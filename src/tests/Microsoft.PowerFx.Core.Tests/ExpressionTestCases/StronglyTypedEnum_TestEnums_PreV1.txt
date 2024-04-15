@@ -95,10 +95,10 @@ true
 >> TestYesNo.Yes <> TestYesNo.No
 true
 
->> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
+>> TestBooleanNoCoerce.SuperTrue = TestBooleanNoCoerce.SuperFalse
 false
 
->> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
+>> TestBooleanNoCoerce.SuperTrue <> TestBooleanNoCoerce.SuperFalse
 true
 
 >> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
@@ -126,7 +126,7 @@ true
 >> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
 false
 
->> TestBooleanNoCoerceTo.SuperTrue = true
+>> TestBooleanNoCoerce.SuperTrue = true
 true
 
 //===========================================================================================================
@@ -141,16 +141,16 @@ true
 
 // Booleans cannot be used in math expressions, even if they support coercion to backing kind
 
->> TestBooleanNoCoerceTo.SuperFalse + 2
+>> TestBooleanNoCoerce.SuperFalse + 2
 2
 
->> TestBooleanNoCoerceTo.SuperFalse * 2
+>> TestBooleanNoCoerce.SuperFalse * 2
 0
 
->> TestBooleanNoCoerceTo.SuperFalse / 2
+>> TestBooleanNoCoerce.SuperFalse / 2
 0
 
->> TestBooleanNoCoerceTo.SuperFalse ^ 2
+>> TestBooleanNoCoerce.SuperFalse ^ 2
 0
 
 >> TestYesNo.Yes + 2
@@ -170,37 +170,37 @@ true
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
 
->> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
+>> TestYesNo.Yes && TestBooleanNoCoerce.SuperTrue
 true
 
->> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
+>> TestBooleanNoCoerce.SuperTrue && TestBooleanNoCoerce.SuperFalse
 false
 
->> TestBooleanNoCoerceTo.SuperTrue && false
+>> TestBooleanNoCoerce.SuperTrue && false
 false
 
->> !TestBooleanNoCoerceTo.SuperTrue
+>> !TestBooleanNoCoerce.SuperTrue
 false
 
->> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
+>> TestYesNo.Yes Or TestBooleanNoCoerce.SuperTrue
 true
 
->> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
+>> Not TestBooleanNoCoerce.SuperTrue And Not TestBooleanNoCoerce.SuperFalse
 false
 
->> TestBooleanNoCoerceTo.SuperTrue
+>> TestBooleanNoCoerce.SuperTrue
 true
 
->> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
+>> And( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperTrue )
 true
 
->> Not( TestBooleanNoCoerceTo.SuperTrue )
+>> Not( TestBooleanNoCoerce.SuperTrue )
 false
 
->> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
+>> Or( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperFalse )
 true
 
->> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
+>> Or(Not(TestBooleanNoCoerce.SuperFalse),  Not(TestBooleanNoCoerce.SuperTrue))
 true
 
 //===========================================================================================================
@@ -234,10 +234,10 @@ false
 >> Boolean( TestYeaNay.Yea )
 true
 
->> Boolean( TestBooleanNoCoerceTo.SuperTrue )
+>> Boolean( TestBooleanNoCoerce.SuperTrue )
 true
 
->> Boolean( TestBooleanNoCoerceTo.SuperFalse )
+>> Boolean( TestBooleanNoCoerce.SuperFalse )
 false
 
 // no constructor for Color values
@@ -246,6 +246,30 @@ false
 //
 // 10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
 //
+
+>> TestXORNoCoerce( true, false )
+true
+
+>> TestXORNoCoerce( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> TestXORNoCoerce( TestYeaNay.Yea, TestYeaNay.Nay )
+true
+
+>> TestXORNoCoerce( TestYesNo.No, TestYesNo.Yes )
+true
+
+>> TestXORYesNo( true, false )
+true
+
+>> TestXORYesNo( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Yea )
+true
+
+>> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
+true
 
 //===========================================================================================================
 //
@@ -393,10 +417,10 @@ false
 >> "Label:" & TestYeaNay.Nay
 "Label:false"
 
->> Text( TestBooleanNoCoerceTo.SuperTrue )
+>> Text( TestBooleanNoCoerce.SuperTrue )
 "true"
 
->> "Label:" & TestBooleanNoCoerceTo.SuperTrue
+>> "Label:" & TestBooleanNoCoerce.SuperTrue
 "Label:true"
 
 >> Text( TestYeaNay.Yea )
@@ -428,3 +452,124 @@ Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: I
 
 >> Len( TestRedRamp.Red25 )
 Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
+
+//===========================================================================================================
+//
+// 17. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+//
+
+// Standard usage
+
+>> TestXORYesNo( TestYesNo.Yes, TestYesNo.Yes )
+false
+
+>> TestYesNo.Yes=TestYesNo.No
+false
+
+>> TestYesNo.Yes<>TestYesNo.No
+true
+
+>> TestYesNo.Yes=TestYesNo.Yes
+true
+
+>> Boolean(TestYesNo.No)
+false
+
+// Coerces to string
+
+>> Text(TestYesNo.No)
+"false"
+
+>> "Severity: "&TestYesNo.No
+"Severity: false"
+
+>> Len(TestYesNo.No)
+5
+
+>> Left(TestYesNo.No,3)
+"fal"
+
+// Standard error cases for number backed enums
+
+>> Value( TestYesNo.No )
+0
+
+>> Decimal( TestYesNo.No )
+0
+
+>> Float( TestYesNo.No )
+0
+
+>> TestYesNo.No = TestYeaNay.Yea
+false
+
+>> TestYesNo.No = TestYeaNay.Nay
+true
+
+>> TestYesNo.No <> TestYeaNay.Yea
+true
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Nay )
+false
+
+// Boolean can be used in place (CanCoerceFromBackingKind = true)
+
+>> TestXORYesNo( false, false )
+false
+
+>> TestYesNo.No = true
+false
+
+>> TestYesNo.No = false
+true
+
+>> TestYesNo.No <> false
+false
+
+>> If( false, TestYesNo.Yes, false )
+false
+
+// Can be used as a Boolean (CanCoerceToBackingKind = true)
+
+>> Sqrt( TestYesNo.No )
+0
+
+>> Mod( TestYesNo.No, 2 )
+0
+
+>> TestYesNo.No + 3
+3
+
+>> TestYesNo.No + TestYesNo.Yes
+1
+
+>> If( false, true, TestYesNo.No )  // first type rule
+false
+
+>> Not( TestYesNo.No )
+true
+
+>> Not TestYesNo.No
+true
+
+>> TestYesNo.No Or TestYesNo.No Or TestYesNo.Yes
+true
+
+>> TestYesNo.Yes And TestYesNo.Yes And TestYesNo.No
+false
+
+// Can't compare numerically (CanCompareNumeric = false)
+
+>> TestYesNo.Yes < TestYesNo.No
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 25-28: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> TestYesNo.Yes >= TestYesNo.No
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 26-29: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+// Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
+
+>> TestYesNo.Yes & TestYesNo.Yes & TestYesNo.No
+"truetruefalse"
+
+>> TestXORYesNo( TestYesNo.Yes & TestYesNo.No, true )
+Error({Kind:ErrorKind.InvalidArgument})

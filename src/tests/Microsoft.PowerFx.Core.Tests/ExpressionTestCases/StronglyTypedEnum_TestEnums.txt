@@ -28,6 +28,9 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
+//
+// Examples
+//   17. TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
 
 //============================================================================================================
 //
@@ -93,10 +96,10 @@ true
 >> TestYesNo.Yes <> TestYesNo.No
 true
 
->> TestBooleanNoCoerceTo.SuperTrue = TestBooleanNoCoerceTo.SuperFalse
+>> TestBooleanNoCoerce.SuperTrue = TestBooleanNoCoerce.SuperFalse
 false
 
->> TestBooleanNoCoerceTo.SuperTrue <> TestBooleanNoCoerceTo.SuperFalse
+>> TestBooleanNoCoerce.SuperTrue <> TestBooleanNoCoerce.SuperFalse
 true
 
 >> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
@@ -124,8 +127,8 @@ Errors: Error 10-11: Incompatible types for comparison. These types can't be com
 >> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
 Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: Enum (TestRedRamp), Color.
 
->> TestBooleanNoCoerceTo.SuperTrue = true
-Errors: Error 32-33: Incompatible types for comparison. These types can't be compared: Enum (TestBooleanNoCoerceTo), Boolean.
+>> TestBooleanNoCoerce.SuperTrue = true
+Errors: Error 30-31: Incompatible types for comparison. These types can't be compared: Enum (TestBooleanNoCoerce), Boolean.
 
 //===========================================================================================================
 //
@@ -139,17 +142,17 @@ Errors: Error 32-33: Incompatible types for comparison. These types can't be com
 
 // Booleans cannot be used in math expressions, even if they support coercion to backing kind
 
->> TestBooleanNoCoerceTo.SuperFalse + 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+>> TestBooleanNoCoerce.SuperFalse + 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperFalse * 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+>> TestBooleanNoCoerce.SuperFalse * 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperFalse / 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+>> TestBooleanNoCoerce.SuperFalse / 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperFalse ^ 2
-Errors: Error 21-32: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+>> TestBooleanNoCoerce.SuperFalse ^ 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> TestYesNo.Yes + 2
 Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
@@ -168,38 +171,38 @@ Errors: Error 9-13: Invalid argument type. Expecting one of the following: Numbe
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
 //
 
->> TestYesNo.Yes && TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> TestYesNo.Yes && TestBooleanNoCoerce.SuperTrue
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperTrue && TestBooleanNoCoerceTo.SuperFalse
-Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 56-67: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> TestBooleanNoCoerce.SuperTrue && TestBooleanNoCoerce.SuperFalse
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 52-63: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperTrue && false
-Errors: Error 21-31: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> TestBooleanNoCoerce.SuperTrue && false
+Errors: Error 19-29: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> !TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 22-32: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> !TestBooleanNoCoerce.SuperTrue
+Errors: Error 20-30: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestYesNo.Yes Or TestBooleanNoCoerceTo.SuperTrue
-Errors: Error 38-48: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> TestYesNo.Yes Or TestBooleanNoCoerce.SuperTrue
+Errors: Error 36-46: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> Not TestBooleanNoCoerceTo.SuperTrue And Not TestBooleanNoCoerceTo.SuperFalse
-Errors: Error 25-35: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 65-76: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
+>> Not TestBooleanNoCoerce.SuperTrue And Not TestBooleanNoCoerce.SuperFalse
+Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
->> TestBooleanNoCoerceTo.SuperTrue
-TestBooleanNoCoerceTo.SuperTrue
+>> TestBooleanNoCoerce.SuperTrue
+TestBooleanNoCoerce.SuperTrue
 
->> And( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperTrue )
-Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 59-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
+>> And( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperTrue )
+Errors: Error 24-34: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 55-65: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
 
->> Not( TestBooleanNoCoerceTo.SuperTrue )
-Errors: Error 26-36: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
+>> Not( TestBooleanNoCoerce.SuperTrue )
+Errors: Error 24-34: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
->> Or( TestBooleanNoCoerceTo.SuperTrue, TestBooleanNoCoerceTo.SuperFalse )
-Errors: Error 25-35: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 58-69: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
+>> Or( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperFalse )
+Errors: Error 23-33: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 54-65: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
 
->> Or(Not(TestBooleanNoCoerceTo.SuperFalse),  Not(TestBooleanNoCoerceTo.SuperTrue))
-Errors: Error 28-39: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 68-78: Invalid argument type (Enum (TestBooleanNoCoerceTo)). Expecting a Boolean value instead.|Error 43-46: The function 'Not' has some invalid arguments.
+>> Or(Not(TestBooleanNoCoerce.SuperFalse),  Not(TestBooleanNoCoerce.SuperTrue))
+Errors: Error 26-37: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 64-74: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 41-44: The function 'Not' has some invalid arguments.
 
 //===========================================================================================================
 //
@@ -232,10 +235,10 @@ false
 >> Boolean( TestYeaNay.Yea )
 true
 
->> Boolean( TestBooleanNoCoerceTo.SuperTrue )
+>> Boolean( TestBooleanNoCoerce.SuperTrue )
 true
 
->> Boolean( TestBooleanNoCoerceTo.SuperFalse )
+>> Boolean( TestBooleanNoCoerce.SuperFalse )
 false
 
 // no constructor for Color values
@@ -244,6 +247,30 @@ false
 //
 // 10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
 //
+
+>> TestXORNoCoerce( true, false )
+Errors: Error 17-21: Invalid argument type (Boolean). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 23-28: Invalid argument type (Boolean). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+
+>> TestXORNoCoerce( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> TestXORNoCoerce( TestYeaNay.Yea, TestYeaNay.Nay )
+Errors: Error 27-31: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 43-47: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+
+>> TestXORNoCoerce( TestYesNo.No, TestYesNo.Yes )
+Errors: Error 26-29: Invalid argument type (Enum (TestYesNo)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 40-44: Invalid argument type (Enum (TestYesNo)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+
+>> TestXORYesNo( true, false )
+true
+
+>> TestXORYesNo( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+Errors: Error 33-44: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Enum (TestYesNo) value instead.|Error 65-75: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Yea )
+Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+
+>> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
+true
 
 //===========================================================================================================
 //
@@ -389,10 +416,10 @@ false
 >> "Label:" & TestYeaNay.Nay
 "Label:Nay"
 
->> Text( TestBooleanNoCoerceTo.SuperTrue )
+>> Text( TestBooleanNoCoerce.SuperTrue )
 "SuperTrue"
 
->> "Label:" & TestBooleanNoCoerceTo.SuperTrue
+>> "Label:" & TestBooleanNoCoerce.SuperTrue
 "Label:SuperTrue"
 
 >> Text( TestYeaNay.Yea )
@@ -424,3 +451,124 @@ false
 
 >> Len( TestRedRamp.Red25 )
 5
+
+//===========================================================================================================
+//
+// 17. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+//
+
+// Standard usage
+
+>> TestXORYesNo( TestYesNo.Yes, TestYesNo.Yes )
+false
+
+>> TestYesNo.Yes=TestYesNo.No
+false
+
+>> TestYesNo.Yes<>TestYesNo.No
+true
+
+>> TestYesNo.Yes=TestYesNo.Yes
+true
+
+>> Boolean(TestYesNo.No)
+false
+
+// Coerces to string
+
+>> Text(TestYesNo.No)
+"No"
+
+>> "Severity: "&TestYesNo.No
+"Severity: No"
+
+>> Len(TestYesNo.No)
+2
+
+>> Left(TestYesNo.No,3)
+"No"
+
+// Standard error cases for number backed enums
+
+>> Value( TestYesNo.No )
+Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Decimal( TestYesNo.No )
+Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 18-21: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Float( TestYesNo.No )
+Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
+
+>> TestYesNo.No = TestYeaNay.Yea
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+
+>> TestYesNo.No = TestYeaNay.Nay
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+
+>> TestYesNo.No <> TestYeaNay.Yea
+Errors: Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Nay )
+Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+
+// Boolean can be used in place (CanCoerceFromBackingKind = true)
+
+>> TestXORYesNo( false, false )
+false
+
+>> TestYesNo.No = true
+false
+
+>> TestYesNo.No = false
+true
+
+>> TestYesNo.No <> false
+false
+
+>> If( false, TestYesNo.Yes, false )
+TestYesNo.CalculatedOptionSetValue
+
+// Can be used as a Boolean (CanCoerceToBackingKind = true)
+
+>> Sqrt( TestYesNo.No )
+Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: Invalid argument type (Enum (TestYesNo)). Expecting a Number value instead.
+
+>> Mod( TestYesNo.No, 2 )
+Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (Enum (TestYesNo)). Expecting a Decimal value instead.
+
+>> TestYesNo.No + 3
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.No + TestYesNo.Yes
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> If( false, true, TestYesNo.No )  // first type rule
+false
+
+>> Not( TestYesNo.No )
+true
+
+>> Not TestYesNo.No
+true
+
+>> TestYesNo.No Or TestYesNo.No Or TestYesNo.Yes
+true
+
+>> TestYesNo.Yes And TestYesNo.Yes And TestYesNo.No
+false
+
+// Can't compare numerically (CanCompareNumeric = false)
+
+>> TestYesNo.Yes < TestYesNo.No
+Errors: Error 14-15: Unable to compare values of type Enum (TestYesNo).
+
+>> TestYesNo.Yes >= TestYesNo.No
+Errors: Error 14-16: Unable to compare values of type Enum (TestYesNo).
+
+// Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
+
+>> TestYesNo.Yes & TestYesNo.Yes & TestYesNo.No
+"YesYesNo"
+
+>> TestXORYesNo( TestYesNo.Yes & TestYesNo.No, true )
+Errors: Error 28-29: Invalid argument type (Text). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.

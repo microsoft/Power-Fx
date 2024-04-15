@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
             store.TestOnly_WithCustomEnum(_testYesNo, append: true);
             store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
-            store.TestOnly_WithCustomEnum(_testBooleanNoCoerceTo, append: true);
+            store.TestOnly_WithCustomEnum(_testBooleanNoCoerce, append: true);
             store.TestOnly_WithCustomEnum(_testNumberCoerceTo, append: true);
             store.TestOnly_WithCustomEnum(_testNumberCompareNumeric, append: true);
             store.TestOnly_WithCustomEnum(_testNumberCompareNumericCoerceFrom, append: true);
@@ -116,6 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // There are likewise no built in functions that take Boolean backed option sets as parameters
             newConfig.AddFunction(new TestXORBooleanFunction());
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerceFunction() : new Boolean_TestXORNoCoerceFunction());
             newConfig.AddFunction(new TestColorInvertFunction());
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
 
@@ -130,6 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         { "Yes", true },
                         { "No", false }
                     },
+                    canCoerceFromBackingKind: true,
                     canCoerceToBackingKind: true);
 
         private static readonly EnumSymbol _testYeaNay = new EnumSymbol(
@@ -140,10 +142,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         { "Yea", true },
                         { "Nay", false }
                     },
+                    canCoerceFromBackingKind: true,
                     canCoerceToBackingKind: true);
 
-        private static readonly EnumSymbol _testBooleanNoCoerceTo = new EnumSymbol(
-                    new DName("TestBooleanNoCoerceTo"),
+        private static readonly EnumSymbol _testBooleanNoCoerce = new EnumSymbol(
+                    new DName("TestBooleanNoCoerce"),
                     DType.Boolean,
                     new Dictionary<string, object>()
                     {
@@ -288,6 +291,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public Boolean_TestXORYesNoFunction()
                 : base("TestXORYesNo", FormulaType.Boolean, new[] { FormulaType.Boolean, FormulaType.Boolean })
+            {
+            }
+
+            public FormulaValue Execute(BooleanValue x, BooleanValue y)
+            {
+                return BooleanValue.New(x.Value ^ y.Value);
+            }
+        }
+
+        private class STE_TestXORNoCoerceFunction : ReflectionFunction
+        {
+            public STE_TestXORNoCoerceFunction()
+                : base("TestXORNoCoerce", FormulaType.Boolean, new[] { _testBooleanNoCoerce.FormulaType, _testBooleanNoCoerce.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
+        private class Boolean_TestXORNoCoerceFunction : ReflectionFunction
+        {
+            public Boolean_TestXORNoCoerceFunction()
+                : base("TestXORNoCoerce", FormulaType.Boolean, new[] { FormulaType.Boolean, FormulaType.Boolean })
             {
             }
 
