@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using CoreMutationUtils = Microsoft.PowerFx.Core.Utils.MutationUtils;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -230,7 +231,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             int skip = 1;
 
-            MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
+            CoreMutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(skip).ToArray(), argTypes.Skip(skip).ToArray(), errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

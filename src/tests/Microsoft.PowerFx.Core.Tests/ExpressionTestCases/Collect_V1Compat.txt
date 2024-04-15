@@ -43,7 +43,7 @@ Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 8-15: T
 Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed.
 
 >> Collect("", "")
-Errors: Error 0-15: The function 'Collect' has some invalid arguments.|Error 8-10: The function 'Collect' has some invalid arguments.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 8-10: The function 'Collect' has some invalid arguments.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.
 
 >> IsBlank(Collect(t1, Blank()))
 true
@@ -61,16 +61,16 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{F
 Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
 >> Collect(t1, "x")
-Errors: Error 0-16: The function 'Collect' has some invalid arguments.|Error 12-15: Invalid argument type. Cannot use Text values in this context.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-15: Invalid argument type. Cannot use Text values in this context.
 
 >> Collect(Foo,r2)
-Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-14: The specified column 'Field1' does not exist.|Error 0-15: The function 'Collect' has some invalid arguments.
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-14: The specified column 'Field1' does not exist.
 
 >> Collect(Foo,Bar)
-Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Collect' has some invalid arguments.
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-7: The function 'Collect' has some invalid arguments.
 
 >> Collect(1/0,Foo)
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(t1,{Price:200}).Price
-Errors: Error 0-23: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.|Error 23-29: Deprecated use of '.'. Please use the 'ShowColumns' function instead.

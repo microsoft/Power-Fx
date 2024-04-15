@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
