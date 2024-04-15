@@ -3121,6 +3121,10 @@
     <value>Adds one or more items to the specified 'collection'. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     <comment>Description of 'Collect' function.</comment>
   </data>
+  <data name="CollectDataSourceArg" xml:space="preserve">
+    <value>data_source</value>
+    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  </data>
   <data name="CollectArg1" xml:space="preserve">
     <value>collection</value>
     <comment>function_parameter - First parameter for the Collect function - the name of the collection that will be created / appended to.</comment>
