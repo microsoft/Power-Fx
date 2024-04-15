@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        // Only used for testing
+        [Obsolete("Only used for testing")]
         internal static (ConnectorFunction s, ConnectorFunction c, ConnectorFunction r, ConnectorFunction u, ConnectorFunction d) GetFunctions(IReadOnlyDictionary<string, FormulaValue> globalValues, OpenApiDocument openApiDocument)
         {
             return new SwaggerTabularService(globalValues).GetFunctions(new PowerFxConfig(), openApiDocument);

@@ -2285,6 +2285,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
         public async Task SP_Tabular_CheckParams()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
@@ -2328,6 +2329,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
         public async Task SQL_Tabular_CheckParams()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
@@ -2372,6 +2374,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
         public async Task SF_Tabular_CheckParams()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
