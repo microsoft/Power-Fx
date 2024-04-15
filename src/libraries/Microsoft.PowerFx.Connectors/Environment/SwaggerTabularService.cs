@@ -160,9 +160,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 executionLogger?.LogInformation($"Entering in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}");
 
-                BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");
-                ODataParameters odataParameters = serviceProvider.GetService<ODataParameters>();
-                IReadOnlyList<NamedValue> optionalParameters = odataParameters != null ? odataParameters.GetNamedValues() : Array.Empty<NamedValue>();
+                BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");                
+                IReadOnlyList<NamedValue> optionalParameters = oDataParameters != null ? oDataParameters.GetNamedValues() : Array.Empty<NamedValue>();
 
                 FormulaValue[] parameters = optionalParameters.Any() ? new FormulaValue[] { FormulaValue.NewRecordFromFields(optionalParameters.ToArray()) } : Array.Empty<FormulaValue>();
 
