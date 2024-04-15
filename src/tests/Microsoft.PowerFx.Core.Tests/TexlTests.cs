@@ -4198,7 +4198,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table([], Table([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 1)]
         [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
 
-        // existing warning due to sqrt should propogate, no new warnigns on table
+        // existing warning due to sqrt should propagate, no new warnigns on table
         [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
         public void TexlFunctionTypeSemanticsTable_PageableInputs(string script, string expectedSchema, int errorCount)
         {

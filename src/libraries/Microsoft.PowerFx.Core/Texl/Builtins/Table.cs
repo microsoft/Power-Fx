@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < argTypes.Length; i++)
             {
-                // show warning when the node is pageable as data would be truncated at this point
+                // show warning when the node is pageable as data could be truncated at this point
                 if (argTypes[i].IsTableNonObjNull && binding.IsPageable(args[i]))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrTruncatedArgWarning, args[i].ToString(), Name);
