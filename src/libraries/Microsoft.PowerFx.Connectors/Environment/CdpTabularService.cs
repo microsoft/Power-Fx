@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public async Task InitAsync(HttpClient httpClient, string uriPrefix, bool useV2, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, bool useV2, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
                 _v2 = useV2;
                 _uriPrefix = uriPrefix;
 
-                string uri = (_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{DoubleEncode(DataSetName)}/tables/{DoubleEncode(TableName)}?api-version=2015-09-01";
+                string uri = (_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{DoubleEncode(DataSetName, "dataset")}/tables/{DoubleEncode(TableName, "table")}?api-version=2015-09-01";
 
                 using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
                 using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private string DoubleEncode(string param)
+        protected virtual string DoubleEncode(string param, string paramName)
         {
             // we force double encoding here (in swagger, we have "x-ms-url-encoding": "double")
             return HttpUtility.UrlEncode(HttpUtility.UrlEncode(param));
