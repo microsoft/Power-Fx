@@ -9,3 +9,9 @@
 
 >> Text( Date(1980,1,1), DateTimeFormat.LongDate & DateTimeFormat.ShortDate, "en-us" )
 "'long1ate''00ort1ate'"
+
+>> Text( Date(1980,1,2), "'longdate'", "en-us" )
+"'long2ate'"
+
+>> Text( Date(1980,1,2), "utc", "en-us" )
+"utc"

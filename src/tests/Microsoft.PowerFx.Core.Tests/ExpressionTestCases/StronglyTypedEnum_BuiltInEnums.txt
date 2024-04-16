@@ -1189,6 +1189,14 @@ true
 >> If( false, DateTimeFormat.LongDate, "help" )  // first type rule
 DateTimeFormat.CalculatedOptionSetValue
 
+// But a string is not interpreted as the enum value by Text
+
+>> Text( Date(1980,1,2), "'longdate'", "en-us" )
+"'long2ate'"
+
+>> Text( Date(1980,1,2), "utc", "en-us" )
+"utc"
+
 // Can't be used as a string (CanCoerceToBackingKind = false)
 
 >> Sqrt( DateTimeFormat.LongDate )

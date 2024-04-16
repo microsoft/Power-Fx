@@ -1194,6 +1194,14 @@ true
 >> If( false, DateTimeFormat.LongDate, "help" )  // first type rule
 "help"
 
+// But a string is not interpreted as the enum value by Text
+
+>> Text( Date(1980,1,2), "'longdate'", "en-us" )
+"Wednesday, January 2, 1980"
+
+>> Text( Date(1980,1,2), "utc", "en-us" )
+"1980-01-02T08:00:00.000Z"
+
 // Can't be used as a string (CanCoerceToBackingKind = false)
 
 >> Sqrt( DateTimeFormat.LongDate )
