@@ -123,13 +123,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\OptionSet.txt";
-            var line = 41;
+            var path = @"D:\...\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnumParams.txt";
+            var line = 0; // or non-zero for a specific test
 
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(new Dictionary<string, bool>() { { "PowerFxV1", true } }, path);
 
             // We can filter to just cases we want 
             if (line > 0)
@@ -138,6 +138,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             var result = testRunner.RunTests();
+
+            if (result.Fail > 0)
+            {
+                Assert.True(false, result.Output);
+            }
+            else
+            {
+                Console.WriteLine(result.Output);
+            }
         }
 #endif
 
