@@ -12,7 +12,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
 {
-    internal class ControlTokens 
+    internal class ControlTokens : IEnumerable<ControlToken>
     {      
         private readonly ICollection<ControlToken> _controlTokens;
         private readonly IDictionary<string, ControlToken> _controlTokenDict;
@@ -44,14 +44,19 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Schemas
             return null;
         }
 
-        public IEnumerable<ControlToken> GetControlTokens()
+        public IEnumerator<ControlToken> GetEnumerator()
         {
-            return _controlTokens;
+            return _controlTokens.GetEnumerator();
         }
 
         public int Size()
         {
             return _controlTokens.Count;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -433,7 +433,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            if (result)
+            {
+                CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            }
+
             return result;
         }
 

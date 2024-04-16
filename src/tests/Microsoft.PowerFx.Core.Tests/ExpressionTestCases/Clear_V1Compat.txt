@@ -7,13 +7,13 @@ Errors: Error 6-13: The value passed to the 'Clear' function cannot be changed.
 Errors: Error 6-36: The value passed to the 'Clear' function cannot be changed.
 
 >> Clear(1)
-Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value instead.|Error 6-7: The value passed to the 'Clear' function cannot be changed.|Error 0-5: The function 'Clear' has some invalid arguments.
+Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-5: The function 'Clear' has some invalid arguments.
 
 >> Clear(1/0)
-Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value instead.|Error 7-8: The value passed to the 'Clear' function cannot be changed.|Error 0-5: The function 'Clear' has some invalid arguments.
+Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-5: The function 'Clear' has some invalid arguments.
 
 >> IsError(Clear(1))
-Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 14-15: The value passed to the 'Clear' function cannot be changed.|Error 8-13: The function 'Clear' has some invalid arguments.
+Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 8-13: The function 'Clear' has some invalid arguments.
 
 >> Clear(t1);Clear(t2)
 If(true, {test:1}, "Void value (result of the expression can't be used).")

@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("abcdefgh\r\nb", 7, 11, 7, 1, 1, 2)]
         public void TestGetRange(string expression, int min, int lim, char startChar, char endChar, int startLine, int endLine)
         {
-            var range = LanguageServer.GetRange(expression, new Span(min, lim));
+            var range = new Span(min, lim).ConvertSpanToRange(expression);
 
             Assert.Equal(startChar, range.Start.Character);
             Assert.Equal(endChar, range.End.Character);
