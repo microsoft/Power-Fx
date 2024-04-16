@@ -568,7 +568,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             string propLogicalName = kv.Key;
-                            string propDisplayName = GetDisplayName(kv.Key);
+                            string propDisplayName = GetDisplayName(kv.Value.Title ?? kv.Key);
                             string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
