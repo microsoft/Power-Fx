@@ -34,7 +34,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(abc, { bcd: 1 }) }; num = 3;")]
         public void ValidUDFBodyTest(string script)
         {
-            var result = UserDefinitions.Process(script, null);
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
 
             Assert.False(result.HasErrors);
         }
@@ -45,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var options = new ParserOptions()
             {
-                AllowsSideEffects = false,
+                AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
             UserDefinitions.ProcessUserDefinitions(script, options, out var result);
@@ -60,7 +65,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var options = new ParserOptions()
             {
-                AllowsSideEffects = false,
+                AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
             UserDefinitions.ProcessUserDefinitions(script, options, out var result);
