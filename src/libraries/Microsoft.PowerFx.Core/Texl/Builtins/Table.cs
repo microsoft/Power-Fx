@@ -114,9 +114,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < argTypes.Length; i++)
             {
-                var ads = argTypes[i].AssociatedDataSources?.FirstOrDefault();
-
-                if (argTypes[i].IsTableNonObjNull && ads is IExternalTabularDataSource)
+                // show warning when the node is pageable as data could be truncated at this point
+                if (argTypes[i].IsTableNonObjNull && binding.IsPageable(args[i]))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrTruncatedArgWarning, args[i].ToString(), Name);
                     continue;
