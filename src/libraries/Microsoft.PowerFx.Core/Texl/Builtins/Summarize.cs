@@ -97,6 +97,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 sourceType = DType.EmptyTable;
             }
 
+            if (args[0] is AsNode)
+            {
+                isValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDatasourceAsNode);
+            }
+
             var atLeastOneGroupByColumn = false;
 
             for (int i = 1; i < args.Length; i++)
@@ -127,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     default:
                         isValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNotSupportedFormat_Func, Name);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeInvalidArg);
                         continue;
                 }
                 
@@ -172,12 +178,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.Assert(node != null);
 
-            return node is AsNode asNode && asNode.Left is CallNode;
+            return node is AsNode asNode;
         }
 
         public override bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
             return index > 0 && node is not AsNode;
+        }
+
+        public override bool IsLambdaParam(TexlNode node, int index)
+        {
+            Contracts.AssertIndexInclusive(index, MaxArity);
+            Contracts.Assert(node != null);
+
+            return (node is AsNode asNode && asNode.Left is CallNode) || node is CallNode;
         }
     }
 }

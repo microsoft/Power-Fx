@@ -4608,7 +4608,15 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
-    <value>Function Summarize expects at least one group by column name.</value>
+    <value>Summarize requires at least one grouping column.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the As keyword.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrSummarizeDatasourceAsNode" xml:space="preserve">
+    <value>Summarize data source doesn't support As keyword.</value>
     <comment>Error Message.</comment>
   </data>
 </root>

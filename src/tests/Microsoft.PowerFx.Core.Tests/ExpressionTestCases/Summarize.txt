@@ -61,18 +61,6 @@ Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:
 
 
 
-// === As on table =================================================
-
-// with group by columns in ThisGroup...
->> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
-Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
-
-// or without them...
->> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(SAS.Fruit) ) As Avg_Len_Price )
-Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
-
-
-
 // === Nesting =================================================
 
 >> Summarize( Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price ), Supplier, CountRows( ThisGroup ) As Count )
@@ -84,14 +72,27 @@ Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
 
 // No grouping columns
 >> Summarize( Sales, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 0-84: Summarize requires at least one grouping column.
+Errors: Error 63-65: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Unnamed aggregate
 >> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
-Errors: Error 0-71: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.
+Errors: Error 25-69: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Can't reference aggregate column from other aggregates
 // >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGruop, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
 // Errors
 
 // Can't reference group by columns in ThisGroup
+
+
+
+// NOT READY YET
+// === As on table =================================================
+
+// with group by columns in ThisGroup...
+//>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
+//Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+// or without them...
+//>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(SAS.Fruit) ) As Avg_Len_Price )
+//Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})

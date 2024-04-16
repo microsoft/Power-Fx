@@ -810,5 +810,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNeedPrimitive = new ErrorResourceKey("ErrNeedPrimitive");
         public static ErrorResourceKey ErrSummarizeNoGroupBy = new ErrorResourceKey("ErrSummarizeNoGroupBy");
+        public static ErrorResourceKey ErrSummarizeInvalidArg = new ErrorResourceKey("ErrSummarizeInvalidArg");
+        public static ErrorResourceKey ErrSummarizeDatasourceAsNode = new ErrorResourceKey("ErrSummarizeDatasourceAsNode");
     }
 }

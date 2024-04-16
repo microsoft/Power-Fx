@@ -575,6 +575,16 @@ namespace Microsoft.PowerFx.Core.Functions
             return _maskLambdas.TestBit(index);
         }
 
+        // Return true if the parameter at the specified 0-based rank is a lambda parameter or is an specific TexlNode, false otherwise.
+        // The function can decide with form of validation to apply.
+        public virtual bool IsLambdaParam(TexlNode node, int index)
+        {
+            Contracts.AssertIndexInclusive(index, MaxArity);
+            Contracts.Assert(node != null);
+
+            return IsLambdaParam(index);
+        }
+
         /// <summary>
         /// True if the evaluation of the param at the 0-based index is controlled by the function in question
         /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise.

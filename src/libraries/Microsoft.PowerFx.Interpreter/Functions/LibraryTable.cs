@@ -1153,7 +1153,7 @@ namespace Microsoft.PowerFx.Functions
             // Nothing to do for empty tables
             if (tableValue.Rows.Count() == 0)
             {
-                return tableValue;
+                return CompileTimeTypeWrapperTableValue.AdjustType((TableType)irContext.ResultType, tableValue);
             }
 
             var keyRecords = new Dictionary<string, RecordValue>();
@@ -1170,7 +1170,7 @@ namespace Microsoft.PowerFx.Functions
                     return row.Error;
                 }
 
-                // !!!TODO Do we need to group by blank rows?
+                // Blank rows are ignored.
                 if (row.IsBlank)
                 {
                     continue;

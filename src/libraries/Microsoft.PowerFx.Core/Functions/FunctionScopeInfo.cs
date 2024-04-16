@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public override DName ScopeIdent => new DName("ThisGroup");
 
         public FunctionTableScopeInfo(TexlFunction function)
-            : base(function)
+            : base(function, appliesToArgument: (argIndex) => true)
         {
         }
 

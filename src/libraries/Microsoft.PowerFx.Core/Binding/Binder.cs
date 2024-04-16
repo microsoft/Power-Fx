@@ -4551,16 +4551,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         _features.SupportColumnNamesAsIdentifiers &&
                         maybeFunc.ParameterCanBeIdentifier(_features, i);
 
-                    var isLambdaArg = maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i);
-
-                    // !!!TODO This last validatio can be simplied.
-                    // !!!TODO Is this necessary?
-                    var scopeIdentMatches = args[i] is AsNode asnode 
-                        && asnode.Left is CallNode callnode 
-                        && callnode.Args != null && callnode.Args.ChildNodes != null && callnode.Args.ChildNodes.Any(node => node is FirstNameNode fnNode && fnNode.Ident.Name.Value == scopeInfo.ScopeIdent.Value);
+                    var isLambdaArg = maybeFunc.IsLambdaParam(args[i], i) && scopeInfo.AppliesToArgument(i);
 
                     // Use the new scope only for lambda or identifier args.
-                    _currentScope = (isIdentifier || isLambdaArg) || scopeIdentMatches ? scopeNew : scopeNew.Parent;
+                    _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
@@ -4584,7 +4578,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     // Accept should leave the scope as it found it.
-                    Contracts.Assert(_currentScope == ((isLambdaArg || isIdentifier) || scopeIdentMatches ? scopeNew : scopeNew.Parent));
+                    Contracts.Assert(_currentScope == ((isLambdaArg || isIdentifier) ? scopeNew : scopeNew.Parent));
                 }
 
                 // Now check and mark the path as async.
