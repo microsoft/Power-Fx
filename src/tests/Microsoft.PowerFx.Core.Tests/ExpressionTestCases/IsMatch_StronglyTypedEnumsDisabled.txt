@@ -1,0 +1,59 @@
+﻿#SETUP: RegEx,disable:StronglyTypedBuiltinEnums
+
+>> IsMatch("Hi", "H", "c")
+true
+
+>> IsMatch("Hi", "H", "$c")
+false
+
+>> IsMatch("Hi", "H", "c$")
+false
+
+>> IsMatch("Hi", "H", "^c")
+true
+
+>> IsMatch("Hi", "H", "c^")
+true
+
+>> IsMatch("Hi", "i", "c$")
+true
+
+>> IsMatch("Hi", "I", "c$")
+false
+
+>> IsMatch("Hi", "I", "c$i")
+true
+
+>> IsMatch("Hi", "Hi", "foo")
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", "c")
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", "c")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", "c")
+true
+
+>> IsMatch("Foo", 17)
+Errors: Error 15-17: Regular expressions must be constant values.
+
+>> IsMatch("Foo", 1/0)
+Errors: Error 16-17: Regular expressions must be constant values.
+
+>> IsMatch("28", 28)
+Errors: Error 14-16: Regular expressions must be constant values.
+
+>> IsMatch("Hello", "Hello", "")
+true

@@ -1,25 +1,25 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup
+﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsSetup
 
 >> ErrorKind.Div0 = Color.Red
-Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (Color).
+false
 
 >> Color.Red
-Color.Red
+RGBA(255,0,0,1)
 
 // Both string backed enums, but incompatble for comparison
 >> TimeUnit.Days <> SortOrder.Ascending
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Enum (SortOrder).
+true
 
 // Valid to compare to strings
 >> TimeUnit.Days <> "abc"
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
+true
 
 // Coercion to Color
 >> ColorFade(Color.Red, 0)
 RGBA(255,0,0,1)
 
 >> Color.Red < Color.Green
-Errors: Error 10-11: Unable to compare values of type Enum (Color).
+Errors: Error 5-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 17-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 // Number backed enums support gt/lt/geq/leq, but enforce type checks
 >> With({ErrorKnd: ErrorKind.Div0}, ErrorKnd < ErrorKind.Custom) 
@@ -32,7 +32,7 @@ true
 false
 
 >> With({ErrorKnd: ErrorKind.Numeric}, ErrorKnd < StartOfWeek.Saturday) 
-Errors: Error 45-46: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (StartOfWeek).
+false
 
 // Coercion to string uses backing values if the enum is string-backed
 >> SortOrder.Ascending & SortOrder.Descending
@@ -41,11 +41,11 @@ Errors: Error 45-46: Incompatible types for comparison. These types can't be com
 // Non string-backed enums use the name when coerced to string
 // This might not be great, but it matches the CDS Option Set behavior.
 >> "Color: " & Color.Red
-"Color: Red"
+Errors: Error 17-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-Errors: Error 36-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.
+Date(2011,1,16)
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
 Date(2011,1,16)
@@ -61,7 +61,7 @@ Date(2011,1,16)
 "A"
 
 >> If(true, 1, TimeUnit.Seconds)
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+1
 
 >> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
 "Thursday, January 1, 1970"

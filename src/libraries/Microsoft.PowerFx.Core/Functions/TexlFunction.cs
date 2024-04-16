@@ -519,7 +519,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (typeChecks)
                 {
                     // For implementations, coerce enum option set values to the backing type
-                    if (expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    if (!context.Features.StronglyTypedBuiltinEnums && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
                     {
                         coercionType = enumSymbol1.EnumType.GetEnumSupertype();
                     }

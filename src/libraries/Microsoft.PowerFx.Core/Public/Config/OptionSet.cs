@@ -80,12 +80,20 @@ namespace Microsoft.PowerFx
         IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
 
         DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
-        
+
         bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
 
         DType IExternalEntity.Type => _type;
 
         DKind IExternalOptionSet.BackingKind => DKind.String;
+
+        bool IExternalOptionSet.CanCoerceFromBackingKind => false;
+
+        bool IExternalOptionSet.CanCoerceToBackingKind => false;
+
+        bool IExternalOptionSet.CanCompareNumeric => false;
+
+        bool IExternalOptionSet.CanConcatenateStronglyTyped => false;
 
         public override bool Equals(object obj)
         {

@@ -1,0 +1,4 @@
+﻿#SETUP: RegEx,disable:StronglyTypedBuiltinEnums
+
+>> MatchAll("Hello", "Hello", "")
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
