@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 var result = scope?.Check(getTokensContext.expression);
                 if (result == null)
                 {
-                    return null;
+                    return Task.FromResult(Enumerable.Empty<ITokenTextSpan>());
                 }
 
                 return Task.FromResult(result.GetTokens(getTokensContext.tokenTypesToSkip));
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
             var tokens = await GetTokensAsync(operationContext, new GetTokensContext(tokenTypesToSkip, semanticTokensParams.TextDocument.Uri, expression), cancellationToken).ConfigureAwait(false);
 
-            if (tokens == null)
+            if (tokens == null || !tokens.Any())
             {
                 WriteEmptySemanticTokensResponse(operationContext);
                 return;
