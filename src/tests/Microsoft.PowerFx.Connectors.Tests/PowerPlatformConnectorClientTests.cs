@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
             var client = Client;
-            using var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
+            using var request = new HttpRequestMessage(new HttpMethod(method), $"/{TestConnectionId}/test/someUri");
 
             if (!string.IsNullOrEmpty(extraHeaders))
             {

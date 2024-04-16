@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.CdpTabularService",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
@@ -36,13 +37,14 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorParameters",              
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
-              "Microsoft.PowerFx.Connectors.ConnectorSettings",
+              "Microsoft.PowerFx.Connectors.ConnectorSettings",              
+              "Microsoft.PowerFx.Connectors.ConnectorTableValue",              
               "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.Constants",
+              "Microsoft.PowerFx.Connectors.EngineExtensions",
               "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.MediaKind",
-              "Microsoft.PowerFx.Connectors.ODataParameters",
-              "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
+              "Microsoft.PowerFx.Connectors.ODataParameters",              
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",              
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
@@ -50,6 +52,8 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
+              "Microsoft.PowerFx.Connectors.SwaggerTabularService",
+              "Microsoft.PowerFx.Connectors.TabularService",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 
