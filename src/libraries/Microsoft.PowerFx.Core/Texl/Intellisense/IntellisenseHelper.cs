@@ -567,6 +567,13 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(intellisenseData);
 
             var info = intellisenseData.Binding.GetInfo(callNode);
+
+            // can happen if callNode is not a valid function.
+            if (info.Function == null)
+            {
+                return DType.Unknown;
+            }
+
             if (info.Function.UseParentScopeForArgumentSuggestions)
             {
                 return ClosestParentScopeTypeForSuggestions(callNode, intellisenseData);

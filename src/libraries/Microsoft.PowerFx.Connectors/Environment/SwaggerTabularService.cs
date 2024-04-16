@@ -25,8 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly TabularFunctionIdentification _tabularFunctionIdentification;
         private IReadOnlyList<ConnectorFunction> _tabularFunctions;
         private readonly OpenApiDocument _openApiDocument;
-
-        private readonly IReadOnlyDictionary<string, FormulaValue> _globalValues;
+        private readonly IReadOnlyDictionary<string, FormulaValue> _globalValues;        
 
         public SwaggerTabularService(OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues)
             : base()
@@ -45,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _connectionId = GetString("connectionId", globalValues);
 
-            DatasetName = _tabularFunctionIdentification.DatasetNames.Any() ? string.Join(",", _tabularFunctionIdentification.DatasetNames.Select(dsn => GetString(dsn, globalValues))) : _tabularFunctionIdentification.DefaultDatasetName;
+            DatasetName = _tabularFunctionIdentification.DatasetNames.Count == 0 ? string.Join(",", _tabularFunctionIdentification.DatasetNames.Select(dsn => GetString(dsn, globalValues))) : _tabularFunctionIdentification.DefaultDatasetName;
             TableName = GetString(_tabularFunctionIdentification.TableName, globalValues);
         }
 
@@ -295,12 +294,8 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (!LoadSwaggerAndIdentifyKeyMethods(config, logger))
                 {
-                    IncludeInternalFunctions = true,
-                    Compatibility = ConnectorCompatibility.SwaggerCompatibility
-                };
-
-                // Swagger based tabular connectors
-                _tabularFunctions = config.AddActionConnector(connectorSettings, openApiDocument, _globalValues, logger);
+                    throw new PowerFxConnectorException("Cannot identify tabular methods.");
+                }
 
                 BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(httpClient);
                 FormulaValue schema = await MetadataService.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
@@ -368,6 +363,9 @@ namespace Microsoft.PowerFx.Connectors
             UpdateItem = _tabularFunctions.FirstOrDefault(tf => tf.Name == _tabularFunctionIdentification.UpdateOpName) ?? throw new PowerFxConnectorException("Update item service not found.");
             DeleteItem = _tabularFunctions.FirstOrDefault(tf => tf.Name == _tabularFunctionIdentification.DeleteOpName) ?? throw new PowerFxConnectorException("Delete item service not found.");
 
+            return (MetadataService, CreateItems, GetItems, UpdateItem, DeleteItem);
+        }
+
         protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -397,7 +395,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private static bool TryGetString(string name, IReadOnlyDictionary<string, FormulaValue> globalValues, out string str)
-        {
+        {            
             if (globalValues.TryGetValue(name, out FormulaValue fv) && fv is StringValue sv)
             {
                 str = sv.Value;
