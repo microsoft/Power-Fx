@@ -2250,6 +2250,188 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("Document1", docName.Value);
         }
 
+        [Fact]
+        public async Task SP_Tabular_MissingParam()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.False(isTabularService);
+            Assert.Equal("Cannot determine metadata service function. 'dataset' value probably missing.", error);
+        }
+
+        [Fact]
+        public async Task SP_Tabular_MissingParam2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.False(isTabularService);
+            Assert.Equal("Cannot determine table name.", error);
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SP_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTable", s.Name);
+            Assert.Equal("PostItem", c.Name);
+            Assert.Equal("GetItems", r.Name);
+            Assert.Equal("PatchItem", u.Name);
+            Assert.Equal("DeleteItem", d.Name);
+
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/$metadata.json/datasets/{dataset}/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SQL_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTableV2", s.Name);
+            Assert.Equal("PostItemV2", c.Name);
+            Assert.Equal("GetItemsV2", r.Name);
+            Assert.Equal("PatchItemV2", u.Name);
+            Assert.Equal("DeleteItemV2", d.Name);
+
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/$metadata.json/datasets/{server},{database}/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SF_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService, error);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTable", s.Name);
+            Assert.Equal("PostItemV2", c.Name);
+            Assert.Equal("GetItems", r.Name);
+            Assert.Equal("PatchItemV3", u.Name);
+            Assert.Equal("DeleteItem", d.Name);
+
+            Assert.Equal(@"/apim/salesforce/{connectionId}/$metadata.json/datasets/default/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/v2/datasets/default/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/datasets/default/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/v3/datasets/default/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/datasets/default/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        public async Task SF_Tabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService, error);
+        }
+
         public class HttpLogger : HttpClient
         {
             private readonly ITestOutputHelper _console;

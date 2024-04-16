@@ -2479,16 +2479,29 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table(First(DS))", "*[Id:n, Name:s, Age:n]")]
         [InlineData("Table(First(DS), Last(DS))", "*[Id:n, Name:s, Age:n]")]
         [InlineData("Table(Last(DS), {count: CountRows(DS)})", "*[Id:n, Name:s, Age:n, count:n]")]
+        [InlineData("With({majors: Filter(DS, Age >= 18)},Table(majors,{Id:0, Name: \"Other\", Age:100}))", "*[Id:n, Name:s, Age:n]")]
         public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
         {
-            var symbol = new SymbolTable();
+            var symbol = new DelegatableSymbolTable();
             symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:n, c:n]")));
             symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
             symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
             symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
 
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
-            symbol.AddEntity(new TestDataSource("DS", dataSourceSchema));
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DS",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Count),
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.GreaterThanOrEqual),
+                            null)),
+                    true));
 
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
@@ -4180,18 +4193,35 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Table(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
         [InlineData("Table(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
-        [InlineData("Table(DS, Filter(DS, \"Foo\" in Name))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("Table([], Table(DS, []))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("Table([], Table([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("Table([], FirstN(DS, 5))", "*[Id:n, Name:s, Age:n]", 1)]
-        [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
-        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 2)]
-        public void TexlFunctionTypeSemanticsTable_Delegation(string script, string expectedSchema, int errorCount)
+        [InlineData("Table(DS, Filter(DS, Name = \"Foo\"))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table([], Table(DS, []))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table([], Table([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
+
+        // existing warning due to sqrt should propagate, no new warnigns on table
+        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
+        public void TexlFunctionTypeSemanticsTable_PageableInputs(string script, string expectedSchema, int errorCount)
         {
             var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
 
-            var symbol = new SymbolTable();
-            symbol.AddEntity(new TestDataSource("DS", dataSourceSchema));
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DS",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null)),
+                    true));
+
             symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
 
             TestBindingWarning(
@@ -4299,6 +4329,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
             var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.False(result.Binding.ErrorContainer.HasErrors());
             Assert.True(result.IsSuccess);
         }
     }

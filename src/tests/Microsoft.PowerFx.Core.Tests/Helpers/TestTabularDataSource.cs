@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public DType Type { get; }
 
-        public bool IsPageable => false;
+        public virtual bool IsPageable => false;
 
         public virtual TabularDataQueryOptions QueryOptions => _tabularDataQueryOptions;
 
@@ -290,17 +290,21 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
     {
         private readonly TabularDataQueryOptions _queryOptions;
         private readonly IDelegationMetadata _delegationMetadata;
+        private readonly bool _isPageable;
 
-        internal TestDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata)
+        internal TestDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata, bool isPageable = false)
             : base(name, schema)
         {
             _queryOptions = new TabularDataQueryOptions(this);
             _delegationMetadata = delegationMetadata;
+            _isPageable = isPageable;
         }
 
         public override bool IsSelectable => true;
 
         public override bool IsDelegatable => true;
+
+        public override bool IsPageable => _isPageable;
 
         public override bool CanIncludeSelect(string selectColumnName)
         {
