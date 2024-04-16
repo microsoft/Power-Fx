@@ -43,7 +43,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            _notifyDidChange?.Invoke(didChangeParams);
             var documentUri = didChangeParams.TextDocument.Uri;
 
             var expression = didChangeParams.ContentChanges[0].Text;
@@ -51,6 +50,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             documentUri,
             (scope) =>
             {
+                _notifyDidChange?.Invoke(didChangeParams);
                 var checkResult = scope?.Check(expression);
 
                 operationContext.OutputBuilder.WriteDiagnosticsNotification(didChangeParams.TextDocument.Uri, expression, checkResult.Errors.ToArray());

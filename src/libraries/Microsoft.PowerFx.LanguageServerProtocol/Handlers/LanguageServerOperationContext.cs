@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <summary>
         /// Language Server Logger.
         /// </summary>
-        public ILanguageServerLogger Logger { get; init; }
+        internal ILanguageServerLogger Logger { get; init; }
 
         /// <summary>
         /// ID of the request. This won't be relevant for notification handlers.
@@ -52,12 +52,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// No handlers are expected to return a value. They should use this builder to write the response.
         /// A handler can write multiple responses and the builder will take care of the correct format.
         /// </summary>
-        public LanguageServerOutputBuilder OutputBuilder { get; init; }
+        internal LanguageServerOutputBuilder OutputBuilder { get; init; }
 
         /// <summary>
         /// Host Task Executor to run tasks in host environment.
         /// </summary>
-        public IHostTaskExecutor HostTaskExecutor { get; init; }
+        internal IHostTaskExecutor HostTaskExecutor { get; init; }
 
         private IPowerFxScope _scope = null;
 
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="factory">Nl Handler Factory.</param>
         /// <param name="nLParams">Ml Params.</param>
         /// <returns>NlHandler Instance.</returns>
-        public NLHandler GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null)
+        internal NLHandler GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null)
         {
             return factory.GetNLHandler(GetScope(uri), nLParams);
         }
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="cancellationToken">Cancellation Token.</param>
         /// <param name="defaultOutput"> Default Output if task is canceled by the host.</param>
         /// <returns>Output.</returns>
-        public async Task<TOutput> ExecuteHostTaskAsync<TOutput>(string uri, Func<IPowerFxScope, Task<TOutput>> task, CancellationToken cancellationToken, TOutput defaultOutput = default)
+        internal async Task<TOutput> ExecuteHostTaskAsync<TOutput>(string uri, Func<IPowerFxScope, Task<TOutput>> task, CancellationToken cancellationToken, TOutput defaultOutput = default)
         {
             if (HostTaskExecutor == null)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="uri">Uri to use for scope creation.</param>
         /// <param name="task">Task to run inside host.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
-        public async Task ExecuteHostTaskAsync(string uri, Action<IPowerFxScope> task, CancellationToken cancellationToken)
+        internal async Task ExecuteHostTaskAsync(string uri, Action<IPowerFxScope> task, CancellationToken cancellationToken)
         {
             if (HostTaskExecutor == null)
             {
@@ -121,7 +121,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            await HostTaskExecutor.ExecuteTaskAsync(() => task(GetScope(uri)), this, cancellationToken).ConfigureAwait(false);
+            await HostTaskExecutor.ExecuteTaskAsync(
+            () =>
+            {
+                task(GetScope(uri));
+                return Task.FromResult<object>(null);
+            }, this, 
+            cancellationToken).ConfigureAwait(false);
         }
     }
 

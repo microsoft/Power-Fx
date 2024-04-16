@@ -25,15 +25,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="defaultOutput">Default Output to return if the provided task is canceled by host.</param>
         /// <returns>Output.</returns>
         Task<TOutput> ExecuteTaskAsync<TOutput>(Func<Task<TOutput>> task, LanguageServerOperationContext operationContext, CancellationToken cancellationToken, TOutput defaultOutput = default);
-
-        /// <summary>
-        ///  Executes a task in host environment if host task executor is available.
-        ///  This is critical to trust between LSP and its hosts.
-        ///  LSP should correctly use this and wrap particulat steps that need to run in host using these methods. 
-        /// </summary>
-        /// <param name="operationContext">Language Server Operation Context.</param>
-        /// <param name="task">Task to run inside host.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        Task ExecuteTaskAsync(Action task, LanguageServerOperationContext operationContext, CancellationToken cancellationToken);
     }
 }
