@@ -50,7 +50,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static TabularFunctionIdentification GetTabularFunctions(OpenApiDocument openApiDocument)
         {
-            List<SwaggerOperation> swaggerOperations = openApiDocument.Paths.SelectMany((KeyValuePair<string, OpenApiPathItem> path) => path.Value.Operations.Select((KeyValuePair<OperationType, OpenApiOperation> operation) => new SwaggerOperation() { OperationType = operation.Key, OperationPath = path.Key, Operation = operation.Value })).ToList();
+            List<SwaggerOperation> swaggerOperations = openApiDocument.Paths.SelectMany((KeyValuePair<string, OpenApiPathItem> path) => 
+                        path.Value.Operations.Where((KeyValuePair<OperationType, OpenApiOperation> operation) => !operation.Value.Deprecated)
+                                             .Select((KeyValuePair<OperationType, OpenApiOperation> operation) => new SwaggerOperation() { OperationType = operation.Key, OperationPath = path.Key, Operation = operation.Value })).ToList();
 
             // Metadata Service
             List<SwaggerOperation> metadataServicePotentialOps = new List<SwaggerOperation>();
