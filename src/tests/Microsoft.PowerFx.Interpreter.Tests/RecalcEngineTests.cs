@@ -584,7 +584,7 @@ namespace Microsoft.PowerFx.Tests
             0.0)]
         [InlineData(
             "Employee = Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
-            "getAge({Name: \"Bob\", Age: 21, Title: \"Engineer\"})",
+            "getAge({Name: \"Bob\", Age: 21})",
             true,
             21.0)]
 
