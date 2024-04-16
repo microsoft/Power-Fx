@@ -500,7 +500,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             return await GetConnectorParameterTypeAsync(knownParameters, connectorParameter, runtimeContext, new CallCounter() { CallsLeft = maxCalls }, cancellationToken).ConfigureAwait(false);
         }
-       
+
         internal async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CallCounter maxCalls, CancellationToken cancellationToken)
         {
             try
@@ -513,7 +513,7 @@ namespace Microsoft.PowerFx.Connectors
                 return result;
             }
             catch (Exception ex)
-            {                
+            {
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorParameterTypeAsync))}, Context {LogKnownParameters(knownParameters)} {LogConnectorParameter(connectorParameter)}, {LogException(ex)}");
                 throw;
             }
@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Connectors
                 return connectorType2;
             }
             catch (Exception ex)
-            {                
+            {
                 runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in {this.LogFunction(nameof(GetConnectorTypeAsync))}, Context {LogKnownParameters(knownParameters)}, callsLeft {maxCalls.CallsLeft} {LogConnectorType(connectorType)}, {LogException(ex)}");
                 throw;
             }
@@ -891,6 +891,29 @@ namespace Microsoft.PowerFx.Connectors
             return ExtractFromJson(JsonDocument.Parse(sv.Value).RootElement, location);
         }
 
+        private static JsonElement ExtractFromJson(StringValue sv, string location, out string name, out string displayName)
+        {
+            if (sv == null || string.IsNullOrEmpty(sv.Value))
+            {
+                name = displayName = null;
+                return default;
+            }
+
+            JsonElement jsonRoot = JsonDocument.Parse(sv.Value).RootElement;
+            JsonElement je = ExtractFromJson(jsonRoot, location);
+
+            name = displayName = null;
+
+            if (jsonRoot.ValueKind == JsonValueKind.Object)
+            {
+                JsonElement.ObjectEnumerator objectEnumerator = jsonRoot.EnumerateObject();
+                name = SafeGetProperty(objectEnumerator, "name");
+                displayName = SafeGetProperty(objectEnumerator, "title");
+            }
+
+            return je;
+        }
+
         private static readonly char[] _slash = new char[] { '/' };
 
         private static JsonElement ExtractFromJson(JsonElement je, string location)
@@ -906,6 +929,12 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return je;
+        }
+
+        private static string SafeGetProperty(JsonElement.ObjectEnumerator jsonObjectEnumerator, string propName)
+        {
+            JsonElement je = jsonObjectEnumerator.FirstOrDefault(jp => jp.Name.Equals(propName, StringComparison.OrdinalIgnoreCase)).Value;
+            return je.ValueKind == JsonValueKind.String ? je.GetString() : null;
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicSchemaAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
@@ -943,6 +972,17 @@ namespace Microsoft.PowerFx.Connectors
         internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility)
         {
             JsonElement je = ExtractFromJson(sv, valuePath);
+            return GetConnectorTypeInternal(compatibility, je);
+        }
+
+        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility, out string name, out string displayName)
+        {
+            JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
+            return GetConnectorTypeInternal(compatibility, je);
+        }
+
+        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
+        {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
             ConnectorType connectorType = new ConnectorType(schema, compatibility);
