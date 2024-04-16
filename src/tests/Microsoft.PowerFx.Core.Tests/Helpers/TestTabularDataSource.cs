@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
@@ -204,7 +205,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public DType Type { get; }
 
-        public bool IsPageable => false;
+        public virtual bool IsPageable => false;
 
         public virtual TabularDataQueryOptions QueryOptions => _tabularDataQueryOptions;
 
@@ -217,6 +218,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         public bool IsRefreshable => throw new NotImplementedException();
 
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
+
+        public bool IsWritable => true;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
@@ -249,21 +252,59 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         }
     }
 
+    internal class CdsTestDataSource : TestDataSource, IExternalCdsDataSource
+    {
+        internal CdsTestDataSource(string name, DType schema, string[] keyColumns = null, IEnumerable<string> selectableColumns = null) 
+            : base(name, schema, keyColumns, selectableColumns)
+        {
+        }
+
+        public string DatasetName => throw new NotImplementedException();
+
+        public IExternalDocument Document => throw new NotImplementedException();
+
+        public IExternalTableDefinition TableDefinition => throw new NotImplementedException();
+
+        public bool IsArgTypeValidForMutation(DType type, out IEnumerable<string> invalidFieldNames)
+        {
+            var externalTabularDataSource = Type.AssociatedDataSources.Single() as IExternalTabularDataSource;
+            var keyFieldName = externalTabularDataSource.GetKeyColumns().First();
+
+            if (type.GetAllNames(DPath.Root).Any(name => name.Name.Value == keyFieldName))
+            {
+                invalidFieldNames = new List<string>() { keyFieldName };
+                return false;
+            }
+
+            invalidFieldNames = null;
+            return true;
+        }
+
+        public bool TryGetRelatedColumn(string selectColumnName, out string additionalColumnName, IExternalTableDefinition expandsTableDefinition = null)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class TestDelegableDataSource : TestDataSource
     {
         private readonly TabularDataQueryOptions _queryOptions;
         private readonly IDelegationMetadata _delegationMetadata;
+        private readonly bool _isPageable;
 
-        internal TestDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata)
+        internal TestDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata, bool isPageable = false)
             : base(name, schema)
         {
             _queryOptions = new TabularDataQueryOptions(this);
             _delegationMetadata = delegationMetadata;
+            _isPageable = isPageable;
         }
 
         public override bool IsSelectable => true;
 
         public override bool IsDelegatable => true;
+
+        public override bool IsPageable => _isPageable;
 
         public override bool CanIncludeSelect(string selectColumnName)
         {

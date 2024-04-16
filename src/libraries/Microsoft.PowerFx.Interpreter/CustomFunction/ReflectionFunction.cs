@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -320,6 +321,11 @@ namespace Microsoft.PowerFx
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
+                    if (customFunctionErrorException.ExpressionError != null)
+                    {
+                        return FormulaValue.NewError(customFunctionErrorException.ExpressionError);
+                    }
+
                     return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
             }

@@ -8,16 +8,26 @@
       "status": "Production"
     },
     "x-ms-keywords": [
-      "salesforce"
+      "salesforce",
+      "account",
+      "accounts",
+      "case",
+      "cases",
+      "contact",
+      "contacts",
+      "lead",
+      "leads",
+      "opportunity",
+      "opportunities"
     ]
   },
-  "host": "localhost:54659",
-  "basePath": "/",
+  "host": "tip1002-002.azure-apihub.net",
+  "basePath": "/apim/salesforce",
   "schemes": [
     "https"
   ],
   "paths": {
-    "/$metadata.json/datasets": {
+    "/{connectionId}/$metadata.json/datasets": {
       "get": {
         "tags": [
           "SalesforceDataSetsMetadata"
@@ -42,10 +52,19 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/$metadata.json/datasets/default/tables/{table}": {
+    "/{connectionId}/$metadata.json/datasets/default/tables/{table}": {
       "get": {
         "tags": [
           "SalesforceTableMetadata"
@@ -62,9 +81,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "Salesforce object type like 'Leads'",
+            "description": "Salesforce object type like \u0027Leads\u0027",
             "required": true,
             "x-ms-dynamic-values": {
               "operationId": "GetTables",
@@ -90,10 +116,13 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-object-metadata"
+        }
       }
     },
-    "/$metadata.json/datasets/default/tables/{table}/getitem": {
+    "/{connectionId}/$metadata.json/datasets/default/tables/{table}/getitem": {
       "get": {
         "tags": [
           "SalesforceTableMetadata"
@@ -108,6 +137,13 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
             "required": true,
@@ -137,7 +173,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/$metadata.json/datasets/default/tables/{table}/patchitem": {
+    "/{connectionId}/$metadata.json/datasets/default/tables/{table}/patchitem": {
       "get": {
         "tags": [
           "SalesforceTableMetadata"
@@ -152,49 +188,12 @@
         ],
         "parameters": [
           {
-            "name": "table",
+            "name": "connectionId",
             "in": "path",
             "required": true,
-            "x-ms-dynamic-values": {
-              "operationId": "GetTables",
-              "parameters": {},
-              "value-collection": "value",
-              "value-path": "Name",
-              "value-title": "DisplayName"
-            },
-            "x-ms-url-encoding": "double",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/TableMetadata"
-            }
+            "type": "string",
+            "x-ms-visibility": "internal"
           },
-          "default": {
-            "description": "Operation Failed."
-          }
-        },
-        "deprecated": false,
-        "x-ms-visibility": "internal"
-      }
-    },
-    "/$metadata.json/datasets/default/tables/{table}/postitem": {
-      "get": {
-        "tags": [
-          "SalesforceTableMetadata"
-        ],
-        "operationId": "GetMetadataForPostItem",
-        "consumes": [],
-        "produces": [
-          "application/json",
-          "text/json",
-          "application/xml",
-          "text/xml"
-        ],
-        "parameters": [
           {
             "name": "table",
             "in": "path",
@@ -225,7 +224,58 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/bulk/createjob": {
+    "/{connectionId}/$metadata.json/datasets/default/tables/{table}/postitem": {
+      "get": {
+        "tags": [
+          "SalesforceTableMetadata"
+        ],
+        "operationId": "GetMetadataForPostItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "required": true,
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "parameters": {},
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TableMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/bulk/createjob": {
       "post": {
         "tags": [
           "SalesforceBulk"
@@ -247,6 +297,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "parameters",
             "in": "body",
@@ -275,10 +332,13 @@
           "status": "Production",
           "family": "CreateJob",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#create-a-job-(v2)"
         }
       }
     },
-    "/datasets": {
+    "/{connectionId}/datasets": {
       "get": {
         "tags": [
           "SalesforceDataSet"
@@ -305,10 +365,22 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-datasets"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/datasets({dataset})/tables": {
+    "/{connectionId}/datasets({dataset})/tables": {
       "get": {
         "tags": [
           "SalesforceTable"
@@ -322,6 +394,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -344,7 +423,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/datasets({dataset})/tables({table})/items": {
+    "/{connectionId}/datasets({dataset})/tables({table})/items": {
       "get": {
         "tags": [
           "SalesforceTableData"
@@ -358,6 +437,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -382,7 +468,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -448,6 +534,13 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "dataset",
             "in": "path",
             "description": "dataset name",
@@ -491,10 +584,13 @@
           "status": "Production",
           "family": "ODataStylePostItem",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#create-record"
         }
       }
     },
-    "/datasets({dataset})/tables({table})/items({id})": {
+    "/{connectionId}/datasets({dataset})/tables({table})/items({id})": {
       "get": {
         "tags": [
           "SalesforceTableData"
@@ -510,6 +606,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -561,6 +664,9 @@
           "status": "Production",
           "family": "ODataStyleGetItem",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-record"
         }
       },
       "delete": {
@@ -576,6 +682,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -621,6 +734,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -677,10 +797,13 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#patches-a-specific-item-in-the-table"
+        }
       }
     },
-    "/datasets({dataset})/tables({table})/ondeleteditems": {
+    "/{connectionId}/datasets({dataset})/tables({table})/ondeleteditems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -694,6 +817,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "dataset",
             "in": "path",
@@ -709,7 +839,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -761,7 +891,7 @@
         "x-ms-trigger": "batch"
       }
     },
-    "/datasets({dataset})/tables({table})/onnewitems": {
+    "/{connectionId}/datasets({dataset})/tables({table})/onnewitems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -778,6 +908,13 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "dataset",
             "in": "path",
             "description": "dataset name",
@@ -788,7 +925,7 @@
           {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "type": "string"
@@ -796,7 +933,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -834,10 +971,13 @@
         },
         "deprecated": false,
         "x-ms-visibility": "internal",
-        "x-ms-trigger": "batch"
+        "x-ms-trigger": "batch",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#when-a-record-is-created"
+        }
       }
     },
-    "/datasets({dataset})/tables({table})/onupdateditems": {
+    "/{connectionId}/datasets({dataset})/tables({table})/onupdateditems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -854,6 +994,13 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "dataset",
             "in": "path",
             "description": "dataset name",
@@ -864,7 +1011,7 @@
           {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "type": "string"
@@ -872,7 +1019,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -910,10 +1057,13 @@
         },
         "deprecated": false,
         "x-ms-visibility": "internal",
-        "x-ms-trigger": "batch"
+        "x-ms-trigger": "batch",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#when-a-record-is-created-or-modified"
+        }
       }
     },
-    "/datasets/default/tables": {
+    "/{connectionId}/datasets/default/tables": {
       "get": {
         "tags": [
           "SalesforceTable"
@@ -943,10 +1093,22 @@
         "x-ms-visibility": "advanced",
         "x-ms-pageable": {
           "nextLinkName": "@odata.nextLink"
-        }
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-object-types"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/datasets/default/tables/{table}/externalIdFields": {
+    "/{connectionId}/datasets/default/tables/{table}/externalIdFields": {
       "get": {
         "tags": [
           "SalesforceTableMetadata"
@@ -963,9 +1125,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-dynamic-values": {
@@ -991,10 +1160,13 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-external-id-fields"
+        }
       }
     },
-    "/datasets/default/tables/{table}/externalIdFields/{externalIdField}/{externalId}": {
+    "/{connectionId}/datasets/default/tables/{table}/externalIdFields/{externalIdField}/{externalId}": {
       "get": {
         "tags": [
           "SalesforceTableData"
@@ -1011,9 +1183,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -1080,7 +1259,10 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "advanced"
+        "x-ms-visibility": "advanced",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-a-record-by-external-id"
+        }
       },
       "patch": {
         "tags": [
@@ -1098,9 +1280,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -1194,16 +1383,19 @@
           "status": "Production",
           "family": "PatchItemByExternalId",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#insert-or-update-(upsert)-a-record-by-external-id-%5bdeprecated%5d"
         }
       }
     },
-    "/datasets/default/tables/{table}/items": {
+    "/{connectionId}/datasets/default/tables/{table}/items": {
       "get": {
         "tags": [
           "SalesforceTableData"
         ],
         "summary": "Get records",
-        "description": "This operation gets records of a certain Salesforce object type like 'Leads'.",
+        "description": "This operation gets records of a certain Salesforce object type like \u0027Leads\u0027.",
         "operationId": "GetItems",
         "consumes": [],
         "produces": [
@@ -1214,9 +1406,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -1232,7 +1431,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -1475,13 +1674,153 @@
                 "200": {
                   "description": "OK",
                   "schema": {
-                    "description": "Response when getting Opportunities",
-                    "type": "object"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "title": "Opportunity",
+                      "required": [
+                        "Name",
+                        "StageName",
+                        "CloseDate"
+                      ],
+                      "properties": {
+                        "AccountId": {
+                          "title": "Account ID",
+                          "type": "string",
+                          "x-ms-keyOrder": 0,
+                          "x-ms-keyType": "none",
+                          "x-ms-sort": "asc,desc",
+                          "x-ms-permission": "read-write",
+                          "x-ms-capabilities": {
+                            "filterFunctions": [
+                              "lt",
+                              "le",
+                              "eq",
+                              "ne",
+                              "gt",
+                              "ge",
+                              "and",
+                              "or",
+                              "not",
+                              "contains",
+                              "startswith",
+                              "endswith"
+                            ]
+                          }
+                        },
+                        "Name": {
+                          "title": "Name",
+                          "type": "string",
+                          "x-ms-keyOrder": 0,
+                          "x-ms-keyType": "none",
+                          "x-ms-sort": "asc,desc",
+                          "x-ms-permission": "read-write",
+                          "x-ms-capabilities": {
+                            "filterFunctions": [
+                              "lt",
+                              "le",
+                              "eq",
+                              "ne",
+                              "gt",
+                              "ge",
+                              "and",
+                              "or",
+                              "not",
+                              "contains",
+                              "startswith",
+                              "endswith"
+                            ]
+                          }
+                        },
+                        "StageName": {
+                          "title": "Stage",
+                          "type": "string",
+                          "x-ms-keyOrder": 0,
+                          "x-ms-keyType": "none",
+                          "x-ms-sort": "asc,desc",
+                          "x-ms-permission": "read-write",
+                          "x-ms-capabilities": {
+                            "filterFunctions": [
+                              "lt",
+                              "le",
+                              "eq",
+                              "ne",
+                              "gt",
+                              "ge",
+                              "and",
+                              "or",
+                              "not",
+                              "contains",
+                              "startswith",
+                              "endswith"
+                            ]
+                          },
+                          "enum": [
+                            "Qualify",
+                            "Meet \u0026 Present",
+                            "Propose",
+                            "Negotiate",
+                            "Closed Won",
+                            "Closed Lost"
+                          ]
+                        },
+                        "Amount": {
+                          "title": "Amount",
+                          "type": "number",
+                          "x-ms-keyOrder": 0,
+                          "x-ms-keyType": "none",
+                          "x-ms-sort": "asc,desc",
+                          "x-ms-permission": "read-write",
+                          "x-ms-capabilities": {
+                            "filterFunctions": [
+                              "lt",
+                              "le",
+                              "eq",
+                              "ne",
+                              "gt",
+                              "ge",
+                              "and",
+                              "or",
+                              "not"
+                            ]
+                          },
+                          "format": "currency"
+                        },
+                        "CloseDate": {
+                          "title": "Close Date",
+                          "type": "string",
+                          "x-ms-keyOrder": 0,
+                          "x-ms-keyType": "none",
+                          "x-ms-sort": "asc,desc",
+                          "x-ms-permission": "read-write",
+                          "x-ms-capabilities": {
+                            "filterFunctions": [
+                              "lt",
+                              "le",
+                              "eq",
+                              "ne",
+                              "gt",
+                              "ge",
+                              "and",
+                              "or",
+                              "not",
+                              "contains",
+                              "startswith",
+                              "endswith"
+                            ]
+                          },
+                          "format": "date"
+                        }
+                      }
+                    }
                   }
                 }
               }
             }
           ]
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-records"
         }
       },
       "post": {
@@ -1500,9 +1839,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-url-encoding": "double",
             "x-ms-dynamic-values": {
@@ -1562,10 +1908,13 @@
           }
         },
         "deprecated": true,
-        "x-ms-visibility": "advanced"
+        "x-ms-visibility": "advanced",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#create-record-%5bdeprecated%5d"
+        }
       }
     },
-    "/datasets/default/tables/{table}/items/{id}": {
+    "/{connectionId}/datasets/default/tables/{table}/items/{id}": {
       "get": {
         "tags": [
           "SalesforceTableData"
@@ -1581,6 +1930,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -1632,6 +1988,9 @@
           "status": "Production",
           "family": "GetItem",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-record-%5bdeprecated%5d"
         }
       },
       "delete": {
@@ -1650,9 +2009,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-url-encoding": "double",
             "x-ms-dynamic-values": {
@@ -1683,7 +2049,10 @@
             "description": "Operation Failed."
           }
         },
-        "deprecated": false
+        "deprecated": false,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#delete-record"
+        }
       },
       "patch": {
         "tags": [
@@ -1701,9 +2070,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-url-encoding": "double",
             "x-ms-dynamic-values": {
@@ -1772,10 +2148,13 @@
           }
         },
         "deprecated": true,
-        "x-ms-visibility": "advanced"
+        "x-ms-visibility": "advanced",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#update-record-%5bdeprecated%5d"
+        }
       }
     },
-    "/datasets/default/tables/{table}/ondeleteditems": {
+    "/{connectionId}/datasets/default/tables/{table}/ondeleteditems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -1789,6 +2168,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -1806,7 +2192,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -1858,7 +2244,7 @@
         "x-ms-trigger": "batch"
       }
     },
-    "/datasets/default/tables/{table}/onnewitems": {
+    "/{connectionId}/datasets/default/tables/{table}/onnewitems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -1875,9 +2261,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -1893,7 +2286,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -1932,10 +2325,13 @@
         "deprecated": false,
         "x-ms-visibility": "important",
         "x-ms-trigger": "batch",
-        "x-ms-trigger-hint": "To see it work now, create a record in Salesforce."
+        "x-ms-trigger-hint": "To see it work now, create a record in Salesforce.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#when-a-record-is-created"
+        }
       }
     },
-    "/datasets/default/tables/{table}/onupdateditems": {
+    "/{connectionId}/datasets/default/tables/{table}/onupdateditems": {
       "get": {
         "tags": [
           "SalesforceTableDataTrigger"
@@ -1952,9 +2348,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -1970,7 +2373,7 @@
           {
             "name": "$filter",
             "in": "query",
-            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
             "required": false,
             "x-ms-summary": "Filter Query",
             "x-ms-visibility": "advanced",
@@ -2009,10 +2412,13 @@
         "deprecated": false,
         "x-ms-visibility": "important",
         "x-ms-trigger": "batch",
-        "x-ms-trigger-hint": "To see it work now, modify a record in Salesforce."
+        "x-ms-trigger-hint": "To see it work now, modify a record in Salesforce.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#when-a-record-is-modified"
+        }
       }
     },
-    "/soql/executesoqlquery": {
+    "/{connectionId}/soql/executesoqlquery": {
       "post": {
         "tags": [
           "SalesforceQuery"
@@ -2034,6 +2440,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "queryParameters",
             "in": "body",
@@ -2062,10 +2475,13 @@
           "status": "Production",
           "family": "ExecuteSoqlQuery",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#execute-a-soql-query"
         }
       }
     },
-    "/testconnection": {
+    "/{connectionId}/testconnection": {
       "get": {
         "tags": [
           "SalesforceDiagnostic"
@@ -2082,10 +2498,19 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/v2/datasets/default/tables/{table}/externalIdFields/{externalIdField}/{externalId}": {
+    "/{connectionId}/v2/datasets/default/tables/{table}/externalIdFields/{externalIdField}/{externalId}": {
       "patch": {
         "tags": [
           "SalesforceTableData"
@@ -2102,9 +2527,16 @@
         ],
         "parameters": [
           {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
             "name": "table",
             "in": "path",
-            "description": "The Salesforce object type like 'Leads'.",
+            "description": "The Salesforce object type like \u0027Leads\u0027.",
             "required": true,
             "x-ms-summary": "Salesforce Object Type",
             "x-ms-url-encoding": "double",
@@ -2198,10 +2630,13 @@
           "status": "Production",
           "family": "PatchItemByExternalId",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#insert-or-update-(upsert)-a-record-by-external-id-(v2)"
         }
       }
     },
-    "/v2/datasets/default/tables/{table}/items": {
+    "/{connectionId}/v2/datasets/default/tables/{table}/items": {
       "post": {
         "tags": [
           "SalesforceTableData"
@@ -2217,6 +2652,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -2285,10 +2727,13 @@
           "status": "Production",
           "family": "PostItem",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#create-record"
         }
       }
     },
-    "/v2/datasets/default/tables/{table}/items/{id}": {
+    "/{connectionId}/v2/datasets/default/tables/{table}/items/{id}": {
       "get": {
         "tags": [
           "SalesforceTableData"
@@ -2304,6 +2749,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -2368,6 +2820,9 @@
           "status": "Production",
           "family": "GetItem",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-record"
         }
       },
       "patch": {
@@ -2385,6 +2840,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -2470,10 +2932,13 @@
           "status": "Production",
           "family": "PatchItem",
           "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#update-record-%5bdeprecated%5d"
         }
       }
     },
-    "/v3/datasets/default/tables/{table}/items/{id}": {
+    "/{connectionId}/v3/datasets/default/tables/{table}/items/{id}": {
       "patch": {
         "tags": [
           "SalesforceTableData"
@@ -2489,6 +2954,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "table",
             "in": "path",
@@ -2574,10 +3046,13 @@
           "status": "Production",
           "family": "PatchItem",
           "revision": 3
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#update-record-(v3)"
         }
       }
     },
-    "/codeless/jobs/ingest": {
+    "/{connectionId}/codeless/jobs/ingest": {
       "get": {
         "summary": "Get all jobs",
         "description": "Get a list of all jobs",
@@ -2587,6 +3062,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "concurrenyMode",
             "in": "query",
@@ -2654,6 +3136,9 @@
           "status": "Production",
           "family": "GetAllJobs",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-all-jobs"
         }
       },
       "post": {
@@ -2667,6 +3152,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "body",
             "in": "body",
@@ -2692,10 +3184,13 @@
           "status": "Production",
           "family": "CreateJob",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#create-a-job-%5bdeprecated%5d"
         }
       }
     },
-    "/codeless/jobs/ingest/{jobId}/batches": {
+    "/{connectionId}/codeless/jobs/ingest/{jobId}/batches": {
       "put": {
         "summary": "Upload job data",
         "description": "Uploads data for a job using CSV data.",
@@ -2704,6 +3199,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "jobId",
             "in": "path",
@@ -2744,10 +3246,13 @@
           "status": "Production",
           "family": "UploadJobData",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#upload-job-data"
         }
       }
     },
-    "/codeless/jobs/ingest/{jobId}": {
+    "/{connectionId}/codeless/jobs/ingest/{jobId}": {
       "get": {
         "summary": "Get job info",
         "description": "Retrieves detailed information about a job.",
@@ -2757,6 +3262,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "jobId",
             "in": "path",
@@ -2788,13 +3300,23 @@
           "status": "Production",
           "family": "CheckJobStatus",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-job-info"
         }
       },
       "patch": {
         "summary": "Close or abort a job",
-        "description": "Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can’t add any additional job data. If you abort a job, the job does not get queued or processed.",
+        "description": "Closes or aborts a job. Use UploadComplete to close a job, or Aborted to abort a job. If you close a job, Salesforce queues the job and uploaded data for processing, and you can\u2019t add any additional job data. If you abort a job, the job does not get queued or processed.",
         "operationId": "CloseJob",
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "jobId",
             "in": "path",
@@ -2834,6 +3356,9 @@
           "status": "Production",
           "family": "CloseJob",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#close-or-abort-a-job"
         }
       },
       "delete": {
@@ -2843,6 +3368,13 @@
         "consumes": [],
         "produces": [],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "jobId",
             "in": "path",
@@ -2871,10 +3403,13 @@
           "status": "Production",
           "family": "DeleteJob",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#delete-a-job"
         }
       }
     },
-    "/codeless/jobs/ingest/{jobId}/results": {
+    "/{connectionId}/codeless/jobs/ingest/{jobId}/results": {
       "get": {
         "summary": "Get job results",
         "description": "Retrieves a list of records based on the result type for a completed job.",
@@ -2884,6 +3419,13 @@
           "text/csv"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "jobId",
             "in": "path",
@@ -2928,10 +3470,13 @@
           "status": "Production",
           "family": "GetJobRecordResults",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-job-results"
         }
       }
     },
-    "/codeless/getinstanceurl": {
+    "/{connectionId}/codeless/getinstanceurl": {
       "get": {
         "summary": "Get Instance Url",
         "description": "Get Instance Url",
@@ -2952,10 +3497,22 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-instance-url"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/codeless/getcurrentuserinfo": {
+    "/{connectionId}/codeless/getcurrentuserinfo": {
       "get": {
         "summary": "Get current user information",
         "description": "Get information about the user currently signed in with the connector",
@@ -2976,10 +3533,22 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "internal"
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#get-current-user-information"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
       }
     },
-    "/codeless/search": {
+    "/{connectionId}/codeless/search": {
       "get": {
         "summary": "Execute SOSL search query",
         "description": "Execute the specified SOSL search qyery",
@@ -2997,6 +3566,13 @@
           "text/xml"
         ],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "q",
             "in": "query",
@@ -3019,10 +3595,13 @@
           }
         },
         "deprecated": false,
-        "x-ms-visibility": "important"
+        "x-ms-visibility": "important",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#execute-sosl-search-query"
+        }
       }
     },
-    "/codeless/httprequest": {
+    "/{connectionId}/codeless/httprequest": {
       "post": {
         "summary": "Send an HTTP request",
         "description": "Construct a Salesforce REST API request to invoke",
@@ -3030,6 +3609,13 @@
         "consumes": [],
         "produces": [],
         "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
           {
             "name": "Uri",
             "in": "header",
@@ -3136,6 +3722,9 @@
           "status": "Production",
           "family": "HttpRequest",
           "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/salesforce/#send-an-http-request"
         }
       }
     }
@@ -3160,7 +3749,7 @@
       }
     },
     "CreateJobParameters": {
-      "description": "Parameters for 'CreateJobV2' operation",
+      "description": "Parameters for \u0027CreateJobV2\u0027 operation",
       "required": [
         "object",
         "operation"
@@ -3213,7 +3802,7 @@
       }
     },
     "CreateJobResponse": {
-      "description": "Output for 'CreateJobV2' operation",
+      "description": "Output for \u0027CreateJobV2\u0027 operation",
       "type": "object",
       "properties": {
         "object": {
@@ -3258,7 +3847,7 @@
           "x-ms-summary": "Concurrency Mode"
         },
         "contentUrl": {
-          "description": "The URL to use for Upload Job Data requests for this job. Only valid if the job is in 'Open' state.",
+          "description": "The URL to use for Upload Job Data requests for this job. Only valid if the job is in \u0027Open\u0027 state.",
           "type": "string",
           "x-ms-summary": "Content Url"
         },
@@ -3279,7 +3868,7 @@
           "x-ms-summary": "Id"
         },
         "jobType": {
-          "description": "The job’s type.",
+          "description": "The job\u2019s type.",
           "type": "string",
           "x-ms-summary": "Job Type"
         },
@@ -3351,12 +3940,12 @@
       "type": "object",
       "properties": {
         "query": {
-          "description": "SOQL Query text. Dynamic parameters can be specified using '@paramName' syntax.",
+          "description": "SOQL Query text. Dynamic parameters can be specified using \u0027@paramName\u0027 syntax.",
           "type": "string",
           "x-ms-summary": "SOQL Query"
         },
         "parameters": {
-          "description": "SOQL Query dynamic parameters. Key is parameter name (without '@' at sign), value is parameter value.",
+          "description": "SOQL Query dynamic parameters. Key is parameter name (without \u0027@\u0027 at sign), value is parameter value.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -4138,5 +4727,8 @@
       "operationId": "TestConnection",
       "parameters": {}
     }
+  },
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/salesforce"
   }
 }
