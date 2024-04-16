@@ -43,6 +43,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
+        public IEnumerable<UDFArg> Args => _args;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>

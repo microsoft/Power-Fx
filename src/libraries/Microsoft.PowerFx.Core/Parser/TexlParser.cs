@@ -391,7 +391,8 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         ParseTrivia();
 
-                        var result = _curs.TidCur == TokKind.CurlyOpen ? ParseUDFBody() : ParseExpr(Precedence.None);
+                        var result = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects ?
+                            ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
 
                         // Check if we're at EOF before a semicolon is found
