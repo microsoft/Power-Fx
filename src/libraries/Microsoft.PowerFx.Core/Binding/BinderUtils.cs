@@ -1019,7 +1019,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // Special case for comparing option set values
             if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
             {
-                // Comparing values from two different option set values is not supported, with or without V1 compat rules
+                // Comparing values from two different option set values is not supported
                 if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue)
                 {
                     if (typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
