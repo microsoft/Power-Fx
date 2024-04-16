@@ -112,6 +112,12 @@ namespace Microsoft.PowerFx.Core.Types
                     continue;
                 }
 
+                // to allow missing fields/columns
+                if (resolvedType.IsTable || resolvedType.IsRecord)
+                {
+                    resolvedType.AreFieldsOptional = true;
+                }
+
                 var name = currentType.Ident.Name;
                 _definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
                 userDefinedTypes.Add(new UserDefinedType(name, FormulaType.Build(resolvedType), currentType.Type));

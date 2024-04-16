@@ -587,6 +587,13 @@ namespace Microsoft.PowerFx.Tests
             "getAge({Name: \"Bob\", Age: 21})",
             true,
             21.0)]
+        [InlineData(
+            @"Employee = Type({Name: Text, Age: Number, Title: Text}); Employees = Type([Employee]);  EmployeeNames = Type([{Name: Text}]); 
+              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
+              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
+            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
+            true,
+            2.0)]
 
         // Cycles not allowed
         [InlineData(

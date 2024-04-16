@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // invalid types
         [InlineData("Pics = Type([Image])", "*[Value:i]", false)]
-        public void TestUserDefinedType(string typeDefinition, string expected, bool isValid)
+        public void TestUserDefinedType(string typeDefinition, string expectedDefinedTypeString, bool isValid)
         {
             var parseOptions = new ParserOptions
             {
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Assert.NotEmpty(results.DefinedTypes);
                 var resultType = results.DefinedTypes.First().Type._type;
-                Assert.Equal(TestUtils.DT(expected), resultType);
+                Assert.Equal(TestUtils.DT(expectedDefinedTypeString), resultType);
             }
             else
             {
@@ -85,8 +85,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A = Type(Blob); B = Type({x: Currency}); C = Type([DateTime]); D = Type(None)", 2)]
 
         // have named formulas and udf in the script
-        [InlineData("NAlias = Type(Number);X = 5, ADDX(n:Number): Number = n + X; SomeType = Type(UntypedObject)", 2)]
-        public void TestValidUDTCounts(string typeDefinition, int expected)
+        [InlineData("NAlias = Type(Number);X = 5; ADDX(n:Number): Number = n + X; SomeType = Type(UntypedObject)", 2)]
+        public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {
             var parseOptions = new ParserOptions
             {
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             UserDefinitions.ProcessUserDefinitions(typeDefinition, parseOptions, out UserDefinitionResult results, nameResolver: _primitiveTypes);
 
-            Assert.Equal(expected, results.DefinedTypes.Count());
+            Assert.Equal(expectedDefinedTypesCount, results.DefinedTypes.Count());
         }
     }
 }
