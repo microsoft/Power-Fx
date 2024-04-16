@@ -80,8 +80,11 @@ Error({Kind:ErrorKind.BadRegex})
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 Error({Kind:ErrorKind.Timeout})
 
->> IsMatch("28", 28)
-Errors: Error 14-16: Regular expressions must be constant values.
+>> IsMatch( "28", Concat( [2,8], Value ) )
+Errors: Error 15-37: Regular expressions must be constant values.
+
+>> IsMatch( "28", Concat( [2,8], If( false, Text(Now()), Value ) ) )
+Errors: Error 15-63: Regular expressions must be constant values.
 
 >> IsMatch("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 true

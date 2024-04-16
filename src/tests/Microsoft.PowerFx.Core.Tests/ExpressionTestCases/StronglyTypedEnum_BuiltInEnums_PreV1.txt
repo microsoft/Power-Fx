@@ -1346,3 +1346,6 @@ true
 
 >> IsMatch( "(123)456-4893", Match.Digit & Match.Digit & Match.Digit & Match.Digit & Match.Digit, MatchOptions.Contains )
 false
+
+>> IsMatch( "28", 28 )
+Errors: Error 15-17: Regular expressions must be constant values.
