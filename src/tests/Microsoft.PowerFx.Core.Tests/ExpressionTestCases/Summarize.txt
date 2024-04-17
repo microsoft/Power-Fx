@@ -112,3 +112,65 @@ Errors: Error 86-88: Column name conflict for 'x'.|Error 0-9: The function 'Summ
 // Can't reference aggregate column from other aggregates
 // >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGroup, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
 // Errors
+
+// === Can't reference individual records of ThisGroup ====================================
+
+// >> Summarize( Sales, Fruit, First( ThisGroup ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, FirstN( ThisGroup, 2 ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, Last( ThisGroup ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, LastN( ThisGroup, 2 ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, Index( ThisGroup, 2 ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, LookUp( ThisGroup, Supplier = "Contoso" ).Supplier As OneSupplier )
+// Errors
+
+// >> Summarize( Sales, Fruit, Sum( FirstN( ThisGroup, 1 ), Price ) As OnePrice )
+// Errors
+
+// >> Summarize( Sales, Fruit, Sum( First( ThisGroup ).Price ) As OnePrice )
+// Errors
+
+//=== Can depend on the order of ThisGroup ====================================
+
+>> Summarize( Sales, Fruit, Sum( SortByColumns( ThisGroup, Supplier ), Price ) As OnePrice )
+Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
+
+>> Summarize( Sales, Fruit, Sum( Sort( ThisGroup, Supplier ), Price ) As OnePrice )
+Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
+
+>> Summarize( Sales, Fruit, Concat( ThisGroup, Supplier ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"ContosoContoso"},{Fruit:"Lemons",Suppliers:"FabrikamContosoFabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+>> Summarize( Sales, Fruit, Concat( Sort( ThisGroup, Supplier ), Supplier, ", " ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+>> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value ), Value, ", " ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+// This formula is in error
+// >> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
+// Errors: BUG should be compile time error, not runtime error as currently generated
+
+//=== Table shaping functions ====================================
+
+>> Summarize( Sales, Fruit, Sum( AddColumns( ThisGroup, A, 10 ), A ) As TenSum, CountRows( ThisGroup ) As Count )
+Table({Count:2,Fruit:"Grapes",TenSum:20},{Count:3,Fruit:"Lemons",TenSum:30},{Count:1,Fruit:"Bananas",TenSum:10})
+
+>> Summarize( Sales, Fruit, Sum( RenameColumns( ThisGroup, Supplier, Sup ), Len( Sup ) ) As Len )
+Table({Fruit:"Grapes",Len:14},{Fruit:"Lemons",Len:23},{Fruit:"Bananas",Len:7})
+
+>> Summarize( Sales, Fruit, Average( DropColumns( ThisGroup, Supplier ), Price ) As Price )
+Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
+
+>> Summarize( Sales, Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
+Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
+
