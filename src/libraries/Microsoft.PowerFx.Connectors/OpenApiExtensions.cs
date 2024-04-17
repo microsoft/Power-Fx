@@ -614,7 +614,7 @@ namespace Microsoft.PowerFx.Connectors
             int i = 0;
             string displayName2 = displayName;
 
-            while (recordType.GetFieldTypes().Any(nft => nft.DisplayName == displayName2))
+            while (recordType._type.DisplayNameProvider?.TryGetLogicalName(new DName(displayName2), out _) == true)
             {
                 displayName2 = $"{displayName}_{++i}";
             }
