@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertIndexInclusive(index, MaxArity);
             Contracts.Assert(node != null);
 
-            return (node is AsNode asNode && asNode.Left is CallNode) || node is CallNode;
+            return node is AsNode;
         }
     }
 }
