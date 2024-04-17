@@ -568,7 +568,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             string propLogicalName = kv.Key;
-                            string propDisplayName = GetDisplayName(kv.Value.Title ?? kv.Key);
+                            string propDisplayName = GetDisplayName(string.IsNullOrWhiteSpace(kv.Value.Title) ? kv.Key : kv.Value.Title);
                             string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
@@ -582,18 +582,18 @@ namespace Microsoft.PowerFx.Connectors
 
                             if (propertyType.HiddenRecordType != null)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propLogicalName, propertyType.HiddenRecordType, propDisplayName);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.HiddenRecordType, propDisplayName);
                                 hiddenConnectorTypes.Add(propertyType); // Hidden
                             }
 
                             if (hiddenRequired)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propLogicalName, propertyType.FormulaType, propDisplayName);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
                                 hiddenConnectorTypes.Add(propertyType);
                             }
                             else
                             {
-                                recordType = recordType.Add(propLogicalName, propertyType.FormulaType, propDisplayName);
+                                recordType = recordType.SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
                                 connectorTypes.Add(propertyType);
                             }
                         }
@@ -607,6 +607,19 @@ namespace Microsoft.PowerFx.Connectors
                 default:
                     return new ConnectorType(error: $"Unsupported schema type {schema.Type}");
             }
+        }
+
+        internal static RecordType SafeAdd(this RecordType recordType, string logicalName, FormulaType formulaType, string displayName)
+        {
+            int i = 0;
+            string displayName2 = displayName;
+
+            while (recordType.GetFieldTypes().Any(nft => nft.DisplayName == displayName2))
+            {
+                displayName2 = $"{displayName}_{++i}";
+            }
+
+            return recordType.Add(logicalName, formulaType, displayName2);
         }
 
         internal static string GetDisplayName(string name)
