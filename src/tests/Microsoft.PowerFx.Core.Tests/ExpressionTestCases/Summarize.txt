@@ -109,7 +109,6 @@ Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Ban
 
 
 
-
 // === Grouping with ThisRecord reference =================================================
 
 >> Summarize(
@@ -296,6 +295,17 @@ Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"C
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value ), Value, ", " ) As Suppliers )
 Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value , SortOrder.Descending ), Value, ", " ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Fabrikam, Contoso"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
 
 // This formula is in error
 // >> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
