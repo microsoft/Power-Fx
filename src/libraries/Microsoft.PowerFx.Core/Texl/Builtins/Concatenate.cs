@@ -55,12 +55,41 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             var count = args.Length;
+            DType argOptionSet = null;
+            TexlNode argOptionSetNode = null;
             var fArgsValid = true;
+            var nonOptionSetArg = false;
+            var concatAsString = false;
             nodeToCoercedTypeMap = null;
 
             for (var i = 0; i < count; i++)
+            { 
+                var argType = argTypes[i];
+
+                if (argType == DType.OptionSetValue)
+                {
+                    if (argOptionSet == null)
+                    {
+                        argOptionSet = argType;
+                        argOptionSetNode = args[i];
+                    }
+                    
+                    if (argOptionSet.OptionSetInfo.EntityName != argType.OptionSetInfo.EntityName ||
+                        !argType.OptionSetInfo.CanConcatenateStronglyTyped)
+                    {
+                        concatAsString = true;
+                    }
+                }
+                else
+                {
+                    nonOptionSetArg = true;
+                    fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                }
+            }
+
+            if (nonOptionSetArg && argOptionSet != null && !argOptionSet.OptionSetInfo.CanCoerceFromBackingKind)
             {
-                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                concatAsString = true;
             }
 
             if (!fArgsValid)
@@ -68,7 +97,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 nodeToCoercedTypeMap = null;
             }
 
-            returnType = ReturnType;
+            // All option sets can coerce to string and be concatenated as strings, which is the default returnType.
+            // If there was only one option set type seen, and it has CanConcatenatedStronglyTyped set,
+            // and either no string values were present or CanCoerceFromBackingKind is set, then Concatenate returns the enum type.
+            // This behavior should mach that of the & operator.
+            // $$ Concat function?
+            returnType = argOptionSet != null && !concatAsString ? argOptionSet : DType.String;
 
             return fArgsValid;
         }

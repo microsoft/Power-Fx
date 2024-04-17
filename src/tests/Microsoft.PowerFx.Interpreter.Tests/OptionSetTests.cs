@@ -25,7 +25,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     { "Yes", true },
                     { "No", false },
-                });
+                },
+                canCoerceToBackingKind: true);
             Assert.True(optionSet.TryGetValue(new DName("Yes"), out var optionSetTrueValue));
             Assert.True(optionSet.TryGetValue(new DName("No"), out var optionSetFalseValue));
 

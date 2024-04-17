@@ -16,17 +16,25 @@ namespace Microsoft.PowerFx.Connectors
     // Implements CDP protocol for Tabular connectors
     public class CdpTabularService : TabularService
     {
-        public string DataSetName { get; }
+        public string Name { get; private set; }
 
-        public string TableName { get; }
+        public string DisplayName { get; private set; }
+
+        public string DatasetName { get; protected set; }
+
+        public string TableName { get; protected set; }
 
         private string _uriPrefix;
         private bool _v2;
 
         public CdpTabularService(string dataset, string table)
         {
-            DataSetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
+            DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
+        }
+
+        protected CdpTabularService()
+        {
         }
 
         //// TABLE METADATA SERVICE
@@ -37,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                logger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName}");
+                logger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}");
 
                 if (IsInitialized)
                 {
@@ -47,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors
                 _v2 = useV2;
                 _uriPrefix = uriPrefix;
 
-                string uri = (_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{DoubleEncode(DataSetName, "dataset")}/tables/{DoubleEncode(TableName, "table")}?api-version=2015-09-01";
+                string uri = (_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{DoubleEncode(DatasetName, "dataset")}/tables/{DoubleEncode(TableName, "table")}?api-version=2015-09-01";
 
                 using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
                 using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -56,7 +64,7 @@ namespace Microsoft.PowerFx.Connectors
                 int statusCode = (int)response.StatusCode;
 
                 string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
-                logger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName} with Http Status {statusCode}{reasonPhrase}{(statusCode < 300 ? string.Empty : text)}");
+                logger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName} with Http Status {statusCode}{reasonPhrase}{(statusCode < 300 ? string.Empty : text)}");
 
                 if (statusCode < 300)
                 {
@@ -65,7 +73,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             catch (Exception ex)
             {
-                logger?.LogException(ex, $"Exception in {nameof(CdpTabularService)} {nameof(InitAsync)} for {DataSetName}, {TableName}, v2: {_v2}, {ConnectorHelperFunctions.LogException(ex)}");
+                logger?.LogException(ex, $"Exception in {nameof(CdpTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}, v2: {_v2}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }
@@ -76,9 +84,12 @@ namespace Microsoft.PowerFx.Connectors
             return HttpUtility.UrlEncode(HttpUtility.UrlEncode(param));
         }
 
-        internal static RecordType GetSchema(string text)
+        internal RecordType GetSchema(string text)
         {
-            ConnectorType connectorType = ConnectorFunction.GetConnectorType("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility);
+            ConnectorType connectorType = ConnectorFunction.GetConnectorType("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName);
+            Name = name;
+            DisplayName = displayName;
+
             return connectorType?.FormulaType as RecordType;
         }
 
@@ -97,9 +108,9 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                executionLogger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}");
+                executionLogger?.LogInformation($"Entering in {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}");
 
-                Uri uri = new Uri((_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/datasets/{HttpUtility.UrlEncode(DataSetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01", UriKind.Relative);
+                Uri uri = new Uri((_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/datasets/{HttpUtility.UrlEncode(DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01", UriKind.Relative);
 
                 if (odataParameters != null)
                 {
@@ -113,13 +124,13 @@ namespace Microsoft.PowerFx.Connectors
                 int statusCode = (int)response.StatusCode;
 
                 string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
-                executionLogger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName} with Http Status {statusCode}{reasonPhrase}{(statusCode < 300 ? string.Empty : text)}");
+                executionLogger?.LogInformation($"Exiting {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName} with Http Status {statusCode}{reasonPhrase}{(statusCode < 300 ? string.Empty : text)}");
 
                 return statusCode < 300 ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
             }
             catch (Exception ex)
             {
-                executionLogger?.LogException(ex, $"Exception in {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DataSetName}, {TableName}, v2: {_v2}, {ConnectorHelperFunctions.LogException(ex)}");
+                executionLogger?.LogException(ex, $"Exception in {nameof(CdpTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}, v2: {_v2}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }

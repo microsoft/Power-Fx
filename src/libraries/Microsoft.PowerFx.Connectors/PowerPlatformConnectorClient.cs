@@ -195,6 +195,9 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("x-ms-user-agent", UserAgent);
             req.Headers.Add("x-ms-request-url", url);
 
+            // might be needed for tabular connectors
+            //req.Headers.Add("X-Ms-Protocol-Semantics", "cdp");
+
             foreach (var header in request.Headers)
             {
                 req.Headers.Add(header.Key, header.Value);

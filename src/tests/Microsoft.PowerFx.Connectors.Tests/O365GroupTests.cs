@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("First(Office365Groups.", "AddMemberToGroup|CalendarDeleteItemV2|CreateCalendarEventV2|HttpRequestV2|ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3|RemoveMemberFromGroup|UpdateCalendarEvent")]
         [InlineData("First(Office365Groups.Lis", "ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3")]
         [InlineData("First(Office365Groups.ListGroups(", "ListGroups({ $filter:String,$top:Decimal,$skiptoken:String })")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().", "value:Table|'@odata.context':String|'@odata.nextLink':String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().", "value:Table|'OData context':String|'OData NextLink':String")]
         [InlineData("First(Filter(Office365Groups.ListGroups().value,", "classification:String|createdDateTime:DateTime|description:String|displayName:String|id:String|mail:String|mailEnabled:Boolean|mailNickname:String|onPremisesLastSyncDateTime:String|onPremisesSecurityIdentifier:String|onPremisesSyncEnabled:Boolean|renewedDateTime:DateTime|securityEnabled:Boolean|ThisRecord:Record|visibility:String")]
         [InlineData("First(Filter(Office365Groups.ListGroups().value, ThisRecord.", "classification:String|createdDateTime:DateTime|description:String|displayName:String|id:String|mail:String|mailEnabled:Boolean|mailNickname:String|onPremisesLastSyncDateTime:String|onPremisesSecurityIdentifier:String|onPremisesSyncEnabled:Boolean|renewedDateTime:DateTime|securityEnabled:Boolean|visibility:String")]        
         [InlineData("First(Filter(Office365Groups.ListGroups().value, mail", "mail:String|mailEnabled:Boolean|mailNickname:String")]

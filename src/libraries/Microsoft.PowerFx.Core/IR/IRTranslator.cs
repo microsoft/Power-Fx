@@ -1152,6 +1152,15 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToOptionSet:
                         unaryOpKind = UnaryOpKind.BooleanToOptionSet;
                         break;
+                    case CoercionKind.NumberToOptionSet:
+                        unaryOpKind = UnaryOpKind.NumberToOptionSet;
+                        break;
+                    case CoercionKind.DecimalToOptionSet:
+                        unaryOpKind = UnaryOpKind.DecimalToOptionSet;
+                        break;
+                    case CoercionKind.StringToOptionSet:
+                        unaryOpKind = UnaryOpKind.StringToOptionSet;
+                        break;
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;

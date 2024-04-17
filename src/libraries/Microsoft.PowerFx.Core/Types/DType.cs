@@ -605,6 +605,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsOptionSetBackedByColor => IsOptionSet && OptionSetInfo.BackingKind == DKind.Color;
 
+        public bool IsOptionSetBackedByString => IsOptionSet && OptionSetInfo.BackingKind == DKind.String;
+
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
         public bool IsAggregate => IsRecord || IsTable;
@@ -1968,11 +1970,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.String:
                     if (usePowerFxV1CompatibilityRules)
                     {
-                        accepts =
-                            type.Kind == Kind ||
-                            type.Kind == DKind.Unknown ||
-                            type.Kind == DKind.Deferred ||
-                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                        accepts = DefaultReturnValue(type);
                     }
                     else
                     {
@@ -1994,11 +1992,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Number:
                     if (usePowerFxV1CompatibilityRules)
                     {
-                        accepts =
-                            type.Kind == Kind ||
-                            type.Kind == DKind.Unknown ||
-                            type.Kind == DKind.Deferred ||
-                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                        accepts = DefaultReturnValue(type);
                     }
                     else
                     {
@@ -3392,7 +3386,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true)) ||
                                  Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Boolean && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules));
                     break;
                 case DKind.DateTime:
                 case DKind.Date:
@@ -3420,7 +3414,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && OptionSetInfo.CanCoerceToBackingKind);
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
@@ -3441,7 +3435,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && OptionSetInfo.CanCoerceToBackingKind);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
@@ -3524,7 +3518,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Color:
-                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color;
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && OptionSetInfo.CanCoerceToBackingKind;
                     break;
                 case DKind.Enum:
                     return CoercesTo(
@@ -3537,7 +3531,11 @@ namespace Microsoft.PowerFx.Core.Types
                         isTopLevelCoercion: false,
                         features);
                 case DKind.OptionSetValue:
-                    doesCoerce = (typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean && !isTopLevelCoercion;
+                    doesCoerce = (typeDest.OptionSetInfo?.CanCoerceFromBackingKind ?? false) && !isTopLevelCoercion &&
+                                  (((typeDest.OptionSetInfo?.IsBooleanValued() ?? false) && Kind == DKind.Boolean) ||
+                                  ((typeDest.OptionSetInfo?.IsStringValued() ?? false) && Kind == DKind.String) ||
+                                  ((typeDest.OptionSetInfo?.IsColorValued() ?? false) && Kind == DKind.Color) ||
+                                  ((typeDest.OptionSetInfo?.IsNumberValued() ?? false) && (Kind == DKind.Number || Kind == DKind.Decimal)));
                     break;
             }
 
