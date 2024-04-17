@@ -647,7 +647,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     fieldTypes.Add(newFieldType);
-                    recordType = recordType.Add(field.Name, newFieldType.FormulaType, field.DisplayName);
+                    recordType = recordType.SafeAdd(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }
 
                 FormulaType formulaType = connectorType.FormulaType is RecordType ? recordType : recordType.ToTable();
