@@ -289,12 +289,31 @@ namespace Microsoft.PowerFx
             return check;
         }
 
-        public FormulaType ResolveType(string typeExpression, SymbolTable symbols = null, ParserOptions options = null) 
+        /// <summary>
+        /// Parse and resolve a type expression. 
+        /// </summary>
+        /// <param name="typeExpression">type expression in plain text. </param>
+        /// <param name="symbols">Symbols that are required to resolve the type.</param>
+        /// <param name="options">parser options to use.</param>
+        /// <returns></returns>
+        public FormulaType ResolveType(string typeExpression, SymbolTable symbols, ParserOptions options = null) 
         {
             var typeNode = ParseType(typeExpression, options: options);
 
             var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
             
+            if (resolvedType == DType.Invalid)
+            {
+                throw new InvalidOperationException("Invalid type expression");
+            }
+
+            return FormulaType.Build(resolvedType);
+        }
+
+        public FormulaType ResolveType(TypeLiteralNode typeNode, SymbolTable symbols, ParserOptions options = null)
+        {
+            var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
+
             if (resolvedType == DType.Invalid)
             {
                 throw new InvalidOperationException("Invalid type expression");

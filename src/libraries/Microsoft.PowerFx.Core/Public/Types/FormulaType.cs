@@ -73,6 +73,7 @@ namespace Microsoft.PowerFx.Types
             _type = type;
         }
 
+        // primitive types currently supported by UDFs
         public static readonly IEnumerable<KeyValuePair<DName, FormulaType>> _primitiveTypes = new Dictionary<DName, FormulaType>()
         {
             { new DName("Boolean"), FormulaType.Boolean },
@@ -126,27 +127,6 @@ namespace Microsoft.PowerFx.Types
             type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
 
             return type;
-        }
-
-        [Obsolete]
-        internal static FormulaType[] GetValidUDFPrimitiveTypes()
-        {
-            FormulaType[] validTypes = { Blank, Boolean, Number, Decimal, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
-            return validTypes;
-        }
-
-        [Obsolete]
-        internal static FormulaType GetFromStringOrNull(string formula)
-        {
-            foreach (FormulaType formulaType in GetValidUDFPrimitiveTypes())
-            {
-                if (string.Equals(formulaType.ToString(), formula, StringComparison.Ordinal))
-                {
-                    return formulaType;
-                }
-            }
-
-            return null;
         }
 
         // Get the correct derived type
