@@ -92,11 +92,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Source table type
             DType sourceType = argTypes[0];
 
-            if (!sourceType.IsTable)
-            {
-                sourceType = DType.EmptyTable;
-            }
-
             if (args[0] is AsNode)
             {
                 isValid = false;

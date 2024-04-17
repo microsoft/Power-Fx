@@ -338,7 +338,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var fullPath = Path.Combine(System.Environment.CurrentDirectory, "Data", "Summarize.txt");
             var lines = File.ReadAllLines(fullPath);
-            var recordValue = (RecordValue)engine.Eval("{Supplier:\"Contoso\",  Fruit:\"Grapes\",  Price:220, Purchase:Date(2015,10,1)}");
+            var recordValue = (RecordValue)engine.Eval("{Supplier:\"Contoso\",  Fruit:\"Grapes\",  Price:220, Purchase:Date(2015,10,1), Tags:[\"\"]}");
 
             var tableValue = FormulaValue.NewTable(recordValue.Type);
 

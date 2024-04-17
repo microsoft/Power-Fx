@@ -82,6 +82,18 @@ Errors: Error 25-69: Summarize arguments must be either existing column names to
 // >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGruop, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
 // Errors
 
+// AsNode is not allowed as arg0
+>> Summarize( Sales As SL, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 45-54: Name isn't valid. 'ThisGroup' isn't recognized.|Error 35-43: The function 'Distinct' has some invalid arguments.|Error 56-64: Name isn't valid. 'Supplier' isn't recognized.|Error 17-19: Summarize data source doesn't support As keyword.|Error 69-71: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
+// Identifier column does not exist
+>> Summarize( Sales, Vegetable, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 18-27: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
+// Groupping or aggregate columns is not primitive type
+>> Summarize( Sales, Tags, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 18-22: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
 // Can't reference group by columns in ThisGroup
 
 
