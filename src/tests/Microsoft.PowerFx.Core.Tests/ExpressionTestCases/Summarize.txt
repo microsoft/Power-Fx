@@ -1,4 +1,4 @@
-﻿#SETUP: LoadDataTestSetup,SupportColumnNamesAsIdentifiers,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules
+﻿#SETUP: SupportColumnNamesAsIdentifiers,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules
 
 // Average
 // Max
@@ -14,28 +14,77 @@
 
 // === Basic grouping with aggregates =================================================
 
->> Summarize( Sales, Supplier, Fruit, CountRows( ThisGroup ) As Count )
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, Fruit, CountRows( ThisGroup ) As Count )
 Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},{Count:1,Fruit:"Lemons",Supplier:"Contoso"},{Count:1,Fruit:"Bananas",Supplier:"Contoso"})
 
 // Aggregates last
->> Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price )
 Table({Avg_Price:215,Fruit:"Grapes",Supplier:"Contoso"},{Avg_Price:30.5,Fruit:"Lemons",Supplier:"Fabrikam"},{Avg_Price:29,Fruit:"Lemons",Supplier:"Contoso"},{Avg_Price:12,Fruit:"Bananas",Supplier:"Contoso"})
 
 // Aggregates first
->> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier, Fruit )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  CountRows( ThisGroup ) As Count, Supplier, Fruit )
 Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},{Count:1,Fruit:"Lemons",Supplier:"Contoso"},{Count:1,Fruit:"Bananas",Supplier:"Contoso"})
 
->> Summarize( Sales, CountRows( ThisGroup ) As Count, Supplier )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  CountRows( ThisGroup ) As Count, Supplier )
 Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
 
->> Summarize( Sales, CountRows( ThisGroup ) As Count, Fruit )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  CountRows( ThisGroup ) As Count, Fruit )
 Table({Count:2,Fruit:"Grapes"},{Count:3,Fruit:"Lemons"},{Count:1,Fruit:"Bananas"})
 
->> Summarize( Sales, Fruit, Sum( ThisGroup, Price ) As Sales_By_Fruit )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( ThisGroup, Price ) As Sales_By_Fruit )
 Table({Fruit:"Grapes",Sales_By_Fruit:430},{Fruit:"Lemons",Sales_By_Fruit:90},{Fruit:"Bananas",Sales_By_Fruit:12})
 
 // DCount
->> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{CountOfSuppliers:1,Fruit:"Bananas"})
 
 
@@ -43,12 +92,26 @@ Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{C
 
 // === Grouping with ThisRecord reference =================================================
 
->> Summarize( Sales, Fruit, Average( ThisGroup, Price * Len(ThisRecord.Fruit) ) As Avg_Len_Price )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Average( ThisGroup, Price * Len(ThisRecord.Fruit) ) As Avg_Len_Price )
 Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
 
 // Group by fields included in GroupBy
 
->> Summarize( Sales, Fruit, Average( ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Average( ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
 Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
 
 
@@ -56,14 +119,29 @@ Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Av
 
 // === Grouping with constant values =================================================
 
->> Summarize( Sales, Supplier, 1 As One, 2 As Two, 3 As Three )
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, 1 As One, 2 As Two, 3 As Three )
 Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:3,Two:2})
 
 
 
 // === Nesting =================================================
 
->> Summarize( Summarize( Sales, Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price ), Supplier, CountRows( ThisGroup ) As Count )
+>> Summarize( Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price ),
+  Supplier, CountRows( ThisGroup ) As Count )
 Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
 
 
@@ -71,32 +149,169 @@ Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
 // === Errors =================================================
 
 // No grouping columns
->> Summarize( Sales, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 63-65: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 683-685: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Unnamed aggregate
->> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
-Errors: Error 25-69: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
+Errors: Error 645-689: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // AsNode is not allowed as arg0
->> Summarize( Sales As SL, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 45-54: Name isn't valid. 'ThisGroup' isn't recognized.|Error 35-43: The function 'Distinct' has some invalid arguments.|Error 56-64: Name isn't valid. 'Supplier' isn't recognized.|Error 17-19: Summarize data source doesn't support As keyword.|Error 69-71: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}) As SL,
+  CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 665-674: Name isn't valid. 'ThisGroup' isn't recognized.|Error 655-663: The function 'Distinct' has some invalid arguments.|Error 676-684: Name isn't valid. 'Supplier' isn't recognized.|Error 634-636: Summarize data source doesn't support As keyword.|Error 689-691: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Identifier column does not exist
->> Summarize( Sales, Vegetable, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 18-27: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Vegetable, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 638-647: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Groupping or aggregate columns is not primitive type
->> Summarize( Sales, Tags, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 18-22: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Tags, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
+Errors: Error 638-642: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Catching columns name conflicts
->> Summarize( Sales, Fruit, Sum( ThisGroup, Supplier ) As x,  Sum( ThisGroup, Supplier ) As x)
-Errors: Error 86-88: Column name conflict for 'x'.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( ThisGroup, Supplier ) As x,  Sum( ThisGroup, Supplier ) As x)
+Errors: Error 706-708: Column name conflict for 'x'.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
-// Can't reference group by columns in ThisGroup
 
+//=== Can depend on the order of ThisGroup ====================================
 
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( SortByColumns( ThisGroup, Supplier ), Price ) As OnePrice )
+Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( Sort( ThisGroup, Supplier ), Price ) As OnePrice )
+Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Concat( ThisGroup, Supplier ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"ContosoContoso"},{Fruit:"Lemons",Suppliers:"FabrikamContosoFabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Concat( Sort( ThisGroup, Supplier ), Supplier, ", " ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value ), Value, ", " ) As Suppliers )
+Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
+
+// This formula is in error
+// >> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
+// Errors: BUG should be compile time error, not runtime error as currently generated
+
+//=== Table shaping functions ====================================
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( AddColumns( ThisGroup, A, 10 ), A ) As TenSum, CountRows( ThisGroup ) As Count )
+Table({Count:2,Fruit:"Grapes",TenSum:20},{Count:3,Fruit:"Lemons",TenSum:30},{Count:1,Fruit:"Bananas",TenSum:10})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Sum( RenameColumns( ThisGroup, Supplier, Sup ), Len( Sup ) ) As Len )
+Table({Fruit:"Grapes",Len:14},{Fruit:"Lemons",Len:23},{Fruit:"Bananas",Len:7})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Average( DropColumns( ThisGroup, Supplier ), Price ) As Price )
+Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
+Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
 
 // NOT READY YET
 // === As on table =================================================
@@ -111,6 +326,7 @@ Errors: Error 86-88: Column name conflict for 'x'.|Error 0-9: The function 'Summ
 
 // Can't reference aggregate column from other aggregates
 // >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGroup, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
+
 // Errors
 
 // === Can't reference individual records of ThisGroup ====================================
@@ -137,40 +353,3 @@ Errors: Error 86-88: Column name conflict for 'x'.|Error 0-9: The function 'Summ
 // Errors
 
 // >> Summarize( Sales, Fruit, Sum( First( ThisGroup ).Price ) As OnePrice )
-// Errors
-
-//=== Can depend on the order of ThisGroup ====================================
-
->> Summarize( Sales, Fruit, Sum( SortByColumns( ThisGroup, Supplier ), Price ) As OnePrice )
-Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
-
->> Summarize( Sales, Fruit, Sum( Sort( ThisGroup, Supplier ), Price ) As OnePrice )
-Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
-
->> Summarize( Sales, Fruit, Concat( ThisGroup, Supplier ) As Suppliers )
-Table({Fruit:"Grapes",Suppliers:"ContosoContoso"},{Fruit:"Lemons",Suppliers:"FabrikamContosoFabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
-
->> Summarize( Sales, Fruit, Concat( Sort( ThisGroup, Supplier ), Supplier, ", " ) As Suppliers )
-Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
-
->> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value ), Value, ", " ) As Suppliers )
-Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
-
-// This formula is in error
-// >> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
-// Errors: BUG should be compile time error, not runtime error as currently generated
-
-//=== Table shaping functions ====================================
-
->> Summarize( Sales, Fruit, Sum( AddColumns( ThisGroup, A, 10 ), A ) As TenSum, CountRows( ThisGroup ) As Count )
-Table({Count:2,Fruit:"Grapes",TenSum:20},{Count:3,Fruit:"Lemons",TenSum:30},{Count:1,Fruit:"Bananas",TenSum:10})
-
->> Summarize( Sales, Fruit, Sum( RenameColumns( ThisGroup, Supplier, Sup ), Len( Sup ) ) As Len )
-Table({Fruit:"Grapes",Len:14},{Fruit:"Lemons",Len:23},{Fruit:"Bananas",Len:7})
-
->> Summarize( Sales, Fruit, Average( DropColumns( ThisGroup, Supplier ), Price ) As Price )
-Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
-
->> Summarize( Sales, Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
-Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
-
