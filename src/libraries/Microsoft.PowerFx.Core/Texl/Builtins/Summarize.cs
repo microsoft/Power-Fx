@@ -21,11 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasColumnIdentifiers => true;
 
-        private static readonly IReadOnlyCollection<string> _supportedAggregateFunctions = new HashSet<string>()
-        {
-            "Sum", "Average", "Max", "Min", "StdevP", "VarP", "Count", "CountA", "CountRows", "CountIf"
-        };
-
         public SummarizeFunction()
             : base("Summarize", TexlStrings.AboutSummarize, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
@@ -144,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (fError)
                 {
                     isValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, arg, TexlStrings.ErrColConflict_Name, columnName);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrColConflict_Name, columnName);
                     continue;
                 }
             }

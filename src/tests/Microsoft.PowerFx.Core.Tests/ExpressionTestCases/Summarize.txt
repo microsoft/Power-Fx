@@ -78,10 +78,6 @@ Errors: Error 63-65: Summarize requires at least one grouping column.|Error 0-9:
 >> Summarize( Sales, Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
 Errors: Error 25-69: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
-// Can't reference aggregate column from other aggregates
-// >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGruop, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
-// Errors
-
 // AsNode is not allowed as arg0
 >> Summarize( Sales As SL, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Errors: Error 45-54: Name isn't valid. 'ThisGroup' isn't recognized.|Error 35-43: The function 'Distinct' has some invalid arguments.|Error 56-64: Name isn't valid. 'Supplier' isn't recognized.|Error 17-19: Summarize data source doesn't support As keyword.|Error 69-71: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -93,6 +89,10 @@ Errors: Error 18-27: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: 
 // Groupping or aggregate columns is not primitive type
 >> Summarize( Sales, Tags, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Errors: Error 18-22: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
+// Catching columns name conflicts
+>> Summarize( Sales, Fruit, Sum( ThisGroup, Supplier ) As x,  Sum( ThisGroup, Supplier ) As x)
+Errors: Error 86-88: Column name conflict for 'x'.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Can't reference group by columns in ThisGroup
 
@@ -108,3 +108,7 @@ Errors: Error 18-22: Expected a text, numeric, boolean, or date/time value.|Erro
 // or without them...
 //>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(SAS.Fruit) ) As Avg_Len_Price )
 //Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
+
+// Can't reference aggregate column from other aggregates
+// >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGroup, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
+// Errors

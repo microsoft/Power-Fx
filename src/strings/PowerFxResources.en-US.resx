@@ -3027,7 +3027,7 @@
     <comment>function_parameter - First argument to the Summarize function - the data source (table / collection) to operate on.</comment>
   </data>
   <data name="SummarizeArg2" xml:space="preserve">
-    <value>groupby_column</value>
+    <value>grouping_column</value>
     <comment>function_parameter - Second argument to the Summarize function - the name of the column by which the data source will be grouped. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="SummarizeArg3" xml:space="preserve">
@@ -3038,7 +3038,7 @@
     <value>The table or collection to group.</value>
     <comment>Description for this parameter</comment>
   </data>
-  <data name="AboutSummarize_groupby_column" xml:space="preserve">
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
     <value>The name of a column to group the data by.</value>
     <comment>Description for this parameter</comment>
   </data>
