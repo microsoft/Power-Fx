@@ -614,9 +614,12 @@ namespace Microsoft.PowerFx.Connectors
             int i = 0;
             string displayName2 = displayName;
 
-            while (recordType._type.DisplayNameProvider?.TryGetLogicalName(new DName(displayName2), out _) == true)
+            if (displayName2 != null)
             {
-                displayName2 = $"{displayName}_{++i}";
+                while (recordType._type.DisplayNameProvider?.TryGetLogicalName(new DName(displayName2), out _) == true)
+                {
+                    displayName2 = $"{displayName}_{++i}";
+                }
             }
 
             return recordType.Add(logicalName, formulaType, displayName2);
