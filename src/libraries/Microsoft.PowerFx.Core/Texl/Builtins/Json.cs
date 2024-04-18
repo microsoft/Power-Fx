@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -54,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public JsonFunction()
-            : base("JSON", TexlStrings.AboutJSON, FunctionCategories.Text, DType.String, 0, 1, 2, DType.EmptyTable, DType.String)
+            : base("JSON", TexlStrings.AboutJSON, FunctionCategories.Text, DType.String, 0, 1, 2, DType.EmptyTable, BuiltInEnums.JSONFormatEnum.FormulaType._type)
         {
         }
 
@@ -74,9 +75,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = DType.String;
             nodeToCoercedTypeMap = null;
 
-            // Do not call base.CheckTypes
+            // Do not call base.CheckTypes for arg0
             if (args.Length > 1)
             {
+                if (context.Features.StronglyTypedBuiltinEnums && 
+                    !base.CheckType(context, args[1], argTypes[1], BuiltInEnums.JSONFormatEnum.FormulaType._type, errors, ref nodeToCoercedTypeMap))
+                {
+                    return false;
+                }
+
                 TexlNode optionsNode = args[1];                
                 if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
                 {

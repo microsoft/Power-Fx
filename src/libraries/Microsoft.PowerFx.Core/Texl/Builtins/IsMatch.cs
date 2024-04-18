@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public IsMatchFunction()
-            : base("IsMatch", TexlStrings.AboutIsMatch, FunctionCategories.Text, DType.Boolean, 0, 2, 3, DType.String, DType.String, DType.String)
+            : base("IsMatch", TexlStrings.AboutIsMatch, FunctionCategories.Text, DType.Boolean, 0, 2, 3, DType.String, BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
         {
         }
 

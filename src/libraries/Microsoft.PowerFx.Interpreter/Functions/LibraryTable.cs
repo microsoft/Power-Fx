@@ -575,9 +575,20 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
-            var arg2 = (StringValue)args[2];
+            bool isDescending;
 
-            var isDescending = arg2.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+            switch (args[2])
+            {
+                case StringValue sv:
+                    isDescending = sv.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                    break;
+                case OptionSetValue osv:
+                    isDescending = ((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue queryableTable)
             {
@@ -710,9 +721,25 @@ namespace Microsoft.PowerFx.Functions
                     return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
                 }
 
-                var isAscending =
-                    i == args.Length - 1 ||
-                    !((StringValue)args[i + 1]).Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                bool isAscending;
+                if (i == args.Length - 1)
+                {
+                    isAscending = true;
+                }
+                else
+                {
+                    switch (args[i + 1])
+                    {
+                        case StringValue sv:
+                            isAscending = !sv.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                            break;
+                        case OptionSetValue osv:
+                            isAscending = !((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
+                            break;
+                        default:
+                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext);
+                    }
+                }
 
                 columnNames.Add(columnName);
                 ascendingSort.Add(isAscending);
