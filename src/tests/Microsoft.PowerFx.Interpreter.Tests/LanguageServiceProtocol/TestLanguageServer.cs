@@ -13,9 +13,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     public class TestLanguageServer : LanguageServer
     {
         public TestLanguageServer(ITestOutputHelper output, SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, INLHandlerFactory nlHandlerFactory = null)
-#pragma warning disable CS0618 // Type or member is obsolete
             : base(sendToClient, scopeFactory, (string s) => output.WriteLine(s))
-#pragma warning restore CS0618 // Type or member is obsolete
         {            
             NLHandlerFactory = nlHandlerFactory;
         }
@@ -32,9 +30,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         // And suppresses the call at one place only
         public new void OnDataReceived(string jsonRpcPayload)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             base.OnDataReceived(jsonRpcPayload);
-#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }

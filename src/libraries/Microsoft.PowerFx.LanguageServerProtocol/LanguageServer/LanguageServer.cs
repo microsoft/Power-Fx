@@ -73,7 +73,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly IHostTaskExecutor _hostTaskExecutor;
 
-        [Obsolete("Use the constructor with ILanguageServerOperationHandlerFactory")]
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LanguageServer"/> class.
+        /// Note: Avoid using this constructor. It is only for backward compatibility.
+        /// </summary>
+        /// <param name="sendToClient"></param>
+        /// <param name="scopeFactory"></param>
+        /// <param name="logger"></param>
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
             Contracts.AssertValue(sendToClient);
@@ -212,7 +218,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// Note: Do not use this overload. Move to using OnDataReceivedAsync overloads.
         /// Note: This only exists for backward compatibility and runs synchronously which could affect performance.
         /// </summary>
-        [Obsolete("Use OnDataReceivedAsync Overloads", false)]
         public void OnDataReceived(string jsonRpcPayload)
         {
             Contracts.AssertValue(jsonRpcPayload);
