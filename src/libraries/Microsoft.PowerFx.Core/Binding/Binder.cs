@@ -249,6 +249,8 @@ namespace Microsoft.PowerFx.Core.Binding
         // Replace Nodes (Display Name -> Logical Name) for serialization
         public IList<KeyValuePair<Token, string>> NodesToReplace { get; }
 
+        private readonly Dictionary<Span, string> _worklist = new Dictionary<Span, string>(); // $$$
+
         public bool UpdateDisplayNames { get; }
 
         /// <summary>
@@ -2702,10 +2704,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         logicalNodeName = new DName(maybeLogicalName);
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
+                        _txb._worklist.Add(ident.Token.Span, "x");
                     }
                     else if (DType.TryGetDisplayNameForColumn(updatedDisplayNamesType, ident.Name.Value, out maybeDisplayName))
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
+                        _txb._worklist.Add(ident.Token.Span, "x");
                     }
 
                     if (maybeDisplayName != null)
@@ -2723,6 +2727,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         if (!_txb.UpdateDisplayNames)
                         {
                             _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
+                            _txb._worklist.Add(ident.Token.Span, "x");
                         }
                     }
                 }
@@ -2902,14 +2907,17 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (_txb.UpdateDisplayNames)
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
+                        _txb._worklist.Add(node.Token.Span, "x");
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
+                        _txb._worklist.Add(node.Token.Span, "x");
                     }
                     else if (lookupInfo.Data is NameSymbol nameSymbol)
                     {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
+                        _txb._worklist.Add(node.Token.Span, "x");
                     }
                 }
 
