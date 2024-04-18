@@ -433,7 +433,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var result = CheckTypes(binding.CheckTypesContext, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            if (result)
+            {
+                CheckSemantics(binding, args, argTypes, errors, ref nodeToCoercedTypeMap);
+            }
+
             return result;
         }
 
@@ -515,7 +519,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (typeChecks)
                 {
                     // For implementations, coerce enum option set values to the backing type
-                    if (expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
+                    if (!context.Features.StronglyTypedBuiltinEnums && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol1)
                     {
                         coercionType = enumSymbol1.EnumType.GetEnumSupertype();
                     }
@@ -1472,7 +1476,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            if (binding.ErrorContainer.HasErrors(callNode, errorSeverity))
+            if (binding.ErrorContainer.HasErrors(callNode, errorSeverity) || binding.ErrorContainer.HasErrors(callNode.Head.Token, errorSeverity))
             {
                 return false;
             }

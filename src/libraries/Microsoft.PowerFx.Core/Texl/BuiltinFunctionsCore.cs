@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
@@ -20,7 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
-            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
+            "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
+            "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
@@ -94,6 +96,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
         public static readonly TexlFunction EDate = _library.Add(new EDateFunction());
         public static readonly TexlFunction EOMonth = _library.Add(new EOMonthFunction());
+        public static readonly TexlFunction EncodeHTML = _library.Add(new EncodeHTMLFunction());
         public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
         public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
@@ -163,6 +166,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Now = _library.Add(new NowFunction());
         public static readonly TexlFunction Or = _library.Add(new VariadicLogicalFunction(isAnd: false));
         public static readonly TexlFunction ParseJSON = _library.Add(new ParseJSONFunction());
+        public static readonly TexlFunction PatchRecord = _library.Add(new PatchRecordFunction());
         public static readonly TexlFunction Pi = _library.Add(new PiFunction());
         public static readonly TexlFunction PlainText = _library.Add(new PlainTextFunction());
         public static readonly TexlFunction Power = _library.Add(new PowerFunction());
@@ -251,9 +255,10 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
-        public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
+        public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
+        public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
@@ -264,5 +269,15 @@ namespace Microsoft.PowerFx.Core.Texl
         // Slow API, only use for backward compatibility
         internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _testOnlyLibrary.Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
+
+        public static bool IsKnownPublicFunction(string functionName)
+        {
+            if (_library.AnyWithName(functionName) || OtherKnownFunctions.Contains(functionName) || _featureGateFunctions.AnyWithName(functionName))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

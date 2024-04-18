@@ -606,6 +606,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public DKind BackingKind => DKind.Boolean;
 
+            public bool CanCoerceFromBackingKind => false;
+
+            public bool CanCoerceToBackingKind => true;
+
+            public bool CanConcatenateStronglyTyped => false;
+
+            public bool CanCompareNumeric => false;
+
             public bool IsConvertingDisplayNameMapping => false;
 
             public DName EntityName => new DName("BoolOptionSet");
@@ -2456,28 +2464,83 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table({Y:123}, {Y:7}, {Y:99.9}, {X:true})", "*[X:b, Y:n]")]
         [InlineData("Table({Y:123}, {Z:true}, {X:\"hello\"}, {W:{A:1, B:true, C:\"hello\"}})", "*[X:s, Y:n, Z:b, W:![A:n, B:b, C:s]]")]
         [InlineData("Table({Nested:Table({Nested:Table({X:1})})})", "*[Nested:*[Nested:*[X:n]]]")]
-        public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
-        {
-            Assert.True(DType.TryParse(expectedType, out DType type));
-            Assert.True(type.IsValid);
-            TestSimpleBindingSuccess(script, type);
-        }
-
-        [Theory]
         [InlineData("Table([])", "*[]")]
         [InlineData("Table(Table())", "*[]")]
         [InlineData("Table(Table(Table()))", "*[]")]
+        [InlineData("Table(Blank(), Blank())", "*[]")]
+        [InlineData("Table([1, 2, 3, 4], Blank())", "*[Value:n]")]
+        [InlineData("Table([{a:0, b:false, c:\"Hello\"}], [{a:1, b:true, c:\"World\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\"}])", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(Blank(), T2, Blank(), T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table([{a:0}], [{b:true}], [{c:\"Hello\", d: {x: \"World\"}}])", "*[a:n, b:b, c:s, d:![x:s]]")]
+        [InlineData("Table(T1, T2)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(T2, T1)", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T2, Table(T1, T2))", "*[a:n, b:b, c:s]")]
+        [InlineData("Table(T1, Table(T2, T3))", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(Table(T1, T2), T3)", "*[a:n, b:n, c:n, d:n]")]
+        [InlineData("Table(T1, Table(T2, T4))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table(Table(T1, T2), T4)", "*[a:n, b:n, c:n]")]
+        [InlineData("Table([1,2], If(1/0<2,[3,4]), [5,6])", "*[Value: n]")]
+        [InlineData("Table(Sequence(20000))", "*[Value: n]")]
+        [InlineData("Table(Filter(T1, b = 5))", "*[a:n, b:n, c:n]")]
+        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n, Value:n]")]
+        [InlineData("Table(First(DS))", "*[Id:n, Name:s, Age:n]")]
+        [InlineData("Table(First(DS), Last(DS))", "*[Id:n, Name:s, Age:n]")]
+        [InlineData("Table(Last(DS), {count: CountRows(DS)})", "*[Id:n, Name:s, Age:n, count:n]")]
+        [InlineData("With({majors: Filter(DS, Age >= 18)},Table(majors,{Id:0, Name: \"Other\", Age:100}))", "*[Id:n, Name:s, Age:n]")]
+        public void TexlFunctionTypeSemanticsTable(string script, string expectedType)
+        {
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:n, c:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[a:n, b:b, c:s]")));
+            symbol.AddVariable("T3", new TableType(TestUtils.DT("*[d:n]")));
+            symbol.AddVariable("T4", new TableType(TestUtils.DT("*[a:s]")));
+
+            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DS",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Count),
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.GreaterThanOrEqual),
+                            null)),
+                    true));
+
+            Assert.True(DType.TryParse(expectedType, out DType type));
+            Assert.True(type.IsValid);
+            TestSimpleBindingSuccess(
+                script,
+                type,
+                symbol,
+                Features.PowerFxV1);
+        }
+
+        [Theory]
         [InlineData("Table(1, 2, 3)", "*[]")]
         [InlineData("Table(true, false)", "*[]")]
         [InlineData("Table(true, 2, \"hello\")", "*[]")]
         [InlineData("Table(\"hello\", \"world\")", "*[]")]
-        [InlineData("Table({X:1}, [1, 2, 3])", "*[X:n]")]
-        [InlineData("Table([true, false, true], {X:1}, {Y:2})", "*[X:n, Y:n]")]
+        [InlineData("Table(T1, T2)", "*[V: n]")]
+        [InlineData("Table([{a:Date(2024,1,1)}], [{a:GUID(\"some-guid-value-1234\")}])", "*[a: D]")]
+        [InlineData("Table([{a:1}], 1/0, {a:3}, [{a:4}])", "*[a: n]")]
         public void TexlFunctionTypeSemanticsTable_Negative(string script, string expectedType)
         {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[V:n]")));
+            symbol.AddVariable("T2", new TableType(TestUtils.DT("*[V:![a:n]]")));
+
             Assert.True(DType.TryParse(expectedType, out DType type));
             Assert.True(type.IsValid);
-            TestBindingErrors(script, type);
+            TestBindingErrors(
+                script,
+                type,
+                symbol,
+                features: Features.PowerFxV1);
         }
 
         [Theory]
@@ -4083,6 +4146,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
+        [Theory]
+        [InlineData("in")]
+        [InlineData("exactin")]
+        public void PrettyPrintTest(string op)
+        {
+            string expr = $"1 {op} [0]";
+            
+            CheckResult check = new CheckResult(new Engine()).SetText(expr);
+            ParseResult parse = check.ApplyParse();
+
+            string str = parse.Root.ToString();
+
+            Assert.Equal($"1 {op} [ 0 ]", str);
+        }
+
         internal class BlobFunc : TexlFunction
         {
             public override bool IsSelfContained => false;
@@ -4120,6 +4198,48 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.IsSuccess);
         }
 
+        [Theory]
+        [InlineData("Table(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
+        [InlineData("Table(DS, Filter(DS, Name = \"Foo\"))", "*[Id:n, Name:s, Age:n]", 2)]
+        [InlineData("Table([], Table(DS, []))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table([], Table([], Search(DS, \"Foo\", Name)))", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(Search(DS, \"Foo\", Name), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
+
+        // existing warning due to sqrt should propagate, no new warnigns on table
+        [InlineData("Table(Filter(DS, Sqrt(Age) > 5), FirstN(LastN(DS, 10), 5))", "*[Id:n, Name:s, Age:n]", 1)]
+        public void TexlFunctionTypeSemanticsTable_PageableInputs(string script, string expectedSchema, int errorCount)
+        {
+            var dataSourceSchema = TestUtils.DT("*[Id:n, Name:s, Age:n]");
+
+            var symbol = new DelegatableSymbolTable();
+            symbol.AddEntity(new TestDelegableDataSource(
+                    "DS",
+                    dataSourceSchema,
+                    new TestDelegationMetadata(
+                        DelegationCapability.Filter,
+                        dataSourceSchema,
+                        new FilterOpMetadata(
+                            dataSourceSchema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>
+                            {
+                                { DPath.Root.Append(new DName("Name")), new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Contains) }
+                            },
+                            new DelegationCapability(DelegationCapability.Equal),
+                            null)),
+                    true));
+
+            symbol.AddVariable("T1", new TableType(TestUtils.DT("*[a:n, b:s]")));
+
+            TestBindingWarning(
+                script,
+                TestUtils.DT(expectedSchema),
+                errorCount,
+                symbol,
+                features: Features.PowerFxV1);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
@@ -4134,9 +4254,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
-        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
+        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false, Features features = null)
         {
-            var config = new PowerFxConfig(Features.None);
+            var config = features != null ? new PowerFxConfig(features) : new PowerFxConfig(Features.None);
             var parserOptions = new ParserOptions()
             {
                 NumberIsFloat = numberIsFloat
@@ -4217,6 +4337,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
             var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
+            Assert.False(result.Binding.ErrorContainer.HasErrors());
             Assert.True(result.IsSuccess);
         }
     }

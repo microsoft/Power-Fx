@@ -16,6 +16,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     internal sealed class EnumStoreBuilder
     {
         #region Default Enums
+        internal static IReadOnlyDictionary<string, EnumSymbol> DefaultEnumSymbols { get; } =
+            new Dictionary<string, EnumSymbol>()
+            {
+                { LanguageConstants.ColorEnumString, BuiltInEnums.ColorEnum },
+                { LanguageConstants.DateTimeFormatEnumString, BuiltInEnums.DateTimeFormatEnum },
+                { LanguageConstants.StartOfWeekEnumString, BuiltInEnums.StartOfWeekEnum },
+                { LanguageConstants.SortOrderEnumString, BuiltInEnums.SortOrderEnum },
+                { LanguageConstants.TimeUnitEnumString, BuiltInEnums.TimeUnitEnum },
+                { LanguageConstants.MatchOptionsEnumString, BuiltInEnums.MatchOptionsEnum },
+                { LanguageConstants.MatchEnumString, BuiltInEnums.MatchEnum },
+                { LanguageConstants.ErrorKindEnumString, BuiltInEnums.ErrorKindEnum },
+                { LanguageConstants.JSONFormatEnumString, BuiltInEnums.JSONFormatEnum },
+                { LanguageConstants.TraceSeverityEnumString, BuiltInEnums.TraceSeverityEnum },
+                { LanguageConstants.TraceOptionsEnumString, BuiltInEnums.TraceOptionsEnum },
+            };
+
+        // DefaultEnums, with enum strings, is legacy and only used by Power Apps
         internal static IReadOnlyDictionary<string, string> DefaultEnums { get; } =
             new Dictionary<string, string>()
             {
@@ -25,28 +42,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.DateTimeFormatEnumString,
-                    "%s[LongDate:\"'longdate'\", ShortDate:\"'shortdate'\", LongTime:\"'longtime'\", ShortTime:\"'shorttime'\", LongTime24:\"'longtime24'\", " +
-                    "ShortTime24:\"'shorttime24'\", LongDateTime:\"'longdatetime'\", ShortDateTime:\"'shortdatetime'\", " +
-                    "LongDateTime24:\"'longdatetime24'\", ShortDateTime24:\"'shortdatetime24'\", UTC:\"utc\"]"
+                    $"%s[{string.Join(", ", BuiltInEnums.DateTimeFormatEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.StartOfWeekEnumString,
-                    "%n[Sunday:1, Monday:2, MondayZero:3, Tuesday:12, Wednesday:13, Thursday:14, Friday:15, Saturday:16]"
+                    $"%n[{string.Join(", ", BuiltInEnums.StartOfWeekEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.SortOrderEnumString,
-                    "%s[Ascending:\"ascending\", Descending:\"descending\"]"
+                    $"%s[{string.Join(", ", BuiltInEnums.SortOrderEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.TimeUnitEnumString,
-                    "%s[Years:\"years\", Quarters:\"quarters\", Months:\"months\", Days:\"days\", Hours:\"hours\", Minutes:\"minutes\", Seconds:\"seconds\", Milliseconds:\"milliseconds\"]"
+                    $"%s[{string.Join(", ", BuiltInEnums.TimeUnitEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
                 {
                     LanguageConstants.ErrorKindEnumString,
-                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermissions:4, DeletePermissions:5, Conflict:6, NotFound:7, " +
-                    "ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, " +
-                    "BadRegex: 15, InvalidFunctionUsage: 16, FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, " +
-                    "InsufficientMemory: 21, QuotaExceeded: 22, Network: 23, Numeric: 24, InvalidArgument: 25, Internal: 26, NotApplicable: 27, Timeout: 28, Custom: 1000]"
+                    $"%n[{string.Join(", ", BuiltInEnums.ErrorKindEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:{pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.MatchOptionsEnumString,
@@ -58,11 +70,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 },
                 {
                     LanguageConstants.JSONFormatEnumString,
-                    "%s[Compact:\"\", IndentFour:\"4\", IgnoreBinaryData:\"G\", IncludeBinaryData:\"B\", IgnoreUnsupportedTypes:\"I\"]"
+                    $"%s[{string.Join(", ", BuiltInEnums.JSONFormatEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}:""{pair.Value.Object}"""))}]"
                 },
-                { 
+                {
                     LanguageConstants.TraceSeverityEnumString,
-                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]" 
+                    $"%n[{string.Join(", ", BuiltInEnums.TraceSeverityEnum.EnumType.ValueTree.GetPairs().Select(pair => $@"{pair.Key}: {pair.Value.Object}"))}]"
                 },
                 {
                     LanguageConstants.TraceOptionsEnumString,
@@ -71,33 +83,22 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             };
         #endregion
 
-        private readonly Dictionary<string, string> _workingEnums = new Dictionary<string, string>();
-
-        private ImmutableList<EnumSymbol> _enumSymbols;
-
-        private Dictionary<string, DType> _enumTypes;
+        private readonly Dictionary<string, EnumSymbol> _enumSymbols = new Dictionary<string, EnumSymbol>();
 
         #region Internal methods
         internal EnumStoreBuilder WithRequiredEnums(TexlFunctionSet functions)
         {
-            var missingEnums = new Dictionary<string, string>();
-
             foreach (var name in functions.Enums)
             {
-                if (!_workingEnums.ContainsKey(name) && !missingEnums.ContainsKey(name))
+                if (!_enumSymbols.ContainsKey(name))
                 {
-                    if (!DefaultEnums.TryGetValue(name, out var enumName))
+                    if (!DefaultEnumSymbols.TryGetValue(name, out var enumSymbol))
                     {
                         throw new InvalidOperationException($"Could not find enum {name}");
                     }
 
-                    missingEnums.Add(name, enumName);
+                    _enumSymbols.Add(name, enumSymbol);
                 }
-            }
-
-            foreach (var missingEnum in missingEnums)
-            {
-                _workingEnums.Add(missingEnum.Key, missingEnum.Value);
             }
 
             return this;
@@ -105,11 +106,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal EnumStoreBuilder WithDefaultEnums()
         {
-            foreach (var defaultEnum in DefaultEnums)
+            foreach (var defaultEnum in DefaultEnumSymbols)
             {
-                if (!_workingEnums.ContainsKey(defaultEnum.Key))
+                if (!_enumSymbols.ContainsKey(defaultEnum.Key))
                 {
-                    _workingEnums.Add(defaultEnum.Key, defaultEnum.Value);
+                    _enumSymbols.Add(defaultEnum.Key, defaultEnum.Value);
                 }
             }
 
@@ -118,59 +119,19 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal EnumStore Build()
         {
-            return EnumStore.Build(new List<EnumSymbol>(EnumSymbols));
+            return EnumStore.Build(_enumSymbols.Values.ToList());
         }
         #endregion
 
-        private Dictionary<string, DType> RegenerateEnumTypes()
-        {
-            var enumTypes = _workingEnums.ToDictionary(enumSpec => enumSpec.Key, enumSpec =>
-            {
-                DType.TryParse(enumSpec.Value, out var type).Verify();
-                return type;
-            });
-
-            return enumTypes;
-        }
-
-        private IEnumerable<(DName name, DType typeSpec)> Enums()
-        {
-            CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
-            {
-                return RegenerateEnumTypes();
-            });
-
-            var list = ImmutableList.CreateBuilder<(DName name, DType typeSpec)>();
-            foreach (var enumSpec in _workingEnums)
-            {
-                Contracts.Assert(DName.IsValidDName(enumSpec.Key));
-
-                var name = new DName(enumSpec.Key);
-                list.Add((name, _enumTypes[enumSpec.Key]));
-            }
-
-            return list.ToImmutable();
-        }
-
-        private IEnumerable<EnumSymbol> EnumSymbols =>
-            CollectionUtils.EnsureInstanceCreated(
-                    ref _enumSymbols, () => RegenerateEnumSymbols());
-
-        private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
-        {
-            var list = ImmutableList.CreateBuilder<EnumSymbol>();
-            foreach (var (name, typeSpec) in Enums())
-            {
-                list.Add(new EnumSymbol(name, typeSpec));
-            }
-
-            return list.ToImmutable();
-        }
-
         // Do not use, only for testing
-        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom)
+        internal EnumStoreBuilder TestOnly_WithCustomEnum(EnumSymbol custom, bool append = false)
         {
-            _enumSymbols = ImmutableList.CreateRange(new List<EnumSymbol>() { custom });
+            if (!append)
+            {
+                _enumSymbols.Clear();
+            }
+
+            _enumSymbols.Add(custom.EntityName, custom);
             return this;
         }
     }

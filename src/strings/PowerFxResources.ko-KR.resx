@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>처리할 부울 값의 열입니다.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>10진수를 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>숫자</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>부울 값으로 변환할 10진수 값입니다.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>10진수 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>처리할 숫자 값 열입니다.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>부울로 백업되는 선택 값을 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>선택 항목</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>부울 값으로 변환하는 선택 사항입니다.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>부울로 백업되는 선택 값 열을 부울 값 열로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>처리할 선택 값의 열입니다.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
     
@@ -1918,6 +1962,14 @@
     <value>이 컨텍스트에서 레코드가 아닌 값을 사용할 수 없습니다.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>컨텍스트 '{0}'에서 레코드가 아닌 값을 사용할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>이 컨텍스트에서는 레코드 또는 테이블 값만 사용할 수 있습니다.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>이 레코드를 사용할 수 없습니다. 호환되지 않는 형식의 충돌하는 필드가 포함되었을 수 있습니다.</value>
     
@@ -2791,15 +2843,16 @@
     <value>입력한 텍스트의 언어 코드입니다.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>지정된 레코드를 통해 고유한 레코드 필드만큼의 열이 있는 테이블을 만듭니다. 예: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>지정된 레코드 및 테이블을 통해 고유한 레코드 필드만큼의 열이 있는 테이블을 만듭니다. 예: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>레코드</value>
+    <value>레코드_또는_테이블</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>결과 테이블의 행이 되는 레코드입니다.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>결과 테이블의 일부가 될 레코드 또는 테이블입니다.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>지정된 열을 제외하고 '원본' 테이블에서 모든 열이 제거된 테이블을 반환합니다.</value>
@@ -3052,16 +3105,55 @@
     <value>지정된 행에 업데이트를 적용하고 지정된 데이터 원본의 행을 변경합니다. 업데이트된 행을 반환합니다.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>기본 키와 업데이트된 값이 있는 단일 레코드를 사용하여 지정된 데이터 원본의 해당 행을 업데이트합니다. 업데이트된 행을 반환합니다.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>행 테이블을 사용하여 업데이트 테이블에 지정된 업데이트를 일 대 일 방식으로 적용합니다. 업데이트된 행 테이블을 반환합니다.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>기본 키와 업데이트된 필드가 있는 행 테이블을 사용하여 데이터 원본에 해당 업데이트를 적용합니다. 업데이트된 행 테이블을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>업데이트가 적용된 행을 반환합니다.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>패치를 적용할 데이터 원본입니다.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>패치를 적용해야 하는 레코드입니다.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>지정된 레코드에 대해 패치를 적용해야 하는 업데이트입니다.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>패치되어야 할 행 테이블입니다.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>지정된 행에 패치되어야 할 업데이트 테이블입니다.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>원본</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>레코드</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>업데이트</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>행</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>업데이트</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>데이터_원본</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>레코드_제거</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>인코딩할 URL입니다.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>텍스트를 HTML로 인코딩된 텍스트로 변환합니다.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>값</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>인코딩할 텍스트입니다.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}'은(는) 인식되었지만 지원되지 않는 함수입니다.</value>
     
@@ -4135,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>사용자지정_레코드</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat 값 '{0}' 및 '{1}'을(를) 함께 사용할 수 없습니다. </value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>'{0}' 값은 JSON 함수에서 옵션으로 지원되지 않습니다.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>알 수 Partial 연산자.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>위임 경고입니다. 이 인수 '{0}'의 결과는 '{1}' 함수로 전달되기 전에 큰 데이터 집합의 경우 잘릴 수 있습니다.</value>
     
   </data>
 </root>

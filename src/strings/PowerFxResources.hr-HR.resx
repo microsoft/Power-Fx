@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stupac Booleovih vrijednosti za obradu.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pretvara decimalni broj u booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>broj</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Vrijednost decimalnog broja koju treba pretvoriti u booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pretvara stupac decimalnih brojčanih vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stupac brojčanih vrijednosti koji treba obraditi.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pretvara vrijednost odabira koju podržava booleova vrijednost u booleovu vrijednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>odabir</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Odabir koji treba pretvoriti u booleovu vrijednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pretvara stupac vrijednosti odabira koje podržavaju booleove vrijednosti u stupac booleovih vrijednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>unos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stupac vrijednosti odabira koji treba obraditi.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vraća prvi argument koji nije prazan</value>
     
@@ -1918,6 +1962,14 @@
     <value>Nije moguće koristiti vrijednost koja nije zapis u ovom kontekstu.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Nije moguće koristiti vrijednost koja nije zapis u ovom kontekstu: "{0}".</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>U tom se kontekstu mogu upotrijebiti samo vrijednosti zapisa ili tablice.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Taj zapis nije moguće koristiti. Možda sadrži polja nekompatibilnih vrsta u sukobu.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Šifra jezika za navedeni tekst.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Stvara tablicu iz navedenih zapisa s onoliko stupaca koliko ima jedinstvenih polja zapisa. Na primjer: tablica({key1: val1, key2: val2, ...}...)</value>
+    <value>Stvara tablicu iz navedenih zapisa i tablica s onoliko stupaca koliko ima jedinstvenih polja zapisa. Na primjer: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>zapis</value>
+    <value>zapis_ili_tablica</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Zapis koji će postati redak u nastaloj tablici.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Zapis ili tablica koja će biti dio nastale tablice.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Vraća tablicu s uklonjenim svim stupcima iz tablice "izvora", osim navedenih stupaca.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>izvor_podataka</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>izvor_podataka</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>izvor_podataka</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Primjenjuje ažuriranje na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Na temelju jednog zapisa s primarnim ključevima i ažuriranim vrijednostima ažurira odgovarajući redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Na tablicu redaka primjenjuje ažuriranja određena u tablici ažuriranja u odnosu jedan na jedan. Vraća tablicu ažuriranih redaka.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Primjenjuje ažuriranja iz tablice redaka s primarnim ključevima i ažuriranim poljima na izvor podataka. Vraća tablicu ažuriranih redaka.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Vraća redak s primijenjenim ažuriranjima.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Izvor podataka koji se popravlja.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Zapis koji se treba popraviti.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Ažuriranje koje se treba popraviti na zadani zapis.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tablica redaka koja će se zakrpati.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tablica ažuriranja koju je potrebno primijeniti kao zakrpu na navedene retke.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>ažuriraj</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>reci</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>ažuriranja</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>izvor_podataka</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>uklanjanje_zapisa</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL koji treba kodirati.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Pretvara tekst u tekst kodiran HTML-om.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vrijednost</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Tekst koji treba kodirati.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” je prepoznata, ali ne i podržana funkcija.</value>
     
@@ -4139,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opcije_praćenja</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Vrijednosti JSONFormat "{0}" i "{1}" ne mogu se koristiti zajedno.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vrijednost „{0}” nije podržana kao mogućnost u funkciji JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nepoznati operator Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Upozorenje delegiranja. Rezultat ovog argumenta „{0}” može se skratiti za velike skupove podataka prije prosljeđivanja funkciji „{1}”.</value>
     
   </data>
 </root>

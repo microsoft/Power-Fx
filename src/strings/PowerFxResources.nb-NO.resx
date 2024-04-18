@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>En kolonne med boolske verdier som skal behandles.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Konverterer et desimaltall til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>De numeriske desimalverdiene som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske desimalverdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>En kolonne med tallverdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Konverterer en valgverdi støttet av en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>valg</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Valget som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Konverterer en kolonne med valgverdier støttet av boolske verdier, til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>En kolonne med valgverdier som skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
     
@@ -1918,6 +1962,14 @@
     <value>Kan ikke bruke en ikke-postverdi i denne konteksten.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Kan ikke bruke en ikke-postverdi i denne konteksten: {0}.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Bare oppførings- eller tabellverdier kan brukes i denne konteksten.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Kan ikke bruke denne posten. Den inneholder kanskje konfliktfelt for inkompatible typer.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Språkkoden for den angitte teksten.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Oppretter en tabell fra de angitte postene med like mange kolonner som det er unike postfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Oppretter en tabell fra de angitte oppføringene og tabellene med like mange kolonner som det er unike oppføringsfelter. Eksempel: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>post</value>
+    <value>oppføring_eller_tabell</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>En post som blir en rad i sluttabellen.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>En oppføring eller en tabell som vil være en del av resultattabellen.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returnerer en tabell med alle kolonner som er fjernet fra kildetabellen, bortsett fra de angitte kolonnene.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Bruker oppdateringene i den angitte raden, og endrer raden i den angitte datakilden. Returnerer den oppdaterte raden.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Tar en enkel post med primærnøkler og oppdaterte verdier, og oppdaterer de tilsvarende radene i den angitte datakilden. Returnerer den oppdaterte raden.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Tar en tabell med rader og bruker oppdateringene angitt i en oppdateringstabell på en-til-en-basis. Returnerer en tabell med oppdaterte rader.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Tar en tabell med rader med primærnøkler og oppdaterte felt, og bruker disse oppdateringene på datakilden. Returnerer en tabell med oppdaterte rader.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returnerer rad med oppdateringer tatt i bruk.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Datakilden som skal oppdateres.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Posten som må oppdateres.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Oppdateringen som må oppdateres til den angitte posten.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabellen med rader som skal implementeres.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabellen med oppdateringer som skal implementeres i de gitte radene.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>oppdateringer</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rader</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>oppdateringer</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datakilde</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>fjern_oppføringer</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En nettadresse som skal kodes.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Konverterer en tekst til en HTML-kodet tekst.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>En tekst som skal kodes.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} er en gjenkjent, men ikke støttet funksjon.</value>
     
@@ -3991,7 +4094,7 @@
     
   </data>
   <data name="MatchArg2" xml:space="preserve">
-    <value>regulært_expression</value>
+    <value>regulært_uttrykk</value>
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
@@ -4139,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>sporingsalternativer</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>JSONFormat-verdiene "{0}" og "{1}" kan ikke brukes sammen.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Verdien {0} støttes ikke som et alternativ i JSON-funksjonen.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ukjent Partial-operator.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegeringsadvarsel. Resultatet av argumentet {0} kan bli avkortet for store datasett før det sendes til {1}-funksjonen.</value>
     
   </data>
 </root>

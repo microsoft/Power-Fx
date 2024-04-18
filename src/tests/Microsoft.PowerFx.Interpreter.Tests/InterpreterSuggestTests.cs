@@ -177,10 +177,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patc|", "Patch")]
         [InlineData("Collect(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Collect(Table({a:1, 'test space': \"test\"), {|", "a:", "'test space':")]
-        [InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")]
-        [InlineData("Patch({a:1, b:2}, {|", "a:", "b:")]
         [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
+        [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "ErrorKind.ServiceUnavailable", "JSONFormat.FlattenValueTables", "Match.Tab", "Table")]
+
+        //[InlineData("Patch({a:1, b:2}, {|", "a:", "b:")] This test case will demand a binder change to work.
+        //[InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")] This test case will demand a binder change to work.
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
@@ -192,12 +194,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
-        [InlineData("Patch(|", "Entity1", "Entity2", "Table1", "table2")]
+        [InlineData("Patch(|", "record1", "record2", "User")]
         [InlineData("Remove(|", "Entity1", "Entity2", "Table1", "table2")]
 
         // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
         [InlineData("Collect(table2,|", "record2")]
-        [InlineData("Patch(table2,|", "record2")]
         [InlineData("Patch(table2, record2, |", "record2")]
         [InlineData("Remove(table2, |", "record2")]
 
@@ -208,7 +209,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
 
         // Suggests Enum.
-        [InlineData("Text(Now(), |", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num", "str")]
+        [InlineData("Text(Now(), |", "str", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC")]
 
         // Custom Function has arg with signature of tableType2, So only suggest table2
         [InlineData("RecordsTest(|", "table2")]
@@ -219,6 +220,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Binary Op Suggestions.
         [InlineData("1 = |", "num")]
         [InlineData("1 + |", "num", "str")]
+
+        [InlineData("Patch(table2,|", "record2")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
             var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
@@ -274,21 +277,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             "field1:")]
         [InlineData(
             "RecordInputTest( {field1 : 1}, \"test\", {|",
-            "id:", 
+            "id:",
             "name:")]
+
+        // do not repeat already used fields.
         [InlineData(
-            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|", 
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, |",
+            "name:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { name: \"test\", |",
+            "id:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name:\"test name\", |}")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|",
             "nested:",
             "nested2:")]
 
         // nested record field.
         [InlineData(
-            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|", 
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|",
             "field1:")]
         [InlineData(
-            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", 
-            "id:", 
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|",
+            "id:",
             "name:")]
+
+        // do not repeat already used fields.
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 2, |",
+            "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 2, name: \"test\", |")]
+
         [InlineData(
             "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: {|",
             "id:",

@@ -1,0 +1,5 @@
+﻿#SETUP: disable:PowerFxV1CompatibilityRules,disable:StronglyTypedBuiltinEnums
+
+// Ignore unknown options in the second argument
+>> JSON({a:1,b:[1,2,3]}, "_U")
+"{""a"":1,""b"":[1,2,3]}"

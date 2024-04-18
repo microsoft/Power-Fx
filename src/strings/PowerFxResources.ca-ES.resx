@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Columna de valors booleans que es processaran.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converteix un nombre decimal en un valor booleà.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>nombre</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valor numèric decimal que es convertirà en un valor booleà.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converteix una columna de valors numèrics decimals en una columna de valors booleans.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Columna de valors numèrics que es processarà.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converteix un valor d'opció amb el suport d'un booleà en un valor booleà.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opció</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>L'opció que es convertirà en un valor booleà.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converteix una columna de valors d'opció amb el suport de booleans en una columna de valors booleans.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Columna de valors d'opció que es processarà.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retorna el primer argument que no està en blanc</value>
     
@@ -1918,6 +1962,14 @@
     <value>No es pot utilitzar un valor que no sigui un registre en aquest context.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>No es pot utilitzar un valor que no sigui un registre en aquest context: '{0}'.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Només es poden utilitzar valors de registre o de taula en aquest context.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>No s'ha pogut utilitzar aquest registre. Pot contenir camps de tipus incompatibles en conflicte.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Codi de llengua del text proporcionat.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea una taula a partir dels registres especificats, amb el mateix nombre de columnes que de camps de registre únics. Per exemple: Table({key1: val1, key2: val2, ...}, ...).</value>
+    <value>Crea una taula a partir dels registres i taules especificats, amb el mateix nombre de columnes que de camps de registre únics. Per exemple: Table({key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registre</value>
+    <value>registre_o_taula</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Registre que es convertirà en una fila a la taula resultant.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Registre o taula que formarà part de la taula resultant.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Retorna una taula amb totes les columnes suprimides de la taula 'source' excepte les columnes especificades.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Aplica les actualitzacions a la fila especificada i canvia la fila de l'origen de dades especificat. Retorna la fila actualitzada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Agafa un sol registre amb les claus principals i els valors actualitzats i actualitza la fila corresponent de l'origen de dades especificat. Retorna la fila actualitzada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Agafa una taula de files i aplica d'una en una les actualitzacions especificades en una taula d'actualitzacions. Retorna una taula de files actualitzades.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Agafa una taula de files amb les claus principals i els camps actualitzats i aplica aquestes actualitzacions a l'origen de dades. Retorna una taula de files actualitzades.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Retorna la fila amb les actualitzacions aplicades.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origen de dades al qual s'aplicarà el pedaç.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registre al qual s'ha d'aplicar el pedaç.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Actualització que s'ha d'aplicar al pedaç del registre proporcionat.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Taula de files que s'han de revisar.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Taula d'actualitzacions que s'han de revisar a les files proporcionades.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origen</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registre</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>actualització</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>files</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>actualitzacions</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_dades</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>suprimir_registres</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>L'URL que es codificarà.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converteix un text en un text codificat en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Text que s'ha de codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" és una funció reconeguda, però no s'admet.</value>
     
@@ -4139,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opcions_seguiment</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Els valors de JSONFormat "{0}" i "{1}" no es poden utilitzar junts.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>El valor "{0}" no s'admet com a opció a la funció JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconegut.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Advertiment de delegació. El resultat d'aquest argument "{0}" es pot truncar per als conjunts de dades grans abans d'enviar-se a la funció "{1}".</value>
     
   </data>
 </root>

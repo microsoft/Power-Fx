@@ -3,9 +3,6 @@
 >> MatchAll("Hello", "\w")
 Table({FullMatch:"H",StartMatch:1,SubMatches:Table()},{FullMatch:"e",StartMatch:2,SubMatches:Table()},{FullMatch:"l",StartMatch:3,SubMatches:Table()},{FullMatch:"l",StartMatch:4,SubMatches:Table()},{FullMatch:"o",StartMatch:5,SubMatches:Table()})
 
->> MatchAll("Hello", "llo", "c")
-Table({FullMatch:"llo",StartMatch:3,SubMatches:Table()})
-
 >> MatchAll("Hello", "llo", MatchOptions.Complete)
 Table()
 
@@ -25,7 +22,13 @@ Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"1
 Table()
 
 >> MatchAll(Blank(), Blank())
-Errors: Error 18-25: Regular expressions must be constant values.|Error 0-26: The function 'MatchAll' has some invalid arguments.
+Errors: Error 18-25: Regular expressions must be constant values.|Error 0-8: The function 'MatchAll' has some invalid arguments.
 
 >> MatchAll(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
+
+>> MatchAll("Hello", "Hello", MatchOptions.IgnoreCase)
+Table({FullMatch:"Hello",StartMatch:1,SubMatches:Table()})
+
+>> MatchAll("Hi", "Hi", MatchOptions.Multiline)
+Table({FullMatch:"Hi",StartMatch:1,SubMatches:Table()})

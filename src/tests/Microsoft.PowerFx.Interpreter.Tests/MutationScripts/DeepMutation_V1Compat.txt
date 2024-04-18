@@ -1,0 +1,412 @@
+#SETUP: PowerFxV1CompatibilityRules
+// NESTED TABLES - PATCH
+
+>> Set( aa, [[1,2,3], [4,5,6]] )
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( ab, First(aa) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch( ab.Value, {Value:2}, {Value:9})
+{Value:9}
+
+>> ab
+{Value:Table({Value:1},{Value:9},{Value:3})}
+
+>> Set( ac, Last(aa) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> Patch( ac.Value, {Value:5}, {Value:8} )
+{Value:8}
+
+>> ac
+{Value:Table({Value:4},{Value:8},{Value:6})}
+
+>> Set( ad, Index(aa,1) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( ae, Index(aa,2) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> Patch( ad.Value, {Value:1}, {Value:10})
+{Value:10}
+
+>> Patch( ae.Value, {Value:6}, {Value:16})
+{Value:16}
+
+>> ad
+{Value:Table({Value:10},{Value:2},{Value:3})}
+
+>> ae
+{Value:Table({Value:4},{Value:5},{Value:16})}
+
+>> ab  // confirm no changes
+{Value:Table({Value:1},{Value:9},{Value:3})}
+
+>> ac // confirm no changes
+{Value:Table({Value:4},{Value:8},{Value:6})}
+
+>> aa // confirm no changes
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+// NESTED TABLES - COLLECT
+
+>> Set( ca, [[1,2,3], [4,5,6]] )
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( cb, First(ca) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Collect( cb.Value, {Value:9})
+{Value:9}
+
+>> cb
+{Value:Table({Value:1},{Value:2},{Value:3},{Value:9})}
+
+>> Set( cc, Last(ca) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> Collect( cc.Value, {Value:8} )
+{Value:8}
+
+>> cc
+{Value:Table({Value:4},{Value:5},{Value:6},{Value:8})}
+
+>> Set( cd, Index(ca,1) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( ce, Index(ca,2) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> Collect( cd.Value, {Value:10})
+{Value:10}
+
+>> Collect( ce.Value, {Value:16})
+{Value:16}
+
+>> cd
+{Value:Table({Value:1},{Value:2},{Value:3},{Value:10})}
+
+>> ce
+{Value:Table({Value:4},{Value:5},{Value:6},{Value:16})}
+
+>> cb  // confirm no changes
+{Value:Table({Value:1},{Value:2},{Value:3},{Value:9})}
+
+>> cc // confirm no changes
+{Value:Table({Value:4},{Value:5},{Value:6},{Value:8})}
+
+>> ca // confirm no changes
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+// NESTED TABLES - CLEARCOLLECT
+
+>> Set( cca, [[1,2,3], [4,5,6]] )
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( ccb, First(cca) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> ClearCollect( ccb.Value, {Value:9})
+{Value:9}
+
+>> ccb
+{Value:Table({Value:9})}
+
+>> Set( ccc, Last(ca) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> ClearCollect( ccc.Value, {Value:8} )
+{Value:8}
+
+>> ccc
+{Value:Table({Value:8})}
+
+>> Set( ccd, Index(ca,1) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( cce, Index(ca,2) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+>> ClearCollect( ccd.Value, {Value:10})
+{Value:10}
+
+>> ClearCollect( cce.Value, {Value:16})
+{Value:16}
+
+>> ccd
+{Value:Table({Value:10})}
+
+>> cce
+{Value:Table({Value:16})}
+
+>> ccb  // confirm no changes
+{Value:Table({Value:9})}
+
+>> ccc // confirm no changes
+{Value:Table({Value:8})}
+
+>> cca // confirm no changes
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+// NESTED TABLES - CLEAR
+
+>> Set( cla, [[1,2,3], [4,5,6]] )
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( clb, First(cla) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( clb.Value ); true
+true
+
+>> clb
+{Value:Table()}
+
+>> Set( clc, Last(cla) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( clc.Value ); true
+true
+
+>> clc
+{Value:Table()}
+
+>> Collect( clb.Value, {Value:91})
+{Value:91}
+
+>> Collect( clc.Value, {Value:81})
+{Value:81}
+
+>> Set( cld, Index(ca,1) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( cle, Index(ca,2) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( cld.Value); true
+true
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Clear( cle.Value); true
+true
+
+>> cld
+{Value:Table()}
+
+>> cle
+{Value:Table()}
+
+>> clb  // confirm no changes
+{Value:Table({Value:91})}
+
+>> clc // confirm no changes
+{Value:Table({Value:81})}
+
+>> cla // confirm no changes
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+// NESTED TABLES - REMOVE
+
+>> Set( ra, [[1,2,3], [4,5,6]] )
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( rb, First(ra) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rb.Value, {Value:2} ); true
+true
+
+>> rb
+{Value:Table({Value:1},{Value:3})}
+
+>> Set( rc, Last(ra) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rc.Value, {Value:4} ); true
+true
+
+>> rc
+{Value:Table({Value:5},{Value:6})}
+
+>> Set( rd, Index(ra,1) )
+{Value:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( re, Index(ra,2) )
+{Value:Table({Value:4},{Value:5},{Value:6})}
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( rd.Value, {Value:3}); true
+true
+
+// ; true on the end so that we get the same result with and without V1Compat
+>> Remove( re.Value, {Value:4}); true
+true
+
+>> rd
+{Value:Table({Value:1},{Value:2})}
+
+>> re
+{Value:Table({Value:5},{Value:6})}
+
+>> rb  // confirm no changes
+{Value:Table({Value:1},{Value:3})}
+
+>> rc // confirm no changes
+{Value:Table({Value:5},{Value:6})}
+
+>> ra // confirm no changes
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+// DEEP NESTING IN RECORDS - PATCH
+
+>> Set( ba, {a: {b: {c: {d: [1,2,3]} } } } )
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3})}}}}
+
+>> Set( bb, ba.a.b )
+{c:{d:Table({Value:1},{Value:2},{Value:3})}}
+
+>> Set( bc, ba.a.b.c )
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( bd, bb.c )
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch( ba.a.b.c.d, {Value:3}, {Value:9} )
+{Value:9}
+
+>> ba
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:9})}}}}
+
+>> bb
+{c:{d:Table({Value:1},{Value:2},{Value:3})}}
+
+>> bc
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> bd
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch( bb.c.d, {Value:2}, {Value:8} )
+{Value:8}
+
+>> ba // after bb
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:9})}}}}
+
+>> bb // after bb
+{c:{d:Table({Value:1},{Value:8},{Value:3})}}
+
+>> bc // after bb
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> bd // after bb
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch( bc.d, {Value:1}, {Value:7})
+{Value:7}
+
+>> ba // after bc
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:9})}}}}
+
+>> bb // after bc
+{c:{d:Table({Value:1},{Value:8},{Value:3})}}
+
+>> bc // after bc
+{d:Table({Value:7},{Value:2},{Value:3})}
+
+>> bd // after bc
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Patch( bd.d, { Value: 2}, {Value: 11 })
+{Value:11}
+
+>> ba // after bd
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:9})}}}}
+
+>> bb // after bd
+{c:{d:Table({Value:1},{Value:8},{Value:3})}}
+
+>> bc // after bd
+{d:Table({Value:7},{Value:2},{Value:3})}
+
+>> bd // after bd
+{d:Table({Value:1},{Value:11},{Value:3})}
+
+// DEEP NESTING IN RECORDS - COLLECT
+
+>> Set( dba, {a: {b: {c: {d: [1,2,3]} } } } )
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3})}}}}
+
+>> Set( dbb, dba.a.b )
+{c:{d:Table({Value:1},{Value:2},{Value:3})}}
+
+>> Set( dbc, dba.a.b.c )
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( dbd, dbb.c )
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Collect( dba.a.b.c.d, {Value:9} )
+{Value:9}
+
+>> dba
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
+
+>> dbb
+{c:{d:Table({Value:1},{Value:2},{Value:3})}}
+
+>> dbc
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> dbd
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Collect( dbb.c.d, {Value:8} )
+{Value:8}
+
+>> dba // after dbb
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
+
+>> dbb // after dbb
+{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:8})}}
+
+>> dbc // after dbb
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> dbd // after dbb
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Collect( dbc.d, {Value:7})
+{Value:7}
+
+>> dba // after dbc
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
+
+>> dbb // after dbc
+{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:8})}}
+
+>> dbc // after dbc
+{d:Table({Value:1},{Value:2},{Value:3},{Value:7})}
+
+>> dbd // after dbc
+{d:Table({Value:1},{Value:2},{Value:3})}
+
+>> Collect( dbd.d, {Value: 11})
+{Value:11}
+
+>> dba // after dbd
+{a:{b:{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:9})}}}}
+
+>> dbb // after dbd
+{c:{d:Table({Value:1},{Value:2},{Value:3},{Value:8})}}
+
+>> dbc // after dbd
+{d:Table({Value:1},{Value:2},{Value:3},{Value:7})}
+
+>> dbd // after dbd
+{d:Table({Value:1},{Value:2},{Value:3},{Value:11})}

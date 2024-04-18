@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>A column of boolean values to process.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converts a decimal number to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>number</value>
+    <comment>function_parameter - First argument to the Boolean function - the decimal number that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>The decimal number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converts a column of decimal numeric values to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of decimal number values.</comment>
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converts a choice value backed by a boolean to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>choice</value>
+    <comment>function_parameter - First argument to the Boolean function - the choice value that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>The choice to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converts a column of choice values backed by booleans to a column of boolean values.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument to the Boolean function - a column of choice values.</comment>
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>A column of choice values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>
@@ -975,7 +1019,7 @@
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_string</value>
-    <comment>function_parameter - String to convert into a GUID</comment>
+    <comment>function_parameter - String to convert into a GUID. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>String to convert into a GUID</value>
@@ -1248,11 +1292,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>color_or_column</value>
-    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. Translate this string. When translating, maintain as a single word (i.e., do not add spaces)</comment>
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>fade_or_column</value>
-    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>A color (or column of color values) to fade.</value>
@@ -1917,6 +1961,14 @@
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Cannot use a non-record value in this context.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Cannot use a non-record value in this context: '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Only record or table values can be used in this context.</value>
+    <comment>Error Message. If a record or table is expected.</comment>
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Cannot use this record. It may contain colliding fields of incompatible types.</value>
@@ -2847,15 +2899,16 @@
     <value>Language code of the supplied text.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Creates a table from the specified records, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Creates a table from the specified records and tables, with as many columns as there are unique record fields. For example: Table({key1: val1, key2: val2, ...}, ...)</value>
     <comment>Description of 'Table' function.</comment>
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>record</value>
-    <comment>function_parameter - Argument of the Table function - a record that will become a row in the resulting table.</comment>
+    <value>record_or_table</value>
+    <comment>function_parameter - Argument of the Table function - a record or a table that will be part of the the resulting table. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>A record that will become a row in the resulting table.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>A record or a table that will be part of the the resulting table.</value>
+    <comment>Description of parameter to table function.</comment>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Returns a table with all columns removed from the 'source' table except the specified columns.</value>
@@ -3078,7 +3131,7 @@
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
+    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3094,11 +3147,11 @@
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements.</comment>
+    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3108,17 +3161,56 @@
     <value>Applies the updates to the specified row and changes the row in the specified datasource. Returns the updated row.</value>
     <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the Patch function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Takes a single record with primary keys and updated values and updates the corresponding row in the specified datasource. Returns the updated row.</value>
+    <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
-    <comment>function_parameter - Second parameter for the Patch function. The record to modify or create. If the record came from a data source, the record is found and modified. If the result of Defaults is used, a record is created.</comment>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Takes a table of rows and applies the updates specified in a table of updates in a one-to-one fashion. Returns a table of updated rows.</value>
+    <comment>Description of 'Patch' function.</comment>
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
-    <comment>function_parameter - Third parameter for the Patch function. One or more records that contain properties to modify in the BaseRecord. Change records are processed in order from the beginning of the argument list to the end, with later property values overriding earlier ones.</comment>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Takes a table of rows with primary keys and updated fields and applies those updates to the datasource. Returns a table of updated rows.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returns row with updates applied.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>The data source to be patched.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>The record that has to be patched.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>The update that needs to be patched to the given record.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>The table of rows to be patched.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>The table of updates that need to be patched to the given rows.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument of the Patch function - the source (collection / table) to be updated.</comment>
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>record</value>
+    <comment>function_parameter - Second argument of the Patch function - the record to be updated.</comment>
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>update</value>
+    <comment>function_parameter - Third argument of the Patch function - the updates to be made to the record.</comment>
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rows</value>
+    <comment>function_parameter - First argument to the Patch function - the rows to be updated.</comment>
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>updates</value>
+    <comment>function_parameter - Second argument to the Patch function - the updates to be applied to the given rows.</comment>
   </data>
   <data name="AboutRemove" xml:space="preserve">
     <value>Removes a specific record or records from a data source</value>
@@ -3126,11 +3218,11 @@
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from.</comment>
+    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    <comment>function_parameter - One or more records to be removed.</comment>
+    <comment>function_parameter - One or more records to be removed. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
@@ -4100,6 +4192,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A url to be encoded.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converts a text to an HTML-encoded text.</value>
+    <comment>Description of 'EncodeHTML' function.</comment>
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>value</value>
+    <comment>Function_parameter - First parameter for the EncodeHTML function - the value (string) to encode.</comment>
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>A text to be encoded.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' is a recognized but not supported function.</value>
     <comment>Error Message.</comment>
@@ -4370,6 +4473,10 @@
     <value>The JSONFormat values '{0}' and '{1}' cannot be used together.</value>
     <comment>{Locked=JSONFormat} Error message shown to the user if they try to use incompatible values from the JSONFormat enumeration. The parameters are string values, members of that enumeration. For example: The JSONFormat values 'IgnoreBinaryData' and 'IncludeBinaryData' cannot be used together.</comment>
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>The value '{0}' is not supported as an option in the JSON function.</value>
+    <comment>{Locked=JSON} Error message shown to the user if they try to pass an option that is not supported to the JSON function. The parameter is a single-character string value. For example: The value '$' is not supported as an option in the JSON function.</comment>
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>The value passed to the JSON function contains media, and it is not supported by default. To allow JSON serialization of media values, make sure to use the IncludeBinaryData option in the 'format' parameter.</value>
     <comment>{Locked=JSON}{Locked=IncludeBinaryData}. Error message shown to the user if they try to serialize an object that contains media values, without specifying the flag that would allow that operation to happen. Media values are any form of media (audio, images, video) that are included as part of a record or a table. The term 'format' should be translated like the term 'JSONArg2' in this same file.</comment>
@@ -4451,7 +4558,7 @@
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
     <value>column_of_numbers</value>
-    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters.</comment>
+    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>A table column of numeric values to be converted into Unicode characters.</value>
@@ -4471,5 +4578,9 @@
     <comment>{Locked=Partial}. Error message when the user attempted to use a Partial operator that we don't recognize.
       A partial operator is the 2nd part of a statement `[Partial Op]` and can be one of "And", "Or", "Table" or "Record".
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
+    <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
   </data>
 </root>

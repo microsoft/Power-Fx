@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 using MemoryStream memoryStream = new MemoryStream();
                 using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo);
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables);
 
                 _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
@@ -83,20 +83,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 JsonFlags flags = new JsonFlags() { HasMedia = JsonFunction.DataHasMedia(_arguments[0].Type._type) };
 
-                if (_arguments.Length > 1 && _arguments[1] is StringValue arg1string)
+                if (_arguments.Length > 1)
                 {
-                    flags.IgnoreBinaryData = arg1string.Value.Contains("G");
-                    flags.IgnoreUnsupportedTypes = arg1string.Value.Contains("I");
-                    flags.IncludeBinaryData = arg1string.Value.Contains("B");
-                    flags.IndentFour = arg1string.Value.Contains("4");
-                }
+                    string optionString = null;
 
-                if (_arguments.Length > 1 && _arguments[1] is OptionSetValue arg1optionset)
-                {
-                    flags.IgnoreBinaryData = arg1optionset.Option == "IgnoreBinaryData";
-                    flags.IgnoreUnsupportedTypes = arg1optionset.Option == "IgnoreUnsupportedTypes";
-                    flags.IncludeBinaryData = arg1optionset.Option == "IncludeBinaryData";
-                    flags.IndentFour = arg1optionset.Option == "IndentFour";
+                    switch (_arguments[1])
+                    {
+                        // Can be built up through concatenation, may have more than one value
+                        case OptionSetValue osv:
+                            optionString = (string)osv.ExecutionValue;
+                            break;
+
+                        // StringValue returned when StronglyTypedBuiltinOptionSet is not used
+                        case StringValue sv:
+                            optionString = sv.Value;
+                            break;
+
+                        // if not one of these, will check optionString != null below
+                    }
+
+                    if (optionString != null)
+                    {
+                        flags.IgnoreBinaryData = optionString.Contains("G");
+                        flags.IgnoreUnsupportedTypes = optionString.Contains("I");
+                        flags.IncludeBinaryData = optionString.Contains("B");
+                        flags.IndentFour = optionString.Contains("4");
+                        flags.FlattenValueTables = optionString.Contains("_");
+                    }
                 }
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
@@ -113,13 +126,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
+                private readonly bool _flattenValueTables;
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
 
-                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo)
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables)
                 {
                     _writer = writer;
                     _timeZoneInfo = timeZoneInfo;
+                    _flattenValueTables = flattenValueTables;
                 }
 
                 public void Visit(BlankValue blankValue)
@@ -254,9 +269,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartArray();
 
+                    var isSingleColumnValueTable = false;
+                    if (_flattenValueTables)
+                    {
+                        var fieldTypes = tableValue.Type.GetFieldTypes();
+                        var firstField = fieldTypes.FirstOrDefault();
+                        if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == TexlFunction.ColumnName_ValueStr)
+                        {
+                            isSingleColumnValueTable = true;
+                        }
+                    }
+
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
-                        row.Value.Visit(this);
+                        if (row.IsBlank)
+                        {
+                            row.Blank.Visit(this);
+                        }
+                        else if (row.IsError)
+                        {
+                            row.Error.Visit(this);
+                        }
+                        else
+                        {
+                            if (isSingleColumnValueTable)
+                            {
+                                var namedValue = row.Value.Fields.First();
+                                namedValue.Value.Visit(this);
+                            }
+                            else
+                            {
+                                row.Value.Visit(this);
+                            }
+                        }
                     }
 
                     _writer.WriteEndArray();
@@ -300,6 +345,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 internal bool IncludeBinaryData = false;
 
                 internal bool IndentFour = false;
+
+                internal bool FlattenValueTables = false;
             }
 
             private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)

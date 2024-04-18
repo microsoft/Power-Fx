@@ -123,21 +123,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\OptionSet.txt";
-            var line = 41;
+            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var line = 0;
 
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(new Dictionary<string, bool>(), path);
 
-            // We can filter to just cases we want 
+            // We can filter to just cases we want, set line above 
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
             }
 
             var result = testRunner.RunTests();
+            if (result.Fail > 0)
+            {
+                Assert.True(false, result.Output);
+            }
+            else
+            {
+                Console.WriteLine(result.Output);
+            }
         }
 #endif
 
@@ -147,7 +155,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Whereas these are fed into a repl and each file maintains state.
         // 
         // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
-        // For Canvas, the important difference is the CoalesceShortCircuit feature, a part of PowerFxV1.
         [Theory]
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
@@ -165,9 +172,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true,
             };
 
-            // disable:CoalesceShortCircuit and disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
+            // disable:PowerFxV1CompatibilityRules will force the tests specifically for those behaviors to be excluded from this run.
             // DecimalSupport allows tests that are written with Float and Decimal functions to operate; it is not itself a feature
-            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
+            RunMutationTestFile(file, features, "disable:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,DecimalSupport");
         }
 
         private void RunMutationTestFile(string file, Features features, string setup)

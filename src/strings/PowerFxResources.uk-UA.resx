@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Стовпець логічних значень, який потрібно обробити.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Перетворює десяткове число на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>число</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Десяткове числове значення, яке потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Перетворює стовпець десяткових числових значень на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Стовпець числових значень, який потрібно обробити.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Перетворює значення вибору, яке ґрунтується на логічному значенні, на логічне значення.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>варіант вибору</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Варіант вибору, який потрібно перетворити на логічне значення.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Перетворює стовпець значень вибору, які ґрунтуються на логічних значеннях, на стовпець логічних значень.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>вхідні дані</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Стовпець значень вибору, який потрібно обробити.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Повертає перший непустий аргумент.</value>
     
@@ -1056,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення — дату в минулому, а нуль не змінює місяць.</value>
+    <value>Кількість місяців, на яку потрібно скоригувати дату. Додатне значення означає дату в майбутньому, від’ємне значення – дату в минулому, а нуль не змінює місяць.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1916,6 +1960,14 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>У цьому контексті не можна використати значення, що не є записом.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>У цьому контексті не можна використати значення, що не є записом: {0}.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>У цьому контексті можна використовувати лише значення записів або таблиць.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2791,15 +2843,16 @@
     <value>Мовний код наданого тексту.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Створює таблицю на основі вказаних записів, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Таблиця({key1: val1, key2: val2, ...}, ...)</value>
+    <value>На основі вказаних записів і таблиць створюється таблиця, кількість стовпців у якій відповідає кількості полів з унікальними записами. Наприклад: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>запис</value>
+    <value>запис_або_таблиця</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Запис, що стане рядком в отриманій таблиці.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Запис або таблиця, які будуть частиною кінцевої таблиці.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Повертає таблицю лише з указаними стовпцями, видаливши решту стовпців із вихідної таблиці.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Бере один запис із первинними ключами й оновленими значеннями та оновлює відповідний рядок у вказаному джерелі даних. Повертає оновлений рядок.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Бере таблицю рядків і застосовує оновлення з указаної таблиці в співвідношенні "один-до-одного". Повертає таблицю оновлених рядків.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Бере таблицю рядків із первинними ключами й оновленими полями та застосовує ці оновлення до джерела даних. Повертає таблицю оновлених рядків.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Повертає оновлений рядок.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Джерело даних, яке потрібно виправити.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Запис, який потрібно виправити.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Оновлення, яке потрібно застосувати до вказаного запису.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Таблиця рядків, які потрібно оновити.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Таблиця з оновленнями, які потрібно застосовувати до вказаних рядків.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>оновлення</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>рядки</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>оновлення</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>вилучити_записи</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL-адреса, яку потрібно закодувати.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Перетворює текст на текст із кодуванням HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>значення</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Текст, який потрібно закодувати.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" є розпізнаною, але непідтримуваною функцією.</value>
     
@@ -4135,11 +4238,11 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>настроюваний_запис</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>параметри_трасування</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Значення JSONFormat "{0}" і "{1}" не можна використовувати разом.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Значення "{0}" не підтримується як параметр функції JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Невідомий оператор Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Попередження про делегування. У випадку великих наборів даних результат цього аргументу "{0}" може бути обрізаний перед передачею до функції "{1}".</value>
     
   </data>
 </root>

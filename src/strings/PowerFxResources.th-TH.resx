@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>คอลัมน์ของค่าแบบบูลีนที่จะประมวลผล</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>แปลงตัวเลขฐานสิบเป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>ค่าตัวเลขฐานสิบที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลขฐานสิบเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>แปลงค่าตัวเลือกที่รองรับโดยบูลีนเป็นค่าบูลีน</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>ชุดตัวเลือก</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>ตัวเลือกที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลือกที่รองรับโดยบูลีนเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลือกที่จะดำเนินการ</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
     
@@ -1918,6 +1962,14 @@
     <value>ไม่สามารถใช้ค่าที่ไม่ใช่เรกคอร์ดในบริบทนี้</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>ไม่สามารถใช้ค่าที่ไม่ใช่เรกคอร์ดในบริบทนี้: '{0}'</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>เฉพาะค่าเรกคอร์ดหรือตารางเท่านั้นที่สามารถใช้ได้ในบริบทนี้</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>ไม่สามารถใช้เรกคอร์ดนี้ อาจมีฟิล์ดขัดแย้งที่ไม่เข้ากัน</value>
     
@@ -2791,15 +2843,16 @@
     <value>รหัสภาษาของข้อความที่ระบุ</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>สร้างตารางจากเรกคอร์ดที่กำหนด ที่มีจำนวนคอลัมน์เท่ากับจำนวนฟิลด์ที่มีชื่อเฉพาะ ตัวอย่างเช่น Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>สร้างตารางจากเรกคอร์ดและตารางที่กำหนด ที่มีจำนวนคอลัมน์เท่ากับจำนวนฟิลด์ที่มีชื่อเฉพาะ ตัวอย่างเช่น Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>ระเบียน</value>
+    <value>เรกคอร์ดหรือตาราง</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>เรกคอร์ดที่จะกลายเป็นแถวในตารางผลลัพธ์</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะเป็นส่วนหนึ่งของตารางผลลัพธ์</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>ส่งคืนตารางที่ลบคอลัมน์ทั้งหมดออกจากตาราง 'source' ยกเว้นคอลัมน์ที่กำหนด</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>เลือกบันทึกหนึ่งรายการที่มีคีย์หลักและค่าที่อัปเดตแล้ว และอัปเดตแถวที่สอดคล้องกันในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>เลือกตารางของแถวและใช้การอัปเดตที่กำหนดในตารางการอัปเดตในลักษณะหนึ่งต่อหนึ่ง ส่งกลับตารางของแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>เลือกตารางของแถวที่มีคีย์หลักและเขตข้อมูลที่อัปเดตแล้ว และใช้การอัปเดตเหล่านั้นกับแหล่งข้อมูล ส่งกลับตารางของแถวที่อัปเดตแล้ว</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>ส่งกลับเฉพาะแถวที่ได้รับการอัปเดต</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>แหล่งข้อมูลที่จะได้รับการแก้ไข</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>เรกคอร์ดที่จะต้องได้รับการแก้ไข</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>การอัปเดตที่จะต้องได้รับการแก้ไขที่เรกคอร์ดที่ระบุ</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>ตารางของแถวที่จะแพทช์</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>ตารางของการอัปเดตที่จะต้องแพทช์ลงในแถวกำหนด</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>ระเบียน</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>อัปเดต</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>แถว</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>อัปเดต</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>เรกคอร์ดที่เอาออก</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL ที่จะเข้ารหัส</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>แปลงข้อความเป็นข้อความที่เข้ารหัส HTML</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>ค่า</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>ข้อความที่จะเข้ารหัส</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ได้รับการยอมรับ แต่ไม่รองรับ</value>
     
@@ -4139,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>ตัวเลือกการติดตาม</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>ไม่สามารถใช้ค่า JSONFormat '{0}' และ '{1}' ร่วมกันได้</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>ค่า '{0}' ไม่ได้รับการสนับสนุนให้เป็นตัวเลือกในฟังก์ชัน JSON</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>ไม่รู้จักตัวดำเนินการ Partial</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>คำเตือนการมอบสิทธิ์ ผลลัพธ์ของอาร์กิวเมนต์นี้ '{0}' อาจถูกตัดทอนสำหรับชุดข้อมูลขนาดใหญ่ก่อนที่จะส่งผ่านไปยังฟังก์ชัน '{1}'</value>
     
   </data>
 </root>

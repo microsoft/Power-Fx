@@ -664,6 +664,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                     case BindKind.OptionSet:
                     case BindKind.PowerFxResolvedObject:
+                    case BindKind.Data:
                         {
                             result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
                             break;
@@ -1140,6 +1141,15 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.BooleanToOptionSet:
                         unaryOpKind = UnaryOpKind.BooleanToOptionSet;
+                        break;
+                    case CoercionKind.NumberToOptionSet:
+                        unaryOpKind = UnaryOpKind.NumberToOptionSet;
+                        break;
+                    case CoercionKind.DecimalToOptionSet:
+                        unaryOpKind = UnaryOpKind.DecimalToOptionSet;
+                        break;
+                    case CoercionKind.StringToOptionSet:
+                        unaryOpKind = UnaryOpKind.StringToOptionSet;
                         break;
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;

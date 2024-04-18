@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Uma coluna de valores booleanos a processar.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Converte um número decimal num valor booleano.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>O valor numérico decimal a converter num valor booleano.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Converte uma coluna de valores numéricos decimais numa coluna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Uma coluna de valores numéricos a processar.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Converte um valor de opção suportado por um booleano num valor booleano.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opção</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>A opção a converter num valor booleano.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Converte uma coluna de valores de opção suportada por booleanos numa coluna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Uma coluna de valores de opção a processar.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devolve o primeiro argumento que não está em branco</value>
     
@@ -1918,6 +1962,14 @@
     <value>Não é possível utilizar um valor que não sejam registo neste contexto.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Não é possível utilizar um valor que não seja registo neste contexto: "{0}".</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Só é possível utilizar valores de registo ou tabela neste contexto.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Não é possível utilizar este registo. Pode conter campos de colisão de tipos incompatíveis.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Código de idioma do texto fornecido.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Cria uma tabela a partir de registos especificados, com tantas colunas como campos de registo únicos. Por exemplo: Tabela({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Cria uma tabela a partir das tabelas e dos registos especificados, com um número de colunas igual ao número de campos de registo exclusivos. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registo</value>
+    <value>registo_ou_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Registo que se tornarão numa linha na tabela resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Um registo ou uma tabela que fará parte da tabela resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Devolve uma tabela com todas as colunas removidas da tabela de "origem", exceto as colunas especificadas.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Aplica as atualizações à linha especificada e altera a linha na origem de dados especificada. Devolve a linha atualizada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Num único registo com chaves primárias e campos atualizados, atualiza a linha correspondente na origem de dados especificada. Devolve a linha atualizada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Numa tabela de linhas, aplica as atualizações especificadas numa tabela de atualizações uma de cada vez. Devolve uma tabela de linhas atualizadas.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Numa tabela de linhas com chaves primárias e campos atualizados, aplica essas atualizações à origem de dados. Devolve uma tabela de linhas atualizadas.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Devolve a linha com as atualizações aplicadas.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origem de dados a ser aplicada.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registo que deve ser aplicado.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Atualização que necessita ser aplicada.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>A tabela de linhas a corrigir.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>A tabela de atualizações que precisa de correções para determinadas linhas.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registo</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>atualizar</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>linhas</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>atualizações</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>remover_registos</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Um URL a codificar.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Converte um texto num texto codificado em HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Um texto a codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é uma função reconhecida, mas não suportada.</value>
     
@@ -4135,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>registo_personalizado</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Os valores JSONFormat "{0}" e "{1}" não podem ser utilizados em conjunto.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>O valor "{0}" não é suportado como uma opção na função JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconhecido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Aviso de delegação. O resultado deste argumento "{0}" poderá ser truncado para conjuntos de dados de grandes dimensões antes de ser transmitido para a função "{1}".</value>
     
   </data>
 </root>

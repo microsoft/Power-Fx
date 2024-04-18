@@ -1,4 +1,4 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,AllEnumsSetup
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup
 
 >> ErrorKind.Div0 = Color.Red
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (Color).
@@ -12,7 +12,7 @@ Errors: Error 14-16: Incompatible types for comparison. These types can't be com
 
 // Valid to compare to strings
 >> TimeUnit.Days <> "abc"
-true
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
 
 // Coercion to Color
 >> ColorFade(Color.Red, 0)
@@ -45,7 +45,7 @@ Errors: Error 45-46: Incompatible types for comparison. These types can't be com
 
 // Functions can enforce expecting an enum type
 >> DateAdd(Date(2011,1,15), 100000000, "milliseconds")
-Errors: Error 36-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-51: The function 'DateAdd' has some invalid arguments.
+Errors: Error 36-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.|Error 0-7: The function 'DateAdd' has some invalid arguments.
 
 >> DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds)
 Date(2011,1,16)

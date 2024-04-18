@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Columna de valores booleanos para procesar.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Convierte un número decimal en un valor booleano.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Valor numérico decimal que se convertirá en un valor booleano.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Convierte una columna de valores numéricos decimales en una columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Una columna de valores numéricos que se procesarán.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Convierte un valor de opción respaldado por un valor booleano en un valor booleano.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>opción</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>La opción que se convertirá en un valor booleano.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Convierte una columna de valores de opción respaldada por booleanos en una columna de valores booleanos.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Columna de valores de opción que se procesarán.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devuelve el primer argumento que no está en blanco.</value>
     
@@ -1056,7 +1100,7 @@
     
   </data>
   <data name="AboutEDate_months" xml:space="preserve">
-    <value>Número de meses durante los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
+    <value>Número de meses por los cuales se cambiará la fecha. Un valor positivo genera una fecha futura; un valor negativo, una fecha pasada; y el cero no cambiará el mes.</value>
     
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
@@ -1916,6 +1960,14 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>No se puede usar un valor que no sea un registro en este contexto.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>No se puede usar un valor que no es un registro en este contexto: '{0}'.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Solo se pueden usar valores de registro o tabla en este contexto.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2791,15 +2843,16 @@
     <value>Código de idioma del texto proporcionado.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Crea una tabla a partir de los registros especificados con tantas columnas como campos de registros únicos haya. Por ejemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Crea una tabla a partir de los registros y tablas especificados con tantas columnas como campos de registros únicos haya. Por ejemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>registro</value>
+    <value>registro_o_tabla</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Un registro que se convertirá en una fila en la tabla resultante.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Un registro o una tabla que formarán parte de la tabla resultante.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Devuelve una tabla con todas las columnas quitadas de la tabla de origen, excepto las columnas especificadas.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_datos</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_datos</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_datos</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Aplica las actualizaciones a la fila especificada y cambia la fila en el origen de datos especificado. Devuelve la fila actualizada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Toma un registro único con claves principales y valores actualizados, y actualiza la fila correspondiente del origen de datos especificado. Devuelve la fila actualizada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Toma una tabla de filas y aplica las actualizaciones especificadas en una tabla de actualizaciones de una a una. Devuelve una tabla de filas actualizadas.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Toma una tabla de filas con claves principales y campos actualizados, y aplica esas actualizaciones al origen de datos. Devuelve una tabla de filas actualizadas.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Devuelve la fila con las actualizaciones aplicadas.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origen de datos que se va a revisar.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registro que se ha de revisar.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Actualización que se ha de revisar para el registro dado.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>La tabla de filas que se revisará.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>La tabla de actualizaciones que tienen que revisarse en las filas proporcionadas.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origen</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registro</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>actualizar</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>filas</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>actualizaciones</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origen_datos</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>quitar_registros</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Dirección URL que codificará.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Convierte un texto en un texto codificado en HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Texto que se va a codificar.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" es una función reconocida pero no admitida.</value>
     
@@ -4014,7 +4117,7 @@
     <value>Un origen de datos conectado que se actualizará.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Solo se pueden actualizar las conexiones administradas.</value>
+    <value>Solo pueden actualizarse las conexiones administradas.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
@@ -4135,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>registro_personalizado</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Los valores de JSONFormat "{0}" y "{1}" no se pueden usar juntos.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>El valor '{0}' no se admite como opción en la función JSON.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconocido.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Advertencia de delegación. El resultado de este argumento "{0}" puede truncarse para conjuntos de datos de gran tamaño antes de pasarse a la función "{1}".</value>
     
   </data>
 </root>

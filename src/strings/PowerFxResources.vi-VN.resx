@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Cột giá trị boolean cần xử lý.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Chuyển đổi số thập phân thành giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>số</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Giá trị số thập phân cần chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Chuyển đổi cột giá trị số thập phân thành cột chứa giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Cột giá trị số cần xử lý.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Chuyển đổi giá trị lựa chọn dựa trên giá trị boolean thành giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>lựa chọn</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Lựa chọn cần chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Chuyển đổi cột giá trị lựa chọn dựa trên giá trị boolean thành cột giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Cột giá trị lựa chọn cần xử lý.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Trả về đối số không trống đầu tiên</value>
     
@@ -1474,7 +1518,7 @@
     
   </data>
   <data name="DistinctArg2" xml:space="preserve">
-    <value>biểu thức</value>
+    <value>biểu_thức</value>
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
@@ -1916,6 +1960,14 @@
   </data>
   <data name="ErrNeedRecord" xml:space="preserve">
     <value>Không thể sử dụng một giá trị không có bản ghi trong ngữ cảnh này.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Không thể sử dụng một giá trị không có bản ghi trong ngữ cảnh này: '{0}'.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Chỉ có thể sử dụng các giá trị bản ghi hoặc bảng trong ngữ cảnh này.</value>
     
   </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
@@ -2791,15 +2843,16 @@
     <value>Mã ngôn ngữ của văn bản được cung cấp.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Tạo một bảng từ các bản ghi được chỉ định, kèm theo số lượng cột nhiều tương đương số trường bản ghi riêng. Ví dụ: Bảng({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Tạo bảng từ các bản ghi và bảng được chỉ định, có số cột bằng số trường bản ghi riêng biệt. Ví dụ: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>bản_ghi</value>
+    <value>bản_ghi_hoặc_bảng</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Một bản ghi sẽ trở thành một hàng trong bảng kết quả.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Bản ghi hoặc bảng sẽ có trong bảng kết quả.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Trả về một bảng đã loại bỏ mọi cột khỏi bảng 'nguồn', ngoại trừ các cột được chỉ định.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Lấy một bản ghi đơn có các khóa chính và giá trị đã cập nhật, rồi cập nhật hàng tương ứng trong nguồn dữ liệu được chỉ định. Trả về hàng được cập nhật.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Lấy một bảng chứa các hàng, rồi áp dụng các cập nhật được chỉ định trong bảng chứa cập nhật theo kiểu lần lượt tương ứng. Trả về bảng chứa các hàng được cập nhật.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Lấy một bảng chứa các hàng có các khóa chính và trường đã cập nhật, rồi áp dụng các cập nhật đó vào nguồn dữ liệu. Trả về bảng chứa các hàng được cập nhật.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Trả về hàng kèm theo các cập nhật được áp dụng.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Nguồn dữ liệu cần được vá.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Bản ghi cần được vá.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Cập nhật cần vá cho bản ghi được cung cấp.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Bảng chứa hàng cần được vá.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Bảng chứa cập nhật cần được vá đối với các hàng đã cung cấp.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>bản_ghi</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>cập_nhật</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>hàng</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>bản_cập_nhật</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ _liệu</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>xóa_bản_ghi</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3786,7 +3878,7 @@
     
   </data>
   <data name="SetArg2" xml:space="preserve">
-    <value>giá trị</value>
+    <value>giá_trị</value>
     
   </data>
   <data name="AboutDec2Hex" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL sẽ được mã hóa.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Chuyển đổi văn bản thành văn bản được mã hóa HTML.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>giá trị</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Văn bản cần mã hóa.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" là một hàm được công nhận nhưng không được hỗ trợ.</value>
     
@@ -3995,7 +4098,7 @@
     
   </data>
   <data name="MatchArg3" xml:space="preserve">
-    <value>tùy_chọn</value>
+    <value>tùy_chọn</value>
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
@@ -4166,6 +4269,10 @@
     <value>Không thể sử dụng các giá trị JSONFormat '{0}' và '{1}' cùng nhau.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Giá trị "{0}" không được hỗ trợ dưới dạng tùy chọn trong hàm JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Giá trị được truyền đến hàm JSON chứa phương tiện và không được hỗ trợ theo mặc định. Để cho phép chuỗi các giá trị truyền thông của JSON, hãy đảm bảo sử dụng tùy chọn IncludeBinaryData trong tham số 'format'.</value>
     
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Toán tử Partial không xác định.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Cảnh báo về ủy quyền. Kết quả của đối số "{0}" này có thể bị cắt ngắn đối với các tập hợp dữ liệu lớn trước khi được chuyển đến hàm "{1}".</value>
     
   </data>
 </root>

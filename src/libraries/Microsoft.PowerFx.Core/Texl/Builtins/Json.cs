@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -17,9 +18,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // JSON(data:any, [format:s])    
     internal class JsonFunction : BuiltinFunction
     {        
-        private const string _includeBinaryDataEnumValue = "B";
-        private const string _ignoreBinaryDataEnumValue = "G";
-        private const string _ignoreUnsupportedTypesEnumValue = "I";
+        private const char _includeBinaryDataEnumValue = 'B';
+        private const char _ignoreBinaryDataEnumValue = 'G';
+        private const char _ignoreUnsupportedTypesEnumValue = 'I';
+        private const char _flattenTableValuesEnumValue = '_';
+        private const char _indentFourEnumValue = '4';
 
         protected bool supportsLazyTypes = false;
 
@@ -52,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public JsonFunction()
-            : base("JSON", TexlStrings.AboutJSON, FunctionCategories.Text, DType.String, 0, 1, 2, DType.EmptyTable, DType.String)
+            : base("JSON", TexlStrings.AboutJSON, FunctionCategories.Text, DType.String, 0, 1, 2, DType.EmptyTable, BuiltInEnums.JSONFormatEnum.FormulaType._type)
         {
         }
 
@@ -72,9 +75,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = DType.String;
             nodeToCoercedTypeMap = null;
 
-            // Do not call base.CheckTypes
+            // Do not call base.CheckTypes for arg0
             if (args.Length > 1)
             {
+                if (context.Features.StronglyTypedBuiltinEnums && 
+                    !base.CheckType(context, args[1], argTypes[1], BuiltInEnums.JSONFormatEnum.FormulaType._type, errors, ref nodeToCoercedTypeMap))
+                {
+                    return false;
+                }
+
                 TexlNode optionsNode = args[1];                
                 if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
                 {
@@ -120,9 +129,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (nodeValue != null)
                 {
-                    ignoreUnsupportedTypes = nodeValue.Contains(_ignoreUnsupportedTypesEnumValue);
-                    includeBinaryData = nodeValue.Contains(_includeBinaryDataEnumValue);
-                    ignoreBinaryData = nodeValue.Contains(_ignoreBinaryDataEnumValue);                    
+                    foreach (var option in nodeValue)
+                    {
+                        switch (option)
+                        {
+                            case _ignoreBinaryDataEnumValue:
+                                ignoreBinaryData = true;
+                                break;
+                            case _ignoreUnsupportedTypesEnumValue:
+                                ignoreUnsupportedTypes = true;
+                                break;
+                            case _includeBinaryDataEnumValue:
+                                includeBinaryData = true;
+                                break;
+                            case _flattenTableValuesEnumValue:
+                            case _indentFourEnumValue:
+                                // Runtime-only options
+                                break;
+                            default:
+                                if (binding.Features.PowerFxV1CompatibilityRules)
+                                {
+                                    errors.EnsureError(optionsNode, TexlStrings.ErrJSONArg2UnsupportedOption, option);
+                                    return;
+                                }
+
+                                break;
+                        }
+                    }
 
                     if (includeBinaryData && ignoreBinaryData)
                     {

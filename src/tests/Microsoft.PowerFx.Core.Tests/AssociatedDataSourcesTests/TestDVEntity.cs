@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -30,6 +29,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public bool IsPageable => true;
 
+        public bool IsWritable => true;
+
         DType IExternalEntity.Type => AccountsTypeHelper.GetDType();
 
         IExternalDataEntityMetadataProvider IExternalDataSource.DataEntityMetadataProvider => throw new NotImplementedException();
@@ -51,6 +52,23 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             var dataSource = new TestDataSource(
                 "Accounts", 
                 accountsType, 
+                keyColumns: new[] { "accountid" },
+                selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" });
+            var displayNameMapping = dataSource.DisplayNameMapping;
+            displayNameMapping.Add("name", "Account Name");
+            displayNameMapping.Add("address1_city", "Address 1: City");
+            displayNameMapping.Add("address1_line1", "Address 1: Street 1");
+            displayNameMapping.Add("nonsearchablestringcol", "Non-searchable string column");
+            displayNameMapping.Add("nonsortablestringcolumn", "Non-sortable string column");
+            return DType.AttachDataSourceInfo(accountsType, dataSource);
+        }
+
+        public static DType GetDTypeCds()
+        {
+            DType accountsType = TestUtils.DT(SimplifiedAccountsSchema);
+            var dataSource = new CdsTestDataSource(
+                "Accounts",
+                accountsType,
                 keyColumns: new[] { "accountid" },
                 selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" });
             var displayNameMapping = dataSource.DisplayNameMapping;

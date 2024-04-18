@@ -1,0 +1,124 @@
+#SETUP: TableSyntaxDoesntWrapRecords
+
+>> Table([{a:0, b:false, c:"Hello"}], [{a:1, b:true, c:"World"}])
+Table({a:0,b:false,c:"Hello"},{a:1,b:true,c:"World"})
+
+// Simple coercions
+>> Table([{a:0}], [{a:true}], [{a:2}])
+Table({a:0},{a:1},{a:2})
+
+>> Table([{a:0, b:"hello"}], [{a:true}], [{a:2}])
+Table({a:0,b:"hello"},{a:1,b:Blank()},{a:2,b:Blank()})
+
+>> Table([{a:0}], [{b:true}], [{c:"Hello"}])
+Table({a:0,b:Blank(),c:Blank()},{a:Blank(),b:true,c:Blank()},{a:Blank(),b:Blank(),c:"Hello"})
+
+>> Table([{a:0}], [{b:true}], [{c:"Hello", d: {x: "World"}}])
+Table({a:0,b:Blank(),c:Blank(),d:Blank()},{a:Blank(),b:true,c:Blank(),d:Blank()},{a:Blank(),b:Blank(),c:"Hello",d:{x:"World"}})
+
+// Typed blank should be treated as blank table
+>> CountRows(Table(If(1<0,[1,2,3],Blank())))
+0
+
+// untyped blank should be treated as blank record
+>> CountRows(Table([{a:0, b:"hello"}], Blank()))
+2
+
+>> CountRows(Table(Sequence(3000)))
+3000
+
+// Mixing - record and table 
+>> Table({c:"Hello", d: {x: "World"}}, [{c:"PowerFx", d: {x: "Cool"}}])
+Table({c:"Hello",d:{x:"World"}},{c:"PowerFx",d:{x:"Cool"}})
+
+// Invalid input - trying to coerce guid and datetime 
+>> Table([{a:Date(2024,1,1)}], [{a:GUID("some-guid-value-1234")}]) 
+Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 28-62: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+// Table type with incompatible schema
+>> Table([1, 2], If(1<0, Table({Value:{a:2}})))
+Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 14-43: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+// No arg
+>> Table()
+Table()
+
+>> Table([])
+Table()
+
+>> Table(Table(Table()))
+Table()
+
+// Single argument with table
+>> Table([{a:0, b:false, c:"Hello"}])
+Table({a:0,b:false,c:"Hello"})
+
+>> Table(Table([{a:0, b:false, c:"Hello"}]))
+Table({a:0,b:false,c:"Hello"})
+
+// Single argument with record
+>> Table({a:0, b:false, c:"Hello"})
+Table({a:0,b:false,c:"Hello"})
+
+// Blank inputs
+>> Table(Blank(), Blank())
+Table(Blank(),Blank())
+
+>> Table([1, 2], Blank(), [4, 5], Blank(), [7, 8])
+Table({Value:1},{Value:2},Blank(),{Value:4},{Value:5},Blank(),{Value:7},{Value:8})
+
+// Tables containing runtime errors
+>> Table([1, 2, 3/0, 4], [5, Sqrt(-1), 7, 8])
+Table({Value:1},{Value:2},{Value:Error({Kind:ErrorKind.Div0})},{Value:4},{Value:5},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7},{Value:8})
+
+>> Table(Filter([2,1,0,-1,-2], 1/Value>0), Filter([-2,-1,0,1,2], Log(Value)>0))
+Table({Value:2},{Value:1},Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),Error({Kind:ErrorKind.Numeric}),{Value:2})
+
+// coercion failures
+>> Table([42],["everything"])
+Table({Value:42},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Table(["everything"], [42])
+Table({Value:"everything"},{Value:"42"})
+
+// Error function has type ObjNull, which can is both a record and a table; we treat it as a record
+>> Table([{a:1}], Error({Kind:ErrorKind.Div0, Message:"Please don't divide by zero"}), {a:3}, [{a:4}])
+Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
+
+>> Table([{a:1}], 1/0, {a:3}, [{a:4}])
+Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 16-17: Only record or table values can be used in this context.
+
+// The second argument is a record, no ambiguity
+>> Table([{a:1}], If(1/0<2,{a:2}), {a:3}, [{a:4}])
+Table({a:1},Error({Kind:ErrorKind.Div0}),{a:3},{a:4})
+
+// The second argument is a table. With an error table is passed in, the result is an error
+>> Table([{a:1}], If(1/0<2,[{a:2}]), {a:3}, [{a:4}])
+Error({Kind:ErrorKind.Div0})
+
+>> Table([{a:1}], {a:Error({Kind:ErrorKind.Custom})}, {a:3}, [{a:4}])
+Table({a:1},{a:Error({Kind:ErrorKind.Custom})},{a:3},{a:4})
+
+// Passing nested record and nested table inside a record
+>> Table({a: {b: {c: "Hello"}}}, {a: {b: {c: "World"}}, d: {f:Table([1, 2], [3, 4])}}, [{d: {f:Table([4, 5], [6, 7])}}])
+Table({a:{b:{c:"Hello"}},d:Blank()},{a:{b:{c:"World"}},d:{f:Table({Value:1},{Value:2},{Value:3},{Value:4})}},{a:Blank(),d:{f:Table({Value:4},{Value:5},{Value:6},{Value:7})}})
+
+// Mixing nested record and nested table inside a record - same column - type error
+>> Table({a: {b: {c: "Hello"}}}, [{a: Table({e: 1}, {e: 2}, {e:5}, {f:[1, 2, 3, 4]})}])
+Errors: Error 0-5: The function 'Table' has some invalid arguments.|Error 30-83: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+// Does not modify existing behavior of Inline value tables
+>> [[1, 2, 3], [4, 5, 6]]
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> [[{name:"John",age:85}], [{name:"Jane",age:79}]]
+Table({Value:Table({age:85,name:"John"})},{Value:Table({age:79,name:"Jane"})})
+
+>> [{name:"John",age:85}, If(1<0, {something:"hello"})]
+Table({age:85,name:"John",something:Blank()},Blank())
+
+>> [[4, 5, 6], If(1<0, [1, 2, 3]), If(1/0, [1, 2, 3])]
+Table({Value:Table({Value:4},{Value:5},{Value:6})},{Value:Blank()},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> [{name:"John",age:85}, If(1<0, [1, 2, 3])]
+Errors: Error 23-41: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.

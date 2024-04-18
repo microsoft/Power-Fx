@@ -62,6 +62,14 @@ namespace Microsoft.PowerFx.Tests
 
             public DKind BackingKind => DKind.Boolean;
 
+            public bool CanCoerceFromBackingKind => false;
+
+            public bool CanCoerceToBackingKind => true;
+
+            public bool CanConcatenateStronglyTyped => false;
+
+            public bool CanCompareNumeric => false;
+
             public bool IsConvertingDisplayNameMapping => false;
 
             public DName EntityName => new DName("BoolOptionSet");
@@ -230,6 +238,40 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(DKind.NamedValue, DType.NamedValue.Kind);
             Assert.Equal(DKind.Deferred, DType.Deferred.Kind);
             Assert.Equal(DKind.Void, DType.Void.Kind);
+        }
+
+        [Fact]
+        public void TestAllAssociatedDataSourcesNonNull()
+        {
+            Assert.NotNull(DType.Unknown.AssociatedDataSources);
+            Assert.NotNull(DType.Error.AssociatedDataSources);
+            Assert.NotNull(DType.Number.AssociatedDataSources);
+            Assert.NotNull(DType.Boolean.AssociatedDataSources);
+            Assert.NotNull(DType.String.AssociatedDataSources);
+            Assert.NotNull(DType.Hyperlink.AssociatedDataSources);
+            Assert.NotNull(DType.Image.AssociatedDataSources);
+            Assert.NotNull(DType.PenImage.AssociatedDataSources);
+            Assert.NotNull(DType.Media.AssociatedDataSources);
+            Assert.NotNull(DType.Guid.AssociatedDataSources);
+            Assert.NotNull(DType.Blob.AssociatedDataSources);
+            Assert.NotNull(DType.Color.AssociatedDataSources);
+            Assert.NotNull(DType.Currency.AssociatedDataSources);
+            Assert.NotNull(DType.Decimal.AssociatedDataSources);
+            Assert.NotNull(DType.DateTime.AssociatedDataSources);
+            Assert.NotNull(DType.EmptyRecord.AssociatedDataSources);
+            Assert.NotNull(DType.EmptyTable.AssociatedDataSources);
+            Assert.NotNull(DType.EmptyEnum.AssociatedDataSources);
+            Assert.NotNull(AttachmentTableType.AssociatedDataSources);
+            Assert.NotNull(AttachmentRecordType.AssociatedDataSources);
+            Assert.NotNull(OptionSetType.AssociatedDataSources);
+            Assert.NotNull(MultiSelectOptionSetType.AssociatedDataSources);
+            Assert.NotNull(DType.Date.AssociatedDataSources);
+            Assert.NotNull(DType.Time.AssociatedDataSources);
+            Assert.NotNull(DType.Polymorphic.AssociatedDataSources);
+            Assert.NotNull(DType.NamedValue.AssociatedDataSources);
+            Assert.NotNull(DType.Deferred.AssociatedDataSources);
+            Assert.NotNull(DType.Void.AssociatedDataSources);
+            Assert.NotNull(DType.Invalid.AssociatedDataSources);
         }
 
         [Fact]

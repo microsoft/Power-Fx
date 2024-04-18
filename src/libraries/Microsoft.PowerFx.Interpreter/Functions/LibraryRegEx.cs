@@ -208,21 +208,42 @@ namespace Microsoft.PowerFx.Functions
                     return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.GenericInvalidArgument(args[0].IRContext));
                 }
 
-                if (args[1] is not StringValue sv1)
+                string regularExpression;
+                switch (args[1])
                 {
-                    return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.GenericInvalidArgument(args[1].IRContext));
+                    case StringValue sv1:
+                        regularExpression = sv1.Value;
+                        break;
+                    case OptionSetValue osv1:
+                        regularExpression = (string)osv1.ExecutionValue;
+                        break;
+                    default:
+                        return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.GenericInvalidArgument(args[1].IRContext));
                 }
 
                 string inputString = args[0] is StringValue sv0 ? sv0.Value : string.Empty;
-                string regularExpression = sv1.Value;
-                string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : RegexOptions;
 
-                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;
-
-                if (!matchOptions.Contains("c"))
+                string matchOptions;
+                if (args.Length == 3)
                 {
-                    return Task.FromResult<FormulaValue>(FormulaValue.New(false));
+                    switch (args[2])
+                    {
+                        case StringValue sv3:
+                            matchOptions = sv3.Value;
+                            break;
+                        case OptionSetValue osv3:
+                            matchOptions = (string)osv3.ExecutionValue;
+                            break;
+                        default:
+                            return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.GenericInvalidArgument(args[2].IRContext));
+                    }
                 }
+                else
+                {
+                    matchOptions = RegexOptions;
+                }
+
+                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
 
                 if (matchOptions.Contains("i"))
                 {

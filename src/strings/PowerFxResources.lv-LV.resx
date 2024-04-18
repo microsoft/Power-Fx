@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Apstrādājamā Būla vērtību kolonna.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pārvērš decimāldaļskaitli par Būla vērtību.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>skaitlis</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimāldaļskaitļa vērtība, kas jāpārvērš par Būla vērtību.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pārvērš decimāldaļu skaitlisko vērtību kolonnu par Būla vērtību kolonnu.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>ievade</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Apstrādājamā skaitlisko vērtību kolonna.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pārvērš izvēles vērtību, ko atbalsta Būla vērtība, par Būla vērtību.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>izvēle</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izvēle, ko pārvērst par Būla vērtību.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pārvērš izvēles vērtību kolonnu, ko atbalsta Būla vērtības, par Būla vērtību kolonnu.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>ievade</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Apstrādājamā izvēles vērtību kolonna.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Atgriež pirmo argumentu, kurš nav tukšs</value>
     
@@ -1918,6 +1962,14 @@
     <value>Šajā kontekstā nevar izmantot ar ierakstu nesaistītu vērtību.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Šajā kontekstā nevar izmantot ar ierakstu nesaistītu vērtību: {0}.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>Šajā kontekstā var izmantot tikai ieraksta vai tabulas vērtības.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Šo ierakstu nevar izmantot. Tajā var būt konfliktējoši lauki vai nesaderīgi tipi.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Norādītā teksta valodas kods.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Izveido tabulu no norādītajiem ierakstiem ar tik daudz kolonnām, cik ir unikālu ierakstu lauku. Piemēram: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Izveido tabulu no norādītajiem ierakstiem un tabulām ar tik daudz kolonnām, cik ir unikālu ierakstu lauku. Piemēram: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>ieraksts</value>
+    <value>ieraksts_vai_tabula</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Ieraksts, kas iegūtajā tabulā kļūs par rindu.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Ieraksts vai tabula, kas būs daļa no iegūtās tabulas.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Atgriež tabulu, kur visas vērtības no tabulas "source" ir noņemtas, izņemot norādītās kolonnas.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datu_avots</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datu_avots</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datu_avots</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Lieto atjauninājumus norādītajā rindā un maina rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Izmanto atsevišķu ierakstu ar primārajām atslēgām un atjauninātajām vērtībām un atjaunina atbilstošo rindu norādītajā datu avotā. Atgriež atjaunināto rindu.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Rindu tabulā lieto atjauninājumu tabulā norādītos atjauninājumus pa vienam. Atgriež atjaunināto rindu tabulu.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Rindu ar primārajām atslēgām un atjauninātajiem laukiem tabulā lieto attiecīgos atjauninājumus datu avotā. Atgriež atjaunināto rindu tabulu.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Atgriež rindu ar lietotiem atjauninājumiem.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Datu avots, kam jālieto ielāps.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Ieraksts, kam ir jālieto ielāps.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Atjauninājums, kam jālieto ielāps norādītajam ierakstam.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Ielāpojamo rindu tabulu.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>To atjauninājumu tabula, kas ir jāielāpo uz norādītajām rindām.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>ieraksts</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>atjaunināt</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rindas</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>atjauninājumi</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,7 +3161,7 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datu_avots</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Vietrādis URL, kas jākodē.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Pārvērš tekstu par HTML kodētu tekstu.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vērtība</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Kodējamais teksts.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ir atpazīta, taču neatbalstīta funkcija.</value>
     
@@ -4135,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>pielāgots_ieraksts</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
@@ -4164,6 +4267,10 @@
   </data>
   <data name="ErrJSONArg2IncompatibleOptions" xml:space="preserve">
     <value>Nevar kopā lietot JSONFormat vērtību “{0}” un “{1}”.</value>
+    
+  </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vērtība “{0}” netiek atbalstīta kā opcija JSON funkcijā.</value>
     
   </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nezināms operators Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Šī argumenta '{0}' rezultāts var tikt saīsināts lielām datu kopām, pirms tas tiek nodots funkcijai '{1}'.</value>
     
   </data>
 </root>

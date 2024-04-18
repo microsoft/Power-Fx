@@ -75,7 +75,8 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
-                if (incomingParameters.TryGetValue(param.Name, out var paramValue))
+                if (incomingParameters.TryGetValue(param.Name, out FormulaValue paramValue) ||
+                    _function.GlobalContext.ConnectorValues?.TryGetValue(param.Name, out paramValue) == true)
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
@@ -122,7 +123,61 @@ namespace Microsoft.PowerFx.Connectors
                 body = await GetBodyAsync(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, contentType, cancellationToken).ConfigureAwait(false);
             }
 
-            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+            string url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+
+            // Process URL replacements
+            StringBuilder url2 = new StringBuilder(1024);
+            bool inVar = false;
+            StringBuilder v = new StringBuilder();
+
+            for (int i = 0; i < url.Length; i++)
+            {
+                char c = url[i];
+
+                if (c == '{')
+                {
+                    if (inVar)
+                    {
+                        throw new PowerFxConnectorException($"This URL is not supported: {url}");
+                    }
+
+                    inVar = true;
+                }
+                else if (c == '}')
+                {
+                    if (!inVar)
+                    {
+                        throw new PowerFxConnectorException($"This URL is not supported: {url}");
+                    }
+
+                    string varName = v.ToString();
+
+                    if (_function.GlobalContext.ConnectorValues?.TryGetValue(varName, out FormulaValue value) == true)
+                    {
+                        url2.Append(value.ToObject().ToString());
+                    }
+                    else
+                    {
+                        url2.Append('{');
+                        url2.Append(varName);
+                        url2.Append('}');
+                    }
+
+                    v.Clear();
+                    inVar = false;
+                }
+                else if (inVar)
+                {
+                    v.Append(c);
+                }
+                else
+                {
+                    url2.Append(c);
+                }
+            }
+
+            url = url2.ToString();
+
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -140,13 +195,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public Dictionary<string, FormulaValue> ConvertToNamedParameters(FormulaValue[] args)
         {
-            // First N are required params. 
+            // First N are required params.
             // Last param is a record with each field being an optional.
             // Parameter names are case sensitive.
 
             Dictionary<string, FormulaValue> map = new ();
 
-            // Seed with default values. This will get overwritten if provided. 
+            // Seed with default values. This will get overwritten if provided.
             foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
             {
                 map[kv.Key] = kv.Value.fValue;
@@ -163,7 +218,7 @@ namespace Microsoft.PowerFx.Connectors
                 string parameterName = _function.RequiredParameters[i].Name;
                 FormulaValue paramValue = args[i];
 
-                // Objects are always flattenned                
+                // Objects are always flattenned
                 if (paramValue is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
                 {
                     foreach (NamedValue field in record.Fields)
@@ -208,7 +263,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    // Type check should have caught this. 
+                    // Type check should have caught this.
                     throw new PowerFxConnectorException($"Optional arguments must be the last argument and a record");
                 }
             }
@@ -272,7 +327,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (NamedValue nv in lst)
             {
-                rt = rt.Add(nv.Name, nv.Value.Type);
+                rt = rt.SafeAdd(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
             }
 
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
@@ -334,7 +389,7 @@ namespace Microsoft.PowerFx.Connectors
 
             var statusCode = (int)response.StatusCode;
 
-            #if RECORD_RESULTS
+#if RECORD_RESULTS
             if (response.RequestMessage.Headers.TryGetValues("x-ms-request-url", out IEnumerable<string> urlHeader) &&
                 response.RequestMessage.Headers.TryGetValues("x-ms-request-method", out IEnumerable<string> verbHeader))
             {
@@ -367,7 +422,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                 }
             }
-            #endif
+#endif
 
             if (statusCode < 300)
             {
@@ -400,7 +455,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
-            cancellationToken.ThrowIfCancellationRequested();            
+            cancellationToken.ThrowIfCancellationRequested();
 
             using HttpRequestMessage request = await BuildRequest(args, utcConverter, cancellationToken).ConfigureAwait(false);
 
@@ -415,7 +470,7 @@ namespace Microsoft.PowerFx.Connectors
                 });
             }
 
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);                  
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
@@ -427,8 +482,8 @@ namespace Microsoft.PowerFx.Connectors
 
         private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
-            var client = localInvoker ?? _httpClient;
-            var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            HttpMessageInvoker client = localInvoker ?? _httpClient;
+            HttpResponseMessage response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 300)
             {

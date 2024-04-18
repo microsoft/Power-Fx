@@ -106,10 +106,20 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
         public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
 
+        public static StringGetter AboutBooleanW = (b) => StringResources.Get("AboutBooleanW", b);
+        public static StringGetter BooleanWArg1 = (b) => StringResources.Get("BooleanWArg1", b);
+        public static StringGetter AboutBooleanWT = (b) => StringResources.Get("AboutBooleanWT", b);
+        public static StringGetter BooleanWTArg1 = (b) => StringResources.Get("BooleanWTArg1", b);
+
         public static StringGetter AboutBooleanB = (b) => StringResources.Get("AboutBooleanB", b);
         public static StringGetter BooleanBArg1 = (b) => StringResources.Get("BooleanBArg1", b);
         public static StringGetter AboutBooleanBT = (b) => StringResources.Get("AboutBooleanBT", b);
         public static StringGetter BooleanBTArg1 = (b) => StringResources.Get("BooleanBTArg1", b);
+
+        public static StringGetter AboutBooleanL = (b) => StringResources.Get("AboutBooleanL", b);
+        public static StringGetter BooleanLArg1 = (b) => StringResources.Get("BooleanLArg1", b);
+        public static StringGetter AboutBooleanLT = (b) => StringResources.Get("AboutBooleanLT", b);
+        public static StringGetter BooleanLTArg1 = (b) => StringResources.Get("BooleanLTArg1", b);
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
@@ -477,9 +487,15 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
 
         public static StringGetter AboutPatch = (b) => StringResources.Get("AboutPatch", b);
-        public static StringGetter PatchDataSourceArg = (b) => StringResources.Get("PatchDataSourceArg", b);
-        public static StringGetter PatchBaseRecordArg = (b) => StringResources.Get("PatchBaseRecordArg", b);
-        public static StringGetter PatchChangeRecordsArg = (b) => StringResources.Get("PatchChangeRecordsArg", b);
+        public static StringGetter AboutPatchSingleRecord = (b) => StringResources.Get("AboutPatchSingleRecord", b);
+        public static StringGetter AboutPatchAggregate = (b) => StringResources.Get("AboutPatchAggregate", b);
+        public static StringGetter AboutPatchAggregateSingleTable = (b) => StringResources.Get("AboutPatchAggregateSingleTable", b);
+        public static StringGetter AboutPatchRecord = (b) => StringResources.Get("AboutPatchRecord", b);
+        public static StringGetter PatchArg_Source = (b) => StringResources.Get("PatchArg_Source", b);
+        public static StringGetter PatchArg_Record = (b) => StringResources.Get("PatchArg_Record", b);
+        public static StringGetter PatchArg_Update = (b) => StringResources.Get("PatchArg_Update", b);
+        public static StringGetter PatchArg_Rows = (b) => StringResources.Get("PatchArg_Rows", b);
+        public static StringGetter PatchArg_Updates = (b) => StringResources.Get("PatchArg_Updates", b);
 
         public static StringGetter AboutCollect = (b) => StringResources.Get("AboutCollect", b);
         public static StringGetter CollectDataSourceArg = (b) => StringResources.Get("CollectDataSourceArg", b);
@@ -517,6 +533,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
+
+        public static StringGetter AboutEncodeHTML = (b) => StringResources.Get("AboutEncodeHTML", b);
+        public static StringGetter EncodeHTMLArg1 = (b) => StringResources.Get("EncodeHTMLArg1", b);
 
         public static StringGetter AboutPlainText = (b) => StringResources.Get("AboutPlainText", b);
         public static StringGetter PlainTextArg1 = (b) => StringResources.Get("PlainTextArg1", b);
@@ -616,8 +635,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidSchemaNeedTypeCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedTypeCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");
         public static ErrorResourceKey ErrNeedRecord = new ErrorResourceKey("ErrNeedRecord");
+        public static ErrorResourceKey ErrNeedRecordOrTable = new ErrorResourceKey("ErrNeedRecordOrTable");
         public static ErrorResourceKey ErrAutoRefreshNotAllowed = new ErrorResourceKey("ErrAutoRefreshNotAllowed");
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
+        public static ErrorResourceKey ErrNeedRecord_Arg = new ErrorResourceKey("ErrNeedRecord_Arg");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
         public static ErrorResourceKey ErrNeedEntity_EntityName = new ErrorResourceKey("ErrNeedEntity_EntityName");
         public static ErrorResourceKey ErrNeedValidVariableName_Arg = new ErrorResourceKey("ErrNeedValidVariableName_Arg");
@@ -766,6 +787,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJSONArg1UnsupportedType = new ErrorResourceKey("ErrJSONArg1UnsupportedType");
         public static ErrorResourceKey ErrJSONArg1ContainsUnsupportedMedia = new ErrorResourceKey("ErrJSONArg1ContainsUnsupportedMedia");
         public static ErrorResourceKey ErrJSONArg2IncompatibleOptions = new ErrorResourceKey("ErrJSONArg2IncompatibleOptions");
+        public static ErrorResourceKey ErrJSONArg2UnsupportedOption = new ErrorResourceKey("ErrJSONArg2UnsupportedOption");
         public static ErrorResourceKey ErrJSONArg1UnsupportedNestedType = new ErrorResourceKey("ErrJSONArg1UnsupportedNestedType");
         public static ErrorResourceKey ErrJSONArg1UnsupportedTypeWithNonBehavioral = new ErrorResourceKey("ErrJSONArg1UnsupportedTypeWithNonBehavioral");
         public static ErrorResourceKey ErrTraceInvalidCustomRecordType = new ErrorResourceKey("ErrTraceInvalidCustomRecordType");
@@ -780,5 +802,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOnlyPartialAttribute = new ErrorResourceKey("ErrOnlyPartialAttribute");
         public static ErrorResourceKey ErrOperationDoesntMatch = new ErrorResourceKey("ErrOperationDoesntMatch");
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
+
+        public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
     }
 }

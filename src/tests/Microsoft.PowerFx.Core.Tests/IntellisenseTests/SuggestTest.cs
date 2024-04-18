@@ -5,9 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -131,7 +128,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
-        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue", "EDate")]
+        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTime", "DateTimeValue", "DateValue", "EDate", "Patch")]
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]
@@ -168,8 +165,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@In|]", "ErrorKind")]
 
         // FunctionRecordNameSuggestionHandler
-        [InlineData("Error({Kin|d:0})", "Kind:")]
-        [InlineData("Error({|Kind:0, Test:\"\"})", "Kind:", "Test:")]
+        [InlineData("Error({Kin|d:0})")]
+        [InlineData("Error({|Kind:0, Test:\"\"})")]
 
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
@@ -193,6 +190,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1},{F1:2}).|")]
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
+        [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
@@ -493,7 +491,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         [InlineData("{|", "output1:", "output2:")]
 
-        [InlineData("{output1: 1, |", "output1:", "output2:")]
+        [InlineData("{output1: 1, |", "output2:")]
 
         // We do not suggest nested type, as this can explode if type is DV.
         [InlineData("{output1: {|")]

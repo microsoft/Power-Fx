@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
@@ -38,7 +39,10 @@ namespace Microsoft.PowerFx
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
             symbolTable.AddFunction(new CollectFunction());
-            symbolTable.AddFunction(new PatchFunction());
+            symbolTable.AddFunction(new PatchImpl());
+            symbolTable.AddFunction(new PatchSingleRecordImpl());
+            symbolTable.AddFunction(new PatchAggregateImpl());
+            symbolTable.AddFunction(new PatchAggregateSingleTableImpl());
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
@@ -59,6 +63,12 @@ namespace Microsoft.PowerFx
                 config.SymbolTable.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
+        }
+
+        [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set backed by a Boolean instead. A new ChoiceInfo function is in the works for access to logical names.")]
+        public static void EnableOptionSetInfo(this PowerFxConfig powerFxConfig)
+        {
+            powerFxConfig.AddFunction(new OptionSetInfoFunction());
         }
     }
 }

@@ -24,12 +24,15 @@ namespace Microsoft.PowerFx.Connectors
     {
         // "name"
         public string Name { get; internal set; }
-
-        // "x-ms-summary"
+        
+        // "title"
         public string DisplayName { get; }
 
         // "description"
         public string Description { get; }
+
+        // "x-ms-summary"
+        public string Summary { get; }
 
         // "required"
         public bool IsRequired { get; internal set; }
@@ -45,28 +48,38 @@ namespace Microsoft.PowerFx.Connectors
         // "x-ms-explicit-input"
         public bool ExplicitInput { get; }
 
-        // "enum" 
         public bool IsEnum { get; }
 
         // Enumeration value, only defined if IsEnum is true
         public FormulaValue[] EnumValues { get; }
 
         // Enumeration display name ("x-ms-enum-display-name"), only defined if IsEnum is true
-        // If not defined, this array will be empty
+        // If not defined, this array will be empty 
         public string[] EnumDisplayNames { get; }
 
-        // Option Set, only defined when IsEnum is true and EnumValues is not empty
-        public OptionSet OptionSet => GetOptionSet();
+        public Dictionary<string, FormulaValue> Enum => GetEnum();
 
-        public Visibility Visibility { get; internal set; }  
+        public Visibility Visibility { get; internal set; }
 
         internal RecordType HiddenRecordType { get; }
 
+        // Supports x-ms-dynamic-values or -list locally
         public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
 
+        // Supports x-ms-dynamic-values or -list locally or anywhere in the tree
+        public bool ContainsDynamicValuesOrList => SupportsDynamicValuesOrList || (Fields != null && Fields.Any(f => f.ContainsDynamicValuesOrList));
+
+        // Supports x-ms-dynamic-schema or -property locally
         public bool SupportsDynamicSchemaOrProperty => DynamicSchema != null || DynamicProperty != null;
 
+        // Supports x-ms-dynamic-schema or -property locally or anywhere in the tree
+        public bool ContainsDynamicSchemaOrProperty => SupportsDynamicSchemaOrProperty || (Fields != null && Fields.Any(f => f.ContainsDynamicSchemaOrProperty));
+
+        // Supports x-ms-dynamic-values, -list, -schema, or -property locally
         public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
+
+        // Supports x-ms-dynamic-values, -list, -schema, or -property locally or anywhere in the tree
+        public bool ContainsDynamicIntellisense => ContainsDynamicValuesOrList || ContainsDynamicSchemaOrProperty;
 
         internal ConnectorDynamicSchema DynamicSchema { get; private set; }
 
@@ -93,9 +106,10 @@ namespace Microsoft.PowerFx.Connectors
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
 
             if (schema != null)
-            {                
+            {
                 Description = schema.Description;
-                DisplayName = schema.GetSummary();
+                DisplayName = schema.Title;
+                Summary = schema.GetSummary();
                 ExplicitInput = schema.GetExplicitInput();
 
                 Fields = Array.Empty<ConnectorType>();
@@ -104,22 +118,24 @@ namespace Microsoft.PowerFx.Connectors
                 if (IsEnum)
                 {
                     EnumValues = schema.Enum.Select(oaa =>
-                    {                        
+                    {
                         if (OpenApiExtensions.TryGetOpenApiValue(oaa, null, out FormulaValue fv, this))
                         {
                             return fv;
                         }
-                        
+
                         AddError($"Invalid conversion for type {oaa.GetType().Name} in enum");
                         return FormulaValue.NewBlank();
                     }).ToArray();
 
+                    // x-ms-enum-display-name
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                        : Array.Empty<string>();
+                                        : Array.Empty<string>();                                        
                 }
                 else
                 {
+                    // those values are null/empty even if x-ms-dynamic-* could be present and would define possible values
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
                 }
@@ -176,6 +192,33 @@ namespace Microsoft.PowerFx.Connectors
             AggregateErrors(hiddenFields);
         }
 
+        internal ConnectorType(ConnectorType connectorType, ConnectorType[] fields, FormulaType formulaType)
+        {
+            Binary = connectorType.Binary;
+            Description = connectorType.Description;
+            DisplayName = connectorType.DisplayName;
+            EnumDisplayNames = connectorType.EnumDisplayNames;
+            EnumValues = connectorType.EnumValues;
+            ExplicitInput = connectorType.ExplicitInput;            
+            IsEnum = true;
+            IsRequired = connectorType.IsRequired;
+            MediaKind = connectorType.MediaKind;
+            Name = connectorType.Name;
+            Schema = connectorType.Schema;
+            Visibility = connectorType.Visibility;
+
+            Fields = fields;
+            FormulaType = formulaType;
+
+            DynamicList = null;
+            DynamicProperty = null;
+            DynamicSchema = null;
+            DynamicValues = null;
+
+            _errors = connectorType._errors;
+            _warnings = connectorType._warnings;
+        }
+
         private void AggregateErrors(ConnectorType[] types)
         {
             if (types != null)
@@ -187,14 +230,32 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private OptionSet GetOptionSet()
+        // Keeping code for creating OptionSet if we need it later
+
+        //private OptionSet GetOptionSet()
+        //{
+        //    if (!IsOptionSet || string.IsNullOrEmpty(Name))
+        //    {
+        //        return null;
+        //    }
+
+        //    string[] enumValues = EnumValues.Select(ev => ev.ToObject().ToString()).ToArray();
+        //    string[] enumDisplayNames = EnumDisplayNames ?? enumValues;
+
+        //    return new OptionSet(Name, enumValues.Zip(enumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
+        //}
+
+        private Dictionary<string, FormulaValue> GetEnum()
         {
-            if (!IsEnum || string.IsNullOrEmpty(Name) || EnumValues.Length != EnumDisplayNames.Length)
+            if (!IsEnum || string.IsNullOrEmpty(Name))
             {
                 return null;
             }
 
-            return new OptionSet(Name, EnumValues.Select(ev => ev.ToObject().ToString()).Zip(EnumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
-        }       
+            FormulaValue[] enumValues = EnumValues;
+            string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
+
+            return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
     }
 }

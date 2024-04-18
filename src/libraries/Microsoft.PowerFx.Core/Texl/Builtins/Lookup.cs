@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -70,6 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Return true if
         //        - Arg0 is delegatable ds and supports filter operation.
         //        - All predicates to filter are delegatable if each firstname/binary/unary/dottedname/call node in each predicate satisfies delegation criteria set by delegation strategy for each node.
+        //        - The reduction can be delegated, if the LookUp is nested in another delegatable predicate.
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
@@ -80,7 +82,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FilterOpMetadata metadata = null;
+            if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
+            {
+                return false;
+            }
+
+            var args = callNode.Args.Children.VerifyValue();
+
+            // Without lookup reduction delegation, follow the legacy logic to determine if the function call is delegatable
+            // NOTE that with the reduction delegation enabled, the reduction node can only make a LookUp not delegatable if it is used inside another filter
+            if (!binding.Features.IsLookUpReductionDelegationEnabled && args.Count > 2 && binding.IsDelegatable(args[2]))
+            {
+                SuggestDelegationHint(args[2], binding);
+                return false;
+            }
+            
+            if (args.Count < 2)
+            {
+                return false;
+            }
+
+            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
+        }
+
+        private bool TryGetFilterOpDelegationMetadata(CallNode callNode, TexlBinding binding, out FilterOpMetadata metadata)
+        {
+            metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -101,25 +128,54 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
 
-            var args = callNode.Args.Children.VerifyValue();
-            if (args.Count > 2 && binding.IsDelegatable(args[2]))
-            {
-                SuggestDelegationHint(args[2], binding);
-                return false;
-            }
-
-            if (args.Count < 2)
-            {
-                return false;
-            }
-
-            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
+            return true;
         }
 
         public override bool IsEcsExcemptedLambda(int index)
         {
-            // Only the second argument for lookup is an ECS excempted lambda
+            // Only the second argument for lookup is an ECS exempted lambda
             return index == 1;
+        }
+
+        public override ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        {
+            return new LookUpCallNodeDelegationStrategy(this);
+        }
+
+        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode reductionNode, TexlBinding binding)
+        {
+            if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
+            {
+                return false;
+            }
+
+            // use a variation of the filter predicate logic to determine if the reduction formula is delegatable, without enforcing the return type must be boolean
+            return IsValidDelegatableFilterPredicateNode(reductionNode, binding, metadata, generateHints: false, enforceBoolean: false);
+        }
+    }
+
+    internal sealed class LookUpCallNodeDelegationStrategy : DelegationValidationStrategy
+    {
+        public LookUpCallNodeDelegationStrategy(TexlFunction function)
+            : base(function)
+        {
+        }
+
+        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        {
+            var function = binding.GetInfo(node)?.Function;
+            var args = node.Args.Children.VerifyValue();          
+
+            // if enabled, only for Lookup functions, verify if the reduction formula is valid for delegation
+            if (binding.Features.IsLookUpReductionDelegationEnabled &&
+                function is LookUpFunction lookup && args.Count > 2 && 
+                !lookup.IsValidDelegatableReductionNode(node, args[2], binding))
+            {
+                this.SuggestDelegationHint(args[2], binding);
+                return false;
+            }
+
+            return base.IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
         }
     }
 }

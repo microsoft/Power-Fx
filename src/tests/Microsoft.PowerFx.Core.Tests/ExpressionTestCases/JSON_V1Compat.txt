@@ -1,0 +1,5 @@
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules
+
+// Error for unknown options in the second argument
+>> JSON({a:1,b:[1,2,3]}, "_U")
+Errors: Error 22-26: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.

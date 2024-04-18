@@ -5,12 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -145,6 +144,37 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.SetText(parseResult));
 
             Assert.Same(parseResult, check.Parse);
+        }
+
+        [Theory]
+
+        [InlineData("\"Something\"", "Something", true)]
+        [InlineData("1", 1d, true)]
+        [InlineData("true", true, true)]
+        [InlineData("GUID(\"ac98f780-0df8-427d-8c09-50f09b5f9cf5\")", "ac98f780-0df8-427d-8c09-50f09b5f9cf5", true)]
+        [InlineData("GUID()", null, false)]
+        [InlineData("Abs(2)", null, false)]
+        public void GetParseLiteralsTests(string expression, object expected, bool canGetAsLiteral)
+        {
+            var check = new CheckResult(new Engine());
+            var parseResult = Engine.Parse(expression, options: new PowerFx.ParserOptions() { NumberIsFloat = true });
+
+            check.SetText(parseResult);
+            check.ApplyParse();
+
+            var gotLiteral = check.TryGetAsLiteral(out var value);
+
+            Assert.Equal(canGetAsLiteral, gotLiteral);
+
+            if (gotLiteral)
+            {
+                if (expression.StartsWith("GUID("))
+                {
+                    expected = Guid.Parse((string)expected);
+                }
+
+                Assert.Equal(expected, value);
+            }
         }
 
         [Fact]
@@ -493,6 +523,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("123+", "#$decimal$# + #$error$#", false)] // error 
         [InlineData("123,456", "#$decimal$#", true)] // locales 
         [InlineData("Power(2,3)", "Power(#$decimal$#)", true)] // functions aren't Pii
+
+        // Unkown public function are PII
+        [InlineData("MadeUpFunction(1)", "#$function$#(#$decimal$#)", true)]
+        [InlineData("Power(MadeUpFunction(1))", "Power(#$function$#(#$decimal$#))", true)]
+        [InlineData("Power(Clear(1))", "Power(Clear(#$decimal$#))", true)]
         public void TestApplyGetLogging(string expr, string execptedLog, bool success)
         {
             var check = new CheckResult(new Engine());

@@ -581,6 +581,50 @@
   <data name="AboutBooleanBT_input" xml:space="preserve">
     <value>Stolpec logičnih vrednosti, ki jih želite obdelati.</value>
   </data>
+  <data name="AboutBooleanW" xml:space="preserve">
+    <value>Pretvori decimalno število v logično vrednost.</value>
+    
+  </data>
+  <data name="BooleanWArg1" xml:space="preserve">
+    <value>število</value>
+    
+  </data>
+  <data name="AboutBooleanW_number" xml:space="preserve">
+    <value>Decimalna številska vrednost za pretvorbo v logično vrednost.</value>
+  </data>
+  <data name="AboutBooleanWT" xml:space="preserve">
+    <value>Pretvori stolpec decimalnih številskih vrednosti v stolpec logičnih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanWTArg1" xml:space="preserve">
+    <value>vnos</value>
+    
+  </data>
+  <data name="AboutBooleanWT_input" xml:space="preserve">
+    <value>Stolpec številskih vrednosti za obdelavo.</value>
+  </data>
+  <data name="AboutBooleanL" xml:space="preserve">
+    <value>Pretvori izbrano vrednost, podprto z logično vrednostjo, v logično vrednost.</value>
+    
+  </data>
+  <data name="BooleanLArg1" xml:space="preserve">
+    <value>možnost</value>
+    
+  </data>
+  <data name="AboutBooleanL_choice" xml:space="preserve">
+    <value>Izbira za pretvorbo v logično vrednost.</value>
+  </data>
+  <data name="AboutBooleanLT" xml:space="preserve">
+    <value>Pretvori stolpec izbranih vrednosti, podprtih z logičnimi vrednostmi, v stolpec logičnih vrednosti.</value>
+    
+  </data>
+  <data name="BooleanLTArg1" xml:space="preserve">
+    <value>vnos</value>
+    
+  </data>
+  <data name="AboutBooleanLT_input" xml:space="preserve">
+    <value>Stolpec izbranih vrednosti za obdelavo.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrne prvi neprazen argument</value>
     
@@ -1918,6 +1962,14 @@
     <value>V tem kontekstu ne morete uporabiti vrednosti, ki ni zapis.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>V tem kontekstu ne morete uporabiti vrednosti, ki ni zapis: »{0}«.</value>
+    
+  </data>
+  <data name="ErrNeedRecordOrTable" xml:space="preserve">
+    <value>V tem kontekstu je mogoče uporabiti samo vrednosti zapisa ali tabele.</value>
+    
+  </data>
   <data name="ErrIncompatibleRecord" xml:space="preserve">
     <value>Tega zapisa ni mogoče uporabiti. Morda vsebuje nasprotujoča si polja nezdružljivih tipov.</value>
     
@@ -2791,15 +2843,16 @@
     <value>Koda jezika podanega besedila.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Ustvari tabelo iz določenih zapisov s toliko stolpci kot je enoličnih polj zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Ustvari tabelo iz določenih zapisov in tabel s toliko stolpci, kot je enoličnih polj zapisa. Na primer: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
-    <value>zapis</value>
+    <value>zapis_ali_tabela</value>
     
   </data>
-  <data name="AboutTable_record" xml:space="preserve">
-    <value>Zapis, ki bo postal vrstica v dobljeni tabeli.</value>
+  <data name="AboutTable_record_or_table" xml:space="preserve">
+    <value>Zapis ali tabela, ki bo del nastale tabele.</value>
+    
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
     <value>Vrne tabelo z odstranjenimi vsemi stolpci iz tabele argumenta »vir«, razen določenih stolpcev.</value>
@@ -3021,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>vir_podatkov</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3037,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>vir_podatkov</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>vir_podatkov</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3052,16 +3105,55 @@
     <value>Uporabi posodobitve določene vrstice in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Vzame en zapis s primarnimi ključi in posodobljenimi vrednostmi ter posodobi ustrezno vrstico v navedenem viru podatkov. Vrne tabelo s posodobljeno vrstico.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Vzame tabelo z vrsticami in uporabi posodobitve, določene v tabeli s posodobitvami, v vsaki posamezni vrstici. Vrne tabelo s posodobljenimi vrsticami.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Vzame tabelo z vrsticami s primarnimi ključi in posodobljena polja ter uporabi te posodobitve v viru podatkov. Vrne tabelo s posodobljenimi vrsticami.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Vrne vrstico z uveljavljenimi posodobitvami.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Vir podatkov, ki ga je treba posodobiti.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Zapis, ki ga je treba posodobiti.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Posodobitev, ki jo je treba uveljaviti za dani zapis.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabela z vrsticami, ki bodo popravljene.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabela s posodobitvami, s katerimi bodo popravljene navedene vrstice.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>zapis</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>posodobi</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>vrstice</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>posodobitve</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3069,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>vir_podatkov</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>odstrani_zapis(e)</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3896,6 +3988,17 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Naslov URL, ki bo kodiran.</value>
   </data>
+  <data name="AboutEncodeHTML" xml:space="preserve">
+    <value>Pretvori besedilo v besedilo, kodirano s HTML-jem.</value>
+    
+  </data>
+  <data name="EncodeHTMLArg1" xml:space="preserve">
+    <value>vrednost</value>
+    
+  </data>
+  <data name="AboutEncodeHTML_value" xml:space="preserve">
+    <value>Besedilo, ki ga je treba kodirati.</value>
+  </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>Funkcija »{0}« je prepoznana, vendar ni podprta.</value>
     
@@ -4042,7 +4145,7 @@
     
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Odstrani vse oblikovanje in vrne vrednost v navadnem besedilu.</value>
+    <value>Odstrani vse oblikovanje in vrne navadno besedilno vrednost.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -4166,6 +4269,10 @@
     <value>Vrednosti JSONFormat »{0}« in »{1}« ni mogoče uporabiti skupaj.</value>
     
   </data>
+  <data name="ErrJSONArg2UnsupportedOption" xml:space="preserve">
+    <value>Vrednost »{0}« ni podprta kot možnost v funkciji JSON.</value>
+    
+  </data>
   <data name="ErrJSONArg1ContainsUnsupportedMedia" xml:space="preserve">
     <value>Vrednost, ki je posredovana funkciji JSON, vsebuje predstavnost in ni privzeto podprta. Če želite dovoliti serializacijo vrednosti predstavnosti JSON, morate v parametru »format« uporabiti možnost »IncludeBinaryData«.</value>
     
@@ -4262,6 +4369,10 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Neznan operator Partial.</value>
+    
+  </data>
+  <data name="ErrTruncatedArgWarning" xml:space="preserve">
+    <value>Opozorilo o delegiranju. Rezultat tega argumenta »{0}« lahko prirežemo za velike nabore podatkov, preden ga prenesemo v funkcijo »{1}«.</value>
     
   </data>
 </root>

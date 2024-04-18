@@ -247,6 +247,7 @@ namespace Microsoft.PowerFx.Core.Binding
         internal static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg, bool usePowerFxV1CompatibilityRules)
         {
             var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
+
             if (cArg == 0)
             {
                 return candidates.FirstOrDefault();
@@ -339,23 +340,39 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
+            // Option sets are checked against typeWant for a match of the backing kind
+            //   Pre-V1: Ensure that Booleans only match bool valued option sets
+            //   V1: BackingKind matches (and Decimal can work with Number) and CanCoerceToBackingKind is true
+            //
+            // Checking against typeWant and not all alternateTypes (below) prevents, for example, Boolean option sets from being used in + operations,
+            // as it would require a coercion to number and then another to Boolean.  Limiting option set usage in this manner is a good thing.
+            // If the maker wants to allow Boolean + to work, they can use the Value function on the option set first.
+            //
+            // Option sets need not (and shouldn't be) listed in calls to CheckTypeCore.  For consistency,
+            // we always check option sets here against the backing types.
+            //
+            // Option sets can always coerce to string, V1 and pre-V1.
+            var nodeBackingKind = nodeType.OptionSetInfo?.BackingKind;
+            if (nodeBackingKind != null &&
+                (typeWant.Kind == DKind.String ||
+                ((!usePowerFxV1CompatibilityRules || nodeType.OptionSetInfo.CanCoerceToBackingKind) &&
+                   ((typeWant.Kind == DKind.Boolean && nodeBackingKind == DKind.Boolean) ||
+                    ((typeWant.Kind == DKind.Number || typeWant.Kind == DKind.Decimal) && nodeBackingKind == DKind.Number) ||
+                    (typeWant.Kind == DKind.Color && nodeBackingKind == DKind.Color)))))
+            {
+                coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
+                return new BinderCheckTypeResult() { Coercions = coercions };
+            }
+
             // Normal (non-control) coercion
             foreach (var altType in alternateTypes)
             {
-                if (!altType.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                if (altType.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
-                    continue;
+                    // We found an alternate type that is accepted and will be coerced.
+                    coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
+                    return new BinderCheckTypeResult() { Coercions = coercions };
                 }
-
-                // Ensure that booleans only match bool valued option sets
-                if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(nodeType.OptionSetInfo?.IsBooleanValued() ?? false))
-                {
-                    continue;
-                }
-
-                // We found an alternate type that is accepted and will be coerced.
-                coercions.Add(new BinderCoercionResult() { Node = node, CoercedType = typeWant });
-                return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
             if (!features.PrimaryOutputPropertyCoercionDeprecated)
@@ -782,77 +799,72 @@ namespace Microsoft.PowerFx.Core.Binding
             var coercions = new List<BinderCoercionResult>();
             var usePowerFxV1CompatibilityRules = features.PowerFxV1CompatibilityRules;
 
-            // Special case for number-backed BuiltIn Option Sets:
+            // Special cases for comparing option set values
+            // Without StronglyTypedBuiltinEnums, option sets are convereted to their backing kind before getting here in Visitor.Visit(FirstNameNode)
             if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
             {
-                // Option set must be numeric to compare. 
-                if ((typeLeft.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
+                // Comparing values from two different option set values is not supported
+                if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue
+                    && typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
-                    errorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
-                        typeLeft.GetKindString());
-
-                    return new BinderCheckTypeResult();
-                }
-                else if ((typeRight.OptionSetInfo?.BackingKind ?? DKind.Number) != DKind.Number)
-                {
-                    errorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrUnOrderedTypeForComparison_Type,
-                        typeRight.GetKindString());
-
-                    return new BinderCheckTypeResult();
-                }
-
-                // Mismatched option sets can't be compared
-                if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
-                {
-                    errorContainer.EnsureError(
-                        DocumentErrorSeverity.Severe,
-                        left.Parent,
-                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
-                        typeLeft.GetKindString(),
-                        typeRight.GetKindString());
-
-                    return new BinderCheckTypeResult();
-                }
-                else if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue)
-                {
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
-                }
-                else if (typeLeft.Kind == DKind.OptionSetValue)
-                {
-                    // The other value (right in this case) needs to be a number or coerced to a number in order to compare
-                    var rightResult = CheckComparisonTypeOneOfCore(errorContainer, right, features, typeRight, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
-                    coercions.AddRange(rightResult.Coercions);
-
-                    // CheckComparisonTypeOneOfCore above will validate that Decimal is OK, but will not coerce to a number
-                    if (!DType.Number.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    if (typeLeft.OptionSetInfo.CanCompareNumeric)
                     {
-                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                        return new BinderCheckTypeResult
+                        {
+                            Coercions = new[]
+                            {
+                                new BinderCoercionResult { Node = left, CoercedType = DType.Number },
+                                new BinderCoercionResult { Node = right, CoercedType = DType.Number }
+                            }
+                        };
                     }
-
-                    // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind. In this case, always number, checked above.
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
-                }
-                else if (typeRight.Kind == DKind.OptionSetValue)
-                {
-                    var leftResult = CheckComparisonTypeOneOfCore(errorContainer, left, features, typeLeft, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTime);
-                    coercions.AddRange(leftResult.Coercions);
-
-                    if (!DType.Number.Accepts(typeLeft, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    else
                     {
-                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        errorContainer.EnsureError(
+                            DocumentErrorSeverity.Severe,
+                            left.Parent,
+                            TexlStrings.ErrUnOrderedTypeForComparison_Type,
+                            typeLeft.GetKindString());
+                        return new BinderCheckTypeResult();
                     }
-
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
                 }
 
-                return new BinderCheckTypeResult() { Coercions = coercions };
+                // Comparing to backing type is permitted under a few circumstances
+                else if (typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo.CanCompareNumeric &&
+                        (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCoerceFromBackingKind || typeLeft.OptionSetInfo.CanCoerceToBackingKind) &&
+                        (typeRight.Kind == DKind.Number || typeRight.Kind == DKind.Decimal))
+                {
+                    return new BinderCheckTypeResult
+                    {
+                        Coercions = new[]
+                        {
+                            new BinderCoercionResult { Node = left, CoercedType = DType.Number },
+                            new BinderCoercionResult { Node = right, CoercedType = DType.Number }
+                        }
+                    };
+                }
+                else if (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo.CanCompareNumeric &&
+                        (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCoerceFromBackingKind || typeRight.OptionSetInfo.CanCoerceToBackingKind) &&
+                        (typeLeft.Kind == DKind.Number || typeLeft.Kind == DKind.Decimal))
+                {
+                    return new BinderCheckTypeResult
+                    {
+                        Coercions = new[]
+                        {
+                            new BinderCoercionResult { Node = left, CoercedType = DType.Number },
+                            new BinderCoercionResult { Node = right, CoercedType = DType.Number }
+                        }
+                    };
+                }
+
+                // otherwise, we have an illegal option set comparison
+                errorContainer.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    left.Parent,
+                    TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                    typeLeft.GetKindString(),
+                    typeRight.GetKindString());
+                return new BinderCheckTypeResult();
             }
 
             // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
@@ -1004,44 +1016,60 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult();
             }
 
-            // Special case for comparing option set values, it should produce an error when the base option sets are different
-            if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            // Special case for comparing option set values
+            if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
             {
+                // Comparing values from two different option set values is not supported
+                if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue)
+                {
+                    if (typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return new BinderCheckTypeResult();
+                    }
+                }
+
+                // Comparing to backing type is permitted under a few circumstances
+                else if (typeLeft.Kind == DKind.OptionSetValue &&
+                        (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCoerceFromBackingKind || typeLeft.OptionSetInfo.CanCoerceToBackingKind))
+                {
+                    if (typeLeft.OptionSetInfo.BackingKind == typeRight.Kind ||
+                        (typeLeft.IsOptionSetBackedByNumber && typeRight.Kind == DKind.Decimal))
+                    {
+                        return new BinderCheckTypeResult
+                        {
+                            Coercions = new[]
+                            {
+                                new BinderCoercionResult { Node = left, CoercedType = new DType(typeLeft.OptionSetInfo.BackingKind) },
+                                new BinderCoercionResult { Node = right, CoercedType = new DType(typeLeft.OptionSetInfo.BackingKind) }
+                            }
+                        };
+                    }
+                }
+                else if (typeRight.Kind == DKind.OptionSetValue &&
+                        (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCoerceFromBackingKind || typeRight.OptionSetInfo.CanCoerceToBackingKind))
+                {
+                    if (typeRight.OptionSetInfo.BackingKind == typeLeft.Kind ||
+                        (typeRight.IsOptionSetBackedByNumber && typeLeft.Kind == DKind.Decimal))
+                    {
+                        return new BinderCheckTypeResult
+                        {
+                            Coercions = new[]
+                            {
+                                new BinderCoercionResult { Node = left, CoercedType = new DType(typeRight.OptionSetInfo.BackingKind) },
+                                new BinderCoercionResult { Node = right, CoercedType = new DType(typeRight.OptionSetInfo.BackingKind) }
+                            }
+                        };
+                    }
+                }
+                
+                // otherwise, we have an illegal option set comparison
                 errorContainer.EnsureError(
                     DocumentErrorSeverity.Severe,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                     typeLeft.GetKindString(),
                     typeRight.GetKindString());
-
                 return new BinderCheckTypeResult();
-            }
-            else if (typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo?.BackingKind == typeRight.Kind)
-            {
-                // Comparing option sets to their backing kind is permitted, and coerces the option set to the backing kind
-                Contracts.Assert(typeRight.Kind == DKind.String || typeRight.Kind == DKind.Number || typeRight.Kind == DKind.Boolean || typeRight.Kind == DKind.Color);
-
-                return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = left, CoercedType = typeRight } } };
-            }
-            else if (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo?.BackingKind == typeLeft.Kind)
-            {
-                Contracts.Assert(typeLeft.Kind == DKind.String || typeLeft.Kind == DKind.Number || typeLeft.Kind == DKind.Boolean || typeLeft.Kind == DKind.Color);
-
-                return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = right, CoercedType = typeLeft } } };
-            }
-
-            // Special case for comparing option set values backed by numbers with decimal values
-            if ((typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo?.BackingKind == DKind.Number && typeRight.Kind == DKind.Decimal) ||
-                (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo?.BackingKind == DKind.Number && typeLeft.Kind == DKind.Decimal))
-            {
-                return new BinderCheckTypeResult
-                {
-                    Coercions = new[]
-                    {
-                        new BinderCoercionResult { Node = left, CoercedType = DType.Number },
-                        new BinderCoercionResult { Node = right, CoercedType = DType.Number }
-                    }
-                };
             }
 
             // Special case for view values, it should produce an error when the base views are different
@@ -1193,7 +1221,7 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case UnaryOp.Not:
-                    var resNot = CheckTypeCore(errorContainer, node.Child, features, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
+                    var resNot = CheckTypeCore(errorContainer, node.Child, features, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
 
                 case UnaryOp.Minus:
@@ -1264,22 +1292,47 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Or:
                 case BinaryOp.And:
-                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
-                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
+                    var resLeftAnd = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.UntypedObject);
+                    var resRightAnd = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
                     BinderCheckTypeResult resLeftConcat;
                     BinderCheckTypeResult resRightConcat;
+
+                    if (features.StronglyTypedBuiltinEnums)
+                    {
+                        if (leftType == DType.OptionSetValue && rightType == DType.OptionSetValue)
+                        {
+                            if (rightType.OptionSetInfo.EntityName == leftType.OptionSetInfo.EntityName &&
+                                rightType.OptionSetInfo.CanConcatenateStronglyTyped)
+                            {
+                                return new BinderCheckTypeResult() { Node = node, NodeType = leftType };
+                            }
+                        }
+                        else if (leftType == DType.OptionSetValue &&
+                                 leftType.OptionSetInfo.CanCoerceFromBackingKind && leftType.OptionSetInfo.CanConcatenateStronglyTyped)
+                        {
+                            resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = leftType, Coercions = resRightConcat.Coercions };
+                        }
+                        else if (rightType == DType.OptionSetValue &&
+                                 rightType.OptionSetInfo.CanCoerceFromBackingKind && rightType.OptionSetInfo.CanConcatenateStronglyTyped)
+                        {
+                            resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                            return new BinderCheckTypeResult() { Node = node, NodeType = rightType, Coercions = resLeftConcat.Coercions };
+                        }
+                    }
+
                     if (features.PowerFxV1CompatibilityRules)
                     {
-                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
                     }
                     else
                     {
-                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, features, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, features, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.ViewValue, DType.UntypedObject);
                     }
 
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
