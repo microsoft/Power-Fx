@@ -43,7 +43,7 @@ Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 0-7: Th
 Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed.
 
 >> Collect("", "")
-Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 8-10: The function 'Collect' has some invalid arguments.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 8-10: The function 'Collect' has some invalid arguments.|Error 12-14: Invalid argument type. Cannot use Text values in this context.
 
 >> IsBlank(Collect(t1, Blank()))
 true
