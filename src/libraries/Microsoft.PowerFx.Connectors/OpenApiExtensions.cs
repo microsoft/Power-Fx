@@ -568,7 +568,20 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             string propLogicalName = kv.Key;
-                            string propDisplayName = GetDisplayName(string.IsNullOrWhiteSpace(kv.Value.Title) ? kv.Key : kv.Value.Title);
+                            string propDisplayName = kv.Value.Title;
+
+                            if (string.IsNullOrEmpty(propDisplayName))
+                            {
+                                propDisplayName = kv.Value.GetSummary();
+                            }
+
+                            if (string.IsNullOrEmpty(propDisplayName))
+                            {
+                                propDisplayName = kv.Key;
+                            }
+                            
+                            propDisplayName = GetDisplayName(propDisplayName);                                    
+
                             string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
