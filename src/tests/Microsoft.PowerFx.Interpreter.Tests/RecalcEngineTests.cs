@@ -593,6 +593,49 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result.AsDouble());
         }
 
+        [Theory]
+
+        // Return value with side effectful UDF
+        [InlineData(
+            "F1(x:Number) : Number = { Set(a, x); a+1; };",
+            "F1(123)",
+            false,
+            124,
+            true)]
+
+        // Mismatch return value with side effectful UDF
+        [InlineData(
+            "F1(x:Number) : Boolean = { Set(a, x); Today(); };",
+            null,
+            true,
+            0,
+            true)]
+
+        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, double expected = 0, bool allowSideEffects = false)
+        {
+            var config = new PowerFxConfig()
+            {
+                MaxCallDepth = 100
+            };
+            config.EnableSetFunction();
+            var recalcEngine = new RecalcEngine(config);
+            recalcEngine.UpdateVariable("a", 1m);
+
+            try
+            {
+                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: allowSideEffects);
+
+                var result = recalcEngine.Eval(expression, options: _opts);
+                var fvExpected = FormulaValue.New(expected);
+
+                Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
+            }
+            catch (Exception ex)
+            {
+                Assert.True(expectedError, ex.Message);
+            }
+        }
+
         // Binding to inner functions does not impact outer functions. 
         [Fact]
         public void FunctionInner()

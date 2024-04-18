@@ -45,6 +45,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
+        [InlineData("F1(x:Number) : Number = { Set(a, x); x+1; };")]
+        [InlineData("F1(x:Number) : Boolean = { Set(a, x); Today(); };")]
+        public void ValidUDFBodyTest2(string script)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+
+            Assert.False(result.HasErrors);
+        }
+
+        [Theory]
         [InlineData("test2(b: Boolean): Boolean = { Set(a, b);")]
         public void InvalidUDFBodyTest(string script)
         {
@@ -73,6 +88,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(result.HasErrors);
             Assert.Equal(udfCount, result.UDFs.Count());
             Assert.Equal(nfCount, result.NamedFormulas.Count());
+        }
+
+        [Theory]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); };")]
+        public void ImperativeUdfsEnabledOrDisabled(string script)
+        {
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+
+            Assert.True(result.HasErrors);
+
+            options = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                Culture = CultureInfo.InvariantCulture
+            };
+            UserDefinitions.ProcessUserDefinitions(script, options, out result);
+
+            Assert.False(result.HasErrors);
         }
     }
 }

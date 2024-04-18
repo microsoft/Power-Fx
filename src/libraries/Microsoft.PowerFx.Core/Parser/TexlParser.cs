@@ -391,8 +391,9 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         ParseTrivia();
 
-                        var result = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects ?
-                            ParseUDFBody() : ParseExpr(Precedence.None);
+                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+
+                        var result = isImperative ? ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
 
                         // Check if we're at EOF before a semicolon is found
@@ -402,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: true));
                     }
                     else
                     {
