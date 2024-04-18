@@ -37,8 +37,9 @@ namespace Microsoft.PowerFx.Core
                 forceUpdateDisplayNames: toDisplay,
                 features: flags);
 
-            foreach (var token in binding.NodesToReplace)
+            foreach (var token in binding.NodesToReplace) // <-- which means we must have duplicates in here. 
             {
+                // <<-- we crash here 
                 worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));
             }
 
