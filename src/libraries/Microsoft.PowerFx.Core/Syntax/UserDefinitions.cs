@@ -89,7 +89,8 @@ namespace Microsoft.PowerFx.Syntax
 
             foreach (var unresolvedType in typeGraph.UnresolvedTypes)
             {
-                typeErr.Add(new TexlError(unresolvedType.Key.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                var definedType = unresolvedType.Key;
+                typeErr.Add(new TexlError(definedType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, definedType.Ident.Name));
             }
 
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 

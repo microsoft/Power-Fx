@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Types
                 var resolvedType = DTypeVisitor.Run(currentType.Type.TypeRoot, composedSymbols);
                 if (resolvedType == DType.Invalid)
                 {
-                    errors.Add(new TexlError(currentType.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, currentType.Ident.Name));
                     continue;
                 }
 
