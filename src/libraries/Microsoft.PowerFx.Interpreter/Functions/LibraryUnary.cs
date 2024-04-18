@@ -316,6 +316,50 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeToDecimal)
             },
             {
+                UnaryOpKind.BooleanToOptionSet,
+                StandardErrorHandling<BooleanValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanToOptionSet)
+            },
+            {
+                UnaryOpKind.NumberToOptionSet,
+                StandardErrorHandling<NumberValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: NumberToOptionSet)
+            },
+            {
+                UnaryOpKind.DecimalToOptionSet,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToOptionSet)
+            },
+            {
+                UnaryOpKind.StringToOptionSet,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StringToOptionSet)
+            },
+            {
                 UnaryOpKind.NumberToTime,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -1007,6 +1051,26 @@ namespace Microsoft.PowerFx.Functions
 
             var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Color), errorMessage);
+        }
+
+        public static OptionSetValue StringToOptionSet(IRContext irContext, StringValue[] args)
+        {
+            return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, (string)args[0].Value);
+        }
+
+        public static OptionSetValue DecimalToOptionSet(IRContext irContext, DecimalValue[] args)
+        {
+            return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, (double)args[0].Value);
+        }
+
+        public static OptionSetValue NumberToOptionSet(IRContext irContext, NumberValue[] args)
+        {
+            return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, (double)args[0].Value);
+        }
+
+        public static OptionSetValue BooleanToOptionSet(IRContext irContext, BooleanValue[] args)
+        {
+            return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, (bool)args[0].Value);
         }
 
         private static System.Drawing.Color ToColor(double doubValue)

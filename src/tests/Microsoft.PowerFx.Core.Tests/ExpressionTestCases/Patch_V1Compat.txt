@@ -16,13 +16,13 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 // **********************************************************
 
 >> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 24-66: The specified column 'x' does not exist.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
-Errors: Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 13-54: The specified column 'x' does not exist.
+Errors: Error 13-54: The specified column 'x' does not exist.
 
 >> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 13-54: The specified column 'x' does not exist.|Error 57-99: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 13-54: The specified column 'x' does not exist.|Error 57-99: The specified column 'x' does not exist.
 
 >> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
 Errors: Error 6-76: The value passed to the 'Patch' function cannot be changed.
@@ -114,7 +114,7 @@ Blank()
 Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
 >> Patch(t1, 0, 0)
-Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context: '0'.|Error 13-14: Cannot use a non-record value in this context: '0'.
+Errors: Error 0-5: The function 'Patch' has some invalid arguments.|Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.
 
 // Display names
 >> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});
@@ -168,10 +168,10 @@ Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false}
 {Field1:6,Field2:"phobos",Field3:DateTime(2033,1,1,0,0,0,0),Field4:false}
 
 >> Patch(Foo, First(t1), {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 11-20: The specified column 'Field1' does not exist.|Error 22-51: The specified column 'DisplayNameField2' does not exist.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> Patch(Foo, Bar, {DisplayNameField2:"jupiter"})
-Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.|Error 16-45: The specified column 'DisplayNameField2' does not exist.
+Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-5: The function 'Patch' has some invalid arguments.
 
 >> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})

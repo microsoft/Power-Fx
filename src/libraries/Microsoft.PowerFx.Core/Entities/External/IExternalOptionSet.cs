@@ -20,7 +20,80 @@ namespace Microsoft.PowerFx.Core.Entities
         /// </summary>
         IEnumerable<DName> OptionNames { get; }
 
+        /// <summary>
+        /// Backing kind for this option set. Must be Number, String, Boolean, or Color.
+        /// </summary>
         DKind BackingKind { get; }
+
+        // Option set flags: defines semantics for how the option set and backing kinds can be intermixed.
+        //
+        // Here are some of the most common usage patterns...
+        //
+        // Strongly typed, single option (default): 
+        //          All flags = false.
+        //          Used by SortOder, TimeUnit, StartOfWeek, TraceSeverity, ...
+        //          The option set doesn't mix with the backing kind in any way. Useful for a strongly typed choice between options.
+        //
+        // Strongly typed, multiple options at once:
+        //          CanStronglyTypedConcatenation = true, string backed only.
+        //          Used by JSONFormat, MatchOptions, ...
+        //          Used when multiple options are supported, members of the option set can be concatenated
+        //          together to form new runtime members of the option set, thus retaining the strong typing.
+        //          Concatenation with the backing kind is not allowed (see below for this case).
+        // 
+        // Option set is shorthand for the backind kind:
+        //          CanCoerceToBackingKind = true. Always true for Boolean.
+        //          Used by Color. 
+        //          The option set is a convenient shorthand for using the backind kind. Loosely typed, the only
+        //          type safety is that a function defined with the option set can't be passed the backing type.
+        //
+        // Option set is shorthand for the backind kind, with Numerical Compare:
+        //          CanCoreceToBackindKind = true and CanCompareNumerical = true, number backed only.
+        //          Used by ErrorKind.
+        //          Numerical order comparisons (<, >, <=, >=) are supported.
+        //
+        // Custom backing kind can be used in place of the option set:
+        //          CanCoerceFromBackindKind = true. Always true for Boolean.
+        //          Not supported for Color. 
+        //          Used by DateTimeFormat.
+        //          Functions that have this option set as a parameter type can be passed the backing kind.
+        //
+        // Custom backing kind mixes with the option set:
+        //          CanCoerceFromBackindKind and CanContenateStronglyTyped = true.
+        //          Used by Match.
+        //          Functions that have this option set as a parameter type can be passed the backing kind and
+        //          concatenations between the option set and the backind kind result in the option set type.
+
+        /// <summary>
+        /// Backing kind typed values can be used in placed of this option set value.  
+        /// This is also possible for concatenate and numeric compare if those flags are set.
+        /// Examples: a completely custom regular expression string can passed for a Match enum
+        /// and a number can be used in place of an ErrorKind.
+        /// </summary>
+        bool CanCoerceFromBackingKind { get; }
+
+        /// <summary>
+        /// Option set can be used in place of the backing kind. 
+        /// This is useful to provide a convenient enum value for the backing kind, for example ErrorKind and Color.
+        /// There is no type safety, effectively the enum is just like using the backing type.
+        /// </summary>
+        bool CanCoerceToBackingKind { get; }
+
+        /// <summary>
+        /// Only applies to string backed option sets.
+        /// All enums can be coerced to strings and concatenated as strings.  In some situations, we intend the maker
+        /// to concatenate enums and not lose the strong typing of that enum, for example with JSONFormat or MatchOptions.
+        /// A concatenate with like enum values results in the enum type being preserved if this flag is true.
+        /// </summary>
+        bool CanConcatenateStronglyTyped { get; }
+
+        /// <summary>
+        /// Only applies to number backed option sets.
+        /// Members of this option set can be compared numerically with one another and with numbers.
+        /// Examples: Members of ErrorKind, where ErrorKind.Custom is used to separate system ErrorKinds (those below) from
+        /// custom ErrorKinds defined by makers (those above).
+        /// </summary>
+        bool CanCompareNumeric { get; }
 
         bool IsConvertingDisplayNameMapping { get; }
 
@@ -32,6 +105,21 @@ namespace Microsoft.PowerFx.Core.Entities
         public static bool IsBooleanValued(this IExternalOptionSet optionSet)
         {
             return optionSet.BackingKind == DKind.Boolean;
+        }
+
+        public static bool IsStringValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.String;
+        }
+
+        public static bool IsNumberValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.Number;
+        }
+
+        public static bool IsColorValued(this IExternalOptionSet optionSet)
+        {
+            return optionSet.BackingKind == DKind.Color;
         }
     }
 }
