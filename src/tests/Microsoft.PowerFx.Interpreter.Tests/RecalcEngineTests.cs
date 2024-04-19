@@ -1239,7 +1239,8 @@ namespace Microsoft.PowerFx.Tests
                 {
                     { "Choice1", true },
                     { "Choice2", false },
-                }));
+                },
+                canCoerceToBackingKind: true));
             var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
             var recalcEngine = new RecalcEngine(config);
 
@@ -1257,8 +1258,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Boolean(TestEnum.Choice1)", false)]
         [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", false)]
         [InlineData("TestEnum.Choice1 And true", false)]
-        [InlineData("ColorFade(TestEnum.Choice1,10%)", true)]
-        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", true)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", false)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", false)]
         public void OptionSetBackingColorTests(string expression, bool valid)
         {
             var enumStoreBuilder = new EnumStoreBuilder();

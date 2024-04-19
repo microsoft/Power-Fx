@@ -81,6 +81,10 @@ namespace Microsoft.PowerFx.Core.IR
         DateToDateTime,
 
         BooleanToOptionSet,
+        NumberToOptionSet,
+        DecimalToOptionSet,
+        StringToOptionSet,
+
         AggregateToDataEntity,  
         
         OptionSetToColor,

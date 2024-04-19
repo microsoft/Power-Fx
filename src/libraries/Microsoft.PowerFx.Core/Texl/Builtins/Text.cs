@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string TextInvariantFunctionName = "Text";
 
         public TextFunction()
-            : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
+            : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, BuiltInEnums.DateTimeFormatEnum.FormulaType._type, DType.String)
         {
         }
 

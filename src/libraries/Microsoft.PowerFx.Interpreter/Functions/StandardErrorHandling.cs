@@ -667,15 +667,24 @@ namespace Microsoft.PowerFx.Functions
         {
             if (index == 0)
             {
+                // arg 0
                 return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
             }
-
-            if (index == 2)
+            else if ((index - 1) % 2 == 0)
             {
-                return ExactValueTypeOrTableOrBlank<StringValue>(irContext, index, arg);
+                // arg 1, 3, 5, ...
+                return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
             }
-
-            return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
+            else if (index == 2 && arg is TableValue)
+            {
+                // arg 2 with order table overload
+                return arg;
+            }
+            else
+            {
+                // arg 2, 4, 6, ... with scalar values
+                return StringOrBlankOrOptionSetBackedByString(irContext, index, arg);
+            }
         }
 
         private static FormulaValue SearchTypeChecker(IRContext irContext, int index, FormulaValue arg)
@@ -737,6 +746,57 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
+
+        private static FormulaValue NumberOrDecimalOrOptionSetBackedByNumber(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is NumberValue || arg is DecimalValue || (arg is OptionSetValue osv && osv.ExecutionValue is double))
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue StringOrOptionSetBackedByString(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is StringValue || (arg is OptionSetValue osv && osv.ExecutionValue is string))
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue StringOrBlankOrOptionSetBackedByString(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is BlankValue)
+            {
+                return arg;
+            }
+
+            return StringOrOptionSetBackedByString(irContext, index, arg);
+        }
+
+        private static FormulaValue NumberOrOptionSetBackedByNumber(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is NumberValue || (arg is OptionSetValue osv && osv.ExecutionValue is double))
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue NumberOrBlankOrOptionSetBackedByNumber(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is BlankValue)
+            {
+                return arg;
+            }
+
+            return NumberOrOptionSetBackedByNumber(irContext, index, arg);
+        }
+
         #endregion
 
         #region Common Runtime Value Checking Pipeline Stages

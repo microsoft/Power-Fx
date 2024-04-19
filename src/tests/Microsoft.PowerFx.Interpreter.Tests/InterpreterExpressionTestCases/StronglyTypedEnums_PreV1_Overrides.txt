@@ -1,0 +1,14 @@
+#override: StronglyTypedEnums_PreV1.txt
+#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsSetup,RegEx,EnableJsonFunctions
+
+// The interpreter depends on typed option set values being passed in for the predefined formats and doesn't interpret the special string values.
+// The base test is left as is so that Canvas can be properly tested.
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
+"'long1ate'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
+"'long1ateti1e'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
+"'long1ateti1e24'"

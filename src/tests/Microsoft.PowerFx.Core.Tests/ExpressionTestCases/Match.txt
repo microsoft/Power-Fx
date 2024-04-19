@@ -15,7 +15,7 @@
 >> Match("Hello", "llo").FullMatch
 "llo"
 
->> Match("Hello", "llo", "c").FullMatch
+>> Match("Hello", "llo", MatchOptions.Contains).FullMatch
 "llo"
 
 >> Match("Hello", "llo", MatchOptions.Complete).FullMatch
@@ -100,9 +100,6 @@ Errors: Error 15-30: Regular expressions must be constant values.|Error 0-5: The
 {FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}
 
 >> Match("Hello", "Hello", MatchOptions.IgnoreCase)
-{FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
-
->> Match("Hello", "Hello", "")
 {FullMatch:"Hello",StartMatch:1,SubMatches:Table()}
 
 >> Match("Hi", "Hi", MatchOptions.Multiline)
