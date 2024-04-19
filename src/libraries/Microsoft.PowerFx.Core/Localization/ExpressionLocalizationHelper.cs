@@ -44,8 +44,6 @@ namespace Microsoft.PowerFx.Core
             return Span.ReplaceSpans(expressionText, worklist);
         }
 
-
-
         internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, Features flags, bool toDisplay)
         {
             return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new ParserOptions() { Culture = culture }, flags, toDisplay);

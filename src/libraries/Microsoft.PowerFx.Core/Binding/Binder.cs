@@ -247,8 +247,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Stores tokens that need replacement (Display Name -> Logical Name) for serialization
         // Replace Nodes (Display Name -> Logical Name) for serialization
-        public IList<KeyValuePair<Token, string>> NodesToReplace => _nodesToReplace.ToList();
-        private readonly Dictionary<Token, string> _nodesToReplace;
+        public IList<KeyValuePair<Token, string>> NodesToReplace { get; }
 
         public bool UpdateDisplayNames { get; }
 
@@ -324,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Binding
             ContextScope = ruleScope;
             BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
             HasReferenceToAttachment = false;
-            _nodesToReplace = new Dictionary<Token, string>();
+            NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
             _forceUpdateDisplayNames = forceUpdateDisplayNames;
             HasLocalScopeReferences = false;
@@ -2714,11 +2713,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, out var maybeDisplayName))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeDisplayName);
+                        _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeDisplayName);
                     }
                     else if (DType.TryGetDisplayNameForColumn(updatedDisplayNamesType, ident.Name.Value, out maybeDisplayName))
                     {
-                        _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeDisplayName);
+                        _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeDisplayName);
                     }
 
                     if (maybeDisplayName != null)
@@ -2735,7 +2734,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name.
                         if (!_txb.UpdateDisplayNames)
                         {
-                            _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeLogicalName);
+                            _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeLogicalName);
                         }
                     }
                 }
@@ -2914,15 +2913,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (_txb.UpdateDisplayNames)
                     {
-                        _txb._nodesToReplace.AddIfNotExisting(node.Token, lookupInfo.DisplayName);
+                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, lookupInfo.DisplayName);
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)
                     {
-                        _txb._nodesToReplace.AddIfNotExisting(node.Token, entity.EntityName);
+                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, entity.EntityName);
                     }
                     else if (lookupInfo.Data is NameSymbol nameSymbol)
                     {
-                        _txb._nodesToReplace.AddIfNotExisting(node.Token, nameSymbol.Name);
+                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, nameSymbol.Name);
                     }
                 }
 

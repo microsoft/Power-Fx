@@ -2,22 +2,23 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
     internal static class BinderExtensions
     {
-        public static bool AddIfNotExisting<TKey, TValue>(this Dictionary<TKey, TValue> nodes, TKey key, TValue value)
+        public static void AddIfNotSameSpan(this IList<KeyValuePair<Token, string>> nodes, Token key, string value)            
         {
-            if (!nodes.ContainsKey(key))
-            {                
-                nodes.Add(key, value);
-                return true;
+            foreach (KeyValuePair<Token, string> kvp in nodes)
+            {
+                if (kvp.Key.Span == key.Span)
+                {
+                    return;
+                }
             }
 
-            return false;
+            nodes.Add(new KeyValuePair<Token, string>(key, value));
         }
     }
 }
