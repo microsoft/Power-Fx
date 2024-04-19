@@ -1,4 +1,4 @@
-#SETUP: PowerFxV1CompatibilityRules
+#SETUP: PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
 
 // User and table of User works as normal
 
