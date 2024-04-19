@@ -247,7 +247,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Stores tokens that need replacement (Display Name -> Logical Name) for serialization
         // Replace Nodes (Display Name -> Logical Name) for serialization
-        public IList<KeyValuePair<Token, string>> NodesToReplace { get; }
+        public IList<KeyValuePair<Token, string>> NodesToReplace => _nodesToReplace.ToList();
+        private readonly Dictionary<Token, string> _nodesToReplace;
 
         public bool UpdateDisplayNames { get; }
 
@@ -323,7 +324,7 @@ namespace Microsoft.PowerFx.Core.Binding
             ContextScope = ruleScope;
             BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
             HasReferenceToAttachment = false;
-            NodesToReplace = new List<KeyValuePair<Token, string>>();
+            _nodesToReplace = new Dictionary<Token, string>();
             UpdateDisplayNames = updateDisplayNames;
             _forceUpdateDisplayNames = forceUpdateDisplayNames;
             HasLocalScopeReferences = false;
@@ -378,7 +379,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </param>
         /// <param name="bindingConfig">
         /// Augments behavior in a similar way to the features argument, but for features
-        /// particular to Power Apps Client.  When possible, use Features instead. 
+        /// particular to Power Apps Client.  When possible, use Features instead.
         /// </param>
         /// <param name="updateDisplayNames">
         /// If true, the binder will update the display names of the nodes in the parse tree.
@@ -677,10 +678,13 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case NodeKind.FirstName:
                     return SupportsPaging(node.AsFirstName());
+
                 case NodeKind.DottedName:
                     return SupportsPaging(node.AsDottedName());
+
                 case NodeKind.Call:
                     return SupportsPaging(node.AsCall());
+
                 default:
                     Contracts.Assert(false, "This should only be called for FirstNameNode, DottedNameNode and CallNode.");
                     return false;
@@ -1046,10 +1050,13 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case NodeKind.DottedName:
                     return TryGetEntityInfo(node.AsDottedName(), out info);
+
                 case NodeKind.FirstName:
                     return TryGetEntityInfo(node.AsFirstName(), out info);
+
                 case NodeKind.Call:
                     return TryGetEntityInfo(node.AsCall(), out info);
+
                 default:
                     info = null;
                     return false;
@@ -1066,9 +1073,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 case NodeKind.DottedName:
                     data = GetInfo(node.AsDottedName())?.Data;
                     break;
+
                 case NodeKind.FirstName:
                     data = GetInfo(node.AsFirstName())?.Data;
                     break;
+
                 default:
                     data = null;
                     break;
@@ -1094,10 +1103,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     break;
+
                 case NodeKind.FirstName:
                     var firstNameNode = node.AsFirstName().VerifyValue();
                     dataSourceInfo = GetInfo(firstNameNode)?.Data as IExternalDataSource;
                     return dataSourceInfo != null;
+
                 case NodeKind.DottedName:
                     IExpandInfo info;
                     if (TryGetEntityInfo(node.AsDottedName(), out info))
@@ -1107,8 +1118,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     break;
+
                 case NodeKind.As:
                     return TryGetDataSourceInfo(node.AsAsNode().Left, out dataSourceInfo);
+
                 default:
                     break;
             }
@@ -2455,7 +2468,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example, 
+        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example,
         /// to run validation logic that should not produce visible errors for the consumer.
         /// </summary>
         /// <param name="container">The new error container.</param>
@@ -2701,11 +2714,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, out var maybeDisplayName))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
+                        _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeDisplayName);
                     }
                     else if (DType.TryGetDisplayNameForColumn(updatedDisplayNamesType, ident.Name.Value, out maybeDisplayName))
                     {
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
+                        _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeDisplayName);
                     }
 
                     if (maybeDisplayName != null)
@@ -2719,10 +2732,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         logicalNodeName = new DName(maybeLogicalName);
 
-                        // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name. 
+                        // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name.
                         if (!_txb.UpdateDisplayNames)
                         {
-                            _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
+                            _txb._nodesToReplace.AddIfNotExisting(ident.Token, maybeLogicalName);
                         }
                     }
                 }
@@ -2901,15 +2914,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (_txb.UpdateDisplayNames)
                     {
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
+                        _txb._nodesToReplace.AddIfNotExisting(node.Token, lookupInfo.DisplayName);
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)
                     {
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
+                        _txb._nodesToReplace.AddIfNotExisting(node.Token, entity.EntityName);
                     }
                     else if (lookupInfo.Data is NameSymbol nameSymbol)
                     {
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
+                        _txb._nodesToReplace.AddIfNotExisting(node.Token, nameSymbol.Name);
                     }
                 }
 
@@ -3278,31 +3291,39 @@ namespace Microsoft.PowerFx.Core.Binding
                     case BindKind.WebResource:
                         _txb.UsesGlobals = true;
                         break;
+
                     case BindKind.Alias:
                         _txb.UsesAliases = true;
                         break;
+
                     case BindKind.ScopeCollection:
                         _txb.UsesScopeCollections = true;
                         break;
+
                     case BindKind.ScopeVariable:
                         _txb.UsesScopeVariables = true;
                         break;
+
                     case BindKind.DeprecatedImplicitThisItem:
                     case BindKind.ThisItem:
                         _txb.UsesThisItem = true;
                         break;
+
                     case BindKind.Resource:
                         _txb.UsesResources = true;
                         _txb.UsesGlobals = true;
                         break;
+
                     case BindKind.OptionSet:
                         _txb.UsesGlobals = true;
                         _txb.UsesOptionSets = true;
                         break;
+
                     case BindKind.View:
                         _txb.UsesGlobals = true;
                         _txb.UsesViews = true;
                         break;
+
                     default:
                         Contracts.Assert(bindKind == BindKind.LambdaField || bindKind == BindKind.LambdaFullRecord || bindKind == BindKind.Enum || bindKind == BindKind.Unknown);
                         break;
