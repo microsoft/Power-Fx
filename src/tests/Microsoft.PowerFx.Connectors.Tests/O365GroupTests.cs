@@ -59,42 +59,42 @@ namespace Microsoft.PowerFx.Connectors.Tests
             /* APIM body      */ "",
             /* response files */ "Response_O365Groups_ListGroups_01.json",
                                  "Response_O365Groups_ListGroups_02.json")]
-        
+
         [InlineData(
             @"First(Office365Groups.ListGroups({ '$filter': ""id eq '202a2963-7e7d-4dc6-8aca-a58a2f3a9d53'"" }).value).description",
             "TestProject9Aug",
             "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups?$filter=id+eq+%27202a2963-7e7d-4dc6-8aca-a58a2f3a9d53%27",
             "",
             "Response_O365Groups_ListGroupsWithFilter.json")]
-       
+
         [InlineData(
             @"First(Office365Groups.ListGroupMembers(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53"")).value).displayName",
             "aurorauser09",
             "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/members",
             "",
             "Response_O365Groups_ListGroupMembers.json")]
-       
+
         [InlineData(
             @"First(Office365Groups.ListOwnedGroups().value).displayName",
             "11111",
             "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/me/memberOf/$/microsoft.graph.group",
             "",
             "Response_O365Groups_ListOwnedGroups.json")]
-        
+
         [InlineData(
             @"First(Office365Groups.ListOwnedGroupsV2().value).mailNickname",
             "11111",
             "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/me/ownedObjects/$/microsoft.graph.group",
             "",
             "Response_O365Groups_ListOwnedGroupsV2.json")]
-        
+
         [InlineData(
             @"First(Office365Groups.ListOwnedGroupsV3().value).mail",
             "11111@capintegration01.onmicrosoft.com",
             "GET:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v2/v1.0/me/memberOf/$/microsoft.graph.group",
             "",
             "Response_O365Groups_ListOwnedGroupsV3.json")]
-        
+
         [InlineData(
             @"Office365Groups.AddMemberToGroup(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""aurorauser09@capintegration01.onmicrosoft.com"")",
             "ERR:Office365Groups.AddMemberToGroup failed: The server returned an HTTP error with code 400|One or more added object references already exist for the following modified properties: 'members'.",
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "400:Response_O365Groups_AddMemberToGroup.json")]
 
         // In start and end, timeZone is NOT mandatory (even if PA requires it)
-        [InlineData( 
+        [InlineData(
             @"Office365Groups.CreateCalendarEvent(GUID(""202a2963-7e7d-4dc6-8aca-a58a2f3a9d53""), ""Event1"", { dateTime: Now() }, { dateTime: Now(), timeZone: ""UTC"" }).subject",
             "Event1",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events",
@@ -149,16 +149,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "Response_O365Groups_HttpRequest.json")]
 
         // In PA, a 3rd param is required for Body even though it is "required":false in swagger file
-        [InlineData( 
-            @"Office365Groups.HttpRequestV2(""https://graph.microsoft.com/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events"", ""GET"")", 
+        [InlineData(
+            @"Office365Groups.HttpRequestV2(""https://graph.microsoft.com/v1.0/groups/202a2963-7e7d-4dc6-8aca-a58a2f3a9d53/events"", ""GET"")",
             "RECORD",
             "POST:/apim/office365groups/380cef7ddacd49d2bdb5b747184c7d8a/v2/httprequest",
             "",
-            "Response_O365Groups_HttpRequestV2.json")] 
+            "Response_O365Groups_HttpRequestV2.json")]
         public async Task Office365Groups_Functions(string expr, string expectedResult, string xUrls, string xBodies, params string[] expectedFiles)
         {
             await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles, true).ConfigureAwait(false);
-        }       
+        }
 
         [Theory]
         [InlineData("First(Office365Groups", "Office365Groups|Office365Groups.AddMemberToGroup|Office365Groups.CalendarDeleteItemV2|Office365Groups.CreateCalendarEventV2|Office365Groups.HttpRequestV2|Office365Groups.ListGroupMembers|Office365Groups.ListGroups|Office365Groups.ListOwnedGroups|Office365Groups.ListOwnedGroupsV2|Office365Groups.ListOwnedGroupsV3|Office365Groups.RemoveMemberFromGroup|Office365Groups.UpdateCalendarEvent")]
@@ -166,12 +166,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("First(Office365Groups.Lis", "ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3")]
         [InlineData("First(Office365Groups.ListGroups(", "ListGroups({ $filter:String,$top:Decimal,$skiptoken:String })")]
         [InlineData("First(Filter(Office365Groups.ListGroups().", "value:Table|'OData context':String|'OData NextLink':String")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().value,", "classification:String|createdDateTime:DateTime|description:String|displayName:String|id:String|mail:String|mailEnabled:Boolean|mailNickname:String|onPremisesLastSyncDateTime:String|onPremisesSecurityIdentifier:String|onPremisesSyncEnabled:Boolean|renewedDateTime:DateTime|securityEnabled:Boolean|ThisRecord:Record|visibility:String")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().value, ThisRecord.", "classification:String|createdDateTime:DateTime|description:String|displayName:String|id:String|mail:String|mailEnabled:Boolean|mailNickname:String|onPremisesLastSyncDateTime:String|onPremisesSecurityIdentifier:String|onPremisesSyncEnabled:Boolean|renewedDateTime:DateTime|securityEnabled:Boolean|visibility:String")]        
-        [InlineData("First(Filter(Office365Groups.ListGroups().value, mail", "mail:String|mailEnabled:Boolean|mailNickname:String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value,", "Classification:String|'Created Date-Time':DateTime|Description:String|Email:String|'Group Id':String|'Mail Enabled':Boolean|Name:String|Nickname:String|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|ThisRecord:Record|Visibility:String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value, ThisRecord.", "Classification:String|'Created Date-Time':DateTime|Description:String|Email:String|'Group Id':String|'Mail Enabled':Boolean|Name:String|Nickname:String|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|Visibility:String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value, mail", "Email:String|'Mail Enabled':Boolean")]
         public async Task Office365Groups_ListGroups_Intellisense(string expr, string expectedSuggestions)
         {
             RunIntellisenseTest(expr, expectedSuggestions);
-        }        
+        }
     }
 }

@@ -24,15 +24,12 @@ namespace Microsoft.PowerFx.Connectors
     {
         // "name"
         public string Name { get; internal set; }
-        
-        // "title"
+
+        // "x-ms-summary" or "title"
         public string DisplayName { get; }
 
         // "description"
         public string Description { get; }
-
-        // "x-ms-summary"
-        public string Summary { get; }
 
         // "required"
         public bool IsRequired { get; internal set; }
@@ -108,8 +105,11 @@ namespace Microsoft.PowerFx.Connectors
             if (schema != null)
             {
                 Description = schema.Description;
-                DisplayName = schema.Title;
-                Summary = schema.GetSummary();
+
+                string summary = schema.GetSummary();
+                string title = schema.Title;
+
+                DisplayName = string.IsNullOrEmpty(title) ? summary : title;               
                 ExplicitInput = schema.GetExplicitInput();
 
                 Fields = Array.Empty<ConnectorType>();
