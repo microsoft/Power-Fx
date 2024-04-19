@@ -3,16 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -42,12 +37,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(callNode);
 
                 var columnName = GetRecordIdentifierForCursorPosition(cursorPos, recordNode, intellisenseData.Script);
-                if (columnName == null)
-                {
-                    return false;
-                }
-
-                if (columnName.Token.Span.Min <= cursorPos)
+                if (columnName != null && columnName.Token.Span.Min <= cursorPos)
                 {
                     var tokenSpan = columnName.Token.Span;
                     var replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
@@ -107,7 +97,7 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     aggregateType = lastFieldType;
                 }
-                else if (recordNode?.Parent?.Kind == NodeKind.Record && 
+                else if (recordNode?.Parent?.Kind == NodeKind.Record &&
                     recordNode?.Parent?.Parent?.Kind != NodeKind.Table)
                 {
                     // If Parent not is record node, that means it was nested field and above method should have found type, if it did not, return false. unless it was [{<cursor position>.
@@ -132,8 +122,8 @@ namespace Microsoft.PowerFx.Intellisense
                 if (TryGetParentRecordNode(currentNode, out var parentRecord))
                 {
                     var fieldName = parentRecord.Ids.LastOrDefault()?.Name;
-                    if (fieldName.HasValue && 
-                        aggregateType.TryGetType(fieldName.Value, out var type) && 
+                    if (fieldName.HasValue &&
+                        aggregateType.TryGetType(fieldName.Value, out var type) &&
                         (type.IsRecord || currentNode.Parent?.Kind == NodeKind.Table))
                     {
                         fieldType = type;
@@ -152,18 +142,49 @@ namespace Microsoft.PowerFx.Intellisense
 
             internal static bool AddAggregateSuggestions(DType aggregateType, IntellisenseData.IntellisenseData intellisenseData, int cursorPos)
             {
-                var suggestionsAdded = false;
-                var parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
-                var alreadyUsedFields = parentRecordNode?.Ids.Select(id => id.Name).ToImmutableHashSet() ?? Enumerable.Empty<DName>().ToImmutableHashSet();
-                foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
+                bool suggestionsAdded = false;                
+                RecordNode parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
+
+                List<DName> validFields = new List<DName>();
+                string errorField = null;
+
+                for (int i = 0; i < parentRecordNode.Ids.Count; i++)
                 {
-                    var usedName = tName.Name;
+                    TexlNode child = parentRecordNode.Children[i];
+                    Identifier id = parentRecordNode.Ids[i];                    
 
-                    if (alreadyUsedFields.Contains(usedName))
+                    if (child.Kind == NodeKind.Error)
                     {
-                        continue;
-                    }
+                        // if we have "aa:" in the ErrorNode, don't enumerate the record as the colon is present
+                        if (parentRecordNode.Colons.Length == parentRecordNode.Ids.Count)
+                        {
+                            return false;
+                        }
 
+                        // Id defaults to '_' when non-existent
+                        errorField = id.Span.Min == id.Span.Lim ? string.Empty : id.Name.Value;
+                    }
+                    else
+                    {
+                        validFields.Add(id.Name);
+                    }
+                }
+               
+                // exclude fields that are already used in the record
+                IEnumerable<TypedName> aggregateNamesNotAlreadyUsed = aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError && !validFields.Contains(param.Name));
+                
+                // if there is an errorField, filter on fields starting with that beginning
+                // case insensitive as it's better for the makers
+                if (!string.IsNullOrEmpty(errorField))
+                {
+                    aggregateNamesNotAlreadyUsed = aggregateNamesNotAlreadyUsed.Where(field => field.Name.Value.StartsWith(errorField, StringComparison.OrdinalIgnoreCase));
+                }
+                
+                foreach (TypedName tName in aggregateNamesNotAlreadyUsed)
+                {
+                    DName usedName = tName.Name;
+
+                    // use display name if available
                     if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
                     {
                         usedName = new DName(maybeDisplayName);
@@ -197,7 +218,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
                 else if (callNode.Args?.Count > 0)
                 {
-                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]); 
+                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]);
                     if (type.IsTableNonObjNull)
                     {
                         return type.ToRecord();

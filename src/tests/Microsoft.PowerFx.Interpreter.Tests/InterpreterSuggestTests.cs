@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -38,7 +37,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         // Intellisense isn't actually all that great when it comes to context-sensitive suggestions
-        // Without a refactor, this is the best it can currently do. 
+        // Without a refactor, this is the best it can currently do.
         // Ideally, for BinaryOp nodes we only suggest things with relevant types,
         // but for now we can at least get them to appear higher in the sort order
         [Theory]
@@ -92,9 +91,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(expectedSuggestions, actualSuggestions2);
         }
 
-        // Test with display names. 
+        // Test with display names.
         [Theory]
-        [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
+        [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
@@ -120,7 +119,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Hou|", "Hour", "TimeUnit.Hours")]
         public void TestSuggestHour(string expression, params string[] expectedSuggestions)
         {
-            // Hour is a function, so that is included with the default set. 
+            // Hour is a function, so that is included with the default set.
             // We don't suggest "Hours" because that is an unqualified enum. Only suggest qualified enum, "TimeUnit.Hours"
             var config = SuggestTests.Default;
 
@@ -180,9 +179,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("ClearCollect(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Remove(Table({a:1, b:2}), {|", "a:", "b:")]
         [InlineData("Error(Ab|  Collect()", "Abs", "Color.OliveDrab", "ErrorKind.NotApplicable", "ErrorKind.ServiceUnavailable", "JSONFormat.FlattenValueTables", "Match.Tab", "Table")]
-
-        //[InlineData("Patch({a:1, b:2}, {|", "a:", "b:")] This test case will demand a binder change to work.
-        //[InlineData("Patch(Table({a:1, b:2}), {|", "a:", "b:")] This test case will demand a binder change to work.
         public void TestSuggestMutationFunctions(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
@@ -201,7 +197,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(table2,|", "record2")]
         [InlineData("Patch(table2, record2, |", "record2")]
         [InlineData("Remove(table2, |", "record2")]
-
         [InlineData("Collect(|, record1", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Sum(|", "num", "str")]
         [InlineData("Text(|", "num", "str")]
@@ -220,7 +215,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Binary Op Suggestions.
         [InlineData("1 = |", "num")]
         [InlineData("1 + |", "num", "str")]
-
         [InlineData("Patch(table2,|", "record2")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
@@ -232,8 +226,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // It is important to put TableType as Place Holder for intellisense to work.
             var dataverseMock = ReadOnlySymbolTable.NewFromDeferred(
-                map, 
-                (disp, logical) => TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String)), 
+                map,
+                (disp, logical) => TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String)),
                 TableType.Empty());
 
             var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
@@ -241,7 +235,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
 
             config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
-            
+
             var tableType1 = TableType.Empty();
             config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
 
@@ -284,14 +278,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData(
             "RecordInputTest( {field1 : 2}, \"test\", { id: 1, |",
             "name:")]
-
         [InlineData(
             "RecordInputTest( {field1 : 2}, \"test\", { name: \"test\", |",
             "id:")]
-
         [InlineData(
             "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name:\"test name\", |}")]
-
         [InlineData(
             "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|",
             "nested:",
@@ -312,12 +303,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             "name:")]
         [InlineData(
             "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 2, name: \"test\", |")]
-
         [InlineData(
             "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: {|",
             "id:",
             "name:")]
-
         [InlineData(
             "RecordInputTest({field1:1}, \"test\", {id:1,name:\"test\"}, {nested2:{id:1,name:\"test\"}},[{nested:{field1:1}}], {topNested:{nested2:{|",
             "id:",
@@ -337,7 +326,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData(
             "RecordInputTest( {field1 : 6}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested: {|",
             "field1:")]
-
         [InlineData(
             "RecordInputTest( {field1 : 7}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested2: {|",
             "id:",
@@ -353,6 +341,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4}), {|", "aa:, ab:")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), {|", "aa:, ab:, ac:, ba:")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { a|", "aa:, ab:, ac:")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { ac:8, aa: |", @"")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5}), { ac , aa: |", @"")]        
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { b|", "ba:")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { c|", @"")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { aa:5, a|", @"ab:, ac:")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { aa:5, ab:6, ac:7, a|", @"")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { aa:5, ab:6, ac:7, |", @"ba:")]
+        [InlineData("c(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { aa:5, c|", @"")]
+        [InlineData("Collect(Table({aa:1, ab:2}, {aa:3, ab:4, ac:5, ba:7}), { aa:5, c:7, b|", @"ba:")]
+        [InlineData("Collect([1], { |", "Value:")]
+        public void SuggestCollect(string exprWithPipe, string expectedSuggestions)
+        {
+            PowerFxConfig config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+            RecalcEngine engine = new RecalcEngine(config);
+            string expr = exprWithPipe.Replace("|", string.Empty);
+            CheckResult check = engine.Check(expr, new ParserOptions() { AllowsSideEffects = true });
+            IIntellisenseResult intellisense = engine.Suggest(check, exprWithPipe.IndexOf('|'));
+
+            string suggestions = string.Join(", ", intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text));
+            Assert.Equal(expectedSuggestions, suggestions);
         }
     }
 }
