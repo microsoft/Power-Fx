@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
             bool isValidInvocation;
 
-            if (argTypes[0].IsSealed)
+            if (context.Features.PowerFxV1CompatibilityRules && argTypes[0].IsSealed)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrRenameOfSealed);
                 return false;

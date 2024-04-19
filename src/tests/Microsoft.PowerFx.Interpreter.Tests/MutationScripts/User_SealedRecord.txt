@@ -1,4 +1,4 @@
-#SETUP: PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+#SETUP: PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,TableSyntaxDoesntWrapRecords
 
 // User and table of User works as normal
 
@@ -108,3 +108,20 @@ Errors: Error 71-73: Can't rename columns of a system record or table of system 
 
 >> AddColumns( Last( ForAll( Table( { b: {c: User, d:{n:1}}, e:{m:2} } ), ThisRecord )).e, Goo, "Hi" )
 {Goo:"Hi",m:2}
+
+// Union
+
+>> [User, User]
+Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"},{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",FullName:"Susan Burk",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
+
+>> [DropColumns(User, FullName), DropColumns(User, FullName)]
+Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"},{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),Email:"susan@contoso.com",TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})
+
+>> [DropColumns(User, FullName), DropColumns(User, Email)]
+Errors: Error 30-54: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> [DropColumns(ShowColumns(User, FullName, Email), FullName), ShowColumns(DropColumns(User, FullName), Email)]
+Table({Email:"susan@contoso.com"},{Email:"susan@contoso.com"})
+
+>> [DropColumns(DropColumns(User, FullName), Email), DropColumns(DropColumns(User, Email), FullName)]
+Table({DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"},{DataverseUserId:GUID("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),TeamsMemberId:"29:1DUjC5z4ttsBQa0fX2O7B0IDu30R"})

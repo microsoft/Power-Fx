@@ -158,7 +158,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!subMatchesHidden)
                 {
-                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
+                    var subMatches = DType.CreateTable(new TypedName(DType.String, ColumnName_Value));
+                    subMatches.IsSealed = true;
+                    propertyNames.Add(new TypedName(subMatches, ColumnName_SubMatches));
                 }
 
                 if (!startMatchHidden)
@@ -167,10 +169,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 returnType = returnType.IsRecord
-                    ? DType.CreateRecord(propertyNames)
-                    : DType.CreateTable(propertyNames);
-
-                returnType.IsSealed = true;
+                    ? DType.CreateRecord(propertyNames, isSealed: true)
+                    : DType.CreateTable(propertyNames, isSealed: true);
 
                 AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
 

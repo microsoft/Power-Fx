@@ -130,6 +130,11 @@ namespace Microsoft.PowerFx.Core.Types
         // Special case for old enums. 
         public ValueTree ValueTree { get; }
 
+        // The columns of a table or record are sealed and cannot be added to, renamed, or unioned by the formula writer. This allows us to add columns to system records/tables without fear of breaking an existing formula.
+        // All records/tables that are sealed in V1 are also marked sealed in Pre-V1. For the IfError function, since ScopeInfo is defined independent of V1 status, it would be a problem to make sealed V1 dependent.
+        // Instead, a V1 specific check is made at the points that a formula could create a problem, such as AddColumns and record union.
+        // Sealed is NOT checked at internal .Add of fields to a record. This would be a good validation, however we don't have V1 information plumbed down to make that possible.
+        // Note that .Add does not pass through IsSealed. Be sure to set IsSealed after fully creating the type.
         public bool IsSealed { get; set; }
 
         #endregion 
@@ -807,9 +812,9 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Record, typedNames);
         }
 
-        public static DType CreateRecord(IEnumerable<TypedName> typedNames)
+        public static DType CreateRecord(IEnumerable<TypedName> typedNames, bool isSealed = false)
         {
-            return CreateRecordOrTable(DKind.Record, typedNames);
+            return CreateRecordOrTable(DKind.Record, typedNames, isSealed: isSealed);
         }
 
         public static DType CreateTable(params TypedName[] typedNames)
@@ -817,9 +822,9 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Table, typedNames);
         }
 
-        public static DType CreateTable(IEnumerable<TypedName> typedNames)
+        public static DType CreateTable(IEnumerable<TypedName> typedNames, bool isSealed = false)
         {
-            return CreateRecordOrTable(DKind.Table, typedNames);
+            return CreateRecordOrTable(DKind.Table, typedNames, isSealed: isSealed);
         }
 
         public static DType CreateFile(params TypedName[] typedNames)
@@ -832,12 +837,12 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Record, typedNames, isLargeImage: true);
         }
 
-        private static DType CreateRecordOrTable(DKind kind, IEnumerable<TypedName> typedNames, bool isFile = false, bool isLargeImage = false)
+        private static DType CreateRecordOrTable(DKind kind, IEnumerable<TypedName> typedNames, bool isFile = false, bool isLargeImage = false, bool isSealed = false)
         {
             Contracts.Assert(kind == DKind.Record || kind == DKind.Table);
             Contracts.AssertValue(typedNames);
 
-            return new DType(kind, TypeTree.Create(typedNames.Select(TypedNameToKVP)), isFile, isLargeImage);
+            return new DType(kind, TypeTree.Create(typedNames.Select(TypedNameToKVP)), isFile, isLargeImage, isSealed);
         }
 
         public static DType CreateExpandType(IExpandInfo info)
@@ -1326,12 +1331,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
-            if (IsSealed)
-            {
-                fError = true;
-                return this;
-            }
-
             var fullType = this;
             if (IsLazyType)
             {
@@ -1370,11 +1369,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(IsAggregate);
             Contracts.Assert(name.IsValid);
             type.AssertValid();
-
-            if (IsSealed)
-            {
-                throw new InvalidOperationException();
-            }
 
             var fullType = this;
             if (IsLazyType)
@@ -2726,7 +2720,7 @@ namespace Microsoft.PowerFx.Core.Types
             leftType.AssertValid();
             rightType.AssertValid();
 
-            if ((leftType.IsSealed || rightType.IsSealed) && leftType != rightType)
+            if (features.PowerFxV1CompatibilityRules && (leftType.IsSealed || rightType.IsSealed) && leftType != rightType)
             {
                 fError = true;
                 return Error;
