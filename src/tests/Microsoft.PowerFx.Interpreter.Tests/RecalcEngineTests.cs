@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -644,6 +645,32 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+            }
+        }
+
+        [Theory]
+        [InlineData(
+            "Type([{x : Coordinate, y : Coordinate}])",
+            true,
+            "*[x:n, y:n]")]
+        [InlineData(
+            "Type(Invalid)",
+            false)]
+        public void EngineResolveTypeTest(string typeDefinition, bool isValid, string expectedDefinedTypeString = "")
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var symbolTable = new SymbolTable();
+
+            symbolTable.AddType(new DName("Coordinate"), FormulaType.Number);
+
+            if (isValid)
+            {
+                Assert.Equal(TestUtils.DT(expectedDefinedTypeString), recalcEngine.ResolveType(typeDefinition, symbolTable)._type);
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.ResolveType(typeDefinition, symbolTable));
             }
         }
 

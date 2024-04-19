@@ -36,7 +36,6 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
-        private readonly DType[] _argTypes;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
@@ -62,7 +61,6 @@ namespace Microsoft.PowerFx.Core.Functions
             this._args = args;
             this._isImperative = isImperative;
             this.UdfBody = body;
-            this._argTypes = argTypes;
         }
 
         /// <summary>
@@ -120,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, _argTypes), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
@@ -180,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), _argTypes);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
