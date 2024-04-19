@@ -608,9 +608,10 @@ namespace Microsoft.PowerFx.Tests
             "F1(x:Number) : Boolean = { Set(a, x); Today(); };",
             null,
             true,
-            "AddUserDefinedFunction")]
+            "AddUserDefinedFunction",
+            0)]
 
-        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string expectedMethodFailure = null, double expected = 0)
+        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string expectedMethodFailure, double expected)
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
