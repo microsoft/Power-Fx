@@ -359,10 +359,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect([1], { |", "Value:")]
         public void SuggestCollect(string exprWithPipe, string expectedSuggestions)
         {
-            PowerFxConfig config = new PowerFxConfig();
+            PowerFxConfig config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
+
             RecalcEngine engine = new RecalcEngine(config);
             string expr = exprWithPipe.Replace("|", string.Empty);
+
             CheckResult check = engine.Check(expr, new ParserOptions() { AllowsSideEffects = true });
             IIntellisenseResult intellisense = engine.Suggest(check, exprWithPipe.IndexOf('|'));
 
