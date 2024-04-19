@@ -1,0 +1,63 @@
+{
+  "name": "Customers",
+  "title": "Customers",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": { "sortable": true },
+    "filterRestrictions": { "filterable": true },
+    "selectRestrictions": { "selectable": true },
+    "filterFunctionSupport": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "now", "not", "and", "or", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes", "totalseconds", "round", "floor", "ceiling", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat", "sum", "min", "max", "average", "countdistinct", "null" ]
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [ "Name" ],
+      "properties": {
+        "CustomerId": {
+          "title": "CustomerId",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int32",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "Name": {
+          "title": "Name",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 50,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Address": {
+          "title": "Address",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 80,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Country": {
+          "title": "Country",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 40,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Phone": {
+          "title": "Phone",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 50,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        }
+      }
+    },
+    "x-ms-permission": "read-write"
+  }
+}

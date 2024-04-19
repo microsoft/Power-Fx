@@ -1019,7 +1019,7 @@
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_string</value>
-    <comment>function_parameter - String to convert into a GUID</comment>
+    <comment>function_parameter - String to convert into a GUID. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>String to convert into a GUID</value>
@@ -1292,11 +1292,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>color_or_column</value>
-    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. Translate this string. When translating, maintain as a single word (i.e., do not add spaces)</comment>
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>fade_or_column</value>
-    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>A color (or column of color values) to fade.</value>
@@ -3123,7 +3123,7 @@
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
+    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3139,11 +3139,11 @@
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements.</comment>
+    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3210,11 +3210,11 @@
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from.</comment>
+    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    <comment>function_parameter - One or more records to be removed.</comment>
+    <comment>function_parameter - One or more records to be removed. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
@@ -4558,7 +4558,7 @@
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
     <value>column_of_numbers</value>
-    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters.</comment>
+    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>A table column of numeric values to be converted into Unicode characters.</value>

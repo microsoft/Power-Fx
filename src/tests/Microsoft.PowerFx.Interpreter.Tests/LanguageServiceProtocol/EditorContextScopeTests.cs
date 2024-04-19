@@ -14,7 +14,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests.LanguageServerTests;
+using static Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests.LegacyLanguageServerTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {

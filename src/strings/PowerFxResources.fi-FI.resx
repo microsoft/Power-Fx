@@ -2843,7 +2843,7 @@
     <value>Annetun tekstin kielikoodi.</value>
   </data>
   <data name="AboutTable" xml:space="preserve">
-    <value>Luo taulukon määritetyistä tietueista käyttäen niin montaa saraketta kuin yksilöiviä tietuekenttiä on. Esimerkki: Table({key1: val1, key2: val2, ...}, ...)</value>
+    <value>Luo taulukon määritetyistä tietueista käyttäen niin monta saraketta kuin yksilöiviä tietuekenttiä on. Esimerkki: Table({key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="TableArg1" xml:space="preserve">
@@ -4372,7 +4372,7 @@
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
-    <value>Delegointiavaroitus. Tämän argumentin tulos {0} saatetaan katkaista suurille tietojoukoille ennen kuin se siirretään funktioon {1}.</value>
+    <value>Delegointivaroitus. Tämän argumentin tulos {0} saatetaan katkaista suurille tietojoukoille ennen kuin se siirretään funktioon {1}.</value>
     
   </data>
 </root>

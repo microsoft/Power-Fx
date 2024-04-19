@@ -50,9 +50,9 @@ namespace Microsoft.PowerFx.Types
             }
 
             var error = new ErrorValue(IRContext, new ExpressionError()
-            {                
+            {
                 Span = IRContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument,                
+                Kind = ErrorKind.InvalidArgument,
                 ResourceKey = TexlStrings.InvalidCast,
                 MessageArgs = new object[] { record.Type, Type.ToRecord() }
             });

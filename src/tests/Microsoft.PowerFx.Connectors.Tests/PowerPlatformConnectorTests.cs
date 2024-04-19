@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -1584,13 +1585,13 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         public async Task EdenAITest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Eden AI.json", _output);
-            OpenApiDocument apiDoc = testConnector._apiDocument;           
+            OpenApiDocument apiDoc = testConnector._apiDocument;
 
             ConnectorSettings connectorSettings = new ConnectorSettings("edenai")
-            {                
+            {
                 Compatibility = ConnectorCompatibility.SwaggerCompatibility,
                 AllowUnsupportedFunctions = true,
-                IncludeInternalFunctions = true                
+                IncludeInternalFunctions = true
             };
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
@@ -1786,74 +1787,51 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
-            string expected = @"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
-                @"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _defaultpricelevelid_value:s, " +
-                @"'_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedby_value:s, " +
-                @"'_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedonbehalfby_value:s, " +
-                @"'_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, '_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, " +
-                @"'_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_originatingleadid_value:s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
-                @"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
-                @"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
-                @"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-                @"_slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, " +
-                @"'_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:w, " +
-                @"accountclassificationcode:w, accountid:s, accountnumber:s, accountratingcode:w, address1_addressid:s, address1_addresstypecode:w, address1_city:s, address1_composite:s, address1_country:s, " +
-                @"address1_county:s, address1_fax:s, address1_freighttermscode:w, address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, address1_longitude:w, address1_name:s, address1_postalcode:s, " +
-                @"address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:w, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, " +
-                @"address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:w, address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:w, " +
-                @"address2_latitude:w, address2_line1:s, address2_line2:s, address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, " +
-                @"address2_shippingmethodcode:w, address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, " +
-                @"adx_createdbyusername:s, adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:w, createdon:d, " +
-                @"creditlimit:w, creditlimit_base:w, creditonhold:b, customersizecode:w, customertypecode:w, description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, " +
-                @"donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, " +
-                @"industrycode:w, lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, " +
-                @"opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:w, participatesinworkflow:b, " +
-                @"paymenttermscode:w, preferredappointmentdaycode:w, preferredappointmenttimecode:w, preferredcontactmethodcode:w, primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, " +
-                @"sharesoutstanding:w, shippingmethodcode:w, sic:s, stageid:s, statecode:w, statuscode:w, stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:w, tickersymbol:s, " +
-                @"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
-
-            // If we would return OptionSet type, this is the return type we'd get
-            // Keeping for reference
-
-            //@"!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id':s, _createdby_value:s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdbyexternalparty_value:s, " +
-            //@"'_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _createdonbehalfby_value:s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-            //@"_defaultpricelevelid_value:s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _masterid_value:s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-            //@"_modifiedby_value:s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _modifiedbyexternalparty_value:s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-            //@"_modifiedonbehalfby_value:s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msa_managingpartnerid_value:s, " +
-            //@"'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _msdyn_accountkpiid_value:s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-            //@"_msdyn_salesaccelerationinsightid_value:s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _originatingleadid_value:s, " +
-            //@"'_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _ownerid_value:s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningbusinessunit_value:s, " +
-            //@"'_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owningteam_value:s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _owninguser_value:s, " +
-            //@"'_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _parentaccountid_value:s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredequipmentid_value:s, " +
-            //@"'_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _preferredserviceid_value:s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, " +
-            //@"_preferredsystemuserid_value:s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _primarycontactid_value:s, " +
-            //@"'_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slaid_value:s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _slainvokedid_value:s, " +
-            //@"'_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _territoryid_value:s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, _transactioncurrencyid_value:s, " +
-            //@"'_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname':s, accountcategorycode:l('Preferred Customer'=1,Standard=2), accountclassificationcode:l('Default Value'=1), accountid:s, " +
-            //@"accountnumber:s, accountratingcode:l('Default Value'=1), address1_addressid:s, address1_addresstypecode:l('Bill To'=1,Other=4,Primary=3,'Ship To'=2), address1_city:s, address1_composite:s, " +
-            //@"address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l(FOB=1,'No Charge'=2), address1_latitude:w, address1_line1:s, address1_line2:s, address1_line3:s, " +
-            //@"address1_longitude:w, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l(Airborne=1,DHL=2,FedEx=3,'Full Load'=6,'Postal Mail'=5,UPS=4,'Will Call'=7), " +
-            //@"address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:w, address2_addressid:s, address2_addresstypecode:l('Default Value'=1), " +
-            //@"address2_city:s, address2_composite:s, address2_country:s, address2_county:s, address2_fax:s, address2_freighttermscode:l('Default Value'=1), address2_latitude:w, address2_line1:s, address2_line2:s, " +
-            //@"address2_line3:s, address2_longitude:w, address2_name:s, address2_postalcode:s, address2_postofficebox:s, address2_primarycontactname:s, address2_shippingmethodcode:l('Default Value'=1), " +
-            //@"address2_stateorprovince:s, address2_telephone1:s, address2_telephone2:s, address2_telephone3:s, address2_upszone:s, address2_utcoffset:w, adx_createdbyipaddress:s, adx_createdbyusername:s, " +
-            //@"adx_modifiedbyipaddress:s, adx_modifiedbyusername:s, aging30:w, aging30_base:w, aging60:w, aging60_base:w, aging90:w, aging90_base:w, businesstypecode:l('Default Value'=1), createdon:d, creditlimit:w, " +
-            //@"creditlimit_base:w, creditonhold:b, customersizecode:l('Default Value'=1), customertypecode:l(Competitor=1,Consultant=2,Customer=3,Influencer=6,Investor=4,Other=12,Partner=5,Press=7,Prospect=8,Reseller=9,Supplier=10,Vendor=11), " +
-            //@"description:s, donotbulkemail:b, donotbulkpostalmail:b, donotemail:b, donotfax:b, donotphone:b, donotpostalmail:b, donotsendmm:b, emailaddress1:s, emailaddress2:s, emailaddress3:s, entityimage:s, " +
-            //@"entityimageid:s, exchangerate:w, fax:s, followemail:b, ftpsiteurl:s, importsequencenumber:w, industrycode:l(Accounting=1,'Agriculture and Non-petrol Natural Resource Extraction'=2," +
-            //@"'Broadcasting Printing and Publishing'=3,Brokers=4,'Building Supply Retail'=5,'Business Services'=6,Consulting=7,'Consumer Services'=8,'Design, Direction and Creative Management'=9," +
-            //@"'Distributors, Dispatchers and Processors'=10,'Doctor''s Offices and Clinics'=11,'Durable Manufacturing'=12,'Eating and Drinking Places'=13,'Entertainment Retail'=14,'Equipment Rental and Leasing'=15," +
-            //@"Financial=16,'Food and Tobacco Processing'=17,'Inbound Capital Intensive Processing'=18,'Inbound Repair and Services'=19,Insurance=20,'Legal Services'=21,'Non-Durable Merchandise Retail'=22," +
-            //@"'Outbound Consumer Service'=23,'Petrochemical Extraction and Distribution'=24,'SIG Affiliations'=26,'Service Retail'=25,'Social Services'=27,'Special Outbound Trade Contractors'=28," +
-            //@"'Specialty Realty'=29,Transportation=30,'Utility Creation and Distribution'=31,'Vehicle Retail'=32,Wholesale=33), lastonholdtime:d, lastusedincampaign:d, marketcap:w, marketcap_base:w, " +
-            //@"marketingonly:b, merged:b, modifiedon:d, msdyn_gdproptout:b, name:s, numberofemployees:w, onholdtime:w, opendeals:w, opendeals_date:d, opendeals_state:w, openrevenue:w, openrevenue_base:w, " +
-            //@"openrevenue_date:d, openrevenue_state:w, overriddencreatedon:d, ownershipcode:l(Other=4,Private=2,Public=1,Subsidiary=3), participatesinworkflow:b, paymenttermscode:l('2% 10, Net 30'=2,'Net 30'=1,'Net 45'=3,'Net 60'=4), " +
-            //@"preferredappointmentdaycode:l(Friday=5,Monday=1,Saturday=6,Sunday=0,Thursday=4,Tuesday=2,Wednesday=3), preferredappointmenttimecode:l(Afternoon=2,Evening=3,Morning=1), " +
-            //@"preferredcontactmethodcode:l(Any=1,Email=2,Fax=4,Mail=5,Phone=3), primarysatoriid:s, primarytwitterid:s, processid:s, revenue:w, revenue_base:w, sharesoutstanding:w, shippingmethodcode:l('Default Value'=1), sic:s, " +
-            //@"stageid:s, statecode:l(Active=0,Inactive=1), statuscode:l(Active=1,Inactive=2), stockexchange:s, teamsfollowed:w, telephone1:s, telephone2:s, telephone3:s, territorycode:l('Default Value'=1), tickersymbol:s, " +
-            //@"timespentbymeonemailandmeetings:s, timezoneruleversionnumber:w, traversedpath:s, utcconversiontimezonecode:w, versionnumber:w, websiteurl:s, yominame:s]]]";
+            string expected =
+                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Type)':s, " +
+                "_createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) (Type)':s, _createdonbehalfby_value`'Created " +
+                "By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogic" +
+                "alname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.looku" +
+                "plogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modified By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External " +
+                "Party) (Type)':s, _modifiedonbehalfby_value`'Modified By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing " +
+                "Partner (Value)':s, '_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'KPI " +
+                "(Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales Acceleration Insights " +
+                "ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, _ownerid_value`'Owner (Value)':s, '_ownerid_value@Microsoft.Dynamics.CRM.lo" +
+                "okuplogicalname'`'Owner (Type)':s, _owningbusinessunit_value`'Owning Business Unit (Value)':s, '_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning Business Unit (Type)':s, _owningteam_value`'Owning " +
+                "Team (Value)':s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning Team (Type)':s, _owninguser_value`'Owning User (Value)':s, '_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning " +
+                "User (Type)':s, _parentaccountid_value`'Parent Account (Value)':s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Parent Account (Type)':s, _preferredequipmentid_value`'Preferred Facility/Equipment " +
+                "(Value)':s, '_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred Facility/Equipment (Type)':s, _preferredserviceid_value`'Preferred Service (Value)':s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogi" +
+                "calname'`'Preferred Service (Type)':s, _preferredsystemuserid_value`'Preferred User (Value)':s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred User (Type)':s, _primarycontactid_value`'Primary " +
+                "Contact (Value)':s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Primary Contact (Type)':s, _slaid_value`'SLA (Value)':s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'SLA " +
+                "(Type)':s, _slainvokedid_value`'Last SLA applied (Value)':s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Last SLA applied (Type)':s, _territoryid_value`'Territory (Value)':s, '_territoryid_value@Microsoft.Dynamics.CRM.loo" +
+                "kuplogicalname'`'Territory (Type)':s, _transactioncurrencyid_value`'Currency (Value)':s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Currency (Type)':s, accountcategorycode`Category:w, " +
+                "accountclassificationcode`Classification:w, accountid`Account:s, accountnumber`'Account Number':s, accountratingcode`'Account Rating':w, address1_addressid`'Address 1: ID':s, address1_addresstypecode`'Address " +
+                "1: Address Type':w, address1_city`'Address 1: City':s, address1_composite`'Address 1':s, address1_country`'Address 1: Country/Region':s, address1_county`'Address 1: County':s, address1_fax`'Address 1: " +
+                "Fax':s, address1_freighttermscode`'Address 1: Freight Terms':w, address1_latitude`'Address 1: Latitude':w, address1_line1`'Address 1: Street 1':s, address1_line2`'Address 1: Street 2':s, address1_line3`'Address " +
+                "1: Street 3':s, address1_longitude`'Address 1: Longitude':w, address1_name`'Address 1: Name':s, address1_postalcode`'Address 1: ZIP/Postal Code':s, address1_postofficebox`'Address 1: Post Office Box':s, " +
+                "address1_primarycontactname`'Address 1: Primary Contact Name':s, address1_shippingmethodcode`'Address 1: Shipping Method':w, address1_stateorprovince`'Address 1: State/Province':s, address1_telephone1`'Address " +
+                "Phone':s, address1_telephone2`'Address 1: Telephone 2':s, address1_telephone3`'Address 1: Telephone 3':s, address1_upszone`'Address 1: UPS Zone':s, address1_utcoffset`'Address 1: UTC Offset':w, address2_addressid`'Address " +
+                "2: ID':s, address2_addresstypecode`'Address 2: Address Type':w, address2_city`'Address 2: City':s, address2_composite`'Address 2':s, address2_country`'Address 2: Country/Region':s, address2_county`'Address " +
+                "2: County':s, address2_fax`'Address 2: Fax':s, address2_freighttermscode`'Address 2: Freight Terms':w, address2_latitude`'Address 2: Latitude':w, address2_line1`'Address 2: Street 1':s, address2_line2`'Address " +
+                "2: Street 2':s, address2_line3`'Address 2: Street 3':s, address2_longitude`'Address 2: Longitude':w, address2_name`'Address 2: Name':s, address2_postalcode`'Address 2: ZIP/Postal Code':s, address2_postofficebox`'Address " +
+                "2: Post Office Box':s, address2_primarycontactname`'Address 2: Primary Contact Name':s, address2_shippingmethodcode`'Address 2: Shipping Method':w, address2_stateorprovince`'Address 2: State/Province':s, " +
+                "address2_telephone1`'Address 2: Telephone 1':s, address2_telephone2`'Address 2: Telephone 2':s, address2_telephone3`'Address 2: Telephone 3':s, address2_upszone`'Address 2: UPS Zone':s, address2_utcoffset`'Address " +
+                "2: UTC Offset':w, adx_createdbyipaddress`'Created By (IP Address)':s, adx_createdbyusername`'Created By (User Name)':s, adx_modifiedbyipaddress`'Modified By (IP Address)':s, adx_modifiedbyusername`'Modified " +
+                "By (User Name)':s, aging30`'Aging 30':w, aging30_base`'Aging 30 (Base)':w, aging60`'Aging 60':w, aging60_base`'Aging 60 (Base)':w, aging90`'Aging 90':w, aging90_base`'Aging 90 (Base)':w, businesstypecode`'Business " +
+                "Type':w, createdon`'Created On':d, creditlimit`'Credit Limit':w, creditlimit_base`'Credit Limit (Base)':w, creditonhold`'Credit Hold':b, customersizecode`'Customer Size':w, customertypecode`'Relationship " +
+                "Type':w, description`Description:s, donotbulkemail`'Do not allow Bulk Emails':b, donotbulkpostalmail`'Do not allow Bulk Mails':b, donotemail`'Do not allow Emails':b, donotfax`'Do not allow Faxes':b, donotphone`'Do " +
+                "not allow Phone Calls':b, donotpostalmail`'Do not allow Mails':b, donotsendmm`'Send Marketing Materials':b, emailaddress1`Email:s, emailaddress2`'Email Address 2':s, emailaddress3`'Email Address 3':s, " +
+                "entityimage`'Default Image':s, entityimageid`'Entity Image Id':s, exchangerate`'Exchange Rate':w, fax`Fax:s, followemail`'Follow Email Activity':b, ftpsiteurl`'FTP Site':s, importsequencenumber`'Import " +
+                "Sequence Number':w, industrycode`Industry:w, lastonholdtime`'Last On Hold Time':d, lastusedincampaign`'Last Date Included in Campaign':d, marketcap`'Market Capitalization':w, marketcap_base`'Market Capitalization " +
+                "(Base)':w, marketingonly`'Marketing Only':b, merged`Merged:b, modifiedon`'Modified On':d, msdyn_gdproptout`'GDPR Optout':b, name`'Account Name':s, numberofemployees`'Number of Employees':w, onholdtime`'On " +
+                "Hold Time (Minutes)':w, opendeals`'Open Deals':w, opendeals_date`'Open Deals (Last Updated On)':d, opendeals_state`'Open Deals (State)':w, openrevenue`'Open Revenue':w, openrevenue_base`'Open Revenue (Base)':w, " +
+                "openrevenue_date`'Open Revenue (Last Updated On)':d, openrevenue_state`'Open Revenue (State)':w, overriddencreatedon`'Record Created On':d, ownershipcode`Ownership:w, participatesinworkflow`'Participates " +
+                "in Workflow':b, paymenttermscode`'Payment Terms':w, preferredappointmentdaycode`'Preferred Day':w, preferredappointmenttimecode`'Preferred Time':w, preferredcontactmethodcode`'Preferred Method of Contact':w, " +
+                "primarysatoriid`'Primary Satori ID':s, primarytwitterid`'Primary Twitter ID':s, processid`Process:s, revenue`'Annual Revenue':w, revenue_base`'Annual Revenue (Base)':w, sharesoutstanding`'Shares Outstanding':w, " +
+                "shippingmethodcode`'Shipping Method':w, sic`'SIC Code':s, stageid`'(Deprecated) Process Stage':s, statecode`Status:w, statuscode`'Status Reason':w, stockexchange`'Stock Exchange':s, teamsfollowed`TeamsFollowed:w, " +
+                "telephone1`'Main Phone':s, telephone2`'Other Phone':s, telephone3`'Telephone 3':s, territorycode`'Territory Code':w, tickersymbol`'Ticker Symbol':s, timespentbymeonemailandmeetings`'Time Spent by me':s, " +
+                "timezoneruleversionnumber`'Time Zone Rule Version Number':w, traversedpath`'(Deprecated) Traversed Path':s, utcconversiontimezonecode`'UTC Conversion Time Zone Code':w, versionnumber`'Version Number':w, " +
+                "websiteurl`Website:s, yominame`'Yomi Account Name':s]]]";
 
             Assert.Equal(expected, ft);
             Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
@@ -1865,7 +1843,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Now, only make a single network call and see the difference: none of the option set values are populated.
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
             ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
-            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();            
 
             Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
@@ -1875,6 +1853,674 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Key differences
             Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
             Assert.Null(returnType2.Fields[0].Fields[0].Fields[7].Enum);
+        }
+
+        [Fact]
+        public async Task SQL_ExecuteStoredProc_Scoped()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eX...", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            // Here, apart from connectionId, we define server and database as globals
+            // This will modify the list of functions and their parameters as 'server' and 'database' will be removed from required parameter list
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("5f57ec83acef477b8ccc769e52fa22cc") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") }
+            });
+
+            // Action connector with global values
+            IReadOnlyList<ConnectorFunction> fList = config.AddActionConnector("SQL", apiDoc, globals, new ConsoleLogger(_output, true));
+            ConnectorFunction executeProcedureV2 = fList.First(f => f.Name == "ExecuteProcedureV2");
+
+            var engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
+
+            // The list of parameters is reduced here (compare with SQL_ExecuteStoredProc test)
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+
+            Assert.Equal(FormulaType.UntypedObject, result.Type);
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
+            Assert.Equal(3, propertyNames.Count());
+
+            string actual = testConnector._log.ToString();
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eX...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""p1"":50}}
+";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SQL_Tabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAiOi...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e74bd8913489439e886426eba8dec1c8", () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Customers", tabularService.TableName);
+            Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
+
+            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+            Assert.Equal("Customers", tabularService.Name);
+            Assert.Equal("Customers", tabularService.DisplayName);
+
+            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
+
+            // Expression with tabular connector
+            string expr = @"First(Customers).Address";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue address = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", address.Value);
+
+            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            testConnector.SetResponseFromFiles(@"Responses\SQL Server Get First Customers.json", @"Responses\SQL Server Get First Customers.json");
+            result = await engine.EvalAsync("First(Customers).Phone; Last(Customers).Phone", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            StringValue phone = Assert.IsType<StringValue>(result);
+            Assert.Equal("+1-425-705-0000", phone.Value);
+            Assert.Equal(2, testConnector.CurrentResponse); // This confirms we had 2 network calls
+        }
+
+        [Fact]
+        public async Task SQL_CdpTabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "18992e9477684930acd2cc5dc9bb94c2";
+            string jwt = "eyJ0eXAiOiJK...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New(connectionId) },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            CdpTabularService tabularService = new CdpTabularService("pfxdev-sql.database.windows.net,connectortest", "Customers");
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Customers", tabularService.TableName);
+
+            await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", true, CancellationToken.None, logger).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Customers).Address";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue address = Assert.IsType<StringValue>(result);
+            Assert.Equal("Juigné", address.Value);
+
+            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
+            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            StringValue phone = Assert.IsType<StringValue>(result);
+            Assert.Equal("+1-425-705-0000", phone.Value);
+        }
+
+        [Fact]
+        public async Task SP_CdpTabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "0b905132239e463a9d12f816be201da9";
+            string jwt = "eyJ0eXAiOiJKV....";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New(connectionId) },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            CdpTabularService tabularService = new CdpTabularService("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents");
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", false, CancellationToken.None, logger).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+
+            Assert.Equal(
+                "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
+                "Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, " +
+                "OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full " +
+                "Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'Comments associated with the content approval of this " +
+                "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
+                "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
+                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
+                "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
+                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
+                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
+                "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
+                "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +
+                "'{TriggerWindowStartToken}':s, '{VersionNumber}':s](ResolvedObject('Documents:RuntimeValues_XXX'))), {Name})", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue docName = Assert.IsType<StringValue>(result);
+            Assert.Equal("Document1", docName.Value);
+        }
+
+        [Fact]
+        public async Task SP_Tabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAiO...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "0b905132239e463a9d12f816be201da9", () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
+
+            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.TableName);
+            Assert.Equal("_tbl_0b905132239e463a9d12f816be201da9", tabularService.Namespace);
+
+            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+            Assert.Equal("Documents", tabularService.Name);
+            Assert.Equal("Documents", tabularService.DisplayName);
+
+            ConnectorTableValue spTable = tabularService.GetTableValue();
+            Assert.True(spTable._tabularService.IsInitialized);
+
+            Assert.Equal(
+                "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
+                "Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, " +
+                "OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full " +
+                "Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'Comments associated with the content approval of this " +
+                "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
+                "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
+
+            // Expression with tabular connector
+            string expr = @"First(Documents).Name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
+                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
+                "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
+                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
+                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
+                "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
+                "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +
+                "'{TriggerWindowStartToken}':s, '{VersionNumber}':s](ResolvedObject('Documents:RuntimeValues_XXX'))), {Name})", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue docName = Assert.IsType<StringValue>(result);
+            Assert.Equal("Document1", docName.Value);
+        }
+
+        [Fact]
+        public async Task SP_Tabular_MissingParam()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.False(isTabularService);
+            Assert.Equal("Missing global value dataset", error);
+        }
+
+        [Fact]
+        public async Task SP_Tabular_MissingParam2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.False(isTabularService);
+            Assert.Equal("Missing global value table", error);
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SP_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            Assert.Equal("connectionId, dataset, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTable", s.Name);
+            Assert.Equal("PostItem", c.Name);
+            Assert.Equal("GetItems", r.Name);
+            Assert.Equal("PatchItem", u.Name);
+            Assert.Equal("DeleteItem", d.Name);
+
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/$metadata.json/datasets/{dataset}/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/sharepointonline/{connectionId}/datasets/{dataset}/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SQL_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            Assert.Equal("connectionId, database, server, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("e74bd8913489439e886426eba8dec1c8") },
+                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
+                { "database", FormulaValue.New("connectortest") },
+                { "table", FormulaValue.New("Customers") }
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTableV2", s.Name);
+            Assert.Equal("PostItemV2", c.Name);
+            Assert.Equal("GetItemsV2", r.Name);
+            Assert.Equal("PatchItemV2", u.Name);
+            Assert.Equal("DeleteItemV2", d.Name);
+
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/$metadata.json/datasets/{server},{database}/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/sql/{connectionId}/v2/datasets/{server},{database}/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        [Obsolete("Using SwaggerTabularService.GetFunctions")]
+        public async Task SF_Tabular_CheckParams()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
+            var apiDoc = testConnector._apiDocument;
+
+            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            Assert.Equal("connectionId, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("0b905132239e463a9d12f816be201da9") },
+                { "table", FormulaValue.New("Documents") },
+            });
+
+            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            Assert.True(isTabularService, error);
+
+            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+
+            Assert.Equal("GetTable", s.Name);
+            Assert.Equal("PostItemV2", c.Name);
+            Assert.Equal("GetItems", r.Name);
+            Assert.Equal("PatchItemV3", u.Name);
+            Assert.Equal("DeleteItem", d.Name);
+
+            Assert.Equal(@"/apim/salesforce/{connectionId}/$metadata.json/datasets/default/tables/{table}", s.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/v2/datasets/default/tables/{table}/items", c.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/datasets/default/tables/{table}/items", r.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/v3/datasets/default/tables/{table}/items/{id}", u.OperationPath);
+            Assert.Equal(@"/apim/salesforce/{connectionId}/datasets/default/tables/{table}/items/{id}", d.OperationPath);
+
+            Assert.Equal("GET", s.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("POST", c.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("GET", r.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("PATCH", u.HttpMethod.Method.ToUpperInvariant());
+            Assert.Equal("DELETE", d.HttpMethod.Method.ToUpperInvariant());
+
+            Assert.Equal(string.Empty, string.Join(", ", s.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("item", string.Join(", ", c.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(string.Empty, string.Join(", ", r.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id, item", string.Join(", ", u.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal("id", string.Join(", ", d.RequiredParameters.Select(rp => rp.Name)));
+        }
+
+        [Fact]
+        public async Task SF_Tabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAi...";
+            using var client = new PowerPlatformConnectorClient("tip2-001.azure-apihub.net", "53d7f409-4bce-e458-8245-5fa1346ec433", "ec5fe6d1cad744a0a716fe4597a74b2e", () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
+            {
+                { "connectionId", FormulaValue.New("ec5fe6d1cad744a0a716fe4597a74b2e") },
+                { "table", FormulaValue.New("Account") },
+            });
+
+            // Use of tabular connector            
+            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Account", tabularService.TableName);
+            Assert.Equal("_tbl_ec5fe6d1cad744a0a716fe4597a74b2e", tabularService.Namespace);
+
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
+            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+            Assert.Equal("Account", tabularService.Name);
+            Assert.Equal("Accounts", tabularService.DisplayName);
+
+            ConnectorTableValue sfTable = tabularService.GetTableValue();
+            Assert.True(sfTable._tabularService.IsInitialized);
+
+            Assert.Equal(
+                "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':s, CreatedDate`'Created Date':d, Description`'Account " +
+                "Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By " +
+                "ID':s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':s, Name`'Account Name':s, NumberOfEmployees`Employees:w, " +
+                "OwnerId`'Owner ID':s, ParentId`'Parent Account ID':s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping " +
+                "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
+                "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext(tabularService.Namespace, client, console: _output);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
+
+            // Expression with tabular connector
+            string expr = @"First(Accounts).'Account ID'";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, " +
+                "CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, " +
+                "Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, " +
+                "ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](InjectServiceProviderFunction:*[AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, " +
+                "BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, " +
+                "LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, " +
+                "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue docName = Assert.IsType<StringValue>(result);
+            Assert.Equal("001DR00001Xj1YmYAJ", docName.Value);
+        }
+
+        public class HttpLogger : HttpClient
+        {
+            private readonly ITestOutputHelper _console;
+
+            public HttpLogger(ITestOutputHelper console)
+                : base()
+            {
+                _console = console;
+            }
+
+            public HttpLogger(ITestOutputHelper console, HttpMessageHandler handler)
+                : base(handler)
+            {
+                _console = console;
+            }
+
+            public HttpLogger(ITestOutputHelper console, HttpMessageHandler handler, bool disposeHandler)
+                : base(handler, disposeHandler)
+            {
+                _console = console;
+            }
+
+            public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    _console.WriteLine($"[HTTP Status {(int)response.StatusCode} {response.StatusCode} - {text}");
+                }
+
+                return response;
+            }
         }
     }
 }

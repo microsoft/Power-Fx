@@ -353,11 +353,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Concatenate,
-                StandardErrorHandling<StringValue>(
+                StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Concatenate.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeTypes: StringOrOptionSetBackedByString,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Concatenate)
@@ -464,7 +464,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         DateOrTimeOrDateTime,
                         ExactValueTypeOrBlank<NumberValue>,
-                        ExactValueTypeOrBlank<StringValue>),
+                        StringOrOptionSetBackedByString),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateAdd)
@@ -481,7 +481,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         DateOrTimeOrDateTime,
                         DateOrTimeOrDateTime,
-                        ExactValueTypeOrBlank<StringValue>),
+                        StringOrBlankOrOptionSetBackedByString),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateDiff)
@@ -1507,7 +1507,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<LambdaFormulaValue>,
-                        ExactValueTypeOrBlank<StringValue>),
+                        StringOrOptionSetBackedByString),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: SortTable)
@@ -1732,9 +1732,9 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<StringValue>,
-                        NumberOrDecimal,
+                        NumberOrDecimalOrOptionSetBackedByNumber,
                         ExactValueTypeOrBlank<RecordValue>,
-                        ExactValueType<StringValue>), /* add check */
+                        StringOrOptionSetBackedByString), /* add check */
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: TraceFunction)
@@ -1854,7 +1854,7 @@ namespace Microsoft.PowerFx.Functions
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     checkRuntimeTypes: ExactSequence(
                         DateOrTimeOrDateTime,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        NumberOrBlankOrOptionSetBackedByNumber),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Weekday)
@@ -1867,7 +1867,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         DateOrTimeOrDateTime,
-                        ExactValueTypeOrBlank<NumberValue>),
+                        NumberOrBlankOrOptionSetBackedByNumber),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: WeekNum)
@@ -2751,7 +2751,17 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                sev = (TraceSeverity)(args[1] as NumberValue).Value;
+                switch (args[1])
+                {
+                    case NumberValue nv:
+                        sev = (TraceSeverity)nv.Value;
+                        break;
+                    case OptionSetValue osv:
+                        sev = (TraceSeverity)(double)osv.ExecutionValue;
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
 
             RecordValue customRecord;

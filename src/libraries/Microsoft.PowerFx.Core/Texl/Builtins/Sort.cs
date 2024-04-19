@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     fValid = false;
                     errors.TypeMismatchError(args[2], orderExpectedType, argTypes[2]);
                 }
-                else if (orderExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                else if (!context.Features.StronglyTypedBuiltinEnums && orderExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
                 {
                     // For implementations, coerce enum option set values to the backing type
                     var coercionType = enumSymbol1.EnumType.GetEnumSupertype();

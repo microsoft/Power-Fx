@@ -209,12 +209,14 @@ namespace Microsoft.PowerFx
         /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
         {
             // Phase 1: Side affects are not allowed.
+            // Phase 2: Introduces side effects and parsing of function bodies.
             var options = new ParserOptions() 
             { 
-                AllowsSideEffects = false,
+                AllowsSideEffects = allowSideEffects, 
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
             var sb = new StringBuilder();
@@ -239,7 +241,8 @@ namespace Microsoft.PowerFx
             foreach (var udf in userDefinitionResult.UDFs)
             {
                 AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
 
                 List<TexlError> errors = new List<TexlError>();
 

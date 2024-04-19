@@ -118,16 +118,33 @@ namespace Microsoft.PowerFx.Functions
 
         // Scalar
         // Operator & maps to this function call.
-        public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
+        public static FormulaValue Concatenate(IRContext irContext, FormulaValue[] args)
         {
             var sb = new StringBuilder();
 
             foreach (var arg in args)
             {
-                sb.Append(arg.Value);
+                switch (arg)
+                {
+                    case StringValue sv:
+                        sb.Append(sv.Value);
+                        break;
+                    case OptionSetValue osv:
+                        sb.Append(osv.ExecutionValue);
+                        break;
+                    default:
+                        return CommonErrors.RuntimeTypeMismatch(arg.IRContext);
+                }
             }
 
-            return new StringValue(irContext, sb.ToString());
+            if (irContext.ResultType == FormulaType.String)
+            {
+                return new StringValue(irContext, sb.ToString());
+            }
+            else
+            {
+                return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, sb.ToString());
+            }
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value

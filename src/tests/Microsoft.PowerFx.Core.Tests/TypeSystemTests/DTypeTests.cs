@@ -62,6 +62,14 @@ namespace Microsoft.PowerFx.Tests
 
             public DKind BackingKind => DKind.Boolean;
 
+            public bool CanCoerceFromBackingKind => false;
+
+            public bool CanCoerceToBackingKind => true;
+
+            public bool CanConcatenateStronglyTyped => false;
+
+            public bool CanCompareNumeric => false;
+
             public bool IsConvertingDisplayNameMapping => false;
 
             public DName EntityName => new DName("BoolOptionSet");

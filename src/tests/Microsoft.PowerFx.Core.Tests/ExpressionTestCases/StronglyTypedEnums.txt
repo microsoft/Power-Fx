@@ -1,4 +1,4 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,AllEnumsSetup
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsSetup
 
 >> ErrorKind.Div0 = Color.Red
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (Color).
@@ -12,7 +12,7 @@ Errors: Error 14-16: Incompatible types for comparison. These types can't be com
 
 // Valid to compare to strings
 >> TimeUnit.Days <> "abc"
-true
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Text.
 
 // Coercion to Color
 >> ColorFade(Color.Red, 0)
