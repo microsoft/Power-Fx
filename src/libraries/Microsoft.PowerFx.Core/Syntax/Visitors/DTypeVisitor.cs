@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
+    // Visitor to convert AST to DType. 
     internal class DTypeVisitor : TexlFunctionalVisitor<DType, INameResolver>
     {
         private DTypeVisitor()
@@ -39,19 +40,26 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(RecordNode node, INameResolver context)
         {
-            var list = new List<TypedName>();
+            var typedNames = new List<TypedName>();
+            var names = new HashSet<string>();
             foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
             {
+                // Invalid if Record fields repeat.
+                if (!names.Add(ident.Name.Value))
+                {
+                    return DType.Invalid;
+                }
+
                 var ty = cNode.Accept(this, context);
                 if (ty == DType.Invalid)
                 {
                     return DType.Invalid;
                 }
 
-                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
+                typedNames.Add(new TypedName(ty, new DName(ident.Name.Value)));
             }
 
-            return DType.CreateRecord(list);
+            return DType.CreateRecord(typedNames);
         }
 
         public override DType Visit(TableNode node, INameResolver context)
@@ -68,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return ty.ToTable();
             }
 
-            // single column table syntax
+            // Single column table syntax
             var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
 
             return rowType.ToTable();

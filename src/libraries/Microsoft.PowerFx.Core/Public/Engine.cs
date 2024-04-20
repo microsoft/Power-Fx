@@ -298,19 +298,10 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public FormulaType ResolveType(string typeExpression, SymbolTable symbols, ParserOptions options = null) 
         {
-            var typeNode = ParseType(typeExpression, options: options);
-
-            var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
-            
-            if (resolvedType == DType.Invalid)
-            {
-                throw new InvalidOperationException("Invalid type expression");
-            }
-
-            return FormulaType.Build(resolvedType);
+            return ResolveType(ParseType(typeExpression, options: options), symbols);
         }
 
-        public FormulaType ResolveType(TypeLiteralNode typeNode, SymbolTable symbols, ParserOptions options = null)
+        public FormulaType ResolveType(TypeLiteralNode typeNode, SymbolTable symbols)
         {
             var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
 

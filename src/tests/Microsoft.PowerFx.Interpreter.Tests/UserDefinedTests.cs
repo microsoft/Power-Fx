@@ -11,6 +11,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class UserDefinedTests
     {
+        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
@@ -39,7 +41,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result, nameResolver: _primitiveTypes);
 
             Assert.False(result.HasErrors);
         }
@@ -54,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result, nameResolver: _primitiveTypes);
 
             Assert.False(result.HasErrors);
         }
@@ -68,7 +70,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result, nameResolver: _primitiveTypes);
 
             Assert.True(result.HasErrors);
         }
@@ -83,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result, nameResolver: _primitiveTypes);
 
             Assert.True(result.HasErrors);
             Assert.Equal(udfCount, result.UDFs.Count());
@@ -99,7 +101,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = false,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out var result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out var result, nameResolver: _primitiveTypes);
 
             Assert.True(result.HasErrors);
 
@@ -108,7 +110,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 AllowsSideEffects = true,
                 Culture = CultureInfo.InvariantCulture
             };
-            UserDefinitions.ProcessUserDefinitions(script, options, out result);
+            UserDefinitions.ProcessUserDefinitions(script, options, out result, nameResolver: _primitiveTypes);
 
             Assert.False(result.HasErrors);
         }

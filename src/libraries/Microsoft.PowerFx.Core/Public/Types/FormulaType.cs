@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // primitive types currently supported by UDFs
-        public static readonly IEnumerable<KeyValuePair<DName, FormulaType>> _primitiveTypes = new Dictionary<DName, FormulaType>()
+        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = new Dictionary<DName, FormulaType>()
         {
             { new DName("Boolean"), FormulaType.Boolean },
             { new DName("Color"), FormulaType.Color },

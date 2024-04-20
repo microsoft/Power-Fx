@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType._primitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
             var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult, nameResolver: nameResolver);
             
             var glue = new Glue2DocumentBinderGlue();
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType._primitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
             var glue = new Glue2DocumentBinderGlue();
             var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult, nameResolver: nameResolver);
             var texlFunctionSet = new TexlFunctionSet(userDefinitionResult.UDFs);
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType._primitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
             var glue = new Glue2DocumentBinderGlue();
             var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult, nameResolver: nameResolver);
             var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
@@ -389,7 +389,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void Basic()
         {
             var st1 = new SymbolTable();
-            st1.AddTypes(FormulaType._primitiveTypes);
+            st1.AddTypes(FormulaType.PrimitiveTypes);
             st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
             st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // A different symbol table can have same function name with different type.  
             var st2 = new SymbolTable();
-            st2.AddTypes(FormulaType._primitiveTypes);
+            st2.AddTypes(FormulaType.PrimitiveTypes);
             st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // Empty symbol table doesn't get builtins. 
             var st = new SymbolTable();
-            st.AddTypes(FormulaType._primitiveTypes);
+            st.AddTypes(FormulaType.PrimitiveTypes);
 
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
             Assert.Throws<InvalidOperationException>(() => st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);"));
@@ -441,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType._primitiveTypes);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
 
             var script = "Add(a: Number, b: Number):Number = a + b;";
             UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult, nameResolver: nameResolver);

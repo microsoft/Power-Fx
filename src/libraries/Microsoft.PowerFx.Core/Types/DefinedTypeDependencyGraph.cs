@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Core.Types
         private readonly IEnumerable<DefinedType> _definedTypes;
         private readonly ReadOnlySymbolTable _globalTypes;
 
-        // stores unresolvedType -> its dependencies
+        // Stores unresolvedType -> its dependencies
         private readonly Dictionary<DefinedType, HashSet<string>> _typeWithDependency;
 
-        // stores unresolvedType -> its dependendents
+        // Stores unresolvedType -> its dependendents
         private readonly Dictionary<string, HashSet<DefinedType>> _invertedDependency;
 
-        // queue with types ready to be resolved
+        // Queue with types ready to be resolved
         private readonly Queue<DefinedType> _tsQueue;
 
         private readonly SymbolTable _definedTypeSymbolTable;
@@ -62,10 +62,10 @@ namespace Microsoft.PowerFx.Core.Types
                 var name = defType.Ident.Name.Value;
                 var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalTypes);
 
-                // establish unresolvedType -> its dependencies
+                // Establish unresolvedType -> its dependencies
                 _typeWithDependency.Add(defType, dependencies);
 
-                // establish unresolvedType -> its dependendents
+                // Establish unresolvedType -> its dependendents
                 foreach (var typeSource in dependencies)
                 {
                     if (_invertedDependency.TryGetValue(typeSource, out var typeDependents))
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Types
                 var currentType = _tsQueue.Dequeue();
                 _typeWithDependency.Remove(currentType);
 
-                // check if typename is restricted or already defined
+                // Check if typename is restricted or already defined
                 if (!CheckTypeName(currentType, composedSymbols, errors))
                 {
                     continue;
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Types
                     continue;
                 }
 
-                // to allow missing fields/columns
+                // To allow missing fields/columns
                 if (resolvedType.IsTable || resolvedType.IsRecord)
                 {
                     resolvedType.AreFieldsOptional = true;

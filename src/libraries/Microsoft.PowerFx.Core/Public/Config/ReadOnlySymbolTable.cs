@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx
             return s;
         }
 
-        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType._primitiveTypes);
+        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType.PrimitiveTypes);
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 

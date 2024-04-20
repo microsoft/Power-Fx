@@ -88,11 +88,15 @@ namespace Microsoft.PowerFx
         {
             get
             {
+                var names = new HashSet<string>();
                 foreach (var table in _symbolTables)
                 {
                     foreach (var type in table.DefinedTypes)
                     {
-                        yield return type;
+                        if (names.Add(type.Key))
+                        {
+                            yield return type;
+                        }
                     }
                 }
             }

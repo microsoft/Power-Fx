@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
 
-        // check record, table types with primitive types
+        // Check record, table types with primitive types
         [InlineData("Point = Type({ x: Number, y: Number })", "![x:n,y:n]", true)]
         [InlineData("Points = Type([{ x: Number, y: Number }])", "*[x:n,y:n]", true)]
         [InlineData("Person = Type({ name: Text, dob: Date })", "![name:s,dob:D]", true)]
@@ -27,13 +27,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Heights = Type([Number])", "*[Value:n]", true)]
         [InlineData("Palette = Type([Color])", "*[Value:c]", true)]
         
-        // type alias
+        // Type alias
         [InlineData("DTNZ = Type(DateTimeTZInd)", "Z", true)]
 
-        // nested record types
+        // Nested record types
         [InlineData("Nested = Type({a: {b: DateTime, c: {d: GUID, e: Hyperlink}}, x: Time})", "![a:![b:d, c:![d:g, e:h]], x:T]", true)]
 
-        // invalid types
+        // Invalid types
         [InlineData("Pics = Type([Image])", "*[Value:i]", false)]
         public void TestUserDefinedType(string typeDefinition, string expectedDefinedTypeString, bool isValid)
         {
@@ -61,30 +61,34 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("X = 5; Point = Type({ x: Number, y: Number })", 1)]
         [InlineData("Point = Type({ x: Number, y: Number }); Points = Type([Point])", 2)]
 
-        // mix named formula with named type
+        // Mix named formula with named type
         [InlineData("X = 5; Point = Type({ x: X, y: Number }); Points = Type([Point])", 0)]
 
-        // have invalid type expression
+        // Have invalid type expression
         [InlineData("WrongType = Type(5+5); WrongTypes = Type([WrongType]); People = Type([{ name: Text, age: Number }])", 1)]
 
-        // have incomplete expressions and parse errors
+        // Have incomplete expressions and parse errors
         [InlineData("Point = Type({a:); Points = Type([Point]); People = Type([{ name: Text, age })", 0)]
         [InlineData("Point = Type({a:; Points = Type([Point]); People = Type([{ name: Text, age: Number })", 1)]
 
-        // redeclare type
+        // Redeclare type
         [InlineData("Point = Type({ x: Number, y: Number }); Point = Type(Number);", 1)]
 
-        // cyclic definition
-        [InlineData("B = Type({ x: A }); A = Type(B);", 0)]
+        // Redeclare typed name in record
+        [InlineData("X= Type({ f:Number, f:Number});", 0)]
 
-        // complex resolutions
+        // Cyclic definition
+        [InlineData("B = Type({ x: A }); A = Type(B);", 0)]
+        [InlineData("B = Type(B);", 0)]
+
+        // Complex resolutions
         [InlineData("C = Type({x: Boolean, y: Date, f: B});B = Type({ x: A }); A = Type(Number);", 3)]
         [InlineData("D = Type({nArray: [Number]}), C = Type({x: Boolean, y: Date, f: B});B = Type({ x: A }); A = Type([C]);", 1)]
 
-        // with Invalid types
+        // With Invalid types
         [InlineData("A = Type(Blob); B = Type({x: Currency}); C = Type([DateTime]); D = Type(None)", 2)]
 
-        // have named formulas and udf in the script
+        // Have named formulas and udf in the script
         [InlineData("NAlias = Type(Number);X = 5; ADDX(n:Number): Number = n + X; SomeType = Type(UntypedObject)", 2)]
         public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {

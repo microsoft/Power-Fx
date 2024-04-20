@@ -461,7 +461,12 @@ namespace Microsoft.PowerFx
             _variables.Add(hostDName, info);
         }
 
-        internal void AddType(DName typeName, FormulaType type)
+        /// <summary>
+        /// Adds a named type that can be referenced in expression.
+        /// </summary>
+        /// <param name="typeName">Name of the type to be added into Symbol table.</param>
+        /// <param name="type">Type associated with the name.</param>
+        public void AddType(DName typeName, FormulaType type)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();

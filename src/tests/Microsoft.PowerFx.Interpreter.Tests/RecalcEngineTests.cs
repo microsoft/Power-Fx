@@ -772,7 +772,7 @@ namespace Microsoft.PowerFx.Tests
         {
             // Inner table 
             SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
-            stInner.AddTypes(FormulaType._primitiveTypes);
+            stInner.AddTypes(FormulaType.PrimitiveTypes);
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
             SymbolTable st = new SymbolTable { DebugName = "Extras" };
