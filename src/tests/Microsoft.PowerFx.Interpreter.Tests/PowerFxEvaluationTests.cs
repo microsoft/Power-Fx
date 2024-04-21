@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
@@ -403,7 +405,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, Dictionary<string, string> setupFormulas)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, TestCase tc, Dictionary<string, string> setupFormulas)
             {
                 RecalcEngine engine = null;
                 RecordValue parameters = null;
@@ -485,6 +487,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
 
                 var parse = Engine.Parse(expr, options: options);
+                if (parse.IsSuccess)
+                {
+                    if (TryGenerateDecimalJS(parse.Root, out string js))
+                    {
+                        var sw = new StreamWriter("c:\\temp\\DecimalTests.js", true);
+                        
+#pragma warning disable CA1849
+                        sw.WriteLine("Test( \"" + Path.GetFileName(tc.SourceFile) + "\", " + tc.SourceLine + ",\n    " + js + ",\n    \"" + tc.Expected + "\");\n");
+                        sw.Dispose();
+#pragma warning restore CA1849
+                    }
+                }
 
                 var check = engine.Check(expr, options: options, symbolTable: combinedSymbolTable);                
                 if (!check.IsSuccess)
@@ -578,6 +592,50 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        public static bool TryGenerateDecimalJS(TexlNode node, out string js)
+        {
+            js = null;
+
+            switch (node.Kind)
+            {
+                case NodeKind.DecLit:
+                    if (node is DecLitNode dln)
+                    {
+                        js = "Decimal(\"" + dln.Value + "\")";
+                        return true;
+                    }
+
+                    break;
+
+                case NodeKind.BinaryOp:
+                    if (node is BinaryOpNode bon)
+                    {
+                        if (TryGenerateDecimalJS(bon.Left, out var left) && TryGenerateDecimalJS(bon.Right, out var right))
+                        {
+                            switch (bon.Token.Kind)
+                            {
+                                case TokKind.Add:
+                                    js = "Add( " + left + ", " + right + " )";
+                                    return true;
+                                case TokKind.Div:
+                                    js = "Divide( " + left + ", " + right + " )";
+                                    return true;
+                                case TokKind.Mul:
+                                    js = "Multiply( " + left + ", " + right + " )";
+                                    return true;
+                                case TokKind.Sub:
+                                    js = "Subtract( " + left + ", " + right + " )";
+                                    return true;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            return false;
+        }
+
         // Run through a .txt in sequence, allowing Set() functions that can create state. 
         // Useful for testing mutation functions. 
         // The .txt format still provides an expected return value after each expression.
@@ -603,7 +661,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, Dictionary<string, string> setupFormulas = null)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, TestCase tc = null, Dictionary<string, string> setupFormulas = null)
             {
                 var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
 

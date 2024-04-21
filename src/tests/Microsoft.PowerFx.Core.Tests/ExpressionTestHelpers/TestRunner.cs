@@ -347,7 +347,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     test.Expected = line.Trim();
 
-                    while (i < lines.Length && Regex.IsMatch(lines[i + 1], @"^\s+[^\s]"))
+                    while (i + 1 < lines.Length && Regex.IsMatch(lines[i + 1], @"^\s+[^\s]"))
                     {
                         test.Expected += lines[i + 1].Trim();
                         i++;

@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\pfx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\Summarize.txt";
+            var path = @"D:\repos\gsum\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\DecimalDotnetRuntime.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

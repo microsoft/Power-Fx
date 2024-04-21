@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="expr">PowerFx expression.</param>
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>        
         /// <returns>Result of evaluating Expr.</returns>
-        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, Dictionary<string, string> setupFormulas = null);
+        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, TestCase tc = null, Dictionary<string, string> setupFormulas = null);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, testCase.SetupFormulas).ConfigureAwait(false);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, testCase, testCase.SetupFormulas).ConfigureAwait(false);
                 result = runResult.Value;
                 originalResult = runResult.OriginalValue;
 
