@@ -147,5 +147,21 @@ namespace Microsoft.PowerFx.Core.Tests
             var aNode = valueANode.ChildNodes[0];
             Assert.False(binding.IsMutable(aNode));
         }
+
+        [Fact]
+        public void TestHasErrorsInTreeCallNode()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            config.SymbolTable.AddVariable("tableVar", new TableType(TestUtils.DT("*[Value:n]")));
+
+            // Function with wrong number of arguments, first error will be a token not a node error
+            var checkResult = engine.Check("FirstN([1, 2, 3, 4, 5])");
+            Assert.False(checkResult.IsSuccess);
+
+            var binding = checkResult.Binding;
+
+            Assert.True(binding.ErrorContainer.HasErrorsInTree(binding.Top));
+        }
     }
 }
