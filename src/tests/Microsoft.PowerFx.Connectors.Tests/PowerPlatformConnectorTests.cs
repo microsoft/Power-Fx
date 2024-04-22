@@ -1788,12 +1788,12 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-                "!['@odata.nextLink':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Type)':s, _createdbyexternalparty_value`'Created " +
-                "By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) (Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, " +
-                "'_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price " +
-                "List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'" +
-                "Modified By (Type)':s, _modifiedbyexternalparty_value`'Modified By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External Party) (Type)':s, " +
-                "_modifiedonbehalfby_value`'Modified By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing " +
+                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Type)':s, " +
+                "_createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) (Type)':s, _createdonbehalfby_value`'Created " +
+                "By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogic" +
+                "alname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.looku" +
+                "plogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modified By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External " +
+                "Party) (Type)':s, _modifiedonbehalfby_value`'Modified By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing " +
                 "Partner (Value)':s, '_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'KPI " +
                 "(Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales Acceleration Insights " +
                 "ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, _ownerid_value`'Owner (Value)':s, '_ownerid_value@Microsoft.Dynamics.CRM.lo" +
@@ -2003,14 +2003,6 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
-            {
-                { "connectionId", FormulaValue.New(connectionId) },
-                { "server", FormulaValue.New("pfxdev-sql.database.windows.net") },
-                { "database", FormulaValue.New("connectortest") },
-                { "table", FormulaValue.New("Customers") }
-            });
-
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
@@ -2079,13 +2071,6 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
-            {
-                { "connectionId", FormulaValue.New(connectionId) },
-                { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
-                { "table", FormulaValue.New("Documents") },
-            });
-
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
@@ -2145,6 +2130,82 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
+        }
+
+        [Fact]
+        public async Task SF_CdpTabular()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "ec5fe6d1cad744a0a716fe4597a74b2e";
+            string jwt = "eyJ0eXAiOiJ...";
+            using var client = new PowerPlatformConnectorClient("tip2-001.azure-apihub.net", "53d7f409-4bce-e458-8245-5fa1346ec433", connectionId, () => jwt, httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
+            };
+
+            // Use of tabular connector
+            // There is a network call here to retrieve the table's schema
+            testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            CdpTabularService tabularService = new CdpTabularService("default", "Account");
+
+            Assert.False(tabularService.IsInitialized);
+            Assert.Equal("Account", tabularService.TableName);
+
+            await tabularService.InitAsync(client, $"/apim/salesforce/{connectionId}", false, CancellationToken.None, logger).ConfigureAwait(false);
+            Assert.True(tabularService.IsInitialized);
+
+            ConnectorTableValue sfTable = tabularService.GetTableValue();
+            Assert.True(sfTable._tabularService.IsInitialized);
+
+            Assert.Equal(
+                "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':s, CreatedDate`'Created Date':d, Description`'Account " +
+                "Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By " +
+                "ID':s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':s, Name`'Account Name':s, NumberOfEmployees`Employees:w, " +
+                "OwnerId`'Owner ID':s, ParentId`'Parent Account ID':s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping " +
+                "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
+                "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Accounts).'Account ID'";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, " +
+                "CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, " +
+                "Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, " +
+                "ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](InjectServiceProviderFunction:*[AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, " +
+                "BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, " +
+                "LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, " +
+                "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue accountId = Assert.IsType<StringValue>(result);
+            Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
         }
 
         [Fact]
