@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes.ToArray());
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -178,17 +178,17 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinedFunctions;
         }
 
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out List<DType> parameterTypes)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out DType[] parameterTypes)
         {
             if (args.Count == 0)
             {
-                parameterTypes = default;
+                parameterTypes = Array.Empty<DType>();
                 return true;
             }
 
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
-            parameterTypes = new List<DType>(); 
+            parameterTypes = new DType[args.Count]; 
 
             foreach (var arg in args)
             {
@@ -208,7 +208,9 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else
                     {
-                        parameterTypes.Add(parameterType._type);
+                        Contracts.Assert(arg.ArgIndex >= 0);
+                        Contracts.Assert(arg.ArgIndex < args.Count);
+                        parameterTypes[arg.ArgIndex] = parameterType._type;
                     }
                 }
             }
