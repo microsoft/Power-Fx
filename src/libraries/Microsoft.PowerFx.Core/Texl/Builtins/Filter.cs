@@ -4,16 +4,15 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -22,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Filter(source:*, predicate1:b, [predicate2:b, ...])
     // Corresponding DAX function: Filter
-    internal sealed class FilterFunction : FilterFunctionBase
+    internal sealed class FilterFunction : FilterFunctionBase, IODataFunction
     {
         public FilterFunction()
             : base("Filter", TexlStrings.AboutFilter, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
@@ -189,6 +188,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // All lambdas in filter can be excluded from ECS.
             return IsLambdaParam(index);
+        }        
+
+        public ODataCommand GetODataCommand(IR.Nodes.CallNode callNode)
+        {
+            // This is where capabilities will take place
+            return new ODataFilter(null);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Types
     [DebuggerDisplay("{_tree}")]
     internal class LambdaFormulaValue : FormulaValue
     {
-        private readonly IntermediateNode _tree;
+        internal readonly IntermediateNode _tree;
 
         private readonly EvalVisitor _runner;
 

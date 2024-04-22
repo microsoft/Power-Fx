@@ -27,10 +27,16 @@ namespace Microsoft.PowerFx.Connectors
             public override IntermediateNode Transform(IntermediateNode node, ICollection<ExpressionError> errors)
             {
                 TabularIRVisitor visitor = new TabularIRVisitor();
-                TabularIRVisitor.Context context = new TabularIRVisitor.Context();
+                TabularIRVisitor.ODataContext context = new TabularIRVisitor.ODataContext();
 
                 TabularIRVisitor.RetVal ret = node.Accept(visitor, context);
                 IntermediateNode result = visitor.Materialize(ret);
+
+                foreach (ExpressionError ee in visitor.Errors)
+                {
+                    errors.Add(ee);
+                }
+
                 return result;
             }
         }

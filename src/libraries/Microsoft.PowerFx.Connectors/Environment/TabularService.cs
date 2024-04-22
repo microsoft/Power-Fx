@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -17,10 +18,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool IsInitialized => TableType != null;
 
-        public virtual ConnectorTableValue GetTableValue()
+        public abstract TabularProtocol Protocol { get; }
+
+        public virtual TabularTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this, TableType)
+                ? new TabularTableValue(this, TableType, Protocol)
                 : throw new InvalidOperationException(NotInitialized);
         }
 
@@ -40,16 +43,16 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        public Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, IList<ODataCommand> oDataCommands, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             return IsInitialized
-                ? GetItemsInternalAsync(serviceProvider, oDataParameters, cancellationToken)
+                ? GetItemsInternalAsync(serviceProvider, oDataCommands, cancellationToken)
                 : throw new InvalidOperationException(NotInitialized);
         }
 
-        protected abstract Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
+        protected abstract Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, IList<ODataCommand> oDataCommands, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

@@ -10,12 +10,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Swagger based CDP tabular service
-    public sealed class SwaggerTabularService : CdpTabularService
+    public sealed class CdpWithSwaggerTabularService : CdpTabularService
     {
         public string Namespace => $"_tbl_{ConnectionId}";
 
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly OpenApiDocument _openApiDocument;
         private readonly IReadOnlyDictionary<string, FormulaValue> _globalValues;        
 
-        public SwaggerTabularService(OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues)
+        public CdpWithSwaggerTabularService(OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues)
             : base()
         {
             _globalValues = globalValues;
@@ -271,7 +272,7 @@ namespace Microsoft.PowerFx.Connectors
             try
             {
                 error = null;
-                return new SwaggerTabularService(openApiDocument, globalValues).LoadSwaggerAndIdentifyKeyMethods(new PowerFxConfig());
+                return new CdpWithSwaggerTabularService(openApiDocument, globalValues).LoadSwaggerAndIdentifyKeyMethods(new PowerFxConfig());
             }
             catch (Exception ex)
             {
@@ -283,7 +284,7 @@ namespace Microsoft.PowerFx.Connectors
         [Obsolete("Only used for testing")]
         internal static (ConnectorFunction s, ConnectorFunction c, ConnectorFunction r, ConnectorFunction u, ConnectorFunction d) GetFunctions(IReadOnlyDictionary<string, FormulaValue> globalValues, OpenApiDocument openApiDocument)
         {
-            return new SwaggerTabularService(openApiDocument, globalValues).GetFunctions(new PowerFxConfig());
+            return new CdpWithSwaggerTabularService(openApiDocument, globalValues).GetFunctions(new PowerFxConfig());
         }
 
         public async Task InitAsync(PowerFxConfig config, HttpClient httpClient, CancellationToken cancellationToken, ConnectorLogger logger = null)
@@ -292,7 +293,7 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                logger?.LogInformation($"Entering in {nameof(SwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}");
+                logger?.LogInformation($"Entering in {nameof(CdpWithSwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}");
 
                 if (!LoadSwaggerAndIdentifyKeyMethods(config, logger))
                 {
@@ -302,7 +303,7 @@ namespace Microsoft.PowerFx.Connectors
                 BaseRuntimeConnectorContext runtimeConnectorContext = new RawRuntimeConnectorContext(httpClient);
                 FormulaValue schema = await MetadataService.InvokeAsync(Array.Empty<FormulaValue>(), runtimeConnectorContext, cancellationToken).ConfigureAwait(false);
 
-                logger?.LogInformation($"Exiting {nameof(SwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName} {(schema is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
+                logger?.LogInformation($"Exiting {nameof(CdpWithSwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName} {(schema is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
 
                 if (schema is StringValue str)
                 {
@@ -311,7 +312,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             catch (Exception ex)
             {
-                logger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
+                logger?.LogException(ex, $"Exception in {nameof(CdpWithSwaggerTabularService)} {nameof(InitAsync)} for {DatasetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }
@@ -368,30 +369,31 @@ namespace Microsoft.PowerFx.Connectors
             return (MetadataService, CreateItems, GetItems, UpdateItem, DeleteItem);
         }
 
-        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, IList<ODataCommand> oDataCommands, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
 
             try
             {
-                executionLogger?.LogInformation($"Entering in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}");
+                executionLogger?.LogInformation($"Entering in {nameof(CdpWithSwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}");
 
                 BaseRuntimeConnectorContext runtimeConnectorContext = serviceProvider.GetService<BaseRuntimeConnectorContext>() ?? throw new InvalidOperationException("Cannot determine runtime connector context.");
-                IReadOnlyList<NamedValue> optionalParameters = oDataParameters != null ? oDataParameters.GetNamedValues() : Array.Empty<NamedValue>();
+                
+                //IReadOnlyList<NamedValue> optionalParameters = oDataParameters != null ? oDataParameters.GetNamedValues() : Array.Empty<NamedValue>();
 
-                FormulaValue[] parameters = optionalParameters.Any() ? new FormulaValue[] { FormulaValue.NewRecordFromFields(optionalParameters.ToArray()) } : Array.Empty<FormulaValue>();
+                FormulaValue[] parameters = /* optionalParameters.Any() ? new FormulaValue[] { FormulaValue.NewRecordFromFields(optionalParameters.ToArray()) } :*/ Array.Empty<FormulaValue>();
 
                 // Notice that there is no paging here, just get 1 page
                 // Use WithRawResults to ignore _getItems return type which is in the form of ![value:*[dynamicProperties:![]]] (ie. without the actual type)
                 FormulaValue rowsRaw = await GetItems.InvokeAsync(parameters, runtimeConnectorContext.WithRawResults(), CancellationToken.None).ConfigureAwait(false);
 
-                executionLogger?.LogInformation($"Exiting {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName} {(rowsRaw is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
+                executionLogger?.LogInformation($"Exiting {nameof(CdpWithSwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName} {(rowsRaw is ErrorValue ev ? string.Join(", ", ev.Errors.Select(er => er.Message)) : string.Empty)}");
                 return rowsRaw is StringValue sv ? GetResult(sv.Value) : Array.Empty<DValue<RecordValue>>();
             }
             catch (Exception ex)
             {
-                executionLogger?.LogException(ex, $"Exception in {nameof(SwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
+                executionLogger?.LogException(ex, $"Exception in {nameof(CdpWithSwaggerTabularService)} {nameof(GetItemsAsync)} for {DatasetName}, {TableName}, {ConnectorHelperFunctions.LogException(ex)}");
                 throw;
             }
         }

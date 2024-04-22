@@ -10,11 +10,13 @@ namespace Microsoft.PowerFx.Connectors
     internal class TabularDType : DType
     {
         internal TableType TableType;
+        internal TabularProtocol Protocol;
 
-        internal TabularDType(TableType tableType)
+        internal TabularDType(TableType tableType, TabularProtocol protocol)
             : base(DKind.Table, tableType._type.TypeTree, null, tableType._type.DisplayNameProvider)
         {
             TableType = tableType;
-        }
+            Protocol = protocol;
+        }        
     }
 }

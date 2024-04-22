@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             tabularService.Init();
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue fileTable = tabularService.GetTableValue();
+            TabularTableValue fileTable = tabularService.GetTableValue();
             Assert.True(fileTable._tabularService.IsInitialized);
             Assert.Equal("*[line:s]", fileTable.Type._type.ToString());
 
@@ -75,13 +76,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
 
+        public override TabularProtocol Protocol => TabularProtocol.None;
+
         // Initialization can be synchronous
         public void Init()
         {
             SetTableType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, IList<ODataCommand> oDataCommands, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);

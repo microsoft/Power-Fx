@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -23,6 +24,8 @@ namespace Microsoft.PowerFx.Connectors
         public string DatasetName { get; protected set; }
 
         public string TableName { get; protected set; }
+
+        public override TabularProtocol Protocol => TabularProtocol.Cdp;
 
         private string _uriPrefix;
         private bool _v2;
@@ -100,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, IList<ODataCommand> odataCommands, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
@@ -112,10 +115,10 @@ namespace Microsoft.PowerFx.Connectors
 
                 Uri uri = new Uri((_uriPrefix ?? string.Empty) + (_v2 ? "/v2" : string.Empty) + $"/datasets/{HttpUtility.UrlEncode(DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01", UriKind.Relative);
 
-                if (odataParameters != null)
-                {
-                    uri = odataParameters.GetUri(uri);
-                }
+                //if (odataParameters != null)
+                //{
+                //    uri = odataParameters.GetUri(uri);
+                //}
 
                 using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
                 using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);

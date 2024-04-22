@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
@@ -58,7 +59,15 @@ namespace Microsoft.PowerFx.Functions
                 catch (NotDelegableException)
                 {
                 }
-            }
+            }            
+            
+            if (arg0 is ISupportsODataCommands oDataTable)
+            {
+                ODataCommand oDataCommand = new ODataTop(1);
+
+                // First returns a record so it's a terminal OData command and we'll only try adding the command if delegatable
+                _ = oDataTable.TryAddODataCommand(oDataCommand);                
+            }            
 
             return arg0.Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
@@ -502,8 +511,20 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            if (arg0 is ISupportsODataCommands oDataTable)
+            {
+                // $$$ would need some conversion here (Fx => OData) and not pass the IntermediateNode
+                ODataCommand oDataCommand = new ODataFilter(arg1._tree);
+                
+                if (oDataTable.TryAddODataCommand(oDataCommand))
+                {
+                    // if delegatable, we can return the table right away
+                    return arg0;
+                }                
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue tableQueryable)
+            else if (arg0 is QueryableTableValue tableQueryable)
 #pragma warning restore CS0618 // Type or member is obsolete
             {
                 try

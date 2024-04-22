@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.OData;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -16,8 +17,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // FirstN(source:*, [count:n])
     // LastN(source:*, [count:n])
-    internal sealed class FirstLastNFunction : FunctionWithTableInput
+    internal sealed class FirstLastNFunction : FunctionWithTableInput, IODataFunction
     {
+        private readonly bool _isFirstN;
+
         public override bool IsSelfContained => true;
 
         public FirstLastNFunction(bool isFirst)
@@ -32,6 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                   DType.EmptyTable,
                   DType.Number)
         {
+            _isFirstN = isFirst;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -69,6 +73,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return fArgsValid;
+        }
+
+        public ODataCommand GetODataCommand(IR.Nodes.CallNode callNode)
+        {
+            // $$$ to be cleaned...
+            if (_isFirstN && callNode.Args[1] is IR.Nodes.CallNode callNode1 && callNode1.Function is FloatFunction && callNode1.Args[0] is DecimalLiteralNode dln && dln.LiteralValue > 0m)
+            {
+                return new ODataTop((int)dln.LiteralValue);
+            }
+
+            return null;
         }
     }
 

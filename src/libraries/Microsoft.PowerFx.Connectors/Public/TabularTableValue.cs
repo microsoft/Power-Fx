@@ -3,33 +3,30 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Created by TabularService.GetTableValue
-    // Doesn't contain any ServiceProvider which is runtime only
-    public class ConnectorTableValue : TableValue, IRefreshable
+    // Doesn't contain any ServiceProvider which is for runtime
+    public class TabularTableValue : TableValue
     {
         protected internal readonly TabularService _tabularService;
+        protected internal readonly TabularProtocol _protocol;
 
-        public ConnectorTableValue(TabularService tabularService, TableType tableType)
-            : base(IRContext.NotInSource(new ConnectorTableType(tableType)))
+        public TabularTableValue(TabularService tabularService, TableType tableType, TabularProtocol protocol)
+            : base(IRContext.NotInSource(new TabularTableType(tableType, protocol)))
         {
             _tabularService = tabularService;
+            _protocol = protocol;
         }
 
-        internal ConnectorTableValue(IRContext irContext)
+        internal TabularTableValue(IRContext irContext)
             : base(irContext)
         {
         }
 
         public override IEnumerable<DValue<RecordValue>> Rows => throw new InvalidOperationException("No service context. Make sure to call engine.EnableTabularConnectors().");
-
-        public virtual void Refresh()
-        {
-        }
     }
 }

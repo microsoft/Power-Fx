@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.OData;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // First(source:*)
     // Last(source:*)
-    internal sealed class FirstLastFunction : FunctionWithTableInput
+    internal sealed class FirstLastFunction : FunctionWithTableInput, IODataFunction
     {
         public override bool IsSelfContained => true;
 
@@ -98,6 +99,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return false;
+        }
+
+        public ODataCommand GetODataCommand(IR.Nodes.CallNode callNode)
+        {
+            return _isFirst ? new ODataTop(1) : null;
         }
     }
 

@@ -1938,7 +1938,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            CdpWithSwaggerTabularService tabularService = new CdpWithSwaggerTabularService(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
             Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
@@ -1948,7 +1948,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("Customers", tabularService.Name);
             Assert.Equal("Customers", tabularService.DisplayName);
 
-            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            TabularTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
@@ -1964,13 +1964,13 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddRuntimeContext(runtimeContext);
 
             // Expression with tabular connector
-            string expr = @"First(Customers).Address";
+            string expr = @"First(Filter(Customers, ThisRecord.Country = ""France"")).Address";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
             // Confirm that InjectServiceProviderFunction has properly been added
             string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
+            Assert.Equal(@"FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](Filter:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s], Scope 1(InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX')), Lazy(EqText:b(ScopeAccess(Scope 1, Country), ""France"":s)))), Address)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
@@ -2024,7 +2024,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", true, CancellationToken.None, logger).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            TabularTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
@@ -2098,7 +2098,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", false, CancellationToken.None, logger).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue spTable = tabularService.GetTableValue();
+            TabularTableValue spTable = tabularService.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
 
             Assert.Equal(
@@ -2173,7 +2173,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
 
-            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            CdpWithSwaggerTabularService tabularService = new CdpWithSwaggerTabularService(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
             Assert.Equal("_tbl_0b905132239e463a9d12f816be201da9", tabularService.Namespace);
@@ -2183,7 +2183,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("Documents", tabularService.Name);
             Assert.Equal("Documents", tabularService.DisplayName);
 
-            ConnectorTableValue spTable = tabularService.GetTableValue();
+            TabularTableValue spTable = tabularService.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
 
             Assert.Equal(
@@ -2243,7 +2243,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = CdpWithSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
             Assert.False(isTabularService);
             Assert.Equal("Missing global value dataset", error);
         }
@@ -2260,7 +2260,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
             });
 
-            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = CdpWithSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
             Assert.False(isTabularService);
             Assert.Equal("Missing global value table", error);
         }
@@ -2272,7 +2272,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = CdpWithSwaggerTabularService.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, dataset, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -2282,10 +2282,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = CdpWithSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService);
 
-            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = CdpWithSwaggerTabularService.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTable", s.Name);
             Assert.Equal("PostItem", c.Name);
@@ -2319,7 +2319,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = CdpWithSwaggerTabularService.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, database, server, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -2330,10 +2330,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 { "table", FormulaValue.New("Customers") }
             });
 
-            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = CdpWithSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService);
 
-            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = CdpWithSwaggerTabularService.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTableV2", s.Name);
             Assert.Equal("PostItemV2", c.Name);
@@ -2367,7 +2367,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = SwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = CdpWithSwaggerTabularService.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -2376,10 +2376,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = SwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = CdpWithSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService, error);
 
-            var (s, c, r, u, d) = SwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = CdpWithSwaggerTabularService.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTable", s.Name);
             Assert.Equal("PostItemV2", c.Name);
@@ -2428,7 +2428,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             });
 
             // Use of tabular connector            
-            SwaggerTabularService tabularService = new SwaggerTabularService(apiDoc, globals);
+            CdpWithSwaggerTabularService tabularService = new CdpWithSwaggerTabularService(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
             Assert.Equal("_tbl_ec5fe6d1cad744a0a716fe4597a74b2e", tabularService.Namespace);
@@ -2440,7 +2440,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("Account", tabularService.Name);
             Assert.Equal("Accounts", tabularService.DisplayName);
 
-            ConnectorTableValue sfTable = tabularService.GetTableValue();
+            TabularTableValue sfTable = tabularService.GetTableValue();
             Assert.True(sfTable._tabularService.IsInitialized);
 
             Assert.Equal(

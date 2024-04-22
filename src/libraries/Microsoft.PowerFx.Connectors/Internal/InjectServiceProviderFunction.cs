@@ -17,15 +17,18 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class InjectServiceProviderFunction : TexlFunction, IAsyncConnectorTexlFunction
     {
-        public InjectServiceProviderFunction()
-            : base(DPath.Root, nameof(InjectServiceProviderFunction), nameof(InjectServiceProviderFunction), (loc) => nameof(InjectServiceProviderFunction), FunctionCategories.REST, DType.EmptyTable, 0, 1, 1)
-        {
-        }
-
         public override bool IsSelfContained => true;
 
         public override bool IsAsync => true;
 
+        internal TabularDType TabularDType;
+
+        public InjectServiceProviderFunction(TabularDType tdt)
+            : base(DPath.Root, nameof(InjectServiceProviderFunction), nameof(InjectServiceProviderFunction), (loc) => nameof(InjectServiceProviderFunction), FunctionCategories.REST, DType.EmptyTable, 0, 1, 1)
+        {
+            TabularDType = tdt;
+        }
+     
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.TableArg1 };
@@ -36,8 +39,21 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
 
             // Creation of the table with its context
-            ConnectorTableValueWithServiceProvider connectorTableWithServiceProvider = new ConnectorTableValueWithServiceProvider(args[0] as ConnectorTableValue, context);
-            return Task.FromResult<FormulaValue>(connectorTableWithServiceProvider);
+            TabularTableValue oDataTableValue = GetTabularTableValue(args[0] as TabularTableValue, context);
+
+            return Task.FromResult<FormulaValue>(oDataTableValue);
+        }
+       
+        internal TabularTableValue GetTabularTableValue(TabularTableValue ttv, IServiceProvider context = null)
+        {
+            return TabularDType.Protocol switch
+            {
+                TabularProtocol.Cdp => new CdpTableValue(ttv, context),
+                TabularProtocol.None => new BaseTableValue(ttv, context),
+                TabularProtocol.OData or 
+                TabularProtocol.Sql or
+                _ => throw new InvalidOperationException("Tabular protocol not supported yet")
+            };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

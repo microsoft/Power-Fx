@@ -7,11 +7,11 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Used in ConnectorTableValue
-    internal class ConnectorTableType : TableType
-    {
-        public ConnectorTableType(TableType tableType)
-            : base(new TabularDType(tableType))
-        {
+    internal class TabularTableType : TableType
+    {        
+        public TabularTableType(TableType tableType, TabularProtocol protocol)
+            : base(new TabularDType(tableType, protocol))
+        {            
         }
 
         public override void Visit(ITypeVisitor vistor)
