@@ -228,18 +228,16 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Parse the type expression without resolving type.
         /// </summary>
-        public static TypeLiteralNode ParseType(string typeExpressionText, Features features = null, ParserOptions options = null)
+        public static TypeLiteralNode ParseType(string typeExpressionText, ParserOptions options = null)
         {
-            if (typeExpressionText == null)
-            {
-                throw new ArgumentNullException(nameof(typeExpressionText));
-            }
+            Contracts.AssertValue(typeExpressionText);
 
             options ??= new ParserOptions 
             {
                 AllowParseAsTypeLiteral = true,
             };
-            var result = options.Parse(typeExpressionText, features ?? Features.None);
+
+            var result = options.Parse(typeExpressionText);
 
             if (result.Root is not TypeLiteralNode typeNode || result.HasError)
             {
@@ -303,6 +301,7 @@ namespace Microsoft.PowerFx
 
         public FormulaType ResolveType(TypeLiteralNode typeNode, SymbolTable symbols)
         {
+            var composedSymbols = ReadOnlySymbolTable.Compose(symbols, PrimitiveTypes);
             var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
 
             if (resolvedType == DType.Invalid)

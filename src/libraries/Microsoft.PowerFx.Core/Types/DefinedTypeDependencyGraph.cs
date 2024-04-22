@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DefinedTypeDependencyGraph(IEnumerable<DefinedType> definedTypes, INameResolver globalSymbols) 
         {
             _definedTypes = definedTypes;
-            _globalTypes = ReadOnlySymbolTable.NewDefaultTypes(globalSymbols?.DefinedTypes);
+            _globalTypes = ReadOnlySymbolTable.NewDefaultTypes(globalSymbols?.NamedTypes);
 
             _typeWithDependency = new Dictionary<DefinedType, HashSet<string>>();
             _invertedDependency = new Dictionary<string, HashSet<DefinedType>>();
@@ -59,7 +59,6 @@ namespace Microsoft.PowerFx.Core.Types
         {
             foreach (var defType in _definedTypes)
             {
-                var name = defType.Ident.Name.Value;
                 var dependencies = DefinedTypeDependencyVisitor.FindDependencies(defType.Type.TypeRoot, _globalTypes);
 
                 // Establish unresolvedType -> its dependencies

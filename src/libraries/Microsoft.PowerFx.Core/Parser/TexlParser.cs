@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
-            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
+            return parser.ParseUserDefinitions(script, parserOptions);
         }
 
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
@@ -259,7 +259,8 @@ namespace Microsoft.PowerFx.Core.Parser
             return new PartialAttribute(attributeName.As<IdentToken>(), attributeOp);
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
+        // Parses User-defined type, User-defined function and Named formulas
+        private ParseUserDefinitionResult ParseUserDefinitions(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();

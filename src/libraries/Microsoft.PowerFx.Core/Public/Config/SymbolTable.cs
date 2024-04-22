@@ -40,9 +40,7 @@ namespace Microsoft.PowerFx
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
-        private readonly Dictionary<DName, FormulaType> _definedTypes = new Dictionary<DName, FormulaType>();
-
-        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => _definedTypes;
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -471,7 +469,7 @@ namespace Microsoft.PowerFx
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
-            _definedTypes.Add(typeName, type);
+            _namedTypes.Add(typeName, type);
         }
 
         internal void AddTypes(IEnumerable<UserDefinedType> types)
@@ -481,24 +479,24 @@ namespace Microsoft.PowerFx
 
             foreach (var type in types)
             {
-                _definedTypes.Add(type.Name, type.Type);
+                _namedTypes.Add(type.Name, type.Type);
             }
         }
 
-        internal void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        public void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             foreach (var type in types)
             {
-                _definedTypes.Add(type.Key, type.Value);
+                _namedTypes.Add(type.Key, type.Value);
             }
         }
 
         bool INameResolver.LookupType(DName name, out FormulaType fType)
         {
-            if (_definedTypes.TryGetValue(name, out fType))
+            if (_namedTypes.TryGetValue(name, out fType))
             {
                 return true;
             }

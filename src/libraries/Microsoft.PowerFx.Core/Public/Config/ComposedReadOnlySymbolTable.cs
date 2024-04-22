@@ -84,14 +84,14 @@ namespace Microsoft.PowerFx
         }
 
         // Expose the list to aide in intellisense suggestions and create new composable type symbol tables.
-        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes
         {
             get
             {
                 var names = new HashSet<string>();
-                foreach (var table in _symbolTables)
+                foreach (INameResolver table in _symbolTables)
                 {
-                    foreach (var type in table.DefinedTypes)
+                    foreach (var type in table.NamedTypes)
                     {
                         if (names.Add(type.Key))
                         {

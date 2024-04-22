@@ -147,6 +147,7 @@ namespace Microsoft.PowerFx.Syntax
         private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, INameResolver nameResolver, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
+            Contracts.AssertValue(nameResolver);
 
             var userDefinedFunctions = new List<UserDefinedFunction>();
             var texlFunctionSet = new TexlFunctionSet();
@@ -179,6 +180,12 @@ namespace Microsoft.PowerFx.Syntax
 
         private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out List<DType> parameterTypes)
         {
+            if (args.Count == 0)
+            {
+                parameterTypes = default;
+                return true;
+            }
+
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
             parameterTypes = new List<DType>(); 

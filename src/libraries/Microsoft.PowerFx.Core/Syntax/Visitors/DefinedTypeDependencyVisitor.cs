@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
+    // Visitor to determine unresolved type dependencies in a given texl node
     internal class DefinedTypeDependencyVisitor : IdentityTexlVisitor
     {
         private readonly HashSet<string> _dependencies;
@@ -31,13 +32,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
             var name = node.Ident.Name;
 
-            if (_context.LookupType(name, out FormulaType _))
+            // Node is unresolved dependency if its not found in context lookup 
+            if (!_context.LookupType(name, out FormulaType _))
             {
-                return;
+                _dependencies.Add(name);
             }
-            
-            _dependencies.Add(name);
-            return;
         }
     }
 }

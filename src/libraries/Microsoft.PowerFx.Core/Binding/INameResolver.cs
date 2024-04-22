@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // List of all valid named types in a given namespace 
         // Intellisense can use this when suggesting type options.
-        IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes { get; }
+        IEnumerable<KeyValuePair<DName, FormulaType>> NamedTypes { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").

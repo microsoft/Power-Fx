@@ -291,6 +291,8 @@ namespace Microsoft.PowerFx
 
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
+        private protected readonly Dictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
+
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         // Helper to create a ReadOnly symbol table around a set of core types. 
@@ -360,9 +362,11 @@ namespace Microsoft.PowerFx
 
         internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        internal IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes => ((INameResolver)this).DefinedTypes;
+        internal IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes => ((INameResolver)this).NamedTypes;
 
         TexlFunctionSet INameResolver.Functions => _functions;
+
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -480,8 +484,6 @@ namespace Microsoft.PowerFx
         DPath INameResolver.CurrentEntityPath => default;
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
-
-        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.DefinedTypes => default;
 
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {

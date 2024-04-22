@@ -200,6 +200,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
             private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, DType[] argTypes)
             {
+                Contracts.AssertValue(globalNameResolver);
+                Contracts.AssertValue(args);
+                Contracts.Assert(args.Count() == argTypes.Length);
+
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
                 _argTypes = argTypes;
@@ -217,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
-            public IEnumerable<KeyValuePair<DName, FormulaType>> DefinedTypes => _globalNameResolver.DefinedTypes;
+            public IEnumerable<KeyValuePair<DName, FormulaType>> NamedTypes => _globalNameResolver.NamedTypes;
 
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
