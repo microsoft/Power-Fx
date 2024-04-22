@@ -2,23 +2,42 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
     internal static class BinderExtensions
     {
-        public static void AddIfNotSameSpan(this IList<KeyValuePair<Token, string>> nodes, Token key, string value)            
+        public static void AddIfNotSameSpan(this IDictionary<Token, string> nodes, Token key, string value)            
         {
-            foreach (KeyValuePair<Token, string> kvp in nodes)
+            if (!nodes.ContainsKey(key))
             {
-                if (kvp.Key.Span == key.Span)
-                {
-                    return;
-                }
+                nodes.Add(key, value);
+            }
+        }
+    }
+
+    internal class NodesToReplaceComparer : IEqualityComparer<Token>
+    {
+        public bool Equals(Token x, Token y)
+        {
+            if (x == null && y == null)
+            {
+                return true;
             }
 
-            nodes.Add(new KeyValuePair<Token, string>(key, value));
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            return x.Span.Min == y.Span.Min && x.Span.Lim == y.Span.Lim;
+        }
+
+        public int GetHashCode(Token token)
+        {
+            return Hashing.CombineHash(token.Span.Min.GetHashCode(), token.Span.Lim.GetHashCode());
         }
     }
 }

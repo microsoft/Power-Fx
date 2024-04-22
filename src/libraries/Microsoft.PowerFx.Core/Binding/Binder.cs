@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Stores tokens that need replacement (Display Name -> Logical Name) for serialization
         // Replace Nodes (Display Name -> Logical Name) for serialization
-        public IList<KeyValuePair<Token, string>> NodesToReplace { get; }
+        public IDictionary<Token, string> NodesToReplace { get; }
 
         public bool UpdateDisplayNames { get; }
 
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Binding
             ContextScope = ruleScope;
             BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
             HasReferenceToAttachment = false;
-            NodesToReplace = new List<KeyValuePair<Token, string>>();
+            NodesToReplace = new Dictionary<Token, string>(new NodesToReplaceComparer());
             UpdateDisplayNames = updateDisplayNames;
             _forceUpdateDisplayNames = forceUpdateDisplayNames;
             HasLocalScopeReferences = false;
@@ -2333,6 +2333,9 @@ namespace Microsoft.PowerFx.Core.Binding
             if (NodesToReplace != null)
             {
                 // Token equality doesn't work here, compare the spans to be certain
+                //var newName = NodesToReplace.Where(kvp => kvp.Key.Span.Min == ident.Token.Span.Min && kvp.Key.Span.Lim == ident.Token.Span.Lim).FirstOrDefault();
+                //if (newName.Value != null && newName.Key != null)
+                //if (NodesToReplace.TryGetValue(ident.Token, out string newName))
                 var newName = NodesToReplace.Where(kvp => kvp.Key.Span.Min == ident.Token.Span.Min && kvp.Key.Span.Lim == ident.Token.Span.Lim).FirstOrDefault();
                 if (newName.Value != null && newName.Key != null)
                 {
