@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -26,6 +27,14 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         public static DType DT(string type)
         {
             Assert.True(DType.TryParse(type, out DType dtype));
+            Assert.True(dtype.IsValid);
+            return dtype;
+        }
+
+        // Parse a type in string form to a DType, with DisplayName
+        public static DType DT2(string type)
+        {
+            Assert.True(TestExtensions.TryParse2(type, out DType dtype));
             Assert.True(dtype.IsValid);
             return dtype;
         }
@@ -316,6 +325,382 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             IsStrict = 0x80,
             SupportsParamCoercion = 0x100,
             SupportsAsyncLambdas = 0x200,
+        }
+    }
+
+    internal static class TestExtensions
+    {
+        internal static bool TryParse2(string typeSpec, out DType type)
+        {
+            Contracts.AssertNonEmpty(typeSpec);
+
+            return DTypeSpecParser2.TryParse(new DTypeSpecLexer2(typeSpec), out type);
+        }
+
+        internal static class DTypeSpecParser2
+        {
+            internal const string _typeEncodings = DTypeSpecParser._typeEncodings;
+            internal static readonly DType[] _types = DTypeSpecParser._types;
+
+            // Parses a type specification, returns true and sets 'type' on success.
+            public static bool TryParse(DTypeSpecLexer2 lexer, out DType type)
+            {
+                Contracts.AssertValue(lexer);
+                Contracts.Assert(_typeEncodings.Length == _types.Length);
+                Contracts.Assert(_typeEncodings.ToCharArray().Zip(_types, (c, t) => DType.MapKindToStr(t.Kind) == c.ToString()).All(x => x));
+
+                if (!lexer.TryNextToken(out var token) || token.Length != 1)
+                {
+                    type = DType.Invalid;
+                    return false;
+                }
+
+                // Older documents may use an "a" type, which for legacy reasons is a duplicate of "o" type.
+                if (token == DType.MapKindToStr(DKind.LegacyBlob))
+                {
+                    token = DType.MapKindToStr(DKind.Blob);
+                }
+
+                // Note that control types "v" or "E" are parsed to Error, since the type spec language is not a mechanism for serializing/deserializing controls.
+                if (token == DType.MapKindToStr(DKind.Control) || token == DType.MapKindToStr(DKind.DataEntity))
+                {
+                    type = DType.Error;
+                    return true;
+                }
+
+                var typeIdx = _typeEncodings.IndexOf(token, StringComparison.Ordinal);
+                if (typeIdx < 0)
+                {
+                    type = DType.Invalid;
+                    return false;
+                }
+
+                Contracts.AssertIndex(typeIdx, _types.Length);
+                var result = _types[typeIdx];
+
+                if (result == DType.ObjNull)
+                {
+                    // For null value
+                    type = result;
+                    return true;
+                }
+
+                if (!result.IsAggregate)
+                {
+                    if (result.IsEnum)
+                    {
+                        if (!TryParse(lexer, out var enumSupertype) ||
+                            (!enumSupertype.IsPrimitive && !enumSupertype.IsUnknown) ||
+                            !TryParseValueMap(lexer, out var valueMap))
+                        {
+                            type = DType.Invalid;
+                            return false;
+                        }
+
+                        // For enums
+                        type = new DType(enumSupertype.Kind, valueMap);
+                        return true;
+                    }
+
+                    // For non-enums, non-aggregates
+                    type = result;
+                    return true;
+                }
+
+                Contracts.Assert(result.IsRecord || result.IsTable);
+
+                if (!TryParseTypeMap(lexer, out var typeMap, out var displayNameProvider))
+                {
+                    type = DType.Invalid;
+                    return false;
+                }
+
+                type = new DType(result.Kind, typeMap, null, displayNameProvider);
+                return true;
+            }
+
+            // Parses a typed name map specification, returns true and sets 'map' on success.
+            // A map specification has the form: [name:type, ...]
+            private static bool TryParseTypeMap(DTypeSpecLexer2 lexer, out TypeTree map, out DisplayNameProvider displayNameProvider2)
+            {
+                Contracts.AssertValue(lexer);
+
+                SingleSourceDisplayNameProvider displayNameProvider = new SingleSourceDisplayNameProvider();
+                displayNameProvider2 = displayNameProvider;
+
+                if (!lexer.TryNextToken(out var token) || token != "[")
+                {
+                    map = default;
+                    return false;
+                }
+
+                map = new TypeTree();
+
+                while (lexer.TryNextToken(out token) && token != "]")
+                {
+                    string name = token;
+                    string displayName = null;
+
+                    if (name.Contains('`'))
+                    {
+                        var parts = name.Split('`');
+                        name = parts[0];
+                        displayName = parts[1];
+                    }
+
+                    if (name.Length >= 2 && name.StartsWith("'", StringComparison.Ordinal) && name.EndsWith("'", StringComparison.Ordinal))
+                    {
+                        name = TexlLexer.UnescapeName(name);
+                    }
+
+                    if (!DName.IsValidDName(name) ||
+                        !lexer.TryNextToken(out token) ||
+                        token != ":" ||
+                        map.Contains(name) ||
+                        !TryParse(lexer, out var type))
+                    {
+                        map = default;
+                        displayNameProvider2 = displayNameProvider;
+                        return false;
+                    }
+
+                    map = map.SetItem(name, type);
+                    displayNameProvider = displayNameProvider.AddField(new DName(name), new DName(string.IsNullOrEmpty(displayName) ? name : displayName));
+
+                    if (!lexer.TryNextToken(out token) || (token != "," && token != "]"))
+                    {
+                        map = default;
+                        displayNameProvider2 = displayNameProvider;
+                        return false;
+                    }
+                    else if (token == "]")
+                    {
+                        displayNameProvider2 = displayNameProvider;
+                        return true;
+                    }
+                }
+
+                if (token != "]")
+                {
+                    map = default;
+                    displayNameProvider2 = displayNameProvider;
+                    return false;
+                }
+
+                displayNameProvider2 = displayNameProvider;
+                return true;
+            }
+
+            // Parses a value map specification, returns true and sets 'map' on success.
+            // A map specification has the form: [name:value, ...]
+            private static bool TryParseValueMap(DTypeSpecLexer2 lexer, out ValueTree map)
+            {
+                Contracts.AssertValue(lexer);
+
+                if (!lexer.TryNextToken(out var token) || token != "[")
+                {
+                    map = default;
+                    return false;
+                }
+
+                map = new ValueTree();
+
+                while (lexer.TryNextToken(out token) && token != "]")
+                {
+                    var name = token;
+                    if (name.Length >= 2 && name.StartsWith("'", StringComparison.Ordinal) && name.EndsWith("'", StringComparison.Ordinal))
+                    {
+                        name = name.TrimStart('\'').TrimEnd('\'');
+                    }
+
+                    if (!lexer.TryNextToken(out token) || token != ":" ||
+                        !TryParseEquatableObject(lexer, out var value))
+                    {
+                        map = default;
+                        return false;
+                    }
+
+                    map = map.SetItem(name, value);
+
+                    if (!lexer.TryNextToken(out token) || (token != "," && token != "]"))
+                    {
+                        map = default;
+                        return false;
+                    }
+                    else if (token == "]")
+                    {
+                        return true;
+                    }
+                }
+
+                if (token != "]")
+                {
+                    map = default;
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Only primitive values are supported:
+            //  - strings, such as "hello", etc.
+            //  - numbers, such as 123.66124, etc.
+            //  - booleans: true and false.
+            private static bool TryParseEquatableObject(DTypeSpecLexer2 lexer, out EquatableObject value)
+            {
+                Contracts.AssertValue(lexer);
+
+                if (!lexer.TryNextToken(out var token) || token.Length == 0)
+                {
+                    value = default;
+                    return false;
+                }
+
+                // String support
+                if (token[0] == '"')
+                {
+                    var tokenLen = token.Length;
+                    if (tokenLen < 2 || token[tokenLen - 1] != '"')
+                    {
+                        value = default;
+                        return false;
+                    }
+
+                    value = new EquatableObject(token.Substring(1, tokenLen - 2));
+                    return true;
+                }
+
+                // Number (hex) support
+                if (token[0] == '#' && token.Length > 1)
+                {
+                    if (uint.TryParse(token.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
+                    {
+                        value = new EquatableObject((double)intValue);
+                        return true;
+                    }
+
+                    value = default;
+                    return false;
+                }
+
+                // Number (double) support
+                if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var numValue))
+                {
+                    value = new EquatableObject(numValue);
+                    return true;
+                }
+
+                // Boolean support
+                if (bool.TryParse(token, out var boolValue))
+                {
+                    value = new EquatableObject(boolValue);
+                    return true;
+                }
+
+                value = default;
+                return false;
+            }
+        }
+
+        internal sealed class DTypeSpecLexer2
+        {
+            private int _cursor;
+            private readonly string _typeSpec;
+
+            public DTypeSpecLexer2(string typeSpec)
+            {
+                Contracts.AssertNonEmpty(typeSpec);
+                _typeSpec = typeSpec;
+                _cursor = 0;
+            }
+
+            public bool Eol => _cursor >= _typeSpec.Length;
+
+            private char CurChar
+            {
+                get
+                {
+                    Contracts.Assert(!Eol);
+                    return _typeSpec[_cursor];
+                }
+            }
+
+            public bool TryNextToken(out string token)
+            {
+                while (!Eol && CharacterUtils.IsSpace(CurChar))
+                {
+                    ++_cursor;
+                }
+
+                if (Eol)
+                {
+                    token = null;                    
+                    return false;
+                }
+
+                const string punctuators = "*!%:[],";
+                if (punctuators.IndexOf(CurChar) >= 0)
+                {
+                    token = CurChar.ToString();
+                    _cursor++;
+                }
+                else
+                {
+                    var tok = new StringBuilder();
+
+                    var quote = '0';
+                    while (!Eol)
+                    {
+                        var c = CurChar;
+                        if ((c == '"' && (quote == '"' || quote == '0')) ||
+                            (c == '\'' && (quote == '\'' || quote == '0')) ||
+                            (c == '`' && (quote == '`' || quote == '0')))
+                        {
+                            if (quote == '0')
+                            {
+                                quote = c;
+                            }
+                            else
+                            {
+                                tok.Append(c);
+                                ++_cursor;
+
+                                // If the quote character is not being escaped (examples of
+                                // escaping: 'apos''trophe', or "quo""te"), then we end the token.
+                                if (Eol || CurChar != c)
+                                {
+                                    quote = '0';
+                                    break;
+                                }
+
+                                // else we let the fall-through logic append c once more.
+                            }
+                        }
+                        else if ((quote == '0') && (CharacterUtils.IsSpace(c) || punctuators.IndexOf(c) >= 0))
+                        {
+                            break;
+                        }
+
+                        tok.Append(c);
+                        ++_cursor;
+                    }
+
+                    if (quote != '0')
+                    {
+                        token = null;                        
+                        return false;
+                    }
+
+                    token = tok.ToString();
+                }
+
+                while (!Eol && CharacterUtils.IsSpace(CurChar))
+                {
+                    ++_cursor;
+                }
+                
+                return true;
+            }
         }
     }
 }
