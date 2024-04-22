@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public static DType GetDTypeCds()
         {
-            DType accountsType = TestUtils.DT(SimplifiedAccountsSchema);
+            DType accountsType = TestUtils.DT2(SimplifiedAccountsSchema);
             var dataSource = new CdsTestDataSource(
                 "Accounts",
                 accountsType,
