@@ -3,16 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -412,7 +407,7 @@ namespace Microsoft.PowerFx.Core.IR
                         var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
                         args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
                     }
-                    else if (func.TranslateAsNodeToRecordNode(arg))
+                    else if (func.TranslateAsNodeToRecordNode(arg, i))
                     {
                         var asNode = arg as AsNode;
                         var recordType = RecordType.Empty().Add(asNode.Right.Name, argContext.GetIRContext(arg).ResultType);

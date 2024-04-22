@@ -4619,4 +4619,16 @@
     <value>Summarize data source doesn't support As keyword.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Column 'ThisGroup' conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>The datasource contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

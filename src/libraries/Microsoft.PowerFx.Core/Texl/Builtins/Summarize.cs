@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Summarize", TexlStrings.AboutSummarize, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
         {
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 3, repeatSpan: 1, endNonRepeatCount: 1, repeatTopLength: 6);
-            ScopeInfo = new FunctionTableScopeInfo(this);
+            ScopeInfo = new FunctionThisGroupScopeInfo(this);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -81,6 +81,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
+            const string thisGroup = "ThisGroup";
+
             bool isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
@@ -90,7 +92,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (args[0] is AsNode)
             {
                 isValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDatasourceAsNode);
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceScopeNotSupported);
+            }
+
+            if (sourceType.Contains(new DName(thisGroup)))
+            {
+                isValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
             }
 
             var atLeastOneGroupByColumn = false;
@@ -111,6 +119,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         columnName = nameNode.Right.Name;
                         break;
 
+                    case DottedNameNode dottedNameNode:
+                        existingType = argType;
+                        columnName = dottedNameNode.Right.Name;
+                        atLeastOneGroupByColumn = true;
+                        break;
+
                     case FirstNameNode:
                         if (!TryGetColumnLogicalName(sourceType, context.Features.SupportColumnNamesAsIdentifiers, arg, errors, out columnName, out existingType))
                         {
@@ -125,6 +139,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         isValid = false;
                         errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeInvalidArg);
                         continue;
+                }
+
+                if (columnName == thisGroup)
+                {
+                    isValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeThisGroupColumnName);
+                    continue;
                 }
                 
                 if (!existingType.IsPrimitive)
@@ -164,11 +185,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.PossiblyIdentifier;
         }
 
-        public override bool TranslateAsNodeToRecordNode(TexlNode node)
+        public override bool TranslateAsNodeToRecordNode(TexlNode node, int index)
         {
             Contracts.Assert(node != null);
 
-            return node is AsNode asNode;
+            return index > 0 && node is AsNode asNode;
         }
 
         public override bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)

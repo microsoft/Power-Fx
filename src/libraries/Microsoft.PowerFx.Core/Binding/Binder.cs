@@ -2787,7 +2787,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
                 {                    
-                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsTable || scope.Type.IsUntypedObject);
+                    Contracts.Assert(scope.Type.IsRecord || scope.Type.IsUntypedObject);
                     
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
@@ -4481,11 +4481,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
-
-                    if (!identRequired)
-                    {
-                        scopeIdent = scopeInfo.ScopeIdent;
-                    }
                 }
 
                 if (!fArgsValid)

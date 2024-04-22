@@ -24,6 +24,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
+        // !!!TODO REMOVE THIS!!!
+        //[Fact]
+        //public void ASDfsdfdsadfsgdfghgfssvnhfvbgfdv()
+        //{
+        //    var engine = new RecalcEngine();
+        //    var expression = @"Summarize(
+        //                      Table({Supplier:""Contoso"",  Fruit:""Grapes"",  Price:220, Purchase:Date(2015,10,1), Tags: [""Red"",""Seedless""]},
+        //                      {Supplier:""Fabrikam"", Fruit:""Lemons"",  Price:31,  Purchase:Date(2015,10,1), Tags: [""Colombia""]},
+        //                      {Supplier:""Contoso"",  Fruit:""Lemons"",  Price:29,  Purchase:Date(2015,10,2), Tags: [""Peru""]},
+        //                      {Supplier:""Contoso"",  Fruit:""Grapes"",  Price:210, Purchase:Date(2015,10,2), Tags: [""Green"",""Seedless""]},
+        //                      {Supplier:""Fabrikam"", Fruit:""Lemons"",  Price:30,  Purchase:Date(2015,10,3), Tags: [""Mexixo"",""Seedless""]},
+        //                      {Supplier:""Contoso"",  Fruit:""Bananas"", Price:12,  Purchase:Date(2015,10,3), Tags: [""Mexico""]}) As SL,
+        //                      SL.Fruit, Sum( Sort( SL.ThisGroup, Supplier ), Price ) As OnePrice )";
+
+        //    var check = engine.Check(expression, options: _opts);
+        //    var result = check.GetEvaluator().Eval();
+
+        //    Assert.True(check.IsSuccess);
+        //    Assert.IsAssignableFrom<TableValue>(result);
+        //}
+
         [Theory]
 
         // Collect functions

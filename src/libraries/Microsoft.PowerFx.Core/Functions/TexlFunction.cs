@@ -678,8 +678,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Average(table, column) As average_column => {average_column:Average(table, column)}.
         /// </summary>
         /// <param name="node">Node.</param>
+        /// <param name="index">Node index.</param>
         /// <returns></returns>
-        public virtual bool TranslateAsNodeToRecordNode(TexlNode node)
+        public virtual bool TranslateAsNodeToRecordNode(TexlNode node, int index)
         {
             Contracts.Assert(node != null);
             return false;

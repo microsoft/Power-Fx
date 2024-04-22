@@ -67,8 +67,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // cause nondeterministic behavior.
         public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
 
-        public virtual DName ScopeIdent => new DName("ThisRecord");
-
         public FunctionScopeInfo(
             TexlFunction function,
             bool usesAllFieldsInScope = true,
@@ -200,20 +198,23 @@ namespace Microsoft.PowerFx.Core.Functions
         }
     }
 
-    internal class FunctionTableScopeInfo : FunctionScopeInfo
+    internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
     {
-        public override DName ScopeIdent => new DName("ThisGroup");
+        private readonly DName _thisGroup = new DName("ThisGroup");
 
-        public FunctionTableScopeInfo(TexlFunction function)
-            : base(function, appliesToArgument: (argIndex) => true)
+        public FunctionThisGroupScopeInfo(TexlFunction function)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 0)
         {
         }
 
-        public override bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, IErrorContainer errors, out DType typeScope)
+        public override bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, out DType typeScope)
         {
-            var ret = base.CheckInput(features, inputNode, inputSchema, errors, out typeScope);
+            var ret = base.CheckInput(features, inputNode, inputSchema, out typeScope);
 
-            typeScope = typeScope.ToTable();
+            if (!typeScope.Contains(_thisGroup))
+            {
+                typeScope = typeScope.Add(new TypedName(typeScope.ToTable(), _thisGroup));
+            }
 
             return ret;
         }
