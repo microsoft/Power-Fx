@@ -573,7 +573,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 // Number (hex) support
                 if (token[0] == '#' && token.Length > 1)
                 {
-                    if (uint.TryParse(token.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
+                    if (uint.TryParse(token.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
                     {
                         value = new EquatableObject((double)intValue);
                         return true;
@@ -639,7 +639,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 }
 
                 const string punctuators = "*!%:[],";
-                if (punctuators.IndexOf(CurChar) >= 0)
+                if (punctuators.Contains(CurChar))
                 {
                     token = CurChar.ToString();
                     _cursor++;
@@ -676,7 +676,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                                 // else we let the fall-through logic append c once more.
                             }
                         }
-                        else if ((quote == '0') && (CharacterUtils.IsSpace(c) || punctuators.IndexOf(c) >= 0))
+                        else if ((quote == '0') && (CharacterUtils.IsSpace(c) || punctuators.Contains(c)))
                         {
                             break;
                         }

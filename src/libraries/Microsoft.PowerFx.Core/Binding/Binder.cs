@@ -2331,15 +2331,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Check if the access was renamed:
             if (NodesToReplace != null)
-            {
-                // Token equality doesn't work here, compare the spans to be certain
-                //var newName = NodesToReplace.Where(kvp => kvp.Key.Span.Min == ident.Token.Span.Min && kvp.Key.Span.Lim == ident.Token.Span.Lim).FirstOrDefault();
-                //if (newName.Value != null && newName.Key != null)
-                //if (NodesToReplace.TryGetValue(ident.Token, out string newName))
-                var newName = NodesToReplace.Where(kvp => kvp.Key.Span.Min == ident.Token.Span.Min && kvp.Key.Span.Lim == ident.Token.Span.Lim).FirstOrDefault();
-                if (newName.Value != null && newName.Key != null)
+            {                
+                if (NodesToReplace.TryGetValue(ident.Token, out string newName))
                 {
-                    replacedIdent = newName.Value;
+                    replacedIdent = newName;
                     return true;
                 }
             }
