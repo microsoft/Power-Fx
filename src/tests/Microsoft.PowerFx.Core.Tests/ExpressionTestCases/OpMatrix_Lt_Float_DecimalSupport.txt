@@ -1,4 +1,4 @@
-#SETUP: NumberIsFloat,DecimalSupport
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
 
 // comparison done in floating point, decimal rounded
 >> Value(16) <  Decimal("16.000000000000000000002")
