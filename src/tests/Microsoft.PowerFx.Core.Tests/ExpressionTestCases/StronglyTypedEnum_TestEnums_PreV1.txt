@@ -205,7 +205,7 @@ true
 
 //===========================================================================================================
 //
-// 9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+// 9. If the underlying value is desired, the Text, Value, Float, and Boolean functions can be called to get the backing value.
 //
 
 // Text can be called on all option set values
@@ -217,9 +217,6 @@ true
 1
 
 >> Float( TestYesNo.Yes )
-1
-
->> Decimal( TestYesNo.Yes )
 1
 
 >> Boolean( TestYesNo.No )
@@ -492,9 +489,6 @@ false
 // Standard error cases for number backed enums
 
 >> Value( TestYesNo.No )
-0
-
->> Decimal( TestYesNo.No )
 0
 
 >> Float( TestYesNo.No )
