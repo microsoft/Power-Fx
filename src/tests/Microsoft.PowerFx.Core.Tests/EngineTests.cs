@@ -23,10 +23,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private class TestPostCheckErrorHandler : IPostCheckErrorHandler
         {
-            public IEnumerable<ExpressionError> Process(TexlNode root)
+            public IEnumerable<ExpressionError> Process(CheckResult check)
             {
                 var visitor = new ErrorVisitor();
-                root.Accept(visitor);
+                check.ApplyParse().Root.Accept(visitor);
                 return visitor.Errors;
             }
         }

@@ -94,7 +94,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// List of error processor that will add host specific custom errors at the end of the check.
         /// </summary>
-        internal readonly IList<IPostCheckErrorHandler> PostCheckErrorHandlers = new List<IPostCheckErrorHandler>();
+        private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
+
+        public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
         
         /// <summary>
         /// Get all functions from the config and symbol tables. 
@@ -273,9 +275,9 @@ namespace Microsoft.PowerFx
         protected virtual IEnumerable<ExpressionError> PostCheck(CheckResult check)
         {
             var hostErrors = new List<ExpressionError>();
-            foreach (var postCheckErrorHandler in PostCheckErrorHandlers)
+            foreach (var postCheckErrorHandler in _postCheckErrorHandlers)
             {
-                hostErrors.AddRange(postCheckErrorHandler.Process(check.Binding.Top));
+                hostErrors.AddRange(postCheckErrorHandler.Process(check));
             }
 
             return hostErrors;

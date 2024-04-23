@@ -8,6 +8,6 @@ namespace Microsoft.PowerFx
 {
     public interface IPostCheckErrorHandler
     {
-        public IEnumerable<ExpressionError> Process(TexlNode root);
+        public IEnumerable<ExpressionError> Process(CheckResult check);
     }
 }
