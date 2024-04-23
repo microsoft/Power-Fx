@@ -1,4 +1,4 @@
-#SETUP: NumberIsFloat,DecimalSupport
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
 
 // ^ Exponentation
 
