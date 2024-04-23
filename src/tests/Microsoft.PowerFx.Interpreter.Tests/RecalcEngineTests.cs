@@ -1533,6 +1533,17 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void LookupBuiltinOptionSets()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            // Builtin enums are on engine.SupportedFunctionm
+            var ok = engine.SupportedFunctions.IsDefined("Color");
+            Assert.True(ok);
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

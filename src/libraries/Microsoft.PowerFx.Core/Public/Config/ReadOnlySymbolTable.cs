@@ -345,6 +345,25 @@ namespace Microsoft.PowerFx
             }
         }
 
+        /// <summary>
+        /// Returns true if the symbol is defined. 
+        /// This includes both variables (that would be found with <see cref="TryLookupSlot(string, out ISymbolSlot)"/>, as well as constants (like Enums, OptionSets, constants).
+        /// It does not include Functions since those are in a different namespace. 
+        /// </summary>
+        /// <param name="name">logical name of a symbol.</param>
+        /// <returns></returns>
+        public bool IsDefined(string name)
+        {
+            // Composed tables will just override the resolver. 
+            INameResolver resolver = this;
+            if (resolver.Lookup(new DName(name), out var nameInfo))
+            {
+                return true;
+            }
+                        
+            return false;
+        }
+
         // Hook from Lookup - Get just variables. 
         internal virtual bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
         {

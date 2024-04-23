@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
@@ -310,6 +311,49 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbol = new SymbolTable();
             Assert.Throws<InvalidOperationException>(() => symbol.AddVariable("x", FormulaType.Void, mutable: true));
+        }
+
+        [Fact]
+        public void IsDefined()
+        {
+            var os = new OptionSet(
+                "os1",
+                DisplayNameUtility.MakeUnique(new Dictionary<string, string> { { "Yes", "Yes1" }, { "No", "No1" } }));
+
+            PowerFxConfig config = new PowerFxConfig();
+
+            bool fOk = config.SymbolTable.IsDefined("os1");
+            Assert.False(fOk);
+
+            config.AddOptionSet(os);
+
+            fOk = config.SymbolTable.IsDefined("os1");
+            Assert.True(fOk);
+
+            // Composed tables.
+            var st1 = new SymbolTable();
+            var st2 = ReadOnlySymbolTable.Compose(st1, config.SymbolTable);
+
+            fOk = st1.IsDefined("os1");
+            Assert.False(fOk);
+
+            fOk = st2.IsDefined("os1");
+            Assert.True(fOk);
+        }
+
+        // IsDefined also maps display names. 
+        [Fact]
+        public void IsDefinedFindsDisplayNames()
+        {
+            var st = new SymbolTable();
+            st.AddVariable("var1", FormulaType.Number, displayName: "Display1");
+
+            var ok = st.IsDefined("var1");
+            Assert.True(ok);
+
+            // not display names 
+            ok = st.IsDefined("Display1");
+            Assert.True(ok);
         }
     }
 }
