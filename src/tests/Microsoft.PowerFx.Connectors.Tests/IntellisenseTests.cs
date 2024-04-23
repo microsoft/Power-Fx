@@ -132,7 +132,6 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             OpenApiDocument apiDoc = testConnector._apiDocument;            
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
 
-
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
