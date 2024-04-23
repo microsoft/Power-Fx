@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
@@ -37,7 +36,12 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(callNode);
 
                 var columnName = GetRecordIdentifierForCursorPosition(cursorPos, recordNode, intellisenseData.Script);
-                if (columnName != null && columnName.Token.Span.Min <= cursorPos)
+                if (columnName == null)
+                {
+                    return false;
+                }
+
+                if (columnName.Token.Span.Min <= cursorPos)
                 {
                     var tokenSpan = columnName.Token.Span;
                     var replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
@@ -142,49 +146,18 @@ namespace Microsoft.PowerFx.Intellisense
 
             internal static bool AddAggregateSuggestions(DType aggregateType, IntellisenseData.IntellisenseData intellisenseData, int cursorPos)
             {
-                bool suggestionsAdded = false;                
-                RecordNode parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
-
-                List<DName> validFields = new List<DName>();
-                string errorField = null;
-
-                for (int i = 0; i < parentRecordNode.Ids.Count; i++)
+                var suggestionsAdded = false;
+                var parentRecordNode = intellisenseData.CurNode.Parent as RecordNode;
+                var alreadyUsedFields = parentRecordNode?.Ids.Select(id => id.Name).ToImmutableHashSet() ?? Enumerable.Empty<DName>().ToImmutableHashSet();
+                foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
                 {
-                    TexlNode child = parentRecordNode.Children[i];
-                    Identifier id = parentRecordNode.Ids[i];                    
+                    var usedName = tName.Name;
 
-                    if (child.Kind == NodeKind.Error)
+                    if (alreadyUsedFields.Contains(usedName))
                     {
-                        // if we have "aa:" in the ErrorNode, don't enumerate the record as the colon is present
-                        if (parentRecordNode.Colons.Length == parentRecordNode.Ids.Count)
-                        {
-                            return false;
-                        }
-
-                        // Id defaults to '_' when non-existent
-                        errorField = id.Span.Min == id.Span.Lim ? string.Empty : id.Name.Value;
+                        continue;
                     }
-                    else
-                    {
-                        validFields.Add(id.Name);
-                    }
-                }
-               
-                // exclude fields that are already used in the record
-                IEnumerable<TypedName> aggregateNamesNotAlreadyUsed = aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError && !validFields.Contains(param.Name));
-                
-                // if there is an errorField, filter on fields starting with that beginning
-                // case insensitive as it's better for the makers
-                if (!string.IsNullOrEmpty(errorField))
-                {
-                    aggregateNamesNotAlreadyUsed = aggregateNamesNotAlreadyUsed.Where(field => field.Name.Value.StartsWith(errorField, StringComparison.OrdinalIgnoreCase));
-                }
-                
-                foreach (TypedName tName in aggregateNamesNotAlreadyUsed)
-                {
-                    DName usedName = tName.Name;
 
-                    // use display name if available
                     if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
                     {
                         usedName = new DName(maybeDisplayName);
