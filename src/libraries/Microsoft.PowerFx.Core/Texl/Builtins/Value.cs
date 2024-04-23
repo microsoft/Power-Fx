@@ -108,6 +108,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base(DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
         {
         }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+
+            if (!binding.Features.PowerFxV1CompatibilityRules)
+            {
+                errors.EnsureError(args[0], TexlStrings.ErrDecimalRequiresPowerFxV1);
+                return;
+            }
+        }
     }
 
     // Float(arg:s|n [,language:s])
