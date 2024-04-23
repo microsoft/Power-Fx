@@ -92,6 +92,11 @@ namespace Microsoft.PowerFx
         internal readonly List<Core.IR.IRTransform> IRTransformList = new List<Core.IR.IRTransform>();
         
         /// <summary>
+        /// List of error processor that will add host specific custom errors at the end of the check.
+        /// </summary>
+        internal readonly IList<IPostCheckErrorHandler> PostCheckErrorHandlers = new List<IPostCheckErrorHandler>();
+        
+        /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -267,7 +272,13 @@ namespace Microsoft.PowerFx
         // Called after check result, can inject additional errors or constraints. 
         protected virtual IEnumerable<ExpressionError> PostCheck(CheckResult check)
         {
-            return Enumerable.Empty<ExpressionError>();
+            var hostErrors = new List<ExpressionError>();
+            foreach (var postCheckErrorHandler in PostCheckErrorHandlers)
+            {
+                hostErrors.AddRange(postCheckErrorHandler.Process(check.Binding.Top));
+            }
+
+            return hostErrors;
         }
 
         internal IEnumerable<ExpressionError> InvokePostCheck(CheckResult check)

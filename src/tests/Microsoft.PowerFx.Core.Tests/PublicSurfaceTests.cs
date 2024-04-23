@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
+                "Microsoft.PowerFx.IPostCheckErrorHandler",
 
                 "Microsoft.PowerFx.EngineDocumentation",
 
