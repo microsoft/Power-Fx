@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
         // Helper method to create IR UserDefinedFunctions 
-        internal static IEnumerable<UserDefinedFunction> CreateFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        public static IEnumerable<UserDefinedFunction> CreateFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
             Contracts.AssertAllValues(uDFs);
