@@ -583,9 +583,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // The function can decide with form of validation to apply.
         public virtual bool IsLambdaParam(TexlNode node, int index)
         {
-            Contracts.AssertIndexInclusive(index, MaxArity);
-            Contracts.Assert(node != null);
-
             return IsLambdaParam(index);
         }
 
