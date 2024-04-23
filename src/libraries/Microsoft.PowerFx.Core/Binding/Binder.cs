@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Stores tokens that need replacement (Display Name -> Logical Name) for serialization
         // Replace Nodes (Display Name -> Logical Name) for serialization
-        public IDictionary<Token, string> NodesToReplace { get; }
+        public IList<KeyValuePair<Token, string>> NodesToReplace { get; }
 
         public bool UpdateDisplayNames { get; }
 
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Binding
             ContextScope = ruleScope;
             BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
             HasReferenceToAttachment = false;
-            NodesToReplace = new Dictionary<Token, string>(new NodesToReplaceComparer());
+            NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
             _forceUpdateDisplayNames = forceUpdateDisplayNames;
             HasLocalScopeReferences = false;
@@ -2331,12 +2331,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Check if the access was renamed:
             if (NodesToReplace != null)
-            {                
-                if (NodesToReplace.TryGetValue(ident.Token, out string newName))
+            {
+                // Token equality doesn't work here, compare the spans to be certain
+                var newName = NodesToReplace.Where(kvp => kvp.Key.Span.Min == ident.Token.Span.Min && kvp.Key.Span.Lim == ident.Token.Span.Lim).FirstOrDefault();
+                if (newName.Value != null && newName.Key != null)
                 {
-                    replacedIdent = newName;
+                    replacedIdent = newName.Value;
                     return true;
-                }
+                }                
             }
 
             return false;
@@ -2711,11 +2713,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, out var maybeDisplayName))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeDisplayName);
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
                     }
                     else if (DType.TryGetDisplayNameForColumn(updatedDisplayNamesType, ident.Name.Value, out maybeDisplayName))
                     {
-                        _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeDisplayName);
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeDisplayName));
                     }
 
                     if (maybeDisplayName != null)
@@ -2732,7 +2734,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name.
                         if (!_txb.UpdateDisplayNames)
                         {
-                            _txb.NodesToReplace.AddIfNotSameSpan(ident.Token, maybeLogicalName);
+                            _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
                         }
                     }
                 }
@@ -2911,15 +2913,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (_txb.UpdateDisplayNames)
                     {
-                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, lookupInfo.DisplayName);
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)
                     {
-                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, entity.EntityName);
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
                     }
                     else if (lookupInfo.Data is NameSymbol nameSymbol)
                     {
-                        _txb.NodesToReplace.AddIfNotSameSpan(node.Token, nameSymbol.Name);
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, nameSymbol.Name));
                     }
                 }
 
@@ -4578,7 +4580,12 @@ namespace Microsoft.PowerFx.Core.Binding
                         Contracts.Assert(argTypes[i].IsValid);
                     }
                     else
-                    {
+                    {                        
+                        if (args[i] is FirstNameNode firstNameNode)
+                        {
+                            GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
+                        }
+
                         // This is an identifier, no associated type, let's make it invalid
                         argTypes[i] = DType.Invalid;
                     }
@@ -4601,24 +4608,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _currentScope = scopeNew.Parent;
-                PostVisit(node.Args);
+                PostVisit(node.Args);                
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
-                if (maybeFunc.HasColumnIdentifiers && _features.SupportColumnNamesAsIdentifiers)
-                {
-                    var i = 0;
-
-                    foreach (var arg in args)
-                    {
-                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(_features, i))
-                        {
-                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
-                        }
-
-                        i++;
-                    }
-                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
