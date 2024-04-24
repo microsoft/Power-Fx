@@ -104,7 +104,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ? (isRecord ? DType.EmptyRecord : DType.EmptyTable)
                 : returnType;
             Dictionary<DName, DName> newDisplayNameMapping = null;
-            if (_isShowColumns && returnType.DisplayNameProvider != null)
+
+            // With Power Fx 1.0, we will propagate the display names to the new result type.
+            // We will not change the pre-v1 logic as it may break some corner scenarios.
+            if (_isShowColumns && context.Features.PowerFxV1CompatibilityRules && returnType.DisplayNameProvider != null)
             {
                 newDisplayNameMapping = new Dictionary<DName, DName>();
             }
