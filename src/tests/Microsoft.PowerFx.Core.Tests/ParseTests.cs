@@ -829,7 +829,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(parseResult.HasErrors);
         }
 
-        internal void TestFormulasParseError(string script)
+        private ParseUserDefinitionResult TestFormulasParseError(string script)
         {
             var parserOptions = new ParserOptions()
             {
@@ -837,6 +837,8 @@ namespace Microsoft.PowerFx.Core.Tests
             };
             var parseResult = UserDefinitions.Parse(script, parserOptions);
             Assert.True(parseResult.HasErrors);
+
+            return parseResult;
         }
 
         [Theory]
@@ -860,12 +862,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false
-            };
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
-            Assert.True(parseResult.HasErrors);
+            var parseResult = TestFormulasParseError(script);
 
             // Parser restarted, and found 'c' correctly
             Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
