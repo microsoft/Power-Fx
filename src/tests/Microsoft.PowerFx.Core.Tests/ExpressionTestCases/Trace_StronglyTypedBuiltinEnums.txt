@@ -1,4 +1,4 @@
-#SETUP: StronglyTypedBuiltinEnums,EnableExpressionChaining,TraceSetup
+#SETUP: StronglyTypedBuiltinEnums,EnableExpressionChaining,TraceSetup,PowerFxV1CompatibilityRules
 
 >> Trace("test1") ; traceRecord;
 {customRecord:"{}",message:"test1",severity:3}

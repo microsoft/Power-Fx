@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -179,6 +180,92 @@ namespace Microsoft.PowerFx.Core.Functions
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
+        }
+
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
+
+        /// <summary>
+        /// Helper to create IR UserDefinedFunctions.
+        /// </summary>
+        /// <param name="uDFs">Valid Parsed UDFs to be converted into UserDefinedFunction.</param>
+        /// <param name="errors">Errors when creating functions.</param>
+        /// <returns>IEnumerable of UserDefinedFunction.</returns>
+        public static IEnumerable<UserDefinedFunction> CreateFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        {
+            Contracts.AssertValue(uDFs);
+            Contracts.AssertAllValues(uDFs);
+
+            var userDefinedFunctions = new List<UserDefinedFunction>();
+            var texlFunctionSet = new TexlFunctionSet();
+            errors = new List<TexlError>();
+
+            foreach (var udf in uDFs)
+            {
+                Contracts.Assert(udf.IsParseValid);
+
+                var udfName = udf.Ident.Name;
+                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+
+                var parametersOk = CheckParameters(udf.Args, errors);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                if (!parametersOk || !returnTypeOk)
+                {
+                    continue;
+                }
+
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+
+                texlFunctionSet.Add(func);
+                userDefinedFunctions.Add(func);
+            }
+
+            return userDefinedFunctions;
+        }
+
+        private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
+        {
+            var isParamCheckSuccessful = true;
+            var argsAlreadySeen = new HashSet<string>();
+
+            foreach (var arg in args)
+            {
+                if (argsAlreadySeen.Contains(arg.NameIdent.Name))
+                {
+                    errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
+                    isParamCheckSuccessful = false;
+                }
+                else
+                {
+                    argsAlreadySeen.Add(arg.NameIdent.Name);
+
+                    var parameterType = arg.TypeIdent.GetFormulaType()._type;
+                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || UserDefinitions.RestrictedTypes.Contains(parameterType))
+                    {
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
+                        isParamCheckSuccessful = false;
+                    }
+                }
+            }
+
+            return isParamCheckSuccessful;
+        }
+
+        private static bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        {
+            var returnTypeFormulaType = returnType.GetFormulaType()._type;
+            var isReturnTypeCheckSuccessful = true;
+
+            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || UserDefinitions.RestrictedTypes.Contains(returnTypeFormulaType))
+            {
+                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
+                isReturnTypeCheckSuccessful = false;
+            }
+
+            return isReturnTypeCheckSuccessful;
         }
 
         /// <summary>

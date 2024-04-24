@@ -1,0 +1,29 @@
+#SETUP: NumberIsFloat,DecimalSupport,disable:PowerFxV1CompatibilityRules
+
+// Decimal function
+
+>> Decimal( 1e100 )
+Errors: Error 9-14: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( "1e100" )
+Errors: Error 9-16: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( true )
+Errors: Error 9-13: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( "12,00000000000000000000003", "Fr-fr" )
+Errors: Error 9-37: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( ParseJSON("""12,00000000000000000000003"""), "Fr-fr" )
+Errors: Error 9-52: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+// ParseJSON
+
+>> Decimal( ParseJSON("12.00000000000000000000003") )
+Errors: Error 9-48: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( Index( ParseJSON("[1e300,12.00000000000000000000003]"), 2 ) )
+Errors: Error 9-68: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.
+
+>> Decimal( ParseJSON("{""a"":12.00000000000000000000003}").a )
+Errors: Error 56-58: The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.

@@ -28,7 +28,6 @@ namespace Microsoft.PowerFx.Syntax
         private readonly string _script;
         private readonly ParserOptions _parserOptions;
         private readonly Features _features;
-        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
         // Exposing it so hosts can filter out the intellisense suggestions
         public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
@@ -76,12 +75,13 @@ namespace Microsoft.PowerFx.Syntax
             }
             
             // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var functions = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
             userDefinitionResult = new UserDefinitionResult(
                 functions,
-                parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
+                errors,
                 parseResult.NamedFormulas);
 
             return true;
@@ -120,81 +120,6 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             return userDefinitionResult;
-        }
-
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
-        {
-            Contracts.AssertValue(uDFs);
-
-            var userDefinedFunctions = new List<UserDefinedFunction>();
-            var texlFunctionSet = new TexlFunctionSet();
-            errors = new List<TexlError>();
-
-            foreach (var udf in uDFs)
-            {
-                var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
-                {
-                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
-                    continue;
-                }
-
-                var parametersOk = CheckParameters(udf.Args, errors);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
-                if (!parametersOk || !returnTypeOk)
-                {
-                    continue;
-                }
-
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
-
-                texlFunctionSet.Add(func);
-                userDefinedFunctions.Add(func);
-            }
-
-            return userDefinedFunctions;
-        }
-
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
-        {
-            var isParamCheckSuccessful = true;
-            var argsAlreadySeen = new HashSet<string>();
-
-            foreach (var arg in args)
-            {
-                if (argsAlreadySeen.Contains(arg.NameIdent.Name))
-                {
-                    errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
-                    isParamCheckSuccessful = false;
-                }
-                else
-                {
-                    argsAlreadySeen.Add(arg.NameIdent.Name);
-
-                    var parameterType = arg.TypeIdent.GetFormulaType()._type;
-                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
-                    {
-                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
-                        isParamCheckSuccessful = false;
-                    }
-                }
-            }
-
-            return isParamCheckSuccessful;
-        }
-
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
-        {
-            var returnTypeFormulaType = returnType.GetFormulaType()._type;
-            var isReturnTypeCheckSuccessful = true;
-
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
-            {
-                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = false;
-            }
-
-            return isReturnTypeCheckSuccessful;
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases
