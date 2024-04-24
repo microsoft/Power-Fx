@@ -571,19 +571,17 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        // Return true if the parameter at the specified 0-based rank is a lambda parameter, false otherwise.
-        public virtual bool IsLambdaParam(int index)
+        /// <summary>
+        /// Return true if the parameter at the specified 0-based rank is a lambda parameter or is an specific TexlNode, false otherwise.
+        /// </summary>
+        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
+        /// <param name="index">TexNode index.</param>
+        /// <returns></returns>
+        public virtual bool IsLambdaParam(TexlNode node, int index)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
             return _maskLambdas.TestBit(index);
-        }
-        
-        // Return true if the parameter at the specified 0-based rank is a lambda parameter or is an specific TexlNode, false otherwise.
-        // The function can decide with form of validation to apply.
-        public virtual bool IsLambdaParam(TexlNode node, int index)
-        {
-            return IsLambdaParam(index);
         }
 
         /// <summary>
@@ -591,13 +589,14 @@ namespace Microsoft.PowerFx.Core.Functions
         /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise.
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
         /// <param name="index">Parameter index, 0-based.</param>
         /// <param name="features">Engine features.</param>
-        public virtual bool IsLazyEvalParam(int index, Features features)
+        public virtual bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
-            return IsLambdaParam(index);
+            return IsLambdaParam(node, index);
         }
 
         public virtual bool IsEcsExcemptedLambda(int index)
@@ -667,20 +666,6 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
             return ParameterCanBeIdentifier(features, index);
-        }
-
-        /// <summary>
-        /// Transformes a AsNode into a RecordNode.
-        /// Some functions (like Summarize) will need both information from left and right side.
-        /// Average(table, column) As average_column => {average_column:Average(table, column)}.
-        /// </summary>
-        /// <param name="node">Node.</param>
-        /// <param name="index">Node index.</param>
-        /// <returns></returns>
-        public virtual bool TranslateAsNodeToRecordNode(TexlNode node, int index)
-        {
-            Contracts.Assert(node != null);
-            return false;
         }
 
         /// <summary>

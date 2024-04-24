@@ -5,10 +5,18 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -185,13 +193,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.PossiblyIdentifier;
         }
 
-        public override bool TranslateAsNodeToRecordNode(TexlNode node, int index)
-        {
-            Contracts.Assert(node != null);
-
-            return index > 0 && node is AsNode asNode;
-        }
-
         public override bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
             return index > 0 && node is not AsNode;
@@ -200,9 +201,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsLambdaParam(TexlNode node, int index)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
-            Contracts.Assert(node != null);
 
-            return index > 0 && node is AsNode;
+            return index > 0 && node != null && node is AsNode;
+        }
+
+        internal override IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var carg = node.Args.Count;
+            var newArgs = new List<IntermediateNode>();
+
+            for (int i = 0; i < carg; i++)
+            {
+                var arg = node.Args.Children[i];
+
+                if (IsLambdaParam(arg, i))
+                {
+                    var asNode = (AsNode)arg;
+                    var irCallNode = (LazyEvalNode)args[i];
+                    var recordType = RecordType.Empty().Add(asNode.Right.Name, context.GetIRContext(arg).ResultType);
+
+                    var child = new RecordNode(
+                        IRContext.NotInSource(recordType),
+                        new Dictionary<DName, IntermediateNode>() { { asNode.Right.Name, irCallNode.Child } });
+
+                    newArgs.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                }
+                else
+                {
+                    newArgs.Add(args[i]);
+                }
+            }
+
+            return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
         }
     }
 }

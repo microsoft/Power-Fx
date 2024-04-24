@@ -402,19 +402,9 @@ namespace Microsoft.PowerFx.Core.IR
                             args.Add(child);
                         }
                     }
-                    else if (func.IsLazyEvalParam(i, _features))
+                    else if (func.IsLazyEvalParam(arg, i, _features))
                     {
                         var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
-                        args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
-                    }
-                    else if (func.TranslateAsNodeToRecordNode(arg, i))
-                    {
-                        var asNode = arg as AsNode;
-                        var recordType = RecordType.Empty().Add(asNode.Right.Name, argContext.GetIRContext(arg).ResultType);
-                        var child = new RecordNode(
-                            IRContext.NotInSource(recordType), 
-                            new Dictionary<DName, IntermediateNode>() { { asNode.Right.Name, asNode.Left.Accept(this, argContext.With(scope)) } });
-
                         args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
                     }
                     else

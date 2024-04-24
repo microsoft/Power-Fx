@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             _isAnd = isAnd;
         }
 
-        public override bool IsLazyEvalParam(int index, Features features)
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             return index > 0;
         }

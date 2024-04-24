@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 for (var i = 0; i < args.Length; i++)
                 {
-                    if (_function.IsLambdaParam(i))
+                    if (_function.IsLambdaParam(args[i], i))
                     {
                         if (args[i].Kind == NodeKind.BoolLit ||
                             args[i].Kind == NodeKind.NumLit ||

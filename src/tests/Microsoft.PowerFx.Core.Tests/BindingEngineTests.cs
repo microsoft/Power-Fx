@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -546,7 +547,7 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsLambdaParam(int index)
+            public override bool IsLambdaParam(TexlNode node, int index)
             {
                 return true;
             }
@@ -578,7 +579,7 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsLambdaParam(int index)
+            public override bool IsLambdaParam(TexlNode node, int index)
             {
                 return (_mask & (1 << index)) != 0;
             }

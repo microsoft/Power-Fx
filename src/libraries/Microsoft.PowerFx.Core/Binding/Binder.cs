@@ -4109,7 +4109,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
                         // Translate the set to the parent (invocation) scope, to indicate that we are moving outside the lambda.
-                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(i))
+                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(args[i], i))
                         {
                             argScopeUseSet = argScopeUseSet.TranslateToParentScope();
                         }
@@ -4421,7 +4421,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(carg > 0);
 
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
-                Contracts.Assert(!maybeFunc.IsLambdaParam(0));
+                Contracts.Assert(!maybeFunc.IsLambdaParam(null, 0));
 
                 var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
@@ -5010,7 +5010,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Use the new scope only for lambda args and args with datasource scope for display name matching.
                     if (scopeNew != null)
                     {
-                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(i)))
+                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(args[i], i)))
                         {
                             _currentScope = scopeNew;
                         }
