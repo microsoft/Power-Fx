@@ -215,13 +215,16 @@ namespace Microsoft.PowerFx
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            var parseResult = UserDefinitions.Parse(script, options);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
 
-            if (userDefinitionResult.HasErrors)
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (errors.Any())
             {
                 sb.AppendLine("Something went wrong when parsing user defined functions.");
 
-                foreach (var error in userDefinitionResult.Errors)
+                foreach (var error in errors)
                 {
                     error.FormatCore(sb);
                 }
@@ -232,15 +235,15 @@ namespace Microsoft.PowerFx
             // Compose will handle null symbols
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
-            foreach (var udf in userDefinitionResult.UDFs)
+            foreach (var udf in udfs)
             {
                 AddFunction(udf);
                 var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
                 var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
 
-                List<TexlError> errors = new List<TexlError>();
+                List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref errors))
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
                     sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
                 }

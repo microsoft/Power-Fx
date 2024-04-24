@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -823,8 +825,8 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 AllowsSideEffects = false
             };
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            Assert.False(userDefinitionResult.HasErrors);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.False(parseResult.HasErrors);
         }
 
         internal void TestFormulasParseError(string script)
@@ -833,8 +835,8 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 AllowsSideEffects = false
             };
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            Assert.True(userDefinitionResult.HasErrors);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(parseResult.HasErrors);
         }
 
         [Theory]
@@ -862,11 +864,11 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 AllowsSideEffects = false
             };
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            Assert.True(userDefinitionResult.HasErrors);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(parseResult.HasErrors);
 
             // Parser restarted, and found 'c' correctly
-            Assert.Contains(userDefinitionResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
+            Assert.Contains(parseResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
         }
 
         [Theory]
@@ -901,11 +903,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
-            Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, errors.Any());
         }
 
         [Theory]
@@ -919,11 +923,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
 
-            var nfs = userDefinitionResult.NamedFormulas;
+            var nfs = parseResult.NamedFormulas;
             Assert.Equal(namedFormulaCount, nfs.Count());
-            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+            Assert.Equal(expectErrors, parseResult.Errors?.Any() ?? false);
 
             int i = 0;
             foreach (var nf in nfs)
