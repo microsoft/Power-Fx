@@ -103,6 +103,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 _isShowColumns
                 ? (isRecord ? DType.EmptyRecord : DType.EmptyTable)
                 : returnType;
+            Dictionary<DName, DName> newDisplayNameMapping = null;
+
+            // With Power Fx 1.0, we will propagate the display names to the new result type.
+            // We will not change the pre-v1 logic as it may break some corner scenarios.
+            if (_isShowColumns && context.Features.PowerFxV1CompatibilityRules && returnType.DisplayNameProvider != null)
+            {
+                newDisplayNameMapping = new Dictionary<DName, DName>();
+            }
 
             var count = args.Length;
             for (var i = 1; i < count; i++)
@@ -136,6 +144,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Make a note of which columns are being kept.
                     Contracts.Assert(columnType.IsValid);
                     colsToKeep = colsToKeep.Add(columnName, columnType);
+                    if (newDisplayNameMapping != null && returnType.DisplayNameProvider.TryGetDisplayName(columnName, out var displayName))
+                    {
+                        newDisplayNameMapping.Add(columnName, displayName);
+                    }
                 }
                 else
                 {
@@ -155,6 +167,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             returnType = colsToKeep;
+            if (newDisplayNameMapping != null)
+            {
+                var newDisplayNameProvider = DisplayNameProvider.New(newDisplayNameMapping);
+                returnType = DType.AttachOrDisableDisplayNameProvider(returnType, newDisplayNameProvider);
+            }
 
             return fArgsValid;
         }

@@ -305,6 +305,59 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.IsSuccess);
         }
 
+        private static TableType CreateTableTypeWithDisplayNames()
+        {
+            var myTableType = DType.EmptyTable
+                .Add(new DName("LogicalName1"), DType.String)
+                .Add(new DName("LogicalName2"), DType.Number);
+
+            var myDisplayNameProvider = DisplayNameProvider.New(new Dictionary<DName, DName>
+            {
+                { new DName("LogicalName1"), new DName("Display Name 1") },
+                { new DName("LogicalName2"), new DName("Display Name 2") },
+            });
+
+            var myTableTypeWithDisplayNames = DType.AttachOrDisableDisplayNameProvider(myTableType, myDisplayNameProvider);
+            return new TableType(myTableTypeWithDisplayNames);
+        }
+
+        [Theory]
+        [InlineData("ForAll( ShowColumns( MyTable, 'Display Name 2' ), { a: 'Display Name 2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, 'Display Name 1', 'Display Name 2' ), { a: 'Display Name 1', b: 'Display Name 2' } )", "*[a:s,b:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName2 ), { a: 'Display Name 2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName2 ), { a: 'LogicalName2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName1, 'Display Name 2' ), { a: 'Display Name 1', b: LogicalName2 } )", "*[a:s,b:n]")]
+        public void TexlFunctionTypeSemanticsShowColumns_DisplayNames(string expression, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("MyTable", CreateTableTypeWithDisplayNames());
+
+            var engine = new Engine(new PowerFxConfig(Features.PowerFxV1) { SymbolTable = symbol });
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData(
+            "With({'Display Name 2':false}, ForAll(ShowColumns(MyTable, 'Display Name 1', 'Display Name 2'), { a:LogicalName1, b:'Display Name 2' }))",
+            "*[a:s,b:b]")]
+        public void TexlFunctionTypeSemanticsShowColumns_DisplayNamesNotPropagatedPrePFxV1(string expression, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("MyTable", CreateTableTypeWithDisplayNames());
+
+            var features = new Features(Features.PowerFxV1) { PowerFxV1CompatibilityRules = false };
+            var engine = new Engine(new PowerFxConfig(features) { SymbolTable = symbol });
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
         [Theory]
         [InlineData("ShowColumns([{A:\"hello\",B:1}], \"A\")", "*[A:s]")]
         [InlineData("ShowColumns([{A:\"hello\",B:1}], \"B\")", "*[B:n]")]
