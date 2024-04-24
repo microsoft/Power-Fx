@@ -350,17 +350,20 @@ namespace Microsoft.PowerFx
         /// This includes both variables (that would be found with <see cref="TryLookupSlot(string, out ISymbolSlot)"/>, as well as constants (like Enums, OptionSets, constants).
         /// It does not include Functions since those are in a different namespace. 
         /// </summary>
-        /// <param name="name">logical name of a symbol.</param>
+        /// <param name="name">logical or display name of a symbol.</param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public bool IsDefined(string name)
+        public bool TryGetType(string name, out FormulaType type)
         {
             // Composed tables will just override the resolver. 
             INameResolver resolver = this;
             if (resolver.Lookup(new DName(name), out var nameInfo))
             {
+                type = FormulaType.Build(nameInfo.Type);
                 return true;
             }
-                        
+
+            type = null;
             return false;
         }
 

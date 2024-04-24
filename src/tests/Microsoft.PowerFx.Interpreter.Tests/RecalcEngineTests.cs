@@ -1540,10 +1540,11 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Builtin enums are on engine.SupportedFunctionm
-            var ok = engine.SupportedFunctions.IsDefined("Color");
+            var ok = engine.SupportedFunctions.TryGetType("Color", out var type);
             Assert.True(ok);
-        }
 
+            // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
+        }
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
