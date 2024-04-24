@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Produce a signature of the form:
-        // GroupBy(source, name, name, ..., name, name, groupName)
+        // Sumamrize(source, grouping_column, aggregation, grouping_column, aggregation, ...)
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             Contracts.Assert(arity >= 0);
@@ -125,12 +125,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case AsNode nameNode:
                         existingType = argType;
                         columnName = nameNode.Right.Name;
-                        break;
-
-                    case DottedNameNode dottedNameNode:
-                        existingType = argType;
-                        columnName = dottedNameNode.Right.Name;
-                        atLeastOneGroupByColumn = true;
                         break;
 
                     case FirstNameNode:
