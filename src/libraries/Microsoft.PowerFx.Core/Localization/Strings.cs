@@ -713,6 +713,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrFilterFunction_OnlyTwoArgs = new ErrorResourceKey("ErrFilterFunction_OnlyTwoArgs");
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowTable = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowTable");
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowRecord = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowRecord");
+        public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");

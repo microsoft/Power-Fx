@@ -1,4 +1,4 @@
-#SETUP: NumberIsFloat,DecimalSupport
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
 
 >> -Decimal("2.000000000000000000000002")
 -2.000000000000000000000002
