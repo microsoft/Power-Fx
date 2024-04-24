@@ -1543,6 +1543,9 @@ namespace Microsoft.PowerFx.Tests
             var ok = engine.SupportedFunctions.TryGetType("Color", out var type);
             Assert.True(ok);
 
+            ok = engine.GetCombinedEngineSymbols().TryGetType("Color", out type);
+            Assert.True(ok);
+
             // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
         }
         #region Test
