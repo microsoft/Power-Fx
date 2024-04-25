@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Valor de text que es convertirà en un valor decimal.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>La funció "Decimal" només es pot utilitzar si la característica "Compatibilitat amb el Power Fx 1.0" està habilitada.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converteix un element "text" que representa un nombre en un valor float.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Component</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
