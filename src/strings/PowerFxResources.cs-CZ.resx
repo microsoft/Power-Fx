@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textová hodnota, kterou chcete převést na desetinnou hodnotu.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkci „Desetinné číslo“ lze použít pouze v případě, že je povolena funkce „Kompatibilita Power Fx 1.0“.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Převede „text“, který představuje číslo, na plovoucí hodnotu.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Komponenta</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
