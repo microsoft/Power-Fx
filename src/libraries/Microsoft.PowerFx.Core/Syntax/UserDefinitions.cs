@@ -47,79 +47,15 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
-            return TexlParser.ParseUserDefinitionScript(script, parserOptions);
-        }
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
 
-        /// <summary>
-        /// Parses and creates user definitions (named formulas, user defined functions).
-        /// </summary>
-        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
-        /// <param name="parserOptions">Options for parsing an expression.</param>
-        /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
-        /// <param name="features">PowerFx feature flags.</param>
-        /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
-        {
-            var userDefinitions = new UserDefinitions(script, parserOptions, features);
-
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
-        }
-
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
-        {
-            var parseResult = Parse(_script, _parserOptions);
-
-            if (_parserOptions.AllowAttributes)
+            if (parserOptions.AllowAttributes)
             {
-                parseResult = ProcessPartialAttributes(parseResult);
-            }
-            
-            // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
-
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-
-            userDefinitionResult = new UserDefinitionResult(
-                functions,
-                errors,
-                parseResult.NamedFormulas);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Process user script and returns user defined functions and named formulas.
-        /// </summary>
-        /// <param name="script">User script containing UDFs and/or named formulas.</param>
-        /// <param name="parseCulture">CultureInfo to parse the script.</param>
-        /// <param name="features">Features.</param>
-        /// <returns>Tuple.</returns>
-        /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null)
-        {
-            var options = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                Culture = parseCulture ?? CultureInfo.InvariantCulture
-            };
-
-            var sb = new StringBuilder();
-
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features);
-
-            if (userDefinitionResult.HasErrors)
-            {
-                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
-
-                foreach (var error in userDefinitionResult.Errors)
-                {
-                    error.FormatCore(sb);
-                }
-
-                throw new InvalidOperationException(sb.ToString());
+                var userDefinitions = new UserDefinitions(script, parserOptions);
+                parseResult = userDefinitions.ProcessPartialAttributes(parseResult);
             }
 
-            return userDefinitionResult;
+            return parseResult;
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases
