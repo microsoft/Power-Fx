@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Nilai teks untuk ditukar kepada nilai Perpuluhan.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Fungsi 'Perpuluhan' hanya boleh digunakan jika ciri 'Keserasian Power Fx 1.0' didayakan.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Menukar 'teks' yang mewakili nombor pada nilai Apungan.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Komponen</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
