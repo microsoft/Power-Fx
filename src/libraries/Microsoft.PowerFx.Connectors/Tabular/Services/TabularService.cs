@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx.Connectors.Tabular
 {
     public abstract class TabularService
     {
@@ -17,10 +17,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool IsInitialized => TableType != null;
 
+        public abstract bool IsDelegatable { get; }
+               
         public virtual ConnectorTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this, TableType)
+                ? new ConnectorTableValue(this) //, TableType)
                 : throw new InvalidOperationException(NotInitialized);
         }
 
