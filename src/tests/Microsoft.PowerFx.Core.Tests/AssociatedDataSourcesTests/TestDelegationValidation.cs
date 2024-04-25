@@ -96,6 +96,9 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             var actualIsDelegable = callInfo.Function.IsServerDelegatable(callNode, result.Binding);
             Assert.Equal(isDelegable, actualIsDelegable);
+
+            // validate we can generate the display expression
+            string displayExpr = engine.GetDisplayExpression(expression, symbolTable);
         }
     }
 }
