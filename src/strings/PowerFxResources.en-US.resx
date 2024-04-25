@@ -2506,10 +2506,6 @@
     <value>Component</value>
     <comment>Function category name - function defined in components within the environment where it is running.</comment>
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    <comment>{StringContains=LCID}</comment>
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>The element '{0}' is missing attribute '{1}'.</value>
     <comment>Invalid xml error message.</comment>
