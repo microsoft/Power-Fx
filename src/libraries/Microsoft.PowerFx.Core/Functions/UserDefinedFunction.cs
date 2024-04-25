@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 Contracts.AssertValue(args);
                 Contracts.AssertValue(argTypes);
-                Contracts.AssertValue(_globalNameResolver);
+                Contracts.AssertValue(globalNameResolver);
                 Contracts.Assert(args.Count() == argTypes.Length);
 
                 this._globalNameResolver = globalNameResolver;

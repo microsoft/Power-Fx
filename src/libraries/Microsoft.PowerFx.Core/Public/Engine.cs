@@ -82,6 +82,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
 
+        /// <summary>
+        /// Builtin Types supported by this engine. 
+        /// </summary>
+        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; } = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         // By default, we pull the core functions. 
         // These can be overridden. 
         internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
@@ -524,7 +529,8 @@ namespace Microsoft.PowerFx
 
         internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable, allowSideEffects);
+            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions);
+            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
         }
     }
 }
