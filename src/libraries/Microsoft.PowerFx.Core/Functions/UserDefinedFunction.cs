@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -52,8 +53,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="body">TexlNode for user defined function body.</param>
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
-        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        /// <param name="argTypes">Array of argTypes.</param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
+        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
             this._args = args;
             this._isImperative = isImperative;
@@ -116,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
@@ -176,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args));
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
@@ -188,9 +190,10 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Helper to create IR UserDefinedFunctions.
         /// </summary>
         /// <param name="uDFs">Valid Parsed UDFs to be converted into UserDefinedFunction.</param>
+        /// <param name="nameResolver">NameResolver to resolve type names.</param>
         /// <param name="errors">Errors when creating functions.</param>
         /// <returns>IEnumerable of UserDefinedFunction.</returns>
-        public static IEnumerable<UserDefinedFunction> CreateFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        public static IEnumerable<UserDefinedFunction> CreateFunctions(IEnumerable<UDF> uDFs, INameResolver nameResolver, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
             Contracts.AssertAllValues(uDFs);
@@ -210,14 +213,14 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }
 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -226,10 +229,17 @@ namespace Microsoft.PowerFx.Core.Functions
             return userDefinedFunctions;
         }
 
-        private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
+        private static bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors, INameResolver nameResolver, out DType[] parameterTypes)
         {
+            if (args.Count == 0)
+            {
+                parameterTypes = Array.Empty<DType>();
+                return true;
+            }
+
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
+            parameterTypes = new DType[args.Count];
 
             foreach (var arg in args)
             {
@@ -242,11 +252,16 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    var parameterType = arg.TypeIdent.GetFormulaType()._type;
-                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || UserDefinitions.RestrictedTypes.Contains(parameterType))
+                    if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType) || UserDefinitions.RestrictedTypes.Contains(parameterType._type))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
+                    }
+                    else
+                    {
+                        Contracts.Assert(arg.ArgIndex >= 0);
+                        Contracts.Assert(arg.ArgIndex < args.Count);
+                        parameterTypes[arg.ArgIndex] = parameterType._type;
                     }
                 }
             }
@@ -254,18 +269,19 @@ namespace Microsoft.PowerFx.Core.Functions
             return isParamCheckSuccessful;
         }
 
-        private static bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, out DType returnType)
         {
-            var returnTypeFormulaType = returnType.GetFormulaType()._type;
-            var isReturnTypeCheckSuccessful = true;
-
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || UserDefinitions.RestrictedTypes.Contains(returnTypeFormulaType))
+            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType) || UserDefinitions.RestrictedTypes.Contains(returnTypeFormulaType._type))
             {
-                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = false;
+                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
+                returnType = DType.Invalid;
+                return false;
             }
-
-            return isReturnTypeCheckSuccessful;
+            else
+            {
+                returnType = returnTypeFormulaType._type;
+                return true;
+            }
         }
 
         /// <summary>
@@ -275,16 +291,23 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
+            private readonly DType[] _argTypes;
 
-            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, DType[] argTypes)
             {
-                return new UserDefinitionsNameResolver(globalNameResolver, args);
+                return new UserDefinitionsNameResolver(globalNameResolver, args, argTypes);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, DType[] argTypes)
             {
+                Contracts.AssertValue(args);
+                Contracts.AssertValue(argTypes);
+                Contracts.AssertValue(_globalNameResolver);
+                Contracts.Assert(args.Count() == argTypes.Length);
+
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
+                this._argTypes = argTypes;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -299,6 +322,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
+            public IEnumerable<KeyValuePair<DName, FormulaType>> NamedTypes => _globalNameResolver.NamedTypes;
+
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
             public bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -306,7 +331,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.TypeIdent.GetFormulaType()._type;
+                    var type = _argTypes[value.ArgIndex];
                     nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;
@@ -329,6 +354,11 @@ namespace Microsoft.PowerFx.Core.Functions
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
             {
                 return _globalNameResolver.LookupFunctionsInNamespace(nameSpace);
+            }
+
+            public bool LookupType(DName name, out FormulaType fType)
+            {
+                return _globalNameResolver.LookupType(name, out fType);
             }
 
             public bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo)

@@ -290,6 +290,8 @@ namespace Microsoft.PowerFx
 
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
+        private protected readonly Dictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
+
         public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         // Which enums are available. 
@@ -321,6 +323,8 @@ namespace Microsoft.PowerFx
         IEnumerable<EnumSymbol> IEnumStore.EnumSymbols => GetEnumSymbolSnapshot;
 
         internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
+
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
         TexlFunctionSet INameResolver.Functions => _functions;
 
@@ -382,6 +386,16 @@ namespace Microsoft.PowerFx
             }
 
             nameInfo = default;
+            return false;
+        }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            if (_namedTypes.TryGetValue(name, out fType))
+            {
+                return true;
+            }
+
             return false;
         }
 
