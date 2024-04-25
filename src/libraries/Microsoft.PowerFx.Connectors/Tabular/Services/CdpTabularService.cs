@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public string TableName { get; protected set; }
 
-        public override bool IsDelegatable => TableCapabilities?.IsDelegatable ?? false;
+        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
 
         internal ServiceCapabilities TableCapabilities { get; private set; }
 

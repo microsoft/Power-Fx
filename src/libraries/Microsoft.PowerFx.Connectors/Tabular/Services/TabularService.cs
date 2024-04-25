@@ -17,12 +17,12 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public bool IsInitialized => TableType != null;
 
-        public abstract bool IsDelegatable { get; }
-               
+        public abstract bool IsDelegable { get; }
+
         public virtual ConnectorTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this) //, TableType)
+                ? new ConnectorTableValue(this)
                 : throw new InvalidOperationException(NotInitialized);
         }
 

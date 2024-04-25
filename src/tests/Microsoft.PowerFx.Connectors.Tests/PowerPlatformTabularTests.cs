@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
-            Assert.True(sqlTable.IsDelegatable);
+            Assert.True(sqlTable.IsDelegable);
 
             //Assert.True(sqlTable.Is)
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
-            Assert.True(sqlTable.IsDelegatable);
+            Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue spTable = tabularService.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
-            Assert.True(spTable.IsDelegatable);
+            Assert.True(spTable.IsDelegable);
 
             Assert.Equal(
                 "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
@@ -337,7 +337,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue spTable = tabularService.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
-            Assert.True(spTable.IsDelegatable);
+            Assert.True(spTable.IsDelegable);
 
             Assert.Equal(
                 "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
@@ -502,7 +502,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue sfTable = tabularService.GetTableValue();
             Assert.True(sfTable._tabularService.IsInitialized);
-            Assert.True(sfTable.IsDelegatable);
+            Assert.True(sfTable.IsDelegable);
 
             Assert.Equal(
                 "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
@@ -578,7 +578,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue sfTable = tabularService.GetTableValue();
             Assert.True(sfTable._tabularService.IsInitialized);
-            Assert.True(sfTable.IsDelegatable);
+            Assert.True(sfTable.IsDelegable);
 
             Assert.Equal(
                 "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +

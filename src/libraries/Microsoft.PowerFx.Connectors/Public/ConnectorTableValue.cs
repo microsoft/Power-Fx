@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors
     // Doesn't contain any ServiceProvider which is runtime only
     public class ConnectorTableValue : TableValue, IRefreshable
     {
-        public bool IsDelegatable => _tabularService.IsDelegatable;
+        public bool IsDelegable => _tabularService.IsDelegable;
 
         protected internal readonly TabularService _tabularService;
 

@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.IsDelegable)]
-        public readonly bool IsDelegatable;
+        public readonly bool IsDelegable;
 
         [JsonIgnore]
         public readonly bool IsSelectable;
@@ -113,8 +113,8 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
             GroupRestriction = groupRestriction;
-            IsDelegatable = (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
-            IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegatable;
+            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+            IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegable;
             SupportsDataverseOffline = supportsDataverseOffline;
             FilterSupportedFunctions = filterSupportedFunctions;
             IsSelectable = SelectionRestriction == null ? false : selectionRestriction.IsSelectable;
