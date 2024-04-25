@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Ondalık değerine dönüştürülecek metin değeri.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Sayı temsil eden bir "metin" değerini kayan bir değere dönüştürür.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Bileşen</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">

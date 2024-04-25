@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Balio hamartar balio bihurtuko den testu-balioa.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>"Hamartarra" funtzioa soilik "Power Fx 1.0 bertsioaren bateragarritasuna" eginbidea gaituta badago erabil daiteke.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Zenbaki bat adierazten duen "text" elementu bat balio higikari bihurtzen du.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Osagaia</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
