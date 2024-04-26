@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>A decimális értékké alakítandó szöveges érték.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>A "Decimális" függvény csak akkor használható, ha a "Power Fx 1.0 kompatibilitás" funkció engedélyezve van.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Számértékké alakítja a számot jelölő lebegő értéket.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Összetevő</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
