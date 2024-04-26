@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Wartość tekstowa do przekonwertowania na wartość dziesiętną.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkcji „Liczba dziesiętna” można używać tylko wtedy, gdy jest włączona funkcja „Zgodność z językiem Power Fx 1.0”.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konwertuje „tekst” reprezentujący liczbę na wartość zmiennoprzecinkową.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Składnik</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">

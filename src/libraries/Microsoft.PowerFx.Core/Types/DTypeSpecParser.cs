@@ -11,8 +11,8 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal static class DTypeSpecParser
     {
-        private const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqVOX-w";
-        private static readonly DType[] _types = new DType[]
+        internal const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqVOX-w";
+        internal static readonly DType[] _types = new DType[]
         {
             /* ? */ DType.Unknown, 
             /* e */ DType.Error, 

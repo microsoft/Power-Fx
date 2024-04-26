@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden geconverteerd naar een decimale waarde.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>De functie Decimaal getal kan alleen worden gebruikt als de functie Compatibiliteit met Power Fx 1.0 is ingeschakeld.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een drijvende waarde.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Onderdeel</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
