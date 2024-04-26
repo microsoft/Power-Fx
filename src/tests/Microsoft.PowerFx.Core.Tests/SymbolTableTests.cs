@@ -323,18 +323,18 @@ namespace Microsoft.PowerFx.Core.Tests
 
             PowerFxConfig config = new PowerFxConfig();
 
-            bool fOk = config.SymbolTable.TryGetType("os1", out var type);
+            bool fOk = config.SymbolTable.TryGetSymbolType("os1", out var type);
             Assert.False(fOk);
 
             config.AddOptionSet(os);
 
-            fOk = config.SymbolTable.TryGetType("os1", out type);
+            fOk = config.SymbolTable.TryGetSymbolType("os1", out type);
             Assert.True(fOk);
 
             AssertOptionSetType(type, os);
 
             // Case sensitivity 
-            fOk = config.SymbolTable.TryGetType("OS1", out type);
+            fOk = config.SymbolTable.TryGetSymbolType("OS1", out type);
             Assert.False(fOk); // case sensitive
 
             // Consistent with SymbolNames
@@ -349,10 +349,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var st1 = new SymbolTable();
             var st2 = ReadOnlySymbolTable.Compose(st1, config.SymbolTable);
 
-            fOk = st1.TryGetType("os1", out type);
+            fOk = st1.TryGetSymbolType("os1", out type);
             Assert.False(fOk);
 
-            fOk = st2.TryGetType("os1", out type);
+            fOk = st2.TryGetSymbolType("os1", out type);
             Assert.True(fOk);
         }
 
@@ -375,11 +375,11 @@ namespace Microsoft.PowerFx.Core.Tests
             var st = new SymbolTable();
             st.AddVariable("var1", FormulaType.Number, displayName: "Display1");
 
-            var ok = st.TryGetType("var1", out var type);
+            var ok = st.TryGetSymbolType("var1", out var type);
             Assert.True(ok);
 
             // not display names 
-            ok = st.TryGetType("Display1", out type);
+            ok = st.TryGetSymbolType("Display1", out type);
             Assert.True(ok);
         }
     }

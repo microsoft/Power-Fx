@@ -1540,10 +1540,10 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Builtin enums are on engine.SupportedFunctionm
-            var ok = engine.SupportedFunctions.TryGetType("Color", out var type);
+            var ok = engine.SupportedFunctions.TryGetSymbolType("Color", out var type);
             Assert.True(ok);
 
-            ok = engine.GetCombinedEngineSymbols().TryGetType("Color", out type);
+            ok = engine.GetCombinedEngineSymbols().TryGetSymbolType("Color", out type);
             Assert.True(ok);
 
             // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
