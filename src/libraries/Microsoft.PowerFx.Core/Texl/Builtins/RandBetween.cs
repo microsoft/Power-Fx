@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsStateless => false;
 
         public RandBetweenFunction()
-            : base("RandBetween", TexlStrings.AboutRandBetween, minArity: 2, nativeDecimal: true)
+            : base("RandBetween", TexlStrings.AboutRandBetween, minArity: 2, nativeDecimalBoth: true)
         {
         }
 

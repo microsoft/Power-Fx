@@ -60,3 +60,18 @@ Error({Kind:ErrorKind.Numeric})
 
 >> Find("000000000000", Text(RandBetween(-1e28, 1e28)))
 Blank()
+
+>> RandBetween( 9007199254740992 /* MaxFloatInt */, 9007199254740992 /* MaxFloatInt */ )
+9007199254740992
+
+>> RandBetween( -9007199254740992 /* MaxFloatInt */, -9007199254740992 /* MaxFloatInt */ )
+-9007199254740992
+
+>> Sum(Sequence(100), With( { r: RandBetween( 9007199254740985, 9007199254740992 /* MaxFloatInt */ ) }, If( r >= 9007199254740985 And r <= 9007199254740992, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, -9007199254740985 ) }, If( r <= -9007199254740985 And r >= -9007199254740992, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, 9007199254740992 /* MaxFloatInt */) }, If( r <= 9007199254740992 /* MaxFloatInt */ And r >= -9007199254740992 /* MinFloatInt */, 1, Error( "Result out of range" ) ) ) )
+100

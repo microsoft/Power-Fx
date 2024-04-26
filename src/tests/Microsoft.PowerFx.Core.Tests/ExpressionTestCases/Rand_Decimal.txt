@@ -1,0 +1,54 @@
+#SETUP: disable:NumberIsFloat,DecimalSupport
+
+// Test Rand() - beware, rand is volatile. 
+
+>> RandBetween( 79228162514264337593543950335 /* MaxValue */, 79228162514264337593543950335 /* MaxValue */ )
+79228162514264337593543950335
+
+>> RandBetween( -79228162514264337593543950335 /* MinValue */, -79228162514264337593543950335 /* MinValue */ )
+-79228162514264337593543950335
+
+// output range at limits
+
+>> Sum(Sequence(100), With( { r: RandBetween( 79228162514264337593543950330, 79228162514264337593543950335 /* MaxValue */ ) }, If( r >= 79228162514264337593543950330 And r <= 79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -79228162514264337593543950335 /* MinValue */, -79228162514264337593543950330 ) }, If( r <= -79228162514264337593543950330 And r >= -79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( 1, 79228162514264337593543950335 /* MaxValue */ ) }, If( r >= 1 And r <= 79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -79228162514264337593543950335 /* MinValue */, -1 ) }, If( r <= -1 And r >= -79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( 0, 79228162514264337593543950335 /* MaxValue */ ) }, If( r >= 0 And r <= 79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -79228162514264337593543950335 /* MinValue */, 0 ) }, If( r <= 0 And r >= -79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1, 79228162514264337593543950335 /* MaxValue */ ) }, If( r >= -1 And r <= 79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -79228162514264337593543950335 /* MinValue */, 1 ) }, If( r <= 1 And r >= -79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100),  With( { r: RandBetween( -79228162514264337593543950335 /* MinValue */, 79228162514264337593543950335 /* MaxValue */ ) }, If( r <= 79228162514264337593543950335 /* MaxValue */ And r >= -79228162514264337593543950335, 1, Error( "Result out of range" ) ) ) )
+100
+
+// mixing with float
+
+>> RandBetween( 1000, 1000 ) + 1.000000000000000000001
+1001.000000000000000000001
+
+>> RandBetween( 1000, Float(1000) ) + 1.000000000000000000001
+1001
+
+>> RandBetween( Float(1000), 1000 ) + 1.000000000000000000001
+1001
+
+>> RandBetween( Float(1000), Float(1000) ) + 1.000000000000000000001
+1001
+
+

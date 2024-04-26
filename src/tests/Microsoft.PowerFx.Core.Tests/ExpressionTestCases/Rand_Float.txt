@@ -1,0 +1,41 @@
+#SETUP: NumberIsFloat
+
+// Test Rand() - beware, rand is volatile. 
+
+>> RandBetween( 1.7976931348623157e308 /* MaxValue */, 1.7976931348623157e308 /* MaxValue */ )
+1.7976931348623157e308
+
+>> RandBetween( -1.7976931348623157e308 /* MinValue */, -1.7976931348623157e308 /* MinValue */ )
+-1.7976931348623157e308
+
+// output range at limits
+
+>> Sum(Sequence(100), With( { r: RandBetween( 1.7976931348623150e308, 1.7976931348623157e308 ) }, If( r >= 1.7976931348623150e308 And r <= 1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, -1.7976931348623150e308 ) }, If( r <= -1.7976931348623150e308 And r >= -1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( 1, 1.7976931348623157e308 ) }, If( r >= 1 And r <= 1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, -1 ) }, If( r <= -1 And r >= -1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( 0, 1.7976931348623157e308 ) }, If( r >= 0 And r <= 1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, 0 ) }, If( r <= 0 And r >= -1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1, 1.7976931348623157e308 ) }, If( r >= -1 And r <= 1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100), With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, 1 ) }, If( r <= 1 And r >= -1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+>> Sum(Sequence(100),  With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, 1.7976931348623157e308 /* MaxValue */ ) }, If( r <= 1.7976931348623157e308 /* MaxValue */ And r >= -1.7976931348623157e308, 1, Error( "Result out of range" ) ) ) )
+100
+
+
+
