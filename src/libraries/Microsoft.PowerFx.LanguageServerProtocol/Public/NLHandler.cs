@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <exception cref="NotImplementedException">Not implemeted by default.</exception>
         public virtual void PreHandleNl2Fx(CustomNL2FxParams nl2FxRequestParams, NL2FxParameters nl2fxParameters, LanguageServerOperationContext operationContext)
         {
-            throw new NotImplementedException();
+            // no op by default
         }
     }
 
