@@ -640,12 +640,10 @@ namespace Microsoft.PowerFx.Tests
         public void FunctionInner()
         {
             // Inner table 
-            SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
-            stInner.AddTypes(FormulaType.PrimitiveTypes);
+            SymbolTable stInner = SymbolTable.WithPrimitiveTypes();
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
-            SymbolTable st = new SymbolTable { DebugName = "Extras" };
-            st.AddTypes(FormulaType.PrimitiveTypes);
+            SymbolTable st = SymbolTable.WithPrimitiveTypes();
             st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();
