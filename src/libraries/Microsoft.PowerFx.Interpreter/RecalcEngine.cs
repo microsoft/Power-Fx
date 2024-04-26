@@ -33,7 +33,6 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -49,7 +48,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
