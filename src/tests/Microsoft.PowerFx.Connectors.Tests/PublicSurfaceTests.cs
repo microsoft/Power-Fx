@@ -27,7 +27,6 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
-              "Microsoft.PowerFx.Connectors.CdpTabularService",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
@@ -52,8 +51,9 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
-              "Microsoft.PowerFx.Connectors.SwaggerTabularService",
-              "Microsoft.PowerFx.Connectors.TabularService",
+              "Microsoft.PowerFx.Connectors.Tabular.CdpSwaggerTabularService",
+              "Microsoft.PowerFx.Connectors.Tabular.CdpTabularService",
+              "Microsoft.PowerFx.Connectors.Tabular.TabularService",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 
