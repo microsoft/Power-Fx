@@ -1224,7 +1224,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 FlagPathAsAsync(node);
 
                 // Pageable nodes are also stateful as data is always pulled from outside.
-                SetStateful(node, isStateful: true);                
+                SetStateful(node, isStateful: true);
                 return true;
             }
 
