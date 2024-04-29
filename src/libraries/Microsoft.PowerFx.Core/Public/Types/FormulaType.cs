@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
@@ -72,6 +74,24 @@ namespace Microsoft.PowerFx.Types
             _type = type;
         }
 
+        // Primitive types - Keeping it same as PrimitiveTypeSymbolTable
+        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
+        {
+            { new DName("Boolean"), Boolean },
+            { new DName("Color"), Color },
+            { new DName("Date"), Date },
+            { new DName("Time"), Time },
+            { new DName("DateTime"), DateTime },
+            { new DName("DateTimeTZInd"), DateTimeNoTimeZone },
+            { new DName("GUID"), Guid },
+            { new DName("Number"), Number },
+            { new DName("Decimal"), Decimal },
+            { new DName("Text"), String },
+            { new DName("Hyperlink"), Hyperlink },
+            { new DName("None"), Blank },
+            { new DName("UntypedObject"), UntypedObject },
+        });
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaType"/> class.
         /// Used for subclasses that must set DType themselves.
@@ -108,25 +128,6 @@ namespace Microsoft.PowerFx.Types
             type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
 
             return type;
-        }
-
-        internal static FormulaType[] GetValidUDFPrimitiveTypes()
-        {
-            FormulaType[] validTypes = { Blank, Boolean, Number, Decimal, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
-            return validTypes;
-        }
-
-        internal static FormulaType GetFromStringOrNull(string formula)
-        {
-            foreach (FormulaType formulaType in GetValidUDFPrimitiveTypes())
-            {
-                if (string.Equals(formulaType.ToString(), formula, StringComparison.Ordinal))
-                {
-                    return formulaType;
-                }
-            }
-
-            return null;
         }
 
         // Get the correct derived type

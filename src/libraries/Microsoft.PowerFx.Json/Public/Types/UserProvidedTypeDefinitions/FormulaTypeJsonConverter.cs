@@ -14,11 +14,11 @@ namespace Microsoft.PowerFx.Core
 {
     public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
-        private readonly DefinedTypeSymbolTable _definedTypes;
+        private readonly SymbolTable _definedTypes;
 
         private readonly FormulaTypeSerializerSettings _settings;
 
-        internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
+        internal FormulaTypeJsonConverter(SymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
             _settings = new FormulaTypeSerializerSettings(null);
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         /// <param name="settings"></param>
         public FormulaTypeJsonConverter(FormulaTypeSerializerSettings settings)
-            : this(new DefinedTypeSymbolTable())
+            : this(new SymbolTable())
         {
             _settings = settings ?? _settings;
         }
