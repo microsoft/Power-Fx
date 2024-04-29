@@ -6,6 +6,7 @@ namespace Microsoft.PowerFx.Connectors
     public static class Constants
     {
         public const string XMsBodyName = "x-bodyName";
+        public const string XMsCapabilities = "x-ms-capabilities";
         public const string XMsDynamicList = "x-ms-dynamic-list";
         public const string XMsDynamicProperties = "x-ms-dynamic-properties";
         public const string XMsDynamicSchema = "x-ms-dynamic-schema";
