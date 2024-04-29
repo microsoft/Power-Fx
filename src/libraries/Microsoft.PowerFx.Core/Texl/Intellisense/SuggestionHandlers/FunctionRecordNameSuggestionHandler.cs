@@ -1,18 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -107,7 +101,7 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     aggregateType = lastFieldType;
                 }
-                else if (recordNode?.Parent?.Kind == NodeKind.Record && 
+                else if (recordNode?.Parent?.Kind == NodeKind.Record &&
                     recordNode?.Parent?.Parent?.Kind != NodeKind.Table)
                 {
                     // If Parent not is record node, that means it was nested field and above method should have found type, if it did not, return false. unless it was [{<cursor position>.
@@ -132,8 +126,8 @@ namespace Microsoft.PowerFx.Intellisense
                 if (TryGetParentRecordNode(currentNode, out var parentRecord))
                 {
                     var fieldName = parentRecord.Ids.LastOrDefault()?.Name;
-                    if (fieldName.HasValue && 
-                        aggregateType.TryGetType(fieldName.Value, out var type) && 
+                    if (fieldName.HasValue &&
+                        aggregateType.TryGetType(fieldName.Value, out var type) &&
                         (type.IsRecord || currentNode.Parent?.Kind == NodeKind.Table))
                     {
                         fieldType = type;
@@ -197,7 +191,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
                 else if (callNode.Args?.Count > 0)
                 {
-                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]); 
+                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]);
                     if (type.IsTableNonObjNull)
                     {
                         return type.ToRecord();

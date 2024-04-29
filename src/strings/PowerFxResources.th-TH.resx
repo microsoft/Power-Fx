@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าตัวเลขทศนิยม</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>ฟังก์ชัน 'Decimal' สามารถใช้ได้เมื่อเปิดใช้งานคุณสมบัติ 'ความเข้ากันได้ของ Power Fx 1.0' เท่านั้น</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>ส่วนประกอบ</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
