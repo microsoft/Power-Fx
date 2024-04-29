@@ -1289,17 +1289,23 @@ namespace Microsoft.PowerFx.Core.Tests
                 DType.Number);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsRandBetween()
+        [Theory]
+        [InlineData("RandBetween(Number1,Number2)", "n")]
+        [InlineData("RandBetween(Number1,Decimal1)", "n")]
+        [InlineData("RandBetween(Decimal1,Number1)", "n")]
+        [InlineData("RandBetween(Decimal1,Decimal2)", "w")]
+        public void TexlFunctionTypeSemanticsRandBetween(string script, string expectedType)
         {
             var symbol = new SymbolTable();
-            symbol.AddVariable("A", FormulaType.Number);
-            symbol.AddVariable("B", FormulaType.Number);
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
 
             TestSimpleBindingSuccess(
-                    "RandBetween(A, B)",
-                    DType.Number,
-                    symbol);
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
         }
 
         [Theory]
@@ -1808,6 +1814,57 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             TestBindingErrors(script, tType, symbolTable: symbolTable, features: features);
+        }
+
+        [Theory]
+        [InlineData("Mod(Number1,Number2)", "n")]
+        [InlineData("Mod(Number1,Decimal1)", "n")]
+        [InlineData("Mod(Decimal1,Number1)", "n")]
+        [InlineData("Mod(Decimal1,Decimal2)", "w")]
+        public void TexlFunctionTypeSemanticsMod(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Mod(NumberT1,NumberT2)", "*[Value:n]")]
+        [InlineData("Mod(NumberT1,DecimalT1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,NumberT1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,DecimalT2)", "*[Value:w]")]
+        [InlineData("Mod(NumberT1,Number2)", "*[Value:n]")]
+        [InlineData("Mod(NumberT1,Decimal1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,Number1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,Decimal2)", "*[Value:w]")]
+        [InlineData("Mod(Number1,NumberT2)", "*[Value:n]")]
+        [InlineData("Mod(Number1,DecimalT1)", "*[Value:n]")]
+        [InlineData("Mod(Decimal1,NumberT1)", "*[Value:n]")]
+        [InlineData("Mod(Decimal1,DecimalT2)", "*[Value:w]")]
+        public void TexlFunctionTypeSemanticsModT(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("NumberT1", new TableType(TestUtils.DT("*[Value:n]")));
+            symbol.AddVariable("NumberT2", new TableType(TestUtils.DT("*[Value:n]")));
+            symbol.AddVariable("DecimalT1", new TableType(TestUtils.DT("*[Value:w]")));
+            symbol.AddVariable("DecimalT2", new TableType(TestUtils.DT("*[Value:w]")));
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                features: Features.PowerFxV1); // for consistent single column result name
         }
 
         [Theory]
