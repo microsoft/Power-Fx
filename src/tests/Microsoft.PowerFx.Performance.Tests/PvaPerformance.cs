@@ -128,7 +128,13 @@ namespace Microsoft.PowerFx.Performance.Tests
             {
                 int j = rnd.Next(0, 10000); // [0 - 9999]
                 int k = rnd.Next(0, 10);    // [0 -9]
-                int l = rnd.Next(0, 10);    // [0 -9]
+
+                int l;
+                do
+                {
+                    l = rnd.Next(0, 10);    // [0 - 9] not same as k.
+                } 
+                while (l == k);
 
                 expr.Append($"(OptionSet{j:0000}.Logical{k} ");
                 expr.Append(rnd.Next() > (1 << 30) ? "=" : "<>");
