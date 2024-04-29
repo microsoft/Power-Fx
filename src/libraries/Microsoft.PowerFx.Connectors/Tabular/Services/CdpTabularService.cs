@@ -11,7 +11,7 @@ using System.Web;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx.Connectors.Tabular
 {
     // Implements CDP protocol for Tabular connectors
     public class CdpTabularService : TabularService
@@ -23,6 +23,10 @@ namespace Microsoft.PowerFx.Connectors
         public string DatasetName { get; protected set; }
 
         public string TableName { get; protected set; }
+
+        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
+
+        internal ServiceCapabilities TableCapabilities { get; private set; }
 
         private string _uriPrefix;
         private bool _v2;
@@ -86,10 +90,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal RecordType GetSchema(string text)
         {
-            ConnectorType connectorType = ConnectorFunction.GetConnectorType("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName);
+            ConnectorType connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
             Name = name;
             DisplayName = displayName;
+            TableCapabilities = tableCapabilities;
 
+            // Note that connectorType contains columns' capabilities but not the FormulaType (as of current developement)
             return connectorType?.FormulaType as RecordType;
         }
 

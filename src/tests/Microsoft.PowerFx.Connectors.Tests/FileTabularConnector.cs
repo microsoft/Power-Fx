@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -38,6 +39,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorTableValue fileTable = tabularService.GetTableValue();
             Assert.True(fileTable._tabularService.IsInitialized);
+
+            // This one is not delegatable
+            Assert.False(fileTable.IsDelegable);
             Assert.Equal("*[line:s]", fileTable.Type._type.ToString());
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
@@ -74,6 +78,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
+
+        public override bool IsDelegable => false;
 
         // Initialization can be synchronous
         public void Init()
