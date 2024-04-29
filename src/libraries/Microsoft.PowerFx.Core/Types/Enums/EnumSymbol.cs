@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
@@ -14,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// Entity info that respresents an enum, such as "Align" or "Font".
     /// </summary>
     [ThreadSafeImmutable]
+    [DebuggerDisplay("Enum({EntityName})")]
     internal sealed class EnumSymbol : IExternalOptionSet
     {
         public DName EntityName { get; }

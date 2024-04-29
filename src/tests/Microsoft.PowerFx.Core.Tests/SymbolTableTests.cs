@@ -311,5 +311,76 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             Assert.Throws<InvalidOperationException>(() => symbol.AddVariable("x", FormulaType.Void, mutable: true));
         }
+
+        // $$$ Consistent with SymbolNames
+
+        [Fact]
+        public void TryGetType()
+        {
+            var os = new OptionSet(
+                "os1",
+                DisplayNameUtility.MakeUnique(new Dictionary<string, string> { { "Yes", "Yes1" }, { "No", "No1" } }));
+
+            PowerFxConfig config = new PowerFxConfig();
+
+            bool fOk = config.SymbolTable.TryGetSymbolType("os1", out var type);
+            Assert.False(fOk);
+
+            config.AddOptionSet(os);
+
+            fOk = config.SymbolTable.TryGetSymbolType("os1", out type);
+            Assert.True(fOk);
+
+            AssertOptionSetType(type, os);
+
+            // Case sensitivity 
+            fOk = config.SymbolTable.TryGetSymbolType("OS1", out type);
+            Assert.False(fOk); // case sensitive
+
+            // Consistent with SymbolNames
+            var names = config.SymbolTable.SymbolNames.ToArray();
+            Assert.Single(names);
+            var name0 = names[0];
+            Assert.Equal("os1", name0.Name);
+            Assert.Equal(string.Empty, name0.DisplayName);
+            AssertOptionSetType(name0.Type, os);
+
+            // Composed tables.
+            var st1 = new SymbolTable();
+            var st2 = ReadOnlySymbolTable.Compose(st1, config.SymbolTable);
+
+            fOk = st1.TryGetSymbolType("os1", out type);
+            Assert.False(fOk);
+
+            fOk = st2.TryGetSymbolType("os1", out type);
+            Assert.True(fOk);
+        }
+
+        // Type is wrong: https://github.com/microsoft/Power-Fx/issues/2342
+        // Option Set returns as a record. 
+        private void AssertOptionSetType(FormulaType actualType, OptionSet expected)
+        {
+            RecordType recordType = (RecordType)actualType;
+            var actualNames = recordType.FieldNames.OrderBy(x => x).ToArray();
+            
+            var expectedNames = expected.Options.Select(kv => kv.Key.Value).OrderBy(x => x).ToArray();
+
+            Assert.True(actualNames.SequenceEqual(expectedNames));
+        }
+
+        // IsDefined also maps display names. 
+        [Fact]
+        public void TryGetTypeFindsDisplayNames()
+        {
+            var st = new SymbolTable();
+            st.AddVariable("var1", FormulaType.Number, displayName: "Display1");
+
+            var ok = st.TryGetSymbolType("var1", out var type);
+            Assert.True(ok);
+
+            // not display names 
+            ok = st.TryGetSymbolType("Display1", out type);
+            Assert.True(ok);
+        }
     }
 }
