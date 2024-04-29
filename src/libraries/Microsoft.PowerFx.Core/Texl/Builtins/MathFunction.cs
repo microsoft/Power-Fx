@@ -126,30 +126,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
-            return _nativeDecimal && (index == 0 || _nativeDecimalBoth) ? 
+            return _nativeDecimalArgs >= 1 && (index == 0 || _nativeDecimalArgs >= 2) ? 
                         ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
 
         public override bool IsSelfContained => true;
 
-        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
-        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
-        // and return a floating point output.
-        // The second argument is always a float and doesn't impact the return type
-        // Used by Round* and Trunc.  Could help with overload resolution in the future, with one less difference.
-        private readonly bool _nativeDecimal = false;
+        // The number of arguments required for the output to be decimal.
+        // 0 = All args are coerced to float and the result of the function is always float.  Effectively turning off native decimal for this function.  Examples: Power.
+        // 1 = If the first arg is decimal, the result will be decimal, float otherwirse.  The second argument is always coerced to float.  Examples: Round, Trunc.
+        // 2 = If both arguments are decimal, the result will be decimal, float otherwise.  Examples: Mod, RandBetween.
+        public int _nativeDecimalArgs = 0;
 
-        // Both arguments must be decimal for the output to be decimal.  Implies _nativeDecimal.
-        // Used by Mod and RandBetween.
-        private readonly bool _nativeDecimalBoth = false;
-
-        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool nativeDecimalBoth = false)
+        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, int nativeDecimalArgs = 0)
             : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, minArity, 2, DType.Number, DType.Number)
         {
-            Contracts.Assert(_nativeDecimalBoth ? _nativeDecimal : true);
-
-            _nativeDecimal = nativeDecimal || nativeDecimalBoth;
-            _nativeDecimalBoth = nativeDecimalBoth;
+            _nativeDecimalArgs = nativeDecimalArgs;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -174,8 +166,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = true;
             nodeToCoercedTypeMap = null;
 
-            returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
-            if (_nativeDecimalBoth && returnType == DType.Decimal)
+            returnType = DetermineNumericFunctionReturnType(_nativeDecimalArgs >= 1, context.NumberIsFloat, argTypes[0]);
+            if (_nativeDecimalArgs >= 2 && returnType == DType.Decimal)
             {
                 returnType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, argTypes[1]);
             }
@@ -187,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (args.Length == 2 && 
-                !CheckType(context, args[1], argTypes[1], !_nativeDecimalBoth ? DType.Number : returnType, errors, ref nodeToCoercedTypeMap))
+                !CheckType(context, args[1], argTypes[1], _nativeDecimalArgs < 2 ? DType.Number : returnType, errors, ref nodeToCoercedTypeMap))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
                 fValid = false;
@@ -201,28 +193,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
-        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
-        // and return a floating point output.
-        // The second argument is always a float and doesn't impact the return type
-        // Used by Round* and Trunc.  Could help with overload resolution in the future, with one less difference.
-        private readonly bool _nativeDecimal = false;
+        // The number of arguments required for the output to be decimal.
+        // 0 = All args are coerced to float and the result of the function is always float.  Effectively turning off native decimal for this function.  Examples: Power.
+        // 1 = If the first arg is decimal, the result will be decimal, float otherwirse.  The second argument is always coerced to float.  Examples: Round, Trunc.
+        // 2 = If both arguments are decimal, the result will be decimal, float otherwise.  Examples: Mod, RandBetween.
+        public int _nativeDecimalArgs = 0;
 
-        // Both arguments must be decimal for the output to be decimal.  Implies _nativeDecimal.
-        // Used by Mod and RandBetween.
-        private readonly bool _nativeDecimalBoth = false;
-
-        // Before ConsistentOneColumnTableResult, this function would always return a fixed name "Result" (Mod)
         protected virtual bool InConsistentTableResultFixedName => false;
 
         // Before ConsistentOneColumnTableResult, this function would use the second argument name if a table (Log, Power)
         protected virtual bool InConsistentTableResultUseSecondArg => false;
 
-        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool nativeDecimalBoth = false)
+        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity, int nativeDecimalArgs = 0)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, minArity, 2)
         {
-            _nativeDecimal = nativeDecimal || nativeDecimalBoth;
-            _nativeDecimalBoth = nativeDecimalBoth;
+            _nativeDecimalArgs = nativeDecimalArgs;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -263,8 +248,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var column0);
-                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column0.Type);
-                    if (_nativeDecimalBoth && returnScalarType == DType.Decimal)
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimalArgs >= 1, context.NumberIsFloat, column0.Type);
+                    if (_nativeDecimalArgs >= 2 && returnScalarType == DType.Decimal)
                     {
                         var reducedType1 = type1;
 
@@ -273,7 +258,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             reducedType1 = column1.Type;
                         }
 
-                        returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, reducedType1);
+                        returnScalarType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, reducedType1);
                     }
 
                     // Ensure we have a one-column table of numerics
@@ -290,18 +275,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Check arg1 below.
                     otherArg = args[1];
                     otherType = type1;
-                    otherDesiredScalarType = !_nativeDecimalBoth ? DType.Number : returnScalarType;
+                    otherDesiredScalarType = _nativeDecimalArgs < 2 ? DType.Number : returnScalarType;
                 }
                 else if (type1.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type1, args[1], errors, out var column1);
-                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, type0);
-                    if (_nativeDecimalBoth && returnScalarType == DType.Decimal)
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimalArgs >= 1, context.NumberIsFloat, type0);
+                    if (_nativeDecimalArgs >= 2 && returnScalarType == DType.Decimal)
                     {
-                        returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column1.Type);
+                        returnScalarType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, column1.Type);
                     }
 
-                    var secondArgScalarType = !_nativeDecimalBoth ? DType.Number : returnScalarType;
+                    var secondArgScalarType = _nativeDecimalArgs < 2 ? DType.Number : returnScalarType;
 
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultUseSecondArg)
@@ -356,7 +341,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var oneArgColumn);
-                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, oneArgColumn.Type);
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimalArgs >= 1, context.NumberIsFloat, oneArgColumn.Type);
                     fValid &= CheckColumnType(context, args[0], type0, oneArgColumn, returnScalarType, errors, ref nodeToCoercedTypeMap, out returnType);
                 }
                 else

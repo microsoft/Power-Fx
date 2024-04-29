@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundScalarFunction : MathTwoArgFunction
     {
         public RoundScalarFunction()
-            : base("Round", TexlStrings.AboutRound, minArity: 2, nativeDecimal: true)
+            : base("Round", TexlStrings.AboutRound, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundUpScalarFunction : MathTwoArgFunction
     {
         public RoundUpScalarFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUp, minArity: 2, nativeDecimal: true)
+            : base("RoundUp", TexlStrings.AboutRoundUp, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundDownScalarFunction : MathTwoArgFunction
     {
         public RoundDownScalarFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDown, minArity: 2, nativeDecimal: true)
+            : base("RoundDown", TexlStrings.AboutRoundDown, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundTableFunction : MathTwoArgTableFunction
     {
         public RoundTableFunction()
-            : base("Round", TexlStrings.AboutRoundT, minArity: 2, nativeDecimal: true)
+            : base("Round", TexlStrings.AboutRoundT, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundUpTableFunction : MathTwoArgTableFunction
     {
         public RoundUpTableFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUpT, minArity: 2, nativeDecimal: true)
+            : base("RoundUp", TexlStrings.AboutRoundUpT, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundDownTableFunction : MathTwoArgTableFunction
     {
         public RoundDownTableFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDownT, minArity: 2, nativeDecimal: true)
+            : base("RoundDown", TexlStrings.AboutRoundDownT, minArity: 2, nativeDecimalArgs: 1)
         {
         }
 

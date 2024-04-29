@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ModFunction : MathTwoArgFunction
     {
         public ModFunction()
-            : base("Mod", TexlStrings.AboutMod, 2, nativeDecimalBoth: true)
+            : base("Mod", TexlStrings.AboutMod, 2, nativeDecimalArgs: 2)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override bool InConsistentTableResultFixedName => true;
 
         public ModTFunction()
-            : base("Mod", TexlStrings.AboutModT, minArity: 2, nativeDecimalBoth: true)
+            : base("Mod", TexlStrings.AboutModT, minArity: 2, nativeDecimalArgs: 2)
         {
         }
 
