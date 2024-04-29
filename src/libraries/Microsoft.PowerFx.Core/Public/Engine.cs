@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx
                 return existing;
             }
 
-            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
+            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable, PrimitiveTypes);
             return symbols;
         }
 

@@ -36,9 +36,13 @@ namespace Microsoft.PowerFx
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
+        private readonly Dictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
+
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
         internal const string UserInfoSymbolName = "User";
 
@@ -463,6 +467,16 @@ namespace Microsoft.PowerFx
 
             s.AddTypes(FormulaType.PrimitiveTypes);
             return s;
+        }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            if (_namedTypes.TryGetValue(name, out fType))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
