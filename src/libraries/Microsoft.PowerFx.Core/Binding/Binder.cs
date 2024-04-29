@@ -1227,6 +1227,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 SetStateful(node, isStateful: true);                
                 return true;
             }
+
             return false;
         }
 
