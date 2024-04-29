@@ -293,6 +293,39 @@ namespace Microsoft.PowerFx
             return NewDefault(tfs);
         }
 
+        // Helper to create a ReadOnly symbol table around a set of core types. 
+        internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+
+            var s = new SymbolTable
+            {
+                DebugName = $"BuiltinTypes ({types?.Count()})"
+            };
+            
+            s.AddTypes(types);
+            return s;
+        }
+
+        // Overload Helper to create a ReadOnly symbol table around a set of core functions and types.
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+            Contracts.AssertValue(coreFunctions);
+
+            var s = new SymbolTable
+            {
+                EnumStoreBuilder = new EnumStoreBuilder(),
+                DebugName = $"BuiltinFunctions ({coreFunctions.Count()}), BuiltinTypes ({types?.Count()})"
+            };
+
+            s.AddFunctions(coreFunctions);
+            s.AddTypes(types);
+            return s;
+        }
+
+        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType.PrimitiveTypes);
+
         /// <summary>
         /// Helper to create a symbol table around a set of core functions.
         /// Important that this is mutable so that it can be changed across engines. 
@@ -465,6 +498,8 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
 
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => Enumerable.Empty<KeyValuePair<DName, FormulaType>>();
+
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {
             lookupInfo = default;
@@ -506,6 +541,13 @@ namespace Microsoft.PowerFx
         {
             throw new NotImplementedException();
         }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            fType = default;
+            return false;
+        }
+
         #endregion
     }
 }

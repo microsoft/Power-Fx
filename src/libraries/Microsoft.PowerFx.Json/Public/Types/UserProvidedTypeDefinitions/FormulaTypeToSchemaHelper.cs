@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Types;
 
@@ -10,7 +12,7 @@ namespace Microsoft.PowerFx.Core
 {
     internal static class FormulaTypeToSchemaHelper
     {
-        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
+        public static FormulaTypeSchema ToSchema(this FormulaType type, INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             // Converting a formulaType to a FormulaTypeSchema requires cutting off at a max depth
             // FormulaType may contain recurisve definitions that are not supported by FormulaTypeSchema
@@ -18,7 +20,7 @@ namespace Microsoft.PowerFx.Core
             return ToSchema(type, definedTypeSymbols, settings, maxDepth: 5);
         }
 
-        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
+        private static FormulaTypeSchema ToSchema(FormulaType type, INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
         {
             if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
             {
@@ -84,13 +86,16 @@ namespace Microsoft.PowerFx.Core
             };
         }
 
-        private static bool TryLookupTypeName(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, out string typeName)
+        private static bool TryLookupTypeName(FormulaType type, INameResolver definedTypeSymbols, out string typeName)
         {
-            var lookupOrder = new List<TypeSymbolTable>() { definedTypeSymbols, PrimitiveTypesSymbolTable.Instance };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
             foreach (var table in lookupOrder)
             {
-                if (table.TryGetTypeName(type, out typeName))
+                var typeNames = table.NamedTypes.Where(kvp => kvp.Value.Equals(type));
+
+                if (typeNames.Any())
                 {
+                    typeName = typeNames.FirstOrDefault().Key.Value;
                     return true;
                 }
             }
@@ -99,7 +104,7 @@ namespace Microsoft.PowerFx.Core
             return false;
         }
 
-        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
+        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
         {
             var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
             foreach (var child in type.GetFieldTypes())

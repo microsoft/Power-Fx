@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests : PowerFxTest
     {
+        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -901,7 +903,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(udfCount, udfs.Count());
