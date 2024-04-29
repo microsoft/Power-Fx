@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        // Expose the list to aide in intellisense suggestions and create new composable type symbol tables.
+        // Expose the list to aide in intellisense suggestions.
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes
         {
             get

@@ -498,7 +498,7 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
 
-        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => default;
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => Enumerable.Empty<KeyValuePair<DName, FormulaType>>();
 
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {

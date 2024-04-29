@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
-        private readonly Dictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
+        private readonly IDictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
@@ -434,6 +434,7 @@ namespace Microsoft.PowerFx
             Contracts.AssertValue(typeName.Value);
             Contracts.AssertValue(type);
             Contracts.Assert(typeName.Value.Length > 0);
+            Contracts.AssertValid(typeName);
 
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
@@ -441,7 +442,7 @@ namespace Microsoft.PowerFx
             _namedTypes.Add(typeName, type);
         }
 
-        public void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        internal void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
         {
             Contracts.AssertValue(types);
 

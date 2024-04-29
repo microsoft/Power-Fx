@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
@@ -74,7 +75,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Primitive types - Keeping it same as PrimitiveTypeSymbolTable
-        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = new Dictionary<DName, FormulaType>()
+        internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
         {
             { new DName("Boolean"), Boolean },
             { new DName("Color"), Color },
@@ -89,7 +90,7 @@ namespace Microsoft.PowerFx.Types
             { new DName("Hyperlink"), Hyperlink },
             { new DName("None"), Blank },
             { new DName("UntypedObject"), UntypedObject },
-        };
+        });
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaType"/> class.
