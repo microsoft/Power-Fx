@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(ReadOnlySymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
+        public FormulaType ToFormulaType(INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             var typeName = Type.Name;
 
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core
             return FormulaType.BindingError;
         }
 
-        private static bool TryLookupType(string typeName, ReadOnlySymbolTable definedTypeSymbols, out FormulaType type)
+        private static bool TryLookupType(string typeName, INameResolver definedTypeSymbols, out FormulaType type)
         {
             var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
             foreach (var table in lookupOrder)

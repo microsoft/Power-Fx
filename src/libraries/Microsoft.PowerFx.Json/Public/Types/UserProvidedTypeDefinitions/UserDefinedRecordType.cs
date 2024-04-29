@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -14,23 +15,23 @@ namespace Microsoft.PowerFx.Core
     /// Aggregate Type Definition derived from a .fx.yaml file
     /// This may recursively refer to itself or other types, and so we resolve
     /// the field types lazily using the DefinedTypeSymbolTable 
-    /// passed to <see cref="FormulaTypeSchema.ToFormulaType(ReadOnlySymbolTable, FormulaTypeSerializerSettings)"/>"/>.
+    /// passed to <see cref="FormulaTypeSchema.ToFormulaType(INameResolver, FormulaTypeSerializerSettings)"/>"/>.
     /// </summary>
     internal class UserDefinedRecordType : RecordType
     {
         private readonly FormulaTypeSchema _backingSchema;
-        private readonly ReadOnlySymbolTable _symbolTable;
+        private readonly INameResolver _symbolTable;
         private readonly FormulaTypeSerializerSettings _settings;
 
         public override IEnumerable<string> FieldNames => _backingSchema.Fields?.Keys ?? Enumerable.Empty<string>();
 
-        public UserDefinedRecordType(FormulaTypeSchema backingSchema, ReadOnlySymbolTable definedTypes)
+        public UserDefinedRecordType(FormulaTypeSchema backingSchema, INameResolver definedTypes)
         {
             _backingSchema = backingSchema;
             _symbolTable = definedTypes;
         }
 
-        public UserDefinedRecordType(FormulaTypeSchema backingSchema, ReadOnlySymbolTable definedTypes, FormulaTypeSerializerSettings settings)
+        public UserDefinedRecordType(FormulaTypeSchema backingSchema, INameResolver definedTypes, FormulaTypeSerializerSettings settings)
         {
             _backingSchema = backingSchema;
             _symbolTable = definedTypes;
