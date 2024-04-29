@@ -55,6 +55,8 @@ namespace Microsoft.PowerFx
 
     /// <summary>
     /// A "slot" is the opaque handle to acts as a storage location for a symbol. 
+    /// Only things requiring per-eval storage (like variables) need slots. 
+    /// Constants, OptionSets, etc (which are common across evals) do not need slots and can be baked directly into the IR. 
     /// It can be used for both get and set on symbols. 
     /// The IR will refer to slots when accessing symbols. Unique slots mean unique symbols.
     /// Runtime allocates storage for these slots.
