@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             if (!HasErrors(token, severity))
             {
-                Error(severity, token, errKey, args);
+                return Error(severity, token, errKey, args);
             }
 
             return null;

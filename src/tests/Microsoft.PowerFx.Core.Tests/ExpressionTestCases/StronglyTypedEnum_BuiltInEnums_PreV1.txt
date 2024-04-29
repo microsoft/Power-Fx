@@ -19,7 +19,7 @@
 //    6. By default, Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
 //    7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
 //    8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
-//    9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+//    9. If the underlying value is desired, the Text, Value, Float, and Boolean functions can be called to get the backing value.
 //
 // In addition, there are flags for each option set that govern how it can be used.  Default is no flags, used by Dataverse option sets.
 //   10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
@@ -311,7 +311,7 @@ true
 
 //===========================================================================================================
 //
-// 9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+// 9. If the underlying value is desired, the Text, Value, Float, and Boolean functions can be called to get the backing value.
 //
 
 // Text can be called on all option set values
@@ -350,18 +350,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Float( JSONFormat.IndentFour )
-4
-
->> Decimal( StartOfWeek.Friday )
-15
-
->> Decimal( ErrorKind.Unknown )
-12
-
->> Decimal( Match.Digit )
-Error({Kind:ErrorKind.InvalidArgument})
-
->> Decimal( JSONFormat.IndentFour )
 4
 
 >> Boolean( StartOfWeek.Friday )
@@ -711,9 +699,6 @@ true
 >> Value( StartOfWeek.Monday )
 2
 
->> Decimal( StartOfWeek.Monday )
-2
-
 >> Float( StartOfWeek.Monday )
 2
 
@@ -833,9 +818,6 @@ true
 >> Value( TimeUnit.Years )
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Decimal( TimeUnit.Years )
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Float( TimeUnit.Years )
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -936,9 +918,6 @@ Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: 
 >> Value( Color.Green )
 Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 12-18: Expected text or number. We expect text or a number at this point in the formula.
 
->> Decimal( Color.Green )
-Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 14-20: Expected text or number. We expect text or a number at this point in the formula.
-
 >> Float( Color.Green )
 Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 12-18: Expected text or number. We expect text or a number at this point in the formula.
 
@@ -1032,9 +1011,6 @@ true
 "23"
 
 >> Value( ErrorKind.Network )
-23
-
->> Decimal( ErrorKind.Network )
 23
 
 >> Float( ErrorKind.Network )
@@ -1165,9 +1141,6 @@ true
 >> Value( DateTimeFormat.LongDate )
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Decimal( DateTimeFormat.LongDate )
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Float( DateTimeFormat.LongDate )
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -1277,9 +1250,6 @@ true
 false
 
 >> Value( Match.MultipleDigits )
-Error({Kind:ErrorKind.InvalidArgument})
-
->> Decimal( Match.MultipleDigits )
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Float( Match.MultipleDigits )

@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>The text value to convert to a Decimal value.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    <comment>Error message shown when a user tries to use the 'Decimal' function in a version of Power Fx that does not support it.</comment>
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converts a 'text' that represents a number to a Float value.</value>
   </data>
@@ -2501,10 +2505,6 @@
   <data name="Component" xml:space="preserve">
     <value>Component</value>
     <comment>Function category name - function defined in components within the environment where it is running.</comment>
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    <comment>{StringContains=LCID}</comment>
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>The element '{0}' is missing attribute '{1}'.</value>
