@@ -67,11 +67,11 @@ Blank()
 >> RandBetween( -9007199254740992 /* MaxFloatInt */, -9007199254740992 /* MaxFloatInt */ )
 -9007199254740992
 
->> Sum(Sequence(100), With( { r: RandBetween( 9007199254740985, 9007199254740992 /* MaxFloatInt */ ) }, If( r >= 9007199254740985 And r <= 9007199254740992, 1, Error( "Result out of range" ) ) ) )
+>> Sum(Sequence(100), With( { r: RandBetween( 9007199254740985, 9007199254740992 /* MaxFloatInt */ ) }, If( 9007199254740985 <= r And r <= 9007199254740992 /* MaxFloatInt */, 1, Error( "Result out of range" ) ) ) )
 100
 
->> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, -9007199254740985 ) }, If( r <= -9007199254740985 And r >= -9007199254740992, 1, Error( "Result out of range" ) ) ) )
+>> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, -9007199254740985 ) }, If( -9007199254740992 /* MaxFloatInt */ <= r And r <= -9007199254740985 , 1, Error( "Result out of range" ) ) ) )
 100
 
->> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, 9007199254740992 /* MaxFloatInt */) }, If( r <= 9007199254740992 /* MaxFloatInt */ And r >= -9007199254740992 /* MinFloatInt */, 1, Error( "Result out of range" ) ) ) )
+>> Sum(Sequence(100), With( { r: RandBetween( -9007199254740992 /* MinFloatInt */, 9007199254740992 /* MaxFloatInt */) }, If( -9007199254740992 <= r And r <= 9007199254740992 /* MaxFloatInt */, 1, Error( "Result out of range" ) ) ) )
 100
