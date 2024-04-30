@@ -11,6 +11,26 @@
 // CountIf
 // Invalid functions
 
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit)
+Table({Fruit:"Grapes"},{Fruit:"Lemons"},{Fruit:"Bananas"})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, Fruit)
+Table({Fruit:"Grapes",Supplier:"Contoso"},{Fruit:"Lemons",Supplier:"Fabrikam"},{Fruit:"Lemons",Supplier:"Contoso"},{Fruit:"Bananas",Supplier:"Contoso"})
+
 
 // === Basic grouping with aggregates =================================================
 
@@ -269,7 +289,7 @@ Error({Kind:ErrorKind.Div0})
   Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
 Errors: Error 692-700: Name isn't valid. 'Supplier' isn't recognized.|Error 653-657: The function 'Sort' has some invalid arguments.|Error 704-712: Name isn't valid. 'Supplier' isn't recognized.|Error 645-651: The function 'Concat' has some invalid arguments.
 
-Summarize( 
+>> Summarize( 
   Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
@@ -277,7 +297,7 @@ Summarize(
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Fruit, Sum(ThisGroup, Price) As Soma)
-Errors: Error 25-30: Column name conflict for 'Fruit'.Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 645-650: Column name conflict for 'Fruit'.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 
 //=== Can depend on the order of ThisGroup ====================================
