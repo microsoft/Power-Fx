@@ -109,54 +109,28 @@ Table({Value:30000.12},{Value:1E+24},{Value:2E+24})
 >> Log( Float("1e100"), 10 )
 100
 
-// Decimal and Float functions
-
->> Decimal( 1e100 )
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Float( 1e100 )
 1E+100
-
->> Decimal( "1e100" )
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> Float( "1e100" )
 1E+100
 
->> Decimal( true )
-1
-
 >> Float( true )
 1
 
->> Decimal( "12,00000000000000000000003", "Fr-fr" )
-12.00000000000000000000003
-
 >> Float( "12,00000000000000000000003", "Fr-fr" )
 12
-
->> Decimal( ParseJSON("""12,00000000000000000000003"""), "Fr-fr" )
-12.00000000000000000000003
 
 >> Float( ParseJSON("""12,00000000000000000000003"""), "Fr-fr" )
 12
 
 // ParseJSON
 
->> Decimal( ParseJSON("12.00000000000000000000003") )
-12.00000000000000000000003
-
 >> Float( ParseJSON("12.00000000000000000000003") )
 12
 
->> Decimal( Index( ParseJSON("[1e300,12.00000000000000000000003]"), 2 ) )
-12.00000000000000000000003
-
 >> Float( Index( ParseJSON("[1e300,12.00000000000000000000003]"), 2 ) )
 12
-
->> Decimal( ParseJSON("{""a"":12.00000000000000000000003}").a )
-12.00000000000000000000003
 
 >> Float( ParseJSON("{""a"":12.00000000000000000000003}").a )
 12

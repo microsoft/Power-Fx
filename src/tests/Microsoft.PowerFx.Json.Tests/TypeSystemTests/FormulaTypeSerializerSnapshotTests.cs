@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Json.Tests
                 Converters =
                 {
                     // Serialize types without accounting for any defined type names
-                    new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
+                    new FormulaTypeJsonConverter(new SymbolTable())
                 }
             });
         }
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Json.Tests
                 Converters =
                 {
                     // Serialize types without accounting for any defined type names
-                    new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
+                    new FormulaTypeJsonConverter(new SymbolTable())
                 }
             });
         }

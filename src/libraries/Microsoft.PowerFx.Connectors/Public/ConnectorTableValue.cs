@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -13,10 +14,12 @@ namespace Microsoft.PowerFx.Connectors
     // Doesn't contain any ServiceProvider which is runtime only
     public class ConnectorTableValue : TableValue, IRefreshable
     {
+        public bool IsDelegable => _tabularService.IsDelegable;
+
         protected internal readonly TabularService _tabularService;
 
-        public ConnectorTableValue(TabularService tabularService, TableType tableType)
-            : base(IRContext.NotInSource(new ConnectorTableType(tableType)))
+        public ConnectorTableValue(TabularService tabularService)
+            : base(IRContext.NotInSource(new ConnectorTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
         }

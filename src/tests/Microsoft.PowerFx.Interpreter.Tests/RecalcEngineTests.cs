@@ -553,7 +553,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.PrimitiveTypes);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();
@@ -640,10 +640,10 @@ namespace Microsoft.PowerFx.Tests
         public void FunctionInner()
         {
             // Inner table 
-            SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
+            SymbolTable stInner = SymbolTable.WithPrimitiveTypes();
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
-            SymbolTable st = new SymbolTable { DebugName = "Extras" };
+            SymbolTable st = SymbolTable.WithPrimitiveTypes();
             st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();
@@ -1533,6 +1533,21 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void LookupBuiltinOptionSets()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            // Builtin enums are on engine.SupportedFunctionm
+            var ok = engine.SupportedFunctions.TryGetSymbolType("Color", out var type);
+            Assert.True(ok);
+
+            ok = engine.GetCombinedEngineSymbols().TryGetSymbolType("Color", out type);
+            Assert.True(ok);
+
+            // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
+        }
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

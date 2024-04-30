@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textová hodnota, ktorá sa má konvertovať na desatinnú hodnotu.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkciu Decimal možno použiť len v prípade, že je povolená funkcia Kompatibilita s jazykom Power Fx 1.0.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Skonvertuje text predstavujúci číslo na hodnotu s pohyblivou desatinnou čiarkou.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Súčasť</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">

@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Текстуална вредност коју треба конвертовати у децималну вредност.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Функција „Децимално“ може да се користи само ако је омогућена функција „Компатибилност са Power Fx 1.0“.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Конвертује „текст“ који представља број у Float вредност.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Компонента</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
