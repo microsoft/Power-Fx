@@ -1533,6 +1533,21 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void LookupBuiltinOptionSets()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            // Builtin enums are on engine.SupportedFunctionm
+            var ok = engine.SupportedFunctions.TryGetSymbolType("Color", out var type);
+            Assert.True(ok);
+
+            ok = engine.GetCombinedEngineSymbols().TryGetSymbolType("Color", out type);
+            Assert.True(ok);
+
+            // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
+        }
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
