@@ -19,7 +19,7 @@
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Supplier, Fruit, CountRows( ThisGroup ) As Count )
 Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},{Count:1,Fruit:"Lemons",Supplier:"Contoso"},{Count:1,Fruit:"Bananas",Supplier:"Contoso"})
@@ -30,7 +30,7 @@ Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Suppli
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price )
 Table({Avg_Price:215,Fruit:"Grapes",Supplier:"Contoso"},{Avg_Price:30.5,Fruit:"Lemons",Supplier:"Fabrikam"},{Avg_Price:29,Fruit:"Lemons",Supplier:"Contoso"},{Avg_Price:12,Fruit:"Bananas",Supplier:"Contoso"})
@@ -41,7 +41,7 @@ Table({Avg_Price:215,Fruit:"Grapes",Supplier:"Contoso"},{Avg_Price:30.5,Fruit:"L
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   CountRows( ThisGroup ) As Count, Supplier, Fruit )
 Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},{Count:1,Fruit:"Lemons",Supplier:"Contoso"},{Count:1,Fruit:"Bananas",Supplier:"Contoso"})
@@ -51,7 +51,7 @@ Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Suppli
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   CountRows( ThisGroup ) As Count, Supplier )
 Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
@@ -61,7 +61,7 @@ Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   CountRows( ThisGroup ) As Count, Fruit )
 Table({Count:2,Fruit:"Grapes"},{Count:3,Fruit:"Lemons"},{Count:1,Fruit:"Bananas"})
@@ -71,7 +71,7 @@ Table({Count:2,Fruit:"Grapes"},{Count:3,Fruit:"Lemons"},{Count:1,Fruit:"Bananas"
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( ThisGroup, Price ) As Sales_By_Fruit )
 Table({Fruit:"Grapes",Sales_By_Fruit:430},{Fruit:"Lemons",Sales_By_Fruit:90},{Fruit:"Bananas",Sales_By_Fruit:12})
@@ -82,7 +82,7 @@ Table({Fruit:"Grapes",Sales_By_Fruit:430},{Fruit:"Lemons",Sales_By_Fruit:90},{Fr
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{CountOfSuppliers:1,Fruit:"Bananas"})
@@ -92,7 +92,7 @@ Table({CountOfSuppliers:1,Fruit:"Grapes"},{CountOfSuppliers:2,Fruit:"Lemons"},{C
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, First(ThisGroup).Supplier As One )
 Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Bananas",One:"Contoso"})
@@ -102,7 +102,7 @@ Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Ban
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, First(FirstN(ThisGroup,2)).Supplier As One )
 Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Bananas",One:"Contoso"})
@@ -116,7 +116,7 @@ Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Ban
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( ThisGroup, Price * Len(ThisRecord.Fruit) ) As Avg_Len_Price )
 Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
@@ -128,7 +128,7 @@ Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Av
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
 Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
@@ -143,7 +143,7 @@ Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Av
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Supplier, 1 As One, 2 As Two, 3 As Three )
 Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:3,Two:2})
@@ -157,7 +157,7 @@ Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Supplier, Fruit, Average( ThisGroup, Price ) As Avg_Price ),
   Supplier, CountRows( ThisGroup ) As Count )
@@ -173,7 +173,7 @@ Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Errors: Error 683-685: Summarize requires at least one grouping column.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -184,10 +184,10 @@ Errors: Error 683-685: Summarize requires at least one grouping column.|Error 0-
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, CountRows( Distinct( ThisGroup, Supplier ) ) )
-Errors: Error 645-689: Summarize arguments must be either existing column names to group by or formulas named with the As keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 645-689: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Identifier column does not exist
 >> Summarize(
@@ -195,7 +195,7 @@ Errors: Error 645-689: Summarize arguments must be either existing column names 
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Vegetable, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Errors: Error 638-647: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -206,7 +206,7 @@ Errors: Error 638-647: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Tags, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
 Errors: Error 638-642: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -216,7 +216,7 @@ Errors: Error 638-642: Expected a text, numeric, boolean, or date/time value.|Er
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, FirstN(ThisGroup,2) As One )
 Errors: Error 665-667: Expected a text, numeric, boolean, or date/time value.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -227,7 +227,7 @@ Errors: Error 665-667: Expected a text, numeric, boolean, or date/time value.|Er
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( ThisGroup, Supplier ) As x,  Sum( ThisGroup, Supplier ) As x)
 Errors: Error 706-708: Column name conflict for 'x'.|Error 0-9: The function 'Summarize' has some invalid arguments.
@@ -237,24 +237,47 @@ Errors: Error 706-708: Column name conflict for 'x'.|Error 0-9: The function 'Su
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), ThisGroup:"Void", Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), ThisGroup:"Void", Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), ThisGroup:"Void", Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico"]}),
   Supplier, Fruit, CountRows( ThisGroup ) As Count )
-Errors: Error 763-772: The function 'CountRows' has some invalid arguments.|Error 774-783: Invalid argument type (Text). Expecting a Table value instead.|Error 14-741: The datasource contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 >> Summarize( 
   Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), ThisGroup:"Void", Tags: ["Red","Seedless"]},
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), ThisGroup:"Void", Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), ThisGroup:"Void", Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), ThisGroup:"Void", Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico"]}),
   Supplier, Fruit, ThisGroup, CountRows( ThisGroup ) As Count )
-Errors: Error 774-783: The function 'CountRows' has some invalid arguments.|Error 785-794: Invalid argument type (Text). Expecting a Table value instead.|Error 14-741: The datasource contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 763-772: Column 'ThisGroup' conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 774-783: The function 'CountRows' has some invalid arguments.|Error 785-794: Invalid argument type (Text). Expecting a Table value instead.|Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 763-772: Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Adding scope to arg0 is currently not supported
 >> Summarize(Table({a:1}) As AAA, a)
 Errors: Error 31-32: Name isn't valid. 'a' isn't recognized.|Error 23-25: Scoping the data source (usage of 'As' keyword) is not supported.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
+>> Summarize(If(1/0<2, [{a:1,b:2},{a:1,b:3}]),a,CountRows(ThisGroup) As Count)
+Error({Kind:ErrorKind.Div0})
+
+>> Summarize(
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
+Errors: Error 692-700: Name isn't valid. 'Supplier' isn't recognized.|Error 653-657: The function 'Sort' has some invalid arguments.|Error 704-712: Name isn't valid. 'Supplier' isn't recognized.|Error 645-651: The function 'Concat' has some invalid arguments.
+
+Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, Fruit, Sum(ThisGroup, Price) As Soma)
+Errors: Error 25-30: Column name conflict for 'Fruit'.Error 0-9: The function 'Summarize' has some invalid arguments.
 
 
 //=== Can depend on the order of ThisGroup ====================================
@@ -264,7 +287,7 @@ Errors: Error 31-32: Name isn't valid. 'a' isn't recognized.|Error 23-25: Scopin
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( SortByColumns( ThisGroup, Supplier ), Price ) As OnePrice )
 Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
@@ -274,7 +297,7 @@ Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( Sort( ThisGroup, Supplier ), Price ) As OnePrice )
 Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas",OnePrice:12})
@@ -284,7 +307,7 @@ Table({Fruit:"Grapes",OnePrice:430},{Fruit:"Lemons",OnePrice:90},{Fruit:"Bananas
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Concat( ThisGroup, Supplier ) As Suppliers )
 Table({Fruit:"Grapes",Suppliers:"ContosoContoso"},{Fruit:"Lemons",Suppliers:"FabrikamContosoFabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
@@ -294,7 +317,7 @@ Table({Fruit:"Grapes",Suppliers:"ContosoContoso"},{Fruit:"Lemons",Suppliers:"Fab
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Concat( Sort( ThisGroup, Supplier ), Supplier, ", " ) As Suppliers )
 Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
@@ -304,7 +327,7 @@ Table({Fruit:"Grapes",Suppliers:"Contoso, Contoso"},{Fruit:"Lemons",Suppliers:"C
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value ), Value, ", " ) As Suppliers )
 Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, Fabrikam"},{Fruit:"Bananas",Suppliers:"Contoso"})
@@ -314,15 +337,10 @@ Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Contoso, F
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Value , SortOrder.Descending ), Value, ", " ) As Suppliers )
 Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Fabrikam, Contoso"},{Fruit:"Bananas",Suppliers:"Contoso"})
-
-
-// This formula is in error
-// >> Summarize( Sales, Fruit, Concat( Sort( Distinct( ThisGroup, Supplier ), Supplier ), Supplier, ", " ) As Suppliers )
-// Errors: BUG should be compile time error, not runtime error as currently generated
 
 //=== Table shaping functions ====================================
 
@@ -331,7 +349,7 @@ Table({Fruit:"Grapes",Suppliers:"Contoso"},{Fruit:"Lemons",Suppliers:"Fabrikam, 
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( AddColumns( ThisGroup, A, 10 ), A ) As TenSum, CountRows( ThisGroup ) As Count )
 Table({Count:2,Fruit:"Grapes",TenSum:20},{Count:3,Fruit:"Lemons",TenSum:30},{Count:1,Fruit:"Bananas",TenSum:10})
@@ -341,7 +359,7 @@ Table({Count:2,Fruit:"Grapes",TenSum:20},{Count:3,Fruit:"Lemons",TenSum:30},{Cou
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Sum( RenameColumns( ThisGroup, Supplier, Sup ), Len( Sup ) ) As Len )
 Table({Fruit:"Grapes",Len:14},{Fruit:"Lemons",Len:23},{Fruit:"Bananas",Len:7})
@@ -351,7 +369,7 @@ Table({Fruit:"Grapes",Len:14},{Fruit:"Lemons",Len:23},{Fruit:"Bananas",Len:7})
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( DropColumns( ThisGroup, Supplier ), Price ) As Price )
 Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
@@ -361,7 +379,7 @@ Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Pric
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
   {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
   {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexixo","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
 Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})

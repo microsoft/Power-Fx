@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
-
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
@@ -1170,6 +1169,11 @@ namespace Microsoft.PowerFx.Functions
             if (args[0] is BlankValue)
             {
                 return new BlankValue(irContext);
+            }
+
+            if (args[0] is ErrorValue)
+            {
+                return args[0];
             }
 
             if (args[0] is not TableValue tableValue)

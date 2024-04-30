@@ -4441,7 +4441,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(carg > 0);
 
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
-                Contracts.Assert(!maybeFunc.IsLambdaParam(null, 0));
+                Contracts.Assert(!maybeFunc.IsLambdaParam(node.Args.Children[0], 0));
 
                 var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
@@ -4497,7 +4497,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, nodeInput, typeInput, out typeScope);
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
@@ -4564,7 +4564,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier = args[i] is FirstNameNode &&
                         _features.SupportColumnNamesAsIdentifiers &&
-                        maybeFunc.ParameterCanBeIdentifier(_features, i);
+                        maybeFunc.ParameterCanBeIdentifier(args[i], i, _features);
 
                     var isLambdaArg = maybeFunc.IsLambdaParam(args[i], i) && scopeInfo.AppliesToArgument(i);
 
@@ -4612,6 +4612,20 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
+                if (maybeFunc.HasColumnIdentifiers && _features.SupportColumnNamesAsIdentifiers)
+                {
+                    var i = 0;
+
+                    foreach (var arg in args)
+                    {
+                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(arg, i, _features))
+                        {
+                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
+                        }
+
+                        i++;
+                    }
+                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);

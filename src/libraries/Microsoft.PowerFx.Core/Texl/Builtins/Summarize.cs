@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -89,8 +90,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            const string thisGroup = "ThisGroup";
-
             bool isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
@@ -103,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceScopeNotSupported);
             }
 
-            if (sourceType.Contains(new DName(thisGroup)))
+            if (sourceType.Contains(FunctionThisGroupScopeInfo.ThisGroup))
             {
                 isValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
@@ -128,10 +127,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         break;
 
                     case FirstNameNode:
-                        if (!TryGetColumnLogicalName(sourceType, context.Features.SupportColumnNamesAsIdentifiers, arg, errors, out columnName, out existingType))
+                        if (!TryGetColumnLogicalName(sourceType, true, arg, errors, out columnName, out existingType))
                         {
                             isValid = false;
                             continue;
+                        }
+
+                        if (DType.TryGetDisplayNameForColumn(sourceType, columnName, out var displayName))
+                        {
+                            if (displayName == FunctionThisGroupScopeInfo.ThisGroup)
+                            {
+                                isValid = false;
+                                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeThisGroupColumnName);
+                                continue;
+                            }
                         }
 
                         atLeastOneGroupByColumn = true;
@@ -143,14 +152,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         continue;
                 }
 
-                if (columnName == thisGroup)
+                if (columnName.Equals(FunctionThisGroupScopeInfo.ThisGroup))
                 {
                     isValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeThisGroupColumnName);
                     continue;
                 }
                 
-                if (!existingType.IsPrimitive)
+                // Restricted supported types
+                if (!(existingType == DType.String || 
+                      existingType == DType.Number || 
+                      existingType == DType.Decimal || 
+                      existingType == DType.Boolean || 
+                      existingType == DType.DateTime ||
+                      existingType == DType.Date))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNeedPrimitive);
                     isValid = false;
@@ -179,11 +194,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
         {
-            if (!features.SupportColumnNamesAsIdentifiers)
-            {
-                return ParamIdentifierStatus.NeverIdentifier;
-            }
-
             return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.PossiblyIdentifier;
         }
 
@@ -196,7 +206,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
-            return index > 0 && node != null && node is AsNode;
+            return index > 0 && node != null && (node is AsNode || node is CallNode);
         }
 
         internal override IntermediateNode CreateIRCallNode(CallNode node, IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)

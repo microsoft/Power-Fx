@@ -210,7 +210,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Substitute = _library.Add(new SubstituteFunction());
         public static readonly TexlFunction SubstituteT = _library.Add(new SubstituteTFunction());
         public static readonly TexlFunction Sum = _library.Add(new SumFunction());
-        public static readonly TexlFunction Summarize = _library.Add(new SummarizeFunction());
         public static readonly TexlFunction SumT = _library.Add(new SumTableFunction());
         public static readonly TexlFunction Switch = _library.Add(new SwitchFunction());
         public static readonly TexlFunction Table = _library.Add(new TableFunction());
@@ -260,6 +259,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
+        public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

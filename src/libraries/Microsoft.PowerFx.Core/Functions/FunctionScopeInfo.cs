@@ -174,6 +174,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, DType inputSchema, out DType typeScope)
+        {
+            return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
+        }
+
         public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
         {
             Contracts.AssertValue(args);
@@ -200,20 +205,43 @@ namespace Microsoft.PowerFx.Core.Functions
 
     internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
     {
-        private readonly DName _thisGroup = new DName("ThisGroup");
+        public static DName ThisGroup => new DName("ThisGroup");
 
         public FunctionThisGroupScopeInfo(TexlFunction function)
             : base(function, appliesToArgument: (argIndex) => argIndex > 0)
         {
         }
 
-        public override bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, out DType typeScope)
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, DType inputSchema, out DType typeScope)
         {
             var ret = base.CheckInput(features, inputNode, inputSchema, out typeScope);
+            var newTypeScope = DType.EmptyRecord;
 
-            if (!typeScope.Contains(_thisGroup))
+            foreach (var node in callNode.Args.ChildNodes)
             {
-                typeScope = typeScope.Add(new TypedName(typeScope.ToTable(), _thisGroup));
+                string name = null;
+
+                switch (node)
+                {
+                    case FirstNameNode firstNameNode:
+                        name = firstNameNode.Ident.Name.Value;
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                if (typeScope.Contains(new DName(name)) && !newTypeScope.Contains(new DName(name)) && typeScope.TryGetType(new DName(name), out DType type))
+                {
+                    newTypeScope = newTypeScope.Add(new DName(name), type);
+                }
+            }
+
+            typeScope = newTypeScope;
+
+            if (!typeScope.Contains(ThisGroup))
+            {
+                typeScope = typeScope.Add(new TypedName(inputSchema.ToTable(), ThisGroup));
             }
 
             return ret;

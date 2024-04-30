@@ -501,7 +501,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = 0; i < count; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(context.Features, i))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features))
                 {
                     continue;
                 }
@@ -536,7 +536,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(context.Features, i))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features))
                 {
                     continue;
                 }
@@ -652,20 +652,16 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
         /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
-        public bool ParameterCanBeIdentifier(Features features, int index)
+        public virtual bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
             var paramIdentifierStatus = GetIdentifierParamStatus(features, index);
             return paramIdentifierStatus ==
                 ParamIdentifierStatus.AlwaysIdentifier ||
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;
-        }
-
-        public virtual bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
-        {
-            return ParameterCanBeIdentifier(features, index);
         }
 
         /// <summary>

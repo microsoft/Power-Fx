@@ -4605,30 +4605,26 @@
   </data>
   <data name="ErrNeedPrimitive" xml:space="preserve">
     <value>Expected a text, numeric, boolean, or date/time value.</value>
-    <comment>Error Message.</comment>
+    <comment>Error message shown to the user when a function expects an expression that returns a primitive value but it doesn't.</comment>
   </data>
   <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
     <value>Summarize requires at least one grouping column.</value>
-    <comment>Error Message.</comment>
+    <comment>Summarize is the function name. Error message shown to the user when a function expects an grouping columns but none is present. {Locked=Summarize} </comment>
   </data>
   <data name="ErrSummarizeInvalidArg" xml:space="preserve">
-    <value>Summarize arguments must be either existing column names to group by or formulas named with the As keyword.</value>
-    <comment>Error Message.</comment>
-  </data>
-  <data name="ErrSummarizeDatasourceAsNode" xml:space="preserve">
-    <value>Summarize data source doesn't support As keyword.</value>
-    <comment>Error Message.</comment>
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.</value>
+    <comment>Summarize is the function name. Error message shown to the user when any argument index greater than 0 is not an existing column name nor a formulas named with the As keyword. {Locked=Summarize} {Locked='As'}</comment>
   </data>
   <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
-    <value>Column 'ThisGroup' conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
-    <comment>Error Message.</comment>
+    <value>Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when an argument conflicts with 'ThisGroup' reserved word. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
   </data>
   <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
-    <value>The datasource contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
-    <comment>Error Message.</comment>
+    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when the provided data source contains a field called 'ThisGroup'. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
-    <comment>Error Message.</comment>
+    <comment>Error message shown to the user when the provided data source is followed by 'As' reserved word. {Locked='As'}</comment>
   </data>
 </root>
