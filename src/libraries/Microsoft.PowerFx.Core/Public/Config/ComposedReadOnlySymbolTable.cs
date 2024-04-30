@@ -82,6 +82,25 @@ namespace Microsoft.PowerFx
             }
         }
 
+        // Expose the list to aide in intellisense suggestions.
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes
+        {
+            get
+            {
+                var names = new HashSet<string>();
+                foreach (INameResolver table in _symbolTables)
+                {
+                    foreach (var type in table.NamedTypes)
+                    {
+                        if (names.Add(type.Key))
+                        {
+                            yield return type;
+                        }
+                    }
+                }
+            }
+        }
+
         public IEnumerable<KeyValuePair<string, NameLookupInfo>> GlobalSymbols
         {
             get
@@ -185,6 +204,20 @@ namespace Microsoft.PowerFx
             }
 
             lookupInfo = default;
+            return false;
+        }
+
+        public virtual bool LookupType(DName name, out FormulaType fType)
+        {
+            foreach (INameResolver table in _symbolTables)
+            {
+                if (table.LookupType(name, out fType))
+                {
+                    return true;
+                }
+            }
+
+            fType = default;
             return false;
         }
 

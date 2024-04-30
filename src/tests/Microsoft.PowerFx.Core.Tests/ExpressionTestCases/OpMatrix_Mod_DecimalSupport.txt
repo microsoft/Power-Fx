@@ -1,0 +1,75 @@
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
+
+>> Mod( Value(16), Decimal("2.00000000000000000000000002") )
+0
+
+>> Mod( Value("1e100"), Decimal("2.00000000000000000000000002") )
+0
+
+>> Mod( "16", Decimal("2.000000000000000000000002") )
+0
+
+>> Mod( "1e100", Decimal("2.000000000000000000000002") )
+0
+
+>> Mod( true, Decimal("2.000000000000000000000002") )
+1
+
+>> Mod( Blank(), Decimal("2.000000000000000000000002") )
+0
+
+>> Mod( Blank(), Decimal("2.000000000000000000000002") )+2.000000000000000000000002
+2
+
+>> Mod( Date(2000,1,1), Decimal("2.000000000000000000000002") )
+0
+
+>> Mod( DateTime(2000,1,1,12,0,0), Decimal("2.0000000000000000000002") )
+0.5
+
+>> Mod( Time(9,0,0), Decimal("0.125000000000000000000001") )
+0
+
+// Decimal
+
+>> Mod( Decimal("16.000000000000000000000001"), Value(2) )
+0
+
+>> Mod( Decimal("16.000000000000000000000001"), "2" )
+0
+
+>> Mod( Decimal("16.000000000000000000000001"), true )
+0
+
+>> Mod( Decimal("16.000000000000000000000001"), Blank() )
+Error({Kind:ErrorKind.Div0})
+
+>> Mod( Decimal("16.0000000000000000000001"), Date(1900,1,7) )
+0
+
+>> Mod( Decimal("16.0000000000000000000001"), DateTime(1900,1,1,12,0,0) )
+1
+
+>> Mod( Decimal("16.000000000000000000001"), Time(12,0,0) )
+0
+
+// these are the two results in this file that should be decimal, everything else is done in floating point
+>> Mod( Decimal("16.000000000000000000000002"), Decimal("2.000000000000000000000001") )
+1.999999999999999999999995
+
+>> Mod( Decimal("7.999999999999999999999997"), Decimal("2.000000000000000000000001") )
+1.999999999999999999999994
+
+>> Mod( Decimal("16.000000000000000000000002"), ParseJSON("2") )
+0
+
+>> Mod( Decimal("16.000000000000000000000002"), ParseJSON("1e100") )
+16
+
+// Untyped
+
+>> Mod( ParseJSON("16.000000000000000000000002"), Decimal("2.000000000000000000000000001") )
+0
+
+>> Mod( ParseJSON("1e100"), Decimal("2.000000000000000000000000001") )
+0

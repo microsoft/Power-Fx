@@ -36,9 +36,13 @@ namespace Microsoft.PowerFx
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
+        private readonly IDictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
+
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
         internal const string UserInfoSymbolName = "User";
 
@@ -216,7 +220,11 @@ namespace Microsoft.PowerFx
             var sb = new StringBuilder();
 
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+
+            // Compose will handle null symbols
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
@@ -231,9 +239,6 @@ namespace Microsoft.PowerFx
 
                 throw new InvalidOperationException(sb.ToString());
             }
-
-            // Compose will handle null symbols
-            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
             foreach (var udf in udfs)
             {
@@ -417,6 +422,62 @@ namespace Microsoft.PowerFx
                 displayName: default);
 
             _variables.Add(hostDName, info);
+        }
+
+        /// <summary>
+        /// Adds a named type that can be referenced in expression.
+        /// </summary>
+        /// <param name="typeName">Name of the type to be added into Symbol table.</param>
+        /// <param name="type">Type associated with the name.</param>
+        public void AddType(DName typeName, FormulaType type)
+        {
+            Contracts.AssertValue(typeName.Value);
+            Contracts.AssertValue(type);
+            Contracts.Assert(typeName.Value.Length > 0);
+            Contracts.AssertValid(typeName);
+
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
+            _namedTypes.Add(typeName, type);
+        }
+
+        internal void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
+            foreach (var type in types)
+            {
+                _namedTypes.Add(type.Key, type.Value);
+            }
+        }
+
+        /// <summary>
+        /// Helper to create a symbol table with primitive types.
+        /// </summary>
+        /// <returns>SymbolTable with primitive types.</returns>
+        public static SymbolTable WithPrimitiveTypes()
+        {
+            var s = new SymbolTable
+            {
+                DebugName = $"SymbolTable with PrimitiveTypes"
+            };
+
+            s.AddTypes(FormulaType.PrimitiveTypes);
+            return s;
+        }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            if (_namedTypes.TryGetValue(name, out fType))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
