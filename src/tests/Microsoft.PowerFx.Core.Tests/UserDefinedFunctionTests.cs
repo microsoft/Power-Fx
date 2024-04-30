@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedFunctionTests : PowerFxTest
     {
+        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
         [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
@@ -55,20 +57,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
             var glue = new Glue2DocumentBinderGlue();
             var hasBinderErrors = false;
 
-            foreach (var udf in userDefinitionResult.UDFs)
+            foreach (var udf in udfs)
             {
-                var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(userDefinitionResult.UDFs)), glue, BindingConfig.Default);
+                var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
                 hasBinderErrors |= binding.ErrorContainer.HasErrors();
             }
 
-            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
-            Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(expectErrors, (userDefinitionResult.Errors?.Any() ?? false) || hasBinderErrors);
+            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, (errors?.Any() ?? false) || hasBinderErrors);
         }
 
         [Theory]
@@ -82,8 +89,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
-            var texlFunctionSet = new TexlFunctionSet(userDefinitionResult.UDFs);
+
+            var parseResult = UserDefinitions.Parse(udfScript, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            var texlFunctionSet = new TexlFunctionSet(udfs);
 
             var engine = new Engine();
             var result = engine.Check(invocationScript, symbolTable: ReadOnlySymbolTable.Compose(ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), ReadOnlySymbolTable.NewDefault(texlFunctionSet)));
@@ -128,15 +139,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
-            var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
 
-            Assert.Single(userDefinitionResult.UDFs);
+            var parseResult = UserDefinitions.Parse(udfScript, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            var udf = userDefinitionResult.UDFs.First();
-            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var texlFunctionSet = new TexlFunctionSet(udfs);
+
+            Assert.Single(udfs);
+
+            var udf = udfs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, BindingConfig.Default);
             var actualIR = IRTranslator.Translate(binding).ToString();
 
             Assert.Equal(expectedIR, actualIR);
@@ -387,7 +402,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Basic()
         {
-            var st1 = new SymbolTable();
+            var st1 = SymbolTable.WithPrimitiveTypes();
             st1.AddUserDefinedFunction("Foo1(x: Number): Number = x*2;");
             st1.AddUserDefinedFunction("Foo2(x: Number): Number = Foo1(x)+1;");
 
@@ -397,7 +412,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, check.ReturnType);
 
             // A different symbol table can have same function name with different type.  
-            var st2 = new SymbolTable();
+            var st2 = SymbolTable.WithPrimitiveTypes();
             st2.AddUserDefinedFunction("Foo2(x: Number): Text = x;");
             check = engine.Check("Foo2(3)", symbolTable: st2);
             Assert.True(check.IsSuccess);
@@ -408,8 +423,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void DefineEmpty()
         {
             // Empty symbol table doesn't get builtins. 
-            var st = new SymbolTable();
-
+            var st = SymbolTable.WithPrimitiveTypes();
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
             Assert.Throws<InvalidOperationException>(() => st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);"));
         }
@@ -438,18 +452,24 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var script = "Add(a: Number, b: Number):Number = a + b;";
-            UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            var func = userDefinitionResult.UDFs.FirstOrDefault();
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            var func = udfs.FirstOrDefault();
             Assert.NotNull(func);
 
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
+            var texlFunctionSet = new TexlFunctionSet(udfs);
 
-            Assert.Single(userDefinitionResult.UDFs);
+            Assert.Single(udfs);
 
-            var udf = userDefinitionResult.UDFs.First();
-            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var udf = udfs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(texlFunctionSet)), glue, BindingConfig.Default);
             var clonedFunc = func.WithBinding(nameResolver, glue, out binding);
             Assert.NotNull(clonedFunc);
             Assert.NotNull(binding);
@@ -470,11 +490,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            UserDefinitions.ProcessUserDefinitions(formula, parserOptions, out var userDefinitionResult);
+            var parseResult = UserDefinitions.Parse(formula, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Equal(nfCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
-            Assert.Contains(userDefinitionResult.Errors, e => e.MessageKey == "ErrBadToken");
+            Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
+            Assert.Equal(udfCount, udfs.Count());
+            Assert.Contains(errors, e => e.MessageKey == "ErrBadToken");
         }
 
         [Theory]
@@ -491,8 +513,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
-            Assert.Contains(userDefinitionResult.Errors, x => x.MessageKey == "ErrUDF_UnknownType");
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
         }
     }
 }

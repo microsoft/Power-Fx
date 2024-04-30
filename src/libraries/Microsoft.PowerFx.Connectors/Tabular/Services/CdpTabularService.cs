@@ -11,7 +11,7 @@ using System.Web;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx.Connectors.Tabular
 {
     // Implements CDP protocol for Tabular connectors
     public class CdpTabularService : TabularService
@@ -23,6 +23,10 @@ namespace Microsoft.PowerFx.Connectors
         public string DatasetName { get; protected set; }
 
         public string TableName { get; protected set; }
+
+        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
+
+        internal ServiceCapabilities TableCapabilities { get; private set; }
 
         private string _uriPrefix;
         private bool _v2;
@@ -86,10 +90,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal RecordType GetSchema(string text)
         {
-            ConnectorType connectorType = ConnectorFunction.GetConnectorType("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName);
+            ConnectorType connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
             Name = name;
             DisplayName = displayName;
+            TableCapabilities = tableCapabilities;
 
+            // Note that connectorType contains columns' capabilities but not the FormulaType (as of current developement)
             return connectorType?.FormulaType as RecordType;
         }
 
@@ -100,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
+        protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters odataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
@@ -135,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        protected ICollection<DValue<RecordValue>> GetResult(string text)
+        protected IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {
             // $$$ Is this always this type?
             RecordValue rv = FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) as RecordValue;

@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Connectors
         internal IServiceProvider ServiceProvider { get; }
 
         internal ConnectorTableValueWithServiceProvider(ConnectorTableValue tableValue, IServiceProvider serviceProvider)
-            : base(tableValue._tabularService, tableValue.IRContext.ResultType as TableType)
+            : base(tableValue._tabularService)
         {
             ServiceProvider = serviceProvider;
         }
 
-        private ICollection<DValue<RecordValue>> _cachedRows;
+        private IReadOnlyCollection<DValue<RecordValue>> _cachedRows;
 
         public override IEnumerable<DValue<RecordValue>> Rows => GetRowsInternal().ConfigureAwait(false).GetAwaiter().GetResult();
 

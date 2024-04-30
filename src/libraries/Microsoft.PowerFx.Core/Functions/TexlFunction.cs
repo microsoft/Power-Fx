@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
-                StringResources.Get("FunctionReference_Link") + char.ToLowerInvariant(LocaleInvariantName.First());
+                "https://go.microsoft.com/fwlink/?LinkId=722347#" + char.ToLowerInvariant(LocaleInvariantName.First());
 
         /// <summary>
         /// Might need to reset if Function is variadic function.

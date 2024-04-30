@@ -17,12 +17,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestNamedFormulaAttributes()
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             @"
                 [SomeName Ident]
                 Foo = 123;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.False(result.HasErrors);
 
@@ -34,12 +33,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestNFAttributeSingleKeyAnd()
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             @"
                 [Partial And]
                 Foo = 123;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.False(result.HasErrors);
 
@@ -59,14 +57,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Table", "Table")]
         public void TestNFAttributeOperationsCombined(string op, string combinedFunctionName)
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             $@"
                 [Partial {op}]
                 Foo = false;
                 [Partial {op}]
                 Foo = true;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.False(result.HasErrors);
 
@@ -85,14 +82,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestNFAttributeOperationInvalid()
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             $@"
                 [Partial Unknown]
                 Foo = false;
                 [Partial Unknown]
                 Foo = true;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.True(result.HasErrors);
 
@@ -103,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestMultipleNamedFormulaAttributes()
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             @"
                 [SomeName Ident]
                 Foo = 123;
@@ -113,8 +109,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 [SomeName2 Ident2]
                 Foo2 = 123;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.False(result.HasErrors);
 
@@ -138,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestErrorNamedFormulaAttributes()
         {
-            UserDefinitions.ProcessUserDefinitions(
+            var result = UserDefinitions.Parse(
             @"
                 [SomeNa.me Iden()t]
                 Foo = 123;
@@ -148,8 +143,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 [SomeName2 Ident2]
                 Foo2 = 123;
-            ", _parseOptions,
-            out var result);
+            ", _parseOptions);
 
             Assert.True(result.HasErrors);
 

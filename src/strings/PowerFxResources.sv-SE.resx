@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textvärdet som ska konverteras till ett decimalvärde.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funktionen "Decimaltal" kan bara användas om funktionen "Power Fx 1.0-kompatibilitet" är aktiverad.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konverterar en text som motsvarar ett tal till ett flyttalsvärde.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Komponent</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
