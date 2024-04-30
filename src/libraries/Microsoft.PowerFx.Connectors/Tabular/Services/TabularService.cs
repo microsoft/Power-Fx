@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
                 : throw new InvalidOperationException(NotInitialized);
         }
 
-        protected abstract Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
+        protected abstract Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

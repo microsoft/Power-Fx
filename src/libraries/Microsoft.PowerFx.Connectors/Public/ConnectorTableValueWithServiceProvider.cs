@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
             ServiceProvider = serviceProvider;
         }
 
-        private ICollection<DValue<RecordValue>> _cachedRows;
+        private IReadOnlyCollection<DValue<RecordValue>> _cachedRows;
 
         public override IEnumerable<DValue<RecordValue>> Rows => GetRowsInternal().ConfigureAwait(false).GetAwaiter().GetResult();
 
