@@ -1211,7 +1211,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
         }
 
-        public bool CheckAndMarkAsPageable(AsNode node)
+        public void CheckAndMarkAsPageableAndStateful(AsNode node)
         {
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
@@ -1224,11 +1224,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 FlagPathAsAsync(node);
 
                 // Pageable nodes are also stateful as data is always pulled from outside.
-                SetStateful(node, isStateful: true);
-                return true;
-            }
-
-            return false;
+                SetStateful(node, isStateful: true);               
+            }            
         }
 
         public void CheckAndMarkAsPageable(DottedNameNode node)
@@ -3926,11 +3923,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetInfo(node, new AsInfo(node, node.Right.Name));
 
                 var left = node.Left;
-                bool isNodeStateful = _txb.CheckAndMarkAsPageable(node);
+                _txb.CheckAndMarkAsPageableAndStateful(node);
                 _txb.CheckAndMarkAsDelegatable(node);
                 _txb.SetType(node, _txb.GetType(left));
-                _txb.SetSideEffects(node, _txb.HasSideEffects(left));
-                _txb.SetStateful(node, _txb.IsStateful(left) || isNodeStateful);
+                _txb.SetSideEffects(node, _txb.HasSideEffects(left));                
                 _txb.SetContextual(node, _txb.IsContextual(left));
                 _txb.SetConstant(node, _txb.IsConstant(left));
                 _txb.SetSelfContainedConstant(node, _txb.IsSelfContainedConstant(left));
