@@ -1,5 +1,8 @@
 ﻿
-$localCache = $Env:USERPROFILE + "\.nuget\packages"
+$localCache = $env:NUGET_PACKAGES
+if (! $localCache) {
+ $localCache = $Env:USERPROFILE + "\.nuget\packages"
+}
 
 Write-Host "Deleting Microsoft.PowerFx.*\1.99.0-local from nuget cache. This will cause the newly built packages to be downloaded."
 
