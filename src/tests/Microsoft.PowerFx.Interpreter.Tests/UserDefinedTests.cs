@@ -13,6 +13,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class UserDefinedTests
     {
+        private static readonly ReadOnlySymbolTable _primitiveTypes = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         [Theory]
         [InlineData("x=1;y=2;z=x+y;", "Float(Abs(-(x+y+z)))", 6d)]
         [InlineData("x=1;y=2;Foo(x: Number): Number = Abs(x);", "Foo(-(y*y)+x)", 3d)]
@@ -42,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.False(errors.Any());
@@ -59,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.False(errors.Any());
@@ -75,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Any());
@@ -92,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Any());
@@ -111,7 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             };
 
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Any());
@@ -122,7 +124,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Culture = CultureInfo.InvariantCulture
             };
             parseResult = UserDefinitions.Parse(script, options);
-            udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out errors);
+            udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.False(errors.Any());
