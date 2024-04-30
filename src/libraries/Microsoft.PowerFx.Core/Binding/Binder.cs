@@ -1216,7 +1216,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
 
-            if (_isPageable[node.Left.Id])
+            if (IsPageable(node.Left))
             {
                 _isPageable.Set(node.Id, true);
 
@@ -1225,7 +1225,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Pageable nodes are also stateful as data is always pulled from outside.
                 SetStateful(node, isStateful: true);               
-            }            
+            }
+            else if (IsStateful(node.Left))
+            {
+                // Transmit stateful if left node is stateful.
+                SetStateful(node, isStateful: true);
+            }
         }
 
         public void CheckAndMarkAsPageable(DottedNameNode node)
