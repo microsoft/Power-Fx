@@ -12,7 +12,10 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -236,6 +239,52 @@ namespace Microsoft.PowerFx
             options ??= new ParserOptions();
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
+        }
+
+        /// <summary>
+        /// Parse the type expression without resolving type.
+        /// </summary>
+        public static TypeLiteralNode ParseType(string typeExpressionText, ParserOptions options = null)
+        {
+            Contracts.AssertValue(typeExpressionText);
+
+            options ??= new ParserOptions
+            {
+                AllowParseAsTypeLiteral = true,
+            };
+
+            var result = options.Parse(typeExpressionText);
+
+            if (result.Root is not TypeLiteralNode typeNode || result.HasError)
+            {
+                throw new InvalidOperationException("Type literal declaration was invalid.");
+            }
+
+            return typeNode;
+        }
+
+        /// <summary>
+        /// Parse and resolve a type expression. 
+        /// </summary>
+        /// <param name="typeExpression">type expression in plain text. </param>
+        /// <param name="symbols">Symbols that are required to resolve the type.</param>
+        /// <param name="options">parser options to use.</param>
+        /// <returns></returns>
+        public FormulaType ResolveType(string typeExpression, SymbolTable symbols, ParserOptions options = null)
+        {
+            return ResolveType(ParseType(typeExpression, options: options), symbols);
+        }
+
+        public static FormulaType ResolveType(TypeLiteralNode typeNode, ReadOnlySymbolTable symbols)
+        {
+            var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
+
+            if (resolvedType == DType.Invalid)
+            {
+                throw new InvalidOperationException("Type literal declaration was invalid.");
+            }
+
+            return FormulaType.Build(resolvedType);
         }
 
         /// <summary>

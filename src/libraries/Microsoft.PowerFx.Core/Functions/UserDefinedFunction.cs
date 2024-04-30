@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="body">TexlNode for user defined function body.</param>
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
-        /// <param name="argTypes">Array of argTypes.</param>
+        /// <param name="argTypes">Array of argTypes in order.</param>
         public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {

@@ -8,12 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -381,6 +380,7 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions()
             {
                 AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
@@ -388,15 +388,47 @@ namespace Microsoft.PowerFx
 
             var parseResult = UserDefinitions.Parse(script, options);
 
+            if (parseResult.HasErrors)
+            {
+                sb.AppendLine("Something went wrong when parsing user definitions.");
+
+                foreach (var error in parseResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
             // Compose will handle null symbols
             var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes);
 
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+            if (parseResult.DefinedTypes.Any())
+            {
+                AddUserDefinedTypes(parseResult.DefinedTypes, composedSymbols);
+            }
+
+            var validUDFs = parseResult.UDFs.Where(udf => udf.IsParseValid);
+            
+            if (validUDFs.Any())
+            {
+                AddUserDefinedFunctions(validUDFs, composedSymbols);
+            }
+
+            foreach (var namedFormula in parseResult.NamedFormulas)
+            {
+                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+            }
+        }
+
+        private void AddUserDefinedFunctions(IEnumerable<UDF> parsedUdfs, INameResolver nameResolver)
+        {
+            var sb = new StringBuilder();
+            var udfs = UserDefinedFunction.CreateFunctions(parsedUdfs, nameResolver, out var errors);
 
             if (errors.Any())
             {
-                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
+                sb.AppendLine("Something went wrong when processing user defined functions.");
 
                 foreach (var error in errors)
                 {
@@ -409,7 +441,7 @@ namespace Microsoft.PowerFx
             foreach (var udf in udfs)
             {
                 Config.SymbolTable.AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
@@ -423,11 +455,27 @@ namespace Microsoft.PowerFx
             {
                 throw new InvalidOperationException(sb.ToString());
             }
+        }
 
-            foreach (var namedFormula in parseResult.NamedFormulas)
+        private void AddUserDefinedTypes(IEnumerable<DefinedType> definedTypes, INameResolver nameResolver)
+        {
+            var sb = new StringBuilder();
+
+            var typeResolverResult = DefinedTypeDependencyGraph.ResolveTypes(definedTypes, nameResolver);
+
+            if (typeResolverResult.Errors.Any())
             {
-                SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
+                sb.AppendLine("Something went wrong when processing user defined types.");
+
+                foreach (var error in typeResolverResult.Errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
             }
+
+            Config.SymbolTable.AddTypes(typeResolverResult.ResolvedTypes);
         }
     } // end class RecalcEngine
 }
