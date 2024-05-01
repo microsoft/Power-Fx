@@ -187,6 +187,17 @@ Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:
 Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
 
 
+// === Interesting grouping types =============================
+>> Summarize(
+  Table({Supplier:"Contoso", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
+  {Supplier:"Fabrikam", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
+  {Supplier:"Contoso", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
+  {Supplier:"Contoso", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
+  {Supplier:"Fabrikam", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday},
+  {Supplier:"Contoso", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday}),
+  DeliveryDay, CountRows(ThisGroup) As Counter )
+Table({Counter:4,DeliveryDay:StartOfWeek.Friday},{Counter:2,DeliveryDay:StartOfWeek.Sunday})
+
 
 // === Errors =================================================
 

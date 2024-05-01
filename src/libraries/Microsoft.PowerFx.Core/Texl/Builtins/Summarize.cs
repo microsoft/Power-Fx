@@ -164,6 +164,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                       existingType == DType.Number || 
                       existingType == DType.Decimal || 
                       existingType == DType.Boolean || 
+                      existingType == DType.Time || 
+                      existingType == DType.OptionSet || 
+                      existingType == DType.OptionSetValue || 
                       existingType == DType.DateTime ||
                       existingType == DType.Date))
                 {
