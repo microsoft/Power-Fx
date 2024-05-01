@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(typeDefinition, parseOptions);
-            var typeResolverResult = DefinedTypeDependencyGraph.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
+            var typeResolverResult = DefinedTypeResolver.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
             var resolvedTypes = typeResolverResult.ResolvedTypes;
 
             if (isValid)
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parseResult = UserDefinitions.Parse(typeDefinition, parseOptions);
-            var typeResolverResult = DefinedTypeDependencyGraph.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
+            var typeResolverResult = DefinedTypeResolver.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
             var resolvedTypes = typeResolverResult.ResolvedTypes;
 
             Assert.Equal(expectedDefinedTypesCount, resolvedTypes.Count());

@@ -457,11 +457,11 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private void AddUserDefinedTypes(IEnumerable<DefinedType> definedTypes, INameResolver nameResolver)
+        private void AddUserDefinedTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable nameResolver)
         {
             var sb = new StringBuilder();
 
-            var typeResolverResult = DefinedTypeDependencyGraph.ResolveTypes(definedTypes, nameResolver);
+            var typeResolverResult = DefinedTypeResolver.ResolveTypes(definedTypes, nameResolver);
 
             if (typeResolverResult.Errors.Any())
             {
