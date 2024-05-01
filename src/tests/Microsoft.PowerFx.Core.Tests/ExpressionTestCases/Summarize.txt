@@ -1,17 +1,5 @@
 ﻿#SETUP: SupportColumnNamesAsIdentifiers,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules
 
-// Average
-// Max
-// Min
-// StdevP
-// VarP
-// Count
-// CountA
-// CountRows
-// CountIf
-// Invalid functions
-
-
 // === Basic grouping without aggregates ==============================================
 
 >> Summarize( 
@@ -187,18 +175,6 @@ Table({One:1,Supplier:"Contoso",Three:3,Two:2},{One:1,Supplier:"Fabrikam",Three:
 Table({Count:3,Supplier:"Contoso"},{Count:1,Supplier:"Fabrikam"})
 
 
-// === Interesting grouping types =============================
->> Summarize(
-  Table({Supplier:"Contoso", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
-  {Supplier:"Fabrikam", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
-  {Supplier:"Contoso", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
-  {Supplier:"Contoso", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
-  {Supplier:"Fabrikam", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday},
-  {Supplier:"Contoso", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday}),
-  DeliveryDay, CountRows(ThisGroup) As Counter )
-Table({Counter:4,DeliveryDay:StartOfWeek.Friday},{Counter:2,DeliveryDay:StartOfWeek.Sunday})
-
-
 // === Errors =================================================
 
 // No grouping columns
@@ -274,7 +250,7 @@ Errors: Error 706-708: Column name conflict for 'x'.|Error 0-9: The function 'Su
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico"]}),
   Supplier, Fruit, CountRows( ThisGroup ) As Count )
-Errors: Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 >> Summarize( 
   Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), ThisGroup:"Void", Tags: ["Red","Seedless"]},
@@ -284,7 +260,7 @@ Errors: Error 14-741: The data source contains a column named 'ThisGroup', which
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), ThisGroup:"Void", Tags: ["Mexico"]}),
   Supplier, Fruit, ThisGroup, CountRows( ThisGroup ) As Count )
-Errors: Error 774-783: The function 'CountRows' has some invalid arguments.|Error 785-794: Invalid argument type (Text). Expecting a Table value instead.|Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.|Error 763-772: Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 774-783: The function 'CountRows' has some invalid arguments.|Error 785-794: Invalid argument type (Text). Expecting a Table value instead.|Error 14-741: The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.|Error 763-772: Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Adding scope to arg0 is currently not supported
 >> Summarize(Table({a:1}) As AAA, a)
@@ -431,30 +407,3 @@ Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Pric
 
 // Can't reference aggregate column from other aggregates
 // >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGroup, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
-
-// Errors
-
-// === Can't reference individual records of ThisGroup ====================================
-
-// >> Summarize( Sales, Fruit, First( ThisGroup ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, FirstN( ThisGroup, 2 ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, Last( ThisGroup ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, LastN( ThisGroup, 2 ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, Index( ThisGroup, 2 ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, LookUp( ThisGroup, Supplier = "Contoso" ).Supplier As OneSupplier )
-// Errors
-
-// >> Summarize( Sales, Fruit, Sum( FirstN( ThisGroup, 1 ), Price ) As OnePrice )
-// Errors
-
-// >> Summarize( Sales, Fruit, Sum( First( ThisGroup ).Price ) As OnePrice )

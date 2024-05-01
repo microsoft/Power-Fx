@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Tests
                 return true;
             }
 
-            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
             {
                 return ParamIdentifierStatus.AlwaysIdentifier;
             }
@@ -606,7 +606,7 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
             {
                 return (_mask & (1 << index)) != 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
             }

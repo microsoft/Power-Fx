@@ -4571,7 +4571,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Use the new scope only for lambda or identifier args.
                     _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
 
-                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
+                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
                         args[i].Accept(this);
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));

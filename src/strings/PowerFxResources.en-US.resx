@@ -4620,7 +4620,7 @@
     <comment>Error message shown to the user when an argument conflicts with 'ThisGroup' reserved word. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
   </data>
   <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
-    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use 'RenameColumns' function to pick a different name.</value>
+    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
     <comment>Error message shown to the user when the provided data source contains a field called 'ThisGroup'. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">

@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Core.IR
                         Contracts.Assert(i > 0, "First argument cannot be a column identifier");
 
                         var identifierNode = arg.AsFirstName();
-                        if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                         {
                             Contracts.Assert(identifierNode != null);
                         }
@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Core.IR
                         var isColumnAsIdentifier = false;
                         if (identifierNode != null)
                         {
-                            if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                            if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                             {
                                 isColumnAsIdentifier = true;
                             }

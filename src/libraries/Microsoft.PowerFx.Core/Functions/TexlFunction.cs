@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload <see cref="GetIdentifierParamStatus(Features, int)"/> method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(TexlNode, Features, int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -633,11 +633,12 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that don't have args based on order e.g. Summarize.</param>
         /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>Value from <see cref="ParamIdentifierStatus"/> which tells whether
         /// the parameter in the given index can be an identifier.</returns>
-        public virtual ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public virtual ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -652,13 +653,13 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
-        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
+        /// <param name="node">TexlNode. Used by functions that don't have args based on order e.g. Summarize.</param>
         /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
-        public virtual bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
+        public bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
-            var paramIdentifierStatus = GetIdentifierParamStatus(features, index);
+            var paramIdentifierStatus = GetIdentifierParamStatus(node, features, index);
             return paramIdentifierStatus ==
                 ParamIdentifierStatus.AlwaysIdentifier ||
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;

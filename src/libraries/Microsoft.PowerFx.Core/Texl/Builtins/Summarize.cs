@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -39,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
+            yield return new[] { TexlStrings.SummarizeArg1, TexlStrings.SummarizeArg2 };
             yield return new[] { TexlStrings.SummarizeArg1, TexlStrings.SummarizeArg2, TexlStrings.SummarizeArg3 };
             yield return new[] { TexlStrings.SummarizeArg1, TexlStrings.SummarizeArg2, TexlStrings.SummarizeArg3, TexlStrings.SummarizeArg2 };
             yield return new[] { TexlStrings.SummarizeArg1, TexlStrings.SummarizeArg2, TexlStrings.SummarizeArg2, TexlStrings.SummarizeArg3, TexlStrings.SummarizeArg3 };
@@ -56,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Limit the argCount avoiding potential OOM
-            int argCount = arity > SignatureConstraint.RepeatTopLength + SignatureConstraint.EndNonRepeatCount ? SignatureConstraint.RepeatTopLength + SignatureConstraint.EndNonRepeatCount : arity;
+            int argCount = Math.Min(arity, SignatureConstraint.RepeatTopLength + SignatureConstraint.EndNonRepeatCount);
             var args = new TexlStrings.StringGetter[argCount];
 
             int lastIndex = argCount - 1;
@@ -102,7 +104,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceScopeNotSupported);
             }
 
-            if (sourceType.Contains(FunctionThisGroupScopeInfo.ThisGroup))
+            // Check if the source table contains ThisGroup display or logical column
+            if (sourceType.GetAllNames(DPath.Root).Any(tn => 
+                tn.Name == FunctionThisGroupScopeInfo.ThisGroup || 
+                (DType.TryGetDisplayNameForColumn(sourceType, tn.Name, out var innerDisplayName) && innerDisplayName == FunctionThisGroupScopeInfo.ThisGroup)))
             {
                 isValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
@@ -160,13 +165,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 
                 // Restricted supported types
-                if (!(existingType == DType.String || 
-                      existingType == DType.Number || 
-                      existingType == DType.Decimal || 
-                      existingType == DType.Boolean || 
-                      existingType == DType.Time || 
-                      existingType == DType.OptionSet || 
-                      existingType == DType.OptionSetValue || 
+                if (!(existingType == DType.String ||
+                      existingType == DType.Number ||
+                      existingType == DType.Decimal ||
+                      existingType == DType.Boolean ||
+                      existingType == DType.Time ||
+                      existingType == DType.OptionSetValue ||
                       existingType == DType.DateTime ||
                       existingType == DType.Date))
                 {
@@ -195,14 +199,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return isValid;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
-            return index == 0 ? ParamIdentifierStatus.NeverIdentifier : ParamIdentifierStatus.PossiblyIdentifier;
-        }
-
-        public override bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
-        {
-            return index > 0 && node is not AsNode;
+            return index > 0 && node is not AsNode ? ParamIdentifierStatus.PossiblyIdentifier : ParamIdentifierStatus.NeverIdentifier;
         }
 
         public override bool IsLambdaParam(TexlNode node, int index)
