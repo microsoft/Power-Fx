@@ -2338,7 +2338,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     replacedIdent = newName.Value;
                     return true;
-                }                
+                }
             }
 
             return false;
@@ -2798,9 +2798,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
-                {                    
+                {
                     Contracts.Assert(scope.Type.IsRecord || scope.Type.IsUntypedObject);
-                    
+
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
                     {
@@ -4497,7 +4497,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
@@ -4580,7 +4580,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         Contracts.Assert(argTypes[i].IsValid);
                     }
                     else
-                    {                        
+                    {
                         if (args[i] is FirstNameNode firstNameNode)
                         {
                             GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
@@ -4608,24 +4608,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _currentScope = scopeNew.Parent;
-                PostVisit(node.Args);                
+                PostVisit(node.Args);
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
-                if (maybeFunc.HasColumnIdentifiers && _features.SupportColumnNamesAsIdentifiers)
-                {
-                    var i = 0;
-
-                    foreach (var arg in args)
-                    {
-                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(arg, i, _features))
-                        {
-                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
-                        }
-
-                        i++;
-                    }
-                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);

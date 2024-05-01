@@ -11,6 +11,9 @@
 // CountIf
 // Invalid functions
 
+
+// === Basic grouping without aggregates ==============================================
+
 >> Summarize( 
   Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
