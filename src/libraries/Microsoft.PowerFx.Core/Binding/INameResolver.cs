@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Binding
 {
@@ -40,6 +41,10 @@ namespace Microsoft.PowerFx.Core.Binding
         DPath CurrentEntityPath { get; }
 
         TexlFunctionSet Functions { get; }
+
+        // List of all valid named types in a given namespace 
+        // Intellisense can use this when suggesting type options.
+        IEnumerable<KeyValuePair<DName, FormulaType>> NamedTypes { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").
@@ -82,6 +87,9 @@ namespace Microsoft.PowerFx.Core.Binding
         bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo);
 
         bool TryLookupEnum(DName name, out NameLookupInfo lookupInfo);
+
+        // Look up a type by name.
+        bool LookupType(DName name, out FormulaType fType);
     }
 
     internal static class NameResolverExtensions

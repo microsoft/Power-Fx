@@ -10,6 +10,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -807,6 +808,26 @@ namespace Microsoft.PowerFx.Connectors
         internal static bool GetExplicitInput(this IOpenApiExtensible param)
         {
             return param.Extensions != null && param.Extensions.TryGetValue(XMsExplicitInput, out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
+        }
+
+        internal static ServiceCapabilities GetTableCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {                
+                return ServiceCapabilities.ParseTableCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
+        }
+
+        internal static ColumnCapabilities GetColumnCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {
+                return ColumnCapabilities.ParseColumnCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
         }
 
         // Get string content of x-ms-url-encoding parameter extension

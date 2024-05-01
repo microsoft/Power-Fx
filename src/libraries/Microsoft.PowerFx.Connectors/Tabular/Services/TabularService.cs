@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx.Connectors.Tabular
 {
     public abstract class TabularService
     {
@@ -17,10 +17,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool IsInitialized => TableType != null;
 
+        public abstract bool IsDelegable { get; }
+
         public virtual ConnectorTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this, TableType)
+                ? new ConnectorTableValue(this)
                 : throw new InvalidOperationException(NotInitialized);
         }
 
@@ -40,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors
         // GET AN ITEM - GET: /datasets/{datasetName}/tables/{tableName}/items/{id}?api-version=2015-09-01
 
         // LIST ITEMS - GET: /datasets/{datasetName}/tables/{tableName}/items?$filter=’CreatedBy’ eq ‘john.doe’&$top=50&$orderby=’Priority’ asc, ’CreationDate’ desc
-        public Task<ICollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -49,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
                 : throw new InvalidOperationException(NotInitialized);
         }
 
-        protected abstract Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
+        protected abstract Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken);
 
         // TABLE DATA SERVICE - UPDATE
         // PATCH: /datasets/{datasetName}/tables/{tableName}/items/{id}

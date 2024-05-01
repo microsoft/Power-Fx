@@ -33,7 +33,6 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -49,7 +48,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -213,21 +211,6 @@ namespace Microsoft.PowerFx
 
             var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
-        }
-
-        internal FormulaType GetFormulaTypeFromName(string name)
-        {
-            return FormulaType.Build(GetTypeFromName(name));
-        }
-
-        internal DType GetTypeFromName(string name)
-        {
-            if (_definedTypeSymbolTable.TryLookup(new DName(name), out NameLookupInfo nameInfo))
-            {
-                return nameInfo.Type;
-            }
-
-            return FormulaType.GetFromStringOrNull(name)._type;
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
@@ -404,7 +387,11 @@ namespace Microsoft.PowerFx
             var sb = new StringBuilder();
 
             var parseResult = UserDefinitions.Parse(script, options);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
+
+            // Compose will handle null symbols
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             if (errors.Any())
@@ -418,9 +405,6 @@ namespace Microsoft.PowerFx
 
                 throw new InvalidOperationException(sb.ToString());
             }
-
-            // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions);
 
             foreach (var udf in udfs)
             {

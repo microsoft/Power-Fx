@@ -3,14 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
 
@@ -51,12 +50,14 @@ namespace Microsoft.PowerFx.Connectors
         public FormulaValue[] EnumValues { get; }
 
         // Enumeration display name ("x-ms-enum-display-name"), only defined if IsEnum is true
-        // If not defined, this array will be empty 
+        // If not defined, this array will be empty
         public string[] EnumDisplayNames { get; }
 
         public Dictionary<string, FormulaValue> Enum => GetEnum();
 
         public Visibility Visibility { get; internal set; }
+
+        internal ColumnCapabilities Capabilities { get; }
 
         internal RecordType HiddenRecordType { get; }
 
@@ -109,8 +110,9 @@ namespace Microsoft.PowerFx.Connectors
                 string summary = schema.GetSummary();
                 string title = schema.Title;
 
-                DisplayName = string.IsNullOrEmpty(title) ? summary : title;               
+                DisplayName = string.IsNullOrEmpty(title) ? summary : title;
                 ExplicitInput = schema.GetExplicitInput();
+                Capabilities = schema.GetColumnCapabilities();
 
                 Fields = Array.Empty<ConnectorType>();
                 IsEnum = schema.Enum != null && schema.Enum.Any();
@@ -131,7 +133,7 @@ namespace Microsoft.PowerFx.Connectors
                     // x-ms-enum-display-name
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                        : Array.Empty<string>();                                        
+                                        : Array.Empty<string>();
                 }
                 else
                 {
@@ -199,7 +201,7 @@ namespace Microsoft.PowerFx.Connectors
             DisplayName = connectorType.DisplayName;
             EnumDisplayNames = connectorType.EnumDisplayNames;
             EnumValues = connectorType.EnumValues;
-            ExplicitInput = connectorType.ExplicitInput;            
+            ExplicitInput = connectorType.ExplicitInput;
             IsEnum = true;
             IsRequired = connectorType.IsRequired;
             MediaKind = connectorType.MediaKind;

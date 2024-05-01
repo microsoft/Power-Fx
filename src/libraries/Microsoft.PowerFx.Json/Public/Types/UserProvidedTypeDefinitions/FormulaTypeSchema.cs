@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
+        public FormulaType ToFormulaType(INameResolver definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             var typeName = Type.Name;
 
@@ -86,19 +86,14 @@ namespace Microsoft.PowerFx.Core
             return FormulaType.BindingError;
         }
 
-        private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
+        private static bool TryLookupType(string typeName, INameResolver definedTypeSymbols, out FormulaType type)
         {
-            var lookupOrder = new List<TypeSymbolTable>() { definedTypeSymbols, PrimitiveTypesSymbolTable.Instance };
+            var lookupOrder = new List<INameResolver>() { definedTypeSymbols, ReadOnlySymbolTable.PrimitiveTypesTableInstance };
             foreach (var table in lookupOrder)
             {
-                if (table.TryLookup(new DName(typeName), out var lookupInfo))
+                if (table.LookupType(new DName(typeName), out var ft))
                 {
-                    if (lookupInfo.Kind != BindKind.TypeName || lookupInfo.Data is not FormulaType castType)
-                    {
-                        throw new InvalidOperationException("Resolved non-type name when constructing FormulaType definition");
-                    }
-
-                    type = castType;
+                    type = ft;
                     return true;
                 }
             }
