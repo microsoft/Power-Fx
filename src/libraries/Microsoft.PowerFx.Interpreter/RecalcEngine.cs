@@ -441,7 +441,7 @@ namespace Microsoft.PowerFx
             foreach (var udf in udfs)
             {
                 Config.SymbolTable.AddFunction(udf);
-                var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default, Config.Features);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 

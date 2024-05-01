@@ -45,8 +45,8 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     _typesDict.Add(typeName, dt);
                 }
-            } 
-            
+            }
+
             _nodes = _typesDict.Keys;
             _edges = new List<TopologicalSortEdge<string>>();
 
@@ -56,65 +56,13 @@ namespace Microsoft.PowerFx.Core.Types
 
                 foreach (var processFirst in dependencies)
                 {
+                    // Ensure no edges from non-existent node
                     if (_typesDict.ContainsKey(processFirst))
                     {
                         _edges.Add(new TopologicalSortEdge<string>(processFirst, definedType.Ident.Name.Value));
                     }
                 }
             }
-        }
-
-        // Resolve a given set of DefinedType ASTs to FormulaType.
-        public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver)
-        {
-            var typeGraph = new DefinedTypeResolver(definedTypes, typeNameResolver);
-
-            var containsCycles = !TopologicalSort.TrySort(typeGraph._nodes, typeGraph._edges, out var resolveOrder, out var cycles);
-
-            Contracts.AssertValue(resolveOrder);
-
-            var definedTypeSymbolTable = new SymbolTable();
-
-            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, typeNameResolver);
-
-            foreach (var typeName in resolveOrder)
-            {
-                Contracts.Assert(typeGraph._typesDict.ContainsKey(typeName));
-                typeGraph._typesDict.TryGetValue(typeName, out var currentType);
-                typeGraph._typesDict.Remove(typeName);
-
-                var resolvedType = DTypeVisitor.Run(currentType.Type.TypeRoot, composedSymbols);
-
-                if (resolvedType == DType.Invalid)
-                {
-                    typeGraph._errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, currentType.Ident.Name));
-                    continue;
-                }
-
-                // To allow missing fields/columns
-                if (resolvedType.IsTable || resolvedType.IsRecord)
-                {
-                    resolvedType.AreFieldsOptional = true;
-                }
-
-                var name = currentType.Ident.Name;
-                definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
-            }
-
-            if (containsCycles)
-            {
-                foreach (var cyclicType in cycles)
-                {
-                    Contracts.Assert(typeGraph._typesDict.ContainsKey(cyclicType));
-                    typeGraph._typesDict.TryGetValue(cyclicType, out var unresolvedType);
-                    typeGraph._typesDict.Remove(cyclicType);
-                    typeGraph._errors.Add(new TexlError(unresolvedType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, unresolvedType.Ident.Name));
-                }
-            }
-
-            Contracts.Assert(typeGraph._typesDict.Count == 0);
-
-            return new TypeResolverResult(((INameResolver)definedTypeSymbolTable).NamedTypes, typeGraph._errors);
         }
 
         private bool CheckTypeName(DefinedType dt)
@@ -134,6 +82,75 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return true;
+        }
+
+        private TypeResolverResult ResolveTypes()
+        {
+            var containsCycles = !TopologicalSort.TrySort(_nodes, _edges, out var resolveOrder, out var cycles);
+
+            Contracts.AssertValue(resolveOrder);
+
+            var definedTypeSymbolTable = new SymbolTable();
+
+            var composedSymbols = ReadOnlySymbolTable.Compose(definedTypeSymbolTable, _globalSymbols);
+
+            foreach (var typeName in resolveOrder)
+            {
+                PopType(typeName, out var currentType);
+
+                var resolvedType = DTypeVisitor.Run(currentType.Type.TypeRoot, composedSymbols);
+
+                if (resolvedType == DType.Invalid)
+                {
+                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, currentType.Ident.Name));
+                    continue;
+                }
+
+                // To allow missing fields/columns
+                if (resolvedType.IsTable || resolvedType.IsRecord)
+                {
+                    resolvedType.AreFieldsOptional = true;
+                }
+
+                var name = currentType.Ident.Name;
+                definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
+            }
+
+            if (containsCycles)
+            {
+                foreach (var cyclicType in cycles)
+                {
+                    PopType(cyclicType, out var ct);
+                    _errors.Add(new TexlError(ct.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, ct.Ident.Name));
+                }
+            }
+
+            Contracts.Assert(_typesDict.Count == 0);
+
+            return new TypeResolverResult(((INameResolver)definedTypeSymbolTable).NamedTypes, _errors);
+        }
+
+        private void PopType(string typeName, out DefinedType type)
+        {
+            Contracts.Assert(_typesDict.ContainsKey(typeName));
+            _typesDict.TryGetValue(typeName, out type);
+            _typesDict.Remove(typeName);
+        }
+
+        // Resolve a given set of DefinedType ASTs to FormulaType.
+        public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver)
+        {
+            Contracts.AssertValue(typeNameResolver);
+            Contracts.AssertValue(definedTypes);
+            Contracts.AssertAllValues(definedTypes);
+
+            var typeGraph = new DefinedTypeResolver(definedTypes, typeNameResolver);
+            return typeGraph.ResolveTypes();
+        }
+
+        public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, INameResolver typeNameResolver)
+        {
+            return ResolveTypes(definedTypes, ReadOnlySymbolTable.NewDefaultTypes(typeNameResolver.NamedTypes));
         }
     }
 }
