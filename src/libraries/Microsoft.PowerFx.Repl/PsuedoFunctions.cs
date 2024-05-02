@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Repl
     {
         public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
         {
-            var innerExp = checkResult.Expression;
+            var innerExp = checkResult.ApplyParse().Text;
 
             if (innerExp.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && innerExp.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
