@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             SetTableType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
-        protected override async Task<ICollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
+        protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);

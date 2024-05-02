@@ -229,3 +229,61 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> Mod(Date(2022, 9, 10), Date(2022, 9, 9))
 1
+
+// Misc
+
+// C# returns -1.2.  Excel and PA both add the divisor to the result to get the final result, see Mod code in LibraryMath.cs.
+>> Mod( -5.2, 2.0 )
+0.8
+
+>> Mod( 5.9, 3.1 )
+2.8
+
+>> Mod( 100, 100 )
+0
+
+>> Mod( 100, 99 )
+1
+
+>> Mod( 100, 98 )
+2
+
+>> Mod( 100, 90 )
+10
+
+>> Mod( 100, 100.1 )
+100
+
+>> Mod( 100, 99.9 )
+0.1
+
+>> Mod( -100, -100 )
+0
+
+>> Mod( -100, -99 )
+-1
+
+>> Mod( -100, -98 )
+-2
+
+>> Mod( -100, -90 )
+-10
+
+>> Mod( -100, -100.1 )
+-100
+
+>> Mod( -100, -99.9 )
+-0.1
+
+>> Mod( 99, 100 )
+99
+
+>> Mod( -99, -100 )
+-99
+
+>> Mod( -99, 100 )
+1
+
+>> Mod( 99, -100 )
+-1
+

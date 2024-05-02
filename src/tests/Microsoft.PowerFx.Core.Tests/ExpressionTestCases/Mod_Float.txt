@@ -33,3 +33,12 @@
 
 >> Mod(1E+400, 3)
 Errors: Error 4-10: Numeric value is too large.|Error 4-10: Invalid argument type (Error). Expecting a Number value instead.|Error 0-3: The function 'Mod' has some invalid arguments.
+
+>> 43556142965880123323311949751266331066368 / 9671406556917033397649408 // powers of 2, will overflow decimal math
+4503599627370496
+
+>> Mod( 43556142965880123323311949751266331066368, 9671406556917033397649408 )
+0
+
+>> Mod( 43556142965880123323311949751266331066368, 3000000000 )
+2331066368
