@@ -105,9 +105,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Check if the source table contains ThisGroup display or logical column
-            if (sourceType.GetAllNames(DPath.Root).Any(tn => 
-                tn.Name == FunctionThisGroupScopeInfo.ThisGroup || 
-                (DType.TryGetDisplayNameForColumn(sourceType, tn.Name, out var innerDisplayName) && innerDisplayName == FunctionThisGroupScopeInfo.ThisGroup)))
+            if (sourceType.Contains(FunctionThisGroupScopeInfo.ThisGroup) || DType.TryGetLogicalNameForColumn(sourceType, FunctionThisGroupScopeInfo.ThisGroup, out var _))
             {
                 isValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
