@@ -76,6 +76,8 @@ namespace Microsoft.PowerFx
 
         internal Engine Engine => _engine;
 
+        public string Expression => _expression;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckResult"/> class.
         /// Create a "failed" check around a set of errors. 

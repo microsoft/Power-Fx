@@ -21,10 +21,9 @@ namespace Microsoft.PowerFx.Repl
         /// Execute the psuedo function.
         /// </summary>
         /// <param name="checkResult">a check for the inner expression.</param>
-        /// <param name="innerExp">Foo(expr). Gets expr.</param>
         /// <param name="repl">REPL for providing services like output windows.</param>
         /// <param name="cancel">cancellation token.</param>
-        public abstract Task ExecuteAsync(CheckResult checkResult, string innerExp, PowerFxREPL repl, CancellationToken cancel);
+        public abstract Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel);
 
         /// <summary>
         /// Name of the psuedo function.
@@ -38,7 +37,7 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public class IRPseudoFunction : IPseudoFunction
     {
-        public async Task ExecuteAsync(CheckResult checkResult, string innerExp, PowerFxREPL repl, CancellationToken cancel)
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
         {
             var irText = checkResult.PrintIR();
             await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
@@ -53,8 +52,10 @@ namespace Microsoft.PowerFx.Repl
     /// </summary>
     public class SuggestionsPseudoFunction : IPseudoFunction
     {
-        public async Task ExecuteAsync(CheckResult checkResult, string innerExp, PowerFxREPL repl, CancellationToken cancel)
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
         {
+            var innerExp = checkResult.Expression;
+
             if (innerExp.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && innerExp.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
                 innerExp = innerExp.Substring(1, innerExp.Length - 2);

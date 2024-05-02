@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx
 
                     try
                     {
-                        await pseudoFunction.ExecuteAsync(pseudoCheck, innerExpr, this, cancel).ConfigureAwait(false);
+                        await pseudoFunction.ExecuteAsync(pseudoCheck, this, cancel).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
