@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx
             return _impl(serviceProvider, args, cancellationToken);
         }
 
-        public override bool IsLazyEvalParam(int index, Features features)
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             return LamdaParamMask.TestBit(index);
         }

@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -546,12 +547,12 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsLambdaParam(int index)
+            public override bool IsLambdaParam(TexlNode node, int index)
             {
                 return true;
             }
 
-            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
             {
                 return ParamIdentifierStatus.AlwaysIdentifier;
             }
@@ -578,7 +579,7 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override bool IsLambdaParam(int index)
+            public override bool IsLambdaParam(TexlNode node, int index)
             {
                 return (_mask & (1 << index)) != 0;
             }
@@ -605,7 +606,7 @@ namespace Microsoft.PowerFx.Tests
                 yield break;
             }
 
-            public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+            public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
             {
                 return (_mask & (1 << index)) != 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
             }
