@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -17,12 +18,17 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         private DefinedTypeDependencyVisitor(INameResolver context)
         {
+            Contracts.AssertValue(context);
+
             _dependencies = new HashSet<string>();
             _context = context;
         }
 
         public static HashSet<string> FindDependencies(TexlNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             var visitor = new DefinedTypeDependencyVisitor(context);
             node.Accept(visitor);
             return visitor._dependencies;
@@ -30,6 +36,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override void Visit(FirstNameNode node)
         {
+            Contracts.AssertValue(node);
+
             var name = node.Ident.Name;
 
             // Node is unresolved dependency if its not found in context lookup 

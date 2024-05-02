@@ -270,13 +270,20 @@ namespace Microsoft.PowerFx
         /// <param name="symbols">Symbols that are required to resolve the type.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public FormulaType ResolveType(string typeExpression, SymbolTable symbols, ParserOptions options = null)
+        public FormulaType ResolveType(string typeExpression, ReadOnlySymbolTable symbols, ParserOptions options = null)
         {
+            Contracts.AssertValue(typeExpression);
+            Contracts.AssertNonEmpty(typeExpression);
+            Contracts.AssertValue(symbols);
+
             return ResolveType(ParseType(typeExpression, options: options), symbols);
         }
 
         public static FormulaType ResolveType(TypeLiteralNode typeNode, ReadOnlySymbolTable symbols)
         {
+            Contracts.AssertValue(typeNode);
+            Contracts.AssertValue(symbols);
+
             var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
 
             if (resolvedType == DType.Invalid)

@@ -23,11 +23,17 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public static DType Run(TexlNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             return node.Accept(new DTypeVisitor(), context);
         }
 
         public override DType Visit(FirstNameNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             var name = node.Ident.Name;
             if (context.LookupType(name, out FormulaType ft))
             {
@@ -39,6 +45,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(RecordNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             var typedNames = new List<TypedName>();
             var names = new HashSet<DName>();
 
@@ -66,6 +75,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override DType Visit(TableNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);
 

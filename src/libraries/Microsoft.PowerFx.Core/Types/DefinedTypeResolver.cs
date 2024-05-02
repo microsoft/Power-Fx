@@ -34,6 +34,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         private DefinedTypeResolver(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable globalSymbols)
         {
+            Contracts.AssertValue(globalSymbols);
+            Contracts.AssertValue(definedTypes);
+            Contracts.AssertAllValues(definedTypes);
+
             _errors = new List<TexlError>();
             _typesDict = new Dictionary<string, DefinedType>();
             _globalSymbols = globalSymbols;
@@ -71,6 +75,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         private bool CheckTypeName(DefinedType dt)
         {
+            Contracts.AssertValue(dt);
+
             var typeName = dt.Ident.Name;
 
             if (_restrictedTypeNames.Contains(typeName))
@@ -138,7 +144,10 @@ namespace Microsoft.PowerFx.Core.Types
         // Safely get and remove a defined type.
         private void PopType(string typeName, out DefinedType type)
         {
+            Contracts.AssertValue(typeName);
+            Contracts.AssertNonEmpty(typeName);
             Contracts.Assert(_typesDict.ContainsKey(typeName));
+
             _typesDict.TryGetValue(typeName, out type);
             _typesDict.Remove(typeName);
         }
@@ -156,6 +165,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, INameResolver typeNameResolver)
         {
+            Contracts.AssertValue(typeNameResolver);
+            Contracts.AssertValue(definedTypes);
+            Contracts.AssertAllValues(definedTypes);
+
             return ResolveTypes(definedTypes, ReadOnlySymbolTable.NewDefaultTypes(typeNameResolver.NamedTypes));
         }
     }

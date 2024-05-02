@@ -297,6 +297,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // To prevent aggregate types from containing restricted types
         internal static bool IsRestrictedType(FormulaType ft)
         {
+            Contracts.AssertValue(ft);
+
             if (ft is AggregateType aggType)
             {
                 if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
