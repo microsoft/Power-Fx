@@ -1609,7 +1609,7 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
-        // UDF restricted primitive types resolve successfully 
+        // Types with UDF restricted primitive types resolve successfully 
         [InlineData(
             @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
               Patients = Type([Patient]);
@@ -1623,6 +1623,12 @@ namespace Microsoft.PowerFx.Tests
             @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
               Patients = Type([Patient]);
               getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
+            "",
+            false)]
+
+        [InlineData(
+            @"Patient = Type({Name: Text, Details: {h: Number, w:Decimal}}); 
+              getPatient(): Patient = {Name:""Alice"", Details: {h: 1, w: 2}};",
             "",
             false)]
 

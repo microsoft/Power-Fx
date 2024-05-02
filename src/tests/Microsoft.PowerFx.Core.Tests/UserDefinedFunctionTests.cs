@@ -517,7 +517,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType");
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InValidReturnType" || x.MessageKey == "ErrUDF_InValidParamType");
         }
     }
 }
