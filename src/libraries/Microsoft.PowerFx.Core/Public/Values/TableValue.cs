@@ -17,6 +17,21 @@ using Microsoft.PowerFx.Functions;
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
+    /// Implemented by a <see cref="TableValue"/> if it supports delegation.
+    /// </summary>
+    public interface IDelegatableTableValue
+    {
+        /// <summary>
+        /// Evaluation will invoke this method on delegated calls.
+        /// </summary>
+        /// <param name="services">Per-eval services.</param>
+        /// <param name="parameters">delegation parameters.</param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+    }
+
+    /// <summary>
     /// Represents a table (both single columna and multi-column). 
     /// </summary>
     public abstract class TableValue : ValidFormulaValue
