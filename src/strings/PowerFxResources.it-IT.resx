@@ -650,7 +650,7 @@
     <value>Valore di testo da convertire in un valore decimale.</value>
   </data>
   <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
-    <value>La funzione "Decimale" può essere utilizzata solo se è abilitata la funzionalità per la compatibilità con Power Fx F1.0.</value>
+    <value>La funzione "Decimale" può essere utilizzata solo se è abilitata la funzionalità per la compatibilità con Power Fx 1.0.</value>
     
   </data>
   <data name="AboutFloat" xml:space="preserve">
