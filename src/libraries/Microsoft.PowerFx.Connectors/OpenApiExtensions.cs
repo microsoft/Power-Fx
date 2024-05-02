@@ -542,8 +542,9 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        RecordType recordType = RecordType.Empty();
-                        RecordType hiddenRecordType = null;
+                        List<(string, string, FormulaType)> fields = new List<(string, string, FormulaType)>();
+                        List<(string, string, FormulaType)> hiddenfields = null;
+
                         List<ConnectorType> connectorTypes = new List<ConnectorType>();
                         List<ConnectorType> hiddenConnectorTypes = new List<ConnectorType>();
 
@@ -588,7 +589,7 @@ namespace Microsoft.PowerFx.Connectors
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
                             {
                                 // Here, we have a circular reference and default to a string
-                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenRecordType);
+                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
 
                             ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
@@ -596,23 +597,25 @@ namespace Microsoft.PowerFx.Connectors
 
                             if (propertyType.HiddenRecordType != null)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.HiddenRecordType, propDisplayName);
+                                hiddenfields ??= new List<(string, string, FormulaType)>();
+                                hiddenfields.Add((propLogicalName, propDisplayName, propertyType.HiddenRecordType));
                                 hiddenConnectorTypes.Add(propertyType); // Hidden
                             }
 
                             if (hiddenRequired)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
+                                hiddenfields ??= new List<(string, string, FormulaType)>();
+                                hiddenfields.Add((propLogicalName, propDisplayName, propertyType.FormulaType));                             
                                 hiddenConnectorTypes.Add(propertyType);
                             }
                             else
                             {
-                                recordType = recordType.SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
+                                fields.Add((propLogicalName, propDisplayName, propertyType.FormulaType));
                                 connectorTypes.Add(propertyType);
                             }
                         }
 
-                        return new ConnectorType(schema, openApiParameter, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
+                        return new ConnectorType(schema, openApiParameter, fields.ToRecordType(), hiddenfields.ToRecordType(), connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
                 case "file":
@@ -623,20 +626,45 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static RecordType SafeAdd(this RecordType recordType, string logicalName, FormulaType formulaType, string displayName)
+        internal static RecordType ToRecordType(this List<(string logicalName, string displayName, FormulaType type)> fields)
         {
-            int i = 0;
-            string displayName2 = displayName;
-
-            if (displayName2 != null)
+            if (fields == null)
             {
-                while (recordType._type.DisplayNameProvider?.TryGetLogicalName(new DName(displayName2), out _) == true)
+                return null;
+            }
+            
+            HashSet<string> names = new HashSet<string>(fields.Select(f => f.logicalName), StringComparer.InvariantCulture);
+            List<(string logicalName, string displayName, FormulaType type)> newPairs = new List<(string, string, FormulaType)>();
+
+            foreach ((string logicalName, string displayName, FormulaType type) field in fields)
+            {
+                string logicalName = field.logicalName;
+                string displayName = string.IsNullOrWhiteSpace(field.displayName) ? null : field.displayName;
+                FormulaType formulaType = field.type;
+
+                int i = 0;
+
+                if (displayName != null && logicalName != displayName)
                 {
-                    displayName2 = $"{displayName}_{++i}";
+                    while (names.Contains(displayName))
+                    {
+                        displayName = $"{field.displayName}_{++i}";
+                    }
+
+                    names.Add(displayName);
                 }
+
+                newPairs.Add((logicalName, displayName, formulaType));
             }
 
-            return recordType.Add(logicalName, formulaType, displayName2);
+            RecordType rt = RecordType.Empty();
+
+            foreach ((string logicalName, string displayName, FormulaType type) in newPairs)
+            {
+                rt = rt.Add(logicalName, type, displayName);
+            }
+
+            return rt;
         }
 
         internal static string GetDisplayName(string name)

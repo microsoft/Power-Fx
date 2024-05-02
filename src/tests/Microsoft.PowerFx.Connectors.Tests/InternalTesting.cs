@@ -559,7 +559,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #endif
         [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
-        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src\Connectors", @"ppc")]
         [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
         public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
         {
