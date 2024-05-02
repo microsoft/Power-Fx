@@ -4058,11 +4058,11 @@
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
-  <data name="ErrUDF_InValidReturnType" xml:space="preserve">
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
     <value>The stated function return type is invalid.</value>
     <comment>This error message shows up when function return type contains restricted primitive types.</comment>
   </data>
-  <data name="ErrUDF_InValidParamType" xml:space="preserve">
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
     <value>The stated function argument type is invalid.</value>
     <comment>This error message shows up when function argument type contains restricted primitive types.</comment>
   </data>

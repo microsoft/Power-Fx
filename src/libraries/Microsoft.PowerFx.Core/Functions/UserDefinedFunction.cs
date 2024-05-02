@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else if (IsRestrictedType(parameterType))
                     {
-                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InValidParamType, arg.TypeIdent.Name));
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
                     }
                     else
@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Core.Functions
             
             if (IsRestrictedType(returnTypeFormulaType))
             {
-                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InValidReturnType, returnTypeToken.Name));
+                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
             }
