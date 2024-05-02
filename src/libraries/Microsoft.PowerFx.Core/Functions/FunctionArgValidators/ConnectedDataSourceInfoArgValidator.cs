@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -22,10 +23,13 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             {
                 case NodeKind.FirstName:
                     return TryGetDsInfo(argNode.AsFirstName(), binding, out dsInfo);
+
                 case NodeKind.Call:
                     return TryGetDsInfo(argNode.AsCall(), binding, out dsInfo);
+
                 case NodeKind.DottedName:
                     return TryGetDsInfo(argNode.AsDottedName(), binding, out dsInfo);
+
                 case NodeKind.As:
                     return TryGetValidValue(argNode.AsAsNode().Left, binding, out dsInfo);
             }
@@ -80,12 +84,19 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             if (firstNameInfo.Kind == BindKind.Data)
             {
-                return binding.EntityScope != null &&
-                    binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
+                return binding.EntityScope != null && binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
             }
-            else if (firstNameInfo.Kind == BindKind.PowerFxResolvedObject && firstNameInfo.Data is IExternalNamedFormula formula)
+            else if (firstNameInfo.Kind == BindKind.PowerFxResolvedObject)
             {
-                return formula.TryGetExternalDataSource(out dsInfo);
+                if (firstNameInfo.Data is IExternalNamedFormula formula)
+                {
+                    return formula.TryGetExternalDataSource(out dsInfo);
+                }
+                else if (firstNameInfo.Data is NameSymbol symbol && ((INameResolver)symbol.Owner).Lookup(new DName(symbol.Name), out NameLookupInfo lookupInfo))
+                {
+                    dsInfo = lookupInfo.Type.AssociatedDataSources.FirstOrDefault();
+                    return dsInfo != null;
+                }
             }
 
             return false;
