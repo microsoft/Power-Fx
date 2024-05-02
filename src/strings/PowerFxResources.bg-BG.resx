@@ -650,7 +650,7 @@
     <value>Текстовата стойност за преобразуване в десетична стойност.</value>
   </data>
   <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
-    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    <value>Функцията Decimal може да се използва само ако функцията „Съвместимост с Power Fx 1.0“ е активирана.</value>
     
   </data>
   <data name="AboutFloat" xml:space="preserve">
