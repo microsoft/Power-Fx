@@ -650,7 +650,7 @@
     <value>10 進値に変換するテキスト値です。</value>
   </data>
   <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
-    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    <value>'Decimal' 関数は、'Power Fx 1.0 互換性' 機能が有効である場合にのみ使用できます。</value>
     
   </data>
   <data name="AboutFloat" xml:space="preserve">
