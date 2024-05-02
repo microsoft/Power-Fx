@@ -189,13 +189,13 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool IsSelectable => true;
 
-        public virtual bool IsDelegatable => false;
+        public virtual bool IsDelegatable => throw new NotImplementedException();
 
         public bool RequiresAsync => throw new NotImplementedException();
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider => ExternalDataEntityMetadataProvider;
 
-        public virtual DataSourceKind Kind => DataSourceKind.Connected;
+        public virtual DataSourceKind Kind => throw new NotImplementedException();
 
         public IExternalTableMetadata TableMetadata => throw new NotImplementedException();
 
