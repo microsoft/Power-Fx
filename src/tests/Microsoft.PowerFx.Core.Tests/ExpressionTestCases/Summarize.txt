@@ -23,6 +23,49 @@ Table({Fruit:"Grapes"},{Fruit:"Lemons"},{Fruit:"Bananas"})
 Table({Fruit:"Grapes",Supplier:"Contoso"},{Fruit:"Lemons",Supplier:"Fabrikam"},{Fruit:"Lemons",Supplier:"Contoso"},{Fruit:"Bananas",Supplier:"Contoso"})
 
 
+// === Testing grouping/aggregate types ==============================================
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Purchase, Sum(ThisGroup, Price) As Soma)
+Table({Purchase:Date(2015,10,1),Soma:251},{Purchase:Date(2015,10,2),Soma:239},{Purchase:Date(2015,10,3),Soma:42})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Paid:true},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Paid:true},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Paid:true},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Paid:false},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Paid:false},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Paid:true}),
+  Paid, Sum(ThisGroup, Price) As Soma)
+Table({Paid:true,Soma:292},{Paid:false,Soma:240})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Arrival:DateTime(2024,5,2,11,29,42,624)},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Arrival:DateTime(2024,5,2,11,29,42,624)},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Arrival:DateTime(2024,5,2,11,29,42,624)},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Arrival:DateTime(2024,5,1,11,29,42,624)},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Arrival:DateTime(2024,5,1,11,29,42,624)},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Arrival:DateTime(2024,5,2,11,29,42,624)}),
+  Arrival, Sum(ThisGroup, Price) As Soma)
+Table({Arrival:DateTime(2024,5,2,11,29,42,624),Soma:292},{Arrival:DateTime(2024,5,1,11,29,42,624),Soma:240})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Timing:Time(2,2,3,99)},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Timing:Time(2,2,3,99)},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Timing:Time(1,2,3,99)},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Timing:Time(1,2,3,99)},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Timing:Time(3,2,3,99)},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Timing:Time(3,2,3,99)}),
+  Timing, Sum(ThisGroup, Price) As Soma)
+Table({Soma:251,Timing:Time(2,2,3,99)},{Soma:239,Timing:Time(1,2,3,99)},{Soma:42,Timing:Time(3,2,3,99)})
+
+
 // === Basic grouping with aggregates =================================================
 
 >> Summarize( 
@@ -393,17 +436,3 @@ Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Pric
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Fruit, Average( ShowColumns( ThisGroup, Price ), Price ) As Price )
 Table({Fruit:"Grapes",Price:215},{Fruit:"Lemons",Price:30},{Fruit:"Bananas",Price:12})
-
-// NOT READY YET
-// === As on table =================================================
-
-// with group by columns in ThisGroup...
-//>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(Fruit) ) As Avg_Len_Price )
-//Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
-
-// or without them...
-//>> Summarize( Sales As SAS, Fruit, Average( SAS.ThisGroup, Price * Len(SAS.Fruit) ) As Avg_Len_Price )
-//Table({Avg_Len_Price:1290,Fruit:"Grapes"},{Avg_Len_Price:180,Fruit:"Lemons"},{Avg_Len_Price:84,Fruit:"Bananas"})
-
-// Can't reference aggregate column from other aggregates
-// >> Summarize( Sales, Fruit, Average( ThisGroup, Price ) As Avg_Price, Sum( ThisGroup, Price ) As Total_Cost, Total_Cost/Avg_Price As Ratio )
