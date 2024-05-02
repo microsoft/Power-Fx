@@ -1609,6 +1609,23 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
+        // UDF restricted primitive types resolve successfully 
+        [InlineData(
+            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients = Type([Patient]);
+              Dummy():Number = CountRows([]);",
+            "Dummy()",
+            true,
+            0.0)]
+
+        // Aggregate types with restricted types are not allowed in UDF
+        [InlineData(
+            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients = Type([Patient]);
+              getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
+            "",
+            false)]
+
         // Cycles not allowed
         [InlineData(
             "Z = Type([{a: {b: Z}}]);",

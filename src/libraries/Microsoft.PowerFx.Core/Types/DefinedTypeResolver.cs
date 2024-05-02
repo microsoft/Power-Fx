@@ -41,22 +41,26 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var dt in definedTypes)
             {
                 var typeName = dt.Ident.Name.Value;
+
+                // Have only valid type names to resolve.
                 if (CheckTypeName(dt))
                 {
                     _typesDict.Add(typeName, dt);
                 }
             }
 
+            // Build graph
             _nodes = _typesDict.Keys;
             _edges = new List<TopologicalSortEdge<string>>();
 
             foreach (var definedType in definedTypes)
             {
+                // Get unresolved dependency names.
                 var dependencies = DefinedTypeDependencyVisitor.FindDependencies(definedType.Type.TypeRoot, globalSymbols);
 
                 foreach (var processFirst in dependencies)
                 {
-                    // Ensure no edges from non-existent node
+                    // Ensure no edges from non-existent node.
                     if (_typesDict.ContainsKey(processFirst))
                     {
                         _edges.Add(new TopologicalSortEdge<string>(processFirst, definedType.Ident.Name.Value));
@@ -116,6 +120,7 @@ namespace Microsoft.PowerFx.Core.Types
                 definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
             }
 
+            // Add error for types with cycles and unreachable edges. 
             if (containsCycles)
             {
                 foreach (var cyclicType in cycles)
@@ -130,6 +135,7 @@ namespace Microsoft.PowerFx.Core.Types
             return new TypeResolverResult(((INameResolver)definedTypeSymbolTable).NamedTypes, _errors);
         }
 
+        // Safely get and remove a defined type.
         private void PopType(string typeName, out DefinedType type)
         {
             Contracts.Assert(_typesDict.ContainsKey(typeName));

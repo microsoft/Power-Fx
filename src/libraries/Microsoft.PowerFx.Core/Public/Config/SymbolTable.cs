@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Binding;
@@ -16,6 +17,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -439,6 +441,11 @@ namespace Microsoft.PowerFx
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
+            if (_namedTypes.ContainsKey(typeName))
+            {
+                throw new InvalidOperationException($"{typeName} is already defined.");
+            }
+
             _namedTypes.Add(typeName, type);
         }
 
@@ -451,6 +458,11 @@ namespace Microsoft.PowerFx
 
             foreach (var type in types)
             {
+                if (_namedTypes.ContainsKey(type.Key))
+                {
+                    throw new InvalidOperationException($"{type.Key} is already defined.");
+                }
+
                 _namedTypes.Add(type.Key, type.Value);
             }
         }
