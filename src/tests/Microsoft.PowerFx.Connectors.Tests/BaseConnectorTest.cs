@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -124,6 +125,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             else if (expectedResult.StartsWith("RECORD"))
             {
                 Assert.IsAssignableFrom<RecordValue>(fv);
+            }
+            else if (expectedResult.StartsWith("BLOBSTR"))
+            {
+                Assert.IsAssignableFrom<BlobValue>(fv);
+
+                BlobValue bv = (BlobValue)fv;
+                string blobStr = await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false);
+                Assert.StartsWith(expectedResult.Substring(8), blobStr);
             }
             else if (expectedResult.StartsWith("BLOB"))
             {

@@ -859,6 +859,11 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
+            if (ReturnParameterType.FormulaType is BlobType bt && result is StringValue str)
+            {
+                result = FormulaValue.NewBlob(str.Value, ReturnParameterType.Schema.Format == "byte");
+            }
+
             return result;
         }
 
