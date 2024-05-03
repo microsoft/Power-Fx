@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -179,7 +180,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
-        [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
+
+        // Should not show Time() in suggestion.
+        [InlineData("DateDiff(Date(2023,1,1), Date(2022,1,1), Time|", "TimeUnit.Days", "TimeUnit.Hours", "TimeUnit.Milliseconds", "TimeUnit.Minutes", "TimeUnit.Months", "TimeUnit.Quarters", "TimeUnit.Seconds", "TimeUnit.Years")]
+        [InlineData("Sum(Ab|", "Abs", "ErrorKind.NotApplicable", "ErrorKind.ServiceUnavailable", "Match.Tab")]
+        [InlineData("LookUp(Filt|", "Filter")]
         [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]

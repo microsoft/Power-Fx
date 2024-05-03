@@ -736,7 +736,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))
                 .Add(new NamedFormulaType("logicalB", FormulaType.Number));
 
-            var intellisenseResult = recalcEngine.Suggest($"DropColumns(myTable, {txt}", rt, 21 + txt.Length);
+            pfxConfig.SymbolTable.AddVariable("myTable", rt.ToTable());
+
+            var intellisenseResult = recalcEngine.Suggest($"DropColumns(myTable, {txt}", null, 21 + txt.Length);
 
             Assert.NotNull(intellisenseResult);
             Assert.NotNull(intellisenseResult.Suggestions);

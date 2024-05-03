@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Theory]
-        [InlineData("First(Office365Groups", "Office365Groups|Office365Groups.AddMemberToGroup|Office365Groups.CalendarDeleteItemV2|Office365Groups.CreateCalendarEventV2|Office365Groups.HttpRequestV2|Office365Groups.ListGroupMembers|Office365Groups.ListGroups|Office365Groups.ListOwnedGroups|Office365Groups.ListOwnedGroupsV2|Office365Groups.ListOwnedGroupsV3|Office365Groups.RemoveMemberFromGroup|Office365Groups.UpdateCalendarEvent")]
+        [InlineData("First(Office365Groups", "Office365Groups")]
         [InlineData("First(Office365Groups.", "AddMemberToGroup|CalendarDeleteItemV2|CreateCalendarEventV2|HttpRequestV2|ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3|RemoveMemberFromGroup|UpdateCalendarEvent")]
         [InlineData("First(Office365Groups.Lis", "ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3")]
         [InlineData("First(Office365Groups.ListGroups(", "ListGroups({ $filter:String,$top:Decimal,$skiptoken:String })")]

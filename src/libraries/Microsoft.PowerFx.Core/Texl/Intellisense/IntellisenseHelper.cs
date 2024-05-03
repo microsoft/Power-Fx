@@ -366,6 +366,10 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
                 }
+                else if (info.Function.HasColumnIdentifiers && info.Function.ParameterCanBeIdentifier(intellisenseData.Features, argPosition))
+                {
+                    AddSuggestionsForNamesInType(type, intellisenseData, false);
+                }
 
                 FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
                     .Select(texlNode => texlNode switch
@@ -838,7 +842,11 @@ namespace Microsoft.PowerFx.Intellisense
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
 
-            intellisenseData.AddSuggestionsForGlobals();
+            if (!(intellisenseData.CurNode is FirstNameNode && intellisenseData.CurNode?.Parent is ListNode && intellisenseData.CurNode?.Parent?.Parent is CallNode))
+            {
+                // Do not add global suggestion if you are in Function arg, AddCustomSuggestionsForGlobals() should have taken care of arg specific suggestions.
+                intellisenseData.AddSuggestionsForGlobals();
+            }
         }
 
         public static void AddSuggestionsForUnaryOperatorKeyWords(IntellisenseData.IntellisenseData intellisenseData)
@@ -858,15 +866,39 @@ namespace Microsoft.PowerFx.Intellisense
             var countSuggBefore = suggestions.Count;
             var countSubSuggBefore = substringSuggestions.Count;
 
+            DType enumExpectedType = DType.Unknown;
+            if (intellisenseData.CurFunc != null && intellisenseData.CurNode?.Parent is ListNode && intellisenseData.CurNode?.Parent?.Parent is CallNode)
+            {
+                intellisenseData.CurFunc.TryGetTypeForArgSuggestionAt(intellisenseData.ArgIndex, out enumExpectedType);
+            }
+
             foreach (var enumInfo in intellisenseData.EnumSymbols)
             {
                 var enumType = enumInfo.EnumType;
                 var enumName = TexlLexer.EscapeName(enumInfo.EntityName.Value);
 
-                // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-                AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
+                if (enumExpectedType != null && (
 
-                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                    // Check if current function supports type coercion for the argument, and if the type can be coerced.
+                    (!(enumExpectedType.IsEnum || enumExpectedType.IsOptionSet) && 
+                     intellisenseData.CurFunc != null &&
+                     intellisenseData.CurFunc.SupportCoercionForArg(intellisenseData.ArgIndex) &&
+                     enumInfo.CanCoerceFromBackingKind &&
+                     (enumType.TypeTree.FirstOrDefault().Value ?? DType.Unknown).CoercesTo(enumExpectedType, aggregateCoercion: false, isTopLevelCoercion: false, intellisenseData.Features)) ||
+
+                    // Check if the expected type is the same as the enum type.
+                    ((enumExpectedType.IsEnum || enumExpectedType.IsOptionSet) && enumExpectedType == enumType) ||
+
+                    // Check if the expected type is not an enum but matches the backing kind of the enum.
+                    (!(enumExpectedType.IsEnum || enumExpectedType.IsOptionSet) && enumExpectedType.Kind == enumInfo.BackingKind) ||
+
+                    // Check if the expected type is unknown.
+                    enumExpectedType.IsUnknown))
+                {
+                    // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
+                    AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
+                    AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                }
             }
         }
 

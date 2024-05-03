@@ -264,7 +264,23 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// True if the function may be suggested, false otherwise.
         /// </returns>
-        internal virtual bool ShouldSuggestFunction(TexlFunction function) => true;
+        internal virtual bool ShouldSuggestFunction(TexlFunction function)
+        {
+            if (this.CurNode?.Parent is ListNode && this.CurNode?.Parent?.Parent is CallNode)
+            {
+                if (CurFunc.TryGetTypeForArgSuggestionAt(ArgIndex, out var expectedArgType))
+                {
+                    if (CurFunc.SupportCoercionForArg(ArgIndex) && function.ReturnType.CoercesTo(expectedArgType, aggregateCoercion: false, isTopLevelCoercion: false, Features))
+                    {
+                        return true;
+                    }
+
+                    return expectedArgType == function.ReturnType;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Returns a list of argument suggestions for a given function, scope type, and argument index.
