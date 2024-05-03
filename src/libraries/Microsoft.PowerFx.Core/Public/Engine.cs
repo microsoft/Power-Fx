@@ -242,59 +242,6 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Parse the type expression without resolving type.
-        /// </summary>
-        public static TypeLiteralNode ParseType(string typeExpressionText, ParserOptions options = null)
-        {
-            Contracts.AssertValue(typeExpressionText);
-
-            options ??= new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true,
-            };
-
-            var result = options.Parse(typeExpressionText);
-
-            if (result.Root is not TypeLiteralNode typeNode || result.HasError)
-            {
-                throw new InvalidOperationException("Type literal declaration was invalid.");
-            }
-
-            return typeNode;
-        }
-
-        /// <summary>
-        /// Parse and resolve a type expression. 
-        /// </summary>
-        /// <param name="typeExpression">type expression in plain text. </param>
-        /// <param name="symbols">Symbols that are required to resolve the type.</param>
-        /// <param name="options">parser options to use.</param>
-        /// <returns></returns>
-        public FormulaType ResolveType(string typeExpression, ReadOnlySymbolTable symbols, ParserOptions options = null)
-        {
-            Contracts.AssertValue(typeExpression);
-            Contracts.AssertNonEmpty(typeExpression);
-            Contracts.AssertValue(symbols);
-
-            return ResolveType(ParseType(typeExpression, options: options), symbols);
-        }
-
-        public static FormulaType ResolveType(TypeLiteralNode typeNode, ReadOnlySymbolTable symbols)
-        {
-            Contracts.AssertValue(typeNode);
-            Contracts.AssertValue(symbols);
-
-            var resolvedType = DTypeVisitor.Run(typeNode.TypeRoot, symbols);
-
-            if (resolvedType == DType.Invalid)
-            {
-                throw new InvalidOperationException("Type literal declaration was invalid.");
-            }
-
-            return FormulaType.Build(resolvedType);
-        }
-
-        /// <summary>
         /// Parse and Bind an expression. 
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>

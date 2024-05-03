@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -386,7 +387,10 @@ namespace Microsoft.PowerFx
 
             var sb = new StringBuilder();
 
-            var parseResult = UserDefinitions.Parse(script, options);
+            var checkResult = new DeclarationsCheckResult()
+                                    .SetText(script, options);
+
+            var parseResult = checkResult.ApplyParse();
 
             if (parseResult.HasErrors)
             {
@@ -401,11 +405,11 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes);
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes, _symbolTable);
 
             if (parseResult.DefinedTypes.Any())
             {
-                AddUserDefinedTypes(parseResult.DefinedTypes, composedSymbols);
+                AddUserDefinedTypes(checkResult, composedSymbols);
             }
 
             var validUDFs = parseResult.UDFs.Where(udf => udf.IsParseValid);
@@ -421,7 +425,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private void AddUserDefinedFunctions(IEnumerable<UDF> parsedUdfs, INameResolver nameResolver)
+        private void AddUserDefinedFunctions(IEnumerable<UDF> parsedUdfs, ReadOnlySymbolTable nameResolver)
         {
             var sb = new StringBuilder();
             var udfs = UserDefinedFunction.CreateFunctions(parsedUdfs, nameResolver, out var errors);
@@ -457,25 +461,27 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private void AddUserDefinedTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable nameResolver)
+        private void AddUserDefinedTypes(DeclarationsCheckResult checkResult, ReadOnlySymbolTable nameResolver)
         {
-            var sb = new StringBuilder();
+            checkResult
+                .SetBindingInfo(nameResolver)
+                .ResolveTypes();
 
-            var typeResolverResult = DefinedTypeResolver.ResolveTypes(definedTypes, nameResolver);
-
-            if (typeResolverResult.Errors.Any())
+            if (!checkResult.IsSuccess)
             {
+                var sb = new StringBuilder();
+
                 sb.AppendLine("Something went wrong when processing user defined types.");
 
-                foreach (var error in typeResolverResult.Errors)
+                foreach (var error in checkResult.Errors)
                 {
-                    error.FormatCore(sb);
+                    sb.AppendLine(error.ToString());
                 }
 
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            Config.SymbolTable.AddTypes(typeResolverResult.ResolvedTypes);
+            _symbolTable.AddTypes(checkResult.ResolvedTypes);
         }
     } // end class RecalcEngine
 }

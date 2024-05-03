@@ -45,20 +45,22 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            var parseResult = UserDefinitions.Parse(typeDefinition, parseOptions);
-            var typeResolverResult = DefinedTypeResolver.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
-            var resolvedTypes = typeResolverResult.ResolvedTypes;
+            var checkResult = new DeclarationsCheckResult()
+                                            .SetText(typeDefinition, parseOptions)
+                                            .SetBindingInfo(_primitiveTypes);
+            checkResult.ApplyParse();
+            checkResult.ResolveTypes();
 
             if (isValid)
             {
-                Assert.NotEmpty(resolvedTypes);
-                var resultType = resolvedTypes.First().Value._type;
+                Assert.NotEmpty(checkResult.ResolvedTypes);
+                var resultType = checkResult.ResolvedTypes.First().Value._type;
                 Assert.Equal(TestUtils.DT(expectedDefinedTypeString), resultType);
             }
             else
             {
-                Assert.Empty(resolvedTypes);
-                Assert.NotEmpty(typeResolverResult.Errors);
+                Assert.Empty(checkResult.ResolvedTypes);
+                Assert.NotEmpty(checkResult.Errors);
             }
         }
 
@@ -102,9 +104,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            var parseResult = UserDefinitions.Parse(typeDefinition, parseOptions);
-            var typeResolverResult = DefinedTypeResolver.ResolveTypes(parseResult.DefinedTypes, _primitiveTypes);
-            var resolvedTypes = typeResolverResult.ResolvedTypes;
+            var checkResult = new DeclarationsCheckResult()
+                                            .SetText(typeDefinition, parseOptions)
+                                            .SetBindingInfo(_primitiveTypes);
+            checkResult.ApplyParse();
+            checkResult.ResolveTypes();
+
+            var resolvedTypes = checkResult.ResolvedTypes;
 
             Assert.Equal(expectedDefinedTypesCount, resolvedTypes.Count());
         }

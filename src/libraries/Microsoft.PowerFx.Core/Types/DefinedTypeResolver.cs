@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        private TypeResolverResult ResolveTypes()
+        private IReadOnlyDictionary<DName, FormulaType> ResolveTypes()
         {
             var containsCycles = !TopologicalSort.TrySort(_nodes, _edges, out var resolveOrder, out var cycles);
 
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(_typesDict.Count == 0);
 
-            return new TypeResolverResult(((INameResolver)definedTypeSymbolTable).NamedTypes, _errors);
+            return definedTypeSymbolTable.NamedTypes;
         }
 
         // Safely get and remove a defined type.
@@ -153,23 +153,16 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Resolve a given set of DefinedType ASTs to FormulaType.
-        public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver)
+        public static IReadOnlyDictionary<DName, FormulaType> ResolveTypes(IEnumerable<DefinedType> definedTypes, ReadOnlySymbolTable typeNameResolver, out List<TexlError> errors)
         {
             Contracts.AssertValue(typeNameResolver);
             Contracts.AssertValue(definedTypes);
             Contracts.AssertAllValues(definedTypes);
 
             var typeGraph = new DefinedTypeResolver(definedTypes, typeNameResolver);
-            return typeGraph.ResolveTypes();
-        }
-
-        public static TypeResolverResult ResolveTypes(IEnumerable<DefinedType> definedTypes, INameResolver typeNameResolver)
-        {
-            Contracts.AssertValue(typeNameResolver);
-            Contracts.AssertValue(definedTypes);
-            Contracts.AssertAllValues(definedTypes);
-
-            return ResolveTypes(definedTypes, ReadOnlySymbolTable.NewDefaultTypes(typeNameResolver.NamedTypes));
+            var resolvedTypes = typeGraph.ResolveTypes();
+            errors = typeGraph._errors;
+            return resolvedTypes;
         }
     }
 }

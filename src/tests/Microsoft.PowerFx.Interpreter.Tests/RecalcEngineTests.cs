@@ -1677,46 +1677,6 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        [Theory]
-        [InlineData(
-            "Type([{x : Coordinate, y : Coordinate}])",
-            true,
-            "*[x:n, y:n]")]
-        [InlineData(
-            "Type({a: {b: Word, c: {d: IsValid}}})",
-            true,
-            "![a: ![b: s, c: ![d: b]]]")]
-        [InlineData(
-            "Type([IsValid])",
-            true,
-            "*[Value: b]")]
-        [InlineData(
-            "Type(Word)",
-            true,
-            "s")]
-        [InlineData(
-            "Type(Invalid)",
-            false)]
-        public void EngineResolveTypeTest(string typeDefinition, bool isValid, string expectedDefinedTypeString = "")
-        {
-            var config = new PowerFxConfig();
-            var recalcEngine = new RecalcEngine(config);
-            var symbolTable = new SymbolTable();
-
-            symbolTable.AddType(new DName("Coordinate"), FormulaType.Number);
-            symbolTable.AddType(new DName("Word"), FormulaType.String);
-            symbolTable.AddType(new DName("IsValid"), FormulaType.Boolean);
-
-            if (isValid)
-            {
-                Assert.Equal(TestUtils.DT(expectedDefinedTypeString), recalcEngine.ResolveType(typeDefinition, symbolTable)._type);
-            }
-            else
-            {
-                Assert.Throws<InvalidOperationException>(() => recalcEngine.ResolveType(typeDefinition, symbolTable));
-            }
-        }
-
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx
 
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
+        internal IReadOnlyDictionary<DName, FormulaType> NamedTypes => _namedTypes.ToDictionary(v => v.Key, v => v.Value);
+
         internal const string UserInfoSymbolName = "User";
 
         /// <summary>

@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 // Core namespace. 
                 "Microsoft.PowerFx.CheckResult",
+                "Microsoft.PowerFx.DeclarationsCheckResult",
                 "Microsoft.PowerFx.CheckContextSummary",
                 "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.Engine",
