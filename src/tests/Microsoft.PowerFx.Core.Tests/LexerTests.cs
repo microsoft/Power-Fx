@@ -163,6 +163,52 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestZeroWidthSpaceCharactersPFxV1Flag()
+        {
+            string value;
+
+            // No Zero Width Space after comma
+            value = "ClearCollect(Temp1,[])";
+            var tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            Assert.NotNull(tokens);
+            Assert.Equal(8, tokens.Count);
+            Assert.Equal(TokKind.Ident, tokens[0].Kind);
+            Assert.Equal(TokKind.ParenOpen, tokens[1].Kind);
+            Assert.Equal(TokKind.Ident, tokens[2].Kind);
+            Assert.Equal(TokKind.Comma, tokens[3].Kind);
+            Assert.Equal(TokKind.BracketOpen, tokens[4].Kind);
+            Assert.Equal(TokKind.BracketClose, tokens[5].Kind);
+            Assert.Equal(TokKind.ParenClose, tokens[6].Kind);
+            Assert.Equal(TokKind.Eof, tokens[7].Kind);
+
+            // Zero Width Space after comma
+            value = "ClearCollect(Temp1," + char.ConvertFromUtf32(8203) + "[])";
+            tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            Assert.NotNull(tokens);
+            Assert.Equal(9, tokens.Count);
+            Assert.Equal(TokKind.Ident, tokens[0].Kind);
+            Assert.Equal(TokKind.ParenOpen, tokens[1].Kind);
+            Assert.Equal(TokKind.Ident, tokens[2].Kind);
+            Assert.Equal(TokKind.Comma, tokens[3].Kind);
+            Assert.Equal(TokKind.Error, tokens[4].Kind);
+            Assert.Equal(2, (tokens[4] as ErrorToken).ResourceKeyFormatStringArgs.Length);
+            Assert.Equal((tokens[4] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
+            Assert.Equal(TokKind.BracketOpen, tokens[5].Kind);
+            Assert.Equal(TokKind.BracketClose, tokens[6].Kind);
+            Assert.Equal(TokKind.ParenClose, tokens[7].Kind);
+            Assert.Equal(TokKind.Eof, tokens[8].Kind);
+
+            // Zero Width Space at the beginning of the formula
+            value = string.Format("{0}", '\u200B') + "ClearCollect(Temp1,[])";
+            tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            Assert.NotNull(tokens);
+            Assert.Equal(9, tokens.Count);
+            Assert.Equal(TokKind.Error, tokens[0].Kind);
+            Assert.Equal(2, (tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length);
+            Assert.Equal((tokens[0] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
+        }
+
+        [Fact]
         public void TestLexDottedNames()
         {
             var tokens = TexlLexer.InvariantLexer.LexSource("A!B");

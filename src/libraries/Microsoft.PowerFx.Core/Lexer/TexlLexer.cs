@@ -36,6 +36,9 @@ namespace Microsoft.PowerFx.Syntax
             // String interpolation is supported with ${ ... } instead of just { ... } to avoid collisions
             // since it is more likely that a raw string will be input, including for example JSON.
             TextFirst = 1 << 2,
+
+            // When specified, the lexer will skip some char verifications.
+            PFxV1 = 1 << 4
         }
 
         // Locale-invariant syntax.
@@ -979,6 +982,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _numberIsFloat;
             private readonly bool _disableReservedKeywords;
             private readonly bool _textFirst;
+            private readonly bool _pfxV1;
             private bool _textFirstStartToken;
             private bool _textFirstEndToken;
             private readonly LexerMode _initialLexerMode = LexerMode.Normal;
@@ -1000,6 +1004,7 @@ namespace Microsoft.PowerFx.Syntax
                 _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
                 _disableReservedKeywords = flags.HasFlag(TexlLexer.Flags.DisableReservedKeywords);
                 _textFirst = flags.HasFlag(TexlLexer.Flags.TextFirst);
+                _pfxV1 = flags.HasFlag(TexlLexer.Flags.PFxV1);
 
                 _modeStack = new Stack<LexerMode>();
 
@@ -1567,6 +1572,10 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
+                    else if (_pfxV1)
+                    {
+                        _sb.Append(ch);
+                    }
                     else if (!CharacterUtils.IsFormatCh(ch))
                     {
                         _sb.Append(ch);
@@ -1689,6 +1698,10 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
+                    else if (_pfxV1)
+                    {
+                        _sb.Append(ch);
+                    }
                     else if (!CharacterUtils.IsFormatCh(ch))
                     {
                         _sb.Append(ch);
@@ -1720,6 +1733,10 @@ namespace Microsoft.PowerFx.Syntax
                     else if (ch == '$' && IsCurlyOpen(PeekChar(1)))
                     {
                         return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
+                    }
+                    else if (_pfxV1)
+                    {
+                        _sb.Append(ch);
                     }
                     else if (!CharacterUtils.IsFormatCh(ch))
                     {
