@@ -4,10 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Binding
+namespace Microsoft.PowerFx.Core
 {
     // Helper class to create composable INameResolver
     internal class ReadOnlyINameResolver : ReadOnlySymbolTable, INameResolver
