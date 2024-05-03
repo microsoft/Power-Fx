@@ -116,31 +116,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[0] as DottedNameNode, binding, metadata, opStrategy);
             }
 
-            if (args[0] is FirstNameNode firstNameNode)
+            if (args[0] is not FirstNameNode node)
             {
-                if (!binding.IsRowScope(firstNameNode))
-                {
-                    return false;
-                }
-
-                var firstNameNodeValidationStrategy = GetFirstNameNodeDelegationStrategy();
-                return firstNameNodeValidationStrategy.IsValidFirstNameNode(firstNameNode, binding, opStrategy);
+                var message = string.Format(CultureInfo.InvariantCulture, "Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
+                AddSuggestionMessageToTelemetry(message, args[0], binding);
+                return false;
             }
 
-            if (args[0] is DottedNameNode dottedNameNode)
+            if (!binding.IsRowScope(node))
             {
-                if (!binding.IsRowScope(dottedNameNode))
-                {
-                    return false;
-                }
-
-                var dottedNameNodeValidationStrategy = GetDottedNameNodeDelegationStrategy();
-                return dottedNameNodeValidationStrategy.IsValidDottedNameNode(dottedNameNode, binding, metadata, opStrategy);
+                return false;
             }
-         
-            var message = string.Format(CultureInfo.InvariantCulture, "Arg1 is neither a firstname nor dotted name node, instead it is {0}", args[0].Kind);
-            AddSuggestionMessageToTelemetry(message, args[0], binding);
-            return false;            
+
+            var firstNameNodeValidationStrategy = GetFirstNameNodeDelegationStrategy();
+            return firstNameNodeValidationStrategy.IsValidFirstNameNode(node, binding, opStrategy);
         }
     }
 

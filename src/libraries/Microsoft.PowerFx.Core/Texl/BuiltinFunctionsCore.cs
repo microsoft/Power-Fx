@@ -259,6 +259,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
+        public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

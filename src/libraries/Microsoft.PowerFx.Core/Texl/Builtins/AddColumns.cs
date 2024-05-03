@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new ReadOnlyCollection<TexlStrings.StringGetter[]>(overloads);
         }
 
-        public override bool IsLambdaParam(int index)
+        public override bool IsLambdaParam(TexlNode node, int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 2 && ((index & 1) == 0);
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.Assert(index >= 0);
 
-            return IsLambdaParam(index);
+            return IsLambdaParam(null, index);
         }
     }
 }

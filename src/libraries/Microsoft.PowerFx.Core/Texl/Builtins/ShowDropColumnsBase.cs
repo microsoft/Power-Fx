@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex >= 0;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             if (!features.SupportColumnNamesAsIdentifiers)
             {
