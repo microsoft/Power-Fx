@@ -206,6 +206,11 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.Error, tokens[0].Kind);
             Assert.Equal(2, (tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length);
             Assert.Equal((tokens[0] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
+
+            var expression = "\"" + char.ConvertFromUtf32(8203) + "AABB\""; // expression.Length is 7
+            tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.None);
+            var stringToken = tokens[0] as StrLitToken; // stringToken.Legth 
+            Assert.Equal(stringToken.Value.Length, expression.Length - 2);
         }
 
         [Fact]
