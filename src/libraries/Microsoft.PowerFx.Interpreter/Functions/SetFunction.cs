@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Interpreter
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
 
+        public override bool MutatesArg0 => true;
+
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };
@@ -71,6 +73,7 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var arg0 = argTypes[0];
+            var arg1 = argTypes[1];
 
             var firstName = args[0].AsFirstName();
 
@@ -80,8 +83,6 @@ namespace Microsoft.PowerFx.Interpreter
                 if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
                 {
                     // We have a variable. type check
-                    var arg1 = argTypes[1];
-
                     if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
                          (arg0.IsNumeric && arg1.IsNumeric)))
                     {
@@ -115,6 +116,11 @@ namespace Microsoft.PowerFx.Interpreter
                     // Success
                     return;
                 }
+            }
+            else if (arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+                    (arg0.IsNumeric && arg1.IsNumeric))
+            {
+                return;
             }
 
             errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);

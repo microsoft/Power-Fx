@@ -181,6 +181,9 @@ namespace Microsoft.PowerFx
                     // This may happen if the runtime symbols are missing a value and we failed to update. 
                 }
             }
+            else if (arg0 is RecordFieldAccessNode rfan)
+            {
+            }
 
             // Fail?
             return CommonErrors.UnreachableCodeError(node.IRContext);
