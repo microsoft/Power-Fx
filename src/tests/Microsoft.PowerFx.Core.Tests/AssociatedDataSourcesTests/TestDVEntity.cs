@@ -44,28 +44,35 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
     internal static class AccountsTypeHelper
     {
-        internal const string SimplifiedAccountsSchema = "*[accountid:g, accountnumber:s, address1_addresstypecode:l, address1_city:s, address1_composite:s, address1_country:s, address1_county:s, address1_fax:s, address1_freighttermscode:l, address1_latitude:n, address1_line1:s, address1_line2:s, address1_line3:s, address1_longitude:n, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, address1_shippingmethodcode:l, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, address1_upszone:s, address1_utcoffset:n, createdon:d, description:s, emailaddress1:s, emailaddress2:s, emailaddress3:s, modifiedon:d, name:s, numberofemployees:n, primarytwitterid:s, stockexchange:s, telephone1:s, telephone2:s, telephone3:s, tickersymbol:s, versionnumber:n, websiteurl:h, nonsearchablestringcol:s, nonsortablestringcolumn:s]";
+        internal const string SimplifiedAccountsSchema = "*[accountid:g, accountnumber:s, address1_addresstypecode:l, address1_city`Address 1: City`:s, address1_composite:s, address1_country:s, " +
+                                                         "address1_county:s, address1_fax:s, address1_freighttermscode:l, address1_latitude:n, address1_line1`Address 1: Street 1`:s, address1_line2:s, " +
+                                                         "address1_line3:s, address1_longitude:n, address1_name:s, address1_postalcode:s, address1_postofficebox:s, address1_primarycontactname:s, " +
+                                                         "address1_shippingmethodcode:l, address1_stateorprovince:s, address1_telephone1:s, address1_telephone2:s, address1_telephone3:s, " +
+                                                         "address1_upszone:s, address1_utcoffset:n, createdon:d, description:s, emailaddress1:s, emailaddress2:s, emailaddress3:s, modifiedon:d, " +
+                                                         "name`Account Name`:s, numberofemployees:n, primarytwitterid:s, stockexchange:s, telephone1:s, telephone2:s, telephone3:s, tickersymbol:s, versionnumber:n, " +
+                                                         "websiteurl:h, nonsearchablestringcol`Non-searchable string column`:s, nonsortablestringcolumn`Non-sortable string column`:s]";
 
         public static DType GetDType()
         {
-            DType accountsType = TestUtils.DT(SimplifiedAccountsSchema);
+            DType accountsType = TestUtils.DT2(SimplifiedAccountsSchema);
             var dataSource = new TestDataSource(
                 "Accounts", 
                 accountsType, 
                 keyColumns: new[] { "accountid" },
                 selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" });
-            var displayNameMapping = dataSource.DisplayNameMapping;
+            var displayNameMapping = dataSource.DisplayNameMapping;            
             displayNameMapping.Add("name", "Account Name");
             displayNameMapping.Add("address1_city", "Address 1: City");
             displayNameMapping.Add("address1_line1", "Address 1: Street 1");
             displayNameMapping.Add("nonsearchablestringcol", "Non-searchable string column");
             displayNameMapping.Add("nonsortablestringcolumn", "Non-sortable string column");
+            
             return DType.AttachDataSourceInfo(accountsType, dataSource);
         }
 
         public static DType GetDTypeCds()
         {
-            DType accountsType = TestUtils.DT(SimplifiedAccountsSchema);
+            DType accountsType = TestUtils.DT2(SimplifiedAccountsSchema);
             var dataSource = new CdsTestDataSource(
                 "Accounts",
                 accountsType,

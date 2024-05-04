@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsEcsExcemptedLambda(int index)
         {
             // All lambdas in filter can be excluded from ECS.
-            return IsLambdaParam(index);
+            return IsLambdaParam(null, index);
         }
     }
 }

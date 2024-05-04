@@ -82,6 +82,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolTable SupportedFunctions { get; protected internal set; } = _allBuiltinCoreFunctions;
 
+        /// <summary>
+        /// Builtin Types supported by this engine. 
+        /// </summary>
+        public ReadOnlySymbolTable PrimitiveTypes { get; protected internal set; } = ReadOnlySymbolTable.PrimitiveTypesTableInstance;
+
         // By default, we pull the core functions. 
         // These can be overridden. 
         internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
@@ -90,6 +95,13 @@ namespace Microsoft.PowerFx
         /// List of transforms to apply to an IR. 
         /// </summary>
         internal readonly List<Core.IR.IRTransform> IRTransformList = new List<Core.IR.IRTransform>();
+        
+        /// <summary>
+        /// List of error processor that will add host specific custom errors at the end of the check.
+        /// </summary>
+        private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
+
+        public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
         
         /// <summary>
         /// Get all functions from the config and symbol tables. 
@@ -147,7 +159,18 @@ namespace Microsoft.PowerFx
                 return existing;
             }
 
-            symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
+            symbols = ReadOnlySymbolTable.Compose(localSymbols, GetCombinedEngineSymbols());
+            return symbols;
+        }
+
+        /// <summary>
+        /// Get a combined engine symbol table, including builtins and config. 
+        /// </summary>
+        /// <returns></returns>
+        public ReadOnlySymbolTable GetCombinedEngineSymbols()
+        {
+            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, SupportedFunctions, Config.SymbolTable, PrimitiveTypes);
+
             return symbols;
         }
 
@@ -267,7 +290,13 @@ namespace Microsoft.PowerFx
         // Called after check result, can inject additional errors or constraints. 
         protected virtual IEnumerable<ExpressionError> PostCheck(CheckResult check)
         {
-            return Enumerable.Empty<ExpressionError>();
+            var hostErrors = new List<ExpressionError>();
+            foreach (var postCheckErrorHandler in _postCheckErrorHandlers)
+            {
+                hostErrors.AddRange(postCheckErrorHandler.Process(check));
+            }
+
+            return hostErrors;
         }
 
         internal IEnumerable<ExpressionError> InvokePostCheck(CheckResult check)
@@ -511,7 +540,8 @@ namespace Microsoft.PowerFx
 
         internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, SupportedFunctions, symbolTable, allowSideEffects);
+            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions);
+            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
         }
     }
 }

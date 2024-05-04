@@ -1281,7 +1281,27 @@ namespace Microsoft.PowerFx.Functions
             upper = Math.Floor(upper);
 
             var value = services.SafeNextDouble();
-            return new NumberValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));
+            double result;
+
+            result = Math.Floor(value * (upper - lower + 1)) + lower;
+            if (double.IsInfinity(result))
+            {
+                double halfSpan;
+                double value2 = services.SafeNextDouble();
+
+                halfSpan = (-lower / 2d) + (upper / 2d);
+                if (double.IsInfinity(halfSpan))
+                {
+                    halfSpan = double.MaxValue;
+                }
+
+                // Order of operations matters here. We must add each half to lower in turn, if we added the two halves first we may overflow.
+                result = lower;
+                result += Math.Floor(value * halfSpan);
+                result += Math.Floor(value2 * halfSpan);
+            }
+
+            return new NumberValue(irContext, result);
         }
 
         public static FormulaValue RandBetweenDecimal(IServiceProvider services, IRContext irContext, DecimalValue lowerArg, DecimalValue upperArg)
@@ -1301,10 +1321,33 @@ namespace Microsoft.PowerFx.Functions
 
             lower = Math.Ceiling(lower);
             upper = Math.Floor(upper);
-
             decimal value = services.SafeNextDecimal();
+            decimal result;
 
-            return new DecimalValue(irContext, Math.Floor((value * (upper - lower + 1m)) + lower));
+            try
+            {
+                // SafeNextDecimal will only return 28 digits, since decimal does not support a full 29 digits.
+                // Since 79228162514264337593543950335 /* MaxValue */ * 0.99999999999999999999999999 != MaxValue (won't round up to MaxValue),
+                // the use of Math.Floor with the extra +1 is OK here.
+                result = Math.Floor(value * (upper - lower + 1m)) + lower;
+            }
+            catch (OverflowException)
+            {
+                // The total span is larger than Decimal can hold as a positive value, which is a legal but unlikely scenario 
+                // For example, RandBetween( -79228162514264337593543950335 /* MinValue */, 79228162514264337593543950335 /* MaxValue */ )
+                // In this case, lower must be negative or zero and upper must be positive or zero
+                // Here we split the addition into two halves to cover the full range of decimal
+                // There is a special case for lower and upper at their full extent, where the 29 vs 28 bit difference will lead to an overflow
+                decimal halfSpan = lower == decimal.MinValue && upper == decimal.MaxValue ? decimal.MaxValue : (-lower / 2m) + (upper / 2m);
+                decimal value2 = services.SafeNextDecimal();
+
+                // Order of operations matters here. We must add each half to lower in turn, if we added the two halves first we may overflow.
+                result = lower;
+                result += Math.Floor(value * halfSpan);
+                result += Math.Floor(value2 * halfSpan);
+            }
+
+            return new DecimalValue(irContext, result);
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)

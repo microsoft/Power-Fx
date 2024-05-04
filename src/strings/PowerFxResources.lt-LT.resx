@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į dešimtainio skaičiaus reikšmę.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkciją „Dešimtainis“ galima naudoti tik tada, jei įjungta funkcija „Suderinama su „Power Fx 1.0“.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konvertuoja tekstą, kuris išreiškia skaičių, į „float“ reikšmę.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Komponentas</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">

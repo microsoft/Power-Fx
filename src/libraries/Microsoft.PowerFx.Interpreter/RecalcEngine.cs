@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -32,7 +33,6 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
-        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -48,7 +48,6 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
-            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -212,21 +211,6 @@ namespace Microsoft.PowerFx
 
             var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
-        }
-
-        internal FormulaType GetFormulaTypeFromName(string name)
-        {
-            return FormulaType.Build(GetTypeFromName(name));
-        }
-
-        internal DType GetTypeFromName(string name)
-        {
-            if (_definedTypeSymbolTable.TryLookup(new DName(name), out NameLookupInfo nameInfo))
-            {
-                return nameInfo.Type;
-            }
-
-            return FormulaType.GetFromStringOrNull(name)._type;
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
@@ -394,22 +378,44 @@ namespace Microsoft.PowerFx
         /// <param name="onUpdate">Function to be called when update is triggered.</param>
         public void AddUserDefinitions(string script, CultureInfo parseCulture = null, Action<string, FormulaValue> onUpdate = null)
         {
-            var userDefinitionResult = UserDefinitions.Process(script, parseCulture, features: Config.Features);
+            var options = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                Culture = parseCulture ?? CultureInfo.InvariantCulture
+            };
 
-            // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions);
             var sb = new StringBuilder();
 
-            foreach (var udf in userDefinitionResult.UDFs)
+            var parseResult = UserDefinitions.Parse(script, options);
+
+            // Compose will handle null symbols
+            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (errors.Any())
+            {
+                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
+
+                foreach (var error in errors)
+                {
+                    error.FormatCore(sb);
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            foreach (var udf in udfs)
             {
                 Config.SymbolTable.AddFunction(udf);
                 var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
 
-                List<TexlError> errors = new List<TexlError>();
+                List<TexlError> bindErrors = new List<TexlError>();
 
                 if (binding.ErrorContainer.GetErrors(ref errors))
                 {
-                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
                 }
             }
 
@@ -418,7 +424,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            foreach (var namedFormula in userDefinitionResult.NamedFormulas)
+            foreach (var namedFormula in parseResult.NamedFormulas)
             {
                 SetFormula(namedFormula.Ident.Name, namedFormula.Formula.ToString(), onUpdate);
             }

@@ -275,6 +275,59 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result.IsSuccess);
         }
 
+        private static TableType CreateTableTypeWithDisplayNames()
+        {
+            var myTableType = DType.EmptyTable
+                .Add(new DName("LogicalName1"), DType.String)
+                .Add(new DName("LogicalName2"), DType.Number);
+
+            var myDisplayNameProvider = DisplayNameProvider.New(new Dictionary<DName, DName>
+            {
+                { new DName("LogicalName1"), new DName("Display Name 1") },
+                { new DName("LogicalName2"), new DName("Display Name 2") },
+            });
+
+            var myTableTypeWithDisplayNames = DType.AttachOrDisableDisplayNameProvider(myTableType, myDisplayNameProvider);
+            return new TableType(myTableTypeWithDisplayNames);
+        }
+
+        [Theory]
+        [InlineData("ForAll( ShowColumns( MyTable, 'Display Name 2' ), { a: 'Display Name 2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, 'Display Name 1', 'Display Name 2' ), { a: 'Display Name 1', b: 'Display Name 2' } )", "*[a:s,b:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName2 ), { a: 'Display Name 2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName2 ), { a: 'LogicalName2' } )", "*[a:n]")]
+        [InlineData("ForAll( ShowColumns( MyTable, LogicalName1, 'Display Name 2' ), { a: 'Display Name 1', b: LogicalName2 } )", "*[a:s,b:n]")]
+        public void TexlFunctionTypeSemanticsShowColumns_DisplayNames(string expression, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("MyTable", CreateTableTypeWithDisplayNames());
+
+            var engine = new Engine(new PowerFxConfig(Features.PowerFxV1) { SymbolTable = symbol });
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData(
+            "With({'Display Name 2':false}, ForAll(ShowColumns(MyTable, 'Display Name 1', 'Display Name 2'), { a:LogicalName1, b:'Display Name 2' }))",
+            "*[a:s,b:b]")]
+        public void TexlFunctionTypeSemanticsShowColumns_DisplayNamesNotPropagatedPrePFxV1(string expression, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("MyTable", CreateTableTypeWithDisplayNames());
+
+            var features = new Features(Features.PowerFxV1) { PowerFxV1CompatibilityRules = false };
+            var engine = new Engine(new PowerFxConfig(features) { SymbolTable = symbol });
+            var result = engine.Check(expression);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
         [Theory]
         [InlineData("ShowColumns([{A:\"hello\",B:1}], \"A\")", "*[A:s]")]
         [InlineData("ShowColumns([{A:\"hello\",B:1}], \"B\")", "*[B:n]")]
@@ -1236,17 +1289,23 @@ namespace Microsoft.PowerFx.Core.Tests
                 DType.Number);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsRandBetween()
+        [Theory]
+        [InlineData("RandBetween(Number1,Number2)", "n")]
+        [InlineData("RandBetween(Number1,Decimal1)", "n")]
+        [InlineData("RandBetween(Decimal1,Number1)", "n")]
+        [InlineData("RandBetween(Decimal1,Decimal2)", "w")]
+        public void TexlFunctionTypeSemanticsRandBetween(string script, string expectedType)
         {
             var symbol = new SymbolTable();
-            symbol.AddVariable("A", FormulaType.Number);
-            symbol.AddVariable("B", FormulaType.Number);
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
 
             TestSimpleBindingSuccess(
-                    "RandBetween(A, B)",
-                    DType.Number,
-                    symbol);
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
         }
 
         [Theory]
@@ -1758,6 +1817,57 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Mod(Number1,Number2)", "n")]
+        [InlineData("Mod(Number1,Decimal1)", "n")]
+        [InlineData("Mod(Decimal1,Number1)", "n")]
+        [InlineData("Mod(Decimal1,Decimal2)", "w")]
+        public void TexlFunctionTypeSemanticsMod(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol);
+        }
+
+        [Theory]
+        [InlineData("Mod(NumberT1,NumberT2)", "*[Value:n]")]
+        [InlineData("Mod(NumberT1,DecimalT1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,NumberT1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,DecimalT2)", "*[Value:w]")]
+        [InlineData("Mod(NumberT1,Number2)", "*[Value:n]")]
+        [InlineData("Mod(NumberT1,Decimal1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,Number1)", "*[Value:n]")]
+        [InlineData("Mod(DecimalT1,Decimal2)", "*[Value:w]")]
+        [InlineData("Mod(Number1,NumberT2)", "*[Value:n]")]
+        [InlineData("Mod(Number1,DecimalT1)", "*[Value:n]")]
+        [InlineData("Mod(Decimal1,NumberT1)", "*[Value:n]")]
+        [InlineData("Mod(Decimal1,DecimalT2)", "*[Value:w]")]
+        public void TexlFunctionTypeSemanticsModT(string script, string expectedType)
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("NumberT1", new TableType(TestUtils.DT("*[Value:n]")));
+            symbol.AddVariable("NumberT2", new TableType(TestUtils.DT("*[Value:n]")));
+            symbol.AddVariable("DecimalT1", new TableType(TestUtils.DT("*[Value:w]")));
+            symbol.AddVariable("DecimalT2", new TableType(TestUtils.DT("*[Value:w]")));
+            symbol.AddVariable("Number1", new NumberType());
+            symbol.AddVariable("Number2", new NumberType());
+            symbol.AddVariable("Decimal1", new DecimalType());
+            symbol.AddVariable("Decimal2", new DecimalType());
+
+            TestSimpleBindingSuccess(
+                script,
+                TestUtils.DT(expectedType),
+                symbol,
+                features: Features.PowerFxV1); // for consistent single column result name
+        }
+
+        [Theory]
         [InlineData("Sqrt(1234.567)", "n")]
         [InlineData("Sqrt(T)", "*[A:n]")]
         [InlineData("Sqrt(ShowColumns(T2,\"Value\"))", "*[Value:n]")]
@@ -2208,7 +2318,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var foundLambdaParams = false;
                 for (var i = 0; i < maxArg; i++)
                 {
-                    foundLambdaParams |= func.IsLambdaParam(i);
+                    foundLambdaParams |= func.IsLambdaParam(null, i);
                 }
 
                 Assert.Equal(func.HasLambdas, foundLambdaParams);

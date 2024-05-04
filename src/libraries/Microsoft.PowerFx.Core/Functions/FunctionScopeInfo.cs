@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
 
         public FunctionScopeInfo(
-            TexlFunction function, 
+            TexlFunction function,
             bool usesAllFieldsInScope = true,
             bool supportsAsyncLambdas = true,
             bool acceptsLiteralPredicates = true,
@@ -174,6 +174,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, DType inputSchema, out DType typeScope)
+        {
+            return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
+        }
+
         public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
         {
             Contracts.AssertValue(args);
@@ -183,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 for (var i = 0; i < args.Length; i++)
                 {
-                    if (_function.IsLambdaParam(i))
+                    if (_function.IsLambdaParam(args[i], i))
                     {
                         if (args[i].Kind == NodeKind.BoolLit ||
                             args[i].Kind == NodeKind.NumLit ||
@@ -195,6 +200,51 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                 }
             }
+        }
+    }
+
+    internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
+    {
+        public static DName ThisGroup => new DName("ThisGroup");
+
+        public FunctionThisGroupScopeInfo(TexlFunction function)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 0)
+        {
+        }
+
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, DType inputSchema, out DType typeScope)
+        {
+            var ret = base.CheckInput(features, inputNode, inputSchema, out typeScope);
+            var newTypeScope = DType.EmptyRecord;
+
+            foreach (var node in callNode.Args.ChildNodes)
+            {
+                string name = null;
+
+                switch (node)
+                {
+                    case FirstNameNode firstNameNode:
+                        name = firstNameNode.Ident.Name.Value;
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                if (typeScope.Contains(new DName(name)) && !newTypeScope.Contains(new DName(name)) && typeScope.TryGetType(new DName(name), out DType type))
+                {
+                    newTypeScope = newTypeScope.Add(new DName(name), type);
+                }
+            }
+
+            typeScope = newTypeScope;
+
+            if (!typeScope.Contains(ThisGroup))
+            {
+                typeScope = typeScope.Add(new TypedName(inputSchema.ToTable(), ThisGroup));
+            }
+
+            return ret;
         }
     }
 }

@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>10진수 값으로 변환할 텍스트 값입니다.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>'십진수' 기능은 'Power Fx 1.0 호환성' 기능이 활성화된 경우에만 사용할 수 있습니다.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>숫자를 나타내는 '텍스트'를 float 값으로 변환합니다.</value>
   </data>
@@ -2500,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>구성 요소</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">

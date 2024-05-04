@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function expect identifiers, false otherwise.
         /// Needs to be overloaded for functions having identifier parameters.
-        /// Also overload <see cref="GetIdentifierParamStatus(Features, int)"/> method. 
+        /// Also overload <see cref="GetIdentifierParamStatus(TexlNode, Features, int)"/> method. 
         /// </summary>
         public virtual bool HasColumnIdentifiers => false;
 
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
-                StringResources.Get("FunctionReference_Link") + char.ToLowerInvariant(LocaleInvariantName.First());
+                "https://go.microsoft.com/fwlink/?LinkId=722347#" + char.ToLowerInvariant(LocaleInvariantName.First());
 
         /// <summary>
         /// Might need to reset if Function is variadic function.
@@ -501,7 +501,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = 0; i < count; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(context.Features, i))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features))
                 {
                     continue;
                 }
@@ -536,7 +536,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(context.Features, i))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features))
                 {
                     continue;
                 }
@@ -571,8 +571,13 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        // Return true if the parameter at the specified 0-based rank is a lambda parameter, false otherwise.
-        public virtual bool IsLambdaParam(int index)
+        /// <summary>
+        /// Return true if the parameter at the specified 0-based rank is a lambda parameter or is an specific TexlNode, false otherwise.
+        /// </summary>
+        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
+        /// <param name="index">TexNode index.</param>
+        /// <returns></returns>
+        public virtual bool IsLambdaParam(TexlNode node, int index)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
@@ -584,13 +589,14 @@ namespace Microsoft.PowerFx.Core.Functions
         /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise.
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that dont have args based on order e.g. Summarize.</param>
         /// <param name="index">Parameter index, 0-based.</param>
         /// <param name="features">Engine features.</param>
-        public virtual bool IsLazyEvalParam(int index, Features features)
+        public virtual bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
-            return IsLambdaParam(index);
+            return IsLambdaParam(node, index);
         }
 
         public virtual bool IsEcsExcemptedLambda(int index)
@@ -627,11 +633,12 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that don't have args based on order e.g. Summarize.</param>
         /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>Value from <see cref="ParamIdentifierStatus"/> which tells whether
         /// the parameter in the given index can be an identifier.</returns>
-        public virtual ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public virtual ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
@@ -646,12 +653,13 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns whether the parameter can be represented by an identifier.
         /// </summary>
+        /// <param name="node">TexlNode. Used by functions that don't have args based on order e.g. Summarize.</param>
         /// <param name="features">The features enabled for the expression.</param>
         /// <param name="index">Parameter's index.</param>
         /// <returns>true if the parameter can be an identifier, false otherwise.</returns>
-        public bool ParameterCanBeIdentifier(Features features, int index)
+        public bool ParameterCanBeIdentifier(TexlNode node, int index, Features features)
         {
-            var paramIdentifierStatus = GetIdentifierParamStatus(features, index);
+            var paramIdentifierStatus = GetIdentifierParamStatus(node, features, index);
             return paramIdentifierStatus ==
                 ParamIdentifierStatus.AlwaysIdentifier ||
                 paramIdentifierStatus == ParamIdentifierStatus.PossiblyIdentifier;

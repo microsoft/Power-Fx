@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 

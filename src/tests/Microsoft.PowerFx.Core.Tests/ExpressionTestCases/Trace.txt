@@ -1,4 +1,4 @@
-#SETUP: EnableExpressionChaining,TraceSetup
+#SETUP: EnableExpressionChaining,TraceSetup,PowerFxV1CompatibilityRules
 
 >> Trace("test1") ; traceRecord;
 {customRecord:"{}",message:"test1",severity:3}

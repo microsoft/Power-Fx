@@ -28,7 +28,6 @@ namespace Microsoft.PowerFx.Syntax
         private readonly string _script;
         private readonly ParserOptions _parserOptions;
         private readonly Features _features;
-        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
         // Exposing it so hosts can filter out the intellisense suggestions
         public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
@@ -48,153 +47,15 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
-            return TexlParser.ParseUserDefinitionScript(script, parserOptions);
-        }
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
 
-        /// <summary>
-        /// Parses and creates user definitions (named formulas, user defined functions).
-        /// </summary>
-        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
-        /// <param name="parserOptions">Options for parsing an expression.</param>
-        /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
-        /// <param name="features">PowerFx feature flags.</param>
-        /// <returns>True if there are no parser errors.</returns>
-        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
-        {
-            var userDefinitions = new UserDefinitions(script, parserOptions, features);
-
-            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
-        }
-
-        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
-        {
-            var parseResult = Parse(_script, _parserOptions);
-
-            if (_parserOptions.AllowAttributes)
+            if (parserOptions.AllowAttributes)
             {
-                parseResult = ProcessPartialAttributes(parseResult);
-            }
-            
-            // Parser returns both complete & incomplete UDFs, and we are only interested in creating TexlFunctions for valid UDFs. 
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), out var errors);
-
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-            userDefinitionResult = new UserDefinitionResult(
-                functions,
-                parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
-                parseResult.NamedFormulas);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Process user script and returns user defined functions and named formulas.
-        /// </summary>
-        /// <param name="script">User script containing UDFs and/or named formulas.</param>
-        /// <param name="parseCulture">CultureInfo to parse the script.</param>
-        /// <param name="features">Features.</param>
-        /// <returns>Tuple.</returns>
-        /// <exception cref="InvalidOperationException">Throw if the user script contains errors.</exception>
-        public static UserDefinitionResult Process(string script, CultureInfo parseCulture, Features features = null)
-        {
-            var options = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-                Culture = parseCulture ?? CultureInfo.InvariantCulture
-            };
-
-            var sb = new StringBuilder();
-
-            ProcessUserDefinitions(script, options, out var userDefinitionResult, features);
-
-            if (userDefinitionResult.HasErrors)
-            {
-                sb.AppendLine("Something went wrong when parsing named formulas and/or user defined functions.");
-
-                foreach (var error in userDefinitionResult.Errors)
-                {
-                    error.FormatCore(sb);
-                }
-
-                throw new InvalidOperationException(sb.ToString());
+                var userDefinitions = new UserDefinitions(script, parserOptions);
+                parseResult = userDefinitions.ProcessPartialAttributes(parseResult);
             }
 
-            return userDefinitionResult;
-        }
-
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
-        {
-            Contracts.AssertValue(uDFs);
-
-            var userDefinedFunctions = new List<UserDefinedFunction>();
-            var texlFunctionSet = new TexlFunctionSet();
-            errors = new List<TexlError>();
-
-            foreach (var udf in uDFs)
-            {
-                var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
-                {
-                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
-                    continue;
-                }
-
-                var parametersOk = CheckParameters(udf.Args, errors);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
-                if (!parametersOk || !returnTypeOk)
-                {
-                    continue;
-                }
-
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
-
-                texlFunctionSet.Add(func);
-                userDefinedFunctions.Add(func);
-            }
-
-            return userDefinedFunctions;
-        }
-
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
-        {
-            var isParamCheckSuccessful = true;
-            var argsAlreadySeen = new HashSet<string>();
-
-            foreach (var arg in args)
-            {
-                if (argsAlreadySeen.Contains(arg.NameIdent.Name))
-                {
-                    errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
-                    isParamCheckSuccessful = false;
-                }
-                else
-                {
-                    argsAlreadySeen.Add(arg.NameIdent.Name);
-
-                    var parameterType = arg.TypeIdent.GetFormulaType()._type;
-                    if (parameterType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(parameterType))
-                    {
-                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
-                        isParamCheckSuccessful = false;
-                    }
-                }
-            }
-
-            return isParamCheckSuccessful;
-        }
-
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
-        {
-            var returnTypeFormulaType = returnType.GetFormulaType()._type;
-            var isReturnTypeCheckSuccessful = true;
-
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind) || RestrictedTypes.Contains(returnTypeFormulaType))
-            {
-                errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
-                isReturnTypeCheckSuccessful = false;
-            }
-
-            return isReturnTypeCheckSuccessful;
+            return parseResult;
         }
 
 // This code is intended as a prototype of the Partial attribute system, for use in solution layering cases

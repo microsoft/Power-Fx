@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncFunction : MathTwoArgFunction
     {
         public TruncFunction()
-            : base("Trunc", TexlStrings.AboutTrunc, minArity: 1, nativeDecimal: true, secondArgFloat: true)
+            : base("Trunc", TexlStrings.AboutTrunc, minArity: 1, nativeDecimalArgs: 1)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncTableFunction : MathTwoArgTableFunction
     {
         public TruncTableFunction()
-            : base("Trunc", TexlStrings.AboutTruncT, minArity: 1, nativeDecimal: true, secondArgFloat: true)
+            : base("Trunc", TexlStrings.AboutTruncT, minArity: 1, nativeDecimalArgs: 1)
         {
         }
 

@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -858,6 +859,11 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
+            if (ReturnParameterType.FormulaType is BlobType bt && result is StringValue str)
+            {
+                result = FormulaValue.NewBlob(str.Value, ReturnParameterType.Schema.Format == "byte");
+            }
+
             return result;
         }
 
@@ -975,8 +981,14 @@ namespace Microsoft.PowerFx.Connectors
             return GetConnectorTypeInternal(compatibility, je);
         }
 
-        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility, out string name, out string displayName)
-        {
+        // Only called by CdpTabularService.GetSchema
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string valuePath, StringValue sv, ConnectorCompatibility compatibility, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        {                       
+            // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _);            
+            tableCapabilities = schema.GetTableCapabilities();
+
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
             return GetConnectorTypeInternal(compatibility, je);
         }
