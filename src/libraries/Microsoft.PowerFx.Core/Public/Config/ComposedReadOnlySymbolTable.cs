@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx
         private VersionHash _cachedVersionHash = VersionHash.New();
 
         // Expose the list to aide in intellisense suggestions. 
+        // Multiple readers ok. But not writing while we read.
         TexlFunctionSet INameResolver.Functions
         {
             get
@@ -76,6 +77,13 @@ namespace Microsoft.PowerFx
                 {
                     _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
                     _cachedVersionHash = current;
+                }
+
+                // Check that it didn't mutate. 
+                var newHash = this.VersionHash;
+                if (newHash != current)
+                {
+                    throw new InvalidOperationException($"Symbol Table was mutated during read.");
                 }
 
                 return _nameResolverFunctions;                
