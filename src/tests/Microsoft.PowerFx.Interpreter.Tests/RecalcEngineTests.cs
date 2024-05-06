@@ -1656,6 +1656,12 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
 
+        // UDFs with body errors should fail
+        [InlineData(
+            "S = Type({x:Text}); f():S = ({);",
+            "",
+            false)]
+
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
