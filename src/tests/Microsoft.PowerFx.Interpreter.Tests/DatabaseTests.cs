@@ -444,7 +444,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             throw new NotImplementedException();
         }
 
-        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
         {
             throw new NotImplementedException();
         }

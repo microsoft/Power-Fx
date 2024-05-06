@@ -3564,6 +3564,10 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrRequiresMutableFirstArg_ShortMessage" xml:space="preserve">
+    <value>First argument to this function cannot be modified.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test function in a non-test property. You can't use this property to invoke test-only functions.</value>
     <comment>Error Message. The term 'Test' is an adjective ('Test function' = 'function for testing').</comment>

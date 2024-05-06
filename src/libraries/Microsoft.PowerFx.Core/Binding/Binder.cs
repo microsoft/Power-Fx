@@ -4678,6 +4678,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetMutable(node, mutable);
                 }
 
+                // Error if function requires a mutable argument and one was not supplied
+                if (_txb.Features.PowerFxV1CompatibilityRules && func.MutatesArg0 && (node.Args.Count < 1 || !_txb.IsMutable(node.Args.ChildNodes[0])))
+                {
+                    _txb.ErrorContainer.EnsureError(node.Args.Count < 1 ? node : node.Args.ChildNodes[0], TexlStrings.ErrRequiresMutableFirstArg);
+                }
+
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {

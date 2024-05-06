@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -100,10 +101,11 @@ namespace Microsoft.PowerFx.Types
         /// Lookup the record at the given 1-based index, or return an error value if out of range.
         /// </summary>
         /// <param name="index1">1-based index.</param>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
         /// <returns>The record or an errorValue.</returns>
-        public DValue<RecordValue> Index(int index1)
+        public DValue<RecordValue> Index(int index1, bool mutationCopy = false)
         {
-            if (TryGetIndex(index1, out var record))
+            if (TryGetIndex(index1, out var record, mutationCopy: mutationCopy))
             {
                 return record;
             }
@@ -112,10 +114,11 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Index() does standard error messaging and then call TryGetIndex().
-        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        // By default, can't mutate through a table, must be overrideen for specific table types.
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
         {
             var index0 = index1 - 1;
-            if (index0 < 0)
+            if (index0 < 0 || mutationCopy)
             {
                 record = null;
                 return false;
@@ -123,6 +126,46 @@ namespace Microsoft.PowerFx.Types
 
             record = Rows.ElementAtOrDefault(index0);
             return record != null;
+        }
+
+        /// <summary>
+        /// Lookup the first record, or return blank if the table is empty.
+        /// </summary>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
+        /// <returns>The record or blank.</returns>
+        public virtual DValue<RecordValue> First(bool mutationCopy = false)
+        {
+            if (mutationCopy)
+            {
+                return DValue<RecordValue>.Of(ImmutableTable(IRContext));
+            }
+
+            return Rows.FirstOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        /// <summary>
+        /// Lookup the last record, or return blank if the table is empty.
+        /// </summary>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
+        /// <returns>The record or blank.</returns>
+        public virtual DValue<RecordValue> Last(bool mutationCopy = false)
+        {
+            if (mutationCopy)
+            {
+                return DValue<RecordValue>.Of(ImmutableTable(IRContext));
+            }
+
+            return Rows.LastOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        private static ErrorValue ImmutableTable(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Table is immutable",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
         }
 
         private static ErrorValue ArgumentOutOfRange(IRContext irContext)

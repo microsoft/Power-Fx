@@ -123,9 +123,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
             Assert.Equal(11m, r1.ToObject());
 
-            // But SetField fails 
-            var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
-            Assert.False(r2.IsSuccess);
+            // Can deep mutate record
+            var r2 = engine.Eval("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.Equal(31m, r2.ToObject());
         }
 
         [Fact]
@@ -144,9 +144,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
             Assert.Equal(11.0, r1.ToObject());
 
-            // But SetField fails 
-            var r2 = engine.Check("Set(obj.X, Float(31)); obj.X", null, _opts);
-            Assert.False(r2.IsSuccess);
+            // Can deep mutate record
+            var r2 = engine.Eval("Set(obj.X, Float(31)); obj.X", null, _opts);
+            Assert.Equal(31.0, r2.ToObject());
         }
 
         // Test various failure cases 

@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
             return recordType;
         }
 
-        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
         {
             TryGetIndexNumberOfCalls++;
 

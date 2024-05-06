@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Types
             return DValue<BooleanValue>.Of(FormulaValue.New(true));
         }
 
-        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
         {
             var index0 = index1 - 1;
             if (_sourceIndex != null)
@@ -134,14 +134,45 @@ namespace Microsoft.PowerFx.Types
                     return false;
                 }
 
-                var item = _sourceIndex[index0];
-                record = Marshal(item);
+                if (mutationCopy && _sourceMutableIndex != null)
+                {
+                    RecordValue rec = Marshal(_sourceIndex[index0]).Value;
+                    RecordValue copyRecord = (RecordValue)rec.MaybeShallowCopy();
+                    _sourceMutableIndex[index0] = MarshalInverse(copyRecord);
+                    record = DValue<RecordValue>.Of(copyRecord);
+                }
+                else
+                {
+                    var item = _sourceIndex[index0];
+                    record = Marshal(item);
+                }
+
                 return true;
             }
             else
             {
                 return base.TryGetIndex(index1, out record);
             }
+        }
+
+        public override DValue<RecordValue> First(bool mutationCopy = false)
+        {
+            if (TryGetIndex(1, out var record, mutationCopy: mutationCopy))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        public override DValue<RecordValue> Last(bool mutationCopy = false)
+        {
+            if (TryGetIndex(Count(), out var record, mutationCopy: mutationCopy))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(FormulaValue.NewBlank());
         }
 
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
