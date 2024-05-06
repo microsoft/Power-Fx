@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -105,6 +106,10 @@ namespace Microsoft.PowerFx
                 {
                     this._resolvedTypes = DefinedTypeResolver.ResolveTypes(_parse.DefinedTypes, _symbols, out var errors);
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
+                }
+                else
+                {
+                    this._resolvedTypes = ImmutableDictionary<DName, FormulaType>.Empty;
                 }
             }
 
