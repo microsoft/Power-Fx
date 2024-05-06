@@ -48,6 +48,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
 
+            if (node.ChildNodes.Count < 1)
+            {
+                return DType.Invalid;
+            }
+
             var typedNames = new List<TypedName>();
             var names = new HashSet<DName>();
 
@@ -77,6 +82,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
+
+            if (node.ChildNodes.Count != 1)
+            {
+                return DType.Invalid;
+            }
 
             var childNode = node.ChildNodes.First();
             var ty = childNode.Accept(this, context);

@@ -38,6 +38,8 @@ namespace Microsoft.PowerFx.Core.Tests
         // Invalid types
         [InlineData("Pics = Type([Image])", "*[Value:i]", false)]
         [InlineData("A = Type(B)", "", false)]
+        [InlineData("A = Type([])", "", false)]
+        [InlineData("A = Type({})", "", false)]
         public void TestUserDefinedType(string typeDefinition, string expectedDefinedTypeString, bool isValid)
         {
             var parseOptions = new ParserOptions
