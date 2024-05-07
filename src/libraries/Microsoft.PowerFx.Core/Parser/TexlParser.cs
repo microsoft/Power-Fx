@@ -376,6 +376,9 @@ namespace Microsoft.PowerFx.Core.Parser
                         _hasSemicolon = false;
                         ParseTrivia();
                         _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
+
+                        var errorCount = _errors.Count;
+
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
@@ -384,7 +387,9 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
+                        var bodyParseValid = _errors.Count == errorCount;
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -393,6 +398,8 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
 
+                        var errorCount = _errors.Count;
+                        
                         var result = isImperative ? ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
 
@@ -402,6 +409,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
                             break;
                         }
+
+                        var bodyParseValid = _errors.Count == errorCount;
 
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: true));
                     }
