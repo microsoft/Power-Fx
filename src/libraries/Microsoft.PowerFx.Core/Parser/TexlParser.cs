@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         var bodyParseValid = _errors?.Count == errorCount;
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: true));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else
                     {

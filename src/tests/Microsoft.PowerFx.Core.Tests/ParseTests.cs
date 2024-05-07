@@ -883,19 +883,19 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a = 10; b = in'valid ; c = 20;", 0, 3, true)]
-        [InlineData("a = 10; b = in(valid ; c = 20;", 0, 3, true)]
-        [InlineData("a = 10; b = in)valid ; c = 20;", 0, 3, true)]
-        [InlineData("a = 10; b = in{valid ; c = 20;", 0, 3, true)]
-        [InlineData("a = 10; b = in}valid ; c = 20;", 0, 3, true)]
-        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
-        [InlineData("x = 1; Foo(x: Number): Number = Abs(x); y = 2;", 1, 2, false)]
-        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, false)]
-        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
-        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
-        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, true)]
-        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
-        public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int namedFormulaCount, bool expectErrors)
+        [InlineData("a = 10; b = in'valid ; c = 20;", 0, 0, 3, true)]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 0, 0, 3, true)]
+        [InlineData("a = 10; b = in)valid ; c = 20;", 0, 0, 3, true)]
+        [InlineData("a = 10; b = in{valid ; c = 20;", 0, 0, 3, true)]
+        [InlineData("a = 10; b = in}valid ; c = 20;", 0, 0, 3, true)]
+        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 1, 0, false)]
+        [InlineData("x = 1; Foo(x: Number): Number = Abs(x); y = 2;", 1, 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 2, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 2, 1, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 1, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, 1, true)]
+        public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int validUdfCount, int namedFormulaCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()
             {
@@ -906,7 +906,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
             Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
             Assert.Equal(expectErrors, errors.Any());
         }
