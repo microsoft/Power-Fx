@@ -936,5 +936,24 @@ namespace Microsoft.PowerFx.Core.Tests
                 i++;
             }
         }
+
+        [Theory]
+        [InlineData("SomeFunc(): Number = ({x:5, y5);", 1, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = ;", 1, 0, true)]
+        [InlineData("Valid(x: Number): Number = x; Invalid(x: Text): Text = {;};", 2, 1, true)]
+        [InlineData("Invalid(x: Text): Text = ({); A(): Text = \"Hello\";", 2, 1, true)]
+        public void TestUDFInvalidBody(string script, int udfCount, int validUdfCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, parseResult.UDFs.Where(udf => udf.IsParseValid).Count());
+            Assert.Equal(expectErrors, parseResult.HasErrors);
+        }
     }
 }
