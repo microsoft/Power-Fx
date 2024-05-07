@@ -17,11 +17,16 @@ namespace Microsoft.PowerFx.Core
 
         public ReadOnlyINameResolver(INameResolver nameResolver) 
         {
+            Contracts.AssertValue(nameResolver);
+
             _nameResolver = nameResolver;
         }
 
         bool INameResolver.LookupType(DName name, out FormulaType fType)
         {
+            Contracts.AssertValid(name);
+            Contracts.AssertNonEmpty(name);
+
             return _nameResolver.LookupType(name, out fType);
         }
     }

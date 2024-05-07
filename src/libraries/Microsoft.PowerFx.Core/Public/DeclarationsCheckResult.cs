@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class DeclarationsCheckResult : IOperationStatus
     {
-        // Information for binding. 
-        private bool _setBindingCalled;
         private ReadOnlySymbolTable _symbols;
 
         private IReadOnlyDictionary<DName, FormulaType> _resolvedTypes;
@@ -44,14 +42,15 @@ namespace Microsoft.PowerFx
 
         internal DeclarationsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
-            if (_setBindingCalled)
+            Contracts.AssertValue(symbols);
+
+            if (_symbols != null)
             {
                 throw new InvalidOperationException($"Can only call {nameof(SetBindingInfo)} once.");
             }
 
             _symbols = symbols;
 
-            _setBindingCalled = true;
             return this;
         }
 
@@ -95,7 +94,7 @@ namespace Microsoft.PowerFx
 
         internal IReadOnlyDictionary<DName, FormulaType> ResolveTypes()
         {
-            if (_parse == null || _parse.DefinedTypes == null || !_setBindingCalled)
+            if (_parse == null || _parse.DefinedTypes == null || _symbols == null)
             {
                 throw new InvalidOperationException($"Must call {nameof(ApplyParse)} with valid defined types and {nameof(SetBindingInfo)} before calling ResolveTypes().");
             }
@@ -144,6 +143,8 @@ namespace Microsoft.PowerFx
         // Set the default culture for localizing error messages. 
         public DeclarationsCheckResult SetDefaultErrorCulture(CultureInfo culture)
         {
+            Contracts.AssertValue(culture);
+
             this._defaultErrorCulture = culture;
             return this;
         }
