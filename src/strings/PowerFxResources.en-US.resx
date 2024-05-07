@@ -3018,6 +3018,34 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Summarize function - the data source (table / collection) to operate on.</comment>
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grouping_column</value>
+    <comment>function_parameter - Second argument to the Summarize function - the name of the column by which the data source will be grouped. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregation</value>
+    <comment>function_parameter - Third argument to the Summarize function - a call to an aggregation function.</comment>
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>The table or collection to group.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>The name of a column to group the data by.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>A call to an aggregation function.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Raises a number x to the power of another number y. Same as x^y.</value>
     <comment>Description of 'Power' function.</comment>
@@ -4594,5 +4622,29 @@
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Expected a text, numeric, boolean, or date/time value.</value>
+    <comment>Error message shown to the user when a function expects an expression that returns a primitive value but it doesn't.</comment>
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize requires at least one grouping column.</value>
+    <comment>Summarize is the function name. Error message shown to the user when a function expects an grouping columns but none is present. {Locked=Summarize} </comment>
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.</value>
+    <comment>Summarize is the function name. Error message shown to the user when any argument index greater than 0 is not an existing column name nor a formulas named with the As keyword. {Locked=Summarize} {Locked='As'}</comment>
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when an argument conflicts with 'ThisGroup' reserved word. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when the provided data source contains a field called 'ThisGroup'. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
+    <comment>Error message shown to the user when the provided data source is followed by 'As' reserved word. {Locked='As'}</comment>
   </data>
 </root>

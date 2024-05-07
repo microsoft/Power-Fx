@@ -1611,6 +1611,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Sum)
             },
             {
+                BuiltinFunctionsCore.Summarize,
+                NoErrorHandling(Summarize)
+            },
+            {
                 BuiltinFunctionsCore.SumT,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.SumT.Name,

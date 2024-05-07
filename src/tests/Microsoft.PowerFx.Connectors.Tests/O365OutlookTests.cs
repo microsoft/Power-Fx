@@ -556,14 +556,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [InlineData(
             @"Office365Outlook.ExportEmail(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="")",
-            "STARTSWITH:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
+            "BLOBSTR:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
             "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/api/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d/$value",
             "",
             "Response_O365Outlook_ExportEmail.eml")]
 
         [InlineData(
             @"Office365Outlook.ExportEmailV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="")",
-            "STARTSWITH:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
+            "BLOBSTR:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
             "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d/$value",
             "",
             "Response_O365Outlook_ExportEmail.eml")]

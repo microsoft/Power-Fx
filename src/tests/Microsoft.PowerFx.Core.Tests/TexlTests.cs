@@ -2318,7 +2318,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var foundLambdaParams = false;
                 for (var i = 0; i < maxArg; i++)
                 {
-                    foundLambdaParams |= func.IsLambdaParam(i);
+                    foundLambdaParams |= func.IsLambdaParam(null, i);
                 }
 
                 Assert.Equal(func.HasLambdas, foundLambdaParams);

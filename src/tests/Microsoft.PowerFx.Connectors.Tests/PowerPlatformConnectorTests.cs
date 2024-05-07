@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -516,6 +517,50 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(7m, ((DecimalValue)fv).Value);
         }
 
+        [Fact]
+        public async Task AzureBlobConnector_GetFileContentV2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+            config.AddFunction(new AsBlobFunctionImpl());
+            var token = @"eyJ0eXAiOi...";
+
+            using var httpClient = new HttpClient(testConnector);
+            using var client =
+                new PowerPlatformConnectorClient(
+                    "firstrelease-003.azure-apihub.net",    // endpoint
+                    "49970107-0806-e5a7-be5e-7c60e2750f01", // environment
+                    "cf743d059c004f668c6d7eb9e721d0f4",     // connectionId
+                    () => $"{token}",
+                    httpClient)
+                {
+                    SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
+                };
+
+            config.AddActionConnector("AzureBlobStorage", apiDoc, new ConsoleLogger(_output));
+
+            // Now execute it...
+            var engine = new RecalcEngine(config);
+            var runtimeContext = new TestConnectorRuntimeContext("AzureBlobStorage", client);
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(runtimeContext);
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_GetFileContentV2.raw");
+
+            CheckResult check = engine.Check(@"AzureBlobStorage.GetFileContentV2(""pfxdevstgaccount1"", ""JTJmdGVzdCUyZjAxLnR4dA=="")", new ParserOptions() { AllowsSideEffects = true });
+            Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
+            _output.WriteLine($"\r\nIR: {check.PrintIR()}");
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+
+            if (result is ErrorValue ev)
+            {
+                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+            }
+
+            BlobValue bv = Assert.IsType<BlobValue>(result);
+            Assert.Equal("TEST FILE", bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult());
+        }
+
         [Theory]
         [InlineData("Office365Outlook.FindMeetingTimesV2(")]
         public void IntellisenseHelpStringsOptionalParms(string expr)
@@ -934,7 +979,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook ExportEmailV2.txt");
             FormulaValue result = await engine.EvalAsync(@"Office365Outlook.ExportEmailV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA="")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            Assert.StartsWith("Received: from DBBPR83MB0507.EURPRD83", (result as StringValue).Value);
+            Assert.StartsWith("Received: from DBBPR83MB0507.EURPRD83", (result as BlobValue).Content.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult());
 
             var actual = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
