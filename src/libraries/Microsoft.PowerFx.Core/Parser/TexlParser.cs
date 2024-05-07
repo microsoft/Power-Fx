@@ -377,7 +377,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
 
-                        var errorCount = _errors.Count;
+                        var errorCount = _errors?.Count;
 
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        var bodyParseValid = _errors.Count == errorCount;
+                        var bodyParseValid = _errors?.Count == errorCount;
 
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
@@ -398,7 +398,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
 
-                        var errorCount = _errors.Count;
+                        var errorCount = _errors?.Count;
                         
                         var result = isImperative ? ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        var bodyParseValid = _errors.Count == errorCount;
+                        var bodyParseValid = _errors?.Count == errorCount;
 
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: true));
                     }
