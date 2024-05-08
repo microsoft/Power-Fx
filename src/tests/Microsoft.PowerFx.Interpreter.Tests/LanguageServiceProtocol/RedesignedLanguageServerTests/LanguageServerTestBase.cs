@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public TestHostTaskExecutor HostTaskExecutor { get; set; }
 
+        public TestHostCancelationHandler HostCancelationHandler { get; set; }
+
         public LanguageServerTestBase()
             : base()
         {
@@ -43,15 +45,19 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             config.AddFunction(new AISummarizeFunction());
 
             var engine = new Engine(config);
-            HandlerFactory = new TestHandlerFactory();
             HostTaskExecutor = new TestHostTaskExecutor();
+            HostCancelationHandler = new TestHostCancelationHandler();
+            HandlerFactory = new TestHandlerFactory(HostCancelationHandler);
             var random = new Random();
             var useHostTaskExecutor = random.Next(0, 2) == 1;
 
             var scopeFactory = initParams?.scopeFactory ?? new TestPowerFxScopeFactory(
                                (string documentUri) => engine.CreateEditorScope(initParams?.options, GetFromUri(documentUri)));
 
-            TestServer = new LanguageServerForTesting(scopeFactory, HandlerFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger);
+            TestServer = new LanguageServerForTesting(scopeFactory, HandlerFactory, useHostTaskExecutor ? HostTaskExecutor : null, Logger)
+            {
+                HostCancelationHandler = HostCancelationHandler
+            };
         }
 
         internal void Init()

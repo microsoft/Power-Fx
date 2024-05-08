@@ -64,6 +64,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public INLHandlerFactory NLHandlerFactory { get; init; }
 
+        /// <summary>
+        /// An instance of the host cancelation handler that allows the host to cancel the lsp operations.
+        /// </summary>
+        public IHostCancelationHandler HostCancelationHandler { get; init; }
+
         private readonly ILanguageServerLogger _loggerInstance;
 
         /// <summary>
@@ -105,7 +110,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private ILanguageServerOperationHandlerFactory GetHandlerFactory()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return HandlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
+            return HandlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange, HostCancelationHandler);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -202,7 +207,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                 // this exists only for backward compat
                 LogUnhandledExceptionHandler?.Invoke(ex);
-                outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, ex.GetDetailedExceptionMessage());
+
+                // If the request was cancelled, we should interpret and try to add the specific error message with specific error code for cancellation
+                // Else just add the generic internal error message
+                if (!outputBuilder.TryAddRequestCancelledErrorIfApplicable(input.Id, cancellationToken, ex))
+                {
+                    outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, ex.GetDetailedExceptionMessage());
+                }
+
                 return outputBuilder;
             }
         }

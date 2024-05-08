@@ -34,6 +34,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public bool Delay { get; set; } = false;
 
+        public int Nl2FxDelayTime { get; set; } = 100;
+
+        public bool ThrowOnCancellation { get; set; } = false;
+
         public int PreHandleNl2FxCallCount { get; set; } = 0;
 
         public TestNL2FxHandler()
@@ -44,12 +48,17 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
             if (this.Delay)
             {
-                await Task.Delay(100, cancel).ConfigureAwait(false);
+                await Task.Delay(Nl2FxDelayTime, CancellationToken.None).ConfigureAwait(false);
             }
 
             if (this.Throw)
             {
                 throw new InvalidOperationException($"Simulated error");
+            }
+
+            if (this.ThrowOnCancellation)
+            {
+                cancel.ThrowIfCancellationRequested();
             }
 
             var nl2FxParameters = request;

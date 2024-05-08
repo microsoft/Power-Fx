@@ -11,8 +11,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         private readonly Dictionary<string, ILanguageServerOperationHandler> _handlers = new ();
 
-        public TestHandlerFactory()
+        private readonly TestHostCancelationHandler _hostCancelationHandler;
+
+        public TestHandlerFactory(TestHostCancelationHandler hostCancelationHandler)
         {
+            _hostCancelationHandler = hostCancelationHandler;
         }
 
         public TestHandlerFactory SetHandler(string method, ILanguageServerOperationHandler handler)
@@ -30,6 +33,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             switch (method)
             {
+                case TextDocumentNames.CancelRequest:
+                    return new CancelRequestNotificationHandler(_hostCancelationHandler);
                 case CustomProtocolNames.NL2FX:
                     return new Nl2FxLanguageServerOperationHandler(null);
                 case CustomProtocolNames.FX2NL:

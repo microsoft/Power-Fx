@@ -121,10 +121,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
             var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
             var tokens = await GetTokensAsync(operationContext, new GetTokensContext(tokenTypesToSkip, semanticTokensParams.TextDocument.Uri, expression), cancellationToken).ConfigureAwait(false);
+            var controlTokensObj = !isRangeSemanticTokens ? new ControlTokens() : null;
 
             if (tokens == null || !tokens.Any())
             {
                 WriteEmptySemanticTokensResponse(operationContext);
+                PublishControlTokenNotification(operationContext, controlTokensObj, queryParams);
                 return;
             }
 
@@ -133,8 +135,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 // Only consider overlapping tokens. end index is exlcusive
                 tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             }
-
-            var controlTokensObj = !isRangeSemanticTokens ? new ControlTokens() : null;
 
             var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol, controlTokensObj);
             operationContext.OutputBuilder.AddSuccessResponse(operationContext.RequestId, new SemanticTokensResponse() { Data = encodedTokens });
