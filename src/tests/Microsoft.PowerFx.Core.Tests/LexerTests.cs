@@ -206,11 +206,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.Error, tokens[0].Kind);
             Assert.Equal(2, (tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length);
             Assert.Equal((tokens[0] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
+        }
 
-            var expression = "\"" + char.ConvertFromUtf32(8203) + "AABB\""; // expression.Length is 7
+        [Fact]
+        public void TestZeroWidthSpaceCharactersStringLength()
+        {
+            var expression = "\"AA" + char.ConvertFromUtf32(8203) + "BB\"";
+            var tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.PFxV1);
+            var stringToken = tokens[0] as StrLitToken;
+            Assert.Equal(stringToken.Value.Length, expression.Length - 2); // Flags.PFxV1 will keep the zero width space char.
+
+            expression = "\"AA" + char.ConvertFromUtf32(8203) + "BB\"";
             tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.None);
-            var stringToken = tokens[0] as StrLitToken; // stringToken.Legth 
-            Assert.Equal(stringToken.Value.Length, expression.Length - 2);
+            stringToken = tokens[0] as StrLitToken;
+            Assert.Equal(stringToken.Value.Length, expression.Length - 3); // Flags.PFxV1 will remove the zero width space char.
         }
 
         [Fact]

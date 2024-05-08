@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        public IReadOnlyList<Token> LexSource(string text, Flags flags = Flags.None)
+        public IReadOnlyList<Token> LexSource(string text, Flags flags = Flags.PFxV1)
         {
             Contracts.AssertValue(text);
 
@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
-        public List<Token> GetTokens(string text, Flags flags = Flags.None)
+        public List<Token> GetTokens(string text, Flags flags = Flags.PFxV1)
         {
             Contracts.AssertValue(text);
 
