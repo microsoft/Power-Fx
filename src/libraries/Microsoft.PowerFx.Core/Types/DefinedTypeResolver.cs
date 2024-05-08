@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 if (resolvedType == DType.Invalid)
                 {
-                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, currentType.Ident.Name));
+                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidTypeDefinition, currentType.Ident.Name));
                     continue;
                 }
 
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Types
                 foreach (var cyclicType in cycles)
                 {
                     PopType(cyclicType, out var ct);
-                    _errors.Add(new TexlError(ct.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, ct.Ident.Name));
+                    _errors.Add(new TexlError(ct.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidCycles, ct.Ident.Name));
                 }
             }
 

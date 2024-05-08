@@ -4411,19 +4411,23 @@
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
     <value>Type literal declaration was invalid.</value>
-    <comment>Error message when type binding is invalid</comment>
+    <comment>Error message when type binding is invalid.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definition of type {0} is invalid.</value>
-    <comment>Error message when type binding is invalid</comment>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definition of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type binding may have cycles.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
     <value>Restricted type name {0} cannot be used.</value>
-    <comment>Error message when using restricted type name</comment>
+    <comment>Error message when using restricted type name.</comment>
   </data>
   <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
     <value>Type {0} is already defined.</value>
-    <comment>This error message shows up when user tries to define a type that already exists</comment>
+    <comment>This error message shows up when user tries to define a type that already exists.</comment>
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
