@@ -84,9 +84,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num = 3;", 1, 1)]
-        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num = 3;", 1, 1)]
-        public void InvalidUDFBodyTest2(string script, int udfCount, int nfCount)
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;}; num = 3;", 1, 0, 1)]
+        [InlineData("test2(b: Boolean): Boolean = { Set(a, b); Collect(,) ;};;;;;;;; num = 3;", 1, 0, 1)]
+        public void InvalidUDFBodyTest2(string script, int udfCount, int validUdfCount, int nfCount)
         {
             var options = new ParserOptions()
             {
@@ -98,7 +98,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Any());
-            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
         }
 

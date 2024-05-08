@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetSortTestSetup", (null, OptionSetSortTestSetup, null, null) },
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
             { "RegEx", (null, RegExSetup, null, null) },
-            { "TraceSetup", (null, null, null, TraceSetup) }
+            { "TraceSetup", (null, null, null, TraceSetup) },
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
@@ -571,7 +571,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t_bsType = TableType.Empty().Add("b", FormulaType.String);
             engine.UpdateVariable("t_bs1", FormulaValue.NewTable(t_bsType.ToRecord()));
             engine.UpdateVariable("t_bs2", FormulaValue.NewTable(t_bsType.ToRecord()));
-        }
+        }        
 
         private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)
         {

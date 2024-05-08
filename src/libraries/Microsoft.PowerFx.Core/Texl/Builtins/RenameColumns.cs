@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0 || (argumentIndex & 0x1) == 1;
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             Contracts.Assert(index >= 0);
 
