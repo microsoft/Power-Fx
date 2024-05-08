@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 {
     /// <summary>
     /// Handler to handle the $/cancelRequest notification.
+    /// Implements https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#cancelRequest .
     /// </summary>
     internal sealed class CancelRequestNotificationHandler : ILanguageServerOperationHandler
     {

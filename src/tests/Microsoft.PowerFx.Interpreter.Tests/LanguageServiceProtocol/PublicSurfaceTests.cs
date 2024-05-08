@@ -47,6 +47,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.ILanguageServerLogger",
                 "Microsoft.PowerFx.LanguageServerProtocol.IHostTaskExecutor",
                 "Microsoft.PowerFx.LanguageServerProtocol.Handlers.LanguageServerOperationContext",
+                "Microsoft.PowerFx.LanguageServerProtocol.IHostCancelationHandler",
 
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
