@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -130,7 +131,7 @@ namespace Microsoft.PowerFx.Functions
                         sb.Append(sv.Value);
                         break;
                     case OptionSetValue osv:
-                        sb.Append(osv.ExecutionValue);
+                        sb.Append(osv.ExecutionValue is string s ? s : osv.DisplayName);
                         break;
                     default:
                         return CommonErrors.RuntimeTypeMismatch(arg.IRContext);

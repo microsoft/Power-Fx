@@ -830,7 +830,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Comparing to backing type is permitted under a few circumstances
-                else if (typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo.CanCompareNumeric &&
+                else if (typeLeft.Kind == DKind.OptionSetValue && 
+                        (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCompareNumeric) &&
                         (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCoerceFromBackingKind || typeLeft.OptionSetInfo.CanCoerceToBackingKind) &&
                         (typeRight.Kind == DKind.Number || typeRight.Kind == DKind.Decimal))
                 {
@@ -843,7 +844,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                     };
                 }
-                else if (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo.CanCompareNumeric &&
+                else if (typeRight.Kind == DKind.OptionSetValue &&
+                        (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCompareNumeric) &&
                         (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCoerceFromBackingKind || typeRight.OptionSetInfo.CanCoerceToBackingKind) &&
                         (typeLeft.Kind == DKind.Number || typeLeft.Kind == DKind.Decimal))
                 {

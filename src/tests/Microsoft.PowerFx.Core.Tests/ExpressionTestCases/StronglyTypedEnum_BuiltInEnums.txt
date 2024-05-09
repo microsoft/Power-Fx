@@ -648,6 +648,15 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 >> "Label:" & StartOfWeek.Sunday
 "Label:Sunday"
 
+>> Concatenate( "Label:", StartOfWeek.Sunday )
+"Label:Sunday"
+
+>> StartOfWeek.Sunday & "Evening"
+"SundayEvening"
+
+>> Concatenate( StartOfWeek.Sunday, "Evening" )
+"SundayEvening"
+
 >> Mid( StartOfWeek.Sunday, 2 )
 "unday"
 
@@ -675,11 +684,23 @@ Match.CalculatedOptionSetValue
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
+>> Concatenate( "Label:" & MatchOptions.IgnoreCase )
+"Label:i"
+
 >> Text( ErrorKind.FileNotFound )
 "FileNotFound"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:FileNotFound"
+
+>> Concatenate( "Label:" & ErrorKind.FileNotFound )
+"Label:FileNotFound"
+
+>> Concat( ["String", StartOfWeek.Tuesday, ErrorKind.Div0, JSONFormat.FlattenValueTables], Value )
+"StringTuesdayDiv0_"
+
+>> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
+"TuesdayFriday"
 
 //===========================================================================================================
 //
@@ -718,6 +739,9 @@ true
 "Monday"
 
 >> "Severity: " & StartOfWeek.Monday
+"Severity: Monday"
+
+>> Concatenate( "Severity: ", StartOfWeek.Monday )
 "Severity: Monday"
 
 >> Len( StartOfWeek.Monday )
@@ -782,6 +806,9 @@ Errors: Error 19-21: Unable to compare values of type Enum (StartOfWeek).
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> StartOfWeek.Monday & StartOfWeek.Tuesday
+"MondayTuesday"
+
+>> Concatenate( StartOfWeek.Monday, StartOfWeek.Tuesday )
 "MondayTuesday"
 
 >> Weekday( Date(1980,1,1), StartOfWeek.Monday & StartOfWeek.Tuesday )

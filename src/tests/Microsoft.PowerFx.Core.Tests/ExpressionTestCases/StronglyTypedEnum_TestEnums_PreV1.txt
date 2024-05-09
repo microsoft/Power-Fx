@@ -408,6 +408,15 @@ false
 >> "Label:" & TestYesNo.No
 "Label:false"
 
+>> Concatenate( "Label:", TestYesNo.No )
+"Label:false"
+
+>> TestYesNo.No & "Way"
+"falseWay"
+
+>> Concatenate( TestYesNo.No, "Way" )
+"falseWay"
+
 >> Text( TestYeaNay.Nay )
 "false"
 

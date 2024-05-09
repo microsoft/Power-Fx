@@ -640,6 +640,15 @@ true
 >> "Label:" & StartOfWeek.Sunday
 "Label:1"
 
+>> Concatenate( "Label:", StartOfWeek.Sunday )
+"Label:1"
+
+>> StartOfWeek.Sunday & "Evening"
+"1Evening"
+
+>> Concatenate( StartOfWeek.Sunday, "Evening" )
+"1Evening"
+
 >> Mid( StartOfWeek.Sunday, 2 )
 ""
 
@@ -667,12 +676,23 @@ true
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
+>> Concatenate( "Label:" & MatchOptions.IgnoreCase )
+"Label:i"
+
 >> Text( ErrorKind.FileNotFound )
 "17"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:17"
 
+>> Concatenate( "Label:" & ErrorKind.FileNotFound )
+"Label:17"
+
+>> Concat( ["String", StartOfWeek.Tuesday, ErrorKind.Div0, JSONFormat.FlattenValueTables], Value )
+"String1213_"
+
+>> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
+"1215"
 
 //===========================================================================================================
 //
@@ -708,6 +728,9 @@ true
 "2"
 
 >> "Severity: " & StartOfWeek.Monday
+"Severity: 2"
+
+>> Concatenate( "Severity: ", StartOfWeek.Monday )
 "Severity: 2"
 
 >> Len( StartOfWeek.Monday )
@@ -772,6 +795,9 @@ false
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> StartOfWeek.Monday & StartOfWeek.Tuesday
+"212"
+
+>> Concatenate( StartOfWeek.Monday, StartOfWeek.Tuesday )
 "212"
 
 >> Weekday( Date(1980,1,1), StartOfWeek.Monday & StartOfWeek.Tuesday )
