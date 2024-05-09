@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx
 
         IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
 
+        internal IReadOnlyDictionary<DName, FormulaType> NamedTypes => _namedTypes.ToDictionary(v => v.Key, v => v.Value);
+
         internal const string UserInfoSymbolName = "User";
 
         /// <summary>
@@ -439,6 +441,11 @@ namespace Microsoft.PowerFx
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
+            if (_namedTypes.ContainsKey(typeName))
+            {
+                throw new InvalidOperationException($"{typeName} is already defined.");
+            }
+
             _namedTypes.Add(typeName, type);
         }
 
@@ -451,6 +458,11 @@ namespace Microsoft.PowerFx
 
             foreach (var type in types)
             {
+                if (_namedTypes.ContainsKey(type.Key))
+                {
+                    throw new InvalidOperationException($"{type.Key} is already defined.");
+                }
+
                 _namedTypes.Add(type.Key, type.Value);
             }
         }
