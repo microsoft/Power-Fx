@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             { 
                 var argType = argTypes[i];
 
-                if (argType == DType.OptionSetValue)
+                if (argType == DType.OptionSetValue && context.Features.PowerFxV1CompatibilityRules)
                 {
                     if (argOptionSet == null)
                     {

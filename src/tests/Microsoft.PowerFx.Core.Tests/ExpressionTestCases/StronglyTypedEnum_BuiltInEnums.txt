@@ -498,8 +498,14 @@ Errors: Error 34-35: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & JSONFormat.FlattenValueTables )
 "[1,2,3]"
 
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, JSONFormat.FlattenValueTables ) )
+"[1,2,3]"
+
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & "_" )
 Errors: Error 43-44: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
+
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, "_" ) )
+Errors: Error 15-62: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
 
 >> JSON( [4,5,6], "_" )
 Errors: Error 15-18: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
