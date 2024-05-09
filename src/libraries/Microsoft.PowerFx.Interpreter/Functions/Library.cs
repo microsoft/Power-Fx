@@ -357,7 +357,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Concatenate.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: StringOrOptionSetBackedByString,
+                    checkRuntimeTypes: StringOrOptionSet,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Concatenate)
