@@ -1,4 +1,4 @@
-#SETUP: DecimalSupport
+#SETUP: DecimalSupport,PowerFxV1CompatibilityRules
 
 // Test Rand() - beware, rand is volatile. 
 
