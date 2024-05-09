@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argNum >= 1;
         }
 
-        public override bool IsLazyEvalParam(int index, Features features)
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             // First argument to mutation functions is Lazy for datasources that are copy-on-write.
             // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
