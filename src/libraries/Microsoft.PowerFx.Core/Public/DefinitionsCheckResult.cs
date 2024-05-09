@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Parser;
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx
     /// Holds work such as parsing, binding, error checking done on user definitions.
     /// Tracks which work is done so that it is not double repeated.
     /// </summary>
-    public class DeclarationsCheckResult : IOperationStatus
+    public class DefinitionsCheckResult : IOperationStatus
     {
         private ReadOnlySymbolTable _symbols;
 
@@ -34,13 +35,17 @@ namespace Microsoft.PowerFx
 
         private ParseUserDefinitionResult _parse;
 
+        // Power Fx expression containing definitions
         private string _definitions;
 
-        public DeclarationsCheckResult()
+        // All errors accumulated. 
+        private readonly List<ExpressionError> _errors = new List<ExpressionError>();
+
+        public DefinitionsCheckResult()
         {
         }
 
-        internal DeclarationsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
+        internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
             Contracts.AssertValue(symbols);
 
@@ -54,7 +59,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        internal DeclarationsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
+        internal DefinitionsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
         {
             Contracts.AssertValue(definitions);
 
@@ -90,13 +95,18 @@ namespace Microsoft.PowerFx
             return _parse;
         }
 
-        public IReadOnlyDictionary<DName, FormulaType> ResolvedTypes => ResolveTypes();
+        public IReadOnlyDictionary<DName, FormulaType> ResolvedTypes => _resolvedTypes;
 
-        internal IReadOnlyDictionary<DName, FormulaType> ResolveTypes()
+        internal IReadOnlyDictionary<DName, FormulaType> ApplyResolveTypes()
         {
-            if (_parse == null || _parse.DefinedTypes == null || _symbols == null)
+            if (_parse == null)
             {
-                throw new InvalidOperationException($"Must call {nameof(ApplyParse)} with valid defined types and {nameof(SetBindingInfo)} before calling ResolveTypes().");
+                this.ApplyParse();
+            }
+
+            if (_symbols == null)
+            {
+                throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} before calling ApplyResolveTypes().");
             }
 
             if (_resolvedTypes == null)
@@ -115,8 +125,15 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
-        // All errors accumulated. 
-        private readonly List<ExpressionError> _errors = new List<ExpressionError>();
+        internal IEnumerable<ExpressionError> ApplyErrors()
+        {
+            if (_resolvedTypes == null)
+            {
+                ApplyResolveTypes();
+            }
+
+            return this.Errors;
+        }
 
         /// <summary>
         /// List of all errors and warnings. Check <see cref="ExpressionError.IsWarning"/>.
@@ -141,7 +158,7 @@ namespace Microsoft.PowerFx
         }
 
         // Set the default culture for localizing error messages. 
-        public DeclarationsCheckResult SetDefaultErrorCulture(CultureInfo culture)
+        public DefinitionsCheckResult SetDefaultErrorCulture(CultureInfo culture)
         {
             Contracts.AssertValue(culture);
 

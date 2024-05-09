@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx
 
             var sb = new StringBuilder();
 
-            var checkResult = new DeclarationsCheckResult()
+            var checkResult = new DefinitionsCheckResult()
                                     .SetText(script, options);
 
             var parseResult = checkResult.ApplyParse();
@@ -461,11 +461,11 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private void AddUserDefinedTypes(DeclarationsCheckResult checkResult, ReadOnlySymbolTable nameResolver)
+        private void AddUserDefinedTypes(DefinitionsCheckResult checkResult, ReadOnlySymbolTable nameResolver)
         {
             checkResult
                 .SetBindingInfo(nameResolver)
-                .ResolveTypes();
+                .ApplyResolveTypes();
 
             if (!checkResult.IsSuccess)
             {

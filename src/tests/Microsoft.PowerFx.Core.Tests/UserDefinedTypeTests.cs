@@ -47,11 +47,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            var checkResult = new DeclarationsCheckResult()
+            var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition, parseOptions)
                                             .SetBindingInfo(_primitiveTypes);
-            checkResult.ApplyParse();
-            checkResult.ResolveTypes();
+            checkResult.ApplyResolveTypes();
 
             if (isValid)
             {
@@ -106,15 +105,38 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowParseAsTypeLiteral = true
             };
 
-            var checkResult = new DeclarationsCheckResult()
+            var checkResult = new DefinitionsCheckResult()
                                             .SetText(typeDefinition, parseOptions)
                                             .SetBindingInfo(_primitiveTypes);
-            checkResult.ApplyParse();
-            checkResult.ResolveTypes();
+            checkResult.ApplyResolveTypes();
 
             var resolvedTypes = checkResult.ResolvedTypes;
 
             Assert.Equal(expectedDefinedTypesCount, resolvedTypes.Count());
+        }
+
+        [Theory]
+
+        //To test DefinitionsCheckResult.ApplyErrors method and error messages
+        [InlineData("Point = Type({ x: Number, y: Number }); Point = Type(Number);", 1, "ErrNamedType_TypeAlreadyDefined")]
+        [InlineData("X= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDefinition")]
+        [InlineData("B = Type({ x: A }); A = Type(B);", 2, "ErrNamedType_InvalidCycles")]
+        [InlineData("B = Type(B);", 1, "ErrNamedType_InvalidCycles")]
+        [InlineData("Currency = Type({x: Text}); Record = Type([DateTime]); D = Type(None);", 2, "ErrNamedType_InvalidTypeName")]
+        public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
+        {
+            var parseOptions = new ParserOptions
+            {
+                AllowParseAsTypeLiteral = true
+            };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(typeDefinition, parseOptions)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errors = checkResult.ApplyErrors();
+
+            Assert.Equal(expectedErrorCount, errors.Count());
+            Assert.All(errors, e => Assert.Contains(expectedMessageKey, e.MessageKey));
         }
     }
 }
