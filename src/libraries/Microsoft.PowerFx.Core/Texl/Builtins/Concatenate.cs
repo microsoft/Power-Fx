@@ -100,8 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // All option sets can coerce to string and be concatenated as strings, which is the default returnType.
             // If there was only one option set type seen, and it has CanConcatenatedStronglyTyped set,
             // and either no string values were present or CanCoerceFromBackingKind is set, then Concatenate returns the enum type.
-            // This behavior should mach that of the & operator.
-            // $$ Concat function?
+            // This behavior should mach that of the & operator (BinderUtils, CheckBinaryOpCore).
             returnType = argOptionSet != null && !concatAsString ? argOptionSet : DType.String;
 
             return fArgsValid;

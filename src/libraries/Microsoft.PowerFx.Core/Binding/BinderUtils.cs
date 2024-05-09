@@ -1299,6 +1299,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
+                    // Behavior here should match that of the Concatenate function.
                     BinderCheckTypeResult resLeftConcat;
                     BinderCheckTypeResult resRightConcat;
 
