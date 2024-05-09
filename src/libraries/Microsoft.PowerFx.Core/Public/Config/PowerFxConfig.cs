@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
         internal static readonly int DefaultMaximumExpressionLength = 1000;
 
         /// <summary>
-        /// Global symbols. Additional symbols beyond default function set. 
+        /// Global symbols. Additional symbols beyond default function set and primitive types. 
         /// </summary>
         public SymbolTable SymbolTable { get; set; } = new SymbolTable
         {
