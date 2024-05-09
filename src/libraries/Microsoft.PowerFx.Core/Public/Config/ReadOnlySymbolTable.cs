@@ -55,6 +55,30 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Lookup a symbol's type by name. 
+        /// Symbols includes both variables that have slots (that would be found with <see cref="TryLookupSlot(string, out ISymbolSlot)"/>, as well as constants that don't have slots (like Enums, OptionSets, constants).
+        /// It does not include Functions since those are in a different namespace. 
+        /// Results here should be consistent with <see cref="SymbolNames"/>.
+        /// </summary>
+        /// <param name="name">logical or display name of a symbol.</param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public bool TryGetSymbolType(string name, out FormulaType type)
+        {
+            // This method should *not* be virtual.  It's a helper that should call existing virtuals. 
+            // Composed tables will just override the resolver. 
+            INameResolver resolver = this;
+            if (resolver.Lookup(new DName(name), out var nameInfo))
+            {
+                type = FormulaType.Build(nameInfo.Type);
+                return true;
+            }
+
+            type = null;
+            return false;
+        }
+
+        /// <summary>
         /// Find the variable by name within this symbol table. 
         /// </summary>
         /// <param name="name">name of the variable.</param>
@@ -269,6 +293,39 @@ namespace Microsoft.PowerFx
             return NewDefault(tfs);
         }
 
+        // Helper to create a ReadOnly symbol table around a set of core types. 
+        internal static ReadOnlySymbolTable NewDefaultTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+
+            var s = new SymbolTable
+            {
+                DebugName = $"BuiltinTypes ({types?.Count()})"
+            };
+            
+            s.AddTypes(types);
+            return s;
+        }
+
+        // Overload Helper to create a ReadOnly symbol table around a set of core functions and types.
+        internal static ReadOnlySymbolTable NewDefault(TexlFunctionSet coreFunctions, IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+            Contracts.AssertValue(coreFunctions);
+
+            var s = new SymbolTable
+            {
+                EnumStoreBuilder = new EnumStoreBuilder(),
+                DebugName = $"BuiltinFunctions ({coreFunctions.Count()}), BuiltinTypes ({types?.Count()})"
+            };
+
+            s.AddFunctions(coreFunctions);
+            s.AddTypes(types);
+            return s;
+        }
+
+        internal static readonly ReadOnlySymbolTable PrimitiveTypesTableInstance = NewDefaultTypes(FormulaType.PrimitiveTypes);
+
         /// <summary>
         /// Helper to create a symbol table around a set of core functions.
         /// Important that this is mutable so that it can be changed across engines. 
@@ -441,6 +498,8 @@ namespace Microsoft.PowerFx
 
         bool INameResolver.SuggestUnqualifiedEnums => false;
 
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => Enumerable.Empty<KeyValuePair<DName, FormulaType>>();
+
         bool INameResolver.LookupParent(out NameLookupInfo lookupInfo)
         {
             lookupInfo = default;
@@ -482,6 +541,13 @@ namespace Microsoft.PowerFx
         {
             throw new NotImplementedException();
         }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            fType = default;
+            return false;
+        }
+
         #endregion
     }
 }

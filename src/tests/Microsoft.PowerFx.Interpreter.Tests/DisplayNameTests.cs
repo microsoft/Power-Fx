@@ -188,5 +188,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("*[logicalA`displayName:w, logicalB`displayName2:w, newColumn:w]", resultD.Type.ToStringWithDisplayNames());
             Assert.Equal("*[logicalA`displayName:w, logicalB`displayName2:w, newColumn:w]", resultI.Type.ToStringWithDisplayNames());
         }
+
+        // ThisGroup cannt be used either as a column name or as a display name.
+        [Theory]        
+        [InlineData("Summarize(t1, logicalC, Sum(ThisGroup, logicalA) As Soma)")]
+        [InlineData("Summarize(t1, 'ThisGroup', Sum(ThisGroup, logicalC) As Soma)")]
+        public void SummarizeDisplayNamesTest(string expression)
+        {
+            var engine = new RecalcEngine();
+
+            var recordType = RecordType.Empty()
+                .Add(new NamedFormulaType("logicalA", FormulaType.Decimal, displayName: "displayName"))
+                .Add(new NamedFormulaType("logicalB", FormulaType.Decimal, displayName: "displayName2"))
+                .Add(new NamedFormulaType("logicalC", FormulaType.Decimal, displayName: "ThisGroup"));
+
+            var rv1 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(1)),
+                new NamedValue("logicalB", FormulaValue.New(4)),
+                new NamedValue("logicalC", FormulaValue.New(4)));
+            var rv2 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(2)),
+                new NamedValue("logicalB", FormulaValue.New(5)),
+                new NamedValue("logicalC", FormulaValue.New(5)));
+            var rv3 = RecordValue.NewRecordFromFields(
+                new NamedValue("logicalA", FormulaValue.New(3)),
+                new NamedValue("logicalB", FormulaValue.New(6)),
+                new NamedValue("logicalC", FormulaValue.New(6)));
+
+            engine.UpdateVariable("t1", TableValue.NewTable(recordType, rv1, rv2, rv3));
+
+            var check = engine.Check(expression);
+            Assert.False(check.IsSuccess);
+        }
     }
 }

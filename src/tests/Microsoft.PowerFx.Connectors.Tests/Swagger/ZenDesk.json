@@ -1,0 +1,2763 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Zendesk",
+    "description": "Zendesk builds software for better customer relationships. With multiple products in its portfolio, Zendesk provides a customer service and support ticketing platform that gives businesses the ability to handle customer calls, emails, and other technical inquiries from a unified interface.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "x-ms-keywords": [
+      "zendesk",
+      "ticket",
+      "tickets",
+      "group",
+      "groups",
+      "organization",
+      "organizations",
+      "org",
+      "orgs",
+      "user",
+      "users",
+      "comment",
+      "comments"
+    ],
+    "contact": {
+      "name": "Microsoft"
+    }
+  },
+  "host": "tip1002-002.azure-apihub.net",
+  "basePath": "/apim/zendesk",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{connectionId}/testconnection": {
+      "get": {
+        "tags": [
+          "ZendeskDiagnostic"
+        ],
+        "operationId": "TestConnection",
+        "consumes": [],
+        "produces": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/$metadata.json/datasets": {
+      "get": {
+        "tags": [
+          "ZendeskMashupDataSetsMetadata"
+        ],
+        "operationId": "GetDataSetsMetadata",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DataSetsMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/$metadata.json/datasets/default/tables/{table}": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableMetadata"
+        ],
+        "summary": "Get item metadata",
+        "description": "Retrieves item metadata for Zendesk object type",
+        "operationId": "GetTable",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TableMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-item-metadata"
+        }
+      }
+    },
+    "/{connectionId}/$metadata.json/datasets(\u0027{dataset}\u0027)/tables(\u0027{table}\u0027)": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableMetadata"
+        ],
+        "summary": "Get item metadata",
+        "description": "Retrieves item metadata for Zendesk object type",
+        "operationId": "ODataStyleGetTable",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TableMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-item-metadata"
+        }
+      }
+    },
+    "/{connectionId}/datasets": {
+      "get": {
+        "tags": [
+          "ZendeskMashupDataSet"
+        ],
+        "summary": "Gets datasets",
+        "description": "Retrieves all datasets available to the connection",
+        "operationId": "GetDataSets",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DataSetsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#gets-datasets"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/datasets/default/tables": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTable"
+        ],
+        "summary": "Get tables",
+        "description": "Retrieves Zendesk tables from a site",
+        "operationId": "GetTables",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TablesList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-tables"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTable"
+        ],
+        "summary": "Get tables",
+        "description": "Retrieves Zendesk tables from a site",
+        "operationId": "ODataStyleGetTables",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "Zendesk site url",
+            "required": true,
+            "x-ms-summary": "Site url",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TablesList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-tables"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/tables/{table}/items": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Get items",
+        "description": "Retrieves Zendesk items of a certain Zendesk type (example: \u0027Ticket\u0027)",
+        "operationId": "GetItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Specific fields to retrieve from entries (default = all).",
+            "required": false,
+            "x-ms-summary": "Select Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-pageable": {
+          "nextLinkName": "@odata.nextLink"
+        },
+        "x-ms-openai-data": {
+          "openai-enabled": true,
+          "operations": [
+            {
+              "operationId": "GetTickets",
+              "parameters": [
+                {
+                  "name": "table",
+                  "type": "delete",
+                  "value": "tickets"
+                },
+                {
+                  "name": "$orderby",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "An ODATA orderBy query for specifying the order of entries. Value should be a valid ticket field found in the response for this API",
+                      "type": "upsert"
+                    }
+                  ]
+                },
+                {
+                  "name": "$filter",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "ODATA filter. Operators are: lt,le,eq,ne,gt,ge,min,max. More string operators: contains,startswith,endswith,length. More date operators: day,month,year,date,time. More bool operators: not,and,or. Strings that are not boolean or date should be surrounded by single-quotes. Ex: priority eq \u0027low\u0027",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/TicketList"
+                  }
+                }
+              },
+              "summary": "Search Zendesk Tickets",
+              "description": "This operation allows to search on Zendesk Ticket objects. Available properties for Tickets can be found on the response schema for this API."
+            },
+            {
+              "operationId": "GetUsers",
+              "parameters": [
+                {
+                  "name": "table",
+                  "type": "delete",
+                  "value": "users"
+                },
+                {
+                  "name": "$orderby",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "An ODATA orderBy query for specifying the order of entries. Value should be a valid user field found in the response for this API",
+                      "type": "upsert"
+                    }
+                  ]
+                },
+                {
+                  "name": "$filter",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "ODATA filter. Operators are: lt,le,eq,ne,gt,ge,min,max. More string operators: contains,startswith,endswith,length. More date operators: day,month,year,date,time. More bool operators: not,and,or. Strings that are not boolean or date should be surrounded by single-quotes. Ex: email eq \u0027abc@mail.com\u0027",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/UserList"
+                  }
+                }
+              },
+              "summary": "Search Zendesk Users",
+              "description": "This operation allows to search on Zendesk User objects. Available properties for Users can be found on the response schema for this API."
+            },
+            {
+              "operationId": "GetGroups",
+              "parameters": [
+                {
+                  "name": "table",
+                  "type": "delete",
+                  "value": "groups"
+                },
+                {
+                  "name": "$orderby",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "An ODATA orderBy query for specifying the order of entries. Value should be a valid group field found in the response for this API",
+                      "type": "upsert"
+                    }
+                  ]
+                },
+                {
+                  "name": "$filter",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "ODATA filter. Operators are: lt,le,eq,ne,gt,ge,min,max. More string operators: contains,startswith,endswith,length. More date operators: day,month,year,date,time. More bool operators: not,and,or. Strings that are not boolean or date should be surrounded by single-quotes. Ex: name eq \u0027Support\u0027",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/GroupList"
+                  }
+                }
+              },
+              "summary": "Search Zendesk Groups",
+              "description": "This operation allows to search on Zendesk Group objects. Available properties for Groups can be found on the response schema for this API."
+            },
+            {
+              "operationId": "GetOrganizations",
+              "parameters": [
+                {
+                  "name": "table",
+                  "type": "delete",
+                  "value": "organizations"
+                },
+                {
+                  "name": "$orderby",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "An ODATA orderBy query for specifying the order of entries. Value should be a valid organization field found in the response for this API",
+                      "type": "upsert"
+                    }
+                  ]
+                },
+                {
+                  "name": "$filter",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "ODATA filter. Operators are: lt,le,eq,ne,gt,ge,min,max. More string operators: contains,startswith,endswith,length. More date operators: day,month,year,date,time. More bool operators: not,and,or. Strings that are not boolean or date should be surrounded by single-quotes. Ex: name eq \u0027acme\u0027",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/OrganizationList"
+                  }
+                }
+              },
+              "summary": "Search Zendesk Organizations",
+              "description": "This operation allows to search on Zendesk Organization objects. Available properties for Organizations can be found on the response schema for this API."
+            },
+            {
+              "operationId": "GetTicketComments",
+              "parameters": [
+                {
+                  "name": "table",
+                  "type": "delete",
+                  "value": "ticket_comments"
+                },
+                {
+                  "name": "$orderby",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "An ODATA orderBy query for specifying the order of entries. Value should be a valid ticket comment field found in the response for this API",
+                      "type": "upsert"
+                    }
+                  ]
+                },
+                {
+                  "name": "$filter",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "ODATA filter. Operators are: lt,le,eq,ne,gt,ge,min,max. More string operators: contains,startswith,endswith,length. More date operators: day,month,year,date,time. More bool operators: not,and,or. Strings that are not boolean or date should be surrounded by single-quotes. Ex: priority eq \u0027low\u0027",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/TicketCommentList"
+                  }
+                }
+              },
+              "summary": "Search Zendesk Ticket Comments",
+              "description": "This operation allows to search on Zendesk Ticket Comment objects. Available properties for Ticket Comments can be found on the response schema for this API."
+            }
+          ]
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-items"
+        }
+      },
+      "post": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Create Item",
+        "description": "Creates a Zendesk item",
+        "operationId": "PostItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Zendesk item to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            },
+            "x-ms-summary": "Item"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#create-item"
+        }
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables({table})/items": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Get items",
+        "description": "Retrieves Zendesk items of a certain Zendesk type (example: \u0027Ticket\u0027)",
+        "operationId": "ODataStyleGetItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Specific fields to retrieve from entries (default = all).",
+            "required": false,
+            "x-ms-summary": "Select Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-pageable": {
+          "nextLinkName": "@odata.nextLink"
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-items"
+        }
+      },
+      "post": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Create Item",
+        "description": "Creates a Zendesk item",
+        "operationId": "ODataStylePostItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Zendesk item to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            },
+            "x-ms-summary": "Item"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#create-item"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/tables/{table}/items/{id}": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Get item",
+        "description": "Retrieves a Zendesk item",
+        "operationId": "GetItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to retrieve",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-item"
+        }
+      },
+      "delete": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Delete item",
+        "description": "Deletes a Zendesk item",
+        "operationId": "DeleteItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to delete",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#delete-item"
+        }
+      },
+      "patch": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Update item",
+        "description": "Updates an existing Zendesk item",
+        "operationId": "PatchItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to update",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Zendesk item with updated values",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            },
+            "x-ms-summary": "Item"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#update-item"
+        }
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables({table})/items({id})": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Get item",
+        "description": "Retrieves a Zendesk item",
+        "operationId": "ODataStyleGetItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to retrieve",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#get-item"
+        }
+      },
+      "delete": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Delete item",
+        "description": "Deletes a Zendesk item",
+        "operationId": "ODataStyleDeleteItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to delete",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#delete-item"
+        }
+      },
+      "patch": {
+        "tags": [
+          "ZendeskMashupTableData"
+        ],
+        "summary": "Update item",
+        "description": "Updates an existing Zendesk item",
+        "operationId": "ODataStylePatchItem",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Zendesk item type (example: \u0027Ticket\u0027)",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique identifier of the item to update",
+            "required": true,
+            "x-ms-summary": "Item key",
+            "type": "string"
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Zendesk item with updated values",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Item"
+            },
+            "x-ms-summary": "Item"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#update-item"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/tables/{table}/onnewitems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "summary": "When an item is created",
+        "description": "Triggers a flow when an item is created in Zendesk",
+        "operationId": "GetOnNewItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Name of Zendesk table",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-trigger": "batch",
+        "x-ms-trigger-hint": "To see it work now, create an object in Zendesk.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#when-an-item-is-created"
+        }
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables({table})/onnewitems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "summary": "When an item is created",
+        "description": "Triggers a flow when an item is created in Zendesk",
+        "operationId": "ODataStyleGetOnNewItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Name of Zendesk table",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "batch",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#when-an-item-is-created"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/tables/{table}/onupdateditems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "summary": "When an item is modified",
+        "description": "Triggers a flow when an item is modified in Zendesk",
+        "operationId": "GetOnUpdatedItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Name of Zendesk table",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-trigger": "batch",
+        "x-ms-trigger-hint": "To see it work now, modify an object in Zendesk.",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#when-an-item-is-modified"
+        }
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables({table})/onupdateditems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "summary": "When an item is modified",
+        "description": "Triggers a flow when an item is modified in Zendesk",
+        "operationId": "ODataStyleGetOnUpdatedItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "dataset name",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "description": "Name of Zendesk table",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "batch",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#when-an-item-is-modified"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/tables/{table}/ondeleteditems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "operationId": "GetOnDeletedItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetTables",
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "batch"
+      }
+    },
+    "/{connectionId}/datasets({dataset})/tables({table})/ondeleteditems": {
+      "get": {
+        "tags": [
+          "ZendeskMashupTableDataTrigger"
+        ],
+        "operationId": "ODataStyleGetOnDeletedItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "dataset",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq \u0027string\u0027 OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "Number of entries to skip (default = 0)",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Maximum number of entries to retrieve (default = 512)",
+            "required": false,
+            "x-ms-summary": "Maximum Get Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "batch"
+      }
+    },
+    "/{connectionId}/api/v2/help_center/articles/search": {
+      "get": {
+        "summary": "Search Articles",
+        "description": "Returns a default number of 25 articles per page, up to a maximum of 1000 results.",
+        "operationId": "SearchArticles",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "x-ms-summary": "Query",
+            "description": "Article to search for.",
+            "type": "string",
+            "x-ms-visibility": "important",
+            "x-ms-test-value": "Sample"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SearchResult"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/zendesk/#search-articles"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "DataSetsMetadata": {
+      "type": "object",
+      "properties": {
+        "tabular": {
+          "$ref": "#/definitions/TabularDataSetsMetadata"
+        },
+        "blob": {
+          "$ref": "#/definitions/BlobDataSetsMetadata"
+        }
+      }
+    },
+    "TabularDataSetsMetadata": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "urlEncoding": {
+          "type": "string"
+        },
+        "tableDisplayName": {
+          "type": "string"
+        },
+        "tablePluralName": {
+          "type": "string"
+        }
+      }
+    },
+    "BlobDataSetsMetadata": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "urlEncoding": {
+          "type": "string"
+        }
+      }
+    },
+    "TableMetadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "x-ms-permission": {
+          "type": "string"
+        },
+        "x-ms-capabilities": {
+          "$ref": "#/definitions/TableCapabilitiesMetadata"
+        },
+        "schema": {
+          "$ref": "#/definitions/Object"
+        },
+        "referencedEntities": {
+          "$ref": "#/definitions/Object"
+        }
+      }
+    },
+    "TableCapabilitiesMetadata": {
+      "type": "object",
+      "properties": {
+        "sortRestrictions": {
+          "$ref": "#/definitions/TableSortRestrictionsMetadata"
+        },
+        "filterRestrictions": {
+          "$ref": "#/definitions/TableFilterRestrictionsMetadata"
+        },
+        "selectRestrictions": {
+          "$ref": "#/definitions/TableSelectRestrictionsMetadata"
+        },
+        "isOnlyServerPagable": {
+          "description": "Server paging restrictions",
+          "type": "boolean"
+        },
+        "filterFunctionSupport": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "eq",
+              "ne",
+              "gt",
+              "ge",
+              "lt",
+              "le",
+              "and",
+              "or",
+              "contains",
+              "startswith",
+              "endswith",
+              "length",
+              "indexof",
+              "replace",
+              "substring",
+              "substringof",
+              "tolower",
+              "toupper",
+              "trim",
+              "concat",
+              "year",
+              "month",
+              "day",
+              "hour",
+              "minute",
+              "second",
+              "date",
+              "time",
+              "now",
+              "totaloffsetminutes",
+              "totalseconds",
+              "floor",
+              "ceiling",
+              "round",
+              "not",
+              "negate",
+              "add",
+              "sub",
+              "mul",
+              "div",
+              "mod",
+              "sum",
+              "min",
+              "max",
+              "average",
+              "countdistinct",
+              "null"
+            ],
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Object": {
+      "type": "object",
+      "properties": {}
+    },
+    "TableSortRestrictionsMetadata": {
+      "description": "Metadata for a table (sort restrictions)",
+      "type": "object",
+      "properties": {
+        "sortable": {
+          "description": "Indicates whether this table has sortable columns",
+          "type": "boolean"
+        },
+        "unsortableProperties": {
+          "description": "List of unsortable properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ascendingOnlyProperties": {
+          "description": "List of properties which support ascending order only",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TableFilterRestrictionsMetadata": {
+      "description": "Metadata for a table (filter restrictions)",
+      "type": "object",
+      "properties": {
+        "filterable": {
+          "description": "Indicates whether this table has filterable columns",
+          "type": "boolean"
+        },
+        "nonFilterableProperties": {
+          "description": "List of non filterable properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requiredProperties": {
+          "description": "List of required properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TableSelectRestrictionsMetadata": {
+      "description": "Metadata for a table (select restrictions)",
+      "type": "object",
+      "properties": {
+        "selectable": {
+          "description": "Indicates whether this table has selectable columns",
+          "type": "boolean"
+        }
+      }
+    },
+    "DataSetsList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSet"
+          }
+        }
+      }
+    },
+    "DataSet": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        }
+      }
+    },
+    "Table": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        }
+      }
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "title": "id",
+                "description": "Automatically assigned article ID",
+                "x-ms-summary": "Article Id",
+                "x-ms-visibility": "important"
+              },
+              "url": {
+                "type": "string",
+                "title": "url",
+                "description": "The API url of the article",
+                "x-ms-summary": "Url",
+                "x-ms-visibility": "important"
+              },
+              "html_url": {
+                "type": "string",
+                "title": "html_url",
+                "description": "The url of the article in Help Center",
+                "x-ms-summary": "Html Url",
+                "x-ms-visibility": "important"
+              },
+              "author_id": {
+                "type": "integer",
+                "title": "author_id",
+                "description": "Author ID",
+                "x-ms-summary": "Author Id",
+                "x-ms-visibility": "important"
+              },
+              "comments_disabled": {
+                "type": "boolean",
+                "title": "comments_disabled",
+                "description": "True if comments are disabled; false otherwise",
+                "x-ms-summary": "Comments Disabled",
+                "x-ms-visibility": "important"
+              },
+              "draft": {
+                "type": "boolean",
+                "title": "draft",
+                "description": "True if the translation for the current locale is a draft",
+                "x-ms-summary": "Draft",
+                "x-ms-visibility": "important"
+              },
+              "promoted": {
+                "type": "boolean",
+                "title": "promoted",
+                "description": "True if this article is promoted; false otherwise. false by default",
+                "x-ms-summary": "Promoted",
+                "x-ms-visibility": "important"
+              },
+              "position": {
+                "type": "integer",
+                "title": "position",
+                "description": "The position of this article in the article list. 0 by default",
+                "x-ms-summary": "Position",
+                "x-ms-visibility": "important"
+              },
+              "vote_sum": {
+                "type": "integer",
+                "title": "vote_sum",
+                "description": "The sum of upvotes (\u002B1) and downvotes (-1), which may be positive or negative",
+                "x-ms-summary": "Vote Sum",
+                "x-ms-visibility": "important"
+              },
+              "vote_count": {
+                "type": "integer",
+                "title": "vote_count",
+                "description": "The total number of upvotes and downvotes",
+                "x-ms-summary": "Vote Count",
+                "x-ms-visibility": "important"
+              },
+              "section_id": {
+                "type": "integer",
+                "title": "section_id",
+                "description": "The id of the section to which this article belongs",
+                "x-ms-summary": "Section Id",
+                "x-ms-visibility": "important"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "title": "created_at",
+                "description": "The time the article was created",
+                "x-ms-summary": "Creation date",
+                "x-ms-visibility": "important"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "title": "updated_at",
+                "description": "The time the article was last updated",
+                "x-ms-summary": "Updated at",
+                "x-ms-visibility": "important"
+              },
+              "name": {
+                "type": "string",
+                "title": "name",
+                "description": "Name of Article",
+                "x-ms-summary": "Name",
+                "x-ms-visibility": "important"
+              },
+              "title": {
+                "type": "string",
+                "title": "title",
+                "description": "The title of the article",
+                "x-ms-summary": "Title",
+                "x-ms-visibility": "important"
+              },
+              "source_locale": {
+                "type": "string",
+                "title": "source_locale",
+                "description": "The source (default) locale of the article",
+                "x-ms-summary": "Source Locale",
+                "x-ms-visibility": "important"
+              },
+              "locale": {
+                "type": "string",
+                "title": "locale",
+                "description": "The locale that the article is being displayed in",
+                "x-ms-summary": "Locale",
+                "x-ms-visibility": "important"
+              },
+              "outdated": {
+                "type": "boolean",
+                "title": "outdated",
+                "description": "Deprecated",
+                "x-ms-summary": "Outdated",
+                "x-ms-visibility": "important"
+              },
+              "outdated_locales": {
+                "type": "array",
+                "title": "outdated_locales",
+                "description": "Locales in which the article was marked as outdated",
+                "x-ms-summary": "Outdated locales",
+                "x-ms-visibility": "important"
+              },
+              "edited_at": {
+                "type": "string",
+                "format": "date-time",
+                "title": "edited_at",
+                "description": "The time the article was last edited in its displayed locale",
+                "x-ms-summary": "Edited at",
+                "x-ms-visibility": "important"
+              },
+              "user_segment_id": {
+                "type": "integer",
+                "title": "user_segment_id",
+                "description": "The id of the user segment which defines who can see this article",
+                "x-ms-summary": "User Segment Id",
+                "x-ms-visibility": "important"
+              },
+              "permission_group_id": {
+                "type": "integer",
+                "title": "permission_group_id",
+                "description": "The id of the permission group which defines who can edit and publish this article",
+                "x-ms-summary": "Permission Group Id",
+                "x-ms-visibility": "important"
+              },
+              "content_tag_ids": {
+                "type": "array",
+                "title": "content_tag_ids",
+                "description": "The list of content tags attached to the article",
+                "x-ms-summary": "Content Tag Ids",
+                "x-ms-visibility": "important"
+              },
+              "label_names": {
+                "type": "array",
+                "title": "label_names",
+                "description": "An array of label names associated with this article",
+                "x-ms-summary": "Label Names",
+                "x-ms-visibility": "important"
+              },
+              "body": {
+                "type": "string",
+                "title": "body",
+                "description": "HTML body of the article",
+                "x-ms-summary": "Body",
+                "x-ms-visibility": "important"
+              },
+              "snippet": {
+                "type": "string",
+                "title": "snippet",
+                "description": "HTML snippet of the article",
+                "x-ms-summary": "Snippet",
+                "x-ms-visibility": "important"
+              },
+              "result_type": {
+                "type": "string",
+                "title": "result_type",
+                "description": "Type of Result",
+                "x-ms-summary": "Result Type",
+                "x-ms-visibility": "important"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "dynamicProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Object"
+          }
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/Object"
+      },
+      "x-ms-dynamic-schema": {
+        "operationId": "GetTable",
+        "parameters": {
+          "table": {
+            "parameter": "table"
+          }
+        },
+        "value-path": "Schema/Items"
+      }
+    },
+    "TablesList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Table"
+          }
+        }
+      }
+    },
+    "ItemsList": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Item"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-openai-data": {
+    "static-schema": {
+      "Group": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "url": {
+            "title": "url",
+            "type": "string"
+          },
+          "name": {
+            "title": "name",
+            "type": "string"
+          },
+          "deleted": {
+            "title": "deleted",
+            "type": "boolean"
+          },
+          "created_at": {
+            "title": "created_at",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "title": "updated_at",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "title": "name",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "created_at",
+            "type": "string",
+            "format": "date-time"
+          },
+          "details": {
+            "title": "details",
+            "type": "string"
+          },
+          "group_id": {
+            "title": "group_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "shared_tickets": {
+            "title": "shared_tickets",
+            "type": "boolean"
+          },
+          "shared_comments": {
+            "title": "shared_comments",
+            "type": "boolean"
+          },
+          "tags": {
+            "title": "tags",
+            "type": "string"
+          },
+          "organization_fields": {
+            "title": "organization_fields",
+            "type": "string"
+          }
+        }
+      },
+      "TicketComment": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "ticket_id": {
+            "title": "ticket_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "body": {
+            "title": "body",
+            "type": "string"
+          },
+          "public": {
+            "title": "public",
+            "type": "boolean"
+          },
+          "author_id": {
+            "title": "author_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "metadata": {
+            "title": "metadata",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "created_at",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Ticket": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "url": {
+            "title": "url",
+            "type": "string"
+          },
+          "external_id": {
+            "title": "external_id",
+            "type": "string"
+          },
+          "type": {
+            "title": "type",
+            "type": "string"
+          },
+          "subject": {
+            "title": "subject",
+            "type": "string"
+          },
+          "description": {
+            "title": "description",
+            "type": "string"
+          },
+          "priority": {
+            "title": "priority",
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "urgent"
+            ]
+          },
+          "status": {
+            "title": "status",
+            "type": "string",
+            "description": "Status of the ticket. Common values are new, open, pending, solved, closed. Other status values may exist"
+          },
+          "recipient": {
+            "title": "recipient",
+            "type": "string"
+          },
+          "requester_id": {
+            "title": "requester_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "submitter_id": {
+            "title": "submitter_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "assignee_id": {
+            "title": "assignee_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "organization_id": {
+            "title": "organization_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "group_id": {
+            "title": "group_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "collaborator_ids": {
+            "title": "collaborator_ids",
+            "type": "string"
+          },
+          "has_incidents": {
+            "title": "has_incidents",
+            "type": "boolean"
+          },
+          "due_at": {
+            "title": "due_at",
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "title": "tags",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "created_at",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "id": {
+            "title": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "title": "name",
+            "type": "string"
+          },
+          "alias": {
+            "title": "alias",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "created_at",
+            "type": "string",
+            "format": "date-time"
+          },
+          "active": {
+            "title": "active",
+            "type": "boolean"
+          },
+          "verified": {
+            "title": "verified",
+            "type": "boolean"
+          },
+          "locale": {
+            "title": "locale",
+            "type": "string"
+          },
+          "email": {
+            "title": "email",
+            "type": "string"
+          },
+          "phone": {
+            "title": "phone",
+            "type": "string"
+          },
+          "organization_id": {
+            "title": "organization_id",
+            "type": "integer",
+            "format": "int64"
+          },
+          "role": {
+            "title": "role",
+            "type": "string"
+          }
+        }
+      },
+      "GroupList": {
+        "description": "List of Groups",
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "List of Groups",
+            "type": "array",
+            "items": {
+              "$ref": "#/x-ms-openai-data/static-schema/Group"
+            }
+          }
+        }
+      },
+      "OrganizationList": {
+        "description": "List of Organizations",
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "List of Organizations",
+            "type": "array",
+            "items": {
+              "$ref": "#/x-ms-openai-data/static-schema/Organization"
+            }
+          }
+        }
+      },
+      "TicketCommentList": {
+        "description": "List of TicketComments",
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "List of TicketComments",
+            "type": "array",
+            "items": {
+              "$ref": "#/x-ms-openai-data/static-schema/TicketComment"
+            }
+          }
+        }
+      },
+      "TicketList": {
+        "description": "List of Tickets",
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "List of Tickets",
+            "type": "array",
+            "items": {
+              "$ref": "#/x-ms-openai-data/static-schema/Ticket"
+            }
+          }
+        }
+      },
+      "UserList": {
+        "description": "List of Users",
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "List of Users",
+            "type": "array",
+            "items": {
+              "$ref": "#/x-ms-openai-data/static-schema/User"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-ms-capabilities": {
+    "testConnection": {
+      "operationId": "TestConnection",
+      "parameters": {}
+    }
+  },
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://www.zendesk.com/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://www.zendesk.com/company/customers-partners/privacy-policy/"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/zendesk"
+  }
+}

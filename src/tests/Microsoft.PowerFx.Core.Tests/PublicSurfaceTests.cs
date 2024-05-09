@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 // Core namespace. 
                 "Microsoft.PowerFx.CheckResult",
+                "Microsoft.PowerFx.DefinitionsCheckResult",
                 "Microsoft.PowerFx.CheckContextSummary",
                 "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.Engine",
@@ -44,6 +45,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
+                "Microsoft.PowerFx.IPostCheckErrorHandler",
 
                 "Microsoft.PowerFx.EngineDocumentation",
 
@@ -125,6 +127,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DecimalType",
                 "Microsoft.PowerFx.Types.DecimalValue",
                 "Microsoft.PowerFx.Types.DeferredType",
+                "Microsoft.PowerFx.Types.DelegationParameters",
+                "Microsoft.PowerFx.Types.DelegationParameterFeatures",                
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
@@ -133,7 +137,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.FormulaValue",
                 "Microsoft.PowerFx.Types.GuidType",
                 "Microsoft.PowerFx.Types.GuidValue",
-                "Microsoft.PowerFx.Types.HyperlinkType",            
+                "Microsoft.PowerFx.Types.HyperlinkType",
+                "Microsoft.PowerFx.Types.IDelegatableTableValue",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
                 "Microsoft.PowerFx.Types.IValueVisitor",              

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
@@ -14,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// Entity info that respresents an enum, such as "Align" or "Font".
     /// </summary>
     [ThreadSafeImmutable]
+    [DebuggerDisplay("Enum({EntityName})")]
     internal sealed class EnumSymbol : IExternalOptionSet
     {
         public DName EntityName { get; }
@@ -29,6 +31,14 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         public OptionSetValueType FormulaType { get; }
 
         public DKind BackingKind => EnumType.EnumSuperkind;
+
+        public bool CanCoerceFromBackingKind { get; }
+
+        public bool CanConcatenateStronglyTyped { get; }
+
+        public bool CanCompareNumeric { get; }
+
+        public bool CanCoerceToBackingKind { get; }
 
         public DisplayNameProvider DisplayNameProvider => DisabledDisplayNameProvider.Instance;
 
@@ -46,14 +56,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             OptionSetType = DType.CreateOptionSetType(this);
         }
 
-        public EnumSymbol(DName name, DType backingType, IEnumerable<KeyValuePair<string, object>> members)
+        public EnumSymbol(DName name, DType backingType, IEnumerable<KeyValuePair<string, object>> members, bool canCoerceFromBackingKind = false, bool canConcatenateStronglyTyped = false, bool canCompareNumeric = false, bool canCoerceToBackingKind = false)
         {
             Contracts.AssertValid(name);
+            Contracts.Assert(backingType.Kind == DKind.String || backingType.Kind == DKind.Boolean || backingType.Kind == DKind.Number || backingType.Kind == DKind.Color);
+            Contracts.Assert(backingType.Kind == DKind.String || !canConcatenateStronglyTyped);
+            Contracts.Assert(backingType.Kind == DKind.Number || !canCompareNumeric);
+            Contracts.Assert(backingType.Kind != DKind.Color || !canCoerceFromBackingKind);
 
             EntityName = name;
             EnumType = DType.CreateEnum(
                 backingType,
                 members.Select(kvp => new KeyValuePair<DName, object>(new DName(kvp.Key), kvp.Value)));
+
+            CanCoerceFromBackingKind = canCoerceFromBackingKind;
+            CanConcatenateStronglyTyped = canConcatenateStronglyTyped;
+            CanCompareNumeric = canCompareNumeric;
+            CanCoerceToBackingKind = canCoerceToBackingKind;
 
             FormulaType = new OptionSetValueType(this);
             OptionSetType = DType.CreateOptionSetType(this);

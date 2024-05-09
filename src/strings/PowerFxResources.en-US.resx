@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>The text value to convert to a Decimal value.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    <comment>Error message shown when a user tries to use the 'Decimal' function in a version of Power Fx that does not support it.</comment>
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converts a 'text' that represents a number to a Float value.</value>
   </data>
@@ -1019,7 +1023,7 @@
   </data>
   <data name="GUIDArg" xml:space="preserve">
     <value>GUID_string</value>
-    <comment>function_parameter - String to convert into a GUID</comment>
+    <comment>function_parameter - String to convert into a GUID. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutGUID_GUID_string" xml:space="preserve">
     <value>String to convert into a GUID</value>
@@ -1292,11 +1296,11 @@
   </data>
   <data name="ColorFadeTArg1" xml:space="preserve">
     <value>color_or_column</value>
-    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - First argument to the ColorFade function - the color on which the function will apply a fade transformation, or a column in a table containing the colors. Translate this string. When translating, maintain as a single word (i.e., do not add spaces)</comment>
   </data>
   <data name="ColorFadeTArg2" xml:space="preserve">
     <value>fade_or_column</value>
-    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+    <comment>function_parameter - Second argument to the ColorFade function - the amount of fade that will be applied to the color, or a column in a table containing the amounts. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutColorFade_color_or_column" xml:space="preserve">
     <value>A color (or column of color values) to fade.</value>
@@ -2502,10 +2506,6 @@
     <value>Component</value>
     <comment>Function category name - function defined in components within the environment where it is running.</comment>
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    <comment>{StringContains=LCID}</comment>
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>The element '{0}' is missing attribute '{1}'.</value>
     <comment>Invalid xml error message.</comment>
@@ -3018,6 +3018,34 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Summarize function - the data source (table / collection) to operate on.</comment>
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grouping_column</value>
+    <comment>function_parameter - Second argument to the Summarize function - the name of the column by which the data source will be grouped. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregation</value>
+    <comment>function_parameter - Third argument to the Summarize function - a call to an aggregation function.</comment>
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>The table or collection to group.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>The name of a column to group the data by.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>A call to an aggregation function.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Raises a number x to the power of another number y. Same as x^y.</value>
     <comment>Description of 'Power' function.</comment>
@@ -3123,7 +3151,7 @@
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to.</comment>
+    <comment>function_parameter - First parameter for the Collect function. The data source that you want to add data to. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3139,11 +3167,11 @@
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements.</comment>
+    <comment>function_parameter - First parameter for the Clear function. The data source that you want to clear from all elements. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create.</comment>
+    <comment>function_parameter - First parameter for the ClearCollect function. The data source that contains the records that you want to modify or will contain the records that you want to create. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
     <value>record</value>
@@ -3210,11 +3238,11 @@
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
     <value>data_source</value>
-    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from.</comment>
+    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
     <value>remove_record(s)</value>
-    <comment>function_parameter - One or more records to be removed.</comment>
+    <comment>function_parameter - One or more records to be removed. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
@@ -4058,6 +4086,14 @@
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>The stated function return type {0} is invalid.</value>
+    <comment>This error message shows up when function return type contains restricted primitive types.</comment>
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>The stated function argument type {0} is invalid.</value>
+    <comment>This error message shows up when function argument type contains restricted primitive types.</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
@@ -4374,8 +4410,24 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
-    <comment>Error message when type binding is invalid</comment>
+    <value>Type literal declaration was invalid.</value>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definition of type {0} is invalid.</value>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definition of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type binding may have cycles.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Restricted type name {0} cannot be used.</value>
+    <comment>Error message when using restricted type name.</comment>
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Type {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a type that already exists.</comment>
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
@@ -4550,7 +4602,7 @@
   </data>
   <data name="UniCharTArg1" xml:space="preserve">
     <value>column_of_numbers</value>
-    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters.</comment>
+    <comment>function_parameter - First argument to the UniChar function - a table column of numeric values to be converted into Unicode characters. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
   </data>
   <data name="AboutUniChar_column_of_numbers" xml:space="preserve">
     <value>A table column of numeric values to be converted into Unicode characters.</value>
@@ -4574,5 +4626,29 @@
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Expected a text, numeric, boolean, or date/time value.</value>
+    <comment>Error message shown to the user when a function expects an expression that returns a primitive value but it doesn't.</comment>
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize requires at least one grouping column.</value>
+    <comment>Summarize is the function name. Error message shown to the user when a function expects an grouping columns but none is present. {Locked=Summarize} </comment>
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.</value>
+    <comment>Summarize is the function name. Error message shown to the user when any argument index greater than 0 is not an existing column name nor a formulas named with the As keyword. {Locked=Summarize} {Locked='As'}</comment>
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when an argument conflicts with 'ThisGroup' reserved word. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when the provided data source contains a field called 'ThisGroup'. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
+    <comment>Error message shown to the user when the provided data source is followed by 'As' reserved word. {Locked='As'}</comment>
   </data>
 </root>

@@ -25,7 +25,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     { "Yes", true },
                     { "No", false },
-                });
+                },
+                canCoerceToBackingKind: true);
             Assert.True(optionSet.TryGetValue(new DName("Yes"), out var optionSetTrueValue));
             Assert.True(optionSet.TryGetValue(new DName("No"), out var optionSetFalseValue));
 
@@ -51,6 +52,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var resultTable = Assert.IsAssignableFrom<TableValue>(result);
 
             Assert.Single(resultTable.Rows);
+        }
+
+        [Fact]
+        public async Task SummarizeOptionSetTests()
+        {
+            var engine = new RecalcEngine();
+            var expression = @"Summarize(
+                              Table({Supplier:""Contoso"", Fruit:""Grapes"", Price:220, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
+                              {Supplier:""Fabrikam"", Fruit:""Lemons"", Price:31, Purchase:Date(2015,10,1),DeliveryDay:StartOfWeek.Friday},
+                              {Supplier:""Contoso"", Fruit:""Lemons"", Price:29, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
+                              {Supplier:""Contoso"", Fruit:""Grapes"", Price:210, Purchase:Date(2015,10,2),DeliveryDay:StartOfWeek.Sunday},
+                              {Supplier:""Fabrikam"", Fruit:""Lemons"", Price:30, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday},
+                              {Supplier:""Contoso"", Fruit:""Bananas"", Price:12, Purchase:Date(2015,10,3),DeliveryDay:StartOfWeek.Friday}),
+                              DeliveryDay, CountRows(ThisGroup) As Counter )";
+
+            var expected = "Table({Counter:Decimal(4),DeliveryDay:StartOfWeek.Friday},{Counter:Decimal(2),DeliveryDay:StartOfWeek.Sunday})";
+
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+
+            var result = await check.GetEvaluator().EvalAsync(cancellationToken: default).ConfigureAwait(false);
+            Assert.Equal(expected, result.ToExpression());
         }
     }
 }

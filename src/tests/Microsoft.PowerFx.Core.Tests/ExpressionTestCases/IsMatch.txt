@@ -12,9 +12,6 @@ true
 >> IsMatch("Bye", "H")
 false
 
->> IsMatch("Hi", "H", "c")
-true
-
 >> IsMatch("Hi", "H", MatchOptions.Contains)
 true
 
@@ -22,27 +19,6 @@ true
 false
 
 >> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.BeginsWith)
-true
-
->> IsMatch("Hi", "H", "$c")
-false
-
->> IsMatch("Hi", "H", "c$")
-false
-
->> IsMatch("Hi", "H", "^c")
-true
-
->> IsMatch("Hi", "H", "c^")
-true
-
->> IsMatch("Hi", "i", "c$")
-true
-
->> IsMatch("Hi", "I", "c$")
-false
-
->> IsMatch("Hi", "I", "c$i")
 true
 
 >> IsMatch("Hi", "H.*")
@@ -75,14 +51,8 @@ false
 >> IsMatch("Foo", Blank())
 Errors: Error 15-22: Regular expressions must be constant values.
 
->> IsMatch("Foo", 17)
-Errors: Error 15-17: Regular expressions must be constant values.
-
 >> IsMatch(28, "Bar")
 false
-
->> IsMatch("Foo", 1/0)
-Errors: Error 16-17: Regular expressions must be constant values.
 
 >> IsMatch("", "")
 true
@@ -103,15 +73,6 @@ false
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
 false
 
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", "c")
-true
-
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", "c")
-false
-
->> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", "c")
-true
-
 >> IsMatch("Foo", "J(")
 Error({Kind:ErrorKind.BadRegex})
 
@@ -119,11 +80,11 @@ Error({Kind:ErrorKind.BadRegex})
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 Error({Kind:ErrorKind.Timeout})
 
->> IsMatch("Hi", "Hi", "foo")
-true
+>> IsMatch( "28", Concat( [2,8], Value ) )
+Errors: Error 15-37: Regular expressions must be constant values.
 
->> IsMatch("28", 28)
-Errors: Error 14-16: Regular expressions must be constant values.
+>> IsMatch( "28", Concat( [2,8], If( false, Text(Now()), Value ) ) )
+Errors: Error 15-63: Regular expressions must be constant values.
 
 >> IsMatch("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 true
@@ -146,8 +107,29 @@ true
 >> IsMatch("Hello", "Hello", MatchOptions.IgnoreCase)
 true
 
->> IsMatch("Hello", "Hello", "")
+>> IsMatch("Hi", "Hi", MatchOptions.Multiline)
 true
 
->> IsMatch("Hi", "Hi", MatchOptions.Multiline)
+>> IsMatch("Hi", "H", MatchOptions.EndsWith )
+false
+
+>> IsMatch("Hi", "H", MatchOptions.BeginsWith)
+true
+
+>> IsMatch("Hi", "i", MatchOptions.EndsWith)
+true
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith)
+false
+
+>> IsMatch("Hi", "I", MatchOptions.EndsWith & MatchOptions.IgnoreCase)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", MatchOptions.Contains)
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", MatchOptions.Contains)
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", MatchOptions.Contains)
 true

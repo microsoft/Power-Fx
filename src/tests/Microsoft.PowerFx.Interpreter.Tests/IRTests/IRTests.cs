@@ -131,6 +131,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             }
 
             DKind IExternalOptionSet.BackingKind => DKind.Boolean;
+
+            bool IExternalOptionSet.CanCoerceToBackingKind => true;
         }
 
         private class InvalidBooleanOptionSet : OptionSet, IExternalOptionSet
@@ -154,6 +156,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             }
 
             DKind IExternalOptionSet.BackingKind => DKind.Boolean;
+
+            bool IExternalOptionSet.CanCoerceToBackingKind => true;
         }
 
         [Theory]

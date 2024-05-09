@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Bạn chỉ có thể sử dụng hàm "Decimal" nếu bật tính năng "Tương thích với Power Fx 1.0".</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Không thể sử dụng một giá trị không có bản ghi trong ngữ cảnh này.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Không thể sử dụng một giá trị không có bản ghi trong ngữ cảnh này: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Chỉ có thể sử dụng các giá trị bản ghi hoặc bảng trong ngữ cảnh này.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Thành phần</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ_liệu</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Lấy một bản ghi đơn có các khóa chính và giá trị đã cập nhật, rồi cập nhật hàng tương ứng trong nguồn dữ liệu được chỉ định. Trả về hàng được cập nhật.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Lấy một bảng chứa các hàng, rồi áp dụng các cập nhật được chỉ định trong bảng chứa cập nhật theo kiểu lần lượt tương ứng. Trả về bảng chứa các hàng được cập nhật.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Lấy một bảng chứa các hàng có các khóa chính và trường đã cập nhật, rồi áp dụng các cập nhật đó vào nguồn dữ liệu. Trả về bảng chứa các hàng được cập nhật.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Trả về hàng kèm theo các cập nhật được áp dụng.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Nguồn dữ liệu cần được vá.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Bản ghi cần được vá.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Cập nhật cần vá cho bản ghi được cung cấp.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Bảng chứa hàng cần được vá.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Bảng chứa cập nhật cần được vá đối với các hàng đã cung cấp.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>bản_ghi</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>cập_nhật</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>hàng</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>bản_cập_nhật</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>nguồn_dữ _liệu</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>xóa_bản_ghi</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -3950,7 +3993,7 @@
     
   </data>
   <data name="EncodeHTMLArg1" xml:space="preserve">
-    <value>giá trị</value>
+    <value>giá trị</value>
     
   </data>
   <data name="AboutEncodeHTML_value" xml:space="preserve">

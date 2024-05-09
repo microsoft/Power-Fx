@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -577,7 +576,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             {
                 var symbolType = symbol.Value.Type;
 
-                var suggestable = IsSymbolSuggestableForFunctionArg(function, argIndex, argType, symbolType, Binding.Features);
+                var suggestable = IsSymbolSuggestableForFunctionArg(CurNode, function, argIndex, argType, symbolType, Binding.Features);
 
                 if (suggestable)
                 {
@@ -586,7 +585,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             }
         }
 
-        private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, Features features)
+        private bool IsSymbolSuggestableForFunctionArg(TexlNode curNode, TexlFunction function, int argIndex, DType argType, DType symbolType, Features features)
         {
             // Check for invalid symbol types and return false if found.
             if (IsSuggestionTypeInvalid(symbolType))
@@ -606,14 +605,19 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 // Case 2: Aggregate type with function manipulations or scope info.
                 isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
+            else if (argType.IsAggregate && function.ParamTypes.Any(parm => parm.Kind == symbolType.Kind) && curNode.Parent is not Syntax.RecordNode)
+            {
+                // Case 3: None of the aggregate check worked. Try to mach any ParamType kind.
+                isSuggestable = true;
+            }
             else if (!argType.IsAggregate && function.SupportCoercionForArg(argIndex))
             {
-                // Case 3: Non-aggregate type with support for coercion.
+                // Case 4: Non-aggregate type with support for coercion.
                 isSuggestable = symbolType.CoercesTo(argType, false, false, features);
             }
             else if (!argType.IsAggregate)
             {
-                // Case 4: Non-aggregate type without support for coercion.
+                // Case 5: Non-aggregate type without support for coercion.
                 isSuggestable = symbolType == argType;
             }
             else

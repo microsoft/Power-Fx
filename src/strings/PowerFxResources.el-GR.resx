@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Η λειτουργία "Δεκαδικός" μπορεί να χρησιμοποιηθεί μόνο αν είναι ενεργοποιημένη η δυνατότητα "Συμβατότητα Power Fx 1.0".</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Μετατρέπει σε "κείμενο" που αντιπροσωπεύει έναν αριθμό σε τιμή κινητής υποδιαστολής.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Σε αυτό το περιβάλλον δεν είναι δυνατή η χρήση τιμής που δεν είναι τιμή εγγραφής.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Σε αυτό το περιβάλλον δεν είναι δυνατή η χρήση τιμής που δεν είναι τιμή εγγραφής: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Μόνο τιμές καρτέλας ή πίνακα μπορούν να χρησιμοποιηθούν σε αυτό το περιβάλλον.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Στοιχείο</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>δεδομένα_προέλευση</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>δεδομένα_προέλευση</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>δεδομένα_προέλευση</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Λαμβάνει μία μεμονωμένη εγγραφή με πρωτεύοντα κλειδιά και ενημερωμένες τιμές και ενημερώνει την αντίστοιχη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Λαμβάνει έναν πίνακα γραμμών και εφαρμόζει τις ενημερώσεις που καθορίζονται σε έναν πίνακα ενημερώσεων με μέθοδο ένα-προς-ένα. Επιστρέφει έναν πίνακα ενημερωμένων γραμμών.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Λαμβάνει έναν πίνακα γραμμών με πρωτεύοντα κλειδιά και ενημερωμένα πεδία και εφαρμόζει αυτές τις ενημερώσεις στην προέλευση δεδομένων. Επιστρέφει έναν πίνακα ενημερωμένων γραμμών.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Επιστρέφει τη σειρά με τις ενημερώσεις εφαρμοσμένες.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Η προέλευση δεδομένων της οποίας ο κώδικας πρέπει να ενημερωθεί.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Η εγγραφή της οποίας ο κώδικας πρέπει να ενημερωθεί.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Η ενημέρωση που θα πρέπει να ενημερωθεί με κώδικα στη δεδομένη εγγραφή.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Ο πίνακας γραμμών που θα ενημερωθούν.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Ο πίνακας ενημερώσεων που πρέπει να εφαρμοστούν στις δεδομένες γραμμές.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>προέλευση</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>εγγραφή</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>ενημέρωση</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>γραμμές</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>ενημερώσεις</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>δεδομένα_προέλευση</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>κατάργηση_εγγραφές</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>ανίχνευση_επιλογές</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

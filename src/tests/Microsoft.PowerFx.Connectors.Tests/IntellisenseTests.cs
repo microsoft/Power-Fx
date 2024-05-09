@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Tests;
 using Xunit;
 using Xunit.Abstractions;
@@ -114,8 +115,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Theory]
-        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"p1")]           // stored proc with 1 param, out of record
-        [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", ", @"p1|p2")]        // stored proc with 2 params, out of record
+        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"p1|User")]           // stored proc with 1 param, out of record
+        [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", ", @"p1|p2|User")]        // stored proc with 2 params, out of record
         [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", {  ", "p1")]         // in record, only suggest param names
         [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { ", "p1|p2")]       // two parameters
         [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { p", @"p1|p2")]     // partial typing
@@ -128,8 +129,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         {
             // These tests are exercising 'x-ms-dynamic-schema' extension property
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
-            OpenApiDocument apiDoc = testConnector._apiDocument;
-            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            OpenApiDocument apiDoc = testConnector._apiDocument;            
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
 
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
@@ -198,6 +199,39 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 
             // The response is invalid (malformed Json), this is to ensure we manage properly the exception coming from ExtractFromJson
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response Error.json");
+
+            RecalcEngine engine = new RecalcEngine(config);
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            CheckResult checkResult = engine.Check(expression, symbolTable: null);
+
+            // This call should not throw an exception
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+
+            // We don't get any result as the response is invalid
+            string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
+            Assert.Equal(string.Empty, list);
+        }
+
+        [Fact]
+        public void ConnectorIntellisenseTest_EmptyResponse()
+        {
+            string expression = @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { ";
+
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("tip1-shared-002.azure-apim.net", "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46", "5f57ec83acef477b8ccc769e52fa22cc", () => "eyJ0eXA...", httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
+
+            // The response is empty, this is to ensure we manage properly the exception coming from ExtractFromJson
+            testConnector.SetResponseFromFile(@"Responses\EmptyResponse.json");
 
             RecalcEngine engine = new RecalcEngine(config);
             BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));

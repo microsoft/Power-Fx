@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าตัวเลขทศนิยม</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>ฟังก์ชัน 'Decimal' สามารถใช้ได้เมื่อเปิดใช้งานคุณสมบัติ 'ความเข้ากันได้ของ Power Fx 1.0' เท่านั้น</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>ไม่สามารถใช้ค่าที่ไม่ใช่เรกคอร์ดในบริบทนี้</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>ไม่สามารถใช้ค่าที่ไม่ใช่เรกคอร์ดในบริบทนี้: '{0}'</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>เฉพาะค่าเรกคอร์ดหรือตารางเท่านั้นที่สามารถใช้ได้ในบริบทนี้</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>ส่วนประกอบ</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>เลือกบันทึกหนึ่งรายการที่มีคีย์หลักและค่าที่อัปเดตแล้ว และอัปเดตแถวที่สอดคล้องกันในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>เลือกตารางของแถวและใช้การอัปเดตที่กำหนดในตารางการอัปเดตในลักษณะหนึ่งต่อหนึ่ง ส่งกลับตารางของแถวที่อัปเดตแล้ว</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>เลือกตารางของแถวที่มีคีย์หลักและเขตข้อมูลที่อัปเดตแล้ว และใช้การอัปเดตเหล่านั้นกับแหล่งข้อมูล ส่งกลับตารางของแถวที่อัปเดตแล้ว</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>ส่งกลับเฉพาะแถวที่ได้รับการอัปเดต</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>แหล่งข้อมูลที่จะได้รับการแก้ไข</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>เรกคอร์ดที่จะต้องได้รับการแก้ไข</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>การอัปเดตที่จะต้องได้รับการแก้ไขที่เรกคอร์ดที่ระบุ</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>ตารางของแถวที่จะแพทช์</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>ตารางของการอัปเดตที่จะต้องแพทช์ลงในแถวกำหนด</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>ระเบียน</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>อัปเดต</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>แถว</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>อัปเดต</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>แหล่งข้อมูล</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>เรกคอร์ดที่เอาออก</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>ตัวเลือกการติดตาม</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

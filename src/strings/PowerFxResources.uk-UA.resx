@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Текстове значення, яке потрібно перетворити на десяткове.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Функцію "Десяткове значення" можна використовувати, лише якщо ввімкнено функцію "Сумісність Power Fx 1.0".</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Перетворює "текст", що представляє число, на значення з плаваючою комою.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>У цьому контексті не можна використати значення, що не є записом.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>У цьому контексті не можна використати значення, що не є записом: {0}.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>У цьому контексті можна використовувати лише значення записів або таблиць.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Компонент</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Бере один запис із первинними ключами й оновленими значеннями та оновлює відповідний рядок у вказаному джерелі даних. Повертає оновлений рядок.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Бере таблицю рядків і застосовує оновлення з указаної таблиці в співвідношенні "один-до-одного". Повертає таблицю оновлених рядків.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Бере таблицю рядків із первинними ключами й оновленими полями та застосовує ці оновлення до джерела даних. Повертає таблицю оновлених рядків.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Повертає оновлений рядок.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Джерело даних, яке потрібно виправити.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Запис, який потрібно виправити.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Оновлення, яке потрібно застосувати до вказаного запису.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Таблиця рядків, які потрібно оновити.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Таблиця з оновленнями, які потрібно застосовувати до вказаних рядків.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>оновлення</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>рядки</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>оновлення</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>джерело_даних</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>вилучити_записи</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,11 +4238,11 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>настроюваний_запис</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>параметри_трасування</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

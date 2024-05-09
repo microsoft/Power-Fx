@@ -10,6 +10,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -567,8 +568,22 @@ namespace Microsoft.PowerFx.Connectors
                                 }
                             }
 
-                            var propName = kv.Key;
-                            var schemaIdentifier = GetUniqueIdentifier(kv.Value);
+                            string propLogicalName = kv.Key;
+                            string propDisplayName = kv.Value.Title;
+
+                            if (string.IsNullOrEmpty(propDisplayName))
+                            {
+                                propDisplayName = kv.Value.GetSummary();
+                            }
+
+                            if (string.IsNullOrEmpty(propDisplayName))
+                            {
+                                propDisplayName = kv.Key;
+                            }
+                            
+                            propDisplayName = GetDisplayName(propDisplayName);                                    
+
+                            string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
                             {
@@ -576,23 +591,23 @@ namespace Microsoft.PowerFx.Connectors
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenRecordType);
                             }
 
-                            ConnectorType propertyType = new OpenApiParameter() { Name = propName, Required = schema.Required.Contains(propName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
+                            ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
                             settings.UnStack();
 
                             if (propertyType.HiddenRecordType != null)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, propertyType.HiddenRecordType);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.HiddenRecordType, propDisplayName);
                                 hiddenConnectorTypes.Add(propertyType); // Hidden
                             }
 
                             if (hiddenRequired)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, propertyType.FormulaType);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
                                 hiddenConnectorTypes.Add(propertyType);
                             }
                             else
                             {
-                                recordType = recordType.Add(propName, propertyType.FormulaType);
+                                recordType = recordType.SafeAdd(propLogicalName, propertyType.FormulaType, propDisplayName);
                                 connectorTypes.Add(propertyType);
                             }
                         }
@@ -606,6 +621,28 @@ namespace Microsoft.PowerFx.Connectors
                 default:
                     return new ConnectorType(error: $"Unsupported schema type {schema.Type}");
             }
+        }
+
+        internal static RecordType SafeAdd(this RecordType recordType, string logicalName, FormulaType formulaType, string displayName)
+        {
+            int i = 0;
+            string displayName2 = displayName;
+
+            if (displayName2 != null)
+            {
+                while (recordType._type.DisplayNameProvider?.TryGetLogicalName(new DName(displayName2), out _) == true)
+                {
+                    displayName2 = $"{displayName}_{++i}";
+                }
+            }
+
+            return recordType.Add(logicalName, formulaType, displayName2);
+        }
+
+        internal static string GetDisplayName(string name)
+        {
+            string displayName = name.Replace("{", string.Empty).Replace("}", string.Empty);
+            return displayName;
         }
 
         internal static string GetUniqueIdentifier(this OpenApiSchema schema)
@@ -771,6 +808,26 @@ namespace Microsoft.PowerFx.Connectors
         internal static bool GetExplicitInput(this IOpenApiExtensible param)
         {
             return param.Extensions != null && param.Extensions.TryGetValue(XMsExplicitInput, out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
+        }
+
+        internal static ServiceCapabilities GetTableCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {                
+                return ServiceCapabilities.ParseTableCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
+        }
+
+        internal static ColumnCapabilities GetColumnCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {
+                return ColumnCapabilities.ParseColumnCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
         }
 
         // Get string content of x-ms-url-encoding parameter extension

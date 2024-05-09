@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx
         private VersionHash _cachedVersionHash = VersionHash.New();
 
         // Expose the list to aide in intellisense suggestions. 
+        // Multiple readers ok. But not writing while we read.
         TexlFunctionSet INameResolver.Functions
         {
             get
@@ -78,7 +79,33 @@ namespace Microsoft.PowerFx
                     _cachedVersionHash = current;
                 }
 
+                // Check that it didn't mutate. 
+                var newHash = this.VersionHash;
+                if (newHash != current)
+                {
+                    throw new InvalidOperationException($"Symbol Table was mutated during read.");
+                }
+
                 return _nameResolverFunctions;                
+            }
+        }
+
+        // Expose the list to aide in intellisense suggestions.
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes
+        {
+            get
+            {
+                var names = new HashSet<string>();
+                foreach (INameResolver table in _symbolTables)
+                {
+                    foreach (var type in table.NamedTypes)
+                    {
+                        if (names.Add(type.Key))
+                        {
+                            yield return type;
+                        }
+                    }
+                }
             }
         }
 
@@ -185,6 +212,20 @@ namespace Microsoft.PowerFx
             }
 
             lookupInfo = default;
+            return false;
+        }
+
+        public virtual bool LookupType(DName name, out FormulaType fType)
+        {
+            foreach (INameResolver table in _symbolTables)
+            {
+                if (table.LookupType(name, out fType))
+                {
+                    return true;
+                }
+            }
+
+            fType = default;
             return false;
         }
 

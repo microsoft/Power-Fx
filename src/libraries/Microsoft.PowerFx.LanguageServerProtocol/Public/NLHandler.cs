@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
 
@@ -37,6 +38,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 #pragma warning disable CS0618 // Type or member is obsolete
             return await Fx2NLAsync(check, cancel).ConfigureAwait(false);
 #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Additional hook to run pre-handle logic for NL2Fx.
+        /// </summary>
+        /// <param name="nl2fxParameters">Nl2fx Parameters computed from defualt pre handle.</param>
+        /// <param name="nl2FxRequestParams">Nl2fx Request Params.</param>
+        /// <param name="operationContext">Language Server Operation Context.</param>
+        /// <exception cref="NotImplementedException">Not implemeted by default.</exception>
+        public virtual void PreHandleNl2Fx(CustomNL2FxParams nl2FxRequestParams, NL2FxParameters nl2fxParameters, LanguageServerOperationContext operationContext)
+        {
+            // no op by default
         }
     }
 

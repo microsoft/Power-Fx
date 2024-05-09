@@ -1,0 +1,29 @@
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
+
+// Decimal function
+
+>> Decimal( 1e100 )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal( "1e100" )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal( true )
+1
+
+>> Decimal( "12,00000000000000000000003", "Fr-fr" )
+12.00000000000000000000003
+
+>> Decimal( ParseJSON("""12,00000000000000000000003"""), "Fr-fr" )
+12.00000000000000000000003
+
+// ParseJSON
+
+>> Decimal( ParseJSON("12.00000000000000000000003") )
+12.00000000000000000000003
+
+>> Decimal( Index( ParseJSON("[1e300,12.00000000000000000000003]"), 2 ) )
+12.00000000000000000000003
+
+>> Decimal( ParseJSON("{""a"":12.00000000000000000000003}").a )
+12.00000000000000000000003

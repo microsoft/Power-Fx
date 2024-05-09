@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Valor de texto a converter em valor Decimal.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Só é possível utilizar A função "Decimal" se a funcionalidade "Compatibilidade com o Power Fx 1.0" estiver ativada.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converte um "texto" que representa um número num valor de Vírgula flutuante.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Não é possível utilizar um valor que não sejam registo neste contexto.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Não é possível utilizar um valor que não seja registo neste contexto: "{0}".</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Só é possível utilizar valores de registo ou tabela neste contexto.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Componente</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Aplica as atualizações à linha especificada e altera a linha na origem de dados especificada. Devolve a linha atualizada.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Num único registo com chaves primárias e campos atualizados, atualiza a linha correspondente na origem de dados especificada. Devolve a linha atualizada.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Numa tabela de linhas, aplica as atualizações especificadas numa tabela de atualizações uma de cada vez. Devolve uma tabela de linhas atualizadas.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Numa tabela de linhas com chaves primárias e campos atualizados, aplica essas atualizações à origem de dados. Devolve uma tabela de linhas atualizadas.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Devolve a linha com as atualizações aplicadas.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Origem de dados a ser aplicada.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Registo que deve ser aplicado.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Atualização que necessita ser aplicada.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>A tabela de linhas a corrigir.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>A tabela de atualizações que precisa de correções para determinadas linhas.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>registo</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>atualizar</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>linhas</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>atualizações</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>origem_de_dados</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>remover_registos</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>registo_personalizado</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">

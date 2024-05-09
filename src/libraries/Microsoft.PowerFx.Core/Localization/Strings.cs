@@ -586,6 +586,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutUniCharT = (b) => StringResources.Get("AboutUniCharT", b);
         public static StringGetter UniCharTArg1 = (b) => StringResources.Get("UniCharTArg1", b);
 
+        public static StringGetter AboutSummarize = (b) => StringResources.Get("AboutSummarize", b);
+        public static StringGetter SummarizeArg1 = (b) => StringResources.Get("SummarizeArg1", b);
+        public static StringGetter SummarizeArg2 = (b) => StringResources.Get("SummarizeArg2", b);
+        public static StringGetter SummarizeArg3 = (b) => StringResources.Get("SummarizeArg3", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -708,6 +713,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrFilterFunction_OnlyTwoArgs = new ErrorResourceKey("ErrFilterFunction_OnlyTwoArgs");
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowTable = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowTable");
         public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowRecord = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowRecord");
+        public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
@@ -749,8 +755,14 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
         public static ErrorResourceKey ErrUDF_MissingReturnType = new ErrorResourceKey("ErrUDF_MissingReturnType");
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
+        public static ErrorResourceKey ErrUDF_InvalidReturnType = new ErrorResourceKey("ErrUDF_InvalidReturnType");
+        public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
 
         public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrNamedType_InvalidCycles = new ErrorResourceKey("ErrNamedType_InvalidCycles");
+        public static ErrorResourceKey ErrNamedType_InvalidTypeDefinition = new ErrorResourceKey("ErrNamedType_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrNamedType_InvalidTypeName = new ErrorResourceKey("ErrNamedType_InvalidTypeName");
+        public static ErrorResourceKey ErrNamedType_TypeAlreadyDefined = new ErrorResourceKey("ErrNamedType_TypeAlreadyDefined");
         public static ErrorResourceKey ErrRecordContainsInvalidFields_Arg = new ErrorResourceKey("ErrRecordContainsInvalidFields_Arg");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
@@ -802,5 +814,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnknownPartialOp = new ErrorResourceKey("ErrUnknownPartialOp");
 
         public static ErrorResourceKey ErrTruncatedArgWarning = new ErrorResourceKey("ErrTruncatedArgWarning");
+
+        public static ErrorResourceKey ErrNeedPrimitive = new ErrorResourceKey("ErrNeedPrimitive");
+        public static ErrorResourceKey ErrSummarizeNoGroupBy = new ErrorResourceKey("ErrSummarizeNoGroupBy");
+        public static ErrorResourceKey ErrSummarizeInvalidArg = new ErrorResourceKey("ErrSummarizeInvalidArg");
+        public static ErrorResourceKey ErrSummarizeThisGroupColumnName = new ErrorResourceKey("ErrSummarizeThisGroupColumnName");
+        public static ErrorResourceKey ErrSummarizeDataSourceContainsThisGroupColumn = new ErrorResourceKey("ErrSummarizeDataSourceContainsThisGroupColumn");
+        public static ErrorResourceKey ErrSummarizeDataSourceScopeNotSupported = new ErrorResourceKey("ErrSummarizeDataSourceScopeNotSupported");
     }
 }

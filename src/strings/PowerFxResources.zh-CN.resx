@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>要转换为数值的文本值。</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>只有在启用“Power Fx 1.0 兼容性”功能时，才能使用 "Decimal" 函数。</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>将表示数字的“文本”转换为浮点值。</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>无法在此上下文中使用非记录值。</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>无法在此上下文中使用非记录值:“{0}”。</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>在此上下文中只能使用记录或表值。</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>组件</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>数据源</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>数据源</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>数据源</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>将更新应用到指定行并更改指定数据源中的行。返回更新的行。</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>采用包含主键和已更新值的单个记录，并更新指定数据源中的相应行。返回已更新的行。</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>采用多个行组成的表并以一对一的方式应用更新表中指定的更新。返回已更新行组成的表。</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>采用包含主键和已更新字段的多个行组成的表，并将这些更新应用到数据源。返回已更新行组成的表。</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>返回已应用更新的行。</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>要修补的数据源。</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>必须进行修补的记录。</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>需要对给定记录进行修补的更新。</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>要修补的多个行组成的表。</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>给定行需要修补的更新的表。</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>记录</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>更新</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>行</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>更新</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>数据源</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>删除记录</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,11 +4238,11 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>自定义记录</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>跟踪选项</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

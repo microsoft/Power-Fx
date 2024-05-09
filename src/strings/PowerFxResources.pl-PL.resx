@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Wartość tekstowa do przekonwertowania na wartość dziesiętną.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkcji „Liczba dziesiętna” można używać tylko wtedy, gdy jest włączona funkcja „Zgodność z językiem Power Fx 1.0”.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konwertuje „tekst” reprezentujący liczbę na wartość zmiennoprzecinkową.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Nie można użyć wartości bez rekordu w tym kontekście.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Nie można użyć wartości bez rekordu w tym kontekście: „{0}”.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>W tym kontekście można użyć tylko wartości rekordów lub tabel.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Składnik</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Stosuje aktualizacje do określonego wiersza i zmienia wiersz w określonym źródle danych. Zwraca zaktualizowany wiersz.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Bierze pojedynczy rekord z kluczami podstawowymi oraz zaktualizowanymi wartościami i aktualizuje odpowiedni wiersz w określonym źródle danych. Zwraca zaktualizowany wiersz.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Bierze tabelę wierszy i stosuje aktualizacje określone w tabeli aktualizacji metodą „jeden do jednego”. Zwraca tabelę zaktualizowanych wierszy.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Bierze tabelę wierszy z kluczami podstawowymi oraz zaktualizowanymi polami i stosuje te aktualizacje w źródle danych. Zwraca tabelę zaktualizowanych wierszy.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Zwraca wiersz z zastosowanymi aktualizacjami.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Źródło danych do poprawienia.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Rekord do poprawienia.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Aktualizacja, którą należy zastosować do danego rekordu.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabela wierszy do zastosowania poprawek.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabela aktualizacji, które należy zastosować jako poprawki w danych wierszach.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>źródło</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>rekord</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>aktualizacja</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>wiersze</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>aktualizacje</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>źródło_danych</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>usuń_rekordy</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">

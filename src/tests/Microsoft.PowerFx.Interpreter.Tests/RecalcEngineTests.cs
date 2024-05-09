@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -553,7 +554,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("myArg", FormulaValue.New(10));
 
-            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions);
+            symbolTable.AddUserDefinedFunction(script, CultureInfo.InvariantCulture, engine.SupportedFunctions, engine.PrimitiveTypes);
 
             var check = engine.Check(expression, symbolTable: symbolTable);
             var result = check.GetEvaluator().Eval();
@@ -593,15 +594,57 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result.AsDouble());
         }
 
+        [Theory]
+
+        // Return value with side effectful UDF
+        [InlineData(
+            "F1(x:Number) : Number = { Set(a, x); a+1; };",
+            "F1(123)",
+            false,
+            null,
+            124)]
+
+        // Mismatch return value with side effectful UDF
+        [InlineData(
+            "F1(x:Number) : Boolean = { Set(a, x); Today(); };",
+            null,
+            true,
+            "AddUserDefinedFunction",
+            0)]
+
+        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string expectedMethodFailure, double expected)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var recalcEngine = new RecalcEngine(config);
+            recalcEngine.UpdateVariable("a", 1m);
+
+            try
+            {
+                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+
+                var result = recalcEngine.Eval(expression, options: _opts);
+                var fvExpected = FormulaValue.New(expected);
+
+                Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
+                Assert.False(expectedError);
+            }
+            catch (Exception ex)
+            {
+                Assert.True(expectedError, ex.Message);
+                Assert.Contains(expectedMethodFailure, ex.StackTrace);
+            }
+        }
+
         // Binding to inner functions does not impact outer functions. 
         [Fact]
         public void FunctionInner()
         {
             // Inner table 
-            SymbolTable stInner = new SymbolTable { DebugName = "Extras" };
+            SymbolTable stInner = SymbolTable.WithPrimitiveTypes();
             stInner.AddUserDefinedFunction("Func1() : Text = \"inner\";");
 
-            SymbolTable st = new SymbolTable { DebugName = "Extras" };
+            SymbolTable st = SymbolTable.WithPrimitiveTypes();
             st.AddUserDefinedFunction("Func2() : Text = Func1() & \"2\";", symbolTable: stInner);
 
             var engine = new RecalcEngine();
@@ -1198,7 +1241,8 @@ namespace Microsoft.PowerFx.Tests
                 {
                     { "Choice1", true },
                     { "Choice2", false },
-                }));
+                },
+                canCoerceToBackingKind: true));
             var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder, features: Features.PowerFxV1);
             var recalcEngine = new RecalcEngine(config);
 
@@ -1216,8 +1260,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Boolean(TestEnum.Choice1)", false)]
         [InlineData("Boolean([TestEnum.Choice1,TestEnum.Choice2])", false)]
         [InlineData("TestEnum.Choice1 And true", false)]
-        [InlineData("ColorFade(TestEnum.Choice1,10%)", true)]
-        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", true)]
+        [InlineData("ColorFade(TestEnum.Choice1,10%)", false)]
+        [InlineData("ColorFade([TestEnum.Choice1,TestEnum.Choice2],10%)", false)]
         public void OptionSetBackingColorTests(string expression, bool valid)
         {
             var enumStoreBuilder = new EnumStoreBuilder();
@@ -1487,6 +1531,155 @@ namespace Microsoft.PowerFx.Tests
             public double NextDouble()
             {
                 return _value;
+            }
+        }
+
+        [Fact]
+        public void LookupBuiltinOptionSets()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            // Builtin enums are on engine.SupportedFunctionm
+            var ok = engine.SupportedFunctions.TryGetSymbolType("Color", out var type);
+            Assert.True(ok);
+
+            ok = engine.GetCombinedEngineSymbols().TryGetSymbolType("Color", out type);
+            Assert.True(ok);
+
+            // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
+        }
+
+        [Theory]
+        [InlineData(
+            "Point = Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
+            "distance({x: 0, y: 0}, {x: 0, y: 5})",
+            true,
+            5.0)]
+
+        // Table types are accepted
+        [InlineData(
+            "People = Type([{Id:Number, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Id: 1, Age: 17}, {Id: 2, Age: 21}])",
+            true,
+            1.0)]
+        [InlineData(
+            "Numbers = Type([Number]); countEven(nums: Numbers): Number = CountRows(Filter(nums, Mod(Value, 2) = 0));",
+            "countEven([1,2,3,4,5,6,7,8,9,10])",
+            true,
+            5.0)]
+
+        // Type Aliases are allowed
+        [InlineData(
+            "CarYear = Type(Number); Car = Type({Model: Text, ModelYear: CarYear}); createCar(model:Number, year: Number): Car = {Model:model, ModelYear: year};",
+            "createCar(\"Model Y\", 2024).ModelYear",
+            true,
+            2024.0)]
+
+        // Type definitions order shouldn't matter
+        [InlineData(
+            "Person = Type({Id: IdType, Age: Number}); IdType = Type(Number); createUser(id:Number, a: Number): Person = {Id:id, Age: a};",
+            "createUser(1, 42).Age",
+            true,
+            42.0)]
+
+        // Functions accept record with more/less fields
+        [InlineData(
+            "People = Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            true,
+            0.0)]
+        [InlineData(
+            "Employee = Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
+            "getAge({Name: \"Bob\", Age: 21})",
+            true,
+            21.0)]
+        [InlineData(
+            @"Employee = Type({Name: Text, Age: Number, Title: Text}); Employees = Type([Employee]);  EmployeeNames = Type([{Name: Text}]); 
+              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
+              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
+            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
+            true,
+            2.0)]
+        [InlineData(
+            @"Employee = Type({Name: Text, Age: Number, Title: Text}); 
+              getAge(e: Employee): Number = e.Age;
+              hasNoAge(e: Employee): Number = IsBlank(getAge(e));",
+            "hasNoAge({Name: \"Bob\", Title: \"CEO\"})",
+            true,
+            1.0)]
+
+        // Types with UDF restricted primitive types resolve successfully 
+        [InlineData(
+            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients = Type([Patient]);
+              Dummy():Number = CountRows([]);",
+            "Dummy()",
+            true,
+            0.0)]
+
+        // Aggregate types with restricted types are not allowed in UDF
+        [InlineData(
+            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients = Type([Patient]);
+              getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
+            "",
+            false)]
+
+        [InlineData(
+            @"Patient = Type({Name: Text, Details: {h: Number, w:Decimal}}); 
+              getPatient(): Patient = {Name:""Alice"", Details: {h: 1, w: 2}};",
+            "",
+            false)]
+
+        // Cycles not allowed
+        [InlineData(
+            "Z = Type([{a: {b: Z}}]);",
+            "",
+            false)]
+        [InlineData(
+            "X = Type(Y); Y = Type(X);",
+            "",
+            false)]
+        [InlineData(
+            "C = Type({x: Boolean, y: Date, f: B});B = Type({ x: A }); A = Type([C]);",
+            "",
+            false)]
+
+        // Redeclaration not allowed
+        [InlineData(
+            "Number = Type(Text);",
+            "",
+            false)]
+        [InlineData(
+            "Point = Type({x : Number, y : Number}); Point = Type({x : Number, y : Number, z: Number})",
+            "",
+            false)]
+
+        // UDFs with body errors should fail
+        [InlineData(
+            "S = Type({x:Text}); f():S = ({);",
+            "",
+            false)]
+
+        public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+                AllowParseAsTypeLiteral = true
+            };
+
+            if (isValid)
+            {
+                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
             }
         }
 

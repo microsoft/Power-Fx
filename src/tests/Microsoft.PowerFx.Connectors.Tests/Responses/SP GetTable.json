@@ -1,0 +1,528 @@
+{
+  "name": "Documents",
+  "title": "Documents",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": {
+      "sortable": true,
+      "unsortableProperties": [ "OData__ExtendedDescription", "OData__ip_UnifiedCompliancePolicyProperties", "OData__DisplayName", "{Identifier}", "{IsFolder}", "{Thumbnail}", "{Link}", "{Name}", "{FilenameWithExtension}", "{Path}", "{FullPath}", "{ModerationStatus}", "{ModerationComment}", "{IsCheckedOut}", "{VersionNumber}", "{TriggerWindowStartToken}", "{TriggerWindowEndToken}" ]
+    },
+    "filterRestrictions": {
+      "filterable": true,
+      "nonFilterableProperties": [ "OData__ExtendedDescription", "OData__ip_UnifiedCompliancePolicyProperties", "OData__DisplayName", "{Identifier}", "{IsFolder}", "{Thumbnail}", "{Link}", "{Name}", "{FilenameWithExtension}", "{Path}", "{FullPath}", "{ModerationStatus}", "{ModerationComment}", "{IsCheckedOut}", "{VersionNumber}", "{TriggerWindowStartToken}", "{TriggerWindowEndToken}" ]
+    },
+    "isOnlyServerPagable": true,
+    "filterFunctionSupport": [ "and", "or", "eq", "startswith", "gt", "ge", "lt", "le", "ne" ],
+    "serverPagingOptions": [ "top", "skiptoken" ],
+    "odataVersion": 3
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "ID": {
+          "title": "ID",
+          "description": "List item id. Use this value for specifying the item to act on in other list related actions.",
+          "type": "integer",
+          "format": "int64",
+          "x-ms-keyType": "primary",
+          "x-ms-keyOrder": 1,
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq" ] }
+        },
+        "Title": {
+          "title": "Title",
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq", "startswith" ] },
+          "maxLength": 255
+        },
+        "Modified": {
+          "title": "Modified",
+          "description": "When this item was last changed.",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq", "gt", "ge", "lt", "le", "ne" ] }
+        },
+        "Editor#Claims": {
+          "title": "Modified By Claims",
+          "type": "string",
+          "description": "Internal identifier for the user who last changed this item.",
+          "x-ms-permission": "read-only",
+          "x-ms-visibility": "internal"
+        },
+        "Editor": {
+          "title": "Modified By",
+          "description": "The user who last changed this item.",
+          "type": "object",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq" ] },
+          "properties": {
+            "@odata.type": {
+              "title": "@odata.type",
+              "x-ms-visibility": "internal",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            },
+            "Claims": {
+              "title": "Claims",
+              "type": "string",
+              "description": "Internal identifier for the user who last changed this item.",
+              "x-ms-permission": "read-only",
+              "x-ms-dynamic-values": {
+                "operationId": "GetEntityValues",
+                "parameters": {
+                  "dataset": { "parameter": "dataset" },
+                  "table": { "parameter": "table" },
+                  "id": "d31655d1-1d5b-4511-95a1-7a09e9b75bf2"
+                },
+                "value-path": "Claims",
+                "value-title": "DisplayName",
+                "value-collection": "value"
+              }
+            },
+            "DisplayName": {
+              "title": "DisplayName",
+              "type": "string",
+              "description": "The name of the user who last changed this item.",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "Title" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Email": {
+              "title": "Email",
+              "type": "string",
+              "description": "Email address of the user who last changed this item.",
+              "format": "email",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "EMail" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Picture": {
+              "title": "Picture",
+              "type": "string",
+              "description": "Link to a picture of the user who last changed this item.",
+              "format": "uri",
+              "x-ms-media-kind": "image",
+              "x-ms-media-default-folder-path": "/teams/pfxtest",
+              "x-ms-media-base-url": "https://microsofteur.sharepoint.com/teams/pfxtest",
+              "x-ms-permission": "read-only"
+            },
+            "Department": {
+              "title": "Department",
+              "type": "string",
+              "description": "Department name of the user who last changed this item.",
+              "x-ms-permission": "read-only"
+            },
+            "JobTitle": {
+              "title": "JobTitle",
+              "type": "string",
+              "description": "Job title of the user who last changed this item.",
+              "x-ms-permission": "read-only"
+            }
+          },
+          "x-ms-displayFormat": {
+            "titleProperty": "DisplayName",
+            "subtitleProperty": "Email",
+            "thumbnailProperty": "Picture"
+          }
+        },
+        "OData__ColorTag": {
+          "title": "Color Tag",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq", "startswith" ] },
+          "maxLength": 255
+        },
+        "ComplianceAssetId": {
+          "title": "Compliance Asset Id",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq", "startswith" ] },
+          "maxLength": 255
+        },
+        "OData__ExtendedDescription": {
+          "title": "Description",
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "OData__ip_UnifiedCompliancePolicyProperties": {
+          "title": "Unified Compliance Policy Properties",
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Created": {
+          "title": "Created",
+          "description": "When this item was created.",
+          "type": "string",
+          "format": "date-time",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq", "gt", "ge", "lt", "le", "ne" ] }
+        },
+        "Author#Claims": {
+          "title": "Created By Claims",
+          "type": "string",
+          "description": "Internal identifier for the user who created this item.",
+          "x-ms-permission": "read-only",
+          "x-ms-visibility": "internal"
+        },
+        "Author": {
+          "title": "Created By",
+          "description": "The user who created this item.",
+          "type": "object",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq" ] },
+          "properties": {
+            "@odata.type": {
+              "title": "@odata.type",
+              "x-ms-visibility": "internal",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            },
+            "Claims": {
+              "title": "Claims",
+              "type": "string",
+              "description": "Internal identifier for the user who created this item.",
+              "x-ms-permission": "read-only",
+              "x-ms-dynamic-values": {
+                "operationId": "GetEntityValues",
+                "parameters": {
+                  "dataset": { "parameter": "dataset" },
+                  "table": { "parameter": "table" },
+                  "id": "1df5e554-ec7e-46a6-901d-d85a3881cb18"
+                },
+                "value-path": "Claims",
+                "value-title": "DisplayName",
+                "value-collection": "value"
+              }
+            },
+            "DisplayName": {
+              "title": "DisplayName",
+              "type": "string",
+              "description": "The name of the user who created this item.",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "Title" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Email": {
+              "title": "Email",
+              "type": "string",
+              "description": "Email address of the user who created this item.",
+              "format": "email",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "EMail" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Picture": {
+              "title": "Picture",
+              "type": "string",
+              "description": "Link to a picture of the user who created this item.",
+              "format": "uri",
+              "x-ms-media-kind": "image",
+              "x-ms-media-default-folder-path": "/teams/pfxtest",
+              "x-ms-media-base-url": "https://microsofteur.sharepoint.com/teams/pfxtest",
+              "x-ms-permission": "read-only"
+            },
+            "Department": {
+              "title": "Department",
+              "type": "string",
+              "description": "Department name of the user who created this item.",
+              "x-ms-permission": "read-only"
+            },
+            "JobTitle": {
+              "title": "JobTitle",
+              "type": "string",
+              "description": "Job title of the user who created this item.",
+              "x-ms-permission": "read-only"
+            }
+          },
+          "x-ms-displayFormat": {
+            "titleProperty": "DisplayName",
+            "subtitleProperty": "Email",
+            "thumbnailProperty": "Picture"
+          }
+        },
+        "CheckoutUser#Claims": {
+          "title": "Checked Out To Claims",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-visibility": "internal"
+        },
+        "CheckoutUser": {
+          "title": "Checked Out To",
+          "type": "object",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "asc,desc",
+          "x-ms-capabilities": { "filterFunctions": [ "eq" ] },
+          "properties": {
+            "@odata.type": {
+              "title": "@odata.type",
+              "x-ms-visibility": "internal",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            },
+            "Claims": {
+              "title": "Claims",
+              "type": "string",
+              "x-ms-permission": "read-only",
+              "x-ms-dynamic-values": {
+                "operationId": "GetEntityValues",
+                "parameters": {
+                  "dataset": { "parameter": "dataset" },
+                  "table": { "parameter": "table" },
+                  "id": "3881510a-4e4a-4ee8-b102-8ee8e2d0dd4b"
+                },
+                "value-path": "Claims",
+                "value-title": "DisplayName",
+                "value-collection": "value"
+              }
+            },
+            "DisplayName": {
+              "title": "DisplayName",
+              "type": "string",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "Title" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Email": {
+              "title": "Email",
+              "type": "string",
+              "format": "email",
+              "x-ms-permission": "read-only",
+              "x-ms-capabilities": {
+                "x-ms-sp": { "OdataQueryName": "EMail" },
+                "filterFunctions": [ "eq", "startswith" ]
+              }
+            },
+            "Picture": {
+              "title": "Picture",
+              "type": "string",
+              "format": "uri",
+              "x-ms-media-kind": "image",
+              "x-ms-media-default-folder-path": "/teams/pfxtest",
+              "x-ms-media-base-url": "https://microsofteur.sharepoint.com/teams/pfxtest",
+              "x-ms-permission": "read-only"
+            },
+            "Department": {
+              "title": "Department",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            },
+            "JobTitle": {
+              "title": "JobTitle",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            }
+          },
+          "x-ms-displayFormat": {
+            "titleProperty": "DisplayName",
+            "subtitleProperty": "Email",
+            "thumbnailProperty": "Picture"
+          }
+        },
+        "OData__DisplayName": {
+          "title": "Sensitivity",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{Identifier}": {
+          "title": "Identifier",
+          "description": "Value that can be used in file related actions for selecting a file.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{IsFolder}": {
+          "title": "IsFolder",
+          "description": "True when the item is a folder, false otherwise.",
+          "type": "boolean",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{Thumbnail}": {
+          "title": "Thumbnail",
+          "description": "URL to the thumbnails of the item in 3 different sizes, if available.",
+          "type": "object",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none",
+          "properties": {
+            "@odata.type": {
+              "title": "@odata.type",
+              "x-ms-visibility": "internal",
+              "type": "string",
+              "x-ms-permission": "read-only"
+            },
+            "Small": {
+              "title": "Small",
+              "type": "string",
+              "description": "URL to the small, highly compressed size thumbnail of the item, if available.",
+              "x-ms-permission": "read-only"
+            },
+            "Medium": {
+              "title": "Medium",
+              "type": "string",
+              "description": "URL to the standard size thumbnail of the item, if available.",
+              "x-ms-permission": "read-only"
+            },
+            "Large": {
+              "title": "Large",
+              "type": "string",
+              "description": "URL to the largest size thumbnail of the item, if available.",
+              "x-ms-permission": "read-only"
+            }
+          }
+        },
+        "{Link}": {
+          "title": "Link to item",
+          "description": "Link that can be used to get to the file or list item. Only people with permissions to the item will be able to open the link.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{Name}": {
+          "title": "Name",
+          "description": "File name of the item in document libraries, display name of the item in lists.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{FilenameWithExtension}": {
+          "title": "File name with extension",
+          "description": "For libraries, returns file name including extension. For lists, returns the title property.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{Path}": {
+          "title": "Folder path",
+          "description": "Path to the folder the item is in, relative to the site address.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{FullPath}": {
+          "title": "Full Path",
+          "description": "Full path of an item or a folder or a file",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{ModerationStatus}": {
+          "title": "Content approval status",
+          "description": "The content approval status. It can be one of the following: Draft, Pending, Approved, or Rejected",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{ModerationComment}": {
+          "title": "Comments associated with the content approval of this list item",
+          "description": "The comments associated with moderation of the list item.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{IsCheckedOut}": {
+          "title": "Checked out",
+          "description": "True when the file is checked out, false otherwise.",
+          "type": "boolean",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{VersionNumber}": {
+          "title": "Version number",
+          "description": "The version number of the file or the list item.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{TriggerWindowStartToken}": {
+          "title": "Trigger Window Start Token",
+          "description": "A token expressing the time of the last flow check. Use this if you want to check if one or more columns were modified since the last flow check.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "{TriggerWindowEndToken}": {
+          "title": "Trigger Window End Token",
+          "description": "A token expressing the time of the current flow check. Use this if you want to check if one or more columns were modified since the last flow check.",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        }
+      },
+      "x-ms-relationships": {
+        "Editor": {
+          "targetEntity": "Editor",
+          "referentialConstraints": { "Editor#Claims": { "referencedProperty": "Claims" } }
+        },
+        "Author": {
+          "targetEntity": "Author",
+          "referentialConstraints": { "Author#Claims": { "referencedProperty": "Claims" } }
+        },
+        "CheckoutUser": {
+          "targetEntity": "CheckoutUser",
+          "referentialConstraints": { "CheckoutUser#Claims": { "referencedProperty": "Claims" } }
+        }
+      },
+      "x-ms-displayFormat": {
+        "propertiesDisplayOrder": [ "Title", "OData__ip_UnifiedCompliancePolicyProperties" ],
+        "propertiesCompactDisplayOrder": [ "Title", "Modified", "Editor" ],
+        "propertiesTabularDisplayOrder": [ "Title", "Modified", "Editor" ]
+      }
+    }
+  },
+  "referencedEntities": {
+    "Editor": {
+      "lookupEndpoint": {
+        "path": "/tables/4bd37916-0026-4726-94e8-5a0cbc8e476a/entities/Editor",
+        "capabilities": {
+          "searchable": true,
+          "requiresSearch": false
+        }
+      }
+    },
+    "Author": {
+      "lookupEndpoint": {
+        "path": "/tables/4bd37916-0026-4726-94e8-5a0cbc8e476a/entities/Author",
+        "capabilities": {
+          "searchable": true,
+          "requiresSearch": false
+        }
+      }
+    },
+    "CheckoutUser": {
+      "lookupEndpoint": {
+        "path": "/tables/4bd37916-0026-4726-94e8-5a0cbc8e476a/entities/CheckoutUser",
+        "capabilities": {
+          "searchable": true,
+          "requiresSearch": false
+        }
+      }
+    }
+  },
+  "webUrl": "https://microsofteur.sharepoint.com/teams/pfxtest/Shared Documents/Forms/AllItems.aspx"
+}

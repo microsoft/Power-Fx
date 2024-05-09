@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Valoarea text de convertit la o valoare zecimală.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funcția „Zecimal” poate fi utilizată numai dacă funcția „Compatibilitate Power Fx 1.0” este activată.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Convertește un „text” care reprezintă un număr, la o valoare float.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Nu se poate utiliza o valoare non-înregistrare în acest context.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Nu se poate utiliza o valoare non-înregistrare în acest context: „{0}”.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Doar valorile de înregistrare sau de tabel pot fi utilizate în acest context.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Componentă</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Aplică actualizările la rândul specificat și modifică rândul în sursa de date specificată. Returnează rândul actualizat.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Preia o singură înregistrare cu chei primare și valori actualizate și actualizează rândul corespunzător din sursa de date specificată. Returnează rândul actualizat.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Preia un tabel de rânduri și aplică actualizările specificate într-un tabel de actualizări într-o modalitate unu-la-unu. Returnează un tabel de rânduri actualizate.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Preia un tabel de rânduri cu chei primare și câmpuri actualizate și aplică aceste actualizări la sursa de date. Returnează un tabel de rânduri actualizate.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Returnează rândul cu actualizări aplicate.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Sursa de date care urmează să fie corectată.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Înregistrarea care trebuie corectată.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Actualizarea care trebuie aplicată la înregistrarea dată.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabelul de rânduri de remediat.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabelul de actualizări care trebuie remediat la rândurile date.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>înregistrare</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>actualizare</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>rânduri</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>actualizări</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,7 +3161,7 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>sursă_date</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
@@ -4199,7 +4242,7 @@
     
   </data>
   <data name="TraceArg4" xml:space="preserve">
-    <value>trace_options</value>
+    <value>opțiuni_urmărire</value>
     
   </data>
   <data name="AboutTrace_message" xml:space="preserve">

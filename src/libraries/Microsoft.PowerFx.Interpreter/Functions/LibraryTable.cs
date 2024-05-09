@@ -575,9 +575,20 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
-            var arg2 = (StringValue)args[2];
+            bool isDescending;
 
-            var isDescending = arg2.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+            switch (args[2])
+            {
+                case StringValue sv:
+                    isDescending = sv.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                    break;
+                case OptionSetValue osv:
+                    isDescending = ((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
+                    break;
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue queryableTable)
             {
@@ -710,9 +721,25 @@ namespace Microsoft.PowerFx.Functions
                     return CreateInvalidSortColumnError(irContext, runner.CultureInfo, columnName);
                 }
 
-                var isAscending =
-                    i == args.Length - 1 ||
-                    !((StringValue)args[i + 1]).Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                bool isAscending;
+                if (i == args.Length - 1)
+                {
+                    isAscending = true;
+                }
+                else
+                {
+                    switch (args[i + 1])
+                    {
+                        case StringValue sv:
+                            isAscending = !sv.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
+                            break;
+                        case OptionSetValue osv:
+                            isAscending = !((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
+                            break;
+                        default:
+                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext);
+                    }
+                }
 
                 columnNames.Add(columnName);
                 ascendingSort.Add(isAscending);
@@ -1135,6 +1162,94 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
         {
             return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
+        }
+
+        public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (args[0] is ErrorValue)
+            {
+                return args[0];
+            }
+
+            if (args[0] is not TableValue tableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            // Nothing to do for empty tables
+            if (tableValue.Rows.Count() == 0)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType((TableType)irContext.ResultType, tableValue);
+            }
+
+            var keyRecords = new Dictionary<string, RecordValue>();
+            var groupByRecords = new Dictionary<string, List<RecordValue>>();
+
+            var stringArgs = args.Where(arg => arg is StringValue);
+
+            foreach (var row in tableValue.Rows)
+            {
+                runner.CancellationToken.ThrowIfCancellationRequested();
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                // Blank rows are ignored.
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                var showColumnsArgs = new List<FormulaValue>() { row.Value };
+                showColumnsArgs.AddRange(stringArgs);
+
+                var keyRecord = await ShowColumns(runner, context, IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), showColumnsArgs.ToArray()).ConfigureAwait(false);
+                var key = keyRecord.ToExpression();
+
+                if (!groupByRecords.ContainsKey(key))
+                {
+                    groupByRecords[key] = new List<RecordValue>();
+                }
+
+                keyRecords[key] = (RecordValue)keyRecord;
+                groupByRecords[key].Add(row.Value);
+            }
+
+            var finalRecords = new List<DValue<RecordValue>>();
+
+            foreach (var group in groupByRecords)
+            {
+                runner.CancellationToken.ThrowIfCancellationRequested();
+
+                var newTable = FormulaValue.NewTable((RecordType)FormulaType.Build(tableValue.Type._type.ToRecord()), group.Value);
+                var record = (InMemoryRecordValue)keyRecords[group.Key];
+                var fields = new Dictionary<string, FormulaValue>();
+
+                foreach (var field in record.Fields)
+                {
+                    fields.Add(field.Name, field.Value);
+                }
+
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(newTable);
+
+                foreach (LambdaFormulaValue arg in args.Where(arg => arg is LambdaFormulaValue))
+                {
+                    var result = (InMemoryRecordValue)(await arg.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false));
+
+                    fields[result.Fields.First().Name] = result.Fields.First().Value;
+                }
+
+                finalRecords.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), fields)));
+            }
+
+            return new InMemoryTableValue(irContext, finalRecords);
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(

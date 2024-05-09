@@ -3,16 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -360,12 +355,12 @@ namespace Microsoft.PowerFx.Core.IR
                     var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
-                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(context.Binding.Features, i))
+                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(arg, i, context.Binding.Features))
                     {
                         Contracts.Assert(i > 0, "First argument cannot be a column identifier");
 
                         var identifierNode = arg.AsFirstName();
-                        if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                         {
                             Contracts.Assert(identifierNode != null);
                         }
@@ -373,7 +368,7 @@ namespace Microsoft.PowerFx.Core.IR
                         var isColumnAsIdentifier = false;
                         if (identifierNode != null)
                         {
-                            if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                            if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                             {
                                 isColumnAsIdentifier = true;
                             }
@@ -407,7 +402,7 @@ namespace Microsoft.PowerFx.Core.IR
                             args.Add(child);
                         }
                     }
-                    else if (func.IsLazyEvalParam(i, _features))
+                    else if (func.IsLazyEvalParam(arg, i, _features))
                     {
                         var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
                         args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
@@ -1141,6 +1136,15 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.BooleanToOptionSet:
                         unaryOpKind = UnaryOpKind.BooleanToOptionSet;
+                        break;
+                    case CoercionKind.NumberToOptionSet:
+                        unaryOpKind = UnaryOpKind.NumberToOptionSet;
+                        break;
+                    case CoercionKind.DecimalToOptionSet:
+                        unaryOpKind = UnaryOpKind.DecimalToOptionSet;
+                        break;
+                    case CoercionKind.StringToOptionSet:
+                        unaryOpKind = UnaryOpKind.StringToOptionSet;
                         break;
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;

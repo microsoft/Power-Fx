@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             ConsoleLogger logger = new ConsoleLogger(_output);
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
-            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector(new ConnectorSettings(null), null, logger);
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector(new ConnectorSettings(@namespace: null), null, logger);
 
             Assert.Empty(functions);
             Assert.Equal(

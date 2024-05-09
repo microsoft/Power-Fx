@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Ondalık değerine dönüştürülecek metin değeri.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>"Ondalık" işlevi yalnızca "Power Fx 1.0 uyumluluğu" özelliği etkinleştirilmişse kullanılabilir.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Sayı temsil eden bir "metin" değerini kayan bir değere dönüştürür.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>Bu bağlamda kayıt olmayan bir değer kullanılamaz.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>Kayıt olmayan değerler bu bağlamda kullanılamıyor: '{0}'.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>Bu bağlamda yalnızca kayıt veya tablo değerleri kullanılabilir.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Bileşen</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>veri_kaynağı</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>veri_kaynağı</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>veri_kaynağı</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Güncelleştirmeleri belirtilen satırlara uygular ve belirtilen veri kaynağındaki satırı değiştirir. Güncelleştirilen satırı döndürür.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Birincil anahtarların ve güncelleştirilmiş değerlerin bulunduğu tek bir kaydı alır ve belirtilen veri kaynağında karşılık gelen satırı güncelleştirir. Güncelleştirilen satırı döndürür.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Bir satır tablosu alır ve güncelleştirme tablosunda belirtilen güncelleştirmeleri bire bir uygular. Güncelleştirilen satırların bulunduğu bir tablo döndürür.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Birincil anahtarların ve güncelleştirilmiş alanların bulunduğu bir satır tablosunu alır ve bu güncelleştirmeleri veri kaynağına uygular. Güncelleştirilmiş satırların bulunduğu bir tablo döndürür.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Güncelleştirmelerin uygulandığı satırı döndürür.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Yama uygulanacak veri kaynağı.</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Yama uygulanması gereken kayıt.</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Belirtilen kayda yama olarak uygulanması gereken güncelleştirme.</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Yama uygulanacak satırların bulunduğu tablo.</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Belirtilen satırlara yama olarak uygulanacak güncelleştirmelerin bulunduğu tablo.</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>güncelleştirme</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>satırlar</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>güncelleştirmeler</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>veri_kaynağı</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>kayıtları_kaldır</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>özel_kayıt</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">

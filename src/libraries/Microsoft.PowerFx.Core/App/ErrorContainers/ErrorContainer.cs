@@ -88,7 +88,12 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             foreach (var err in _errors)
             {
-                if (err.Node.InTree(rootNode) && err.Severity >= severity)
+                Span nodeSpan;
+                if (err.Severity >= severity &&
+                    ((err.Node?.InTree(rootNode) ?? false) || 
+                    (err.Node == null && 
+                        ((nodeSpan = rootNode.GetTextSpan()) != null) &&
+                        err.TextSpan.Min >= nodeSpan.Min && err.TextSpan.Lim <= nodeSpan.Lim)))
                 {
                     return true;
                 }
@@ -131,7 +136,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             if (!HasErrors(token, severity))
             {
-                Error(severity, token, errKey, args);
+                return Error(severity, token, errKey, args);
             }
 
             return null;

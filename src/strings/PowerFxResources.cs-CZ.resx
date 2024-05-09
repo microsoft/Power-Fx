@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textová hodnota, kterou chcete převést na desetinnou hodnotu.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkci „Desetinné číslo“ lze použít pouze v případě, že je povolena funkce „Kompatibilita Power Fx 1.0“.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Převede „text“, který představuje číslo, na plovoucí hodnotu.</value>
   </data>
@@ -1962,6 +1966,10 @@
     <value>V tomto kontextu nejde použít jinou hodnotu než záznam.</value>
     
   </data>
+  <data name="ErrNeedRecord_Arg" xml:space="preserve">
+    <value>V tomto kontextu nejde použít jinou hodnotu než záznam: {0}.</value>
+    
+  </data>
   <data name="ErrNeedRecordOrTable" xml:space="preserve">
     <value>V tomto kontextu lze použít pouze hodnoty záznamů nebo tabulek.</value>
     
@@ -2496,10 +2504,6 @@
   </data>
   <data name="Component" xml:space="preserve">
     <value>Komponenta</value>
-    
-  </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
@@ -3070,7 +3074,7 @@
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datový_zdroj</value>
     
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
@@ -3086,11 +3090,11 @@
     
   </data>
   <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datový_zdroj</value>
     
   </data>
   <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datový_zdroj</value>
     
   </data>
   <data name="ClearCollectRecordArg" xml:space="preserve">
@@ -3101,16 +3105,55 @@
     <value>Aplikuje aktualizace pro zadaný řádek a změní řádek v zadaném zdroji dat. Vrátí aktualizovaný řádek.</value>
     
   </data>
-  <data name="PatchDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+  <data name="AboutPatchSingleRecord" xml:space="preserve">
+    <value>Vezme jeden záznam s primárními klíči a aktualizovanými hodnotami a aktualizuje odpovídající řádek v zadaném zdroji dat. Vrátí aktualizovaný řádek.</value>
     
   </data>
-  <data name="PatchBaseRecordArg" xml:space="preserve">
-    <value>base_record</value>
+  <data name="AboutPatchAggregate" xml:space="preserve">
+    <value>Vezme tabulku řádků a postupně pro každý řádek aplikuje aktualizaci zadanou v odpovídajícím řádku tabulky aktualizací. Vrátí tabulku aktualizovaných řádků.</value>
     
   </data>
-  <data name="PatchChangeRecordsArg" xml:space="preserve">
-    <value>change_record(s)</value>
+  <data name="AboutPatchAggregateSingleTable" xml:space="preserve">
+    <value>Vezme tabulku řádků s primárními klíči a aktualizovanými poli a tyto aktualizace aplikuje pro zdroj dat. Vrátí tabulku aktualizovaných řádků.</value>
+    
+  </data>
+  <data name="AboutPatchRecord" xml:space="preserve">
+    <value>Vrátí řádek s použitými aktualizacemi.</value>
+    
+  </data>
+  <data name="AboutPatch_source" xml:space="preserve">
+    <value>Zdroj dat, který se má opravit</value>
+  </data>
+  <data name="AboutPatch_record" xml:space="preserve">
+    <value>Záznam, který se má opravit</value>
+  </data>
+  <data name="AboutPatch_update" xml:space="preserve">
+    <value>Aktualizace, která se má použít pro zadaný záznam</value>
+  </data>
+  <data name="AboutPatch_rows" xml:space="preserve">
+    <value>Tabulka řádků, která se má opravit</value>
+  </data>
+  <data name="AboutPatch_updates" xml:space="preserve">
+    <value>Tabulka aktualizací, které se musí použít pro dané řádky</value>
+  </data>
+  <data name="PatchArg_Source" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="PatchArg_Record" xml:space="preserve">
+    <value>záznam</value>
+    
+  </data>
+  <data name="PatchArg_Update" xml:space="preserve">
+    <value>aktualizovat</value>
+    
+  </data>
+  <data name="PatchArg_Rows" xml:space="preserve">
+    <value>řádky</value>
+    
+  </data>
+  <data name="PatchArg_Updates" xml:space="preserve">
+    <value>aktualizace</value>
     
   </data>
   <data name="AboutRemove" xml:space="preserve">
@@ -3118,11 +3161,11 @@
     
   </data>
   <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
+    <value>datový_zdroj</value>
     
   </data>
   <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
+    <value>odstranit_záznamy</value>
     
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
@@ -4195,7 +4238,7 @@
     
   </data>
   <data name="TraceArg3" xml:space="preserve">
-    <value>custom_record</value>
+    <value>vlastní_záznam</value>
     
   </data>
   <data name="TraceArg4" xml:space="preserve">

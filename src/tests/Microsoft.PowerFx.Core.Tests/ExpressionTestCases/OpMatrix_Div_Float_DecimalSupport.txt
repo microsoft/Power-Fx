@@ -1,4 +1,4 @@
-#SETUP: NumberIsFloat,DecimalSupport
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
 
 >> Value(16)/Decimal("2.00000000000000000000000002")
 8
@@ -53,12 +53,12 @@ Error({Kind:ErrorKind.Div0})
 >> Decimal("16.000000000000000000001")/Time(12,0,0)
 32
 
-// this is the one result in this file that should be decimal, everything else is done in floating point
+// these next two tests are the only ones in this file that should be decimal, everything else is done in floating point
 >> Decimal("16.000000000000000000000002")/Decimal("2.000000000000000000000001")
 7.999999999999999999999997
 
->> Decimal("7.999999999999999999999997")*Decimal("2.000000000000000000000001")
-16
+>> Decimal("7.999999999999999999999997")/Decimal("2.000000000000000000000001")
+3.9999999999999999999999965
 
 >> Decimal("16.000000000000000000000002")/ParseJSON("2")
 8
