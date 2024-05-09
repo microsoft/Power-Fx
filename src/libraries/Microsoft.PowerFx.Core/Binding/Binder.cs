@@ -2338,7 +2338,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     replacedIdent = newName.Value;
                     return true;
-                }                
+                }
             }
 
             return false;
@@ -4137,7 +4137,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
                         // Translate the set to the parent (invocation) scope, to indicate that we are moving outside the lambda.
-                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(i))
+                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(args[i], i))
                         {
                             argScopeUseSet = argScopeUseSet.TranslateToParentScope();
                         }
@@ -4414,7 +4414,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the 1st arg
                             required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
-                            if (scopeInfo.CheckInput(_txb.Features, nodeInp, _txb.GetType(nodeInp), out scope))
+                            if (scopeInfo.CheckInput(_txb.Features, node, nodeInp, _txb.GetType(nodeInp), out scope))
                             {
                                 if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
                                 {
@@ -4449,7 +4449,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(carg > 0);
 
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
-                Contracts.Assert(!maybeFunc.IsLambdaParam(0));
+                Contracts.Assert(!maybeFunc.IsLambdaParam(node.Args.Children[0], 0));
 
                 var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
@@ -4505,7 +4505,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, nodeInput, typeInput, out typeScope);
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
@@ -4572,14 +4572,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier = args[i] is FirstNameNode &&
                         _features.SupportColumnNamesAsIdentifiers &&
-                        maybeFunc.ParameterCanBeIdentifier(_features, i);
+                        maybeFunc.ParameterCanBeIdentifier(args[i], i, _features);
 
-                    var isLambdaArg = maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i);
+                    var isLambdaArg = maybeFunc.IsLambdaParam(args[i], i) && scopeInfo.AppliesToArgument(i);
 
                     // Use the new scope only for lambda or identifier args.
                     _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
 
-                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
+                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
                         args[i].Accept(this);
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
@@ -4588,7 +4588,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         Contracts.Assert(argTypes[i].IsValid);
                     }
                     else
-                    {                        
+                    {
                         if (args[i] is FirstNameNode firstNameNode)
                         {
                             GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
@@ -4616,7 +4616,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _currentScope = scopeNew.Parent;
-                PostVisit(node.Args);                
+                PostVisit(node.Args);
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
@@ -5029,7 +5029,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Use the new scope only for lambda args and args with datasource scope for display name matching.
                     if (scopeNew != null)
                     {
-                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(i)))
+                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(args[i], i)))
                         {
                             _currentScope = scopeNew;
                         }

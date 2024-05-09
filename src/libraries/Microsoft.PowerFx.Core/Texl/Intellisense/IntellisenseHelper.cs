@@ -341,7 +341,7 @@ namespace Microsoft.PowerFx.Intellisense
             // Suggestions are added for the error nodes in the next step.
             if (info.Function != null && argPosition <= info.Function.MaxArity)
             {
-                if (info.Function.IsLambdaParam(argPosition) && !info.Function.HasSuggestionsForParam(argPosition) && type.IsValid)
+                if (info.Function.IsLambdaParam(null, argPosition) && !info.Function.HasSuggestionsForParam(argPosition) && type.IsValid)
                 {
                     if (type.ContainsDataEntityType(DPath.Root))
                     {

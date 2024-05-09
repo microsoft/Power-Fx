@@ -478,12 +478,12 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x = $\"{\"}\";", 1, 0)]
-        [InlineData("x = First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0)]
-        [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
-        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
-        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1)]
-        public void TestUDF(string formula, int nfCount, int udfCount)
+        [InlineData("x = $\"{\"}\";", 1, 0, 0)]
+        [InlineData("x = First([$\"{ {a:1,b:2,c:3}.a }]).Value;", 1, 0, 0)]
+        [InlineData("x = $\"{\"1$\"}.{\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
+        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}}\"}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
+        [InlineData("x = $\"{$\"{$\"{$\"{.12e4}\"}\"}\"}{$\"Another nested}\";\r\nudf():Text = $\"{\"}\";\r\ny = 2;", 2, 1, 0)]
+        public void TestUDF(string formula, int nfCount, int udfCount, int validUdfCount)
         {
             var parserOptions = new ParserOptions()
             {
@@ -495,7 +495,8 @@ namespace Microsoft.PowerFx.Core.Tests
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Equal(nfCount, parseResult.NamedFormulas.Count());
-            Assert.Equal(udfCount, udfs.Count());
+            Assert.Equal(udfCount, parseResult.UDFs.Count());
+            Assert.Equal(validUdfCount, udfs.Count());
             Assert.Contains(errors, e => e.MessageKey == "ErrBadToken");
         }
 

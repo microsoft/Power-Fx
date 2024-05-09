@@ -355,12 +355,12 @@ namespace Microsoft.PowerFx.Core.IR
                     var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
-                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(context.Binding.Features, i))
+                    if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(arg, i, context.Binding.Features))
                     {
                         Contracts.Assert(i > 0, "First argument cannot be a column identifier");
 
                         var identifierNode = arg.AsFirstName();
-                        if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                        if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                         {
                             Contracts.Assert(identifierNode != null);
                         }
@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Core.IR
                         var isColumnAsIdentifier = false;
                         if (identifierNode != null)
                         {
-                            if (func.GetIdentifierParamStatus(context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
+                            if (func.GetIdentifierParamStatus(arg, context.Binding.Features, i) == TexlFunction.ParamIdentifierStatus.AlwaysIdentifier)
                             {
                                 isColumnAsIdentifier = true;
                             }
@@ -402,7 +402,7 @@ namespace Microsoft.PowerFx.Core.IR
                             args.Add(child);
                         }
                     }
-                    else if (func.IsLazyEvalParam(i, _features))
+                    else if (func.IsLazyEvalParam(arg, i, _features))
                     {
                         var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
                         args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
