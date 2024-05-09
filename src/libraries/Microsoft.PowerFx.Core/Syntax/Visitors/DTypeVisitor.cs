@@ -14,7 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
-    // Visitor to convert AST to DType. 
+    // Visitor to resolve TypeLiteralNode.TypeRoot into DType.
     internal class DTypeVisitor : TexlFunctionalVisitor<DType, INameResolver>
     {
         private DTypeVisitor()

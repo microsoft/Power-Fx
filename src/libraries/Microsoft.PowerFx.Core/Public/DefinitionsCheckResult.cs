@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on user definitions.
-    /// Tracks which work is done so that it is not double repeated.
+    /// Tracks which work is done so that it is not repeated.
     /// </summary>
     public class DefinitionsCheckResult : IOperationStatus
     {
