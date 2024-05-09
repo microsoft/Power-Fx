@@ -447,6 +447,9 @@ RGBA(26,29,33,1)
 >> ErrorKind.Unknown + 2
 14
 
+>> ErrorKind.Unknown - 2
+10
+
 >> ErrorKind.Unknown * 2
 24
 
@@ -500,7 +503,13 @@ Table({Value:1},{Value:2},{Value:3})
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & JSONFormat.FlattenValueTables )
 "[1,2,3]"
 
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, JSONFormat.FlattenValueTables ) )
+"[1,2,3]"
+
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & "_" )
+"[1,2,3]"
+
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, "_" ) )
 "[1,2,3]"
 
 >> JSON( [4,5,6], "_" )
@@ -652,6 +661,15 @@ true
 >> "Label:" & StartOfWeek.Sunday
 "Label:1"
 
+>> Concatenate( "Label:", StartOfWeek.Sunday )
+"Label:1"
+
+>> StartOfWeek.Sunday & "Evening"
+"1Evening"
+
+>> Concatenate( StartOfWeek.Sunday, "Evening" )
+"1Evening"
+
 >> Mid( StartOfWeek.Sunday, 2 )
 ""
 
@@ -679,12 +697,50 @@ true
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
+>> Concatenate( "Label:" & MatchOptions.IgnoreCase )
+"Label:i"
+
 >> Text( ErrorKind.FileNotFound )
 "17"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:17"
 
+>> Concatenate( "Label:" & ErrorKind.FileNotFound )
+"Label:17"
+
+>> Concat( ["String", StartOfWeek.Tuesday, ErrorKind.Div0, JSONFormat.FlattenValueTables], Value )
+"String1213_"
+
+>> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
+"1215"
+
+>> true & StartOfWeek.Friday
+"true15"
+
+>> 1 & StartOfWeek.Friday
+"115"
+
+>> "hi" & StartOfWeek.Friday
+"hi15"
+
+>> StartOfWeek.Friday & true
+"15true"
+
+>> StartOfWeek.Friday & 1
+"151"
+
+>> StartOfWeek.Friday & "hi"
+"15hi"
+
+>> Concatenate( true, StartOfWeek.Friday )
+"true15"
+
+>> Concatenate( 1, StartOfWeek.Friday )
+"115"
+
+>> Concatenate( "hi", StartOfWeek.Friday )
+"hi15"
 
 //===========================================================================================================
 //
@@ -723,6 +779,9 @@ true
 "2"
 
 >> "Severity: " & StartOfWeek.Monday
+"Severity: 2"
+
+>> Concatenate( "Severity: ", StartOfWeek.Monday )
 "Severity: 2"
 
 >> Len( StartOfWeek.Monday )
@@ -787,6 +846,9 @@ false
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> StartOfWeek.Monday & StartOfWeek.Tuesday
+"212"
+
+>> Concatenate( StartOfWeek.Monday, StartOfWeek.Tuesday )
 "212"
 
 >> Weekday( Date(1980,1,1), StartOfWeek.Monday & StartOfWeek.Tuesday )
@@ -930,6 +992,21 @@ Errors: Error 10-17: Invalid argument type (Color). Expecting a Text value inste
 
 >> Left( Color.Yellow, 4 )
 Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Concatenate( "Option: ", Color.Yellow )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-37: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Yellow & " banana"
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Yellow, " banana" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-25: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-24: Invalid argument type (Color). Expecting a Text value instead.|Error 59-66: Invalid argument type (Color). Expecting a Text value instead.
 
 // Standard error cases for color backed enums
 
