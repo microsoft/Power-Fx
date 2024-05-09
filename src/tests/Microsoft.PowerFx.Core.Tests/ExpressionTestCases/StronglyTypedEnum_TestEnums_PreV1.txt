@@ -408,6 +408,15 @@ false
 >> "Label:" & TestYesNo.No
 "Label:false"
 
+>> Concatenate( "Label:", TestYesNo.No )
+"Label:false"
+
+>> TestYesNo.No & "Way"
+"falseWay"
+
+>> Concatenate( TestYesNo.No, "Way" )
+"falseWay"
+
 >> Text( TestYeaNay.Nay )
 "false"
 
@@ -432,6 +441,21 @@ Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: 
 >> "Label:" & TestBlueRamp.Blue50
 Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
 
+>> Concatenate( "Label:", TestBlueRamp.Blue50 )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 35-42: Invalid argument type (Color). Expecting a Text value instead.
+
+>> TestBlueRamp.Blue50 & " is the sky"
+Errors: Error 12-19: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( TestBlueRamp.Blue50, " is the sky")
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 25-32: Invalid argument type (Color). Expecting a Text value instead.
+
+>> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
+Errors: Error 36-43: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 48-55: Invalid argument type (Color). Expecting a Text value instead.
+
 >> Mid( TestBlueRamp.Blue50, 2 )
 Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
 
@@ -449,6 +473,60 @@ Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: I
 
 >> Len( TestRedRamp.Red25 )
 Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
+
+>> true & TestRedRamp.Red25
+Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> 1 & TestRedRamp.Red25
+Errors: Error 15-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> "hi" & TestRedRamp.Red25
+Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> TestRedRamp.Red25 & true
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> TestRedRamp.Red25 & 1
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> TestRedRamp.Red25 & "hi"
+Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( true, TestRedRamp.Red25 )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-36: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Concatenate( 1, TestRedRamp.Red25 )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 27-33: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Concatenate( "hi", TestRedRamp.Red25 )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-36: Invalid argument type (Color). Expecting a Text value instead.
+
+>> true & TestYeaNay.Yea
+"truetrue"
+
+>> 1 & TestYeaNay.Yea
+"1true"
+
+>> "hi" & TestYeaNay.Yea
+"hitrue"
+
+>> TestYeaNay.Yea & true
+"truetrue"
+
+>> TestYeaNay.Yea & 1
+"true1"
+
+>> TestYeaNay.Yea & "hi"
+"truehi"
+
+>> Concatenate( true, TestYeaNay.Yea )
+"truetrue"
+
+>> Concatenate( 1, TestYeaNay.Yea )
+"1true"
+
+>> Concatenate( "hi", TestYeaNay.Yea )
+"hitrue"
 
 //===========================================================================================================
 //

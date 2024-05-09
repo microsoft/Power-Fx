@@ -62,47 +62,63 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var concatAsString = false;
             nodeToCoercedTypeMap = null;
 
-            for (var i = 0; i < count; i++)
-            { 
-                var argType = argTypes[i];
-
-                if (argType == DType.OptionSetValue)
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                for (var i = 0; i < count; i++)
                 {
-                    if (argOptionSet == null)
+                    var argType = argTypes[i];
+
+                    if (argType == DType.OptionSetValue)
                     {
-                        argOptionSet = argType;
-                        argOptionSetNode = args[i];
+                        // if no option sets seen, argOptionSet will be null
+                        if (argOptionSet == null)
+                        {
+                            argOptionSet = argType;
+                            argOptionSetNode = args[i];
+                        }
+
+                        if (argOptionSet.OptionSetInfo.EntityName != argType.OptionSetInfo.EntityName ||
+                            !argType.OptionSetInfo.CanConcatenateStronglyTyped)
+                        {
+                            // We have two different option sets or a single option set is not setup for strongly typed concat.
+                            // The result of the function will be a string.
+                            concatAsString = true;
+                        }
                     }
-                    
-                    if (argOptionSet.OptionSetInfo.EntityName != argType.OptionSetInfo.EntityName ||
-                        !argType.OptionSetInfo.CanConcatenateStronglyTyped)
+                    else
                     {
-                        concatAsString = true;
+                        nonOptionSetArg = true;
+                        fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
                     }
                 }
-                else
+
+                // If both an option set and non option set were seen when scanning the arguments,
+                // but the option set doesn't support coercion from the backing kind, then the result is forced to a string.
+                if (nonOptionSetArg && argOptionSet != null && !argOptionSet.OptionSetInfo.CanCoerceFromBackingKind)
                 {
-                    nonOptionSetArg = true;
+                    concatAsString = true;
+                }
+
+                // All option sets can coerce to string and be concatenated as strings, which is the default returnType.
+                // If there was only one option set type seen, and it has CanConcatenatedStronglyTyped set,
+                // and either no string values were present or CanCoerceFromBackingKind is set, then Concatenate returns the enum type.
+                // This behavior should mach that of the & operator (BinderUtils, CheckBinaryOpCore).
+                returnType = argOptionSet != null && !concatAsString ? argOptionSet : DType.String;
+            }
+            else
+            {
+                for (var i = 0; i < count; i++)
+                {
                     fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
                 }
-            }
 
-            if (nonOptionSetArg && argOptionSet != null && !argOptionSet.OptionSetInfo.CanCoerceFromBackingKind)
-            {
-                concatAsString = true;
+                returnType = DType.String;
             }
 
             if (!fArgsValid)
             {
                 nodeToCoercedTypeMap = null;
             }
-
-            // All option sets can coerce to string and be concatenated as strings, which is the default returnType.
-            // If there was only one option set type seen, and it has CanConcatenatedStronglyTyped set,
-            // and either no string values were present or CanCoerceFromBackingKind is set, then Concatenate returns the enum type.
-            // This behavior should mach that of the & operator.
-            // $$ Concat function?
-            returnType = argOptionSet != null && !concatAsString ? argOptionSet : DType.String;
 
             return fArgsValid;
         }
