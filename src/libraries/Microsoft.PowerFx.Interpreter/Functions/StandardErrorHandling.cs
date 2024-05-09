@@ -767,6 +767,16 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
+        private static FormulaValue StringOrOptionSet(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is StringValue || arg is OptionSetValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
         private static FormulaValue StringOrBlankOrOptionSetBackedByString(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is BlankValue)
