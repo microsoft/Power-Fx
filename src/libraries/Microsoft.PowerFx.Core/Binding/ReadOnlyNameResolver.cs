@@ -14,11 +14,11 @@ namespace Microsoft.PowerFx.Core
     /// Helper class to create composable INameResolver. Only supports LookupType method currently.
     /// Other INameResolver methods should be implemented as needed.
     /// </summary>
-    internal class ReadOnlyINameResolver : ReadOnlySymbolTable, INameResolver
+    internal class ReadOnlyNameResolver : ReadOnlySymbolTable, INameResolver
     {
         private readonly INameResolver _nameResolver;
 
-        public ReadOnlyINameResolver(INameResolver nameResolver) 
+        public ReadOnlyNameResolver(INameResolver nameResolver) 
         {
             Contracts.AssertValue(nameResolver);
 
