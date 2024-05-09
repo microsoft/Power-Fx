@@ -807,7 +807,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (typeLeft.Kind == DKind.OptionSetValue && typeRight.Kind == DKind.OptionSetValue
                     && typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
-                    if (typeLeft.OptionSetInfo.CanCompareNumeric)
+                    if (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCompareNumeric)
                     {
                         return new BinderCheckTypeResult
                         {
@@ -830,10 +830,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Comparing to backing type is permitted under a few circumstances
-                else if (typeLeft.Kind == DKind.OptionSetValue && 
-                        (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCompareNumeric) &&
-                        (!usePowerFxV1CompatibilityRules || typeLeft.OptionSetInfo.CanCoerceFromBackingKind || typeLeft.OptionSetInfo.CanCoerceToBackingKind) &&
-                        (typeRight.Kind == DKind.Number || typeRight.Kind == DKind.Decimal))
+                else if (IsOptionSetComparableWithNumeric(typeLeft, typeRight, usePowerFxV1CompatibilityRules))
                 {
                     return new BinderCheckTypeResult
                     {
@@ -844,10 +841,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                     };
                 }
-                else if (typeRight.Kind == DKind.OptionSetValue &&
-                        (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCompareNumeric) &&
-                        (!usePowerFxV1CompatibilityRules || typeRight.OptionSetInfo.CanCoerceFromBackingKind || typeRight.OptionSetInfo.CanCoerceToBackingKind) &&
-                        (typeLeft.Kind == DKind.Number || typeLeft.Kind == DKind.Decimal))
+                else if (IsOptionSetComparableWithNumeric(typeRight, typeLeft, usePowerFxV1CompatibilityRules))
                 {
                     return new BinderCheckTypeResult
                     {
@@ -985,6 +979,15 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             return new BinderCheckTypeResult() { Coercions = coercions };
+        }
+
+        private static bool IsOptionSetComparableWithNumeric(DType optionSet, DType numeric, bool usePowerFxV1CompatibilityRules)
+        {
+            return optionSet.Kind == DKind.OptionSetValue &&
+                   (numeric.Kind == DKind.Number || numeric.Kind == DKind.Decimal) &&
+                   (!usePowerFxV1CompatibilityRules ||
+                       (optionSet.OptionSetInfo.CanCompareNumeric &&
+                           (optionSet.OptionSetInfo.CanCoerceFromBackingKind || optionSet.OptionSetInfo.CanCoerceToBackingKind)));     
         }
 
         private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, bool usePowerFxV1CompatibilityRules, DType typeLeft, DType typeRight, bool numberIsFloat)

@@ -443,6 +443,21 @@ false
 >> "Label:" & TestBlueRamp.Blue50
 "Label:Blue50"
 
+>> Concatenate( "Label:", TestBlueRamp.Blue50 )
+"Label:Blue50"
+
+>> TestBlueRamp.Blue50 & " is the sky"
+"Blue50 is the sky"
+
+>> Concatenate( TestBlueRamp.Blue50, " is the sky")
+"Blue50 is the sky"
+
+>> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
+"The sky is so very Blue50 !!!"
+
+>> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
+"The sky is so very Blue50 !!!"
+
 >> Mid( TestBlueRamp.Blue50, 2 )
 "lue50"
 
@@ -460,6 +475,60 @@ false
 
 >> Len( TestRedRamp.Red25 )
 5
+
+>> true & TestRedRamp.Red25
+"trueRed25"
+
+>> 1 & TestRedRamp.Red25
+"1Red25"
+
+>> "hi" & TestRedRamp.Red25
+"hiRed25"
+
+>> TestRedRamp.Red25 & true
+"Red25true"
+
+>> TestRedRamp.Red25 & 1
+"Red251"
+
+>> TestRedRamp.Red25 & "hi"
+"Red25hi"
+
+>> Concatenate( true, TestRedRamp.Red25 )
+"trueRed25"
+
+>> Concatenate( 1, TestRedRamp.Red25 )
+"1Red25"
+
+>> Concatenate( "hi", TestRedRamp.Red25 )
+"hiRed25"
+
+>> true & TestYeaNay.Yea
+"trueYea"
+
+>> 1 & TestYeaNay.Yea
+"1Yea"
+
+>> "hi" & TestYeaNay.Yea
+"hiYea"
+
+>> TestYeaNay.Yea & true
+"Yeatrue"
+
+>> TestYeaNay.Yea & 1
+"Yea1"
+
+>> TestYeaNay.Yea & "hi"
+"Yeahi"
+
+>> Concatenate( true, TestYeaNay.Yea )
+"trueYea"
+
+>> Concatenate( 1, TestYeaNay.Yea )
+"1Yea"
+
+>> Concatenate( "hi", TestYeaNay.Yea )
+"hiYea"
 
 //===========================================================================================================
 //

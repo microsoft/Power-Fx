@@ -302,6 +302,39 @@ Errors: Error 11-19: Invalid argument type. Expecting one of the following: Deci
 >> StartOfWeek.Tuesday * 2
 Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
+>> StartOfWeek.Tuesday * StartOfWeek.Thursday
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday + 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Tuesday + StartOfWeek.Wednesday
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-43: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday - 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday - StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday * 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday / 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday / StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday ^ 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> StartOfWeek.Friday ^ StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> StartOfWeek.Friday%
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Date, DateTime, DateTimeNoTimeZone, Time, Text, Boolean, UntypedObject.
+
 //===========================================================================================================
 //
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
@@ -445,6 +478,9 @@ RGBA(26,29,33,1)
 >> ErrorKind.Unknown + 2
 14
 
+>> ErrorKind.Unknown - 2
+10
+
 >> ErrorKind.Unknown * 2
 24
 
@@ -453,6 +489,9 @@ RGBA(26,29,33,1)
 
 >> ErrorKind.Unknown ^ 2
 144
+
+>> ErrorKind.Unknown%
+0.12
 
 // Equals/not equals comparisons
 
@@ -708,6 +747,33 @@ Match.CalculatedOptionSetValue
 >> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
 "TuesdayFriday"
 
+>> true & StartOfWeek.Friday
+"trueFriday"
+
+>> 1 & StartOfWeek.Friday
+"1Friday"
+
+>> "hi" & StartOfWeek.Friday
+"hiFriday"
+
+>> StartOfWeek.Friday & true
+"Fridaytrue"
+
+>> StartOfWeek.Friday & 1
+"Friday1"
+
+>> StartOfWeek.Friday & "hi"
+"Fridayhi"
+
+>> Concatenate( true, StartOfWeek.Friday )
+"trueFriday"
+
+>> Concatenate( 1, StartOfWeek.Friday )
+"1Friday"
+
+>> Concatenate( "hi", StartOfWeek.Friday )
+"hiFriday"
+
 //===========================================================================================================
 //
 // 17. Examples - StartOfWeek - Standard number backed enum
@@ -952,6 +1018,21 @@ true
 
 >> "Option: " & Color.Yellow
 "Option: Yellow"
+
+>> Concatenate( "Option: ", Color.Yellow )
+"Option: Yellow"
+
+>> Color.Yellow & " banana"
+"Yellow banana"
+
+>> Concatenate( Color.Yellow, " banana" )
+"Yellow banana"
+
+>> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
+"Green bananas are riper than Yellow bananas"
+
+>> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
+"Green bananas are riper than Yellow bananas"
 
 >> Len( Color.Yellow )
 6

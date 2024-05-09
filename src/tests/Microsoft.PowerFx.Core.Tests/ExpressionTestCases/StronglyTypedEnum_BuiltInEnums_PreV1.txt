@@ -435,6 +435,9 @@ RGBA(26,29,33,1)
 >> ErrorKind.Unknown + 2
 14
 
+>> ErrorKind.Unknown - 2
+10
+
 >> ErrorKind.Unknown * 2
 24
 
@@ -700,6 +703,33 @@ true
 >> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
 "1215"
 
+>> true & StartOfWeek.Friday
+"true15"
+
+>> 1 & StartOfWeek.Friday
+"115"
+
+>> "hi" & StartOfWeek.Friday
+"hi15"
+
+>> StartOfWeek.Friday & true
+"15true"
+
+>> StartOfWeek.Friday & 1
+"151"
+
+>> StartOfWeek.Friday & "hi"
+"15hi"
+
+>> Concatenate( true, StartOfWeek.Friday )
+"true15"
+
+>> Concatenate( 1, StartOfWeek.Friday )
+"115"
+
+>> Concatenate( "hi", StartOfWeek.Friday )
+"hi15"
+
 //===========================================================================================================
 //
 // 17. Examples - StartOfWeek - Standard number backed enum
@@ -944,6 +974,21 @@ Errors: Error 10-17: Invalid argument type (Color). Expecting a Text value inste
 
 >> Left( Color.Yellow, 4 )
 Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Concatenate( "Option: ", Color.Yellow )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-37: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Yellow & " banana"
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Yellow, " banana" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-25: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-24: Invalid argument type (Color). Expecting a Text value instead.|Error 59-66: Invalid argument type (Color). Expecting a Text value instead.
 
 // Standard error cases for color backed enums
 
