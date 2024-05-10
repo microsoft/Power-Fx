@@ -200,13 +200,14 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet Add(TexlFunctionSet functionSet)
         {
-            functionSet._guard.VerifyNoWriters();
             using var guard = _guard.Enter(); // Region is single threaded.
 
             if (functionSet == null)
             {
                 throw new ArgumentNullException(nameof(functionSet));
             }
+            
+            functionSet._guard.VerifyNoWriters();
 
             // Notice that this code path is a critical performance gain versus the various loops in the 'else' part
             if (_count == 0)
