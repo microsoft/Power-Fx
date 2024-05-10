@@ -90,16 +90,28 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         public void AddRelatedColumns()
         {
-            if (!(ExpandInfo.ParentDataSource is IExternalCdsDataSource))
+            // This statement captures the properties of ExpandInfo and returns false iff all the captured values are
+            // non-null and of the correct type if specified
+            if (ExpandInfo is not {
+                    Identity: { } identity,
+                    ParentDataSource: IExternalCdsDataSource {
+                        Document: { GlobalScope: { } scope },
+                        DatasetName: { } datasetName } })
             {
+                Contracts.Assert(false, "The expand object lacks necessary dependencies.");
                 return;
             }
 
-            var cdsDataSourceInfo = ExpandInfo.ParentDataSource as IExternalCdsDataSource;
+            if (!scope.TryGetCdsDataSourceWithLogicalName(datasetName, identity, out var targetDatasource))
+            {
+                Contracts.Assert(false, "The expand datasource does not exist.");
+                return;
+            }
+
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
             {
-                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
+                if (targetDatasource.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
                 {
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);

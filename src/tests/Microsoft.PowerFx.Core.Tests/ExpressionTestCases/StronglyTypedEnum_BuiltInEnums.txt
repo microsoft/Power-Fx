@@ -302,6 +302,39 @@ Errors: Error 11-19: Invalid argument type. Expecting one of the following: Deci
 >> StartOfWeek.Tuesday * 2
 Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
+>> StartOfWeek.Tuesday * StartOfWeek.Thursday
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-42: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday + 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Tuesday + StartOfWeek.Wednesday
+Errors: Error 11-19: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 33-43: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday - 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday - StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday * 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday / 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday / StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> StartOfWeek.Friday ^ 2
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> StartOfWeek.Friday ^ StartOfWeek.Thursday
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> StartOfWeek.Friday%
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Decimal, Date, DateTime, DateTimeNoTimeZone, Time, Text, Boolean, UntypedObject.
+
 //===========================================================================================================
 //
 // 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
@@ -445,6 +478,9 @@ RGBA(26,29,33,1)
 >> ErrorKind.Unknown + 2
 14
 
+>> ErrorKind.Unknown - 2
+10
+
 >> ErrorKind.Unknown * 2
 24
 
@@ -453,6 +489,9 @@ RGBA(26,29,33,1)
 
 >> ErrorKind.Unknown ^ 2
 144
+
+>> ErrorKind.Unknown%
+0.12
 
 // Equals/not equals comparisons
 
@@ -498,8 +537,14 @@ Errors: Error 34-35: Invalid argument type (Text). Expecting a Enum (JSONFormat)
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & JSONFormat.FlattenValueTables )
 "[1,2,3]"
 
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, JSONFormat.FlattenValueTables ) )
+"[1,2,3]"
+
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & "_" )
 Errors: Error 43-44: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
+
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, "_" ) )
+Errors: Error 15-62: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
 
 >> JSON( [4,5,6], "_" )
 Errors: Error 15-18: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.|Error 0-4: The function 'JSON' has some invalid arguments.
@@ -648,6 +693,15 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 >> "Label:" & StartOfWeek.Sunday
 "Label:Sunday"
 
+>> Concatenate( "Label:", StartOfWeek.Sunday )
+"Label:Sunday"
+
+>> StartOfWeek.Sunday & "Evening"
+"SundayEvening"
+
+>> Concatenate( StartOfWeek.Sunday, "Evening" )
+"SundayEvening"
+
 >> Mid( StartOfWeek.Sunday, 2 )
 "unday"
 
@@ -675,11 +729,50 @@ Match.CalculatedOptionSetValue
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
+>> Concatenate( "Label:" & MatchOptions.IgnoreCase )
+"Label:i"
+
 >> Text( ErrorKind.FileNotFound )
 "FileNotFound"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:FileNotFound"
+
+>> Concatenate( "Label:" & ErrorKind.FileNotFound )
+"Label:FileNotFound"
+
+>> Concat( ["String", StartOfWeek.Tuesday, ErrorKind.Div0, JSONFormat.FlattenValueTables], Value )
+"StringTuesdayDiv0_"
+
+>> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
+"TuesdayFriday"
+
+>> true & StartOfWeek.Friday
+"trueFriday"
+
+>> 1 & StartOfWeek.Friday
+"1Friday"
+
+>> "hi" & StartOfWeek.Friday
+"hiFriday"
+
+>> StartOfWeek.Friday & true
+"Fridaytrue"
+
+>> StartOfWeek.Friday & 1
+"Friday1"
+
+>> StartOfWeek.Friday & "hi"
+"Fridayhi"
+
+>> Concatenate( true, StartOfWeek.Friday )
+"trueFriday"
+
+>> Concatenate( 1, StartOfWeek.Friday )
+"1Friday"
+
+>> Concatenate( "hi", StartOfWeek.Friday )
+"hiFriday"
 
 //===========================================================================================================
 //
@@ -718,6 +811,9 @@ true
 "Monday"
 
 >> "Severity: " & StartOfWeek.Monday
+"Severity: Monday"
+
+>> Concatenate( "Severity: ", StartOfWeek.Monday )
 "Severity: Monday"
 
 >> Len( StartOfWeek.Monday )
@@ -782,6 +878,9 @@ Errors: Error 19-21: Unable to compare values of type Enum (StartOfWeek).
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> StartOfWeek.Monday & StartOfWeek.Tuesday
+"MondayTuesday"
+
+>> Concatenate( StartOfWeek.Monday, StartOfWeek.Tuesday )
 "MondayTuesday"
 
 >> Weekday( Date(1980,1,1), StartOfWeek.Monday & StartOfWeek.Tuesday )
@@ -919,6 +1018,21 @@ true
 
 >> "Option: " & Color.Yellow
 "Option: Yellow"
+
+>> Concatenate( "Option: ", Color.Yellow )
+"Option: Yellow"
+
+>> Color.Yellow & " banana"
+"Yellow banana"
+
+>> Concatenate( Color.Yellow, " banana" )
+"Yellow banana"
+
+>> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
+"Green bananas are riper than Yellow bananas"
+
+>> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
+"Green bananas are riper than Yellow bananas"
 
 >> Len( Color.Yellow )
 6

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="body">TexlNode for user defined function body.</param>
         /// <param name="isImperative"></param>
         /// <param name="args"></param>
-        /// <param name="argTypes">Array of argTypes.</param>
+        /// <param name="argTypes">Array of argTypes in order.</param>
         public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes)
         : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
         {
@@ -252,9 +252,14 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType) || UserDefinitions.RestrictedTypes.Contains(parameterType._type))
+                    if (!nameResolver.LookupType(arg.TypeIdent.Name, out var parameterType))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
+                        isParamCheckSuccessful = false;
+                    }
+                    else if (IsRestrictedType(parameterType))
+                    {
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidParamType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
                     }
                     else
@@ -271,17 +276,43 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private static bool CheckReturnType(IdentToken returnTypeToken, List<TexlError> errors, INameResolver nameResolver, out DType returnType)
         {
-            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType) || UserDefinitions.RestrictedTypes.Contains(returnTypeFormulaType._type))
+            if (!nameResolver.LookupType(returnTypeToken.Name, out var returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
             }
-            else
+            
+            if (IsRestrictedType(returnTypeFormulaType))
             {
-                returnType = returnTypeFormulaType._type;
+                errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
+                returnType = DType.Invalid;
+                return false;
+            }
+            
+            returnType = returnTypeFormulaType._type;
+            return true; 
+        }
+
+        // To prevent aggregate types from containing restricted types
+        internal static bool IsRestrictedType(FormulaType ft)
+        {
+            Contracts.AssertValue(ft);
+
+            if (ft is AggregateType aggType)
+            {
+                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
+                {
+                    return true;
+                }
+            }
+
+            if (UserDefinitions.RestrictedTypes.Contains(ft._type))
+            {
                 return true;
             }
+
+            return false;
         }
 
         /// <summary>
