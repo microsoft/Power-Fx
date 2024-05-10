@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
+        private readonly TexlFunctionSet _functions = new TexlFunctionSet();
+
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         private readonly IDictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
@@ -63,6 +65,10 @@ namespace Microsoft.PowerFx
 
             return new DName(name);
         }
+
+        TexlFunctionSet INameResolver.Functions => _guard.VerifyNoWriters(_functions);
+
+        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {

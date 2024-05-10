@@ -338,17 +338,13 @@ namespace Microsoft.PowerFx
                 DebugName = DebugName + " (Functions only)",
             };
 
-            s.AddFunctions(_functions);
+            s.AddFunctions(this.Functions);
 
             return s;
         }
 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
-        private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
-
-        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
-
+                
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
@@ -379,7 +375,10 @@ namespace Microsoft.PowerFx
 
         internal TexlFunctionSet Functions => ((INameResolver)this).Functions;
 
-        TexlFunctionSet INameResolver.Functions => _functions;
+        // Base implementation is readonly and does not allow adding functions. 
+        private readonly TexlFunctionSet _emptyFunctionSet = TexlFunctionSet.Empty();
+                
+        TexlFunctionSet INameResolver.Functions => _emptyFunctionSet;
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
@@ -456,7 +455,7 @@ namespace Microsoft.PowerFx
         {
             Contracts.Check(nameSpace.IsValid, "The namespace is invalid.");
             
-            return _functions.WithNamespace(nameSpace);
+            return this.Functions.WithNamespace(nameSpace);
         }
 
         internal virtual void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)

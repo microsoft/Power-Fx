@@ -34,23 +34,31 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal Dictionary<DPath, List<TexlFunction>>.KeyCollection Namespaces => _namespaces.Keys;
 
-        internal IEnumerable<TexlFunction> WithName(string name) => WithNameInternal(name);
+        internal IEnumerable<TexlFunction> WithName(string name) => _guard.VerifyNoWriters(this).WithNameInternal(name);
 
         private List<TexlFunction> WithNameInternal(string name) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
         internal IEnumerable<TexlFunction> WithName(string name, DPath ns) => _functions.TryGetValue(name, out List<TexlFunction> result) ? result.Where(f => f.Namespace == ns) : new List<TexlFunction>();
 
-        internal IEnumerable<TexlFunction> WithInvariantName(string name) => WithInvariantNameInternal(name);
+        internal IEnumerable<TexlFunction> WithInvariantName(string name) => _guard.VerifyNoWriters(this).WithInvariantNameInternal(name);
 
         private List<TexlFunction> WithInvariantNameInternal(string name) => _functionsInvariant.TryGetValue(name, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
         internal IEnumerable<TexlFunction> WithInvariantName(string name, DPath ns) => _functionsInvariant.TryGetValue(name, out List<TexlFunction> result) ? result.Where(f => f.Namespace == ns) : new List<TexlFunction>();
 
-        internal IEnumerable<TexlFunction> WithNamespace(DPath ns) => WithNamespaceInternal(ns);
+        internal IEnumerable<TexlFunction> WithNamespace(DPath ns) => _guard.VerifyNoWriters(this).WithNamespaceInternal(ns);
 
         private List<TexlFunction> WithNamespaceInternal(DPath ns) => _namespaces.TryGetValue(ns, out List<TexlFunction> result) ? result : new List<TexlFunction>();
 
         internal IEnumerable<string> Enums => _enums;
+
+        // Return an empty TexlFucntion set that can never be added to. 
+        internal static TexlFunctionSet Empty()
+        {
+            var set = new TexlFunctionSet();
+            set._guard.ForbidWriters();
+            return set;
+        }
 
         internal TexlFunctionSet()
         {
@@ -100,6 +108,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
             foreach (var functionSet in functionSets)
             {
+                functionSet._guard.VerifyNoWriters();
+
                 if (functionSet._count > 0)
                 {
                     Add(functionSet);
@@ -190,6 +200,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet Add(TexlFunctionSet functionSet)
         {
+            functionSet._guard.VerifyNoWriters();
             using var guard = _guard.Enter(); // Region is single threaded.
 
             if (functionSet == null)
@@ -276,15 +287,17 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal int Count()
         {
+            _guard.VerifyNoWriters();
             return _count;
         }
 
         internal bool Any()
         {
+            _guard.VerifyNoWriters();
             return _count != 0;
         }
 
-        internal bool AnyWithName(string name) => _functions.ContainsKey(name);
+        internal bool AnyWithName(string name) => _guard.VerifyNoWriters(_functions).ContainsKey(name);
 
         internal void RemoveAll(string name)
         {
