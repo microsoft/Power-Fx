@@ -29,15 +29,16 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
+//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
 // 
 // Examples (examples for Boolean backed enums and other configurations are in StronglyTypedEnums_TestEnums)
-//   17. StartOfWeek - Standard number backed enum
-//   18. TimeUnit - Standard string backed enum
-//   19. MatchOptions - String backed enum with CanConcatenateStronglyTyped
-//   20. Color - Color backed enum with CoerceToBackingKind
-//   21. ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
-//   22. DateTimeFormat - String backed enum with CoerceFromBackingKind
-//   23. Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
+//   18. StartOfWeek - Standard number backed enum
+//   19. TimeUnit - Standard string backed enum
+//   20. MatchOptions - String backed enum with CanConcatenateStronglyTyped
+//   21. Color - Color backed enum with CoerceToBackingKind
+//   22. ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
+//   23. DateTimeFormat - String backed enum with CoerceFromBackingKind
+//   24. Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
 
 //============================================================================================================
 //
@@ -776,7 +777,62 @@ Match.CalculatedOptionSetValue
 
 //===========================================================================================================
 //
-// 17. Examples - StartOfWeek - Standard number backed enum
+// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//
+
+>> StartOfWeek.Monday < Blank()
+Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: Enum (StartOfWeek), ObjNull.
+
+>> StartOfWeek.Monday = Blank()
+false
+
+>> Blank() >= StartOfWeek.Monday
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (StartOfWeek).
+
+>> Blank() <> StartOfWeek.Monday
+true
+
+// ErrorKind works because of CanCompareNumeric
+
+>> ErrorKind.Network < Blank()
+false
+
+>> ErrorKind.Network = Blank()
+false
+
+>> Blank() >= ErrorKind.Network
+false
+
+>> Blank() <> ErrorKind.Network
+true
+
+>> Match.Letter < Blank()
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (Match), ObjNull.
+
+>> Match.Letter = Blank()
+false
+
+>> Blank() >= Match.Letter
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Match).
+
+>> Blank() <> Match.Letter
+true
+
+>> Color.Gray < Blank()
+Errors: Error 11-12: Incompatible types for comparison. These types can't be compared: Enum (Color), ObjNull.
+
+>> Color.Gray = Blank()
+false
+
+>> Blank() >= Color.Gray
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (Color).
+
+>> Blank() <> Color.Gray
+true
+
+//===========================================================================================================
+//
+// 18. Examples - StartOfWeek - Standard number backed enum
 //
 
 // Standard usage
@@ -888,7 +944,7 @@ Errors: Error 44-45: Invalid argument type (Text). Expecting a Enum (StartOfWeek
 
 //===========================================================================================================
 //
-// 18. Examples - TimeUnit - Standard string backed enum
+// 19. Examples - TimeUnit - Standard string backed enum
 //
 
 // Standard usage
@@ -991,7 +1047,7 @@ Errors: Error 43-44: Invalid argument type (Text). Expecting a Enum (TimeUnit) v
 
 //===========================================================================================================
 //
-// 20. Examples - Color - Color backed enum with CoerceToBackingKind
+// 21. Examples - Color - Color backed enum with CoerceToBackingKind
 //
 
 // Standard usage
@@ -1109,7 +1165,7 @@ Errors: Error 10-12: Incompatible types for comparison. These types can't be com
 
 //===========================================================================================================
 //
-// 21. Examples - ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
+// 22. Examples - ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
 //
 
 // Standard usage
@@ -1232,7 +1288,7 @@ false
 
 //===========================================================================================================
 //
-// 22. Examples - DateTimeFormat - String backed enum with CoerceFromBackingKind
+// 23. Examples - DateTimeFormat - String backed enum with CoerceFromBackingKind
 //
 
 // Standard usage
@@ -1346,7 +1402,7 @@ Errors: Error 24-26: Unable to compare values of type Enum (DateTimeFormat).
 
 //===========================================================================================================
 //
-// 23. Examples - Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
+// 24. Examples - Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
 //
 
 // Standard usage
