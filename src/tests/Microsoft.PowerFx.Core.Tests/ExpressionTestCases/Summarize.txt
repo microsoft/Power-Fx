@@ -110,6 +110,26 @@ Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Suppli
   CountRows( ThisGroup ) As Count, Supplier )
 Table({Count:4,Supplier:"Contoso"},{Count:2,Supplier:"Fabrikam"})
 
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, First(ThisGroup).Supplier As One )
+Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Bananas",One:"Contoso"})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Fruit, First(FirstN(ThisGroup,2)).Supplier As One )
+Table({Fruit:"Grapes",One:"Contoso"},{Fruit:"Lemons",One:"Fabrikam"},{Fruit:"Bananas",One:"Contoso"})
+
 >> Summarize(
   Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
@@ -315,28 +335,9 @@ Errors: Error 645-650: Column name conflict for 'Fruit'.|Error 0-9: The function
 >> Summarize( [1,2,3], Value, Value As A )
 Errors: Error 33-35: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
->> Summarize( [1,2,3], Value, ThisRecord.Value As A )
-Errors: Error 44-46: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
+>> With({Global:1}, Summarize( [1,2,3], Value, Global As A ))
+Errors: Error 51-53: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 17-26: The function 'Summarize' has some invalid arguments.
 
->> Summarize( 
-  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
-  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
-  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
-  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
-  Fruit, First(ThisGroup).Supplier As One )
-Errors: Error 671-673: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
-
->> Summarize( 
-  Table({Supplier:"Contoso",  Fruit:"Grapes",  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
-  {Supplier:"Contoso",  Fruit:"Lemons",  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
-  {Supplier:"Contoso",  Fruit:"Grapes",  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
-  {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
-  {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
-  Fruit, First(FirstN(ThisGroup,2)).Supplier As One )
-Errors: Error 681-683: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 
 //=== Can depend on the order of ThisGroup ====================================

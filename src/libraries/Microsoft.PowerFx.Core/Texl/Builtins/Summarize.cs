@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     case AsNode asNode:
 
-                        if (asNode.Left is FirstNameNode || asNode.Left is DottedNameNode)
+                        if (asNode.Left is FirstNameNode)
                         {
                             isValid = false;
                             errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeInvalidArg);
