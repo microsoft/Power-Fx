@@ -800,7 +800,7 @@ namespace Microsoft.PowerFx.Core.Binding
             var usePowerFxV1CompatibilityRules = features.PowerFxV1CompatibilityRules;
 
             // Special cases for comparing option set values
-            // Without StronglyTypedBuiltinEnums, option sets are convereted to their backing kind before getting here in Visitor.Visit(FirstNameNode)
+            // Without StronglyTypedBuiltinEnums, enums are convereted to their backing kind before getting here in Binder.cs, Visitor.Visit(FirstNameNode)
             if (typeLeft.Kind == DKind.OptionSetValue || typeRight.Kind == DKind.OptionSetValue)
             {
                 if (usePowerFxV1CompatibilityRules)
