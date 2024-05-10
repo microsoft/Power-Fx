@@ -30,6 +30,7 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
+//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
 
 //============================================================================================================
 //
@@ -533,7 +534,126 @@ Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error
 
 //===========================================================================================================
 //
-// 17. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//
+
+>> TestYesNo.Yes = Blank()
+false
+
+>> TestYesNo.No = Blank()
+false
+
+>> TestYesNo.Yes <> Blank()
+true
+
+>> TestYesNo.No <> Blank()
+true
+
+>> Blank() = TestYesNo.Yes
+false
+
+>> Blank() = TestYesNo.No 
+false
+
+>> Blank() <> TestYesNo.Yes
+true
+
+>> Blank() <> TestYesNo.No
+true
+
+>> TestYesNo.No >= Blank()
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> TestYesNo.No < Blank()
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() < TestYesNo.Yes
+Errors: Error 19-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() <= TestYesNo.Yes
+Errors: Error 20-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> TestNumberCompareNumeric.V2 < Blank()
+false
+
+>> TestNumberCompareNumeric.V2 <= Blank()
+false
+
+>> TestNumberCompareNumeric.V2 >= Blank()
+true
+
+>> TestNumberCompareNumeric.V2 > Blank()
+true
+
+>> TestNumberCompareNumeric.V2 = Blank()
+false
+
+>> TestNumberCompareNumeric.V2 <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumeric.V2
+true
+
+>> Blank() <= TestNumberCompareNumeric.V2
+true
+
+>> Blank() >= TestNumberCompareNumeric.V2
+false
+
+>> Blank() > TestNumberCompareNumeric.V2
+false
+
+>> Blank() = TestNumberCompareNumeric.V2
+false
+
+>> Blank() <> TestNumberCompareNumeric.V2
+true
+
+>> TestNumberCoerceTo.V > Blank()
+true
+
+>> TestNumberCoerceTo.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V < Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <= Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V >= Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V > Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() <= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() >= TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() > TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() = TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() <> TestNumberCompareNumericCoerceFrom.V
+true
+
+//===========================================================================================================
+//
+// 18. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
 //
 
 // Standard usage
