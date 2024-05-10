@@ -64,11 +64,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public INLHandlerFactory NLHandlerFactory { get; init; }
 
-        /// <summary>
-        /// An instance of the host cancelation handler that allows the host to cancel the lsp operations.
-        /// </summary>
-        public IHostCancelationHandler HostCancelationHandler { get; init; }
-
         private readonly ILanguageServerLogger _loggerInstance;
 
         /// <summary>
@@ -110,7 +105,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private ILanguageServerOperationHandlerFactory GetHandlerFactory()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return HandlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange, HostCancelationHandler);
+            return HandlerFactory ?? new DefaultLanguageServerOperationHandlerFactory(GetNLHandlerFactory(), OnDidChange);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

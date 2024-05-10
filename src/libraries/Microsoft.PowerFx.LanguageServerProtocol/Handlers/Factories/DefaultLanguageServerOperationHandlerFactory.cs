@@ -15,24 +15,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         // if all hosts start using the new design, these properties can be removed.
         private readonly INLHandlerFactory _nlHandlerFactory;
         private readonly LanguageServer.NotifyDidChange _notifyDidChange;
-        private readonly IHostCancelationHandler _cancelationHandler;
 
-        public DefaultLanguageServerOperationHandlerFactory(
-            INLHandlerFactory nlHandlerFactory, 
-            LanguageServer.NotifyDidChange notifyDidChange,
-            IHostCancelationHandler cancelationHandler)
+        public DefaultLanguageServerOperationHandlerFactory(INLHandlerFactory nlHandlerFactory, LanguageServer.NotifyDidChange notifyDidChange)
         {
             _nlHandlerFactory = nlHandlerFactory;
             _notifyDidChange = notifyDidChange;
-            _cancelationHandler = cancelationHandler;
         }
 
         public ILanguageServerOperationHandler GetHandler(string lspMethod, HandlerCreationContext creationContext)
         {
             switch (lspMethod)
             {
-                case TextDocumentNames.CancelRequest:
-                    return new CancelRequestNotificationHandler(_cancelationHandler);
                 case CustomProtocolNames.NL2FX:
                     return new Nl2FxLanguageServerOperationHandler(_nlHandlerFactory);
                 case CustomProtocolNames.FX2NL:
