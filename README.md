@@ -10,13 +10,17 @@
 
 ## Summary
 
+- [Vision](#vision)
 - [Overview](#overview)
-- [Build Status](#build-status)
 - [Packages](#packages)
 - [Daily Builds](#daily-builds)
 - [Samples](#samples)
 - [Contributing](#contributing)
 - [Trademarks](#trademarks)
+
+## Vision
+
+The easiest and most powerful ​system to express business logic for ​everyone, everywhere.
 
 ## Overview
 
