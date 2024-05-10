@@ -344,7 +344,9 @@ namespace Microsoft.PowerFx
         }
 
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-                
+
+        public IEnumerable<string> FunctionNames => this.Functions.FunctionNames;
+
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 

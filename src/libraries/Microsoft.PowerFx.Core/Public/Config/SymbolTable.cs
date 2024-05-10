@@ -68,8 +68,6 @@ namespace Microsoft.PowerFx
 
         TexlFunctionSet INameResolver.Functions => _guard.VerifyNoWriters(_functions);
 
-        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
-
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {
             if (_slots.TryGet(slot.SlotIndex, out var nameInfo))
