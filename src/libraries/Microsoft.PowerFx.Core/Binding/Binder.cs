@@ -3363,7 +3363,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidDot);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidDot, leftType.GetKindString());
                     return;
                 }
 

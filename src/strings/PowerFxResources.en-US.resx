@@ -1863,8 +1863,8 @@
     <comment>Description of the third parameter to Sequence</comment>
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Invalid use of '.'</value>
-    <comment>Error Message.</comment>
+    <value>The '.' operator cannot be used on {0} values.</value>
+    <comment>Error Message. {Locked='.'}. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean).</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
