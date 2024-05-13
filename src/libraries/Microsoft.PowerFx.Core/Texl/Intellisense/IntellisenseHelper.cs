@@ -366,7 +366,7 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
                 }
-                else if (info.Function.HasColumnIdentifiers && info.Function.ParameterCanBeIdentifier(intellisenseData.Features, argPosition))
+                else if (info.Function.HasColumnIdentifiers && info.Function.ParameterCanBeIdentifier(intellisenseData.CurNode, argPosition, intellisenseData.Features))
                 {
                     AddSuggestionsForNamesInType(type, intellisenseData, false);
                 }
