@@ -1,4 +1,4 @@
-﻿#SETUP: DecimalSupport
+﻿#SETUP: DecimalSupport,PowerFxV1CompatibilityRules
 
 // Default to invariant
 >> Float("-5")
