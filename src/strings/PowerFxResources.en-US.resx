@@ -4658,6 +4658,9 @@
   <data name="AboutClear_collection" xml:space="preserve">
     <value>The collection to clear.</value>
   </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
