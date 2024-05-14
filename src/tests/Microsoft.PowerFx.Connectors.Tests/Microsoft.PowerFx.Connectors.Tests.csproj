@@ -32,7 +32,8 @@
     <EmbeddedResource Include="Responses\*.json" />
     <EmbeddedResource Include="Responses\*.jsonSet" />
     <EmbeddedResource Include="Responses\*.png" />
-    <EmbeddedResource Include="Responses\*.txt" />        
+    <EmbeddedResource Include="Responses\*.txt" />
+    <EmbeddedResource Include="Responses\*.raw" />
     <EmbeddedResource Include="Swagger\*.json" />
   </ItemGroup>
 

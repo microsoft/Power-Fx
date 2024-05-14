@@ -1863,8 +1863,8 @@
     <comment>Description of the third parameter to Sequence</comment>
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Invalid use of '.'</value>
-    <comment>Error Message.</comment>
+    <value>The '.' operator cannot be used on {0} values.</value>
+    <comment>Error Message. {Locked='.'}. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean).</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
@@ -4086,6 +4086,14 @@
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>The stated function return type {0} is invalid.</value>
+    <comment>This error message shows up when function return type contains restricted primitive types.</comment>
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>The stated function argument type {0} is invalid.</value>
+    <comment>This error message shows up when function argument type contains restricted primitive types.</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
@@ -4402,8 +4410,24 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
-    <comment>Error message when type binding is invalid</comment>
+    <value>Type literal declaration was invalid.</value>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definition of type {0} is invalid.</value>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definition of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type binding may have cycles.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Restricted type name {0} cannot be used.</value>
+    <comment>Error message when using restricted type name.</comment>
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Type {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a type that already exists.</comment>
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>

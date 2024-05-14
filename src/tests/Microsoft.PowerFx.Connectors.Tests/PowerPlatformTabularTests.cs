@@ -53,12 +53,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Use of tabular connector
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            CdpSwaggerTabularService tabularService = new CdpSwaggerTabularService(apiDoc, globals);
+            ConnectorTable tabularService = new ConnectorTable(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
             Assert.Equal("_tbl_e74bd8913489439e886426eba8dec1c8", tabularService.Namespace);
 
-            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            await tabularService.InitAsync(client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.Name);
             Assert.Equal("Customers", tabularService.DisplayName);
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = CdpSwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = ConnectorTable.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, database, server, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -192,10 +192,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { "table", FormulaValue.New("Customers") }
             });
 
-            bool isTabularService = CdpSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = ConnectorTable.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService);
 
-            var (s, c, r, u, d) = CdpSwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = ConnectorTable.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTableV2", s.Name);
             Assert.Equal("PostItemV2", c.Name);
@@ -248,12 +248,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SP GetTable.json");
 
-            CdpSwaggerTabularService tabularService = new CdpSwaggerTabularService(apiDoc, globals);
+            ConnectorTable tabularService = new ConnectorTable(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
             Assert.Equal("_tbl_0b905132239e463a9d12f816be201da9", tabularService.Namespace);
 
-            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            await tabularService.InitAsync(client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.Name);
             Assert.Equal("Documents", tabularService.DisplayName);
@@ -397,7 +397,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = CdpSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = ConnectorTable.IsTabular(globals, apiDoc, out string error);
             Assert.False(isTabularService);
             Assert.Equal("Missing global value dataset", error);
         }
@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { "dataset", FormulaValue.New("https://microsofteur.sharepoint.com/teams/pfxtest") },
             });
 
-            bool isTabularService = CdpSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = ConnectorTable.IsTabular(globals, apiDoc, out string error);
             Assert.False(isTabularService);
             Assert.Equal("Missing global value table", error);
         }
@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\SharePoint.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = CdpSwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = ConnectorTable.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, dataset, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -436,10 +436,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = CdpSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = ConnectorTable.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService);
 
-            var (s, c, r, u, d) = CdpSwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = ConnectorTable.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTable", s.Name);
             Assert.Equal("PostItem", c.Name);
@@ -488,14 +488,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             });
 
             // Use of tabular connector
-            CdpSwaggerTabularService tabularService = new CdpSwaggerTabularService(apiDoc, globals);
+            ConnectorTable tabularService = new ConnectorTable(apiDoc, globals);
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
             Assert.Equal("_tbl_ec5fe6d1cad744a0a716fe4597a74b2e", tabularService.Namespace);
 
             // There is a network call here to retrieve the table's schema
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
-            await tabularService.InitAsync(config, client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
+            await tabularService.InitAsync(client, CancellationToken.None, new ConsoleLogger(_output)).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.Name);
             Assert.Equal("Accounts", tabularService.DisplayName);
@@ -632,7 +632,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\SalesForce.json", _output);
             var apiDoc = testConnector._apiDocument;
 
-            string[] globalValueNames = CdpSwaggerTabularService.GetGlobalValueNames(apiDoc);
+            string[] globalValueNames = ConnectorTable.GetGlobalValueNames(apiDoc);
             Assert.Equal("connectionId, table", string.Join(", ", globalValueNames.OrderBy(x => x)));
 
             IReadOnlyDictionary<string, FormulaValue> globals = new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>()
@@ -641,10 +641,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { "table", FormulaValue.New("Documents") },
             });
 
-            bool isTabularService = CdpSwaggerTabularService.IsTabular(globals, apiDoc, out string error);
+            bool isTabularService = ConnectorTable.IsTabular(globals, apiDoc, out string error);
             Assert.True(isTabularService, error);
 
-            var (s, c, r, u, d) = CdpSwaggerTabularService.GetFunctions(globals, apiDoc);
+            var (s, c, r, u, d) = ConnectorTable.GetFunctions(globals, apiDoc);
 
             Assert.Equal("GetTable", s.Name);
             Assert.Equal("PostItemV2", c.Name);

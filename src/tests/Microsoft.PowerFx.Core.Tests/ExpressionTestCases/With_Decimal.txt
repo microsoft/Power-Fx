@@ -5,3 +5,6 @@
 
 >> With( { x : 2e28 , y : 1.234e28}, x * y )
 Error({Kind:ErrorKind.Numeric})
+
+>> With ( { x : 3 }, x.y )
+Errors: Error 19-21: The '.' operator cannot be used on Decimal values.

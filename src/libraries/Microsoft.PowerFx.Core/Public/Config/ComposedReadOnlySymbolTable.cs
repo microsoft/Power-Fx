@@ -61,21 +61,35 @@ namespace Microsoft.PowerFx
         private TexlFunctionSet _nameResolverFunctions = null;
         private VersionHash _cachedVersionHash = VersionHash.New();
 
+        // To keep _cachedVersionHash and _nameResolverFunctions in sync.
+        private readonly object _lock = new object();
+
         // Expose the list to aide in intellisense suggestions. 
+        // Multiple readers ok. But not writing while we read.
         TexlFunctionSet INameResolver.Functions
         {
             get
             {
-                var current = this.VersionHash;
-                if (current != _cachedVersionHash)
+                lock (_lock)
                 {
-                    _nameResolverFunctions = null;       
-                }
+                    var current = this.VersionHash;
+                    if (current != _cachedVersionHash)
+                    {
+                        _nameResolverFunctions = null;
+                    }
 
-                if (_nameResolverFunctions == null)
-                {
-                    _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
-                    _cachedVersionHash = current;
+                    if (_nameResolverFunctions == null)
+                    {
+                        _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
+                        _cachedVersionHash = current;
+                    }
+
+                    // Check that it didn't mutate. 
+                    var newHash = this.VersionHash;
+                    if (newHash != current)
+                    {
+                        throw new InvalidOperationException($"Symbol Table was mutated during read.");
+                    }
                 }
 
                 return _nameResolverFunctions;                

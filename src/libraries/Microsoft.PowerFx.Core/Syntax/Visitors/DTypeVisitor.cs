@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
+    // Visitor to resolve TypeLiteralNode.TypeRoot into DType.
     internal class DTypeVisitor : TexlFunctionalVisitor<DType, INameResolver>
     {
         private DTypeVisitor()
@@ -22,43 +23,19 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public static DType Run(TexlNode node, INameResolver context)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
             return node.Accept(new DTypeVisitor(), context);
-        }
-
-        public override DType Visit(ErrorNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(BlankNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(BoolLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(StrLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(NumLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(DecLitNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
         }
 
         public override DType Visit(FirstNameNode node, INameResolver context)
         {
-            var name = node.Ident.Name.Value;
-            if (context.LookupType(new DName(name), out FormulaType ft))
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
+            var name = node.Ident.Name;
+            if (context.LookupType(name, out FormulaType ft))
             {
                 return ft._type;
             }
@@ -66,83 +43,148 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return DType.Invalid;
         }
 
-        public override DType Visit(ParentNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(SelfNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(StrInterpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(DottedNameNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(UnaryOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(BinaryOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(VariadicOpNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(CallNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DType Visit(ListNode node, INameResolver context)
-        {
-            throw new NotImplementedException();
-        }
-
         public override DType Visit(RecordNode node, INameResolver context)
         {
-            var list = new List<TypedName>();
-            foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
-            {
-                var ty = cNode.Accept(this, context);
-                if (ty == null)
-                {
-                    return null;
-                }
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
 
-                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
+            if (node.ChildNodes.Count < 1)
+            {
+                return DType.Invalid;
             }
 
-            return DType.CreateRecord(list);
+            var typedNames = new List<TypedName>();
+            var names = new HashSet<DName>();
+
+            foreach (var (cNode, ident) in node.ChildNodes.Zip(node.Ids, (a, b) => (a, b)))
+            {
+                var name = ident.Name;
+
+                // Invalid if Record fields repeat.
+                if (!names.Add(name))
+                {
+                    return DType.Invalid;
+                }
+
+                var ty = cNode.Accept(this, context);
+                if (ty == DType.Invalid)
+                {
+                    return DType.Invalid;
+                }
+
+                typedNames.Add(new TypedName(ty, name));
+            }
+
+            return DType.CreateRecord(typedNames);
         }
 
         public override DType Visit(TableNode node, INameResolver context)
         {
-            var childNode = node.ChildNodes.First();
-            var ty = childNode.Accept(this, context);
-            if (ty == null)
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
+            if (node.ChildNodes.Count != 1)
             {
-                return null;
+                return DType.Invalid;
             }
 
-            return ty.ToTable();
+            var childNode = node.ChildNodes.First();
+            var ty = childNode.Accept(this, context);
+
+            if (ty == DType.Invalid)
+            {
+                return DType.Invalid;
+            }
+
+            if (ty.IsRecord || ty.IsTable)
+            {
+                return ty.ToTable();
+            }
+
+            // Single column table syntax
+            var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
+
+            return rowType.ToTable();
+        }
+
+        public override DType Visit(ErrorNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(BlankNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(BoolLitNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(StrLitNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(NumLitNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(DecLitNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(ParentNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(SelfNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(StrInterpNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(DottedNameNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(UnaryOpNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(BinaryOpNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(VariadicOpNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(CallNode node, INameResolver context)
+        {
+            return DType.Invalid;
+        }
+
+        public override DType Visit(ListNode node, INameResolver context)
+        {
+            return DType.Invalid;
         }
 
         public override DType Visit(AsNode node, INameResolver context)
         {
-            throw new NotImplementedException();
+            return DType.Invalid;
         }
     }
 }
