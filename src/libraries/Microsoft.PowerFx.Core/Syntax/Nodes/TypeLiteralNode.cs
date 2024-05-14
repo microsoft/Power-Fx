@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Syntax
 
         internal static bool IsValid(TypeLiteralNode typeNode, out List<TexlError> errors)
         {
-            var validator = new Validator(typeNode.TypeRoot);
-
+            var validator = new Validator();
+            typeNode.TypeRoot.Accept(validator);
             errors = validator.Errors;
             return !errors.Any();
         }
@@ -63,15 +63,11 @@ namespace Microsoft.PowerFx.Syntax
         private class Validator : IdentityTexlVisitor
         {
             private readonly List<TexlError> _errors;
-            private readonly TexlNode _typeRoot;
 
-            internal List<TexlError> Errors => Errors;
+            internal List<TexlError> Errors => _errors;
 
-            public Validator(TexlNode typeRoot)
+            public Validator()
             {
-                Contracts.AssertValue(typeRoot);
-
-                _typeRoot = typeRoot;
                 _errors = new List<TexlError>();
             }
 
@@ -117,7 +113,7 @@ namespace Microsoft.PowerFx.Syntax
 
             public override void Visit(SelfNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
             }
 
             public override void Visit(TypeLiteralNode node)
@@ -127,37 +123,37 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(StrInterpNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
             public override bool PreVisit(DottedNameNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
             public override bool PreVisit(UnaryOpNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
             public override bool PreVisit(BinaryOpNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
             public override bool PreVisit(VariadicOpNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
             public override bool PreVisit(CallNode node)
             {
-                _errors.Add(new TexlError(_typeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
                 return false;
             }
 
