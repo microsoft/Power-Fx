@@ -4410,7 +4410,7 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid.</value>
+    <value>Type literal declaration is invalid.</value>
     <comment>Error message when type binding is invalid.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">

@@ -317,7 +317,12 @@ namespace Microsoft.PowerFx.Core.Parser
                         var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            if (TypeLiteralNode.IsValid(typeLiteralNode, out var err))
+                            {
+                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            }
+
+                            CollectionUtils.Add(ref _errors, err);
                             continue;
                         }
 
