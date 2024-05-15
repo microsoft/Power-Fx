@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // No Zero Width Space after comma
             value = "ClearCollect(Temp1,[])";
-            var tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            var tokens = TexlLexer.InvariantLexer.LexSource(value);
             Assert.NotNull(tokens);
             Assert.Equal(8, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Zero Width Space after comma
             value = "ClearCollect(Temp1," + char.ConvertFromUtf32(8203) + "[])";
-            tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            tokens = TexlLexer.InvariantLexer.LexSource(value);
             Assert.NotNull(tokens);
             Assert.Equal(9, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Zero Width Space at the beginning of the formula
             value = string.Format("{0}", '\u200B') + "ClearCollect(Temp1,[])";
-            tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.PFxV1);
+            tokens = TexlLexer.InvariantLexer.LexSource(value);
             Assert.NotNull(tokens);
             Assert.Equal(9, tokens.Count);
             Assert.Equal(TokKind.Error, tokens[0].Kind);
@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Core.Tests
             expression = "\"AA" + char.ConvertFromUtf32(8203) + "BB\"";
             tokens = TexlLexer.InvariantLexer.LexSource(expression, TexlLexer.Flags.None);
             stringToken = tokens[0] as StrLitToken;
-            Assert.Equal(stringToken.Value.Length, expression.Length - 3); // Flags.PFxV1 will remove the zero width space char.
+            Assert.Equal(stringToken.Value.Length, expression.Length - 3); // Flags.None will remove the zero width space char.
         }
 
         [Fact]
