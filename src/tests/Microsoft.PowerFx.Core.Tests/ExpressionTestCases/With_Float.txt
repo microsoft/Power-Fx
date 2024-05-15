@@ -5,3 +5,6 @@
 
 >> With( { x : 1e306 }, Power( x, x/3 ) )
 Error({Kind:ErrorKind.Numeric})
+
+>> With ( { x : 3 }, x.y )
+Errors: Error 19-21: The '.' operator cannot be used on Number values.
