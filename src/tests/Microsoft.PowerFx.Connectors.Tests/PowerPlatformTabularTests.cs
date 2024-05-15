@@ -377,7 +377,100 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Document1", docName.Value);
         }
 
-        [Fact(Skip = "Can't get SF metadata")]        
+        [Fact]
+        public async Task SF_CdpTabular_GetTables()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "e88a5bf3321547e0965695384a2fe57d";
+            string jwt = "eyJ0eXAiOiJKV1Qi...";
+            using var client = new PowerPlatformConnectorClient("tip2-001.azure-apihub.net", "8d626c93-244c-eaa5-b3d8-bbffbb04b626", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            ConnectorDataSource cds = new ConnectorDataSource("default");
+
+            testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
+            await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+
+            Assert.NotNull(cds.DatasetMetadata);
+            Assert.Null(cds.DatasetMetadata.Blob);
+            Assert.Null(cds.DatasetMetadata.DatasetFormat);
+            Assert.Null(cds.DatasetMetadata.Parameters);
+
+            Assert.NotNull(cds.DatasetMetadata.Tabular);
+            Assert.Equal("dataset", cds.DatasetMetadata.Tabular.DisplayName);
+            Assert.Equal("singleton", cds.DatasetMetadata.Tabular.Source);
+            Assert.Equal("Table", cds.DatasetMetadata.Tabular.TableDisplayName);
+            Assert.Equal("Tables", cds.DatasetMetadata.Tabular.TablePluralName);
+            Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
+
+            testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
+            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+
+            Assert.NotNull(tables);
+            Assert.Equal(569, tables.Count());
+
+            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            Assert.Equal("Account", connectorTable.TableName);
+            Assert.False(connectorTable.IsInitialized);
+
+            testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
+            await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            Assert.True(connectorTable.IsInitialized);
+
+            ConnectorTableValue sfTable = connectorTable.GetTableValue();
+            Assert.True(sfTable._tabularService.IsInitialized);
+            Assert.True(sfTable.IsDelegable);
+
+            Assert.Equal(
+                "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':s, CreatedDate`'Created Date':d, Description`'Account " +
+                "Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By " +
+                "ID':s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':s, Name`'Account Name':s, NumberOfEmployees`Employees:w, " +
+                "OwnerId`'Owner ID':s, ParentId`'Parent Account ID':s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping " +
+                "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
+                "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Accounts).'Account ID'";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, " +
+                "CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, " +
+                "Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, " +
+                "ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](InjectServiceProviderFunction:*[AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, " +
+                "BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, " +
+                "LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, " +
+                "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            StringValue accountId = Assert.IsType<StringValue>(result);
+            Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+        }
+
+        [Fact]
         public async Task SF_CdpTabular()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -398,7 +491,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
 
-            testConnector.SetResponseFromFile(/* Need SF Metadata response file here*/ @"Responses\SF GetSchema.json");
+            testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetSchema.json");
             await tabularService.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
             Assert.True(tabularService.IsInitialized);
 

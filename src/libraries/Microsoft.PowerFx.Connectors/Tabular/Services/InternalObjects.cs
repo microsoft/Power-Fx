@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.Connectors.Tabular
 {
+    // Used by ConnectorDataSource.GetTablesAsync
     internal class GetTables
     {
         [JsonPropertyName("value")]
@@ -21,6 +22,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         public string DisplayName { get; set; }
     }
 
+    // Used by ConnectorDataSource.GetDatasetsMetadataAsync
     internal class DatasetMetadata
     {
         [JsonPropertyName("tabular")]

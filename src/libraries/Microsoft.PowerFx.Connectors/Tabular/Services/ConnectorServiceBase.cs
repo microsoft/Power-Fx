@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         {
         }
 
-        internal async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
             where T : class, new()
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
         }
 
-        internal async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
         { 
             cancellationToken.ThrowIfCancellationRequested();
             string log = $"{callingMethod}.{nameof(GetObject)} for {message}, Uri {uri}";
