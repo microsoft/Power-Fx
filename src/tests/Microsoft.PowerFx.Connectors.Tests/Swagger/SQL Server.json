@@ -6,15 +6,7 @@
     "description": "Microsoft SQL Server is a relational database management system developed by Microsoft. Connect to SQL Server to manage data. You can perform various actions such as create, update, get, and delete on rows in a table.",
     "x-ms-api-annotation": {
       "status": "Production"
-    },
-    "__comments00": "     --- Changes applied to this file ---",
-    "__comments01": "",
-    "__comments02": "     1. basePath is /apim/sql instead of / only",
-    "__comments03": "",
-    "__comments04": "     2. All paths are prefixed with /{connectionId}",
-    "__comments05": "",
-    "__comments06": "     3. Added fake 'ExecuteProcedure_V2z' operation for testing",
-    "__comments07": ""
+    }
   },
   "host": "localhost:33069",
   "basePath": "/apim/sql",
