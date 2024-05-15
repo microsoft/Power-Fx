@@ -52,15 +52,39 @@ namespace Microsoft.PowerFx.Core.Annotations
             }
         }
 
-        // Readers can run in parallel. Verify there are no writes. 
+        /// <summary>
+        /// Readers can run in parallel. Verify there are no current writes. 
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If violated.</exception>
         public void VerifyNoWriters()
         {
-            if (_id != 0)
+            if (_id > 0)
             {
                 throw new InvalidOperationException($"Can't read while another thread is writing. Other {_id}.");
             }
         }
 
+        // Convenience for calling VerifyNoWriters() in a property getter. 
+        public T VerifyNoWriters<T>(T inner)
+        {
+            this.VerifyNoWriters();
+            return inner;
+        }
+
+        /// <summary>
+        /// Mark this guard as "no writers allowed". Any attempt to enter a write region will fail.
+        /// </summary>
+        public void ForbidWriters()
+        {
+            // non-zero will mean any attempt to Enter will fail. 
+            // But still let VerifyNoWriters() succeed. 
+            _id = -1;
+        }
+
+        /// <summary>
+        /// Enter a "write" region. Only 1 thread can enter this region at a time. 
+        /// </summary>
+        /// <returns></returns>
         public IDisposable Enter()
         {            
             var t = new GuardInstance(this);

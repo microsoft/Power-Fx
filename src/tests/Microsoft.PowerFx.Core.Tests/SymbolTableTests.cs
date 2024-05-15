@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
@@ -354,6 +355,36 @@ namespace Microsoft.PowerFx.Core.Tests
 
             fOk = st2.TryGetSymbolType("os1", out type);
             Assert.True(fOk);
+        }
+
+        // Reads should be thread safe. 
+        [Fact]
+        public void Threading()
+        {
+            int nLoops = 100; 
+
+            for (int i = 0; i < nLoops; i++)
+            {
+                // Create complex tree of composed tables. 
+                var composed1a = new ComposedReadOnlySymbolTable(new SymbolTable(), new SymbolTable(), new SymbolTable(), new SymbolTable());
+                var composed1b = new ComposedReadOnlySymbolTable(new SymbolTable(), new SymbolTable(), new SymbolTable(), new SymbolTable());
+
+                var composed1 = new ComposedReadOnlySymbolTable(composed1a, composed1b);
+                var composed2 = new ComposedReadOnlySymbolTable(new SymbolTable(), new SymbolTable(), new SymbolTable(), new SymbolTable());
+
+                var composed = new ComposedReadOnlySymbolTable(composed1, composed2, new SymbolTable(), new SymbolTable());
+                
+                var engine = new Engine();
+
+                // Reads should be thread-safe. 
+                Parallel.For(
+                    0,
+                    2,
+                    (i) =>
+                    {
+                        Assert.True(engine.Check("Sum(1)", symbolTable: composed).IsSuccess);
+                    });
+            }
         }
 
         // Type is wrong: https://github.com/microsoft/Power-Fx/issues/2342
