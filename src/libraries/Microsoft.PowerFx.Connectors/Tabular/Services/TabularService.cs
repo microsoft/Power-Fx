@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Tabular
 {
-    public abstract class TabularService
+    public abstract class TabularService : ConnectorServiceBase
     {
         private const string NotInitialized = "Tabular service is not initialized.";
 
