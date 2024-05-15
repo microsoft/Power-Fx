@@ -84,6 +84,20 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void GuardForbidWriters()
+        {
+            var r = new GuardSingleThreaded();
+
+            r.ForbidWriters();
+
+            // Ok. 
+            r.VerifyNoWriters();
+
+            // Fails - can't have writers. 
+            Assert.Throws<InvalidOperationException>(() => r.Enter());
+        }
+
+        [Fact]
         public void GuardTestNotReentrant()
         {
             var r = new GuardSingleThreaded();

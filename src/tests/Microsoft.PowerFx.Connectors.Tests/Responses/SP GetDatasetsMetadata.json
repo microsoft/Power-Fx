@@ -1,0 +1,14 @@
+{
+  "tabular": {
+    "source": "mru",
+    "displayName": "site",
+    "urlEncoding": "double",
+    "tableDisplayName": "list",
+    "tablePluralName": "lists"
+  },
+  "blob": {
+    "source": "mru",
+    "displayName": "site",
+    "urlEncoding": "double"
+  }
+}

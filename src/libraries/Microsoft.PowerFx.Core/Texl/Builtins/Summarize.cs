@@ -124,9 +124,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // All args starting at index 1 need to be identifiers or aggregate functions (wrapped in AsNode node).
                 switch (arg)
                 {
-                    case AsNode nameNode:
+                    case AsNode asNode:
+
+                        if (asNode.Left is FirstNameNode)
+                        {
+                            isValid = false;
+                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeInvalidArg);
+                        }
+
                         existingType = argType;
-                        columnName = nameNode.Right.Name;
+                        columnName = asNode.Right.Name;
                         break;
 
                     case FirstNameNode:

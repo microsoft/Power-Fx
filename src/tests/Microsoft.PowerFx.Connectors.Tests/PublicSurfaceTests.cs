@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Connector.Tests
         {
             var asm = typeof(PowerPlatformConnectorClient).Assembly;
 
-            // The goal for public namespaces is to make the SDK easy for the consumer. 
-            // Namespace principles for public classes:            // 
+            // The goal for public namespaces is to make the SDK easy for the consumer.
+            // Namespace principles for public classes:            //
             // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
             // - For easy discovery, but Engine in "Microsoft.PowerFx".
             // - For sub areas with many related classes, cluster into a single subnamespace.
@@ -33,26 +33,27 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorLog",
               "Microsoft.PowerFx.Connectors.ConnectorLogger",
               "Microsoft.PowerFx.Connectors.ConnectorParameter",
-              "Microsoft.PowerFx.Connectors.ConnectorParameters",              
+              "Microsoft.PowerFx.Connectors.ConnectorParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
-              "Microsoft.PowerFx.Connectors.ConnectorSettings",              
-              "Microsoft.PowerFx.Connectors.ConnectorTableValue",              
+              "Microsoft.PowerFx.Connectors.ConnectorSettings",
+              "Microsoft.PowerFx.Connectors.ConnectorTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.Constants",
               "Microsoft.PowerFx.Connectors.EngineExtensions",
               "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.MediaKind",
-              "Microsoft.PowerFx.Connectors.ODataParameters",              
-              "Microsoft.PowerFx.Connectors.OpenApiExtensions",              
+              "Microsoft.PowerFx.Connectors.ODataParameters",
+              "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
+              "Microsoft.PowerFx.Connectors.Tabular.ConnectorDataSource",
+              "Microsoft.PowerFx.Connectors.Tabular.ConnectorServiceBase",
               "Microsoft.PowerFx.Connectors.Tabular.ConnectorTable",
-              "Microsoft.PowerFx.Connectors.Tabular.CdpTabularService",
               "Microsoft.PowerFx.Connectors.Tabular.TabularService",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Connector.Tests
 
             Assert.True(count == 0, $"Unexpected public types: {sb}");
 
-            // Types we expect to be in the assembly are all there. 
+            // Types we expect to be in the assembly are all there.
             Assert.Empty(allowed);
         }
     }

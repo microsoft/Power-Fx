@@ -1,2 +1,6 @@
 # Global
 * @microsoft/power-fx-approvers
+
+# csproj and sln reviewers
+*.csproj @microsoft/power-fx-project-reviewers
+*.sln @microsoft/power-fx-project-reviewers
