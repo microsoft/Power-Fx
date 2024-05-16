@@ -71,11 +71,36 @@ namespace Microsoft.PowerFx.Syntax
                 _errors = new List<TexlError>();
             }
 
-            // Valid Node
+            // Valid Nodes
             public override void Visit(FirstNameNode node)
             {
             }
 
+            public override bool PreVisit(RecordNode node)
+            {
+                return true;
+            }
+
+            public override void PostVisit(RecordNode node)
+            {
+            }
+
+            public override bool PreVisit(TableNode node)
+            {
+                if (node.ChildNodes.Count > 1)
+                {
+                    _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override void PostVisit(TableNode node)
+            {
+            }
+
+            // Invalid nodes
             public override void Visit(ErrorNode node)
             {
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
@@ -163,20 +188,10 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
 
-            public override bool PreVisit(RecordNode node)
+            public override bool PreVisit(AsNode node)
             {
-                return true;
-            }
-
-            public override bool PreVisit(TableNode node)
-            {
-                if (node.ChildNodes.Count > 1)
-                {
-                    _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
-                    return false;
-                }
-
-                return true;
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                return false;
             }
         }
     }
