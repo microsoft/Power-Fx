@@ -317,16 +317,16 @@ namespace Microsoft.PowerFx.Core.Parser
                         var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            if (typeLiteralNode.IsValid(out var err))
+                            if (typeLiteralNode.IsValid(out var errors))
                             {
                                 definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, true));
                             }
                             else
                             {
                                 definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, false));
+                                CollectionUtils.Add(ref _errors, errors);
                             }
 
-                            CollectionUtils.Add(ref _errors, err);
                             continue;
                         }
 

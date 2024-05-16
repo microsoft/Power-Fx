@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Syntax
 
     public sealed class TypeLiteralNode : TexlNode
     {
-        private IReadOnlyList<TexlError> _errors;
+        private IEnumerable<TexlError> _errors;
 
         internal TexlNode TypeRoot { get; }
 
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override NodeKind Kind => NodeKind.TypeLiteral;
 
-        internal bool IsValid(out IReadOnlyList<TexlError> errors)
+        internal bool IsValid(out IEnumerable<TexlError> errors)
         {
             if (_errors == null)
             {
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Syntax
         {
             private readonly List<TexlError> _errors;
 
-            internal IReadOnlyList<TexlError> Errors => _errors;
+            internal IEnumerable<TexlError> Errors => _errors;
 
             public Validator()
             {
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
 
-            // Do nothing in post visit as we fail add errors in PreVisit for these nodes
+            // Do nothing in PostVisit for these nodes as we fail and add errors in PreVisit for these nodes
             public override void PostVisit(StrInterpNode node)
             {
             }
