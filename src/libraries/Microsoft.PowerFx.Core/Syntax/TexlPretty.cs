@@ -403,6 +403,23 @@ namespace Microsoft.PowerFx.Syntax
             return result;
         }
 
+        public override LazyList<string> Visit(TypeLiteralNode node, Precedence parentPrecedence)
+        {
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty;
+            var sb = new StringBuilder();
+
+            result = result
+                .With(
+                    "Type",
+                    TexlLexer.PunctuatorParenOpen)
+                .With(node.TypeRoot.Accept(this, Precedence.Primary))
+                .With(TexlLexer.PunctuatorParenClose);
+
+            return ApplyPrecedence(parentPrecedence, Precedence.Primary, result);
+        }
+
         public virtual string GetRightToken(TexlNode leftNode, Identifier right)
         {
             return right.Token.ToString();
