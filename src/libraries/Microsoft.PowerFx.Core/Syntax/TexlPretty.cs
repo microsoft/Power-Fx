@@ -414,10 +414,10 @@ namespace Microsoft.PowerFx.Syntax
                 .With(
                     "Type",
                     TexlLexer.PunctuatorParenOpen)
-                .With(node.TypeRoot.Accept(this, Precedence.Primary))
+                .With(node.TypeRoot.Accept(this, Precedence.Atomic))
                 .With(TexlLexer.PunctuatorParenClose);
 
-            return ApplyPrecedence(parentPrecedence, Precedence.Primary, result);
+            return result;
         }
 
         public virtual string GetRightToken(TexlNode leftNode, Identifier right)
