@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Neplatné použití „.“</value>
+    <value>Operátor „.“ nelze použít pro hodnoty {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>vzorec</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Vrátí seskupení zadané tabulky kombinované s agregačními funkcemi.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>sloupec_seskupení</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregace</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabulka nebo kolekce, která se má seskupit.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Název sloupce, podle kterého se data mají seskupit.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Volání agregační funkce.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Umocní číslo x jiným číslem y. Je to to stejné jako x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Chybějící typ argumentu funkce, například ":Text" v "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Uvedený typ návratu funkce {0} je neplatný.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Uvedený typ argumentu funkce {0} je neplatný.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' již existuje.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarace literálu typu byla neplatná</value>
+    <value>Prohlášení literálu typu bylo neplatné.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definice typu {0} je neplatná.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definice typu {0} je neplatná a může obsahovat cykly.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Název omezeného typu {0} nelze použít.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Typ {0} je již definovaný.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozornění na delegování. Výsledek tohoto argumentu „{0}“ může být u velkých souborů dat před předáním funkci „{1}“ zkrácen.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Očekávala se textová, číselná nebo logická hodnota nebo datum a čas.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Funkce Summarize vyžaduje alespoň jeden sloupec seskupení.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumenty Summarize musí být buď názvy existujících sloupců, podle kterých se má seskupit, nebo vzorce pojmenované klíčovým slovem „As“.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Sloupec „ThisGroup“ je v konfliktu s vyhrazeným názvem. Vyberte jiný název pomocí funkce „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Zdroj dat obsahuje sloupec s názvem „ThisGroup“, který je v konfliktu s vyhrazeným názvem. Vyberte jiný název pomocí funkce „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Rozsah zdroje dat (použití klíčového slova „As“) není podporován.</value>
     
   </data>
 </root>

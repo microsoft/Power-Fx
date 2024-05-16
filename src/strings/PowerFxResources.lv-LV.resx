@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Nederīga "." izmantošana</value>
+    <value>Operatoru “.” nevar izmantot tipa {0} vērtībām.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Atgriež norādītās tabulas grupējumu, kas tiek apvienots ar apkopošanas funkcijām.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>avots</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grupēšanas_kolonna</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>apkopošana</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Grupējamā tabula vai kolekcija.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Kolonnas, pēc kuras grupēt datus, nosaukums.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Izsaukums uz apkopošanas funkciju.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Kāpina skaitli x cita skaitļa y pakāpē. Tas pats, kas x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Trūkst funkcijas argumenta tipa, piemēram, “:Text” sadaļā “FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Norādītais funkcijas atgriešanas tips {0} nav derīgs.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Norādītais funkcijas argumenta tips {0} nav derīgs.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Formula ar nosaukumu “{0}” jau pastāv.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipa literāļa deklarācija bija nederīga</value>
+    <value>Tipa literāļa deklarācija bija nederīga.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tipa {0} definīcija nav derīga.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Tipa {0} definīcija nav derīga un var saturēt ciklus.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Nevar izmantot ierobežotā tipa nosaukumu {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tips {0} jau ir definēts.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Deleģēšanas brīdinājums. Šī argumenta '{0}' rezultāts var tikt saīsināts lielām datu kopām, pirms tas tiek nodots funkcijai '{1}'.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Paredzēta teksta, skaitliska, Būla vai datuma/laika vērtība.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Funkcijai Summarize nepieciešama vismaz viena grupēšanas kolonna.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Funkcijas Summarize argumentiem jābūt esošiem kolonnu nosaukumiem, pēc kuriem grupēt, vai formulām, kas ir nosauktas pēc atslēgvārda “As”.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolonna “ThisGroup” konfliktē ar rezervēto nosaukumu. Izmantojiet funkciju RenameColumns, lai izvēlētos citu nosaukumu.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Datu avotā ir kolonna ar nosaukumu “ThisGroup”, kas konfliktē ar rezervēto nosaukumu. Izmantojiet funkciju “RenameColumns”, lai izvēlētos citu nosaukumu.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Netiek atbalstīta datu avota (atslēgvārda “As” lietojums) mērogošana.</value>
     
   </data>
 </root>
