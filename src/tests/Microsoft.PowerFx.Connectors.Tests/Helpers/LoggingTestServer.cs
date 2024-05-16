@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Tests
         public LoggingTestServer(string swaggerName, ITestOutputHelper output, bool live = false)
         {
             Live = live;
-            _apiDocument = Helpers.ReadSwagger(swaggerName, output);
+            _apiDocument = string.IsNullOrEmpty(swaggerName) ? null : Helpers.ReadSwagger(swaggerName, output);
 
             if (live)
             {
@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var text = GetFileText(filename);
             SetResponse(text, status);
+            ResponseSetMode = false;
         }
 
         private static object GetFileText(string filename)
