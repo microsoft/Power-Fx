@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// List of suggestions associated with the result.
         /// </summary>
-        protected readonly List<IntellisenseSuggestion> _suggestions;
+        protected readonly IReadOnlyList<IntellisenseSuggestion> _suggestions;
 
         /// <summary>
         /// The script to which the result pertains.
@@ -30,12 +30,12 @@ namespace Microsoft.PowerFx.Intellisense
         /// List of candidate signatures for the Intellisense, compliant with Language Server Protocol
         /// <see cref="SignatureHelp"/>.
         /// </summary>
-        private readonly List<SignatureInformation> _functionSignatures;
+        private readonly IEnumerable<SignatureInformation> _functionSignatures;
 
         /// <summary>
         /// List of candidate signatures for the Intellisense, compliant with Document Server intellisense.
         /// </summary>
-        protected readonly List<IntellisenseSuggestion> _functionOverloads;
+        protected readonly IReadOnlyList<IntellisenseSuggestion> _functionOverloads;
 
         /// <summary>
         /// The index of the current argument.  0 if there are no arguments associated with the result, either
@@ -66,8 +66,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.CheckValueOrNull(func);
 
             _suggestions = suggestions;
-            _functionSignatures = new List<SignatureInformation>();
-            _functionOverloads = new List<IntellisenseSuggestion>();
+            var functionSignatures = new List<SignatureInformation>();
+            var functionOverloads = new List<IntellisenseSuggestion>();
 
             CurrentFunctionOverloadIndex = -1;
             _currentArgumentIndex = argIndex;            
@@ -155,20 +155,20 @@ namespace Microsoft.PowerFx.Intellisense
                             Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
                             Parameters = parameters.ToArray(),
                         };
-                        _functionSignatures.Add(signatureInformation);
-                        _functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, possibleOverload.ReturnType, signatureIndex, possibleOverload.Description, possibleOverload.Name, highlightedFuncParamDescription));
+                        functionSignatures.Add(signatureInformation);
+                        functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, possibleOverload.ReturnType, signatureIndex, possibleOverload.Description, possibleOverload.Name, highlightedFuncParamDescription));
 
                         if ((signatureIndex >= argCount || (possibleOverload.SignatureConstraint != null && argCount > possibleOverload.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
                         {
                             // _functionOverloads has at least one item at this point.
-                            CurrentFunctionOverloadIndex = _functionOverloads.Count - 1;
+                            CurrentFunctionOverloadIndex = functionOverloads.Count - 1;
                             minMatchingArgCount = signatureIndex;
                         }
                     }
                 }
 
                 // Handling of case where the function does not take any arguments.
-                if (_functionOverloads.Count == 0 && func.MinArity == 0)
+                if (functionOverloads.Count == 0 && func.MinArity == 0)
                 {
                     var signatureInformation = new SignatureInformation()
                     {
@@ -177,13 +177,16 @@ namespace Microsoft.PowerFx.Intellisense
                         Label = CreateFunctionSignature(func.Name),
                         Parameters = new ParameterInformation[0],
                     };
-                    _functionSignatures.Add(signatureInformation);
-                    _functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.Description, func.Name));
+                    functionSignatures.Add(signatureInformation);
+                    functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.Description, func.Name));
                     CurrentFunctionOverloadIndex = 0;
                 }
             }
 
-            Contracts.Assert(_functionSignatures.Count == _functionOverloads.Count);
+            Contracts.Assert(functionSignatures.Count == functionOverloads.Count);
+
+            _functionSignatures = functionSignatures;
+            _functionOverloads = functionOverloads;
         }
 
         /// <summary>
