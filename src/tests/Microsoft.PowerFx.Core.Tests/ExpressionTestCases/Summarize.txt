@@ -332,6 +332,13 @@ Errors: Error 692-700: Name isn't valid. 'Supplier' isn't recognized.|Error 653-
   Fruit, Fruit, Sum(ThisGroup, Price) As Soma)
 Errors: Error 645-650: Column name conflict for 'Fruit'.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
+>> Summarize( [1,2,3], Value, Value As A )
+Errors: Error 33-35: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 0-9: The function 'Summarize' has some invalid arguments.
+
+>> With({Global:1}, Summarize( [1,2,3], Value, Global As A ))
+Errors: Error 51-53: Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.|Error 17-26: The function 'Summarize' has some invalid arguments.
+
+
 
 //=== Can depend on the order of ThisGroup ====================================
 

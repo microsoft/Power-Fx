@@ -1,0 +1,2281 @@
+{
+  "@odata.context": "https://salesforce-dfwus.azconn-dfwus-001.p.azurewebsites.net/$metadata#datasets('default')/tables",
+  "value": [
+    {
+      "Name": "AcceptedEventRelation",
+      "DisplayName": "Accepted Event Relations"
+    },
+    {
+      "Name": "Account",
+      "DisplayName": "Accounts"
+    },
+    {
+      "Name": "AccountChangeEvent",
+      "DisplayName": "Account Change Event"
+    },
+    {
+      "Name": "AccountContactRelation",
+      "DisplayName": "Account Contact Relationships"
+    },
+    {
+      "Name": "AccountContactRole",
+      "DisplayName": "Account Contact Roles"
+    },
+    {
+      "Name": "AccountFeed",
+      "DisplayName": "Account Feed"
+    },
+    {
+      "Name": "AccountHistory",
+      "DisplayName": "Account History"
+    },
+    {
+      "Name": "AccountPartner",
+      "DisplayName": "Account Partner"
+    },
+    {
+      "Name": "AccountShare",
+      "DisplayName": "Account Share"
+    },
+    {
+      "Name": "ActionLinkGroupTemplate",
+      "DisplayName": "Action Link Group Templates"
+    },
+    {
+      "Name": "ActionLinkTemplate",
+      "DisplayName": "Action Link Templates"
+    },
+    {
+      "Name": "ActivityHistory",
+      "DisplayName": "Activity History"
+    },
+    {
+      "Name": "AdditionalNumber",
+      "DisplayName": "Additional Directory Numbers"
+    },
+    {
+      "Name": "AgentWork",
+      "DisplayName": "Agent Work"
+    },
+    {
+      "Name": "AgentWorkShare",
+      "DisplayName": "Agent Work Share"
+    },
+    {
+      "Name": "AggregateResult",
+      "DisplayName": "Aggregate Result"
+    },
+    {
+      "Name": "Announcement",
+      "DisplayName": "Announcements"
+    },
+    {
+      "Name": "ApexClass",
+      "DisplayName": "Apex Classes"
+    },
+    {
+      "Name": "ApexComponent",
+      "DisplayName": "Visualforce Components"
+    },
+    {
+      "Name": "ApexEmailNotification",
+      "DisplayName": "Apex Email Notifications"
+    },
+    {
+      "Name": "ApexLog",
+      "DisplayName": "Apex Debug Log"
+    },
+    {
+      "Name": "ApexPage",
+      "DisplayName": "Visualforce Pages"
+    },
+    {
+      "Name": "ApexPageInfo",
+      "DisplayName": "Apex Pages Info"
+    },
+    {
+      "Name": "ApexTestQueueItem",
+      "DisplayName": "Apex Test Queue Items"
+    },
+    {
+      "Name": "ApexTestResult",
+      "DisplayName": "Apex Test Results"
+    },
+    {
+      "Name": "ApexTestResultLimits",
+      "DisplayName": "Apex Test Result Limit"
+    },
+    {
+      "Name": "ApexTestRunResult",
+      "DisplayName": "Apex Test Run Result"
+    },
+    {
+      "Name": "ApexTestSuite",
+      "DisplayName": "Apex Test Suites"
+    },
+    {
+      "Name": "ApexTrigger",
+      "DisplayName": "Apex Triggers"
+    },
+    {
+      "Name": "AppMenuItem",
+      "DisplayName": "AppMenuItems"
+    },
+    {
+      "Name": "Approval",
+      "DisplayName": "Approval"
+    },
+    {
+      "Name": "Asset",
+      "DisplayName": "Assets"
+    },
+    {
+      "Name": "AssetChangeEvent",
+      "DisplayName": "Asset Change Event"
+    },
+    {
+      "Name": "AssetFeed",
+      "DisplayName": "Asset Feed"
+    },
+    {
+      "Name": "AssetHistory",
+      "DisplayName": "Asset History"
+    },
+    {
+      "Name": "AssetRelationship",
+      "DisplayName": "Asset Relationships"
+    },
+    {
+      "Name": "AssetRelationshipFeed",
+      "DisplayName": "Asset Relationship Feed"
+    },
+    {
+      "Name": "AssetRelationshipHistory",
+      "DisplayName": "Asset Relationship History"
+    },
+    {
+      "Name": "AssetShare",
+      "DisplayName": "Asset Share"
+    },
+    {
+      "Name": "AssetTokenEvent",
+      "DisplayName": "Asset Token Events"
+    },
+    {
+      "Name": "AssignmentRule",
+      "DisplayName": "Assignment Rules"
+    },
+    {
+      "Name": "AssociatedLocation",
+      "DisplayName": "Associated Locations"
+    },
+    {
+      "Name": "AssociatedLocationHistory",
+      "DisplayName": "Associated Location History"
+    },
+    {
+      "Name": "AsyncApexJob",
+      "DisplayName": "Apex Jobs"
+    },
+    {
+      "Name": "AttachedContentDocument",
+      "DisplayName": "Attached Content Documents"
+    },
+    {
+      "Name": "AttachedContentNote",
+      "DisplayName": "Notes"
+    },
+    {
+      "Name": "Attachment",
+      "DisplayName": "Attachments"
+    },
+    {
+      "Name": "AuraDefinition",
+      "DisplayName": "Lightning Component Definitions"
+    },
+    {
+      "Name": "AuraDefinitionBundle",
+      "DisplayName": "Aura Component Bundles"
+    },
+    {
+      "Name": "AuraDefinitionBundleInfo",
+      "DisplayName": "AuraDefinitionBundle Infos"
+    },
+    {
+      "Name": "AuraDefinitionInfo",
+      "DisplayName": "AuraDefinition Infos"
+    },
+    {
+      "Name": "AuthConfig",
+      "DisplayName": "Authentication Configurations"
+    },
+    {
+      "Name": "AuthConfigProviders",
+      "DisplayName": "Authentication Configuration Auth. Providers"
+    },
+    {
+      "Name": "AuthProvider",
+      "DisplayName": "Auth. Providers"
+    },
+    {
+      "Name": "AuthSession",
+      "DisplayName": "Auth Sessions"
+    },
+    {
+      "Name": "BackgroundOperation",
+      "DisplayName": "Background Operations"
+    },
+    {
+      "Name": "BrandTemplate",
+      "DisplayName": "Letterheads"
+    },
+    {
+      "Name": "BrandingSet",
+      "DisplayName": "Branding Sets"
+    },
+    {
+      "Name": "BrandingSetProperty",
+      "DisplayName": "Branding Set Properties"
+    },
+    {
+      "Name": "BusinessHours",
+      "DisplayName": "Business Hours"
+    },
+    {
+      "Name": "BusinessProcess",
+      "DisplayName": "Business Process"
+    },
+    {
+      "Name": "CallCenter",
+      "DisplayName": "Call Centers"
+    },
+    {
+      "Name": "Campaign",
+      "DisplayName": "Campaigns"
+    },
+    {
+      "Name": "CampaignChangeEvent",
+      "DisplayName": "Campaign Change Event"
+    },
+    {
+      "Name": "CampaignFeed",
+      "DisplayName": "Campaign Feed"
+    },
+    {
+      "Name": "CampaignHistory",
+      "DisplayName": "Campaign Field History"
+    },
+    {
+      "Name": "CampaignInfluenceModel",
+      "DisplayName": "Campaign Influence Models"
+    },
+    {
+      "Name": "CampaignMember",
+      "DisplayName": "Campaign Members"
+    },
+    {
+      "Name": "CampaignMemberStatus",
+      "DisplayName": "Campaign Member Statuses"
+    },
+    {
+      "Name": "CampaignShare",
+      "DisplayName": "Campaign Share"
+    },
+    {
+      "Name": "Case",
+      "DisplayName": "Cases"
+    },
+    {
+      "Name": "CaseArticle",
+      "DisplayName": "Case Article"
+    },
+    {
+      "Name": "CaseChangeEvent",
+      "DisplayName": "Case Change Event"
+    },
+    {
+      "Name": "CaseComment",
+      "DisplayName": "Case Comments"
+    },
+    {
+      "Name": "CaseContactRole",
+      "DisplayName": "Case Contact Role"
+    },
+    {
+      "Name": "CaseExternalDocument",
+      "DisplayName": "Case External Documents"
+    },
+    {
+      "Name": "CaseFeed",
+      "DisplayName": "Case Feed"
+    },
+    {
+      "Name": "CaseHistory",
+      "DisplayName": "Case History"
+    },
+    {
+      "Name": "CaseMilestone",
+      "DisplayName": "Case Milestones"
+    },
+    {
+      "Name": "CaseShare",
+      "DisplayName": "Case Share"
+    },
+    {
+      "Name": "CaseSolution",
+      "DisplayName": "Case Solution"
+    },
+    {
+      "Name": "CaseStatus",
+      "DisplayName": "Case Status Value"
+    },
+    {
+      "Name": "CaseSubjectParticle",
+      "DisplayName": "Case Subject Particles"
+    },
+    {
+      "Name": "CaseTeamMember",
+      "DisplayName": "Case Team Member"
+    },
+    {
+      "Name": "CaseTeamRole",
+      "DisplayName": "Case Team Member Role"
+    },
+    {
+      "Name": "CaseTeamTemplate",
+      "DisplayName": "Predefined Case Team"
+    },
+    {
+      "Name": "CaseTeamTemplateMember",
+      "DisplayName": "Predefined Case Team Member"
+    },
+    {
+      "Name": "CaseTeamTemplateRecord",
+      "DisplayName": "Predefined Case Team Record"
+    },
+    {
+      "Name": "CategoryData",
+      "DisplayName": "Category Data"
+    },
+    {
+      "Name": "CategoryNode",
+      "DisplayName": "Category Nodes"
+    },
+    {
+      "Name": "ChatterActivity",
+      "DisplayName": "Chatter Activity"
+    },
+    {
+      "Name": "ChatterExtension",
+      "DisplayName": "Extensions"
+    },
+    {
+      "Name": "ChatterExtensionConfig",
+      "DisplayName": "Chatter Extension Configurations"
+    },
+    {
+      "Name": "ClientBrowser",
+      "DisplayName": "Client Browser"
+    },
+    {
+      "Name": "CollaborationGroup",
+      "DisplayName": "Groups"
+    },
+    {
+      "Name": "CollaborationGroupFeed",
+      "DisplayName": "Group Feed"
+    },
+    {
+      "Name": "CollaborationGroupMember",
+      "DisplayName": "Group Members"
+    },
+    {
+      "Name": "CollaborationGroupMemberRequest",
+      "DisplayName": "Group Member Requests"
+    },
+    {
+      "Name": "CollaborationGroupRecord",
+      "DisplayName": "Group Records"
+    },
+    {
+      "Name": "CollaborationInvitation",
+      "DisplayName": "Chatter Invitations"
+    },
+    {
+      "Name": "CombinedAttachment",
+      "DisplayName": "Notes, Attachments, Google Docs And Files"
+    },
+    {
+      "Name": "Community",
+      "DisplayName": "Zones"
+    },
+    {
+      "Name": "ConferenceNumber",
+      "DisplayName": "Conference Numbers"
+    },
+    {
+      "Name": "ConnectedApplication",
+      "DisplayName": "Connected Apps"
+    },
+    {
+      "Name": "Contact",
+      "DisplayName": "Contacts"
+    },
+    {
+      "Name": "ContactChangeEvent",
+      "DisplayName": "Contact Change Event"
+    },
+    {
+      "Name": "ContactFeed",
+      "DisplayName": "Contact Feed"
+    },
+    {
+      "Name": "ContactHistory",
+      "DisplayName": "Contact History"
+    },
+    {
+      "Name": "ContactShare",
+      "DisplayName": "Contact Share"
+    },
+    {
+      "Name": "ContentAsset",
+      "DisplayName": "Asset Files"
+    },
+    {
+      "Name": "ContentBody",
+      "DisplayName": "Content Bodies"
+    },
+    {
+      "Name": "ContentDistribution",
+      "DisplayName": "Content Deliveries"
+    },
+    {
+      "Name": "ContentDistributionView",
+      "DisplayName": "Content Delivery Views"
+    },
+    {
+      "Name": "ContentDocument",
+      "DisplayName": "Content Documents"
+    },
+    {
+      "Name": "ContentDocumentFeed",
+      "DisplayName": "ContentDocument Feed"
+    },
+    {
+      "Name": "ContentDocumentHistory",
+      "DisplayName": "Content Document History"
+    },
+    {
+      "Name": "ContentDocumentLink",
+      "DisplayName": "Content Document Link"
+    },
+    {
+      "Name": "ContentFolder",
+      "DisplayName": "Content Folders"
+    },
+    {
+      "Name": "ContentFolderItem",
+      "DisplayName": "Content Folder Items"
+    },
+    {
+      "Name": "ContentFolderLink",
+      "DisplayName": "Content Folder Links"
+    },
+    {
+      "Name": "ContentFolderMember",
+      "DisplayName": "Content Folder Members"
+    },
+    {
+      "Name": "ContentNote",
+      "DisplayName": "Notes"
+    },
+    {
+      "Name": "ContentVersion",
+      "DisplayName": "Content Versions"
+    },
+    {
+      "Name": "ContentVersionHistory",
+      "DisplayName": "Content Version History"
+    },
+    {
+      "Name": "ContentWorkspace",
+      "DisplayName": "Libraries"
+    },
+    {
+      "Name": "ContentWorkspaceDoc",
+      "DisplayName": "Library Documents"
+    },
+    {
+      "Name": "ContentWorkspaceMember",
+      "DisplayName": "Library Members"
+    },
+    {
+      "Name": "ContentWorkspacePermission",
+      "DisplayName": "Library Permissions"
+    },
+    {
+      "Name": "Contract",
+      "DisplayName": "Contracts"
+    },
+    {
+      "Name": "ContractContactRole",
+      "DisplayName": "Contract Contact Role"
+    },
+    {
+      "Name": "ContractFeed",
+      "DisplayName": "Contract Feed"
+    },
+    {
+      "Name": "ContractHistory",
+      "DisplayName": "Contract History"
+    },
+    {
+      "Name": "ContractLineItem",
+      "DisplayName": "Contract Line Items"
+    },
+    {
+      "Name": "ContractLineItemChangeEvent",
+      "DisplayName": "Contract Line Item Change Event"
+    },
+    {
+      "Name": "ContractLineItemHistory",
+      "DisplayName": "Contract Line Item History"
+    },
+    {
+      "Name": "ContractStatus",
+      "DisplayName": "Contract Status Value"
+    },
+    {
+      "Name": "CorsWhitelistEntry",
+      "DisplayName": "CORS Allowed Origins List"
+    },
+    {
+      "Name": "CronJobDetail",
+      "DisplayName": "Cron Job"
+    },
+    {
+      "Name": "CronTrigger",
+      "DisplayName": "Scheduled Jobs"
+    },
+    {
+      "Name": "CspTrustedSite",
+      "DisplayName": "Trusted URLs"
+    },
+    {
+      "Name": "CustomBrand",
+      "DisplayName": "Custom Brand"
+    },
+    {
+      "Name": "CustomBrandAsset",
+      "DisplayName": "Custom Brand Asset"
+    },
+    {
+      "Name": "CustomObjectUserLicenseMetrics",
+      "DisplayName": "Custom Object Usage By User License Metrics"
+    },
+    {
+      "Name": "CustomPermission",
+      "DisplayName": "Custom Permissions"
+    },
+    {
+      "Name": "CustomPermissionDependency",
+      "DisplayName": "Custom Permission Dependencies"
+    },
+    {
+      "Name": "CustomSetup",
+      "DisplayName": "Custom Setups"
+    },
+    {
+      "Name": "CustomSetupDefinition",
+      "DisplayName": "Custom Setup Definition"
+    },
+    {
+      "Name": "Dashboard",
+      "DisplayName": "Dashboards"
+    },
+    {
+      "Name": "DashboardComponent",
+      "DisplayName": "Dashboard Components"
+    },
+    {
+      "Name": "DashboardComponentFeed",
+      "DisplayName": "Dashboard Component Feed"
+    },
+    {
+      "Name": "DashboardFeed",
+      "DisplayName": "Dashboard Feed"
+    },
+    {
+      "Name": "DataAssessmentFieldMetric",
+      "DisplayName": "Data Assessment Field Metrics"
+    },
+    {
+      "Name": "DataAssessmentMetric",
+      "DisplayName": "Data Assessment Metrics"
+    },
+    {
+      "Name": "DataAssessmentValueMetric",
+      "DisplayName": "Data Assessment Field Value Metrics"
+    },
+    {
+      "Name": "DataStatistics",
+      "DisplayName": "Data Statistics"
+    },
+    {
+      "Name": "DataType",
+      "DisplayName": "Data Types"
+    },
+    {
+      "Name": "DatacloudAddress",
+      "DisplayName": "Data.com Addresses"
+    },
+    {
+      "Name": "DeclinedEventRelation",
+      "DisplayName": "Declined Event Relations"
+    },
+    {
+      "Name": "Document",
+      "DisplayName": "Documents"
+    },
+    {
+      "Name": "DocumentAttachmentMap",
+      "DisplayName": "Document Entity Map"
+    },
+    {
+      "Name": "Domain",
+      "DisplayName": "Domains"
+    },
+    {
+      "Name": "DomainSite",
+      "DisplayName": "Custom URLs"
+    },
+    {
+      "Name": "DuplicateJob",
+      "DisplayName": "Duplicate Jobs"
+    },
+    {
+      "Name": "DuplicateJobDefinition",
+      "DisplayName": "Duplicate Job Definitions"
+    },
+    {
+      "Name": "DuplicateJobMatchingRule",
+      "DisplayName": "Duplicate Job Matching Rules"
+    },
+    {
+      "Name": "DuplicateJobMatchingRuleDefinition",
+      "DisplayName": "Duplicate Job Matching Rule Definitions"
+    },
+    {
+      "Name": "DuplicateRecordItem",
+      "DisplayName": "Duplicate Record Items"
+    },
+    {
+      "Name": "DuplicateRecordSet",
+      "DisplayName": "Duplicate Record Sets"
+    },
+    {
+      "Name": "DuplicateRule",
+      "DisplayName": "Duplicate Rules"
+    },
+    {
+      "Name": "EmailCapture",
+      "DisplayName": "Email Captures"
+    },
+    {
+      "Name": "EmailDomainKey",
+      "DisplayName": "Email Domain Keys"
+    },
+    {
+      "Name": "EmailMessage",
+      "DisplayName": "Email Messages"
+    },
+    {
+      "Name": "EmailMessageRelation",
+      "DisplayName": "Email Message Relations"
+    },
+    {
+      "Name": "EmailRoutingAddress",
+      "DisplayName": "Email-to-Case Routing Address"
+    },
+    {
+      "Name": "EmailServicesAddress",
+      "DisplayName": "Email Services Address"
+    },
+    {
+      "Name": "EmailServicesFunction",
+      "DisplayName": "Email Services"
+    },
+    {
+      "Name": "EmailStatus",
+      "DisplayName": "Email Status"
+    },
+    {
+      "Name": "EmailTemplate",
+      "DisplayName": "Email Templates"
+    },
+    {
+      "Name": "EmbeddedServiceDetail",
+      "DisplayName": "Embedded Services"
+    },
+    {
+      "Name": "Entitlement",
+      "DisplayName": "Entitlements"
+    },
+    {
+      "Name": "EntitlementChangeEvent",
+      "DisplayName": "Entitlement Change Event"
+    },
+    {
+      "Name": "EntitlementContact",
+      "DisplayName": "Entitlement Contacts"
+    },
+    {
+      "Name": "EntitlementFeed",
+      "DisplayName": "Entitlement Feed"
+    },
+    {
+      "Name": "EntitlementHistory",
+      "DisplayName": "Entitlement History"
+    },
+    {
+      "Name": "EntitlementTemplate",
+      "DisplayName": "Entitlement Template"
+    },
+    {
+      "Name": "EntityDefinition",
+      "DisplayName": "Entity Definitions"
+    },
+    {
+      "Name": "EntityMilestone",
+      "DisplayName": "Object Milestones"
+    },
+    {
+      "Name": "EntityMilestoneFeed",
+      "DisplayName": "Object Milestone Feed"
+    },
+    {
+      "Name": "EntityMilestoneHistory",
+      "DisplayName": "Object Milestone History"
+    },
+    {
+      "Name": "EntityParticle",
+      "DisplayName": "Entity Particles"
+    },
+    {
+      "Name": "EntitySubscription",
+      "DisplayName": "Entity Subscriptions"
+    },
+    {
+      "Name": "Event",
+      "DisplayName": "Events"
+    },
+    {
+      "Name": "EventBusSubscriber",
+      "DisplayName": "Platform Event Subscription"
+    },
+    {
+      "Name": "EventFeed",
+      "DisplayName": "Event Feed"
+    },
+    {
+      "Name": "EventLogFile",
+      "DisplayName": "Event Log Files"
+    },
+    {
+      "Name": "EventRelation",
+      "DisplayName": "Event Relations"
+    },
+    {
+      "Name": "EventWhoRelation",
+      "DisplayName": "Event Who Relations"
+    },
+    {
+      "Name": "ExternalDataSource",
+      "DisplayName": "External Data Sources"
+    },
+    {
+      "Name": "ExternalDataUserAuth",
+      "DisplayName": "External Data User Authentications"
+    },
+    {
+      "Name": "ExternalEvent",
+      "DisplayName": "External Events"
+    },
+    {
+      "Name": "ExternalEventMapping",
+      "DisplayName": "External Event Mappings"
+    },
+    {
+      "Name": "ExternalEventMappingShare",
+      "DisplayName": "External Event Mapping Share"
+    },
+    {
+      "Name": "ExternalSocialAccount",
+      "DisplayName": "Managed Social Accounts"
+    },
+    {
+      "Name": "FeedAttachment",
+      "DisplayName": "Feed Attachments"
+    },
+    {
+      "Name": "FeedComment",
+      "DisplayName": "Feed Comments"
+    },
+    {
+      "Name": "FeedItem",
+      "DisplayName": "Feed Items"
+    },
+    {
+      "Name": "FeedLike",
+      "DisplayName": "Feed Likes"
+    },
+    {
+      "Name": "FeedPollChoice",
+      "DisplayName": "Feed Poll Choices"
+    },
+    {
+      "Name": "FeedPollVote",
+      "DisplayName": "Feed Poll Votes"
+    },
+    {
+      "Name": "FeedRevision",
+      "DisplayName": "Feed Revisions"
+    },
+    {
+      "Name": "FeedSignal",
+      "DisplayName": "Feed Signals"
+    },
+    {
+      "Name": "FeedTrackedChange",
+      "DisplayName": "Feed Tracked Changes"
+    },
+    {
+      "Name": "FieldDefinition",
+      "DisplayName": "Field Definitions"
+    },
+    {
+      "Name": "FieldPermissions",
+      "DisplayName": "Field Permissions"
+    },
+    {
+      "Name": "FileSearchActivity",
+      "DisplayName": "File Search Activity"
+    },
+    {
+      "Name": "FiscalYearSettings",
+      "DisplayName": "Fiscal Year Settings"
+    },
+    {
+      "Name": "FlexQueueItem",
+      "DisplayName": "Flex Queue Items"
+    },
+    {
+      "Name": "FlowInterview",
+      "DisplayName": "Flow Interviews"
+    },
+    {
+      "Name": "FlowInterviewShare",
+      "DisplayName": "Flow Interview Share"
+    },
+    {
+      "Name": "Folder",
+      "DisplayName": "Folders"
+    },
+    {
+      "Name": "FolderedContentDocument",
+      "DisplayName": "Foldered Content Documents"
+    },
+    {
+      "Name": "ForecastingAdjustment",
+      "DisplayName": "Forecasting Adjustments"
+    },
+    {
+      "Name": "ForecastingCategoryMapping",
+      "DisplayName": "Forecasting Category Mappings"
+    },
+    {
+      "Name": "ForecastingDisplayedFamily",
+      "DisplayName": "Forecasting Displayed Families"
+    },
+    {
+      "Name": "ForecastingFact",
+      "DisplayName": "Forecasting Facts"
+    },
+    {
+      "Name": "ForecastingItem",
+      "DisplayName": "Forecasting Items"
+    },
+    {
+      "Name": "ForecastingOwnerAdjustment",
+      "DisplayName": "Forecasting Owner Adjustments"
+    },
+    {
+      "Name": "ForecastingQuota",
+      "DisplayName": "Forecasting Quotas"
+    },
+    {
+      "Name": "ForecastingShare",
+      "DisplayName": "Forecasting Shares"
+    },
+    {
+      "Name": "ForecastingType",
+      "DisplayName": "Forecasting Types"
+    },
+    {
+      "Name": "ForecastingTypeToCategory",
+      "DisplayName": "Forecasting Type To Category Mappings"
+    },
+    {
+      "Name": "ForecastingUserPreference",
+      "DisplayName": "Forecasting User Preferences"
+    },
+    {
+      "Name": "GrantedByLicense",
+      "DisplayName": "Settings Granted By Licenses"
+    },
+    {
+      "Name": "Group",
+      "DisplayName": "Group"
+    },
+    {
+      "Name": "GroupMember",
+      "DisplayName": "Group Member"
+    },
+    {
+      "Name": "Holiday",
+      "DisplayName": "Holidays"
+    },
+    {
+      "Name": "Idea",
+      "DisplayName": "Ideas"
+    },
+    {
+      "Name": "IdeaComment",
+      "DisplayName": "Idea Comments"
+    },
+    {
+      "Name": "IdpEventLog",
+      "DisplayName": "Identity Event Logs"
+    },
+    {
+      "Name": "In_App_Checklist_Settings__ChangeEvent",
+      "DisplayName": "Change Event: In App Checklist Settings"
+    },
+    {
+      "Name": "In_App_Checklist_Settings__Share",
+      "DisplayName": "Share: In App Checklist Settings"
+    },
+    {
+      "Name": "In_App_Checklist_Settings__c",
+      "DisplayName": "In App Checklist Settings"
+    },
+    {
+      "Name": "InstalledMobileApp",
+      "DisplayName": "Installed Mobile Apps"
+    },
+    {
+      "Name": "KnowledgeArticle",
+      "DisplayName": "Knowledge Articles"
+    },
+    {
+      "Name": "KnowledgeArticleVersion",
+      "DisplayName": "Knowledge Article Versions"
+    },
+    {
+      "Name": "KnowledgeArticleVersionHistory",
+      "DisplayName": "Article Version History"
+    },
+    {
+      "Name": "KnowledgeArticleViewStat",
+      "DisplayName": "Article View Statistics"
+    },
+    {
+      "Name": "KnowledgeArticleVoteStat",
+      "DisplayName": "Article Vote Statistics"
+    },
+    {
+      "Name": "Knowledge__DataCategorySelection",
+      "DisplayName": "Data Category Selection: Knowledge"
+    },
+    {
+      "Name": "Knowledge__Feed",
+      "DisplayName": "Feed: Knowledge"
+    },
+    {
+      "Name": "Knowledge__Share",
+      "DisplayName": "Share: Knowledge"
+    },
+    {
+      "Name": "Knowledge__ViewStat",
+      "DisplayName": "View Stat: Knowledge"
+    },
+    {
+      "Name": "Knowledge__VoteStat",
+      "DisplayName": "Vote Stat: Knowledge"
+    },
+    {
+      "Name": "Knowledge__ka",
+      "DisplayName": "Knowledge"
+    },
+    {
+      "Name": "Knowledge__kav",
+      "DisplayName": "Knowledge"
+    },
+    {
+      "Name": "KnowledgeableUser",
+      "DisplayName": "Knowledgeable Users"
+    },
+    {
+      "Name": "Lead",
+      "DisplayName": "Leads"
+    },
+    {
+      "Name": "LeadChangeEvent",
+      "DisplayName": "Lead Change Event"
+    },
+    {
+      "Name": "LeadFeed",
+      "DisplayName": "Lead Feed"
+    },
+    {
+      "Name": "LeadHistory",
+      "DisplayName": "Lead History"
+    },
+    {
+      "Name": "LeadShare",
+      "DisplayName": "Lead Share"
+    },
+    {
+      "Name": "LeadStatus",
+      "DisplayName": "Lead Status Value"
+    },
+    {
+      "Name": "LinkedArticle",
+      "DisplayName": "Linked Articles"
+    },
+    {
+      "Name": "LinkedArticleFeed",
+      "DisplayName": "Linked Article Feed"
+    },
+    {
+      "Name": "LinkedArticleHistory",
+      "DisplayName": "Linked Article History"
+    },
+    {
+      "Name": "ListEmail",
+      "DisplayName": "List Emails"
+    },
+    {
+      "Name": "ListEmailRecipientSource",
+      "DisplayName": "List Email Recipient Sources"
+    },
+    {
+      "Name": "ListEmailShare",
+      "DisplayName": "List Email Share"
+    },
+    {
+      "Name": "ListView",
+      "DisplayName": "List Views"
+    },
+    {
+      "Name": "ListViewChart",
+      "DisplayName": "List View Charts"
+    },
+    {
+      "Name": "ListViewChartInstance",
+      "DisplayName": "List View Chart Instances"
+    },
+    {
+      "Name": "LiveAgentSession",
+      "DisplayName": "Chat Sessions"
+    },
+    {
+      "Name": "LiveAgentSessionHistory",
+      "DisplayName": "Chat Session History"
+    },
+    {
+      "Name": "LiveAgentSessionShare",
+      "DisplayName": "Chat Session Share"
+    },
+    {
+      "Name": "LiveChatBlockingRule",
+      "DisplayName": "Chat Blocking Rules"
+    },
+    {
+      "Name": "LiveChatButton",
+      "DisplayName": "Chat Buttons"
+    },
+    {
+      "Name": "LiveChatButtonDeployment",
+      "DisplayName": "LiveChatButtonDeployments"
+    },
+    {
+      "Name": "LiveChatButtonSkill",
+      "DisplayName": "LiveChatButtonSkills"
+    },
+    {
+      "Name": "LiveChatDeployment",
+      "DisplayName": "Chat Deployments"
+    },
+    {
+      "Name": "LiveChatSensitiveDataRule",
+      "DisplayName": "Sensitive Data Rules"
+    },
+    {
+      "Name": "LiveChatTranscript",
+      "DisplayName": "Chat Transcripts"
+    },
+    {
+      "Name": "LiveChatTranscriptChangeEvent",
+      "DisplayName": "Chat Transcript Change Event"
+    },
+    {
+      "Name": "LiveChatTranscriptEvent",
+      "DisplayName": "Chat Transcript Events"
+    },
+    {
+      "Name": "LiveChatTranscriptFeed",
+      "DisplayName": "Chat Transcript Feed"
+    },
+    {
+      "Name": "LiveChatTranscriptHistory",
+      "DisplayName": "Chat Transcript History"
+    },
+    {
+      "Name": "LiveChatTranscriptShare",
+      "DisplayName": "Chat Transcript Share"
+    },
+    {
+      "Name": "LiveChatTranscriptSkill",
+      "DisplayName": "LiveChatTranscriptSkills"
+    },
+    {
+      "Name": "LiveChatUserConfig",
+      "DisplayName": "Chat Agent Configurations"
+    },
+    {
+      "Name": "LiveChatUserConfigProfile",
+      "DisplayName": "Chat User Config Profiles"
+    },
+    {
+      "Name": "LiveChatUserConfigUser",
+      "DisplayName": "Chat User Config Users"
+    },
+    {
+      "Name": "LiveChatVisitor",
+      "DisplayName": "Chat Visitors"
+    },
+    {
+      "Name": "Location",
+      "DisplayName": "Locations"
+    },
+    {
+      "Name": "LocationFeed",
+      "DisplayName": "Location Feed"
+    },
+    {
+      "Name": "LocationHistory",
+      "DisplayName": "Location History"
+    },
+    {
+      "Name": "LocationShare",
+      "DisplayName": "Location Share"
+    },
+    {
+      "Name": "LoginGeo",
+      "DisplayName": "Login Geo Data"
+    },
+    {
+      "Name": "LoginHistory",
+      "DisplayName": "Login History"
+    },
+    {
+      "Name": "LoginIp",
+      "DisplayName": "Login IP"
+    },
+    {
+      "Name": "LogoutEventStream",
+      "DisplayName": "Logout Event Streams"
+    },
+    {
+      "Name": "LookedUpFromActivity",
+      "DisplayName": "Lookups from Activities"
+    },
+    {
+      "Name": "Macro",
+      "DisplayName": "Macros"
+    },
+    {
+      "Name": "MacroHistory",
+      "DisplayName": "Macro History"
+    },
+    {
+      "Name": "MacroInstruction",
+      "DisplayName": "Macro Instructions"
+    },
+    {
+      "Name": "MacroShare",
+      "DisplayName": "Macro Share"
+    },
+    {
+      "Name": "MailmergeTemplate",
+      "DisplayName": "Mail Merge Template"
+    },
+    {
+      "Name": "MatchingInformation",
+      "DisplayName": "Matching Information"
+    },
+    {
+      "Name": "MatchingRule",
+      "DisplayName": "Matching Rules"
+    },
+    {
+      "Name": "MatchingRuleItem",
+      "DisplayName": "Matching Rule Items"
+    },
+    {
+      "Name": "MessagingChannel",
+      "DisplayName": "Is Unified Messaging Enabled"
+    },
+    {
+      "Name": "MessagingEndUser",
+      "DisplayName": "Messaging Users"
+    },
+    {
+      "Name": "MessagingEndUserHistory",
+      "DisplayName": "Messaging User History"
+    },
+    {
+      "Name": "MessagingEndUserShare",
+      "DisplayName": "Messaging User Share"
+    },
+    {
+      "Name": "MessagingSession",
+      "DisplayName": "Messaging Sessions"
+    },
+    {
+      "Name": "MessagingSessionFeed",
+      "DisplayName": "Messaging Session Feed"
+    },
+    {
+      "Name": "MessagingSessionHistory",
+      "DisplayName": "Messaging Session History"
+    },
+    {
+      "Name": "MessagingSessionShare",
+      "DisplayName": "Messaging Session Share"
+    },
+    {
+      "Name": "MilestoneType",
+      "DisplayName": "Milestones"
+    },
+    {
+      "Name": "MlFeatureValueMetric",
+      "DisplayName": "ML Feature Value Metrics"
+    },
+    {
+      "Name": "MobileApplicationDetail",
+      "DisplayName": "Mobile Application Details"
+    },
+    {
+      "Name": "Name",
+      "DisplayName": "Names"
+    },
+    {
+      "Name": "NamedCredential",
+      "DisplayName": "Named Credentials"
+    },
+    {
+      "Name": "NavigationLinkSet",
+      "DisplayName": "Navigation Link Sets"
+    },
+    {
+      "Name": "NavigationMenuItem",
+      "DisplayName": "Navigation Menu Items"
+    },
+    {
+      "Name": "Network",
+      "DisplayName": "Networks"
+    },
+    {
+      "Name": "NetworkActivityAudit",
+      "DisplayName": "Network Audits"
+    },
+    {
+      "Name": "NetworkAffinity",
+      "DisplayName": "Default Communities"
+    },
+    {
+      "Name": "NetworkMember",
+      "DisplayName": "Network Members"
+    },
+    {
+      "Name": "NetworkMemberGroup",
+      "DisplayName": "Network Member Group"
+    },
+    {
+      "Name": "NetworkModeration",
+      "DisplayName": "Network Moderations"
+    },
+    {
+      "Name": "NetworkPageOverride",
+      "DisplayName": "Experience Page Overrides"
+    },
+    {
+      "Name": "NetworkSelfRegistration",
+      "DisplayName": "Experience Self Registrations"
+    },
+    {
+      "Name": "NetworkUserHistoryRecent",
+      "DisplayName": "Experience User Access Histories Recent"
+    },
+    {
+      "Name": "Note",
+      "DisplayName": "Notes"
+    },
+    {
+      "Name": "NoteAndAttachment",
+      "DisplayName": "Notes and Attachments"
+    },
+    {
+      "Name": "OauthToken",
+      "DisplayName": "Oauth Tokens"
+    },
+    {
+      "Name": "ObjectPermissions",
+      "DisplayName": "Object Permissions"
+    },
+    {
+      "Name": "OmniSupervisorConfig",
+      "DisplayName": "Omni Supervisor Configurations"
+    },
+    {
+      "Name": "OmniSupervisorConfigGroup",
+      "DisplayName": "Omni Supervisor Configuration for Public Groups"
+    },
+    {
+      "Name": "OmniSupervisorConfigProfile",
+      "DisplayName": "Omni Supervisor Configuration for Profiles"
+    },
+    {
+      "Name": "OmniSupervisorConfigUser",
+      "DisplayName": "Omni Supervisor Configuration for Users"
+    },
+    {
+      "Name": "OpenActivity",
+      "DisplayName": "Open Activities"
+    },
+    {
+      "Name": "Opportunity",
+      "DisplayName": "Opportunities"
+    },
+    {
+      "Name": "OpportunityChangeEvent",
+      "DisplayName": "Opportunity Change Event"
+    },
+    {
+      "Name": "OpportunityCompetitor",
+      "DisplayName": "Opportunity: Competitor"
+    },
+    {
+      "Name": "OpportunityContactRole",
+      "DisplayName": "Opportunity Contact Role"
+    },
+    {
+      "Name": "OpportunityFeed",
+      "DisplayName": "Opportunity Feed"
+    },
+    {
+      "Name": "OpportunityFieldHistory",
+      "DisplayName": "Opportunity Field History"
+    },
+    {
+      "Name": "OpportunityHistory",
+      "DisplayName": "Opportunity History"
+    },
+    {
+      "Name": "OpportunityLineItem",
+      "DisplayName": "Opportunity Product"
+    },
+    {
+      "Name": "OpportunityPartner",
+      "DisplayName": "Opportunity Partner"
+    },
+    {
+      "Name": "OpportunityShare",
+      "DisplayName": "Opportunity Share"
+    },
+    {
+      "Name": "OpportunityStage",
+      "DisplayName": "Opportunity Stage"
+    },
+    {
+      "Name": "Opportunity__hd",
+      "DisplayName": "Opportunities (Historical)"
+    },
+    {
+      "Name": "Order",
+      "DisplayName": "Orders"
+    },
+    {
+      "Name": "OrderChangeEvent",
+      "DisplayName": "Order Change Event"
+    },
+    {
+      "Name": "OrderFeed",
+      "DisplayName": "Order Feed"
+    },
+    {
+      "Name": "OrderHistory",
+      "DisplayName": "Order History"
+    },
+    {
+      "Name": "OrderItem",
+      "DisplayName": "Order Products"
+    },
+    {
+      "Name": "OrderItemChangeEvent",
+      "DisplayName": "Order Product Change Event"
+    },
+    {
+      "Name": "OrderItemFeed",
+      "DisplayName": "Order Product Feed"
+    },
+    {
+      "Name": "OrderItemHistory",
+      "DisplayName": "Order Product History"
+    },
+    {
+      "Name": "OrderShare",
+      "DisplayName": "Order Share"
+    },
+    {
+      "Name": "OrgLifecycleNotification",
+      "DisplayName": "Org Lifecycle Notification"
+    },
+    {
+      "Name": "OrgWideEmailAddress",
+      "DisplayName": "Organization-wide From Email Addresses"
+    },
+    {
+      "Name": "Organization",
+      "DisplayName": "Organizations"
+    },
+    {
+      "Name": "OutgoingEmail",
+      "DisplayName": "Outgoing Emails"
+    },
+    {
+      "Name": "OutgoingEmailRelation",
+      "DisplayName": "Outgoing Email Relations"
+    },
+    {
+      "Name": "OwnedContentDocument",
+      "DisplayName": "User Owned File"
+    },
+    {
+      "Name": "OwnerChangeOptionInfo",
+      "DisplayName": "Change Owner Options Info"
+    },
+    {
+      "Name": "PackageLicense",
+      "DisplayName": "Package License"
+    },
+    {
+      "Name": "Partner",
+      "DisplayName": "Partner"
+    },
+    {
+      "Name": "PartnerRole",
+      "DisplayName": "Partner Role Value"
+    },
+    {
+      "Name": "PendingServiceRouting",
+      "DisplayName": "Pending Service Routings"
+    },
+    {
+      "Name": "PendingServiceRoutingShare",
+      "DisplayName": "Pending Service Routing Share"
+    },
+    {
+      "Name": "Period",
+      "DisplayName": "Period"
+    },
+    {
+      "Name": "PermissionSet",
+      "DisplayName": "Permission Sets"
+    },
+    {
+      "Name": "PermissionSetAssignment",
+      "DisplayName": "Permission Set Assignments"
+    },
+    {
+      "Name": "PermissionSetGroup",
+      "DisplayName": "Permission Set Groups"
+    },
+    {
+      "Name": "PermissionSetGroupComponent",
+      "DisplayName": "Permission Set Group Components"
+    },
+    {
+      "Name": "PermissionSetLicense",
+      "DisplayName": "Permission Set Licenses"
+    },
+    {
+      "Name": "PermissionSetLicenseAssign",
+      "DisplayName": "Permission Set License Assignments"
+    },
+    {
+      "Name": "PicklistValueInfo",
+      "DisplayName": "Picklist Value Info"
+    },
+    {
+      "Name": "PlatformAction",
+      "DisplayName": "Platform Actions"
+    },
+    {
+      "Name": "PlatformCachePartition",
+      "DisplayName": "Platform Cache Partitions"
+    },
+    {
+      "Name": "PlatformCachePartitionType",
+      "DisplayName": "Platform Cache Partition Types"
+    },
+    {
+      "Name": "PresenceConfigDeclineReason",
+      "DisplayName": "Presence Configuration Decline Reasons"
+    },
+    {
+      "Name": "PresenceDeclineReason",
+      "DisplayName": "Presence Decline Reasons"
+    },
+    {
+      "Name": "PresenceUserConfig",
+      "DisplayName": "Presence Configurations"
+    },
+    {
+      "Name": "PresenceUserConfigProfile",
+      "DisplayName": "Presence Configurations for Profiles"
+    },
+    {
+      "Name": "PresenceUserConfigUser",
+      "DisplayName": "Presence Configurations for Users"
+    },
+    {
+      "Name": "Pricebook2",
+      "DisplayName": "Price Books"
+    },
+    {
+      "Name": "Pricebook2History",
+      "DisplayName": "Price Book History"
+    },
+    {
+      "Name": "PricebookEntry",
+      "DisplayName": "Price Book Entries"
+    },
+    {
+      "Name": "ProcessDefinition",
+      "DisplayName": "Process Definition"
+    },
+    {
+      "Name": "ProcessInstance",
+      "DisplayName": "Process Instance"
+    },
+    {
+      "Name": "ProcessInstanceHistory",
+      "DisplayName": "Process Instance History"
+    },
+    {
+      "Name": "ProcessInstanceNode",
+      "DisplayName": "Process Instance Node"
+    },
+    {
+      "Name": "ProcessInstanceStep",
+      "DisplayName": "Process Instance Step"
+    },
+    {
+      "Name": "ProcessInstanceWorkitem",
+      "DisplayName": "Approval Requests"
+    },
+    {
+      "Name": "ProcessNode",
+      "DisplayName": "Process Node"
+    },
+    {
+      "Name": "Product2",
+      "DisplayName": "Products"
+    },
+    {
+      "Name": "Product2ChangeEvent",
+      "DisplayName": "Product Change Event"
+    },
+    {
+      "Name": "Product2Feed",
+      "DisplayName": "Product Feed"
+    },
+    {
+      "Name": "Product2History",
+      "DisplayName": "Product History"
+    },
+    {
+      "Name": "ProductEntitlementTemplate",
+      "DisplayName": "Product Entitlement Template"
+    },
+    {
+      "Name": "Profile",
+      "DisplayName": "Profile"
+    },
+    {
+      "Name": "ProfileSkill",
+      "DisplayName": "Skills"
+    },
+    {
+      "Name": "ProfileSkillEndorsement",
+      "DisplayName": "Endorsements"
+    },
+    {
+      "Name": "ProfileSkillEndorsementFeed",
+      "DisplayName": "Endorsement Feed"
+    },
+    {
+      "Name": "ProfileSkillEndorsementHistory",
+      "DisplayName": "Endorsement History"
+    },
+    {
+      "Name": "ProfileSkillFeed",
+      "DisplayName": "Skill Feed"
+    },
+    {
+      "Name": "ProfileSkillHistory",
+      "DisplayName": "Skill History"
+    },
+    {
+      "Name": "ProfileSkillShare",
+      "DisplayName": "Skill Share"
+    },
+    {
+      "Name": "ProfileSkillUser",
+      "DisplayName": "Skill Users"
+    },
+    {
+      "Name": "ProfileSkillUserFeed",
+      "DisplayName": "Skill User Feed"
+    },
+    {
+      "Name": "ProfileSkillUserHistory",
+      "DisplayName": "Skill User History"
+    },
+    {
+      "Name": "Publisher",
+      "DisplayName": "Publishers"
+    },
+    {
+      "Name": "PushBackDefinition",
+      "DisplayName": "Push Back Definitions"
+    },
+    {
+      "Name": "PushTopic",
+      "DisplayName": "Push Topics"
+    },
+    {
+      "Name": "QueueRoutingConfig",
+      "DisplayName": "Routing Configurations"
+    },
+    {
+      "Name": "QueueSobject",
+      "DisplayName": "Queue sObjects"
+    },
+    {
+      "Name": "QuickText",
+      "DisplayName": "Quick Text"
+    },
+    {
+      "Name": "QuickTextHistory",
+      "DisplayName": "Quick Text History"
+    },
+    {
+      "Name": "QuickTextShare",
+      "DisplayName": "Quick Text Share"
+    },
+    {
+      "Name": "Quote",
+      "DisplayName": "Quotes"
+    },
+    {
+      "Name": "QuoteChangeEvent",
+      "DisplayName": "Quote Change Event"
+    },
+    {
+      "Name": "QuoteDocument",
+      "DisplayName": "Quote PDFs"
+    },
+    {
+      "Name": "QuoteFeed",
+      "DisplayName": "Quote Feed"
+    },
+    {
+      "Name": "QuoteLineItem",
+      "DisplayName": "Quote Line Items"
+    },
+    {
+      "Name": "QuoteLineItemChangeEvent",
+      "DisplayName": "Quote Line Item Change Event"
+    },
+    {
+      "Name": "QuoteShare",
+      "DisplayName": "Quote Share"
+    },
+    {
+      "Name": "QuoteTemplateRichTextData",
+      "DisplayName": "Quote Template Rich Text Data"
+    },
+    {
+      "Name": "RecentlyViewed",
+      "DisplayName": "Recently Viewed"
+    },
+    {
+      "Name": "RecordType",
+      "DisplayName": "Record Types"
+    },
+    {
+      "Name": "RelationshipDomain",
+      "DisplayName": "Relationship Domains"
+    },
+    {
+      "Name": "RelationshipInfo",
+      "DisplayName": "Relationships"
+    },
+    {
+      "Name": "Report",
+      "DisplayName": "Reports"
+    },
+    {
+      "Name": "ReportFeed",
+      "DisplayName": "Report Feed"
+    },
+    {
+      "Name": "ReputationLevel",
+      "DisplayName": "Reputation Levels"
+    },
+    {
+      "Name": "ReputationPointsRule",
+      "DisplayName": "Reputation Points Rules"
+    },
+    {
+      "Name": "SPSamlAttributes",
+      "DisplayName": "Service Provider SAML Attributes"
+    },
+    {
+      "Name": "SamlSsoConfig",
+      "DisplayName": "SAML Single Sign-On Settings"
+    },
+    {
+      "Name": "Scontrol",
+      "DisplayName": "Custom S-Controls"
+    },
+    {
+      "Name": "SearchActivity",
+      "DisplayName": "Knowledge Search Activity"
+    },
+    {
+      "Name": "SearchLayout",
+      "DisplayName": "Search Layouts"
+    },
+    {
+      "Name": "SearchPromotionRule",
+      "DisplayName": "Promoted Search Terms"
+    },
+    {
+      "Name": "SecurityCustomBaseline",
+      "DisplayName": "Security Custom Baselines"
+    },
+    {
+      "Name": "ServiceChannel",
+      "DisplayName": "Service Channels"
+    },
+    {
+      "Name": "ServiceChannelStatus",
+      "DisplayName": "Service Channel Statuses"
+    },
+    {
+      "Name": "ServiceContract",
+      "DisplayName": "Service Contracts"
+    },
+    {
+      "Name": "ServiceContractChangeEvent",
+      "DisplayName": "Service Contract Change Event"
+    },
+    {
+      "Name": "ServiceContractFeed",
+      "DisplayName": "Service Contract Feed"
+    },
+    {
+      "Name": "ServiceContractHistory",
+      "DisplayName": "Service Contract History"
+    },
+    {
+      "Name": "ServiceContractShare",
+      "DisplayName": "Service Contract Share"
+    },
+    {
+      "Name": "ServicePresenceStatus",
+      "DisplayName": "Service Presence Statuses"
+    },
+    {
+      "Name": "ServiceResource",
+      "DisplayName": "Service Resources"
+    },
+    {
+      "Name": "ServiceResourceFeed",
+      "DisplayName": "Service Resource Feed"
+    },
+    {
+      "Name": "ServiceResourceHistory",
+      "DisplayName": "Service Resource History"
+    },
+    {
+      "Name": "ServiceResourceShare",
+      "DisplayName": "Service Resource Share"
+    },
+    {
+      "Name": "SessionPermSetActivation",
+      "DisplayName": "Session Permission Set Activations"
+    },
+    {
+      "Name": "SetupAuditTrail",
+      "DisplayName": "Setup Audit Trail Entries"
+    },
+    {
+      "Name": "SetupEntityAccess",
+      "DisplayName": "Setup Entity Access"
+    },
+    {
+      "Name": "Site",
+      "DisplayName": "Sites"
+    },
+    {
+      "Name": "SiteDetail",
+      "DisplayName": "Site Details"
+    },
+    {
+      "Name": "SiteFeed",
+      "DisplayName": "Site"
+    },
+    {
+      "Name": "SiteHistory",
+      "DisplayName": "Site History"
+    },
+    {
+      "Name": "Skill",
+      "DisplayName": "Skills"
+    },
+    {
+      "Name": "SkillProfile",
+      "DisplayName": "Skill Profiles"
+    },
+    {
+      "Name": "SkillUser",
+      "DisplayName": "Skill Users"
+    },
+    {
+      "Name": "SlaProcess",
+      "DisplayName": "Entitlement Processes"
+    },
+    {
+      "Name": "SocialPersona",
+      "DisplayName": "Social Personas"
+    },
+    {
+      "Name": "SocialPersonaHistory",
+      "DisplayName": "Social Persona History"
+    },
+    {
+      "Name": "SocialPost",
+      "DisplayName": "Social Posts"
+    },
+    {
+      "Name": "SocialPostFeed",
+      "DisplayName": "Social Post Feed"
+    },
+    {
+      "Name": "SocialPostHistory",
+      "DisplayName": "Social Post History"
+    },
+    {
+      "Name": "SocialPostShare",
+      "DisplayName": "Social Post Share"
+    },
+    {
+      "Name": "Solution",
+      "DisplayName": "Solutions"
+    },
+    {
+      "Name": "SolutionFeed",
+      "DisplayName": "Solution Feed"
+    },
+    {
+      "Name": "SolutionHistory",
+      "DisplayName": "Solution History"
+    },
+    {
+      "Name": "SolutionStatus",
+      "DisplayName": "Solution Status Value"
+    },
+    {
+      "Name": "Stamp",
+      "DisplayName": "Stamps"
+    },
+    {
+      "Name": "StampAssignment",
+      "DisplayName": "Stamp Assignments"
+    },
+    {
+      "Name": "StaticResource",
+      "DisplayName": "Static Resources"
+    },
+    {
+      "Name": "StreamingChannel",
+      "DisplayName": "Streaming Channels"
+    },
+    {
+      "Name": "StreamingChannelShare",
+      "DisplayName": "Streaming Channel Share"
+    },
+    {
+      "Name": "SupervisorAgentConfigSkill",
+      "DisplayName": "SupervisorAgentConfigSkills"
+    },
+    {
+      "Name": "Survey",
+      "DisplayName": "Surveys"
+    },
+    {
+      "Name": "SurveyEmailBranding",
+      "DisplayName": "Survey Email Brandings"
+    },
+    {
+      "Name": "SurveyInvitation",
+      "DisplayName": "Survey Invitations"
+    },
+    {
+      "Name": "SurveyInvitationShare",
+      "DisplayName": "Survey Invitation Share"
+    },
+    {
+      "Name": "SurveyPage",
+      "DisplayName": "Survey Pages"
+    },
+    {
+      "Name": "SurveyQuestion",
+      "DisplayName": "Survey Questions"
+    },
+    {
+      "Name": "SurveyQuestionChoice",
+      "DisplayName": "Survey Question Choices"
+    },
+    {
+      "Name": "SurveyQuestionResponse",
+      "DisplayName": "Survey Question Responses"
+    },
+    {
+      "Name": "SurveyResponse",
+      "DisplayName": "Survey Responses"
+    },
+    {
+      "Name": "SurveyShare",
+      "DisplayName": "Survey Share"
+    },
+    {
+      "Name": "SurveyVersion",
+      "DisplayName": "Survey Versions"
+    },
+    {
+      "Name": "Task",
+      "DisplayName": "Tasks"
+    },
+    {
+      "Name": "TaskFeed",
+      "DisplayName": "Task Feed"
+    },
+    {
+      "Name": "TaskPriority",
+      "DisplayName": "Task Priority Value"
+    },
+    {
+      "Name": "TaskRelation",
+      "DisplayName": "Task Relations"
+    },
+    {
+      "Name": "TaskStatus",
+      "DisplayName": "Task Status Value"
+    },
+    {
+      "Name": "TaskWhoRelation",
+      "DisplayName": "Task Who Relations"
+    },
+    {
+      "Name": "TenantUsageEntitlement",
+      "DisplayName": "Tenant Usage Entitlements"
+    },
+    {
+      "Name": "TestSuiteMembership",
+      "DisplayName": "Test Suite Memberships"
+    },
+    {
+      "Name": "ThirdPartyAccountLink",
+      "DisplayName": "Third Party Account Links"
+    },
+    {
+      "Name": "TodayGoal",
+      "DisplayName": "Goals"
+    },
+    {
+      "Name": "TodayGoalShare",
+      "DisplayName": "Goal Share"
+    },
+    {
+      "Name": "Topic",
+      "DisplayName": "Topics"
+    },
+    {
+      "Name": "TopicAssignment",
+      "DisplayName": "Topic Assignments"
+    },
+    {
+      "Name": "TopicFeed",
+      "DisplayName": "Topic Feed"
+    },
+    {
+      "Name": "UndecidedEventRelation",
+      "DisplayName": "Undecided Event Relations"
+    },
+    {
+      "Name": "User",
+      "DisplayName": "Users"
+    },
+    {
+      "Name": "UserAppInfo",
+      "DisplayName": "Last Used App"
+    },
+    {
+      "Name": "UserAppMenuCustomization",
+      "DisplayName": "UserAppMenuCustomizations"
+    },
+    {
+      "Name": "UserAppMenuCustomizationShare",
+      "DisplayName": "UserAppMenuCustomization Share"
+    },
+    {
+      "Name": "UserAppMenuItem",
+      "DisplayName": "Applications"
+    },
+    {
+      "Name": "UserConfigTransferButton",
+      "DisplayName": "UserConfigTransferButtons"
+    },
+    {
+      "Name": "UserConfigTransferSkill",
+      "DisplayName": "UserConfigTransferSkills"
+    },
+    {
+      "Name": "UserCustomBadge",
+      "DisplayName": "Custom User Badges"
+    },
+    {
+      "Name": "UserEntityAccess",
+      "DisplayName": "User Entity Access"
+    },
+    {
+      "Name": "UserFeed",
+      "DisplayName": "User Feed"
+    },
+    {
+      "Name": "UserFieldAccess",
+      "DisplayName": "User Field Access"
+    },
+    {
+      "Name": "UserLicense",
+      "DisplayName": "User Licenses"
+    },
+    {
+      "Name": "UserListView",
+      "DisplayName": "User List View"
+    },
+    {
+      "Name": "UserListViewCriterion",
+      "DisplayName": "User List View Criteria"
+    },
+    {
+      "Name": "UserLogin",
+      "DisplayName": "User Login"
+    },
+    {
+      "Name": "UserPackageLicense",
+      "DisplayName": "User Package License"
+    },
+    {
+      "Name": "UserPermissionAccess",
+      "DisplayName": "User Permission Access"
+    },
+    {
+      "Name": "UserPreference",
+      "DisplayName": "User Preferences"
+    },
+    {
+      "Name": "UserProvAccount",
+      "DisplayName": "User Provisioning Accounts"
+    },
+    {
+      "Name": "UserProvAccountStaging",
+      "DisplayName": "User Provisioning Account Stagings"
+    },
+    {
+      "Name": "UserProvMockTarget",
+      "DisplayName": "User Provisioning Mock Targets"
+    },
+    {
+      "Name": "UserProvisioningConfig",
+      "DisplayName": "User Provisioning Configs"
+    },
+    {
+      "Name": "UserProvisioningLog",
+      "DisplayName": "User Provisioning Logs"
+    },
+    {
+      "Name": "UserProvisioningRequest",
+      "DisplayName": "User Provisioning Requests"
+    },
+    {
+      "Name": "UserProvisioningRequestShare",
+      "DisplayName": "User Provisioning Request Share"
+    },
+    {
+      "Name": "UserRecordAccess",
+      "DisplayName": "User Record Access"
+    },
+    {
+      "Name": "UserRole",
+      "DisplayName": "Role"
+    },
+    {
+      "Name": "UserServicePresence",
+      "DisplayName": "User Presences"
+    },
+    {
+      "Name": "UserServicePresenceShare",
+      "DisplayName": "User Presence Share"
+    },
+    {
+      "Name": "UserShare",
+      "DisplayName": "User Share"
+    },
+    {
+      "Name": "VerificationHistory",
+      "DisplayName": "Identity Verification History"
+    },
+    {
+      "Name": "VisualforceAccessMetrics",
+      "DisplayName": "Visualforce Access Metrics"
+    },
+    {
+      "Name": "VoiceCall",
+      "DisplayName": "Voice Calls"
+    },
+    {
+      "Name": "VoiceCallRecording",
+      "DisplayName": "VoiceCallRecordings"
+    },
+    {
+      "Name": "VoiceCallRecordingShare",
+      "DisplayName": "Voice Call Recording Share"
+    },
+    {
+      "Name": "VoiceCallShare",
+      "DisplayName": "Voice Call Share"
+    },
+    {
+      "Name": "Vote",
+      "DisplayName": "Votes"
+    },
+    {
+      "Name": "WaveCompatibilityCheckItem",
+      "DisplayName": "Wave Compatibility Check Items"
+    },
+    {
+      "Name": "WebLink",
+      "DisplayName": "Custom Buttons or Links"
+    },
+    {
+      "Name": "WorkAccess",
+      "DisplayName": "Access"
+    },
+    {
+      "Name": "WorkAccessShare",
+      "DisplayName": "Access Share"
+    },
+    {
+      "Name": "WorkBadge",
+      "DisplayName": "Badges Received"
+    },
+    {
+      "Name": "WorkBadgeDefinition",
+      "DisplayName": "Badges"
+    },
+    {
+      "Name": "WorkBadgeDefinitionFeed",
+      "DisplayName": "Badge Feed"
+    },
+    {
+      "Name": "WorkBadgeDefinitionHistory",
+      "DisplayName": "Badge History"
+    },
+    {
+      "Name": "WorkBadgeDefinitionShare",
+      "DisplayName": "Badge Share"
+    },
+    {
+      "Name": "WorkOrder",
+      "DisplayName": "Work Orders"
+    },
+    {
+      "Name": "WorkOrderFeed",
+      "DisplayName": "Work Order Feed"
+    },
+    {
+      "Name": "WorkOrderHistory",
+      "DisplayName": "Work Order History"
+    },
+    {
+      "Name": "WorkOrderLineItem",
+      "DisplayName": "Work Order Line Items"
+    },
+    {
+      "Name": "WorkOrderLineItemFeed",
+      "DisplayName": "Work Order Line Item Feed"
+    },
+    {
+      "Name": "WorkOrderLineItemHistory",
+      "DisplayName": "Work Order Line Item History"
+    },
+    {
+      "Name": "WorkOrderLineItemStatus",
+      "DisplayName": "Work Order Line Item Status Value"
+    },
+    {
+      "Name": "WorkOrderShare",
+      "DisplayName": "Work Order Share"
+    },
+    {
+      "Name": "WorkOrderStatus",
+      "DisplayName": "Work Order Status Value"
+    },
+    {
+      "Name": "WorkThanks",
+      "DisplayName": "Thanks"
+    },
+    {
+      "Name": "WorkThanksShare",
+      "DisplayName": "Thanks Share"
+    }
+  ]
+}

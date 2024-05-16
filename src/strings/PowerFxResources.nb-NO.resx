@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Ugyldig bruk av '.'</value>
+    <value>Operatoren . kan ikke brukes på {0}-verdier.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formel</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returnerer en gruppering av den angitte tabellen, kombinert med aggregeringsfunksjoner.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>gruppering_kolonne</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregering</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabellen eller samlingen som skal grupperes.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Navnet på en kolonne som dataene skal grupperes etter.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Et kall til en aggregeringsfunksjon.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Opphøyer et tall x i potensen til et annet tall y. Samme som x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Funksjonsargumenttype mangler, for eksempel ":Text" i "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Den angitte funksjonsreturtypen {0} er ugyldig.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Den angitte funksjonsargumenttypen {0} er ugyldig.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} finnes allerede.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type bokstavelig deklarasjon var ugyldig</value>
+    <value>Type bokstavelig deklarasjon var ugyldig.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definisjonen av typen {0} er ugyldig.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definisjonen av typen {0} er ugyldig og kan inneholde sykluser.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Kan ikke bruke navnet på den begrensede typen {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Typen {0} er allerede definert.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeringsadvarsel. Resultatet av argumentet {0} kan bli avkortet for store datasett før det sendes til {1}-funksjonen.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Forventet en tekstverdi, numerisk verdi, boolsk verdi eller dato-/klokkeslettverdi.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize krever minst én grupperingskolonne.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize-argumentene må enten være eksisterende kolonnenavn å gruppere etter, eller formler med nøkkelordet As.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolonnen ThisGroup er i konflikt med et reservert navn. Bruk RenameColumns-funksjonen til å velge et annet navn.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Datakilden inneholder en kolonne med navnet ThisGroup, som er i konflikt med et reservert navn. Bruk RenameColumnsfunksjonen til å velge et annet navn.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Omfang av datakilden (bruk av nøkkelordet As) støttes ikke.</value>
     
   </data>
 </root>
