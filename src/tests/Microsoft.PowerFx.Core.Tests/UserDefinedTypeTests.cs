@@ -138,5 +138,38 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedErrorCount, errors.Count());
             Assert.All(errors, e => Assert.Contains(expectedMessageKey, e.MessageKey));
         }
+
+        [Theory]
+        [InlineData("T = Type({ x: 5+5, y: -5 });", 2)]
+        [InlineData("T = Type(Type(Number));", 1)]
+        [InlineData("T = Type({+});", 1)]
+        [InlineData("T = Type({);", 1)]
+        [InlineData("T = Type({x: true, y: \"Number\"});", 2)]
+        [InlineData("T1 = Type({A: Number}); T2 = Type(T1.A);", 1)]
+        [InlineData("T = Type((1, 2));", 1)]
+        [InlineData("T1 = Type(UniChar(955)); T2 = Type([Table(Number)])", 2)]
+        [InlineData("T = Type((1; 2));", 1)]
+        [InlineData("T = Type(Self.T);", 1)]
+        [InlineData("T = Type(Parent.T);", 1)]
+        [InlineData("T = Type(Number As T1);", 1)]
+        [InlineData("T = Type(Text); T1 = Type(Not T);", 1)]
+        [InlineData("T1 = Type({V: Number}); T2 = Type(T1[@V]);", 1)]
+        [InlineData("T = Type([{a: {b: {c: [{d: 10e+4}]}}}]);", 1)]
+        public void TestUDTParseErrors(string typeDefinition, int expectedErrorCount)
+        {
+            var parseOptions = new ParserOptions
+            {
+                AllowParseAsTypeLiteral = true
+            };
+
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(typeDefinition, parseOptions);
+
+            var parseResult = checkResult.ApplyParse();
+            Assert.True(parseResult.HasErrors);
+
+            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeLiteral_InvalidTypeDefinition"));
+            Assert.Equal(expectedErrorCount, validatorErrors.Count());
+        }
     }
 }

@@ -4410,8 +4410,8 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid.</value>
-    <comment>Error message when type binding is invalid.</comment>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <comment>Error message when validation of type literal fails.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definition of type {0} is invalid.</value>
