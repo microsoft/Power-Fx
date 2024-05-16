@@ -1,21 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -52,6 +42,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = pe.Eval();
 
             Assert.True(result is ErrorValue ev && ev.Errors.Count == 1 && ev.Errors[0].Kind == ErrorKind.InvalidArgument);
+        }
+
+        [Fact]
+        public void ZeroWidthSpaceCharactersPFxV1Engine()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
+            var enginePFx1 = new RecalcEngine();
+
+            var content = "AA" + char.ConvertFromUtf32(8203) + "BB";
+            var expression = $"\"{content}\"";
+
+            var check = engine.Check(expression);
+            var result = (StringValue)check.GetEvaluator().Eval();
+
+            Assert.NotEqual(content, result.Value);
+            Assert.Equal(4, result.Value.Length);
+
+            check = enginePFx1.Check(expression);
+            result = (StringValue)check.GetEvaluator().Eval();
+            Assert.Equal(content, result.Value);
+            Assert.Equal(5, result.Value.Length);
         }
     }
 }

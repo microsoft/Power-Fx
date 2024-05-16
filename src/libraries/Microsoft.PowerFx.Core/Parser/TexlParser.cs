@@ -378,7 +378,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
-                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.PFxV1);
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
                       
                         var errorCount = _errors?.Count;
                         var exp_result = ParseExpr(Precedence.None);
@@ -471,12 +471,12 @@ namespace Microsoft.PowerFx.Core.Parser
         // Parse the script
         // Parsing strips out parens used to establish precedence, but these may be helpful to the
         // caller, so precedenceTokens provide a list of stripped tokens.
-        internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.PFxV1)
+        internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
             return ParseScript(script, Features.None, loc, flags);
         }
 
-        internal static ParseResult ParseScript(string script, Features features, CultureInfo culture = null, Flags flags = Flags.PFxV1)
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo culture = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(culture);
@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.PFxV1)
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
