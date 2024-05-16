@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(returnType.IsUnknown);
 
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
