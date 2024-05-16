@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>"." дұрыс емес пайдалану</value>
+    <value>"." амалын {0} мәндерге пайдалануға болмайды.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>формула</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Агрегация функцияларымен біріктіріліп, көрсетілген кестенің топталуын береді.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>көз</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grouping_column</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>агрегация</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Топталатын кесте немесе жиын.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Деректерді топтастыруға арналған баған атауы.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Агрегация функциясына шақыру.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>x санын басқа y санының дәрежесіне арттырады. x^y сияқты.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Функциялық аргумент түрі, мысалы, "FindMonth( d:Text ):Number = Month( DateParse( d ))" ішінде ":Text" жоқ</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Мәлімделген {0} функциялық қайтары түрі жарамсыз.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Мәлімделген {0} функциялық аргумент түрі жарамсыз.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" бұрыннан бар.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Түрдің тура декларациясы жарамсыз болды</value>
+    <value>Түрдің тура декларациясы жарамсыз болды.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>{0} түрін анықтау жарамсыз.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>{0} түріндегі анықтама жарамсыз және циклдерді қамтуы мүмкін.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Шектелген {0} түр атауын пайдалану мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>{0} түрі анықталып қойды.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Өкілдік ету ескертуі. Бұл "{0}" аргументінің нәтижесі "{1}" функциясына өту алдында үлкен деректер жиыны үшін қысқартылуы мүмкін.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Мәтін, сандық, логикалық немесе күн/уақыт мәні күтілді.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize кем дегенде бір топтау бағанын қажет етеді.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize аргументтері топталатын бар баған атаулары немесе "As" кілтсөзімен аталған формулалар болуы керек.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>"ThisGroup" бағанының сақталған атаумен қайшы келеді. Басқа атауды таңдау үшін "RenameColumns" функциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Деректер көзінде сақталған атаумен қайшы келетін "ThisGroup" бағаны бар. Басқа атауды таңдау үшін "RenameColumns" функциясын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Деректер көзін ("As" кілтсөзін пайдалану) шолуға қолдау көрсетілмейді.</value>
     
   </data>
 </root>

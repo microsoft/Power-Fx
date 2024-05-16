@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Неважећа употреба „.“</value>
+    <value>Оператор „.“ не може да се користи са следећим вредностима: {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>формула</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Враћа груписање наведене табеле, уз комбиновање са функцијама за агрегацију.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>колона_за_груписање</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>агрегација</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Табела или колекција за груписање.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Име колоне по којој ће се груписати подаци.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Позивање функције за агрегацију.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Подиже број x на степен другог броја y. Исто као x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Недостаје тип аргумента функције, на пример „:Text“ у „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Наведени тип резултата функције {0} неважећи.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Тип аргумента наведене функције {0} је неважећи.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ већ постоји.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларација типа литерала није важећа</value>
+    <value>Декларација типа литерала није важећа.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Дефиниција типа {0} је неважећа.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Дефиниција типа {0} је неважећа и може да садржи циклусе.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Назив ограниченог типа {0} не може да се користи.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Тип {0} је већ дефинисан.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Упозорење о делегирању. Резултат овог аргумента „{0}“ може да буде скраћен за велике скупове података пре него што буде прослеђен у функцију „{1}“.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Очекивана је текстуална, нумеричка, Булова вредност или вредност датум/време.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize захтева најмање једну колону за груписање.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize аргументи морају да буду постојећи називи колона за груписање по формулама којима је назив дат помоћу кључне речи „As“.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Колона „ThisGroup“ није усаглашена са резервисаним називом. Користите функцију „RenameColumns“ да бисте изабрали други назив.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Извор података садржи колону под називом „ThisGroup“, што није усаглашено са резервисаним називом. Користите функцију „RenameColumns“ да бисте изабрали други назив.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Одређивање опсега извора података (употреба кључне речи „As“) није подржано.</value>
     
   </data>
 </root>

@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Utilizare nevalidă a „.”</value>
+    <value>Operatorul „.” nu se poate utiliza pentru valori de tip {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formulă</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returnează o grupare a tabelului specificat, în combinație cu funcții de agregare.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>coloană_grupare</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregare</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabelul sau colecția de grupat.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Numele unei coloane după care se grupează datele.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Apel la o funcție de agregare.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Ridică un număr x la puterea definită de alt număr y. Similar cu x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Lipsește tipul de argument al funcției, de exemplu „:Text” în „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Tipul de returnare {0} a funcției declarate este nevalid.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Tipul de argument al funcției {0} declarate este nevalid.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” există deja.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Declarația literală a tipului nu a fost validă</value>
+    <value>Declarația literală a tipului nu a fost validă.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definiția tipului {0} este nevalidă.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definiția tipului {0} este nevalidă și poate conține cicluri.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Numele tipului restricționat {0} nu se poate utiliza.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tipul {0} este definit deja.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Avertisment de delegare. Rezultatul argumentului „{0}” este posibil să se fi trunchiat datorită seturilor mari de date înainte de a fi transmis funcției „{1}”.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Se aștepta o valoare text, numerică, booleană sau dată/oră.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Funcția Summarize necesită cel puțin o coloană de grupare.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumentele Summarize trebuie să fie, ori nume de coloane existente după care se face gruparea, ori formule denumite cu cuvântul cheie „As”.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Coloana „ThisGroup” intră în conflict cu un nume rezervat. Utilizați funcția „RenameColumns” pentru a alege un nume diferit.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Sursa de date conține o coloană denumită „ThisGroup”, ce intră în conflict cu un nume rezervat. Utilizați funcția „RenameColumns” pentru a alege un nume diferit.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Stabilirea domeniului sursei de date (utilizarea cuvântului cheie „As”) nu este acceptată.</value>
     
   </data>
 </root>
