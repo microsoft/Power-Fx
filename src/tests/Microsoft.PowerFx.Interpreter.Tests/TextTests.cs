@@ -53,12 +53,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var content = "AA" + char.ConvertFromUtf32(8203) + "BB";
             var expression = $"\"{content}\"";
 
+            // If PFxV1 is false, the zero width space character will be removed from the result string
             var check = engine.Check(expression);
             var result = (StringValue)check.GetEvaluator().Eval();
-
             Assert.NotEqual(content, result.Value);
             Assert.Equal(4, result.Value.Length);
 
+            // If PFxV1 is not true, the zero width space character will be kept in the result string
             check = enginePFx1.Check(expression);
             result = (StringValue)check.GetEvaluator().Eval();
             Assert.Equal(content, result.Value);
