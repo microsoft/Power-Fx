@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         private readonly int _currentArgumentIndex;
 
-        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads)
+        internal IntellisenseResult(IIntellisenseData data, IReadOnlyList<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads)
         {
             Contracts.AssertValue(suggestions);
 
