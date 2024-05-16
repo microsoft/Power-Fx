@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool MutatesArg0 => true;
 
         public ClearFunction()
-            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+            : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Unknown, 0, 1, 1, DType.EmptyTable)
         {
         }
 
