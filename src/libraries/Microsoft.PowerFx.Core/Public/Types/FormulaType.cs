@@ -90,6 +90,7 @@ namespace Microsoft.PowerFx.Types
             { new DName("Hyperlink"), Hyperlink },
             { new DName("None"), Blank },
             { new DName("UntypedObject"), UntypedObject },
+            { new DName("Void"), Void },
         });
 
         /// <summary>

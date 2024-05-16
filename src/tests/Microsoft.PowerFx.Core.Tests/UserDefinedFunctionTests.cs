@@ -520,5 +520,21 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType" || x.MessageKey == "ErrUDF_InvalidParamType");
         }
+
+        [Theory]
+        [InlineData("Set(x: Number):Number = x + 1;")]
+        public void TestUDFsReservedNames(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+        }
     }
 }

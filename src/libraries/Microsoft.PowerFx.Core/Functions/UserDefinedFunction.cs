@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -184,7 +185,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return func;
         }
 
-        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string>
+        {
+            "Type", "IsType", "AsType", "Set", "Collect",
+            "ClearCollect", "UpdateContext", "Navigate", "Select", "Reset",
+        };
 
         /// <summary>
         /// Helper to create IR UserDefinedFunctions.
