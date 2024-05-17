@@ -15,9 +15,10 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     // Visitor to resolve TypeLiteralNode.TypeRoot into DType.
-    internal class DTypeVisitor : TexlFunctionalVisitor<DType, INameResolver>
+    internal class DTypeVisitor : DefaultVisitor<DType, INameResolver>
     {
-        private DTypeVisitor()
+        private DTypeVisitor() 
+            : base(DType.Invalid)
         {
         }
 
@@ -105,86 +106,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             var rowType = DType.EmptyRecord.Add(new TypedName(ty, TableValue.ValueDName));
 
             return rowType.ToTable();
-        }
-
-        public override DType Visit(ErrorNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(BlankNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(BoolLitNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(StrLitNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(NumLitNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(DecLitNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(ParentNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(SelfNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(StrInterpNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(DottedNameNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(UnaryOpNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(BinaryOpNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(VariadicOpNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(CallNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(ListNode node, INameResolver context)
-        {
-            return DType.Invalid;
-        }
-
-        public override DType Visit(AsNode node, INameResolver context)
-        {
-            return DType.Invalid;
         }
     }
 }
