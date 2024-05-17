@@ -79,13 +79,13 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Convert these OData Paramters to a URL query string.
-        /// This will only inlucde non-default values, and merged them into a single 
-        /// query string separated with '&'. Like:
-        ///    $filter=..&$top=1
+        /// This will only inlucde non-default values, and merged them into a single.        
         /// </summary>
         /// <returns></returns>
         public string ToQueryString()
         {
+            // query string separated with '&'. Like:
+            //    $filter=..&$top=1
             var query = GetNamedValues();
 
             // NameValueCollection.ToString does not return a query string. 
