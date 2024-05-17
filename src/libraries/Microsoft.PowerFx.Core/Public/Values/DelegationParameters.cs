@@ -37,9 +37,10 @@ namespace Microsoft.PowerFx.Types
             var flags = this.Features;
 
             // Fail if params have extra features not supported in Odata. 
-            if ((allowedFeatures & flags) != allowedFeatures)
+            var notAllowed = ~allowedFeatures;
+            if ((notAllowed & flags) != 0)
             {
-                throw new InvalidOperationException($"Delegations needs ({flags}), but only supports ({allowedFeatures}).");
+                throw new InvalidOperationException($"This operations only supports ({allowedFeatures:x}). This object has unsupported capabilities: ({flags:x}).");
             }
         }
 
@@ -63,9 +64,9 @@ namespace Microsoft.PowerFx.Types
     [Flags]
     public enum DelegationParameterFeatures
     {
-        Filter,
-        Top,
-        Sort,
-        Columns
+        Filter = 1 << 0,
+        Top = 1 << 1,
+        Columns = 1 << 2,
+        Sort = 1 << 3,
     }
 }

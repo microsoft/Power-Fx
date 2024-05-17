@@ -4,12 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Web; 
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.pdf
+    // These values are not escaped / url encoded. 
     public class ODataParameters
     {
         // $compute
@@ -42,8 +46,9 @@ namespace Microsoft.PowerFx.Connectors
         // $search
         public string Search { get; init; } = null;
 
-        // $select
-        public string Select { get; init; } = null;
+        // $select        
+        // Select is encoded as a comma separate list of fields.
+        public IReadOnlyCollection<string> Select { get; init; } = null;
 
         // $skip
         public int Skip { get; init; } = 0;
@@ -72,90 +77,128 @@ namespace Microsoft.PowerFx.Connectors
             Top = oDataParameters.Top;
         }
 
-        public IReadOnlyList<NamedValue> GetNamedValues()
+        /// <summary>
+        /// Convert these OData Paramters to a URL query string.
+        /// This will only inlucde non-default values, and merged them into a single.        
+        /// </summary>
+        /// <returns></returns>
+        public string ToQueryString()
         {
-            List<NamedValue> namedValues = new ();
+            // query string separated with '&'. Like:
+            //    $filter=..&$top=1
+            var query = GetNamedValues();
 
+            // NameValueCollection.ToString does not return a query string. 
+
+            StringBuilder sb = new StringBuilder();
+            string dil = string.Empty;
+            foreach (var kv in query.OrderBy(x => x.Key))
+            {
+                string key = kv.Key;
+                object value = kv.Value;
+                
+                sb.Append(dil);
+                sb.Append($"{key}=");
+
+                string encoded;
+                if (value is IEnumerable<string> strList)
+                {
+                    string d2 = string.Empty;
+                    foreach (var item in strList)
+                    {
+                        string encodedItem = HttpUtility.UrlEncode(item);
+
+                        sb.Append(d2);
+                        sb.Append(encodedItem);
+
+                        d2 = ",";
+                    }
+                } 
+                else
+                {
+                    encoded = HttpUtility.UrlEncode(value.ToString());
+                    sb.Append(encoded);
+                }
+
+                dil = "&";
+            }
+
+            return sb.ToString();
+        }
+
+        public IReadOnlyDictionary<string, object> GetNamedValues()
+        {
+            var query = new Dictionary<string, object>();
+            AddTo(query);
+            return query;
+        }
+
+        public void AddTo(IDictionary<string, object> query)
+        {
             if (!string.IsNullOrEmpty(Compute))
             {
-                namedValues.Add(new NamedValue("$compute", FormulaValue.New(Compute)));
+                query["$compute"] = Compute;
             }
 
             if (Count)
             {
-                namedValues.Add(new NamedValue("$count", FormulaValue.New(true)));
+                query["$count"] = true;
             }
 
             if (!string.IsNullOrEmpty(Expand))
             {
-                namedValues.Add(new NamedValue("$expand", FormulaValue.New(Expand)));
+                query["$expand"] = Expand;
             }
 
             if (!string.IsNullOrEmpty(Filter))
             {
-                namedValues.Add(new NamedValue("$filter", FormulaValue.New(Filter)));
+                query["$filter"] = Filter;
             }
 
             if (!string.IsNullOrEmpty(Format))
             {
-                namedValues.Add(new NamedValue("$format", FormulaValue.New(Format)));
+                query["$format"] = Format;
             }
 
-            if (Index != 0)
+            if (Index != 0)            
             {
-                namedValues.Add(new NamedValue("$index", FormulaValue.New(Index)));
+                query["$index"] = Index;
             }
 
             if (Levels != 0)
             {
-                namedValues.Add(new NamedValue("$levels", FormulaValue.New(Levels)));
+                query["$levels"] = Levels;
             }
 
             if (!string.IsNullOrEmpty(OrderBy))
             {
-                namedValues.Add(new NamedValue("$orderby", FormulaValue.New(OrderBy)));
+                query["$orderby"] = OrderBy;
             }
 
             if (!string.IsNullOrEmpty(SchemaVersion))
             {
-                namedValues.Add(new NamedValue("$schemaversion", FormulaValue.New(SchemaVersion)));
+                query["$schemaversion"] = SchemaVersion;
             }
 
             if (!string.IsNullOrEmpty(Search))
             {
-                namedValues.Add(new NamedValue("$search", FormulaValue.New(Search)));
+                query["$search"] = Search;
             }
 
-            if (!string.IsNullOrEmpty(Select))
+            if (Select != null && Select.Count > 0)
             {
-                namedValues.Add(new NamedValue("$select", FormulaValue.New(Select)));
+                query["$select"] = Select;
             }
 
             if (Skip != 0)
             {
-                namedValues.Add(new NamedValue("$skip", FormulaValue.New(Skip)));
+                query["$skip"] = Skip;
             }
 
             if (Top != 0)
             {
-                namedValues.Add(new NamedValue("$top", FormulaValue.New(Top)));
+                query["$top"] = Top;
             }
-
-            return namedValues;
         }        
-
-        public Uri GetUri(Uri uriBase)
-        {
-            UriBuilder uriBuilder = new (uriBase);
-            NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
-            
-            foreach (NamedValue nv in GetNamedValues())
-            {
-                query[nv.Name] = nv.Value.ToString();
-            }
-
-            uriBuilder.Query = query.ToString();
-            return uriBuilder.Uri;
-        }
     }
 }
