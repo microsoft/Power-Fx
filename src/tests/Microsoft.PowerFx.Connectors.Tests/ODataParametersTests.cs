@@ -25,13 +25,13 @@ namespace Microsoft.PowerFx.Tests
         {
             var od = new ODataParameters
             {
-                Filter = "x>5",
+                Filter = "x gt 5",
                 Top = 10,
             };
 
             var str = od.ToQueryString();
 
-            Assert.Equal("$filter=x%3e5&$top=10", str);
+            Assert.Equal("$filter=x+gt+5&$top=10", str);
         }
 
         private static bool IsSingleBitSet(int i)
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void TestColumns()
+        public void TestToOdataParametersSelect()
         {
             var delegation = new TestDelegationParameters()
             {
@@ -93,6 +93,41 @@ namespace Microsoft.PowerFx.Tests
             var str = od.ToQueryString();
 
             Assert.Equal("$select=c1,c2", str);
+        }
+
+        [Fact]
+        public void TestToOdataParametersSelect2()
+        {
+            var delegation = new TestDelegationParameters()
+            {
+                _columns = new string[0],  // 0-length
+                _features = DelegationParameterFeatures.Columns
+            };
+
+            var od = delegation.ToOdataParameters();
+
+            var str = od.ToQueryString();
+
+            // 0-length not included. 
+            Assert.Equal(string.Empty, str);
+        }
+
+        [Fact]
+        public void TestToOdataParametersFilterTop()
+        {
+            var delegation = new TestDelegationParameters()
+            {
+                _columns = null,
+                _features = DelegationParameterFeatures.Columns | DelegationParameterFeatures.Filter | DelegationParameterFeatures.Top,
+                _filter = "score gt 5",
+                Top = 10
+            };
+
+            var od = delegation.ToOdataParameters();
+
+            var str = od.ToQueryString();
+
+            Assert.Equal("$filter=score+gt+5&$top=10", str);
         }
 
         private class TestDelegationParameters : DelegationParameters

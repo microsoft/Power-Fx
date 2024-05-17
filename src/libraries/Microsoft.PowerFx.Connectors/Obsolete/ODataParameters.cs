@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors
 
             StringBuilder sb = new StringBuilder();
             string dil = string.Empty;
-            foreach (var kv in query)
+            foreach (var kv in query.OrderBy(x => x.Key))
             {
                 string key = kv.Key;
                 object value = kv.Value;
