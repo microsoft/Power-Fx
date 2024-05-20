@@ -3157,10 +3157,6 @@
     <value>record</value>
     <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Deletes all the records of a collection. The columns of the collection will remain.</value>
-    <comment>Description of 'Clear' function.</comment>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Deletes all the records from a collection. And then adds a different set of records to the same collection.</value>
     <comment>Description of 'Clear' function.</comment>
@@ -4650,5 +4646,23 @@
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
     <comment>Error message shown to the user when the provided data source is followed by 'As' reserved word. {Locked='As'}</comment>
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Clears all the items from a collection and returns the empty collection.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>collection</value>
+    <comment>function_parameter - First argument to the Clear function - the name of the collection to be cleared.</comment>
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>The collection to clear.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>The specified data source cannot be used with this function.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>

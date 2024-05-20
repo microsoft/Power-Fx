@@ -1,22 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
@@ -46,7 +37,7 @@ namespace Microsoft.PowerFx.Functions
                 args[0] = await arg0lazy.EvalAsync().ConfigureAwait(false);
             }
 
-            var clearFunction = new ClearFunction();
+            var clearFunction = new ClearImpl();
 
             var cleared = await clearFunction.InvokeAsync(FormulaType.Void, args, cancellationToken).ConfigureAwait(false);
 
