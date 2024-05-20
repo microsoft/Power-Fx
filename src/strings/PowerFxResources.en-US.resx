@@ -1864,7 +1864,7 @@
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
     <value>The '.' operator cannot be used on {0} values.</value>
-    <comment>Error Message. {Locked='.'}. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean).</comment>
+    <comment>Error Message. {Locked="'.'"}. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean).</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
@@ -4410,8 +4410,8 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid.</value>
-    <comment>Error message when type binding is invalid.</comment>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <comment>Error message when validation of type literal fails.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definition of type {0} is invalid.</value>
