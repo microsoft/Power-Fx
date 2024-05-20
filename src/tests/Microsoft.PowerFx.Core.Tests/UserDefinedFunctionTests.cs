@@ -522,8 +522,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Set(x: Number):Number = x + 1;")]
-        public void TestUDFsReservedNames(string script)
+        [InlineData("Set(x: Number):Number = x + 1;", true)]
+        [InlineData("Count():Number = 5;", false)]
+        public void TestUDFsReservedNames(string script, bool expectedError)
         {
             var parserOptions = new ParserOptions()
             {
@@ -534,7 +535,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+            if (expectedError)
+            {
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+            }
+            else
+            {
+                Assert.True(errors.Count() == 0);
+            }
         }
     }
 }
