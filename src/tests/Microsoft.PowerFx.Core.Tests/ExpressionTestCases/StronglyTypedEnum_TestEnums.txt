@@ -28,9 +28,10 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
+//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
 //
 // Examples
-//   17. TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+//   18. TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
 
 //============================================================================================================
 //
@@ -410,6 +411,15 @@ false
 >> "Label:" & TestYesNo.No
 "Label:No"
 
+>> Concatenate( "Label:", TestYesNo.No )
+"Label:No"
+
+>> TestYesNo.No & "Way"
+"NoWay"
+
+>> Concatenate( TestYesNo.No, "Way" )
+"NoWay"
+
 >> Text( TestYeaNay.Nay )
 "Nay"
 
@@ -434,6 +444,21 @@ false
 >> "Label:" & TestBlueRamp.Blue50
 "Label:Blue50"
 
+>> Concatenate( "Label:", TestBlueRamp.Blue50 )
+"Label:Blue50"
+
+>> TestBlueRamp.Blue50 & " is the sky"
+"Blue50 is the sky"
+
+>> Concatenate( TestBlueRamp.Blue50, " is the sky")
+"Blue50 is the sky"
+
+>> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
+"The sky is so very Blue50 !!!"
+
+>> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
+"The sky is so very Blue50 !!!"
+
 >> Mid( TestBlueRamp.Blue50, 2 )
 "lue50"
 
@@ -452,9 +477,182 @@ false
 >> Len( TestRedRamp.Red25 )
 5
 
+>> true & TestRedRamp.Red25
+"trueRed25"
+
+>> 1 & TestRedRamp.Red25
+"1Red25"
+
+>> "hi" & TestRedRamp.Red25
+"hiRed25"
+
+>> TestRedRamp.Red25 & true
+"Red25true"
+
+>> TestRedRamp.Red25 & 1
+"Red251"
+
+>> TestRedRamp.Red25 & "hi"
+"Red25hi"
+
+>> Concatenate( true, TestRedRamp.Red25 )
+"trueRed25"
+
+>> Concatenate( 1, TestRedRamp.Red25 )
+"1Red25"
+
+>> Concatenate( "hi", TestRedRamp.Red25 )
+"hiRed25"
+
+>> true & TestYeaNay.Yea
+"trueYea"
+
+>> 1 & TestYeaNay.Yea
+"1Yea"
+
+>> "hi" & TestYeaNay.Yea
+"hiYea"
+
+>> TestYeaNay.Yea & true
+"Yeatrue"
+
+>> TestYeaNay.Yea & 1
+"Yea1"
+
+>> TestYeaNay.Yea & "hi"
+"Yeahi"
+
+>> Concatenate( true, TestYeaNay.Yea )
+"trueYea"
+
+>> Concatenate( 1, TestYeaNay.Yea )
+"1Yea"
+
+>> Concatenate( "hi", TestYeaNay.Yea )
+"hiYea"
+
 //===========================================================================================================
 //
-// 17. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//
+
+>> TestYesNo.Yes = Blank()
+false
+
+>> TestYesNo.No = Blank()
+false
+
+>> TestYesNo.Yes <> Blank()
+true
+
+>> TestYesNo.No <> Blank()
+true
+
+>> Blank() = TestYesNo.Yes
+false
+
+>> Blank() = TestYesNo.No 
+false
+
+>> Blank() <> TestYesNo.Yes
+true
+
+>> Blank() <> TestYesNo.No
+true
+
+>> TestYesNo.No >= Blank()
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+
+>> TestYesNo.No < Blank()
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+
+>> Blank() < TestYesNo.Yes
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+
+>> Blank() <= TestYesNo.Yes
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+
+>> TestNumberCompareNumeric.V2 < Blank()
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+
+>> TestNumberCompareNumeric.V2 <= Blank()
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+
+>> TestNumberCompareNumeric.V2 >= Blank()
+Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+
+>> TestNumberCompareNumeric.V2 > Blank()
+Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+
+>> TestNumberCompareNumeric.V2 = Blank()
+false
+
+>> TestNumberCompareNumeric.V2 <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumeric.V2
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+
+>> Blank() <= TestNumberCompareNumeric.V2
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+
+>> Blank() >= TestNumberCompareNumeric.V2
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+
+>> Blank() > TestNumberCompareNumeric.V2
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+
+>> Blank() = TestNumberCompareNumeric.V2
+false
+
+>> Blank() <> TestNumberCompareNumeric.V2
+true
+
+>> TestNumberCoerceTo.V > Blank()
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), ObjNull.
+
+>> TestNumberCoerceTo.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V < Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <= Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V >= Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V > Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() <= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() >= TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() > TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() = TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() <> TestNumberCompareNumericCoerceFrom.V
+true
+
+//===========================================================================================================
+//
+// 18. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
 //
 
 // Standard usage

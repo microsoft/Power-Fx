@@ -58,9 +58,6 @@ Error({Kind:ErrorKind.Numeric})
 >> Sum(Sequence(100), RandBetween(3.5, 3.7))
 400
 
->> Find("000000000000", Text(RandBetween(-1e28, 1e28)))
-Blank()
-
 >> RandBetween( 9007199254740992 /* MaxFloatInt */, 9007199254740992 /* MaxFloatInt */ )
 9007199254740992
 

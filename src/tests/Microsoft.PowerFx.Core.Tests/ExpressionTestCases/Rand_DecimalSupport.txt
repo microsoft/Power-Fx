@@ -1,0 +1,6 @@
+#SETUP: DecimalSupport,PowerFxV1CompatibilityRules
+
+// Test Rand() - beware, rand is volatile. 
+
+>> Find("000000000000", Text(RandBetween(Decimal("-1e28"), Decimal("1e28"))))
+Blank()

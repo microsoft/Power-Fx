@@ -476,6 +476,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id].IsValid);
 
+            return GetTypeAllowInvalid(node);
+        }
+
+        public DType GetTypeAllowInvalid(TexlNode node)
+        {
             return _typeMap[node.Id];
         }
 
@@ -3363,7 +3368,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidDot);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidDot, leftType.GetKindString());
                     return;
                 }
 

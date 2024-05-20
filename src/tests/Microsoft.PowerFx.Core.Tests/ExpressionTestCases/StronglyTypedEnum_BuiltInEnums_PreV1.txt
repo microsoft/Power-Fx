@@ -31,15 +31,16 @@
 // Misc
 //   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
 //   16. Everything coerces to string
+//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
 // 
 // Examples (examples for Boolean backed enums and other configurations are in StronglyTypedEnums_TestEnums)
-//   17. StartOfWeek - Standard number backed enum
-//   18. TimeUnit - Standard string backed enum
-//   19. MatchOptions - String backed enum with CanConcatenateStronglyTyped
-//   20. Color - Color backed enum with CoerceToBackingKind
-//   21. ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
-//   22. DateTimeFormat - String backed enum with CoerceFromBackingKind
-//   23. Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
+//   18. StartOfWeek - Standard number backed enum
+//   19. TimeUnit - Standard string backed enum
+//   20. MatchOptions - String backed enum with CanConcatenateStronglyTyped
+//   21. Color - Color backed enum with CoerceToBackingKind
+//   22. ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
+//   23. DateTimeFormat - String backed enum with CoerceFromBackingKind
+//   24. Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
 
 //============================================================================================================
 //
@@ -435,6 +436,9 @@ RGBA(26,29,33,1)
 >> ErrorKind.Unknown + 2
 14
 
+>> ErrorKind.Unknown - 2
+10
+
 >> ErrorKind.Unknown * 2
 24
 
@@ -488,7 +492,13 @@ Table({Value:1},{Value:2},{Value:3})
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & JSONFormat.FlattenValueTables )
 "[1,2,3]"
 
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, JSONFormat.FlattenValueTables ) )
+"[1,2,3]"
+
 >> JSON( [1,2,3], JSONFormat.IgnoreBinaryData & "_" )
+"[1,2,3]"
+
+>> JSON( [1,2,3], Concatenate( JSONFormat.IgnoreBinaryData, "_" ) )
 "[1,2,3]"
 
 >> JSON( [4,5,6], "_" )
@@ -640,6 +650,15 @@ true
 >> "Label:" & StartOfWeek.Sunday
 "Label:1"
 
+>> Concatenate( "Label:", StartOfWeek.Sunday )
+"Label:1"
+
+>> StartOfWeek.Sunday & "Evening"
+"1Evening"
+
+>> Concatenate( StartOfWeek.Sunday, "Evening" )
+"1Evening"
+
 >> Mid( StartOfWeek.Sunday, 2 )
 ""
 
@@ -667,16 +686,109 @@ true
 >> "Label:" & MatchOptions.IgnoreCase
 "Label:i"
 
+>> Concatenate( "Label:" & MatchOptions.IgnoreCase )
+"Label:i"
+
 >> Text( ErrorKind.FileNotFound )
 "17"
 
 >> "Label:" & ErrorKind.FileNotFound
 "Label:17"
 
+>> Concatenate( "Label:" & ErrorKind.FileNotFound )
+"Label:17"
+
+>> Concat( ["String", StartOfWeek.Tuesday, ErrorKind.Div0, JSONFormat.FlattenValueTables], Value )
+"String1213_"
+
+>> Concat( [StartOfWeek.Tuesday, StartOfWeek.Friday], Value )
+"1215"
+
+>> true & StartOfWeek.Friday
+"true15"
+
+>> 1 & StartOfWeek.Friday
+"115"
+
+>> "hi" & StartOfWeek.Friday
+"hi15"
+
+>> StartOfWeek.Friday & true
+"15true"
+
+>> StartOfWeek.Friday & 1
+"151"
+
+>> StartOfWeek.Friday & "hi"
+"15hi"
+
+>> Concatenate( true, StartOfWeek.Friday )
+"true15"
+
+>> Concatenate( 1, StartOfWeek.Friday )
+"115"
+
+>> Concatenate( "hi", StartOfWeek.Friday )
+"hi15"
 
 //===========================================================================================================
 //
-// 17. Examples - StartOfWeek - Standard number backed enum
+// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//
+
+>> StartOfWeek.Monday < Blank()
+false
+
+>> StartOfWeek.Monday = Blank()
+false
+
+>> Blank() >= StartOfWeek.Monday
+false
+
+>> Blank() <> StartOfWeek.Monday
+true
+
+// ErrorKind works because of CanCompareNumeric
+
+>> ErrorKind.Network < Blank()
+false
+
+>> ErrorKind.Network = Blank()
+false
+
+>> Blank() >= ErrorKind.Network
+false
+
+>> Blank() <> ErrorKind.Network
+true
+
+>> Match.Letter < Blank()
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Match.Letter = Blank()
+false
+
+>> Blank() >= Match.Letter
+Errors: Error 16-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() <> Match.Letter
+true
+
+>> Color.Gray < Blank()
+Errors: Error 5-10: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Color.Gray = Blank()
+false
+
+>> Blank() >= Color.Gray
+Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() <> Color.Gray
+true
+
+//===========================================================================================================
+//
+// 18. Examples - StartOfWeek - Standard number backed enum
 //
 
 // Standard usage
@@ -708,6 +820,9 @@ true
 "2"
 
 >> "Severity: " & StartOfWeek.Monday
+"Severity: 2"
+
+>> Concatenate( "Severity: ", StartOfWeek.Monday )
 "Severity: 2"
 
 >> Len( StartOfWeek.Monday )
@@ -774,12 +889,15 @@ false
 >> StartOfWeek.Monday & StartOfWeek.Tuesday
 "212"
 
+>> Concatenate( StartOfWeek.Monday, StartOfWeek.Tuesday )
+"212"
+
 >> Weekday( Date(1980,1,1), StartOfWeek.Monday & StartOfWeek.Tuesday )
 Error({Kind:ErrorKind.InvalidArgument})
 
 //===========================================================================================================
 //
-// 18. Examples - TimeUnit - Standard string backed enum
+// 19. Examples - TimeUnit - Standard string backed enum
 //
 
 // Standard usage
@@ -879,7 +997,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 //===========================================================================================================
 //
-// 20. Examples - Color - Color backed enum with CoerceToBackingKind
+// 21. Examples - Color - Color backed enum with CoerceToBackingKind
 //
 
 // Standard usage
@@ -912,6 +1030,21 @@ Errors: Error 10-17: Invalid argument type (Color). Expecting a Text value inste
 
 >> Left( Color.Yellow, 4 )
 Errors: Error 0-4: The function 'Left' has some invalid arguments.|Error 11-18: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Concatenate( "Option: ", Color.Yellow )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-37: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Yellow & " banana"
+Errors: Error 5-12: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Yellow, " banana" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-25: Invalid argument type (Color). Expecting a Text value instead.
+
+>> Color.Green & " bananas are riper than " & Color.Yellow & " bananas"
+Errors: Error 5-11: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.|Error 48-55: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+
+>> Concatenate( Color.Green, " bananas are riper than ", Color.Yellow, " bananas" )
+Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 18-24: Invalid argument type (Color). Expecting a Text value instead.|Error 59-66: Invalid argument type (Color). Expecting a Text value instead.
 
 // Standard error cases for color backed enums
 
@@ -979,7 +1112,7 @@ Errors: Error 5-9: Invalid argument type. Expecting one of the following: Text, 
 
 //===========================================================================================================
 //
-// 21. Examples - ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
+// 22. Examples - ErrorKind - Number backed enum with CoerceToBackingKind and CanCompareNumeric
 //
 
 // Standard usage
@@ -1099,7 +1232,7 @@ false
 
 //===========================================================================================================
 //
-// 22. Examples - DateTimeFormat - String backed enum with CoerceFromBackingKind
+// 23. Examples - DateTimeFormat - String backed enum with CoerceFromBackingKind
 //
 
 // Standard usage
@@ -1210,7 +1343,7 @@ Errors: Error 14-23: Invalid argument type. Expecting one of the following: Numb
 
 //===========================================================================================================
 //
-// 23. Examples - Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
+// 24. Examples - Match - String backed enum with CoerceFromBackingKind and CanConcatenateStronglyTyped
 //
 
 // Standard usage
