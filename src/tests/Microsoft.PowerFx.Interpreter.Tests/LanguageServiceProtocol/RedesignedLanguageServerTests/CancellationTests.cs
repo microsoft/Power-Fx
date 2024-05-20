@@ -26,10 +26,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
             nl2FxHandler.Delay = true;
             nl2FxHandler.ThrowOnCancellation = true;
-            nl2FxHandler.Nl2FxDelayTime = 2000;
+            nl2FxHandler.Nl2FxDelayTime = 800;
             var payload = NL2FxMessageJson(documentUri);
             using var source = new CancellationTokenSource();
-            source.CancelAfter(1200);
+            source.CancelAfter(500);
 
             // Act
             var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload, source.Token).ConfigureAwait(false);

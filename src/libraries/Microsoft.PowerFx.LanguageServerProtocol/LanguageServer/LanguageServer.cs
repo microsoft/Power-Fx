@@ -196,22 +196,30 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 await handler.HandleAsync(context, cancellationToken).ConfigureAwait(false);
                 return outputBuilder;
             }
+            catch (OperationCanceledException operationCanceledEx)
+            {
+                return HandleException(outputBuilder, input, cancellationToken, operationCanceledEx);
+            }
             catch (Exception ex)
             {
-                _loggerInstance?.LogException(ex);
-
-                // this exists only for backward compat
-                LogUnhandledExceptionHandler?.Invoke(ex);
-
-                // If the request was cancelled, we should interpret and try to add the specific error message with specific error code for cancellation
-                // Else just add the generic internal error message
-                if (!outputBuilder.TryAddRequestCancelledErrorIfApplicable(input.Id, cancellationToken, ex))
-                {
-                    outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, ex.GetDetailedExceptionMessage());
-                }
-
-                return outputBuilder;
+                return HandleException(outputBuilder, input, cancellationToken, ex);
             }
+        }
+
+        private LanguageServerOutputBuilder HandleException(LanguageServerOutputBuilder outputBuilder, LanguageServerInput input, CancellationToken token, Exception exception)
+        {
+            _loggerInstance?.LogException(exception);
+
+            LogUnhandledExceptionHandler?.Invoke(exception);
+
+            // If the request was cancelled, we should interpret and try to add the specific error message with specific error code for cancellation
+            // Else just add the generic internal error message
+            if (!outputBuilder.TryAddRequestCancelledErrorIfApplicable(input.Id, token, exception))
+            {
+                outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, exception.GetDetailedExceptionMessage());
+            }
+
+            return outputBuilder;
         }
 
         /// <summary>

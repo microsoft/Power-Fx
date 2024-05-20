@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="exception">Exception.</param>
         /// <param name="cancellationToken" >Cancellation Token.</param>
         /// <returns>True if the error was added, false otherwise.</returns>
-        public static bool TryAddRequestCancelledErrorIfApplicable(this LanguageServerOutputBuilder outputBuilder, string id, CancellationToken cancellationToken, Exception exception = null)
+        public static bool TryAddRequestCancelledErrorIfApplicable(this LanguageServerOutputBuilder outputBuilder, string id, CancellationToken cancellationToken, Exception exception)
         {
             // Theoretically, we should not have anything in the output builder if cancellation was requested.
             // If there's something then we should not add the error and respect what's already there.
@@ -200,18 +200,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             if (cancellationToken.IsCancellationRequested)
             {
-                outputBuilder.AddRequestCancelledError(id, exception?.GetDetailedExceptionMessage());
-                return true;
-            }
-
-            if (exception is OperationCanceledException || 
-
-                // Downstream nl2fx or fx2nl dependencies might throw InvalidOperationException with message containing "canceled".
-                // Instead of throwing OperationCanceledException
-                (exception is InvalidOperationException && 
-                exception.Message != null && exception.Message.ToLowerInvariant().Contains("canceled")))
-            {
-                outputBuilder.AddRequestCancelledError(id, exception?.GetDetailedExceptionMessage());
+                outputBuilder.AddRequestCancelledError(id, exception.GetDetailedExceptionMessage());
                 return true;
             }
 
