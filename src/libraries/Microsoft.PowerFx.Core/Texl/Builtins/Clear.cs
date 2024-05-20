@@ -13,13 +13,6 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // !!!TODO 
-    //[RequiresErrorContext]
-    //[ComponentVisibilityRestriction(
-    //    DisableForDataComponent = true,
-    //    DisableForCommanding = true,
-    //    SuppressIntellisenseForComponent = true)]
-
     // Clear(collection:*[])
     internal class ClearFunction : BuiltinFunction
     {
