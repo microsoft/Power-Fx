@@ -196,10 +196,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 await handler.HandleAsync(context, cancellationToken).ConfigureAwait(false);
                 return outputBuilder;
             }
-            catch (OperationCanceledException operationCanceledEx)
-            {
-                return HandleException(outputBuilder, input, cancellationToken, operationCanceledEx);
-            }
             catch (Exception ex)
             {
                 return HandleException(outputBuilder, input, cancellationToken, ex);
