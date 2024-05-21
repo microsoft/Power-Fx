@@ -1,26 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -31,7 +18,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task CheckArgsTestAsync()
         {
-            var function = new ClearFunction();
+            var function = new ClearImpl();
             var expressionError = new ExpressionError()
             {
                 Kind = ErrorKind.ReadOnlyValue,
@@ -63,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public async Task CheckArgsTestAsync_V1CompatDisabled()
         {
-            var function = new ClearFunction();
+            var function = new ClearImpl();
             var expressionError = new ExpressionError()
             {
                 Kind = ErrorKind.ReadOnlyValue,
