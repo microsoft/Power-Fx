@@ -541,6 +541,24 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(execptedLog, log);
         }
 
+        [Theory]
+        [InlineData("ShowColumns(Table, Name)")]
+        public void ApplyLoggingWithBinding(string expr)
+        {
+            var tableType = TableType.Empty().Add("Name", FormulaType.String);
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("Table", tableType);
+
+            CheckResult check = new CheckResult(new Engine())
+                .SetText(expr)
+                .SetBindingInfo(symbolTable);
+
+            var errors = check.ApplyErrors();
+            Assert.Empty(errors);
+
+            var anon = check.ApplyGetLogging();
+        }
+
         [Fact]
         public void TestSummary()
         {
