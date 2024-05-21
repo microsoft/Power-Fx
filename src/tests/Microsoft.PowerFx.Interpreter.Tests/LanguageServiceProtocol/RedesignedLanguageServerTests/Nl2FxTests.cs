@@ -32,9 +32,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public bool Throw { get; set; }
 
-        public bool Delay { get; set; } = false;
-
-        public int Nl2FxDelayTime { get; set; } = 100;
+        public int? Nl2FxDelayTime { get; set; } = null;
 
         public bool ThrowOnCancellation { get; set; } = false;
 
@@ -46,9 +44,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         public override async Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
         {
-            if (this.Delay)
+            if (Nl2FxDelayTime.HasValue)
             {
-                await Task.Delay(Nl2FxDelayTime, CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(Nl2FxDelayTime.Value, CancellationToken.None).ConfigureAwait(false);
             }
 
             if (this.Throw)
@@ -116,7 +114,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
-            nl2FxHandler.Delay = true;
+            nl2FxHandler.Nl2FxDelayTime = 100;
             nl2FxHandler.Expected = expectedExpr;
 
             // Act
@@ -179,7 +177,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
-            nl2FxHandler.Delay = true;
+            nl2FxHandler.Nl2FxDelayTime = 100;
             nl2FxHandler.Throw = true;
 
             // Act

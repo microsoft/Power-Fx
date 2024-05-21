@@ -24,7 +24,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
-            nl2FxHandler.Delay = true;
             nl2FxHandler.ThrowOnCancellation = true;
             nl2FxHandler.Nl2FxDelayTime = 800;
             var payload = NL2FxMessageJson(documentUri);
