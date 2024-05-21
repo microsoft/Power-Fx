@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public bool IsWritable => true;
 
+        public bool IsClearable => true;
+
         DType IExternalEntity.Type => AccountsTypeHelper.GetDType();
 
         IExternalDataEntityMetadataProvider IExternalDataSource.DataEntityMetadataProvider => throw new NotImplementedException();
