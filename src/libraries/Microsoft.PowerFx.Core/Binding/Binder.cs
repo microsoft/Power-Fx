@@ -476,6 +476,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id].IsValid);
 
+            return GetTypeAllowInvalid(node);
+        }
+
+        public DType GetTypeAllowInvalid(TexlNode node)
+        {
             return _typeMap[node.Id];
         }
 

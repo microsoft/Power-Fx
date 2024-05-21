@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Nieprawidłowe użycie znaku „.”</value>
+    <value>Operatora „.” nie można używać w wartościach typu {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formuła</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Zwraca grupowanie określonej tabeli w połączeniu z funkcjami agregacji.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>źródło</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>kolumna_grupowania</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregacja</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabela lub kolekcja do grupowania.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Nazwa kolumny, według której będą grupowane dane.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Wywołanie funkcji agregacji.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Podnosi liczbę x do potęgi innej liczby y. Identycznie jak x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Brak typu argumentu funkcji, na przykład typu „:Text” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Deklarowany zwracany typ funkcji {0} jest nieprawidłowy.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Deklarowany typ argumentu funkcji {0} jest nieprawidłowy.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracja literału typu była nieprawidłowa</value>
+    <value>Deklaracja literału typu była nieprawidłowa.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definicja typu {0} jest nieprawidłowa.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definicja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Nie można użyć nazwy typu podlegającego ograniczeniom {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Typ {0} został już zdefiniowany.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Ostrzeżenie dotyczące delegowania. Wynik użycia tego argumentu „{0}” może zostać obcięty w przypadku dużych zestawów danych przed przekazaniem do funkcji „{1}”.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Oczekiwana jest wartość tekstowa, liczbowa, logiczna lub data/godzina.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Funkcja Summarize wymaga co najmniej jednej kolumny grupowania.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumentami funkcji Summarize muszą być nazwy istniejących kolumn, według których ma zostać wykonane grupowanie, albo nazwane formuły ze słowem kluczowym „As”.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolumna „ThisGroup” powoduje konflikt z nazwą zarezerwowaną. Użyj funkcji „RenameColumns”, aby wybrać inną nazwę.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Źródło danych zawiera kolumnę o nazwie „ThisGroup”, która powoduje konflikt z zarezerwowaną nazwą. Użyj funkcji „RenameColumns”, aby wybrać inną nazwę.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Określanie zakresu źródła danych (użycie słowa kluczowego „As”) nie jest obsługiwane.</value>
     
   </data>
 </root>

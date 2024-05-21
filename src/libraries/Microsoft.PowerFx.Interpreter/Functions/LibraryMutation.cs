@@ -336,4 +336,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
         }
     }
+  
+   // Clear(collection_or_table)
+    internal class ClearImpl : ClearFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            if (args[0] is ErrorValue errorValue)
+            {
+                return errorValue;
+            }
+
+            if (args[0] is BlankValue)
+            {
+                return irContext == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank(FormulaType.Boolean);
+            }
+
+            var datasource = (TableValue)args[0];
+            var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
+
+            if (irContext == FormulaType.Void)
+            {
+                return ret.IsError ? FormulaValue.NewError(ret.Error.Errors, FormulaType.Void) : FormulaValue.NewVoid();
+            }
+            else
+            {
+                return ret.ToFormulaValue();
+            }
+        }
+    }
 }

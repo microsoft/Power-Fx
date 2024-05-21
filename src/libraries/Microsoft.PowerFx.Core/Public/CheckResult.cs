@@ -585,7 +585,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(node));
             }
 
-            var type = this.Binding.GetType(node);
+            var type = this.Binding.GetTypeAllowInvalid(node);
             return FormulaType.Build(type);
         }
 

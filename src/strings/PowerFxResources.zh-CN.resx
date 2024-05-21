@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>使用 "." 无效</value>
+    <value>. 运算符不能用于 {0} 值.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>公式</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>返回指定表格的分组，并结合使用聚合函数。</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>源</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>分组列</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>聚合</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>要分组的表或集合。</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>对数据进行分组所依据的列的名称。</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>对聚合函数的调用。</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>数字 x 的数字 y 次幂。与 x^y 相同。</value>
     
@@ -3862,6 +3890,14 @@
     <value>缺少函数参数类型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ))" 中的 ":Text"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>所说明的函数返回类型 {0} 无效。</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>所说明的函数参数类型 {0} 无效。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型文字声明无效</value>
+    <value>类型文字声明无效。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>类型 {0} 的定义无效。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>类型 {0} 的定义无效，并且可能包含循环。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>不能使用受限类型名称 {0}。</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>类型 {0} 已定义。</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>委派警告。对于大型数据集，此参数 '{0}' 的结果在传递给 '{1}' 函数之前可能会被截断。</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>应是文本、数字、布尔值或日期/时间值。</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize 至少需要一个分组列。</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize 参数必须是分组所依据的现有列名称或使用 "As" 关键字命名的公式。</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>ThisGroup 列与保留名称冲突。请使用 "RenameColumns" 函数选择其他名称。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>数据源包含名为 "ThisGroup" 的列，该列与保留名称冲突。请使用 "RenameColumns" 函数选择其他名称。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>不支持确定数据源范围(使用 "As" 关键字)。</value>
     
   </data>
 </root>
