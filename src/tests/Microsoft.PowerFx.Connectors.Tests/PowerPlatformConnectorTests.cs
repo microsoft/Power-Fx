@@ -1645,6 +1645,22 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task SendEmail()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\shared_sendmail.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("sendmail")
+            {
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility
+            };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            Assert.Single(functions.Where(x => x.Name == "SendEmailV3"));
+        }
+
+        [Fact]
         public async Task ExcelOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);

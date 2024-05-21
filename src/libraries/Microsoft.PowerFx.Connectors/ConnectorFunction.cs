@@ -1458,7 +1458,7 @@ namespace Microsoft.PowerFx.Connectors
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
-            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.ConnectorType.Binary))
             {
                 errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }
