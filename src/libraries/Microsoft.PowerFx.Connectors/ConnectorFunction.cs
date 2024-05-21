@@ -647,6 +647,8 @@ namespace Microsoft.PowerFx.Connectors
                         runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
                     }
 
+                    // field's name correspond to the key of the fhe field in the record, we need to set it to wire it up correctly to the updated record type
+                    newFieldType.Name = field.Name;
                     fieldTypes.Add(newFieldType);
                     recordType = recordType.SafeAdd(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }

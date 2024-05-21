@@ -1,0 +1,107 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "action_type": {
+        "type": "string",
+        "title": "Action type",
+        "description": ""
+      },
+      "icon": {
+        "type": "string",
+        "title": "Action icon",
+        "description": ""
+      },
+      "sys_mod_count": {
+        "type": "string",
+        "title": "Updates",
+        "description": ""
+      },
+      "active": {
+        "type": "string",
+        "title": "Active",
+        "description": ""
+      },
+      "sys_overrides": {
+        "type": "string",
+        "title": "Overrides",
+        "description": ""
+      },
+      "sys_updated_on": {
+        "type": "string",
+        "title": "Updated",
+        "description": ""
+      },
+      "sys_tags": {
+        "type": "string",
+        "title": "Tags",
+        "description": ""
+      },
+      "sys_class_name": {
+        "type": "string",
+        "title": "Class",
+        "description": ""
+      },
+      "sys_id": {
+        "type": "string",
+        "title": "Sys ID",
+        "description": ""
+      },
+      "sys_package": {
+        "type": "string",
+        "title": "Package",
+        "description": ""
+      },
+      "sys_update_name": {
+        "type": "string",
+        "title": "Update name",
+        "description": ""
+      },
+      "sys_updated_by": {
+        "type": "string",
+        "title": "Updated by",
+        "description": ""
+      },
+      "sys_created_on": {
+        "type": "string",
+        "title": "Created",
+        "description": ""
+      },
+      "sys_domain": {
+        "type": "string",
+        "title": "Domain",
+        "description": ""
+      },
+      "name": {
+        "type": "string",
+        "title": "Action label",
+        "description": ""
+      },
+      "sys_name": {
+        "type": "string",
+        "title": "Display name",
+        "description": "Display name for this application file"
+      },
+      "sys_scope": {
+        "type": "string",
+        "title": "Application",
+        "description": "Application containing this record"
+      },
+      "sys_created_by": {
+        "type": "string",
+        "title": "Created by",
+        "description": ""
+      },
+      "table": {
+        "type": "string",
+        "title": "Table",
+        "description": "The table to query for condition triggers"
+      },
+      "sys_policy": {
+        "type": "string",
+        "title": "Protection policy",
+        "description": "Determines how application files are protected when downloaded or installed"
+      }
+    }
+  }
+}
