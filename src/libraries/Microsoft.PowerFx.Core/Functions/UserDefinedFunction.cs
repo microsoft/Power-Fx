@@ -185,10 +185,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return func;
         }
 
+        // Adding a restricted UDF name is a breaking change, this test will need to be updated and a conversion will be needed for existing scenarios
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string>
         {
-            "Type", "IsType", "AsType", "Set", "Collect",
-            "ClearCollect", "UpdateContext", "Navigate", "Select", "Reset",
+            "Type", "IsType", "AsType", "Set", "Collect", "ClearCollect",
+            "UpdateContext", "Navigate", "Select", "Reset",
         };
 
         /// <summary>
@@ -212,7 +213,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.Assert(udf.IsParseValid);
 
                 var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName))
+                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;

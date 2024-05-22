@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -542,6 +543,38 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 Assert.True(errors.Count() == 0);
+            }
+        }
+
+        [Fact]
+        public void TestUDFsReservedNamesTracking()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            // Adding a restricted UDF name is a breaking change, this test will need to be updated and a conversion will be needed for existing scenarios
+            var restrictedUDFNames = new HashSet<string>
+            {
+                "Type", "IsType", "AsType", "Set", "Collect", "ClearCollect",
+                "UpdateContext", "Navigate", "Select", "Reset",
+            };
+
+            foreach (var func in BuiltinFunctionsCore._library.FunctionNames.Union(BuiltinFunctionsCore.OtherKnownFunctions))
+            {
+                var script = $"{func}():Boolean = true;";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+                if (!restrictedUDFNames.Contains(func))
+                {
+                    Assert.True(errors.Count() == 0);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+                }
             }
         }
     }
