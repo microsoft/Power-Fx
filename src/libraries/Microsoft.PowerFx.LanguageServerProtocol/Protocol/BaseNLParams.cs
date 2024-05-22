@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
@@ -16,11 +17,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     public class BaseNLResult
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault | JsonIgnoreCondition.WhenWritingNull)]
-        public BaseNLDiagnosticInfo Diagnostics { get; set; } = null;
-    }
-
-    public class BaseNLDiagnosticInfo
-    {
-        public string ModelPrompt { get; set; }
+        public string DiagnosticsJson { get; set; } = null;
     }
 }
