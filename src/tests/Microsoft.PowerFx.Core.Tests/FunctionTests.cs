@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
@@ -316,6 +317,20 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // ShowColumns(<table>, <column from arg0>, <sort order>, <column from arg0>, <sort order>, ...)
                 Assert.Equal(i % 2 == 1, BuiltinFunctionsCore.SortByColumns.ScopeInfo.AppliesToArgument(i));
+            }
+        }
+
+        [Fact]
+        [Obsolete("Using BuiltinFunctionsCore._library.Functions")]
+        public void TestAllFunctionsArePresent()
+        {
+            FieldInfo[] fInfo = typeof(BuiltinFunctionsCore).GetFields(BindingFlags.Public | BindingFlags.Static);
+            List<TexlFunction> libraryAndFeatureGateFunctions = BuiltinFunctionsCore._library.Functions.Union(BuiltinFunctionsCore._featureGateFunctions.Functions).ToList();
+
+            for (int i = 0; i < fInfo.Length; i++)
+            {
+                Assert.True(typeof(TexlFunction) == fInfo[i].FieldType, $"{fInfo[i].Name} is not of TexlFunction type");
+                Assert.True(libraryAndFeatureGateFunctions.Contains(fInfo[i].GetValue(null) as TexlFunction), $"{fInfo[i].Name} is neither in BuiltinFunctionsCore._library nor in BuiltinFunctionsCore._featureGateFunctions");
             }
         }
 
