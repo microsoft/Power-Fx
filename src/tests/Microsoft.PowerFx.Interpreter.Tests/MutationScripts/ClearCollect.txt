@@ -32,25 +32,25 @@ Table({Value:1},{Value:2},{Value:3})
 Table({Value:88})
 
 >> ClearCollect(t1)
-Errors: Error 0-16: Invalid number of arguments: received 1, expected 2.
+Errors: Error 0-16: Invalid number of arguments: received 1, expected 2 or more.
 
 >> ClearCollect(t1, r1, r1)
-Errors: Error 0-24: Invalid number of arguments: received 3, expected 2.
+Table({a:99},{a:99})
 
 >> ClearCollect(t1, r1, 1; 2; r1)
-Errors: Error 0-30: Invalid number of arguments: received 3, expected 2.
+Table({a:99},{a:99})
 
 >> ClearCollect(t1, "x")
-Errors: Error 17-20: Invalid argument type (Text). Expecting a Record value instead.|Error 17-20: Invalid argument type. Cannot use Text values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 17-20: Invalid argument type. Cannot use Text values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(t1, 1)
-Errors: Error 17-18: Invalid argument type (Decimal). Expecting a Record value instead.|Error 17-18: Invalid argument type. Cannot use Decimal values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 17-18: Invalid argument type. Cannot use Decimal values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(t1, Float(1))
-Errors: Error 17-25: Invalid argument type (Number). Expecting a Record value instead.|Error 17-25: Invalid argument type. Cannot use Number values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 17-25: Invalid argument type. Cannot use Number values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(t1, true)
-Errors: Error 17-21: Invalid argument type (Boolean). Expecting a Record value instead.|Error 17-21: Invalid argument type. Cannot use Boolean values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 17-21: Invalid argument type. Cannot use Boolean values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 34-57: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
@@ -68,10 +68,10 @@ Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-19: The 
 Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-20: Name isn't valid. 'Bar' isn't recognized.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(1/0,Foo)
-Errors: Error 17-20: Name isn't valid. 'Foo' isn't recognized.|Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 17-20: Name isn't valid. 'Foo' isn't recognized.|Error 14-15: The function 'ClearCollect' has some invalid arguments.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Float(1)/0,Foo)
-Errors: Error 24-27: Name isn't valid. 'Foo' isn't recognized.|Error 21-22: Invalid argument type (Number). Expecting a Table value instead.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 24-27: Name isn't valid. 'Foo' isn't recognized.|Error 21-22: The function 'ClearCollect' has some invalid arguments.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(Error({Kind:ErrorKind.Custom}), r1)
 Errors: Error 45-47: The specified column 'a' does not exist.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
@@ -86,7 +86,19 @@ Errors: Error 22-24: The specified column 'a' does not exist.|Error 0-12: The fu
 Errors: Error 13-20: The value passed to the 'ClearCollect' function cannot be changed.
 
 >> ClearCollect("", "")
-Errors: Error 13-15: Invalid argument type (Text). Expecting a Table value instead.|Error 17-19: Invalid argument type (Text). Expecting a Record value instead.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 13-15: The function 'ClearCollect' has some invalid arguments.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(If(false,Blank()),r1)
 Errors: Error 31-33: The specified column 'a' does not exist.|Error 0-12: The function 'ClearCollect' has some invalid arguments.
+
+>> Set(t2, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> ClearCollect(t2, 99)
+{Value:99}
+
+>> 0;t2
+Table({Value:99})
+
+>> ClearCollect(t2, 8,88,888)
+Table({Value:8},{Value:88},{Value:888})

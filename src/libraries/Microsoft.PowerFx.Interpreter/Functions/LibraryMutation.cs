@@ -337,7 +337,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
   
-   // Clear(collection_or_table)
+    // Clear(collection_or_table)
     internal class ClearImpl : ClearFunction, IAsyncTexlFunction3
     {
         public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -363,6 +363,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return ret.ToFormulaValue();
             }
+        }
+    }
+
+    // ClearCollect(table_or_collection, table|record, ...)
+    internal class ClearCollectImpl : ClearCollectFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                args[0] = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+
+            var clearFunction = new ClearImpl();
+
+            var cleared = await clearFunction.InvokeAsync(FormulaType.Void, args, cancellationToken).ConfigureAwait(false);
+
+            if (cleared is ErrorValue)
+            {
+                return cleared;
+            }
+
+            var collectFunction = new CollectImpl();
+
+            return await collectFunction.InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // ClearCollect(table_or_collection, scalar, ...)
+    internal class ClearCollectScalarImpl : ClearCollectScalarFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await new ClearCollectImpl().InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 }

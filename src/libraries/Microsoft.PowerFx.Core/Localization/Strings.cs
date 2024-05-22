@@ -506,8 +506,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutCollect_item = (b) => StringResources.Get("AboutCollect_item", b);
 
         public static StringGetter AboutClearCollect = (b) => StringResources.Get("AboutClearCollect", b);
-        public static StringGetter ClearCollectDataSourceArg = (b) => StringResources.Get("ClearCollectDataSourceArg", b);
-        public static StringGetter ClearCollectRecordArg = (b) => StringResources.Get("ClearCollectRecordArg", b);
 
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);

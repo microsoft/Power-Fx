@@ -8,10 +8,15 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -78,6 +83,31 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 _ => TableValue.ValueName
             };
+        }
+
+        public static List<IntermediateNode> CreateIRCallNodeCollect(CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var newArgs = new List<IntermediateNode>() { args[0] };
+
+            foreach (var arg in args.Skip(1))
+            {
+                if (arg.IRContext.ResultType._type.IsPrimitive)
+                {
+                    newArgs.Add(
+                        new RecordNode(
+                            new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)),
+                            new Dictionary<DName, IntermediateNode>
+                            {
+                                { TableValue.ValueDName, arg }
+                            }));
+                }
+                else
+                {
+                    newArgs.Add(arg);
+                }
+            }
+
+            return newArgs;
         }
     }
 }

@@ -438,27 +438,53 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            var newArgs = new List<IntermediateNode>() { args[0] };
+            return base.CreateIRCallNode(node, context, MutationUtils.CreateIRCallNodeCollect(node, context, args, scope), scope);
+        }
+    }
 
-            foreach (var arg in args.Skip(1))
+    // ClearCollect(collection:*[...], item1:![...]|*[...], ...)
+    internal class ClearCollectFunction : CollectFunction
+    {
+        public override bool AllowedWithinNondeterministicOperationOrder => false;
+
+        public ClearCollectFunction()
+            : base("ClearCollect", TexlStrings.AboutClearCollect)
+        {
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            base.CheckSemantics(binding, args, argTypes, errors);
+
+            if (binding.EntityScope != null &&
+                binding.EntityScope.TryGetDataSource(args[0], out IExternalDataSource dataSourceInfo) &&
+                !dataSourceInfo.IsClearable)
             {
-                if (arg.IRContext.ResultType._type.IsPrimitive)
-                {
-                    newArgs.Add(
-                        new RecordNode(
-                            new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)), 
-                            new Dictionary<DName, IntermediateNode>
-                            {
-                                { TableValue.ValueDName, arg }
-                            }));
-                }
-                else
-                {
-                    newArgs.Add(arg);
-                }
+                errors.EnsureError(args[0], TexlStrings.ErrInvalidDataSourceForFunction);
             }
+        }
+    }
 
-            return base.CreateIRCallNode(node, context, newArgs, scope);
+    // ClearCollect(collection:*[...], item1, ...)
+    internal class ClearCollectScalarFunction : ClearCollectFunction
+    {
+        public override bool IsScalar => true;
+
+        public override DType GetCollectedType(PowerFx.Features features, DType argType)
+        {
+            return GetCollectedTypeForGivenArgType(features, argType);
+        }
+
+        internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            return base.CreateIRCallNode(node, context, MutationUtils.CreateIRCallNodeCollect(node, context, args, scope), scope);
         }
     }
 }
