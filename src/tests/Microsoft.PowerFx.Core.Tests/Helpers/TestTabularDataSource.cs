@@ -221,6 +221,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public bool IsWritable => true;
 
+        public bool IsClearable => throw new NotImplementedException();
+
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
         {
             throw new NotImplementedException();

@@ -455,7 +455,7 @@ namespace Microsoft.PowerFx.Core.Logging
 
         private bool IsExpandedType(TexlBinding binding, TexlNode node)
         {
-            var type = _binding?.GetType(node);
+            var type = _binding?.GetTypeAllowInvalid(node);
 
             return type != null && type.AggregateHasExpandedType();
         }

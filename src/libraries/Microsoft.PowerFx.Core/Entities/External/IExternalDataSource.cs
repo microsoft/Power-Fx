@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool IsWritable { get; }
 
+        bool IsClearable { get; }
+
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
         DataSourceKind Kind { get; }
