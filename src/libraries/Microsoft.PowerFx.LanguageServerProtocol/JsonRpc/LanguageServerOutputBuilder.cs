@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -22,6 +26,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         };
 
         private readonly List<LanguageServerOutput> _outputs = new ();
+
+        public int Size => _outputs.Count;
 
         /// <summary>
         /// A serialized output created from all the outputs in the builder.
@@ -93,6 +99,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// </summary>
     internal static class LanguageServerOutputBuilderExtensions
     {
+        private const string DefaultRequestCancelledMessage = "Lsp request with id {0} was canceled";
+
         /// <summary>
         /// Add an error response with ParseError error code.
         /// </summary>
@@ -157,6 +165,46 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public static void AddMethodNotFoundError(this LanguageServerOutputBuilder outputBuilder, string id, string message = null)
         {
             outputBuilder.AddErrorResponse(id, JsonRpcHelper.ErrorCode.MethodNotFound, message);
+        }
+
+        /// <summary>
+        /// Add an error response with RequestCancelled error code.
+        /// </summary>
+        /// <param name="outputBuilder">Output Builder.</param>
+        /// <param name="id">Request Id.</param>
+        /// <param name="message">Option Error Message.</param>
+        public static void AddRequestCancelledError(this LanguageServerOutputBuilder outputBuilder, string id, string message = null)
+        {
+            var prefix = string.Format(CultureInfo.InvariantCulture, DefaultRequestCancelledMessage, id);
+            message = string.IsNullOrEmpty(message) ? prefix : $"{prefix}. {message}";
+            outputBuilder.AddErrorResponse(id, JsonRpcHelper.ErrorCode.RequestCancelled, message);
+        }
+
+        /// <summary>
+        /// Add an error response with RequestCancelled error code if the exception is a cancellation exception or cancellation was requested on the token.
+        /// </summary>
+        /// <param name="outputBuilder">Output Builder.</param>
+        /// <param name="id">Request Id.</param>
+        /// <param name="exception">Exception.</param>
+        /// <param name="cancellationToken" >Cancellation Token.</param>
+        /// <returns>True if the error was added, false otherwise.</returns>
+        public static bool TryAddRequestCancelledErrorIfApplicable(this LanguageServerOutputBuilder outputBuilder, string id, CancellationToken cancellationToken, Exception exception)
+        {
+            // Theoretically, we should not have anything in the output builder if cancellation was requested.
+            // If there's something then we should not add the error and respect what's already there.
+            // Adding the cancellation error might add extra noise to the output.
+            if (outputBuilder.Size > 0)
+            {
+                return false;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                outputBuilder.AddRequestCancelledError(id, exception.GetDetailedExceptionMessage());
+                return true;
+            }
+
+            return false;
         }
     }
 }

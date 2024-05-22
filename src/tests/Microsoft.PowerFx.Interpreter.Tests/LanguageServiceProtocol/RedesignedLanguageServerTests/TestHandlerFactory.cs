@@ -11,10 +11,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         private readonly Dictionary<string, ILanguageServerOperationHandler> _handlers = new ();
 
-        public TestHandlerFactory()
-        {
-        }
-
         public TestHandlerFactory SetHandler(string method, ILanguageServerOperationHandler handler)
         {
             _handlers[method] = handler;
