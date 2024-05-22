@@ -71,6 +71,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomGetCapabilitiesResult",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseNLParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseNLResult",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseNLDiagnosticInfo",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomFx2NLResult",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxParams",
