@@ -79,7 +79,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public UsageHints UsageHints { get; set; }
 
         // we may add additional app context...
-        public bool IncludeModelLogs { get; set; } = false;
     }
 
     /// <summary>
