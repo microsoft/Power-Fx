@@ -213,7 +213,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.Assert(udf.IsParseValid);
 
                 var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName))
+                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) ||
+                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;
