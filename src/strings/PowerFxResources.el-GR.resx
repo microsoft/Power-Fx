@@ -3109,10 +3109,6 @@
     <value>καρτέλα</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Διαγράφει όλες τις καρτέλες μιας συλλογής. Οι στήλες της συλλογής θα παραμείνουν.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Διαγράφει όλες τις καρτέλες από μια συλλογή. Στη συνέχεια, προσθέτει ένα διαφορετικό σύνολο καρτελών στην ίδια συλλογή.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Η κυριολεκτική δήλωση τύπου δεν ήταν έγκυρη.</value>
+    <value>Η κυριολεκτική δήλωση τύπου δεν είναι έγκυρη. Η παράσταση '{0}' δεν μπορεί να χρησιμοποιηθεί σε έναν ορισμό τύπου.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Δεν υποστηρίζεται ο έλεγχος της προέλευσης δεδομένων (χρήση της λέξης-κλειδιού 'As').</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Απαλείφει όλα τα στοιχεία από μια συλλογή και επιστρέφει την κενή συλλογή.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>συλλογή</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Η συλλογή προς απαλοιφή.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Η προέλευση για απαλοιφή.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Η καθορισμένη προέλευση δεδομένων δεν μπορεί να χρησιμοποιηθεί με αυτήν τη συνάρτηση.</value>
     
   </data>
 </root>

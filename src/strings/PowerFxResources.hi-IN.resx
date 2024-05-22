@@ -3109,10 +3109,6 @@
     <value>रिकॉर्ड</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>एक संग्रह के सभी रिकॉर्ड हटा देता है. संग्रह के कॉलम बने रहेंगे.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>एक संग्रह से सभी रिकॉर्ड हटा देता है. और फिर उसी संग्रह में रिकॉर्ड्स के अलग सेट जोड़ता है.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>प्रकार लिटरल घोषणा अमान्य थी.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>डेटा स्रोत का दायरा बढ़ाना ('As' कीवर्ड का इस्तेमाल) समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>किसी संग्रह से सभी आइटम साफ़ करता है और संग्रह को रिक्त करता है.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>संग्रह</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>संग्रह साफ़ करने के लिए.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>
     
   </data>
 </root>

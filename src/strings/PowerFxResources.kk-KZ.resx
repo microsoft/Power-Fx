@@ -3109,10 +3109,6 @@
     <value>жазу</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Жиынның барлық жазбасын жояды. Жиынның бағандары қалады.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Жиыннан барлық жазбаны жояды. Одан кейін бір жиынға басқа жазбалар жиынын қосады.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Түрдің тура декларациясы жарамсыз болды.</value>
+    <value>Түрді литералды етіп жариялау жарамсыз. "{0}" өрнегі түр анықтамасында пайдаланылмауы керек.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Деректер көзін ("As" кілтсөзін пайдалану) шолуға қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Жиынтықтағы барлық элементтерді жояды және бос жиынтықты қайтарады.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>жиынтық</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Тазаланатын жиынтық.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Тазаланатын дереккөз.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Көрсетілген деректер көзі бұл функциямен бірге пайдаланылмайды.</value>
     
   </data>
 </root>

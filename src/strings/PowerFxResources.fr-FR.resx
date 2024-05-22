@@ -3109,10 +3109,6 @@
     <value>enregistrement</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Supprime tous les enregistrements d’une collection sans les colonnes de la collection.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Supprime tous les enregistrements d’une collection. Ajoute ensuite un ensemble d’enregistrements différent à la même collection.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Déclaration de littéral de type non valide.</value>
+    <value>La déclaration de type littéral n’est pas valide. Impossible d’utiliser l’expression « {0} » dans une définition de type.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>L’analyse de la source de données (utilisation du mot clé « As ») n’est pas prise en charge.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Efface tous les éléments d’une collection et retourne la collection vide.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>collection</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Collection à effacer.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Source à effacer.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>La source de données spécifiée ne peut pas être utilisée avec cette fonction.</value>
     
   </data>
 </root>
