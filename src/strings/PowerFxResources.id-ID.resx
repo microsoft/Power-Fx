@@ -3109,10 +3109,6 @@
     <value>rekaman</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Menghapus semua rekaman dari suatu kumpulan. Kolom kumpulan akan tetap ada.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarasi harfiah jenis tidak valid.</value>
+    <value>Deklarasi harfiah jenis tidak valid. Ekspresi '{0}' tidak dapat digunakan dalam definisi jenis.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Pencakupan sumber data (penggunaan kata kunci 'As') tidak didukung.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Menghapus semua item dari koleksi dan menampilkan koleksi kososng.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>koleksi</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Koleksi untuk dihapus.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Sumber yang akan dihapus.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Sumber data yang ditentukan tidak dapat digunakan dengan fungsi ini.</value>
     
   </data>
 </root>

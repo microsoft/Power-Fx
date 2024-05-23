@@ -3109,10 +3109,6 @@
     <value>registo</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Elimina todos os registos de uma coleção. As colunas da coleção permanecerão.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Elimina todos os registos de uma coleção e, em seguida, adiciona um conjunto de registos diferente à mesma coleção.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A declaração literal do tipo é inválida.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>O controlo do âmbito da origem de dados (utilização da palavra-chave "As") não é suportado.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Limpa todos os itens de uma coleção e devolve a coleção vazia.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>coleção</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>A coleção para desmarcar.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>A origem de dados especificada não pode ser utilizada com esta função.</value>
     
   </data>
 </root>

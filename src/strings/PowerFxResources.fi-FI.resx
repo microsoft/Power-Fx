@@ -3109,10 +3109,6 @@
     <value>record</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Poistaa kaikki kokoelman tietueet. Kokoelman sarakkeet säilyvät.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Poistaa kaikki tietueet kokoelmasta. Lisää sitten toisen tietuejoukon samaan kokoelmaan.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tyyppiliteraalin esittely oli virheellinen.</value>
+    <value>Tyyppiliteraalin esittely on virheellinen. Lauseketta {0} ei voi käyttää tyypin määrittelynä.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Tietolähteen rajausta (As-avainsanan käyttöä) ei tueta.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Tyhjentää kaikki kohteet kokoelmasta ja palauttaa tyhjän kokoelman.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kokoelma</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Tyhjennettävä kokoelma.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Tyhjennettävä lähde.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Määritettyä tietolähdettä ei voi käyttää tämän funktion kanssa.</value>
     
   </data>
 </root>
