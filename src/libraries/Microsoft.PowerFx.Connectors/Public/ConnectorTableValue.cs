@@ -53,13 +53,17 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static ODataParameters ToOdataParameters(this DelegationParameters parameters)
         {
-            DelegationParameterFeatures allowedFeatures = DelegationParameterFeatures.Filter | DelegationParameterFeatures.Top;
+            DelegationParameterFeatures allowedFeatures = 
+                DelegationParameterFeatures.Filter | 
+                DelegationParameterFeatures.Top | 
+                DelegationParameterFeatures.Columns;
             parameters.EnsureOnlyFeatures(allowedFeatures);
 
             ODataParameters op = new ODataParameters()
             {
                 Filter = parameters.GetOdataFilter(),
                 Top = parameters.Top.GetValueOrDefault(),
+                Select = parameters.GetColumns()
             };
 
             return op;

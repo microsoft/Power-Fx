@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Uso inválido de '.'</value>
+    <value>O operador "." não pode ser usado em valores {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>fórmula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Retorna um agrupamento da tabela especificada, combinando com funções de agregação.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>fonte</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>coluna_de_agrupamento</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregação</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>A tabela ou coleção para agrupar.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>O nome de uma coluna para agrupar os dados.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Uma chamada para uma função de agregação.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Eleva um número x à potência de outro número y. Igual a x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Tipo de argumento de função ausente; por exemplo, ":Text" em "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>O tipo de retorno de função {0} declarado é inválido.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>O tipo de argumento de função {0} declarado é inválido.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula '{0}' já existe.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A declaração literal do tipo era inválida</value>
+    <value>A declaração literal do tipo era inválida.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>A definição de tipo {0} é inválida.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>A definição de tipo {0} é inválida e pode conter ciclos.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>O nome do tipo restrito {0} não pode ser usado.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>O tipo {0} já foi definido.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Aviso de delegação. O resultado deste argumento "{0}" pode ser truncado para conjuntos de dados grandes antes de ser passado para a função "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Esperado um valor de texto, numérico, booleano ou de data/hora.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize requer pelo menos uma coluna de agrupamento.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Os argumentos de Summarize devem ser nomes de coluna existentes para agrupar ou fórmulas nomeadas com a palavra-chave "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>A coluna "ThisGroup" está em conflito com um nome reservado. Use a função "RenameColumns" para escolher um nome diferente.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>A fonte de dados contém uma coluna chamada "ThisGroup", que entra em conflito com um nome reservado. Use a função "RenameColumns" para escolher um nome diferente.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Não há suporte para a definição de escopo da fonte de dados (uso da palavra-chave "As").</value>
     
   </data>
 </root>

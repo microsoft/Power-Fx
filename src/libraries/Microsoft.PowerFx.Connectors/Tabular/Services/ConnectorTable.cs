@@ -107,16 +107,13 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
             HttpClient httpClient = serviceProvider?.GetService<HttpClient>() ?? throw new InvalidOperationException("HttpClient is required on IServiceProvider");
 
+            string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
+
             Uri uri = new Uri(
                    (_uriPrefix ?? string.Empty) +
                    (_uriPrefix.Contains("/sql/") ? "/v2" : string.Empty) +
-                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01", UriKind.Relative);
-
-            if (odataParameters != null)
-            {
-                uri = odataParameters.GetUri(uri);
-            }
-
+                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
+            
             string text = await GetObject(httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);         
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();           
         }

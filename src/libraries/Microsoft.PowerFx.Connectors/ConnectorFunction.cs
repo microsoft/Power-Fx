@@ -647,6 +647,8 @@ namespace Microsoft.PowerFx.Connectors
                         runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
                     }
 
+                    // field's name correspond to the key of the fhe field in the record, we need to set it to wire it up correctly to the updated record type
+                    newFieldType.Name = field.Name;
                     fieldTypes.Add(newFieldType);
                     recordType = recordType.SafeAdd(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }
@@ -1472,7 +1474,7 @@ namespace Microsoft.PowerFx.Connectors
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
-            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.ConnectorType.Binary))
             {
                 errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }

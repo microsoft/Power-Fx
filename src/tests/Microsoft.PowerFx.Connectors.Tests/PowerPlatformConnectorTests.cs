@@ -1645,6 +1645,22 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task SendEmail()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\shared_sendmail.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("sendmail")
+            {
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility
+            };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            Assert.Single(functions.Where(x => x.Name == "SendEmailV3"));
+        }
+
+        [Fact]
         public async Task ExcelOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
@@ -1897,6 +1913,39 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Key differences
             Assert.Equal(string.Empty, string.Join(", ", returnType2.Fields[0].Fields[0].Fields[7].EnumValues.Select(ev => ev.ToObject().ToString())));
             Assert.Null(returnType2.Fields[0].Fields[0].Fields[7].Enum);
+        }
+
+        [Fact]
+        public async Task ServiceNowOutputType_GetRecord()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ServiceNow.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            testConnector.SetResponseFromFile($@"Responses\Response_ServiceNowReturnType.json");
+
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXAiOiJKV1QiLCJhbGc...";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-c2983f0e-34ee-4b43-8abc-c2f460fd26be" /* env */, "7dfb68206d8c46c0aa25cd75e3172d44" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("cds") { Compatibility = ConnectorCompatibility.SwaggerCompatibility };
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("cds", ppClient, console: _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+            ConnectorFunction listRecordsWithOrganizations = functions.First(functions => functions.Name == "GetRecord");
+
+            NamedValue[] parameters = new NamedValue[]
+            {
+                new NamedValue("tableType", FormulaValue.New("sn_ex_sp_action"))
+            };
+
+            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
+            string ft = returnType.FormulaType.ToStringWithDisplayNames();
+
+            string expected =
+                "![result:![action_type`'Action type':s, active`Active:s, icon`'Action icon':s, name`'Action label':s, sys_class_name`Class:s, sys_created_by`'Created by':s, sys_created_on`Created:s, sys_domain`Domain:s, sys_id`'Sys ID':s, sys_mod_count`Updates:s, sys_name`'Display name':s, sys_overrides`Overrides:s, sys_package`Package:s, sys_policy`'Protection policy':s, sys_scope`Application:s, sys_tags`Tags:s, sys_update_name`'Update name':s, sys_updated_by`'Updated by':s, sys_updated_on`Updated:s, table`Table:s]]";
+
+            Assert.Equal(expected, ft);
         }
 
         [Fact]

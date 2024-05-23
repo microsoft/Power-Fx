@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Neveljavna uporaba ».«</value>
+    <value>Operatorja ».« ni mogoče uporabiti za vrednosti »{0}«.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Vrne združitev navedene tabele v kombinaciji s funkcijami združevanja.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>vir</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>stolpec_za_združevanje</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>združevanje</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabela ali zbirka za združevanje.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Ime stolpca za združevanje podatkov.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Klic funkcije združevanja.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Potencira število x na potenci drugega števila y. Enako kot x^y.</value>
     
@@ -3862,6 +3890,14 @@
     <value>Manjka vrsta argumenta funkcije, na primer »:Text« v »FindMonth( d:Text ):Number = Month( DateParse( d ))«</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Navedena vrsta vrnitve funkcije {0} ni veljavna.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Navedena vrsta argumenta funkcije {0} ni veljavna.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula »{0}« že obstaja.</value>
   </data>
@@ -4178,7 +4214,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Vrsta dobesedne deklaracije ni bila veljavna</value>
+    <value>Deklaracija niza vrste ni bila veljavna.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Opredelitev vrste {0} ni veljavna.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Opredelitev vrste {0} je neveljavna in lahko vsebuje cikle.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Omejenega imena vrste {0} ni mogoče uporabiti.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Vrsta {0} je že določena.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4425,30 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Opozorilo o delegiranju. Rezultat tega argumenta »{0}« lahko prirežemo za velike nabore podatkov, preden ga prenesemo v funkcijo »{1}«.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Pričakovana je besedilna, številska, logična ali vrednost datum/čas.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Argument Summarize zahteva vsaj en stolpec za združevanje.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumenti Summarize morajo biti obstoječa imena stolpcev za združevanje ali formule, poimenovane s ključno besedo »As«.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Stolpec »ThisGroup« je v sporu z rezerviranim imenom. S funkcijo »RenameColumns« izberite drugo ime.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Vir podatkov vsebuje stolpec z imenom »ThisGroup«, ki je v sporu z rezerviranim imenom. S funkcijo »RenameColumns« izberite drugo ime.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Določanje obsega vira podatkov (uporaba ključne besede »As«) ni podprto.</value>
     
   </data>
 </root>
