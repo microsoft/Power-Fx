@@ -557,7 +557,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var restrictedUDFNames = new HashSet<string>
             {
                 "Type", "IsType", "AsType", "Set", "Collect", "ClearCollect",
-                "UpdateContext", "Navigate", "Select", "Reset",
+                "UpdateContext", "Navigate",
             };
 
             foreach (var func in BuiltinFunctionsCore._library.FunctionNames.Union(BuiltinFunctionsCore.OtherKnownFunctions))
