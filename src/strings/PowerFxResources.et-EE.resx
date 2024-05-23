@@ -3109,10 +3109,6 @@
     <value>kirje</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Kustutab kõik kogumi kirjed. Kogumi veerud jäävad alles.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Kustutab kõik kirjed kogumist. Seejärel lisab samasse kogumisse teise kirjete kogumi.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tüübi sõnasõnaline deklaratsioon ei sobinud.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Andmeallika ulatuse määramist (märksõna „As“ kasutust) ei toetata.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Eemaldab kogumist kõik üksused ja tagastab tühja kogumi.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kogum</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Tühjendatav kogum.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>
     
   </data>
 </root>

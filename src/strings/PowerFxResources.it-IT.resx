@@ -3109,10 +3109,6 @@
     <value>record</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Elimina tutti i record di una raccolta. Le colonne della raccolta rimarranno.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Elimina tutti i record da una raccolta. Quindi aggiunge un set diverso di record alla stessa raccolta.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Dichiarazione valore letterale del tipo non valida.</value>
+    <value>Dichiarazione valore letterale tipo non valida. Impossibile utilizzare l'espressione "{0}" in una definizione di tipo.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>La definizione dell'ambito dell'origine dati (utilizzo della parola chiave "As") non è supportata.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Cancella tutti gli elementi da una raccolta e restituisce la raccolta vuota.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>raccolta</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Raccolta da cancellare.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Origine da cancellare.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>L'origine dati specificata non può essere usata con questa funzione.</value>
     
   </data>
 </root>

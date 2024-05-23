@@ -3109,10 +3109,6 @@
     <value>registro</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Exclui todos os registros de uma coleção. As colunas da coleção permanecerão.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Exclui todos os registros de uma coleção. E depois adiciona um conjunto diferente de registros à mesma coleção.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A declaração literal do tipo era inválida.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Não há suporte para a definição de escopo da fonte de dados (uso da palavra-chave "As").</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Limpa todos os itens de uma coleção e a retorna vazia.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>coleção</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Coleção a ser limpa.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>A fonte de dados especificada não pode ser usada com essa função.</value>
     
   </data>
 </root>
