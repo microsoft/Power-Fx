@@ -1572,7 +1572,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
+                    else if (IncludeCharInLiteral(ch))
                     {
                         _sb.Append(ch);
                     }
@@ -1694,7 +1694,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
+                    else if (IncludeCharInLiteral(ch))
                     {
                         _sb.Append(ch);
                     }
@@ -1726,7 +1726,7 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                     }
-                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
+                    else if (IncludeCharInLiteral(ch))
                     {
                         _sb.Append(ch);
                     }
@@ -1845,6 +1845,16 @@ namespace Microsoft.PowerFx.Syntax
                     NextChar();
                     return new ErrorToken(GetTextSpan());
                 }
+            }
+
+            /// <summary>
+            /// Check if a char should be included in a literal.PFxV1 always includes all chars. Pre-V1 would excluside certain formatting chars.
+            /// </summary>
+            /// <param name="ch">Char to be verified.</param>
+            /// <returns>True if the char should be included in the literal. False otherwise.</returns>
+            private bool IncludeCharInLiteral(char ch)
+            {
+                return _pfxV1 || !CharacterUtils.IsFormatCh(ch);
             }
         }
     }
