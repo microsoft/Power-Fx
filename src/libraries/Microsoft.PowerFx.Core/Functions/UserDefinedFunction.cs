@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -213,10 +212,15 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.Assert(udf.IsParseValid);
 
                 var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) ||
-                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+                if (texlFunctionSet.AnyWithName(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+                else if (_restrictedUDFNames.Contains(udfName) ||
+                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
                     continue;
                 }
 

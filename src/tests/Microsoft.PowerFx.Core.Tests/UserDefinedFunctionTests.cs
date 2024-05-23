@@ -537,7 +537,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (expectedError)
             {
-                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionNameRestricted");
             }
             else
             {
@@ -572,7 +572,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else
                 {
-                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionAlreadyDefined");
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionNameRestricted");
                 }
             }
         }
