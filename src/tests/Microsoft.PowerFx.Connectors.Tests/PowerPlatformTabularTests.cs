@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Connectors.Tabular;
+using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -98,6 +100,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            TabularDataSource tds = Assert.IsType<TabularDataSource>(ads.First());
+            Assert.NotNull(tds);
+            Assert.NotNull(tds.DataEntityMetadataProvider);
+
+            CdpEntityMetadataProvider cemp = Assert.IsType<CdpEntityMetadataProvider>(tds.DataEntityMetadataProvider);
+            Assert.True(cemp.TryGetEntityMetadata("Customers", out IDataEntityMetadata dem));
+
+            TabularDataSourceMetadata tdsm = Assert.IsType<TabularDataSourceMetadata>(dem);
+            Assert.Equal("pfxdev-sql.database.windows.net,connectortest", tdsm.DatasetName);
+            Assert.Equal("Customers", tdsm.EntityName);
+
+            Assert.Equal("Customers", tds.EntityName.Value);
+            Assert.True(tds.IsDelegatable);
+            Assert.True(tds.IsPageable);
+            Assert.True(tds.IsRefreshable);
+            Assert.True(tds.IsSelectable);
+            Assert.True(tds.IsWritable);
+            Assert.Equal(DataSourceKind.Connected, tds.Kind);
+            Assert.Equal("Customers", tds.Name);
+            Assert.True(tds.RequiresAsync);
+            Assert.NotNull(tds.ServiceCapabilities);
+
+            Assert.NotNull(sqlTable._connectorType);
+            Assert.Null(sqlTable._connectorType.Relationships);
+            
 #pragma warning disable CS0618 // Type or member is obsolete
 
             // Enable IR rewritter to auto-inject ServiceProvider where needed
@@ -263,6 +294,39 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'Comments associated with the content approval of this " +
                 "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
                 "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
+
+            HashSet<IExternalTabularDataSource> ads = spTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+            
+            TabularDataSource tds = Assert.IsType<TabularDataSource>(ads.First());
+            Assert.NotNull(tds);
+            Assert.NotNull(tds.DataEntityMetadataProvider);
+
+            CdpEntityMetadataProvider cemp = Assert.IsType<CdpEntityMetadataProvider>(tds.DataEntityMetadataProvider);
+            Assert.True(cemp.TryGetEntityMetadata("Documents", out IDataEntityMetadata dem));
+
+            TabularDataSourceMetadata tdsm = Assert.IsType<TabularDataSourceMetadata>(dem);
+            Assert.Equal("https://microsofteur.sharepoint.com/teams/pfxtest", tdsm.DatasetName);
+            Assert.Equal("Documents", tdsm.EntityName);
+
+            Assert.Equal("Documents", tds.EntityName.Value);
+            Assert.True(tds.IsDelegatable);
+            Assert.True(tds.IsPageable);
+            Assert.True(tds.IsRefreshable);
+            Assert.False(tds.IsSelectable);
+            Assert.True(tds.IsWritable);
+            Assert.Equal(DataSourceKind.Connected, tds.Kind);
+            Assert.Equal("Documents", tds.Name);
+            Assert.True(tds.RequiresAsync);
+            Assert.NotNull(tds.ServiceCapabilities);
+
+            Assert.NotNull(spTable._connectorType);
+            Assert.NotNull(spTable._connectorType.Relationships);
+            Assert.Equal(3, spTable._connectorType.Relationships.Count);
+            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => kvp.Key)));
+            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => kvp.Value.TargetEntity)));
+            Assert.Equal("Editor#Claims-Claims, Author#Claims-Claims, CheckoutUser#Claims-Claims", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => string.Join("|", kvp.Value.ReferentialConstraints.Select(kvp2 => $"{kvp2.Key}-{kvp2.Value}")))));
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -434,6 +498,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
                 "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
 
+            HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            TabularDataSource tds = Assert.IsType<TabularDataSource>(ads.First());
+            Assert.NotNull(tds);
+            Assert.NotNull(tds.DataEntityMetadataProvider);
+
+            CdpEntityMetadataProvider cemp = Assert.IsType<CdpEntityMetadataProvider>(tds.DataEntityMetadataProvider);
+            Assert.True(cemp.TryGetEntityMetadata("Account", out IDataEntityMetadata dem));
+
+            TabularDataSourceMetadata tdsm = Assert.IsType<TabularDataSourceMetadata>(dem);
+            Assert.Equal("default", tdsm.DatasetName);
+            Assert.Equal("Account", tdsm.EntityName);
+
+            Assert.Equal("Account", tds.EntityName.Value);
+            Assert.True(tds.IsDelegatable);
+            Assert.True(tds.IsPageable);
+            Assert.True(tds.IsRefreshable);
+            Assert.True(tds.IsSelectable);
+            Assert.True(tds.IsWritable);
+            Assert.Equal(DataSourceKind.Connected, tds.Kind);
+            Assert.Equal("Account", tds.Name);
+            Assert.True(tds.RequiresAsync);
+            Assert.NotNull(tds.ServiceCapabilities);
+
+            Assert.NotNull(sfTable._connectorType);
+            Assert.Null(sfTable._connectorType.Relationships);
+            
 #pragma warning disable CS0618 // Type or member is obsolete
 
             // Enable IR rewritter to auto-inject ServiceProvider where needed

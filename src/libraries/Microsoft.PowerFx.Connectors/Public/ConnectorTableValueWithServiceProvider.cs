@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors
         internal IServiceProvider ServiceProvider { get; }
 
         internal ConnectorTableValueWithServiceProvider(ConnectorTableValue tableValue, IServiceProvider serviceProvider)
-            : base(tableValue._tabularService)
+            : base(tableValue._tabularService, tableValue._connectorType)
         {
             ServiceProvider = serviceProvider;
         }
