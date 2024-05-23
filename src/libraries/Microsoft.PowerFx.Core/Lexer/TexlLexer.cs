@@ -1572,11 +1572,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (_pfxV1)
-                    {
-                        _sb.Append(ch);
-                    }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
                     {
                         _sb.Append(ch);
                     }
@@ -1698,11 +1694,7 @@ namespace Microsoft.PowerFx.Syntax
                         _sb.Append(ch);
                         NextChar();
                     }
-                    else if (_pfxV1)
-                    {
-                        _sb.Append(ch);
-                    }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
                     {
                         _sb.Append(ch);
                     }
@@ -1734,11 +1726,7 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         return new StrLitToken(_sb.ToString(), GetTextSpan(), IsTextFirstActive);
                     }
-                    else if (_pfxV1)
-                    {
-                        _sb.Append(ch);
-                    }
-                    else if (!CharacterUtils.IsFormatCh(ch))
+                    else if (_pfxV1 || !CharacterUtils.IsFormatCh(ch))
                     {
                         _sb.Append(ch);
                     }

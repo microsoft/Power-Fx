@@ -390,6 +390,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
                       
                         var errorCount = _errors?.Count;
+
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
