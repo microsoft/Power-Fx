@@ -187,8 +187,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // Adding a restricted UDF name is a breaking change, this test will need to be updated and a conversion will be needed for existing scenarios
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string>
         {
-            "Type", "IsType", "AsType", "Set", "Collect", "ClearCollect",
-            "UpdateContext", "Navigate", "Select", "Reset",
+            "Type", "IsType", "AsType", "Set", "Collect",
+            "ClearCollect", "UpdateContext", "Navigate",
         };
 
         /// <summary>
