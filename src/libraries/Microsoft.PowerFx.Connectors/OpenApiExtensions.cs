@@ -810,6 +810,46 @@ namespace Microsoft.PowerFx.Connectors
             return param.Extensions != null && param.Extensions.TryGetValue(XMsExplicitInput, out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
         }
 
+        internal static ConnectorKeyType GetKeyType(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsKeyType, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr != null && !string.IsNullOrEmpty(apiStr.Value))
+            {
+                if (Enum.TryParse(apiStr.Value, true, out ConnectorKeyType ckt))
+                {
+                    return ckt;
+                }
+            }
+
+            return ConnectorKeyType.Undefined;
+        }
+
+        internal static double GetKeyOrder(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsKeyOrder, out IOpenApiExtension ext) && ext is OpenApiDouble dbl)
+            {
+                return dbl.Value;
+            }
+
+            return 0.0;
+        }
+
+        internal static ConnectorPermission GetPermission(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsPermission, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr != null && !string.IsNullOrEmpty(apiStr.Value))
+            {
+                if (apiStr.Value.Equals("read-only", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ConnectorPermission.PermissionReadOnly;
+                }
+                else if (apiStr.Value.Equals("read-write", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ConnectorPermission.PermissionReadWrite;
+                }
+            }
+
+            return ConnectorPermission.Undefined;
+        }
+
         internal static ServiceCapabilities GetTableCapabilities(this IOpenApiExtensible schema)
         {
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
@@ -825,6 +865,16 @@ namespace Microsoft.PowerFx.Connectors
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
             {
                 return ColumnCapabilities.ParseColumnCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
+        }
+
+        internal static Dictionary<string, Relationship> GetRelationships(this IOpenApiExtensible schema)
+        {           
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext))
+            {
+                return Relationship.ParseRelationships(ext as OpenApiObject);
             }
 
             return null;
