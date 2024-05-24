@@ -294,14 +294,14 @@ namespace Microsoft.PowerFx.Core.Functions
             return true; 
         }
 
-        // To prevent aggregate types from containing restricted types
+        // To prevent aggregate types from containing recursive types and restricted types
         internal static bool IsRestrictedType(FormulaType ft)
         {
             Contracts.AssertValue(ft);
 
             if (ft is AggregateType aggType)
             {
-                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
+                if (aggType.HasRecuriveType() || aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
                 {
                     return true;
                 }

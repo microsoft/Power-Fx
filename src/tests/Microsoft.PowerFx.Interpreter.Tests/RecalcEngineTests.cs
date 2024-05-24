@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
+using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -1662,6 +1663,25 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
 
+        // Recurive type not allowed in UDF definitions
+        [InlineData(
+            "f(a: RecursiveType):Number = 1;",
+            "",
+            false)]
+        [InlineData(
+            "f(a: Number):RecursiveType = ({});",
+            "",
+            false)]
+
+        // Recurive type not allowed in Type definitions
+        [InlineData(
+            "T = Type(RecursiveType);",
+            "",
+            false)]
+        [InlineData(
+            "T = Type([{a: {b: RecursiveType}}]);",
+            "",
+            false)]
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1671,6 +1691,10 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
+
+            var at = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
+
+            recalcEngine.Config.SymbolTable.AddType(new DName("RecursiveType"), new LazyRecursiveRecordType());
 
             if (isValid)
             {
