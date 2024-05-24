@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             }            
         }
 
-        internal RecordType GetSchema(string text)
+        private RecordType GetSchema(string text)
         {
             _connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
             TableName = name;
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             TableCapabilities = tableCapabilities;
 
             // Note that connectorType contains columns' capabilities but not the FormulaType (as of current developement)
-            return _connectorType?.FormulaType as RecordType;
+            return (RecordType)_connectorType?.FormulaType;
         }
 
         // TABLE DATA SERVICE - CREATE
