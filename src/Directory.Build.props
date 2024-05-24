@@ -75,7 +75,6 @@
 
   <PropertyGroup Condition=" '$(ProjectName)' != 'Microsoft.PowerFx.Performance.Tests' ">
     <AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\src\build\35MSSharedLib1024.snk')">..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <AssemblyOriginatorKeyFile Condition="EXISTS('..\..\..\..\src\build\35MSSharedLib1024.snk')">..\..\..\..\src\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
