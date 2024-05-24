@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public bool IsPageable => ServiceCapabilities.IsPagable;
 
+        public bool IsClearable => throw new NotImplementedException();
+
         public bool IsRefreshable => true;
 
         public bool RequiresAsync => true;
