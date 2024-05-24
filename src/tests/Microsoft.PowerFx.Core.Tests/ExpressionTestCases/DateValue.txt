@@ -265,3 +265,9 @@ Date(45,2,3)
 
 >> DateValue("10/1/1920","vi-vn")
 Date(1920,1,10)
+
+>> DateValue("1920-1-10","vi-vn")
+Date(1920,1,10)
+
+>> DateValue("10 Tháng Giêng 1920","vi-vn")
+Date(1920,1,10)
