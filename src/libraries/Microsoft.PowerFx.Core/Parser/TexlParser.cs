@@ -42,6 +42,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // Parse supports Attributes on Named Formulas/Udfs.
             AllowAttributes = 1 << 6,
+
+            // Apart from PA, should always be included.
+            PFxV1 = 1 << 7,
         }
 
         private bool _hasSemicolon = false;
@@ -385,7 +388,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _hasSemicolon = false;
                         ParseTrivia();
                         _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
-
+                      
                         var errorCount = _errors?.Count;
 
                         var exp_result = ParseExpr(Precedence.None);
@@ -582,7 +585,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(culture);
             var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
                              (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0) |
-                             (flags.HasFlag(Flags.TextFirst) ? TexlLexer.Flags.TextFirst : 0);
+                             (flags.HasFlag(Flags.TextFirst) ? TexlLexer.Flags.TextFirst : 0) |
+                             (flags.HasFlag(Flags.PFxV1) ? TexlLexer.Flags.PFxV1 : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);

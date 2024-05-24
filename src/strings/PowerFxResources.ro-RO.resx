@@ -3109,10 +3109,6 @@
     <value>înregistrare</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Șterge toate înregistrările unei colecții. Coloanele colecției se vor păstra.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Șterge toate înregistrările dintr-o colecție. Apoi adaugă un set diferit de înregistrări la respectiva colecție.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Declarația literală a tipului nu a fost validă.</value>
+    <value>Tipul declarației literale este nevalid. Expresia „{0}” nu se poate utilizat într-o definiție de tip.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Stabilirea domeniului sursei de date (utilizarea cuvântului cheie „As”) nu este acceptată.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Șterge toate elementele dintr-o colecție și returnează colecția goală.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>colecție</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Colecția de șters.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Sursa de golit.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Sursa de date specificată nu poate fi utilizată cu această funcție.</value>
     
   </data>
 </root>

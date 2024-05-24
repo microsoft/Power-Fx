@@ -3109,10 +3109,6 @@
     <value>запись</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Удаляет все записи коллекции. Столбцы коллекции останутся.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Удаляет все записи из коллекции. А затем добавляет другой набор записей в ту же коллекцию.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Недопустимая декларация типа литерала.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Определение области источника данных (использование 'As' в качестве ключевого слова) не поддерживается.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Удаляет все элементы из коллекции и возвращает пустую коллекцию.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>коллекция</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Коллекция для очистки.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Указанный источник данных невозможно использовать в этой функции.</value>
     
   </data>
 </root>

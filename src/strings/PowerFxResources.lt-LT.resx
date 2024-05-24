@@ -3109,10 +3109,6 @@
     <value>įrašas</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Panaikinami visi rinkinio įrašai. Rinkinio stulpeliai liks.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Panaikinami visi rinkinio įrašai. Tada į tą patį rinkinį įtraukiamas kitas įrašų rinkinys.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipo literalo deklaracija buvo netinkama.</value>
+    <value>Netinkamas tipo literalas. Tipo apraše negalima naudoti išraiškos „{0}“.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Duomenų šaltinio aprėpimas (raktažodžio „As“ naudojimas) nepalaikomas.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Išvalo visus elementus rinkinyje ir pateikia tuščią rinkinį.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>rinkinys</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Rinkinys, kurį reikia išvalyti.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Šaltinis, kurį reikia išvalyti.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Nurodyto duomenų šaltinio negalima naudoti su šia funkcija.</value>
     
   </data>
 </root>

@@ -4062,6 +4062,10 @@
     <value>Function {0} is already defined.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
   </data>
+    <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Function name {0} is restricted.</value>
+    <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is a duplicate.</value>
     <comment>This error message shows up when user defined function has a duplicate parameter</comment>
