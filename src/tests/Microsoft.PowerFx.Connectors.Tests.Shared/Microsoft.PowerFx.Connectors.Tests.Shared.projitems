@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b91ccc91-2a8d-4411-9a50-709a11b61adc</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microsoft.PowerFx.Connectors.Tests.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.eml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.jsonSet" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.txt" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\*.raw" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\*.json" />
+  </ItemGroup>
+</Project>
