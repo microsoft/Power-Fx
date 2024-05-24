@@ -1,0 +1,145 @@
+// ************************************** FIRST CONDITION TRUE CASES **************************************
+
+// The first condition is true, and the corresponding Date ThenResult is returned.
+>> If(true, Date(2022,4,22), Date(2022,4,23))
+Date(4,22,2022)
+
+// The first condition is true, and the corresponding Time ThenResult is returned.
+//Excel doesn't ignore the seconds part and returns 12:50:00 PM
+>> If(Time(12,50,50)>Time(12,49,00), Time(12,50,50), Time(12,49,00))
+12:50 PM
+
+// The first condition is true, and the corresponding DateTimeValue ThenResult is returned.
+>> If(DateTimeValue("1/1/2000 12:00:00:00 AM")>Time(12,49,00), DateTimeValue("1/1/2000 12:00:00:00 AM"), Time(12,49,00))
+1/1/2000 12:00 AM
+
+//Excel returns error
+>> If("a", 2, 3)
+3
+
+// ************************************** FIRST CONDITION FALSE CASES **************************************
+
+// Both the first and second conditions are false, a DefaultResult was provided, and it's returned
+>> If( 5>25, "Result1", IsNumeric("25"), "Result2", "Result3")	
+"Result3"
+
+// Both the first and second conditions are false, a DefaultResult isn't provided, hence returned Blank
+>> If( 5>25, "Result1", IsNumeric("25"), "Result2")	
+Blank()
+
+// ***************** FIRST ARGUMENT NUMBER, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Number to Date Coercion
+>> If(false,1,Date(2012,12,14))
+1355472000000
+
+//Number to Date Coercion
+>> If(false,1,DateValue("12/14/2012"))
+1355472000000
+
+//Number to Time Coercion
+>> If(false,1,Time(12,35,55))
+74155000
+
+//Number to Time Coercion
+>> If(false,1,TimeValue("12:35:55"))
+74155000
+
+//Number to DateTime Coercion
+>> If(false,1,DateTimeValue("1/1/2000 12:00:00:00 AM"))
+946713600000
+
+// ***************** FIRST ARGUMENT STRING, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//String to Date Coercion
+>> If(false,"Hello",DateValue("12/14/2012"))
+Date(12,14,2012)
+
+//String to DateTime Coercion
+>> If(false,"Hello",DateTimeValue("1/1/2000 12:00:00:00 AM"))
+"1/1/2000 12:00 AM"
+
+// ***************** FIRST ARGUMENT BOOLEAN, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Boolean to String Coercion
+////Excel returns "Good morning"
+>> If(false,true,"Good morning")
+false
+
+// ***************** FIRST ARGUMENT DATE, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Date to Date Coercion
+>> If(false,Date(2012,12,14),DateValue("1/1/2014"))
+Date(1,1,2014)
+
+//Date to Date Coercion
+>> If(false,Date(2012,12,14),Date(2014,1,1))
+Date(1,1,2014)
+
+//Date to Number Coercion
+>> If(false,Date(2012,12,14),1)
+Date(12,31,1969)
+
+//Date to Time Coercion
+>> If(false,Date(2012,12,14),Time(12,35,55))
+1/1/1970 12:35 PM
+
+//Date to Time Coercion
+>> If(false,Date(2012,12,14),TimeValue("12:35:55"))
+1/1/1970 12:35 PM
+
+//Date to DateTime Coercion
+>> If(false,Date(2012,12,14),DateTimeValue("1/1/2000 12:00:00:00 AM"))
+1/1/2000 12:00 AM
+
+// ***************** FIRST ARGUMENT TIME, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Time to Time Coercion
+>> If(false,Time(12,35,55),Time(5,20,40))
+5:20 AM
+
+//Time to Time Coercion
+>> If(false,Time(12,35,55),TimeValue("5:20:40"))
+5:20 AM
+
+//Time to Number Coercion
+>> If(false,Time(12,35,55),1)
+4:00 PM
+
+//Time to Date Coercion
+>> If(false,Time(12,35,55),Date(2014,2,15))
+2/15/2014 12:00 AM
+
+//Time to Date Coercion
+>> If(false,Time(12,35,55),DateValue("2/15/2014"))
+2/15/2014 12:00 AM
+
+//Time to DateTime Coercion
+>> If(false,Time(12,35,55),DateTimeValue("1/1/2000 12:00:00:00 AM"))
+1/1/2000 12:00 AM
+
+// ***************** FIRST ARGUMENT DATETIME, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//DateTime to DateTime Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),DateTimeValue("12/1/2004 12:00:00:00 AM"))
+12/1/2004 12:00 AM
+
+//DateTime to Number Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),1)
+12/31/1969 4:00 PM
+
+//DateTime to Date Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),Date(2014,2,15))
+2/15/2014 12:00 AM
+
+//DateTime to Date Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),DateValue("2/15/2014"))
+2/15/2014 12:00 AM
+
+//DateTime to Time Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),TimeValue("12:35:55"))
+1/1/1970 12:35 PM
+
+//DateTime to Time Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),Time(12,35,55))
+1/1/1970 12:35 PM
