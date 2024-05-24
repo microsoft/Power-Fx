@@ -9,6 +9,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DateValueLocaleTests
     {
+        private readonly DateTime _datetime = new DateTime(2021, 4, 9);
+
         [Theory]
         [InlineData("bg-BG")]
         [InlineData("ca-ES")]
@@ -55,8 +57,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         //[InlineData("eu-ES")] PFx and PA are unable to parse long date format back to date.
         public void DateValueLocaleTest(string locale)
         {
-            DateTime datetime = new DateTime(2021, 4, 9);
+            (string resultShort, string resultLong) = GetDateValueLocale(locale);
 
+            var engine = new RecalcEngine();            
+
+            var reversedShort = (DateValue)engine.Eval($"DateValue(\"{resultShort}\", \"{locale}\")");
+            Assert.Equal(_datetime, reversedShort.GetConvertedValue(null));
+
+            var reversedLong = (DateValue)engine.Eval($"DateValue(\"{resultLong}\", \"{locale}\")");
+            Assert.Equal(_datetime, reversedLong.GetConvertedValue(null));
+        }
+
+        [Theory]
+        [InlineData("eu-ES")] // PFx and PA are unable to parse long date format back to date.
+        public void DateValueLocaleUnableToParseTest(string locale)
+        {
+            (_, string resultLong) = GetDateValueLocale(locale);
+
+            var engine = new RecalcEngine();
+
+            var reversedLong = engine.Eval($"DateValue(\"{resultLong}\", \"{locale}\")");
+            Assert.IsType<ErrorValue>(reversedLong);
+        }
+
+        private (string resultShort, string resultLong) GetDateValueLocale(string locale)
+        {
             var expressionShort = $"Text(Date(2021, 4, 9), DateTimeFormat.ShortDate, \"{locale}\")";
             var expressionLong = $"Text(Date(2021, 4, 9), DateTimeFormat.LongDate, \"{locale}\")";
 
@@ -65,11 +90,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var resultShort = (StringValue)engine.Eval(expressionShort);
             var resultLong = (StringValue)engine.Eval(expressionLong);
 
-            var reversedShort = (DateValue)engine.Eval($"DateValue(\"{resultShort.Value}\", \"{locale}\")");
-            Assert.Equal(datetime, reversedShort.GetConvertedValue(null));
-
-            var reversedLong = (DateValue)engine.Eval($"DateValue(\"{resultLong.Value}\", \"{locale}\")");
-            Assert.Equal(datetime, reversedLong.GetConvertedValue(null));
+            return (resultShort.Value, resultLong.Value);
         }
     }
 }
