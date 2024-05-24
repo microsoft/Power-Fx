@@ -14,21 +14,24 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors.Tabular
 {
     // Implements CDP protocol for Tabular connectors
-    public class ConnectorTable : TabularService
+    public sealed class ConnectorTable : TabularService
     {        
         public string DisplayName { get; internal set; }
 
-        public string DatasetName { get; protected set; }
+        public string DatasetName { get; private set; }
 
-        public string TableName { get; protected set; }
+        public string TableName { get; private set; }
 
         public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
 
+        public override ConnectorType ConnectorType => _connectorType;
+
         internal ServiceCapabilities TableCapabilities { get; private set; }
 
-        private string _uriPrefix;
-
         internal DatasetMetadata DatasetMetadata;
+
+        private string _uriPrefix;
+        private ConnectorType _connectorType;            
 
         public ConnectorTable(string dataset, string table)
         {
@@ -44,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -80,15 +83,15 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             }            
         }
 
-        internal RecordType GetSchema(string text)
+        private RecordType GetSchema(string text)
         {
-            ConnectorType connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
+            _connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
             TableName = name;
             DisplayName = displayName;
             TableCapabilities = tableCapabilities;
 
             // Note that connectorType contains columns' capabilities but not the FormulaType (as of current developement)
-            return connectorType?.FormulaType as RecordType;
+            return (RecordType)_connectorType?.FormulaType;
         }
 
         // TABLE DATA SERVICE - CREATE
@@ -115,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();           
         }
 
-        protected IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
+        private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {
             // $$$ Is this always this type?
             RecordValue rv = FormulaValueJSON.FromJson(text, RecordType.Empty().Add("value", TableType)) as RecordValue;

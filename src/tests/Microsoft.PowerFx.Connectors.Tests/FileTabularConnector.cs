@@ -81,6 +81,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public override bool IsDelegable => false;
 
+        public override ConnectorType ConnectorType => null;
+
         // Initialization can be synchronous
         public void Init()
         {
