@@ -3109,10 +3109,6 @@
     <value>레코드</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>컬렉션의 모든 레코드를 삭제합니다. 컬렉션의 열은 그대로 남아 있습니다.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>컬렉션에서 모든 레코드를 삭제합니다. 그런 다음 동일한 컬렉션에 다른 레코드 집합을 추가합니다.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>유형 리터럴 선언이 유효하지 않습니다.</value>
+    <value>유형 리터럴 선언이 잘못되었습니다. '{0}' 식은 유형 정의에 사용할 수 없습니다.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>데이터 원본 범위 지정('As' 키워드 사용)은 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>컬렉션에서 모든 항목을 지우고 빈 컬렉션을 반환합니다.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>컬렉션</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>지울 컬렉션입니다.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>삭제할 원본입니다.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>지정된 데이터 원본은 이 함수에서 사용할 수 없습니다.</value>
     
   </data>
 </root>

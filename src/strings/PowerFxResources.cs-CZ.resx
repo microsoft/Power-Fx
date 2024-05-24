@@ -3109,10 +3109,6 @@
     <value>záznam</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Odstraní všechny záznamy kolekce. Sloupce kolekce zůstanou zachovány.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Odstraní všechny záznamy z kolekce. A poté do stejné kolekce přidá jinou sadu záznamů.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Prohlášení literálu typu bylo neplatné.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Rozsah zdroje dat (použití klíčového slova „As“) není podporován.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Vymaže všechny položky z kolekce a vrátí prázdnou kolekci.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kolekce</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Kolekce, která se má vymazat</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Zadaný zdroj dat nelze s touto funkcí použít.</value>
     
   </data>
 </root>

@@ -3109,10 +3109,6 @@
     <value>記錄</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>刪除集合的所有記錄。將保留集合的資料行。</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>刪除集合中的所有記錄。然後新增其他記錄集至同一個集合。</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型常值宣告無效。</value>
+    <value>類型常值聲明無效。運算式 '{0}' 不能用於類型定義。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>不支援確定資料來源範圍 (使用 'As' 關鍵字)。</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>清除集合中的所有項目，並傳回空的集合。</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>集合</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>要清除的集合。</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>要清除的來源。</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>指定的資料來源無法與此函數一起使用。</value>
     
   </data>
 </root>

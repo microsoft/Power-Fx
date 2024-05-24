@@ -3109,10 +3109,6 @@
     <value>ieraksts</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Dzēš visus kolekcijas ierakstus. Kolekcijas kolonnas tiek atstātas.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Dzēš visus ierakstus no kolekcijas. Un pēc tam tai pašai kolekcijai pievieno citu ierakstu kopu.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipa literāļa deklarācija bija nederīga.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Netiek atbalstīta datu avota (atslēgvārda “As” lietojums) mērogošana.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Notīra visus vienumus no kolekcijas un atgriež tukšu kolekciju.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kolekcija</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Notīrāmā kolekcija.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Norādīto datu avotu nevar izmantot ar šo funkciju.</value>
     
   </data>
 </root>

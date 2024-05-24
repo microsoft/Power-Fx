@@ -47,9 +47,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; };", 0, 0, true)]
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; ;", 0, 0, true)]
         [InlineData("Add(a:Number, a:Number): Number { a; };", 0, 0, true)]
-        [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
-        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
-        [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
+        [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
+        [InlineData(@"F2(b: String): String  = ""Test"";", 0, 0, true)]
         public void TestUDFNamedFormulaCounts(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()
@@ -418,7 +418,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.String, check.ReturnType);
         }
-                
+
         [Fact]
         public void DefineEmpty()
         {
@@ -519,6 +519,62 @@ namespace Microsoft.PowerFx.Core.Tests
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.Contains(errors, x => x.MessageKey == "ErrUDF_InvalidReturnType" || x.MessageKey == "ErrUDF_InvalidParamType");
+        }
+
+        [Theory]
+        [InlineData("Set(x: Number):Number = x + 1;", true)]
+        [InlineData("Count():Number = 5;", false)]
+        public void TestUDFsReservedNames(string script, bool expectedError)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (expectedError)
+            {
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionNameRestricted");
+            }
+            else
+            {
+                Assert.True(errors.Count() == 0);
+            }
+        }
+
+        [Fact]
+        public void TestUDFsReservedNamesTracking()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            // Adding a restricted UDF name is a breaking change, this test will need to be updated and a conversion will be needed for existing scenarios
+            var restrictedUDFNames = new HashSet<string>
+            {
+                "Type", "IsType", "AsType", "Set", "Collect", "ClearCollect",
+                "UpdateContext", "Navigate",
+            };
+
+            foreach (var func in BuiltinFunctionsCore._library.FunctionNames.Union(BuiltinFunctionsCore.OtherKnownFunctions))
+            {
+                var script = $"{func}():Boolean = true;";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+                if (!restrictedUDFNames.Contains(func))
+                {
+                    Assert.True(errors.Count() == 0);
+                }
+                else
+                {
+                    Assert.Contains(errors, x => x.MessageKey == "ErrUDF_FunctionNameRestricted");
+                }
+            }
         }
     }
 }
