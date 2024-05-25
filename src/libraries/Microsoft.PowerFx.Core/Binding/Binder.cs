@@ -982,7 +982,8 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var ds = currNodeQueryOptions.First().TabularDataSourceInfo;
 
-                if (!ds.IsSelectable)
+                // TODO: this feature should be set based on a Canvas ECS flag
+                if (!ds.IsSelectable && !this.Features.GenerateProjectionForNonSelectable)
                 {
                     return Enumerable.Empty<string>();
                 }
