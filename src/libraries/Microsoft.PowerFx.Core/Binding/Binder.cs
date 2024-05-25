@@ -983,6 +983,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var ds = currNodeQueryOptions.First().TabularDataSourceInfo;
 
                 // TODO: this feature should be set based on a Canvas ECS flag
+                // TODO: should also check for SharePoint
                 if (!ds.IsSelectable && !this.Features.GenerateProjectionForNonSelectable)
                 {
                     return Enumerable.Empty<string>();
