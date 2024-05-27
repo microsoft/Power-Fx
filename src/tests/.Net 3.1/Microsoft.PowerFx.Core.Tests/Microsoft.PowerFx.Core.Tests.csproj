@@ -37,10 +37,22 @@
   <ItemGroup>
     <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
-  
+
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
+
+  <Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <PfxIcon Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\icon.png"/>
+      <PfxExpressionTestCases Include ="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\*" Pack="true" />
+      <PfxExpressionTestCasesNotYetReady Include ="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\NotYetReady\*" Pack="true" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PfxIcon)" DestinationFolder="$(MSBuildProjectDirectory)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PfxExpressionTestCases)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PfxExpressionTestCasesNotYetReady)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases\NotYetReady" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
