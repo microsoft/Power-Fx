@@ -25,241 +25,473 @@ namespace Microsoft.PowerFx.Core.Texl
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
         };
 
+        internal static readonly TexlFunction[] __library = new TexlFunction[]
+        {
+             new AbsFunction(),
+             new AbsTableFunction(),
+             new AcosFunction(),
+             new AcosTableFunction(),
+             new AcotFunction(),
+             new AcotTableFunction(),
+             new AddColumnsFunction(),
+             new AmPmFunction(),
+             new AmPmShortFunction(),
+             new VariadicLogicalFunction(isAnd: true),
+             new AsinFunction(),
+             new AsinTableFunction(),
+             new AsTypeFunction(),
+             new AtanFunction(),
+             new Atan2Function(),
+             new AtanTableFunction(),
+             new AverageFunction(),
+             new AverageTableFunction(),
+             new BlankFunction(),
+             new BooleanFunction(),
+             new BooleanFunction_T(),
+             new BooleanFunction_UO(),
+             new BooleanBFunction(),
+             new BooleanBFunction_T(),
+             new BooleanNFunction(),
+             new BooleanNFunction_T(),
+             new BooleanWFunction(),
+             new BooleanWFunction_T(),
+             new CharFunction(),
+             new CharTFunction(),
+             new IsClock24Function(),
+             new CoalesceFunction(),
+             new ColorFadeFunction(),
+             new ColorFadeTFunction(),
+             new ColorValueFunction(),
+             new ColorValueFunction_UO(),
+             new ColumnFunction_UO(),
+             new ColumnNamesFunction_UO(),
+             new ConcatFunction(),
+             new ConcatenateFunction(),
+             new ConcatenateTableFunction(),
+             new CosFunction(),
+             new CosTableFunction(),
+             new CotFunction(),
+             new CotTableFunction(),
+             new CountFunction(),
+             new CountAFunction(),
+             new CountIfFunction(),
+             new CountRowsFunction(),
+             new CountRowsFunction_UO(),
+             new DateFunction(),
+             new DateAddFunction(),
+             new DateAddTFunction(),
+             new DateDiffFunction(),
+             new DateDiffTFunction(),
+             new DateTimeFunction(),
+             new DateTimeValueFunction(),
+             new DateTimeValueFunction_UO(),
+             new DateValueFunction(),
+             new DateValueFunction_UO(),
+             new DayFunction(),
+             new Dec2HexFunction(),
+             new Dec2HexTFunction(),
+             new DegreesFunction(),
+             new DegreesTableFunction(),
+             new DropColumnsFunction(),
+             new EDateFunction(),
+             new EOMonthFunction(),
+             new EncodeHTMLFunction(),
+             new EncodeUrlFunction(),
+             new EndsWithFunction(),
+             new ErrorFunction(),
+             new ExpFunction(),
+             new ExpTableFunction(),
+             new FilterFunction(),
+             new FindFunction(),
+             new FindTFunction(),
+             new FirstLastFunction(isFirst: true),
+             new FirstLastFunction_UO(isFirst: true),
+             new FirstLastNFunction(isFirst: true),
+             new FirstLastNFunction_UO(isFirst: true),
+             new ForAllFunction(),
+             new ForAllFunction_UO(),
+             new GUIDPureFunction_UO(),
+             new GUIDNoArgFunction(),
+             new GUIDPureFunction(),
+             new Hex2DecFunction(),
+             new Hex2DecTFunction(),
+             new HourFunction(),
+             new IfFunction(),
+             new IfErrorFunction(),
+             new IndexFunction(),
+             new IndexFunction_UO(),
+             new IntFunction(),
+             new IntTableFunction(),
+             new IsBlankFunction(),
+             new IsBlankOptionSetValueFunction(),
+             new IsBlankOrErrorFunction(),
+             new IsBlankOrErrorOptionSetValueFunction(),
+             new IsEmptyFunction(),
+             new IsErrorFunction(),
+             new IsNumericFunction(),
+             new ISOWeekNumFunction(),
+             new IsTodayFunction(),
+             new LanguageFunction(),
+             new FirstLastFunction(isFirst: false),
+             new FirstLastFunction_UO(isFirst: false),
+             new FirstLastNFunction(isFirst: false),
+             new FirstLastNFunction_UO(isFirst: false),
+             new LeftRightScalarFunction(isLeft: true),
+             new LeftRightScalarTableFunction(isLeft: true),
+             new LeftRightTableScalarFunction(isLeft: true),
+             new LeftRightTableTableFunction(isLeft: true),
+             new LenFunction(),
+             new LenTFunction(),
+             new LnFunction(),
+             new LnTableFunction(),
+             new LogFunction(),
+             new LogTFunction(),
+             new LookUpFunction(),
+             new LowerUpperFunction(isLower: true),
+             new LowerUpperTFunction(isLower: true),
+             new MinMaxFunction(isMin: false),
+             new MinMaxTableFunction(isMin: false),
+             new MidFunction(),
+             new MidTFunction(),
+             new MinMaxFunction(isMin: true),
+             new MinMaxTableFunction(isMin: true),
+             new MinuteFunction(),
+             new ModFunction(),
+             new ModTFunction(),
+             new MonthFunction(),
+             new MonthsLongFunction(),
+             new MonthsShortFunction(),
+             new NotFunction(),
+             new NowFunction(),
+             new VariadicLogicalFunction(isAnd: false),
+             new ParseJSONFunction(),
+             new PatchRecordFunction(),
+             new PiFunction(),
+             new PlainTextFunction(),
+             new PowerFunction(),
+             new PowerTFunction(),
+             new ProperFunction(),
+             new ProperTFunction(),
+             new RadiansFunction(),
+             new RadiansTableFunction(),
+             new RandFunction(),
+             new RandBetweenFunction(),
+             new RefreshFunction(),
+             new RenameColumnsFunction(),
+             new ReplaceFunction(),
+             new ReplaceTFunction(),
+             new RGBAFunction(),
+             new LeftRightScalarFunction(isLeft: false),
+             new LeftRightScalarTableFunction(isLeft: false),
+             new LeftRightTableScalarFunction(isLeft: false),
+             new LeftRightTableTableFunction(isLeft: false),
+             new RoundScalarFunction(),
+             new RoundDownScalarFunction(),
+             new RoundDownTableFunction(),
+             new RoundTableFunction(),
+             new RoundUpScalarFunction(),
+             new RoundUpTableFunction(),
+             new SearchFunction(),
+             new SecondFunction(),
+             new SequenceFunction(),
+             new ShowColumnsFunction(),
+             new ShuffleFunction(),
+             new SinFunction(),
+             new SinTableFunction(),
+             new SortFunction(),
+             new SortByColumnsFunction(),
+             new SplitFunction(),
+             new SqrtFunction(),
+             new SqrtTableFunction(),
+             new StartsWithFunction(),
+             new StdevPFunction(),
+             new StdevPTableFunction(),
+             new SubstituteFunction(),
+             new SubstituteTFunction(),
+             new SumFunction(),
+             new SumTableFunction(),
+             new SwitchFunction(),
+             new TableFunction(),
+             new TableFunction_UO(),
+             new TanFunction(),
+             new TanTableFunction(),
+             new TextFunction(),
+             new TextFunction_UO(),
+             new TimeFunction(),
+             new TimeValueFunction(),
+             new TimeValueFunction_UO(),
+             new TimeZoneOffsetFunction(),
+             new TodayFunction(),
+             new TraceFunction(),
+             new TrimFunction(),
+             new TrimEndsFunction(),
+             new TrimEndsTFunction(),
+             new TrimTFunction(),
+             new TruncFunction(),
+             new TruncTableFunction(),
+             new UniCharFunction(),
+             new UniCharTFunction(),
+             new LowerUpperFunction(isLower: false),
+             new LowerUpperTFunction(isLower: false),
+             new ValueFunction(),
+             new ValueFunction_UO(),
+             new VarPFunction(),
+             new VarPTableFunction(),
+             new WeekdayFunction(),
+             new WeekdaysLongFunction(),
+             new WeekdaysShortFunction(),
+             new WeekNumFunction(),
+             new WithFunction(),
+             new YearFunction(),
+        };
+
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _library = new TexlFunctionSet(__library);
 
-        public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
-        public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
-        public static readonly TexlFunction Acos = _library.Add(new AcosFunction());
-        public static readonly TexlFunction AcosT = _library.Add(new AcosTableFunction());
-        public static readonly TexlFunction Acot = _library.Add(new AcotFunction());
-        public static readonly TexlFunction AcotT = _library.Add(new AcotTableFunction());
-        public static readonly TexlFunction AddColumns = _library.Add(new AddColumnsFunction());
-        public static readonly TexlFunction AmPm = _library.Add(new AmPmFunction());
-        public static readonly TexlFunction AmPmShort = _library.Add(new AmPmShortFunction());
-        public static readonly TexlFunction And = _library.Add(new VariadicLogicalFunction(isAnd: true));
-        public static readonly TexlFunction Asin = _library.Add(new AsinFunction());
-        public static readonly TexlFunction AsinT = _library.Add(new AsinTableFunction());
-        public static readonly TexlFunction AsType = _library.Add(new AsTypeFunction());
-        public static readonly TexlFunction Atan = _library.Add(new AtanFunction());
-        public static readonly TexlFunction Atan2 = _library.Add(new Atan2Function());
-        public static readonly TexlFunction AtanT = _library.Add(new AtanTableFunction());
-        public static readonly TexlFunction Average = _library.Add(new AverageFunction());
-        public static readonly TexlFunction AverageT = _library.Add(new AverageTableFunction());
-        public static readonly TexlFunction Blank = _library.Add(new BlankFunction());
-        public static readonly TexlFunction Boolean = _library.Add(new BooleanFunction());
-        public static readonly TexlFunction Boolean_T = _library.Add(new BooleanFunction_T());
-        public static readonly TexlFunction Boolean_UO = _library.Add(new BooleanFunction_UO());
-        public static readonly TexlFunction BooleanB = _library.Add(new BooleanBFunction());
-        public static readonly TexlFunction BooleanB_T = _library.Add(new BooleanBFunction_T());
-        public static readonly TexlFunction BooleanN = _library.Add(new BooleanNFunction());
-        public static readonly TexlFunction BooleanN_T = _library.Add(new BooleanNFunction_T());
-        public static readonly TexlFunction BooleanW = _library.Add(new BooleanWFunction());
-        public static readonly TexlFunction BooleanW_T = _library.Add(new BooleanWFunction_T());
-        public static readonly TexlFunction Char = _library.Add(new CharFunction());
-        public static readonly TexlFunction CharT = _library.Add(new CharTFunction());
-        public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
-        public static readonly TexlFunction Coalesce = _library.Add(new CoalesceFunction());
-        public static readonly TexlFunction ColorFade = _library.Add(new ColorFadeFunction());
-        public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
-        public static readonly TexlFunction ColorValue = _library.Add(new ColorValueFunction());
-        public static readonly TexlFunction ColorValue_UO = _library.Add(new ColorValueFunction_UO());
-        public static readonly TexlFunction Column_UO = _library.Add(new ColumnFunction_UO());
-        public static readonly TexlFunction ColumnNames_UO = _library.Add(new ColumnNamesFunction_UO());
-        public static readonly TexlFunction Concat = _library.Add(new ConcatFunction());
-        public static readonly TexlFunction Concatenate = _library.Add(new ConcatenateFunction());
-        public static readonly TexlFunction ConcatenateT = _library.Add(new ConcatenateTableFunction());
-        public static readonly TexlFunction Cos = _library.Add(new CosFunction());
-        public static readonly TexlFunction CosT = _library.Add(new CosTableFunction());
-        public static readonly TexlFunction Cot = _library.Add(new CotFunction());
-        public static readonly TexlFunction CotT = _library.Add(new CotTableFunction());
-        public static readonly TexlFunction Count = _library.Add(new CountFunction());
-        public static readonly TexlFunction CountA = _library.Add(new CountAFunction());
-        public static readonly TexlFunction CountIf = _library.Add(new CountIfFunction());
-        public static readonly TexlFunction CountRows = _library.Add(new CountRowsFunction());
-        public static readonly TexlFunction CountRows_UO = _library.Add(new CountRowsFunction_UO());
-        public static readonly TexlFunction Date = _library.Add(new DateFunction());
-        public static readonly TexlFunction DateAdd = _library.Add(new DateAddFunction());
-        public static readonly TexlFunction DateAddT = _library.Add(new DateAddTFunction());
-        public static readonly TexlFunction DateDiff = _library.Add(new DateDiffFunction());
-        public static readonly TexlFunction DateDiffT = _library.Add(new DateDiffTFunction());
-        public static readonly TexlFunction DateTime = _library.Add(new DateTimeFunction());
-        public static readonly TexlFunction DateTimeValue = _library.Add(new DateTimeValueFunction());
-        public static readonly TexlFunction DateTimeValue_UO = _library.Add(new DateTimeValueFunction_UO());
-        public static readonly TexlFunction DateValue = _library.Add(new DateValueFunction());
-        public static readonly TexlFunction DateValue_UO = _library.Add(new DateValueFunction_UO());
-        public static readonly TexlFunction Day = _library.Add(new DayFunction());
-        public static readonly TexlFunction Dec2Hex = _library.Add(new Dec2HexFunction());
-        public static readonly TexlFunction Dec2HexT = _library.Add(new Dec2HexTFunction());
-        public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
-        public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
-        public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
-        public static readonly TexlFunction EDate = _library.Add(new EDateFunction());
-        public static readonly TexlFunction EOMonth = _library.Add(new EOMonthFunction());
-        public static readonly TexlFunction EncodeHTML = _library.Add(new EncodeHTMLFunction());
-        public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
-        public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
-        public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
-        public static readonly TexlFunction Exp = _library.Add(new ExpFunction());
-        public static readonly TexlFunction ExpT = _library.Add(new ExpTableFunction());
-        public static readonly TexlFunction Filter = _library.Add(new FilterFunction());
-        public static readonly TexlFunction Find = _library.Add(new FindFunction());
-        public static readonly TexlFunction FindT = _library.Add(new FindTFunction());
-        public static readonly TexlFunction First = _library.Add(new FirstLastFunction(isFirst: true));
-        public static readonly TexlFunction First_UO = _library.Add(new FirstLastFunction_UO(isFirst: true));
-        public static readonly TexlFunction FirstN = _library.Add(new FirstLastNFunction(isFirst: true));
-        public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
-        public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
-        public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
-        public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
-        public static readonly TexlFunction GUIDNoArg = _library.Add(new GUIDNoArgFunction());
-        public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
-        public static readonly TexlFunction Hex2Dec = _library.Add(new Hex2DecFunction());
-        public static readonly TexlFunction Hex2DecT = _library.Add(new Hex2DecTFunction());
-        public static readonly TexlFunction Hour = _library.Add(new HourFunction());
-        public static readonly TexlFunction If = _library.Add(new IfFunction());
-        public static readonly TexlFunction IfError = _library.Add(new IfErrorFunction());
-        public static readonly TexlFunction Index = _library.Add(new IndexFunction());
-        public static readonly TexlFunction Index_UO = _library.Add(new IndexFunction_UO());
-        public static readonly TexlFunction Int = _library.Add(new IntFunction());
-        public static readonly TexlFunction IntT = _library.Add(new IntTableFunction());
-        public static readonly TexlFunction IsBlank = _library.Add(new IsBlankFunction());
-        public static readonly TexlFunction IsBlankOptionSetValue = _library.Add(new IsBlankOptionSetValueFunction());
-        public static readonly TexlFunction IsBlankOrError = _library.Add(new IsBlankOrErrorFunction());
-        public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
-        public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
-        public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
-        public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
-        public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
-        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
-        public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
-        public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
-        public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
-        public static readonly TexlFunction LastN = _library.Add(new FirstLastNFunction(isFirst: false));
-        public static readonly TexlFunction LastN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: false));
-        public static readonly TexlFunction Left = _library.Add(new LeftRightScalarFunction(isLeft: true));
-        public static readonly TexlFunction LeftST = _library.Add(new LeftRightScalarTableFunction(isLeft: true));
-        public static readonly TexlFunction LeftTS = _library.Add(new LeftRightTableScalarFunction(isLeft: true));
-        public static readonly TexlFunction LeftTT = _library.Add(new LeftRightTableTableFunction(isLeft: true));
-        public static readonly TexlFunction Len = _library.Add(new LenFunction());
-        public static readonly TexlFunction LenT = _library.Add(new LenTFunction());
-        public static readonly TexlFunction Ln = _library.Add(new LnFunction());
-        public static readonly TexlFunction LnT = _library.Add(new LnTableFunction());
-        public static readonly TexlFunction Log = _library.Add(new LogFunction());
-        public static readonly TexlFunction LogT = _library.Add(new LogTFunction());
-        public static readonly TexlFunction LookUp = _library.Add(new LookUpFunction());
-        public static readonly TexlFunction Lower = _library.Add(new LowerUpperFunction(isLower: true));
-        public static readonly TexlFunction LowerT = _library.Add(new LowerUpperTFunction(isLower: true));
-        public static readonly TexlFunction Max = _library.Add(new MinMaxFunction(isMin: false));
-        public static readonly TexlFunction MaxT = _library.Add(new MinMaxTableFunction(isMin: false));
-        public static readonly TexlFunction Mid = _library.Add(new MidFunction());
-        public static readonly TexlFunction MidT = _library.Add(new MidTFunction());
-        public static readonly TexlFunction Min = _library.Add(new MinMaxFunction(isMin: true));
-        public static readonly TexlFunction MinT = _library.Add(new MinMaxTableFunction(isMin: true));
-        public static readonly TexlFunction Minute = _library.Add(new MinuteFunction());
-        public static readonly TexlFunction Mod = _library.Add(new ModFunction());
-        public static readonly TexlFunction ModT = _library.Add(new ModTFunction());
-        public static readonly TexlFunction Month = _library.Add(new MonthFunction());
-        public static readonly TexlFunction MonthsLong = _library.Add(new MonthsLongFunction());
-        public static readonly TexlFunction MonthsShort = _library.Add(new MonthsShortFunction());
-        public static readonly TexlFunction Not = _library.Add(new NotFunction());
-        public static readonly TexlFunction Now = _library.Add(new NowFunction());
-        public static readonly TexlFunction Or = _library.Add(new VariadicLogicalFunction(isAnd: false));
-        public static readonly TexlFunction ParseJSON = _library.Add(new ParseJSONFunction());
-        public static readonly TexlFunction PatchRecord = _library.Add(new PatchRecordFunction());
-        public static readonly TexlFunction Pi = _library.Add(new PiFunction());
-        public static readonly TexlFunction PlainText = _library.Add(new PlainTextFunction());
-        public static readonly TexlFunction Power = _library.Add(new PowerFunction());
-        public static readonly TexlFunction PowerT = _library.Add(new PowerTFunction());
-        public static readonly TexlFunction Proper = _library.Add(new ProperFunction());
-        public static readonly TexlFunction ProperT = _library.Add(new ProperTFunction());
-        public static readonly TexlFunction Radians = _library.Add(new RadiansFunction());
-        public static readonly TexlFunction RadiansT = _library.Add(new RadiansTableFunction());
-        public static readonly TexlFunction Rand = _library.Add(new RandFunction());
-        public static readonly TexlFunction RandBetween = _library.Add(new RandBetweenFunction());
-        public static readonly TexlFunction Refresh = _library.Add(new RefreshFunction());
-        public static readonly TexlFunction RenameColumns = _library.Add(new RenameColumnsFunction());
-        public static readonly TexlFunction Replace = _library.Add(new ReplaceFunction());
-        public static readonly TexlFunction ReplaceT = _library.Add(new ReplaceTFunction());
-        public static readonly TexlFunction RGBA = _library.Add(new RGBAFunction());
-        public static readonly TexlFunction Right = _library.Add(new LeftRightScalarFunction(isLeft: false));
-        public static readonly TexlFunction RightST = _library.Add(new LeftRightScalarTableFunction(isLeft: false));
-        public static readonly TexlFunction RightTS = _library.Add(new LeftRightTableScalarFunction(isLeft: false));
-        public static readonly TexlFunction RightTT = _library.Add(new LeftRightTableTableFunction(isLeft: false));
-        public static readonly TexlFunction Round = _library.Add(new RoundScalarFunction());
-        public static readonly TexlFunction RoundDown = _library.Add(new RoundDownScalarFunction());
-        public static readonly TexlFunction RoundDownT = _library.Add(new RoundDownTableFunction());
-        public static readonly TexlFunction RoundT = _library.Add(new RoundTableFunction());
-        public static readonly TexlFunction RoundUp = _library.Add(new RoundUpScalarFunction());
-        public static readonly TexlFunction RoundUpT = _library.Add(new RoundUpTableFunction());
-        public static readonly TexlFunction Search = _library.Add(new SearchFunction());
-        public static readonly TexlFunction Second = _library.Add(new SecondFunction());
-        public static readonly TexlFunction Sequence = _library.Add(new SequenceFunction());
-        public static readonly TexlFunction ShowColumns = _library.Add(new ShowColumnsFunction());
-        public static readonly TexlFunction Shuffle = _library.Add(new ShuffleFunction());
-        public static readonly TexlFunction Sin = _library.Add(new SinFunction());
-        public static readonly TexlFunction SinT = _library.Add(new SinTableFunction());
-        public static readonly TexlFunction Sort = _library.Add(new SortFunction());
-        public static readonly TexlFunction SortByColumns = _library.Add(new SortByColumnsFunction());
-        public static readonly TexlFunction Split = _library.Add(new SplitFunction());
-        public static readonly TexlFunction Sqrt = _library.Add(new SqrtFunction());
-        public static readonly TexlFunction SqrtT = _library.Add(new SqrtTableFunction());
-        public static readonly TexlFunction StartsWith = _library.Add(new StartsWithFunction());
-        public static readonly TexlFunction StdevP = _library.Add(new StdevPFunction());
-        public static readonly TexlFunction StdevPT = _library.Add(new StdevPTableFunction());
-        public static readonly TexlFunction Substitute = _library.Add(new SubstituteFunction());
-        public static readonly TexlFunction SubstituteT = _library.Add(new SubstituteTFunction());
-        public static readonly TexlFunction Sum = _library.Add(new SumFunction());
-        public static readonly TexlFunction SumT = _library.Add(new SumTableFunction());
-        public static readonly TexlFunction Switch = _library.Add(new SwitchFunction());
-        public static readonly TexlFunction Table = _library.Add(new TableFunction());
-        public static readonly TexlFunction Table_UO = _library.Add(new TableFunction_UO());
-        public static readonly TexlFunction Tan = _library.Add(new TanFunction());
-        public static readonly TexlFunction TanT = _library.Add(new TanTableFunction());
-        public static readonly TexlFunction Text = _library.Add(new TextFunction());
-        public static readonly TexlFunction Text_UO = _library.Add(new TextFunction_UO());
-        public static readonly TexlFunction Time = _library.Add(new TimeFunction());
-        public static readonly TexlFunction TimeValue = _library.Add(new TimeValueFunction());
-        public static readonly TexlFunction TimeValue_UO = _library.Add(new TimeValueFunction_UO());
-        public static readonly TexlFunction TimeZoneOffset = _library.Add(new TimeZoneOffsetFunction());
-        public static readonly TexlFunction Today = _library.Add(new TodayFunction());
-        public static readonly TexlFunction Trace = _library.Add(new TraceFunction());
-        public static readonly TexlFunction Trim = _library.Add(new TrimFunction());
-        public static readonly TexlFunction TrimEnds = _library.Add(new TrimEndsFunction());
-        public static readonly TexlFunction TrimEndsT = _library.Add(new TrimEndsTFunction());
-        public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
-        public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
-        public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
-        public static readonly TexlFunction UniChar = _library.Add(new UniCharFunction());
-        public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
-        public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
-        public static readonly TexlFunction UpperT = _library.Add(new LowerUpperTFunction(isLower: false));
-        public static readonly TexlFunction Value = _library.Add(new ValueFunction());
-        public static readonly TexlFunction Value_UO = _library.Add(new ValueFunction_UO());
-        public static readonly TexlFunction VarP = _library.Add(new VarPFunction());
-        public static readonly TexlFunction VarPT = _library.Add(new VarPTableFunction());
-        public static readonly TexlFunction Weekday = _library.Add(new WeekdayFunction());
-        public static readonly TexlFunction WeekdaysLong = _library.Add(new WeekdaysLongFunction());
-        public static readonly TexlFunction WeekdaysShort = _library.Add(new WeekdaysShortFunction());
-        public static readonly TexlFunction WeekNum = _library.Add(new WeekNumFunction());
-        public static readonly TexlFunction With = _library.Add(new WithFunction());
-        public static readonly TexlFunction Year = _library.Add(new YearFunction());
+        public static readonly TexlFunction Abs = __library[0];
+        public static readonly TexlFunction AbsT = __library[1];
+        public static readonly TexlFunction Acos = __library[2];
+        public static readonly TexlFunction AcosT = __library[3];
+        public static readonly TexlFunction Acot = __library[4];
+        public static readonly TexlFunction AcotT = __library[5];
+        public static readonly TexlFunction AddColumns = __library[6];
+        public static readonly TexlFunction AmPm = __library[7];
+        public static readonly TexlFunction AmPmShort = __library[8];
+        public static readonly TexlFunction And = __library[9];
+        public static readonly TexlFunction Asin = __library[10];
+        public static readonly TexlFunction AsinT = __library[11];
+        public static readonly TexlFunction AsType = __library[12];
+        public static readonly TexlFunction Atan = __library[13];
+        public static readonly TexlFunction Atan2 = __library[14];
+        public static readonly TexlFunction AtanT = __library[15];
+        public static readonly TexlFunction Average = __library[16];
+        public static readonly TexlFunction AverageT = __library[17];
+        public static readonly TexlFunction Blank = __library[18];
+        public static readonly TexlFunction Boolean = __library[19];
+        public static readonly TexlFunction Boolean_T = __library[20];
+        public static readonly TexlFunction Boolean_UO = __library[21];
+        public static readonly TexlFunction BooleanB = __library[22];
+        public static readonly TexlFunction BooleanB_T = __library[23];
+        public static readonly TexlFunction BooleanN = __library[24];
+        public static readonly TexlFunction BooleanN_T = __library[25];
+        public static readonly TexlFunction BooleanW = __library[26];
+        public static readonly TexlFunction BooleanW_T = __library[27];
+        public static readonly TexlFunction Char = __library[28];
+        public static readonly TexlFunction CharT = __library[29];
+        public static readonly TexlFunction Clock24 = __library[30];
+        public static readonly TexlFunction Coalesce = __library[31];
+        public static readonly TexlFunction ColorFade = __library[32];
+        public static readonly TexlFunction ColorFadeT = __library[33];
+        public static readonly TexlFunction ColorValue = __library[34];
+        public static readonly TexlFunction ColorValue_UO = __library[35];
+        public static readonly TexlFunction Column_UO = __library[36];
+        public static readonly TexlFunction ColumnNames_UO = __library[37];
+        public static readonly TexlFunction Concat = __library[38];
+        public static readonly TexlFunction Concatenate = __library[39];
+        public static readonly TexlFunction ConcatenateT = __library[40];
+        public static readonly TexlFunction Cos = __library[41];
+        public static readonly TexlFunction CosT = __library[42];
+        public static readonly TexlFunction Cot = __library[43];
+        public static readonly TexlFunction CotT = __library[44];
+        public static readonly TexlFunction Count = __library[45];
+        public static readonly TexlFunction CountA = __library[46];
+        public static readonly TexlFunction CountIf = __library[47];
+        public static readonly TexlFunction CountRows = __library[48];
+        public static readonly TexlFunction CountRows_UO = __library[49];
+        public static readonly TexlFunction Date = __library[50];
+        public static readonly TexlFunction DateAdd = __library[51];
+        public static readonly TexlFunction DateAddT = __library[52];
+        public static readonly TexlFunction DateDiff = __library[53];
+        public static readonly TexlFunction DateDiffT = __library[54];
+        public static readonly TexlFunction DateTime = __library[55];
+        public static readonly TexlFunction DateTimeValue = __library[56];
+        public static readonly TexlFunction DateTimeValue_UO = __library[57];
+        public static readonly TexlFunction DateValue = __library[58];
+        public static readonly TexlFunction DateValue_UO = __library[59];
+        public static readonly TexlFunction Day = __library[60];
+        public static readonly TexlFunction Dec2Hex = __library[61];
+        public static readonly TexlFunction Dec2HexT = __library[62];
+        public static readonly TexlFunction Degrees = __library[63];
+        public static readonly TexlFunction DegreesT = __library[64];
+        public static readonly TexlFunction DropColumns = __library[65];
+        public static readonly TexlFunction EDate = __library[66];
+        public static readonly TexlFunction EOMonth = __library[67];
+        public static readonly TexlFunction EncodeHTML = __library[68];
+        public static readonly TexlFunction EncodeUrl = __library[69];
+        public static readonly TexlFunction EndsWith = __library[70];
+        public static readonly TexlFunction Error = __library[71];
+        public static readonly TexlFunction Exp = __library[72];
+        public static readonly TexlFunction ExpT = __library[73];
+        public static readonly TexlFunction Filter = __library[74];
+        public static readonly TexlFunction Find = __library[75];
+        public static readonly TexlFunction FindT = __library[76];
+        public static readonly TexlFunction First = __library[77];
+        public static readonly TexlFunction First_UO = __library[78];
+        public static readonly TexlFunction FirstN = __library[79];
+        public static readonly TexlFunction FirstN_UO = __library[80];
+        public static readonly TexlFunction ForAll = __library[81];
+        public static readonly TexlFunction ForAll_UO = __library[82];
+        public static readonly TexlFunction GUID_UO = __library[83];
+        public static readonly TexlFunction GUIDNoArg = __library[84];
+        public static readonly TexlFunction GUIDPure = __library[85];
+        public static readonly TexlFunction Hex2Dec = __library[86];
+        public static readonly TexlFunction Hex2DecT = __library[87];
+        public static readonly TexlFunction Hour = __library[88];
+        public static readonly TexlFunction If = __library[89];
+        public static readonly TexlFunction IfError = __library[90];
+        public static readonly TexlFunction Index = __library[91];
+        public static readonly TexlFunction Index_UO = __library[92];
+        public static readonly TexlFunction Int = __library[93];
+        public static readonly TexlFunction IntT = __library[94];
+        public static readonly TexlFunction IsBlank = __library[95];
+        public static readonly TexlFunction IsBlankOptionSetValue = __library[96];
+        public static readonly TexlFunction IsBlankOrError = __library[97];
+        public static readonly TexlFunction IsBlankOrErrorOptionSetValue = __library[98];
+        public static readonly TexlFunction IsEmpty = __library[99];
+        public static readonly TexlFunction IsError = __library[100];
+        public static readonly TexlFunction IsNumeric = __library[101];
+        public static readonly TexlFunction ISOWeekNum = __library[102];
+        public static readonly TexlFunction IsToday = __library[103];
+        public static readonly TexlFunction Language = __library[104];
+        public static readonly TexlFunction Last = __library[105];
+        public static readonly TexlFunction Last_UO = __library[106];
+        public static readonly TexlFunction LastN = __library[107];
+        public static readonly TexlFunction LastN_UO = __library[108];
+        public static readonly TexlFunction Left = __library[109];
+        public static readonly TexlFunction LeftST = __library[110];
+        public static readonly TexlFunction LeftTS = __library[111];
+        public static readonly TexlFunction LeftTT = __library[112];
+        public static readonly TexlFunction Len = __library[113];
+        public static readonly TexlFunction LenT = __library[114];
+        public static readonly TexlFunction Ln = __library[115];
+        public static readonly TexlFunction LnT = __library[116];
+        public static readonly TexlFunction Log = __library[117];
+        public static readonly TexlFunction LogT = __library[118];
+        public static readonly TexlFunction LookUp = __library[119];
+        public static readonly TexlFunction Lower = __library[120];
+        public static readonly TexlFunction LowerT = __library[121];
+        public static readonly TexlFunction Max = __library[122];
+        public static readonly TexlFunction MaxT = __library[123];
+        public static readonly TexlFunction Mid = __library[124];
+        public static readonly TexlFunction MidT = __library[125];
+        public static readonly TexlFunction Min = __library[126];
+        public static readonly TexlFunction MinT = __library[127];
+        public static readonly TexlFunction Minute = __library[128];
+        public static readonly TexlFunction Mod = __library[129];
+        public static readonly TexlFunction ModT = __library[130];
+        public static readonly TexlFunction Month = __library[131];
+        public static readonly TexlFunction MonthsLong = __library[132];
+        public static readonly TexlFunction MonthsShort = __library[133];
+        public static readonly TexlFunction Not = __library[134];
+        public static readonly TexlFunction Now = __library[135];
+        public static readonly TexlFunction Or = __library[136];
+        public static readonly TexlFunction ParseJSON = __library[137];
+        public static readonly TexlFunction PatchRecord = __library[138];
+        public static readonly TexlFunction Pi = __library[139];
+        public static readonly TexlFunction PlainText = __library[140];
+        public static readonly TexlFunction Power = __library[141];
+        public static readonly TexlFunction PowerT = __library[142];
+        public static readonly TexlFunction Proper = __library[143];
+        public static readonly TexlFunction ProperT = __library[144];
+        public static readonly TexlFunction Radians = __library[145];
+        public static readonly TexlFunction RadiansT = __library[146];
+        public static readonly TexlFunction Rand = __library[147];
+        public static readonly TexlFunction RandBetween = __library[148];
+        public static readonly TexlFunction Refresh = __library[149];
+        public static readonly TexlFunction RenameColumns = __library[150];
+        public static readonly TexlFunction Replace = __library[151];
+        public static readonly TexlFunction ReplaceT = __library[152];
+        public static readonly TexlFunction RGBA = __library[153];
+        public static readonly TexlFunction Right = __library[154];
+        public static readonly TexlFunction RightST = __library[155];
+        public static readonly TexlFunction RightTS = __library[156];
+        public static readonly TexlFunction RightTT = __library[157];
+        public static readonly TexlFunction Round = __library[158];
+        public static readonly TexlFunction RoundDown = __library[159];
+        public static readonly TexlFunction RoundDownT = __library[160];
+        public static readonly TexlFunction RoundT = __library[161];
+        public static readonly TexlFunction RoundUp = __library[162];
+        public static readonly TexlFunction RoundUpT = __library[163];
+        public static readonly TexlFunction Search = __library[164];
+        public static readonly TexlFunction Second = __library[165];
+        public static readonly TexlFunction Sequence = __library[166];
+        public static readonly TexlFunction ShowColumns = __library[167];
+        public static readonly TexlFunction Shuffle = __library[168];
+        public static readonly TexlFunction Sin = __library[169];
+        public static readonly TexlFunction SinT = __library[170];
+        public static readonly TexlFunction Sort = __library[171];
+        public static readonly TexlFunction SortByColumns = __library[172];
+        public static readonly TexlFunction Split = __library[173];
+        public static readonly TexlFunction Sqrt = __library[174];
+        public static readonly TexlFunction SqrtT = __library[175];
+        public static readonly TexlFunction StartsWith = __library[176];
+        public static readonly TexlFunction StdevP = __library[177];
+        public static readonly TexlFunction StdevPT = __library[178];
+        public static readonly TexlFunction Substitute = __library[179];
+        public static readonly TexlFunction SubstituteT = __library[180];
+        public static readonly TexlFunction Sum = __library[181];
+        public static readonly TexlFunction SumT = __library[182];
+        public static readonly TexlFunction Switch = __library[183];
+        public static readonly TexlFunction Table = __library[184];
+        public static readonly TexlFunction Table_UO = __library[185];
+        public static readonly TexlFunction Tan = __library[186];
+        public static readonly TexlFunction TanT = __library[187];
+        public static readonly TexlFunction Text = __library[188];
+        public static readonly TexlFunction Text_UO = __library[189];
+        public static readonly TexlFunction Time = __library[190];
+        public static readonly TexlFunction TimeValue = __library[191];
+        public static readonly TexlFunction TimeValue_UO = __library[192];
+        public static readonly TexlFunction TimeZoneOffset = __library[193];
+        public static readonly TexlFunction Today = __library[194];
+        public static readonly TexlFunction Trace = __library[195];
+        public static readonly TexlFunction Trim = __library[196];
+        public static readonly TexlFunction TrimEnds = __library[197];
+        public static readonly TexlFunction TrimEndsT = __library[198];
+        public static readonly TexlFunction TrimT = __library[199];
+        public static readonly TexlFunction Trunc = __library[200];
+        public static readonly TexlFunction TruncT = __library[201];
+        public static readonly TexlFunction UniChar = __library[202];
+        public static readonly TexlFunction UniCharT = __library[203];
+        public static readonly TexlFunction Upper = __library[204];
+        public static readonly TexlFunction UpperT = __library[205];
+        public static readonly TexlFunction Value = __library[206];
+        public static readonly TexlFunction Value_UO = __library[207];
+        public static readonly TexlFunction VarP = __library[208];
+        public static readonly TexlFunction VarPT = __library[209];
+        public static readonly TexlFunction Weekday = __library[210];
+        public static readonly TexlFunction WeekdaysLong = __library[211];
+        public static readonly TexlFunction WeekdaysShort = __library[212];
+        public static readonly TexlFunction WeekNum = __library[213];
+        public static readonly TexlFunction With = __library[214];
+        public static readonly TexlFunction Year = __library[215];
 
-        // Don't add new functions here, follow alpha order
+        internal static readonly TexlFunction[] __featureGateFunctions = new TexlFunction[]
+        {
+            new DecimalFunction(),
+            new DecimalFunction_UO(),
+            new FloatFunction(),
+            new FloatFunction_UO(),
+            new IsUTCTodayFunction(),
+            new UTCNowFunction(),
+            new UTCTodayFunction(),
+            new BooleanLFunction(),
+            new BooleanLFunction_T(),
+            new SummarizeFunction(),
+        };
 
         // _featureGateFunctions functions, not present in all platforms
-        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet(__featureGateFunctions);
 
-        public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
-        public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
-        public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
-        public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
-        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
-        public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
-        public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
-        public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
-        public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
-        public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
+        public static readonly TexlFunction Decimal = __featureGateFunctions[0];
+        public static readonly TexlFunction Decimal_UO = __featureGateFunctions[1];
+        public static readonly TexlFunction Float = __featureGateFunctions[2];
+        public static readonly TexlFunction Float_UO = __featureGateFunctions[3];
+        public static readonly TexlFunction IsUTCToday = __featureGateFunctions[4];
+        public static readonly TexlFunction UTCNow = __featureGateFunctions[5];
+        public static readonly TexlFunction UTCToday = __featureGateFunctions[6];
+        public static readonly TexlFunction BooleanL = __featureGateFunctions[7];
+        public static readonly TexlFunction BooleanL_T = __featureGateFunctions[8];
+        public static readonly TexlFunction Summarize = __featureGateFunctions[9];
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

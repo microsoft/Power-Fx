@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 // readonly arrays / dictionary - is there an IReadOnly type to changes these too instead? 
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "BuiltinFunctionsCore._featureGateFunctions",
+                "BuiltinFunctionsCore.__featureGateFunctions",
                 "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore.__library",
                 "BuiltinFunctionsCore._testOnlyLibrary",
                 "DateAddFunction.SubDayStringList",
                 "DelegationCapability._binaryOpToDelegationCapabilityMap",

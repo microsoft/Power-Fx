@@ -69,5 +69,21 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(tabularOverload.MaxArity, simpleFunction.MaxArity);
             }
         }
+
+        [Fact]
+        public void ValidateBuiltInFunctions()
+        {
+            TexlFunction[] lib = BuiltinFunctionsCore.__library
+                .Union(BuiltinFunctionsCore.__featureGateFunctions)
+                .ToArray();
+
+            TexlFunction[] funcs = typeof(BuiltinFunctionsCore)
+                .GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.FieldType == typeof(TexlFunction))
+                .Select(f => f.GetValue(null) as TexlFunction)
+                .ToArray();
+
+            Assert.Equal(lib, funcs);
+        }
     }
 }
