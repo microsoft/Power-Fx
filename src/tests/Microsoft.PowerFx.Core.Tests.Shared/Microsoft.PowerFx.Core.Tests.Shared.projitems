@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d274e7b2-0fed-4f9e-b39a-9fa4a8accf39</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Microsoft.PowerFx.Core.Tests.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssociatedDataSourcesTests\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Docs\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExpressionTestHelpers\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IntellisenseTests\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRTests\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestRunnerTests\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeSystemTests\*.cs" />
+    <None Include="$(MSBuildThisFileDirectory)TestRunnerTests\*.txt" />
+    <None Update="$(MSBuildThisFileDirectory)TestRunnerTests\*.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs" />
+    <Compile Update="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Resources.resx" />
+    <EmbeddedResource Update="$(MSBuildThisFileDirectory)Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="$(MSBuildThisFileDirectory)ExpressionTestCases\README.md" />
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>
+      <PackagePath>content\ExpressionTestCases</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\ExpressionTestCases</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\NotYetReady\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\NotYetReady\%(Filename)%(Extension)</Link>
+      <PackagePath>content\ExpressionTestCases\NotYetReady</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\NotYetReady\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\NotYetReady\%(Filename)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\ExpressionTestCases\NotYetReady</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)IntellisenseTests\TestSignatures\**">
+      <Visible>false</Visible>
+      <Link>IntellisenseTests\TestSignatures\%(Content.RecursiveDir)%(FileName)%(Extension)</Link>
+      <PackagePath>content\IntellisenseTests\TestSignatures</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)IntellisenseTests\TestSignatures\**">
+      <Visible>false</Visible>
+      <Link>IntellisenseTests\TestSignatures\%(Content.RecursiveDir)%(FileName)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\IntellisenseTests\TestSignatures</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ExpressionTestCases\README.md" />
+  </ItemGroup>
+</Project>
