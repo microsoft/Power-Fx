@@ -41,19 +41,37 @@
     <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\*">
       <Visible>false</Visible>
       <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>
-      <PackagePath>ExpressionTestCases</PackagePath>
+      <PackagePath>content\ExpressionTestCases</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\ExpressionTestCases</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\NotYetReady\*">
       <Visible>false</Visible>
       <Link>ExpressionTestCases\NotYetReady\%(Filename)%(Extension)</Link>
-      <PackagePath>ExpressionTestCases\NotYetReady</PackagePath>
+      <PackagePath>content\ExpressionTestCases\NotYetReady</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\NotYetReady\*">
+      <Visible>false</Visible>
+      <Link>ExpressionTestCases\NotYetReady\%(Filename)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\ExpressionTestCases\NotYetReady</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)IntellisenseTests\TestSignatures\**">
       <Visible>false</Visible>
       <Link>IntellisenseTests\TestSignatures\%(Content.RecursiveDir)%(FileName)%(Extension)</Link>
-      <PackagePath>IntellisenseTests\TestSignatures</PackagePath>
+      <PackagePath>content\IntellisenseTests\TestSignatures</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)IntellisenseTests\TestSignatures\**">
+      <Visible>false</Visible>
+      <Link>IntellisenseTests\TestSignatures\%(Content.RecursiveDir)%(FileName)%(Extension)</Link>
+      <PackagePath>contentFiles\any\$(TargetFrameworks)\IntellisenseTests\TestSignatures</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
