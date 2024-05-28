@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <Target Name="CleanOutputpackagesDir" AfterTargets="Clean">
+    <RemoveDir Directories="$(MSBuildThisFileDirectory)outputpackages" />
   </Target>
 
   <PropertyGroup>
