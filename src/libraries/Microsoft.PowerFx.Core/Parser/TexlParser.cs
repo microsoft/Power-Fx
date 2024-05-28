@@ -396,6 +396,8 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         if (TokEat(TokKind.CurlyClose) == null)
                         {
+                            // Add incomplete UDF as they are needed for intellisense
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
                             break;
                         }
 
@@ -418,6 +420,8 @@ namespace Microsoft.PowerFx.Core.Parser
                         // Check if we're at EOF before a semicolon is found
                         if (_curs.TidCur == TokKind.Eof)
                         {
+                            // Add incomplete UDF as they are needed for intellisense 
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
                             CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
                             break;
                         }
