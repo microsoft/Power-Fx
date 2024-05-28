@@ -73,9 +73,15 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ValidateBuiltInFunctions()
         {
-            TexlFunction[] lib = BuiltinFunctionsCore.__library
-                .Union(BuiltinFunctionsCore.__featureGateFunctions)
-                .ToArray();
+            TexlFunction[] lib1 = (TexlFunction[])typeof(BuiltinFunctionsCore)
+                .GetField("_functionArray", BindingFlags.Static | BindingFlags.NonPublic)
+                .GetValue(null);
+
+            TexlFunction[] lib2 = (TexlFunction[])typeof(BuiltinFunctionsCore)
+                    .GetField("_featureGateFunctionArray", BindingFlags.Static | BindingFlags.NonPublic)
+                    .GetValue(null);
+
+            TexlFunction[] lib = lib1.Union(lib2).ToArray();
 
             TexlFunction[] funcs = typeof(BuiltinFunctionsCore)
                 .GetFields(BindingFlags.Static | BindingFlags.Public)
