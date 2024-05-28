@@ -19,10 +19,12 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public abstract bool IsDelegable { get; }
 
+        public abstract ConnectorType ConnectorType { get; }
+
         public virtual ConnectorTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this)
+                ? new ConnectorTableValue(this, ConnectorType)
                 : throw new InvalidOperationException(NotInitialized);
         }
 

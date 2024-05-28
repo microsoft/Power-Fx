@@ -3109,10 +3109,6 @@
     <value>registre</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Suprimeix tots els registres d'una col·lecció. Es conservaran les columnes de la col·lecció.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Suprimeix tots els registres d'una col·lecció. A continuació, afegeix un conjunt de registres diferent a la mateixa col·lecció.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>La declaració literal de tipus no és vàlida.</value>
+    <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>No s'admet definir un àmbit per a la font de dades (ús de la paraula clau "As").</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Esborra tots els elements d'una col·lecció i la retorna buida.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>col·lecció</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Col·lecció que s'esborrarà.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Origen que s'ha d'esborrar.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>No es pot utilitzar l'origen de dades especificat amb aquesta funció.</value>
     
   </data>
 </root>

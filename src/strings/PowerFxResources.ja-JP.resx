@@ -3109,10 +3109,6 @@
     <value>レコード</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>コレクションのすべてのレコードを削除します。コレクションの列は残ります。</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>コレクションからすべてのレコードを削除します。その後、別のレコード セットを同じコレクションに追加します。</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>タイプ リテラルの宣言が無効です。</value>
+    <value>型リテラルの宣言が正しくありません。式 '{0}' を型の定義に使用することはできません。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>データ ソースの (キーワードに 'As' を使用した) スコープ化はサポートされていません。</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>コレクション内のすべての項目をクリアし、空のコレクションを返します。</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>コレクション</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>クリアするコレクション。</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>消去するソースです。</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>指定されたデータ ソースは、この関数では使用できません。</value>
     
   </data>
 </root>

@@ -3109,10 +3109,6 @@
     <value>record</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Hiermee worden alle records van een verzameling verwijderd. De kolommen van de verzameling blijven behouden.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Hiermee worden alle records uit een verzameling verwijderd. Vervolgens wordt een andere set records aan dezelfde verzameling toegevoegd.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type aangifte met letterlijke waarde was ongeldig.</value>
+    <value>Letterlijke aangifte van het type is ongeldig. De expressie {0} kan niet in een typedefinitie worden gebruikt.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Scoping van de gegevensbron (gebruik van trefwoord As) wordt niet ondersteund.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Hiermee worden alle items uit de verzameling gewist en wordt een lege verzameling geretourneerd.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>verzameling</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>De verzameling die moet worden gewist.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>De bron om te wissen.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>De opgegeven gegevensbron kan niet worden gebruikt met deze functie.</value>
     
   </data>
 </root>

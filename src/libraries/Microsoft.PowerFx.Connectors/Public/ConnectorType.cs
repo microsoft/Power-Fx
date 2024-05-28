@@ -9,7 +9,11 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Tabular;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
 
@@ -39,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType[] HiddenFields { get; }
 
         // FormulaType
-        public FormulaType FormulaType { get; }
+        public FormulaType FormulaType { get; private set; }
 
         // "x-ms-explicit-input"
         public bool ExplicitInput { get; }
@@ -55,9 +59,22 @@ namespace Microsoft.PowerFx.Connectors
 
         public Dictionary<string, FormulaValue> Enum => GetEnum();
 
+        // Supports x-ms-visibility
         public Visibility Visibility { get; internal set; }
 
+        // Supports x-ms-capabilities
         internal ColumnCapabilities Capabilities { get; }
+
+        // Supports x-ms-relationships
+        internal Dictionary<string, Relationship> Relationships { get; }
+
+        // Supports x-ms-keyType
+        public ConnectorKeyType KeyType { get; }
+
+        // Supports x-ms-keyOrder (only valid if KeyType = Primary)
+        public double KeyOrder { get; }
+
+        public ConnectorPermission Permission { get; }
 
         internal RecordType HiddenRecordType { get; }
 
@@ -89,6 +106,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool Binary { get; private set; }
 
+        // Supports x-ms-media-kind
         internal MediaKind MediaKind { get; private set; }
 
         internal OpenApiSchema Schema { get; private set; } = null;
@@ -113,6 +131,10 @@ namespace Microsoft.PowerFx.Connectors
                 DisplayName = string.IsNullOrEmpty(title) ? summary : title;
                 ExplicitInput = schema.GetExplicitInput();
                 Capabilities = schema.GetColumnCapabilities();
+                Relationships = schema.GetRelationships();
+                KeyType = schema.GetKeyType();
+                KeyOrder = schema.GetKeyOrder();
+                Permission = schema.GetPermission();                
 
                 Fields = Array.Empty<ConnectorType>();
                 IsEnum = schema.Enum != null && schema.Enum.Any();
@@ -219,6 +241,19 @@ namespace Microsoft.PowerFx.Connectors
 
             _errors = connectorType._errors;
             _warnings = connectorType._warnings;
+        }
+
+        internal void AddDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        {
+            if (FormulaType is not RecordType)
+            {
+                throw new PowerFxConnectorException("Invalid FormulaType");
+            }
+
+            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new TabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
+
+            FormulaType = new KnownRecordType(newDType);
         }
 
         private void AggregateErrors(ConnectorType[] types)

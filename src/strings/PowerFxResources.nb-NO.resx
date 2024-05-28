@@ -3109,10 +3109,6 @@
     <value>post</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Sletter alle oppføringene i en samling. Kolonnene i samlingen blir værende.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Sletter alle oppføringene fra en samling. Legger deretter til et annet sett med oppføringer i samme samling.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type bokstavelig deklarasjon var ugyldig.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Omfang av datakilden (bruk av nøkkelordet As) støttes ikke.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Fjerner alle elementer fra en samling og returnerer en tom samling.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>samling</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Samlingen som skal tømmes.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Den angitte datakilden kan ikke brukes med denne funksjonen.</value>
     
   </data>
 </root>

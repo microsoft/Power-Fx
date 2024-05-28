@@ -184,7 +184,12 @@ namespace Microsoft.PowerFx.Core.Functions
             return func;
         }
 
-        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
+        // Adding a restricted UDF name is a breaking change, this test will need to be updated and a conversion will be needed for existing scenarios
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string>
+        {
+            "Type", "IsType", "AsType", "Set", "Collect",
+            "ClearCollect", "UpdateContext", "Navigate",
+        };
 
         /// <summary>
         /// Helper to create IR UserDefinedFunctions.
@@ -207,9 +212,15 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.Assert(udf.IsParseValid);
 
                 var udfName = udf.Ident.Name;
-                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
+                if (texlFunctionSet.AnyWithName(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+                else if (_restrictedUDFNames.Contains(udfName) ||
+                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
                     continue;
                 }
 

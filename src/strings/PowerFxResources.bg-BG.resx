@@ -3109,10 +3109,6 @@
     <value>запис</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Изтрива всички записи от колекция, като колоните ѝ остават.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Изтрива всички записи от колекция, след което добавя друг набор от записи към същата колекция.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларацията за литерал на тип е невалидна.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Не се поддържа определяне на обхвата на източника на данни (използване на ключовата дума As).</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Изчиства всички елементи от дадена колекция и връща празната колекция.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>колекция</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Колекцията за изчистване.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Указаният източник на данни не може да се използва с тази функция.</value>
     
   </data>
 </root>

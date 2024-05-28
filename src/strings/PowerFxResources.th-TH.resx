@@ -3109,10 +3109,6 @@
     <value>เรกคอร์ด</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>ลบเรกคอร์ดทั้งหมดของคอลเลกชัน คอลัมน์ของคอลเลกชันจะยังคงอยู่</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>ลบเรกคอร์ดทั้งหมดออกจากคอลเลกชัน จากนั้นเพิ่มชุดเรกคอร์ดอื่นลงในคอลเลกชันเดียวกัน</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>ไม่รองรับการกำหนดขอบเขตแหล่งข้อมูล (การใช้คำสำคัญ 'As')</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>ล้างรายการทั้งหมดจากคอลเลกชันและคืนค่าคอลเลกชันว่างเปล่า</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>คอลเลกชัน</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>คอลเลกชันที่จะล้าง</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>แหล่งข้อมูลที่ระบุไม่สามารถใช้กับฟังก์ชันนี้ได้</value>
     
   </data>
 </root>
