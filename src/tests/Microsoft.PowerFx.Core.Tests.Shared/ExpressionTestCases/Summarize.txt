@@ -251,7 +251,7 @@ Errors: Error 645-689: Summarize arguments must be either existing column names 
   {Supplier:"Fabrikam", Fruit:"Lemons",  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Vegetable, CountRows( Distinct( ThisGroup, Supplier ) ) As CountOfSuppliers )
-Errors: Error 638-647: Name isn't valid. 'Vegetable' isn't recognized.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 638-647: The specified column 'Vegetable' does not exist.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 // Groupping or aggregate columns is not primitive type
 >> Summarize(
@@ -307,7 +307,7 @@ Errors: Error 774-783: The function 'CountRows' has some invalid arguments.|Erro
 
 // Adding scope to arg0 is currently not supported
 >> Summarize(Table({a:1}) As AAA, a)
-Errors: Error 31-32: Name isn't valid. 'a' isn't recognized.|Error 23-25: Scoping the data source (usage of 'As' keyword) is not supported.|Error 0-9: The function 'Summarize' has some invalid arguments.
+Errors: Error 23-25: Scoping the data source (usage of 'As' keyword) is not supported.|Error 0-9: The function 'Summarize' has some invalid arguments.
 
 >> Summarize(If(1/0<2, [{a:1,b:2},{a:1,b:3}]),a,CountRows(ThisGroup) As Count)
 Error({Kind:ErrorKind.Div0})
