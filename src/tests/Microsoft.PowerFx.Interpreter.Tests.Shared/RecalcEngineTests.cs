@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -1663,26 +1663,6 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
 
-        // Recurive type not allowed in UDF definitions
-        [InlineData(
-            "f(a: RecursiveType):Number = 1;",
-            "",
-            false)]
-        [InlineData(
-            "f(a: Number):RecursiveType = ({});",
-            "",
-            false)]
-
-        // Recurive type not allowed in Type definitions
-        [InlineData(
-            "T = Type(RecursiveType);",
-            "",
-            false)]
-        [InlineData(
-            "T = Type([{a: {b: RecursiveType}}]);",
-            "",
-            false)]    
-
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1692,10 +1672,6 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
                 AllowParseAsTypeLiteral = true
             };
-
-            var at = DType.CreateTable(new TypedName(DType.CreateAttachmentType(TestUtils.DT("*[Value:o, Name:s, Link:s]")), new DName("Attach")), new TypedName(TestUtils.DT("b"), new DName("Value")));
-
-            recalcEngine.Config.SymbolTable.AddType(new DName("RecursiveType"), new LazyRecursiveRecordType());
 
             if (isValid)
             {

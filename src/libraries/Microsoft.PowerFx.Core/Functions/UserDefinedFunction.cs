@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -305,14 +305,14 @@ namespace Microsoft.PowerFx.Core.Functions
             return true; 
         }
 
-        // To prevent aggregate types from containing recursive types and restricted types
+        // To prevent aggregate types from containing restricted types
         internal static bool IsRestrictedType(FormulaType ft)
         {
             Contracts.AssertValue(ft);
 
-            if (ft is AggregateType aggType)
+            if (!ft._type.HasExpandInfo && ft is AggregateType aggType)
             {
-                if (aggType.HasRecuriveType() || aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
+                if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
                 {
                     return true;
                 }

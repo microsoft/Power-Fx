@@ -125,12 +125,6 @@ namespace Microsoft.PowerFx.Core.Types
                 var name = currentType.Ident.Name;
                 var type = FormulaType.Build(resolvedType);
 
-                if (CheckForRecursiveType(type))
-                {
-                    _errors.Add(new TexlError(currentType.Type.TypeRoot, DocumentErrorSeverity.Severe, TexlStrings.ErrNamedType_InvalidTypeDefinition, currentType.Ident.Name));
-                    continue;
-                }
-
                 definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
             }
 
@@ -158,16 +152,6 @@ namespace Microsoft.PowerFx.Core.Types
 
             _typesDict.TryGetValue(typeName, out type);
             _typesDict.Remove(typeName);
-        }
-
-        private bool CheckForRecursiveType(FormulaType type)
-        {
-            if (type is AggregateType aggType && aggType.HasRecuriveType())
-            {
-                return true;
-            }
-
-            return false;
         }
 
         // Resolve a given set of DefinedType ASTs to FormulaType.
