@@ -304,7 +304,8 @@ namespace Microsoft.PowerFx.Core.Tests
                         long delta = Math.Abs(originalDV.Value.Ticks - expectedDT.Ticks);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                        if (delta < 10000) // 1ms
+                        // 1ms
+                        if (delta < 10000) 
                         {
                             return (TestResult.Pass, null);
                         }
@@ -323,7 +324,8 @@ namespace Microsoft.PowerFx.Core.Tests
                         long delta = Math.Abs(originalDTV.Value.Ticks - expectedDTV.Ticks);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                        if (delta < 10000) // 1ms
+                        // 1ms
+                        if (delta < 10000) 
                         {
                             return (TestResult.Pass, null);
                         }

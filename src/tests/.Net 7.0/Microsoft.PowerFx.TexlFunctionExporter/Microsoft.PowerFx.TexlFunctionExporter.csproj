@@ -10,7 +10,7 @@
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <Configurations>Debug;Release;Debug462</Configurations>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <OutputType>Library</OutputType>
     <DefineConstants>$(DefineConstants);$(CustomConstants)</DefineConstants>
   </PropertyGroup>

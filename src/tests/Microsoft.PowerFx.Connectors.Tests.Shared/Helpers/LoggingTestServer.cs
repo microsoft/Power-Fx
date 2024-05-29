@@ -160,8 +160,15 @@ namespace Microsoft.PowerFx.Tests
                         _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");
                     }
                 }
+                
+#if NET7_0_OR_GREATER
+                var content = await httpContent.ReadAsStringAsync(cancellationToken);
+#else
 
+                // We cannot pass the cancellation token in .Net 4.6.2
                 var content = await httpContent.ReadAsStringAsync();
+#endif
+
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
@@ -176,8 +183,15 @@ namespace Microsoft.PowerFx.Tests
                 // Copy the request's content (via a MemoryStream) into the cloned object
                 var ms = new MemoryStream();
                 if (request.Content != null)
-                {
+                {                    
+#if NET7_0_OR_GREATER
+                    await request.Content.CopyToAsync(ms, cancellationToken);
+#else
+
+                    // We cannot pass the cancellation token in .Net 4.6.2
                     await request.Content.CopyToAsync(ms);
+#endif
+
                     ms.Position = 0;
                     clone.Content = new StreamContent(ms);
 

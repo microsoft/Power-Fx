@@ -288,7 +288,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (coercionKindStr.StartsWith("UnaryOpKind."))
             {
 #if NETCOREAPP3_1_OR_GREATER
-                unaryOpCoercionKind = Enum.Parse<UnaryOpKind>( coercionKindStr.Substring("UnaryOpKind.".Length));
+                unaryOpCoercionKind = Enum.Parse<UnaryOpKind>(coercionKindStr.Substring("UnaryOpKind.".Length));
 #else
                 unaryOpCoercionKind = (UnaryOpKind)Enum.Parse(typeof(UnaryOpKind), coercionKindStr.Substring("UnaryOpKind.".Length));
 #endif

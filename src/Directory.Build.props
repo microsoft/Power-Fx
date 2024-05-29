@@ -31,7 +31,7 @@
     </PackageReference>    
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True'" >
+  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True'" >
     <EnableNETAnalyzers>false</EnableNETAnalyzers>    
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>  
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -39,7 +39,7 @@
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' != 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True'" >
+  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True'" >
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>8.0.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -80,7 +80,7 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'!='DEBUG' AND '$(Configuration)'!='DEBUG462'">
+  <PropertyGroup Condition="'$(Configuration)'!='Debug' AND '$(Configuration)'!='Debug462' AND '$(Configuration)'!='Debug70' AND '$(Configuration)'!='DebugAll'">
     <Optimize>True</Optimize>
   </PropertyGroup>
 

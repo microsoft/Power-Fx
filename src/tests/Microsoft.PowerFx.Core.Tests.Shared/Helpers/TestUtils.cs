@@ -573,7 +573,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 // Number (hex) support
                 if (token[0] == '#' && token.Length > 1)
                 {
+#if NET7_0_OR_GREATER
+                    if (uint.TryParse(token.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
+#else
                     if (uint.TryParse(token.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
+#endif
                     {
                         value = new EquatableObject((double)intValue);
                         return true;

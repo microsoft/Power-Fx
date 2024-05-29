@@ -3,7 +3,7 @@
     <TargetFramework>net462</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <Configurations>Debug;Release;Debug462</Configurations>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
