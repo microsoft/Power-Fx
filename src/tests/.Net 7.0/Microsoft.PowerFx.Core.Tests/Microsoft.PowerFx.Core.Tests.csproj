@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />-->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
@@ -43,15 +43,15 @@
 
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
 
-  <Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
+  <!--<Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
     <ItemGroup>
       <PfxIcon Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\icon.png" />
       <PfxExpressionTestCases Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\*" Pack="true" />
       <PfxExpressionTestCasesNotYetReady Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\NotYetReady\*" Pack="true" />
     </ItemGroup>
     <Copy SourceFiles="@(PfxIcon)" DestinationFolder="$(MSBuildProjectDirectory)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(PfxExpressionTestCases)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(PfxExpressionTestCasesNotYetReady)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases\NotYetReady" SkipUnchangedFiles="true" />
-  </Target>
+    <Copy SourceFiles="@(PfxExpressionTestCases)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFramework)\ExpressionTestCases" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PfxExpressionTestCasesNotYetReady)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFramework)\ExpressionTestCases\NotYetReady" SkipUnchangedFiles="true" />
+  </Target>-->
 
 </Project>
