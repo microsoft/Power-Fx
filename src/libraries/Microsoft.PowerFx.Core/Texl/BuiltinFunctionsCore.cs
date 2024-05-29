@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
@@ -470,7 +469,7 @@ namespace Microsoft.PowerFx.Core.Texl
 
             Dictionary<FeatureGateFunctions, TexlFunction> featureGateFunctionsArray = new Dictionary<FeatureGateFunctions, TexlFunction>()
             {
-                { FeatureGateFunctions.Decimal , new DecimalFunction() },
+                { FeatureGateFunctions.Decimal, new DecimalFunction() },
                 { FeatureGateFunctions.Decimal_UO, new DecimalFunction_UO() },
                 { FeatureGateFunctions.Float, new FloatFunction() },
                 { FeatureGateFunctions.Float_UO, new FloatFunction_UO() },
