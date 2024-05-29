@@ -28,471 +28,467 @@ namespace Microsoft.PowerFx.Core.Texl
 
         static BuiltinFunctionsCore()
         {
-            Dictionary<Library, TexlFunction> functionDictionary = new Dictionary<Library, TexlFunction>()
+            Abs = new AbsFunction();
+            AbsT = new AbsTableFunction();
+            Acos = new AcosFunction();
+            AcosT = new AcosTableFunction();
+            Acot = new AcotFunction();
+            AcotT = new AcotTableFunction();
+            AddColumns = new AddColumnsFunction();
+            AmPm = new AmPmFunction();
+            AmPmShort = new AmPmShortFunction();
+            And = new VariadicLogicalFunction(isAnd: true);
+            Asin = new AsinFunction();
+            AsinT = new AsinTableFunction();
+            AsType = new AsTypeFunction();
+            Atan = new AtanFunction();
+            Atan2 = new Atan2Function();
+            AtanT = new AtanTableFunction();
+            Average = new AverageFunction();
+            AverageT = new AverageTableFunction();
+            Blank = new BlankFunction();
+            Boolean = new BooleanFunction();
+            Boolean_T = new BooleanFunction_T();
+            Boolean_UO = new BooleanFunction_UO();
+            BooleanB = new BooleanBFunction();
+            BooleanB_T = new BooleanBFunction_T();
+            BooleanN = new BooleanNFunction();
+            BooleanN_T = new BooleanNFunction_T();
+            BooleanW = new BooleanWFunction();
+            BooleanW_T = new BooleanWFunction_T();
+            Char = new CharFunction();
+            CharT = new CharTFunction();
+            Clock24 = new IsClock24Function();
+            Coalesce = new CoalesceFunction();
+            ColorFade = new ColorFadeFunction();
+            ColorFadeT = new ColorFadeTFunction();
+            ColorValue = new ColorValueFunction();
+            ColorValue_UO = new ColorValueFunction_UO();
+            Column_UO = new ColumnFunction_UO();
+            ColumnNames_UO = new ColumnNamesFunction_UO();
+            Concat = new ConcatFunction();
+            Concatenate = new ConcatenateFunction();
+            ConcatenateT = new ConcatenateTableFunction();
+            Cos = new CosFunction();
+            CosT = new CosTableFunction();
+            Cot = new CotFunction();
+            CotT = new CotTableFunction();
+            Count = new CountFunction();
+            CountA = new CountAFunction();
+            CountIf = new CountIfFunction();
+            CountRows = new CountRowsFunction();
+            CountRows_UO = new CountRowsFunction_UO();
+            Date = new DateFunction();
+            DateAdd = new DateAddFunction();
+            DateAddT = new DateAddTFunction();
+            DateDiff = new DateDiffFunction();
+            DateDiffT = new DateDiffTFunction();
+            DateTime = new DateTimeFunction();
+            DateTimeValue = new DateTimeValueFunction();
+            DateTimeValue_UO = new DateTimeValueFunction_UO();
+            DateValue = new DateValueFunction();
+            DateValue_UO = new DateValueFunction_UO();
+            Day = new DayFunction();
+            Dec2Hex = new Dec2HexFunction();
+            Dec2HexT = new Dec2HexTFunction();
+            Degrees = new DegreesFunction();
+            DegreesT = new DegreesTableFunction();
+            DropColumns = new DropColumnsFunction();
+            EDate = new EDateFunction();
+            EOMonth = new EOMonthFunction();
+            EncodeHTML = new EncodeHTMLFunction();
+            EncodeUrl = new EncodeUrlFunction();
+            EndsWith = new EndsWithFunction();
+            Error = new ErrorFunction();
+            Exp = new ExpFunction();
+            ExpT = new ExpTableFunction();
+            Filter = new FilterFunction();
+            Find = new FindFunction();
+            FindT = new FindTFunction();
+            First = new FirstLastFunction(isFirst: true);
+            First_UO = new FirstLastFunction_UO(isFirst: true);
+            FirstN = new FirstLastNFunction(isFirst: true);
+            FirstN_UO = new FirstLastNFunction_UO(isFirst: true);
+            ForAll = new ForAllFunction();
+            ForAll_UO = new ForAllFunction_UO();
+            GUID_UO = new GUIDPureFunction_UO();
+            GUIDNoArg = new GUIDNoArgFunction();
+            GUIDPure = new GUIDPureFunction();
+            Hex2Dec = new Hex2DecFunction();
+            Hex2DecT = new Hex2DecTFunction();
+            Hour = new HourFunction();
+            If = new IfFunction();
+            IfError = new IfErrorFunction();
+            Index = new IndexFunction();
+            Index_UO = new IndexFunction_UO();
+            Int = new IntFunction();
+            IntT = new IntTableFunction();
+            IsBlank = new IsBlankFunction();
+            IsBlankOptionSetValue = new IsBlankOptionSetValueFunction();
+            IsBlankOrError = new IsBlankOrErrorFunction();
+            IsBlankOrErrorOptionSetValue = new IsBlankOrErrorOptionSetValueFunction();
+            IsEmpty = new IsEmptyFunction();
+            IsError = new IsErrorFunction();
+            IsNumeric = new IsNumericFunction();
+            ISOWeekNum = new ISOWeekNumFunction();
+            IsToday = new IsTodayFunction();
+            Language = new LanguageFunction();
+            Last = new FirstLastFunction(isFirst: false);
+            Last_UO = new FirstLastFunction_UO(isFirst: false);
+            LastN = new FirstLastNFunction(isFirst: false);
+            LastN_UO = new FirstLastNFunction_UO(isFirst: false);
+            Left = new LeftRightScalarFunction(isLeft: true);
+            LeftST = new LeftRightScalarTableFunction(isLeft: true);
+            LeftTS = new LeftRightTableScalarFunction(isLeft: true);
+            LeftTT = new LeftRightTableTableFunction(isLeft: true);
+            Len = new LenFunction();
+            LenT = new LenTFunction();
+            Ln = new LnFunction();
+            LnT = new LnTableFunction();
+            Log = new LogFunction();
+            LogT = new LogTFunction();
+            LookUp = new LookUpFunction();
+            Lower = new LowerUpperFunction(isLower: true);
+            LowerT = new LowerUpperTFunction(isLower: true);
+            Max = new MinMaxFunction(isMin: false);
+            MaxT = new MinMaxTableFunction(isMin: false);
+            Mid = new MidFunction();
+            MidT = new MidTFunction();
+            Min = new MinMaxFunction(isMin: true);
+            MinT = new MinMaxTableFunction(isMin: true);
+            Minute = new MinuteFunction();
+            Mod = new ModFunction();
+            ModT = new ModTFunction();
+            Month = new MonthFunction();
+            MonthsLong = new MonthsLongFunction();
+            MonthsShort = new MonthsShortFunction();
+            Not = new NotFunction();
+            Now = new NowFunction();
+            Or = new VariadicLogicalFunction(isAnd: false);
+            ParseJSON = new ParseJSONFunction();
+            PatchRecord = new PatchRecordFunction();
+            Pi = new PiFunction();
+            PlainText = new PlainTextFunction();
+            Power = new PowerFunction();
+            PowerT = new PowerTFunction();
+            Proper = new ProperFunction();
+            ProperT = new ProperTFunction();
+            Radians = new RadiansFunction();
+            RadiansT = new RadiansTableFunction();
+            Rand = new RandFunction();
+            RandBetween = new RandBetweenFunction();
+            Refresh = new RefreshFunction();
+            RenameColumns = new RenameColumnsFunction();
+            Replace = new ReplaceFunction();
+            ReplaceT = new ReplaceTFunction();
+            RGBA = new RGBAFunction();
+            Right = new LeftRightScalarFunction(isLeft: false);
+            RightST = new LeftRightScalarTableFunction(isLeft: false);
+            RightTS = new LeftRightTableScalarFunction(isLeft: false);
+            RightTT = new LeftRightTableTableFunction(isLeft: false);
+            Round = new RoundScalarFunction();
+            RoundDown = new RoundDownScalarFunction();
+            RoundDownT = new RoundDownTableFunction();
+            RoundT = new RoundTableFunction();
+            RoundUp = new RoundUpScalarFunction();
+            RoundUpT = new RoundUpTableFunction();
+            Search = new SearchFunction();
+            Second = new SecondFunction();
+            Sequence = new SequenceFunction();
+            ShowColumns = new ShowColumnsFunction();
+            Shuffle = new ShuffleFunction();
+            Sin = new SinFunction();
+            SinT = new SinTableFunction();
+            Sort = new SortFunction();
+            SortByColumns = new SortByColumnsFunction();
+            Split = new SplitFunction();
+            Sqrt = new SqrtFunction();
+            SqrtT = new SqrtTableFunction();
+            StartsWith = new StartsWithFunction();
+            StdevP = new StdevPFunction();
+            StdevPT = new StdevPTableFunction();
+            Substitute = new SubstituteFunction();
+            SubstituteT = new SubstituteTFunction();
+            Sum = new SumFunction();
+            SumT = new SumTableFunction();
+            Switch = new SwitchFunction();
+            Table = new TableFunction();
+            Table_UO = new TableFunction_UO();
+            Tan = new TanFunction();
+            TanT = new TanTableFunction();
+            Text = new TextFunction();
+            Text_UO = new TextFunction_UO();
+            Time = new TimeFunction();
+            TimeValue = new TimeValueFunction();
+            TimeValue_UO = new TimeValueFunction_UO();
+            TimeZoneOffset = new TimeZoneOffsetFunction();
+            Today = new TodayFunction();
+            Trace = new TraceFunction();
+            Trim = new TrimFunction();
+            TrimEnds = new TrimEndsFunction();
+            TrimEndsT = new TrimEndsTFunction();
+            TrimT = new TrimTFunction();
+            Trunc = new TruncFunction();
+            TruncT = new TruncTableFunction();
+            UniChar = new UniCharFunction();
+            UniCharT = new UniCharTFunction();
+            Upper = new LowerUpperFunction(isLower: false);
+            UpperT = new LowerUpperTFunction(isLower: false);
+            Value = new ValueFunction();
+            Value_UO = new ValueFunction_UO();
+            VarP = new VarPFunction();
+            VarPT = new VarPTableFunction();
+            Weekday = new WeekdayFunction();
+            WeekdaysLong = new WeekdaysLongFunction();
+            WeekdaysShort = new WeekdaysShortFunction();
+            WeekNum = new WeekNumFunction();
+            With = new WithFunction();
+            Year = new YearFunction();
+            
+            _library = new TexlFunctionSet(new[]
             {
-                { Library.Abs, new AbsFunction() },
-                { Library.AbsT, new AbsTableFunction() },
-                { Library.Acos, new AcosFunction() },
-                { Library.AcosT, new AcosTableFunction() },
-                { Library.Acot, new AcotFunction() },
-                { Library.AcotT, new AcotTableFunction() },
-                { Library.AddColumns, new AddColumnsFunction() },
-                { Library.AmPm, new AmPmFunction() },
-                { Library.AmPmShort, new AmPmShortFunction() },
-                { Library.And, new VariadicLogicalFunction(isAnd: true) },
-                { Library.Asin, new AsinFunction() },
-                { Library.AsinT, new AsinTableFunction() },
-                { Library.AsType, new AsTypeFunction() },
-                { Library.Atan, new AtanFunction() },
-                { Library.Atan2, new Atan2Function() },
-                { Library.AtanT, new AtanTableFunction() },
-                { Library.Average, new AverageFunction() },
-                { Library.AverageT, new AverageTableFunction() },
-                { Library.Blank, new BlankFunction() },
-                { Library.Boolean, new BooleanFunction() },
-                { Library.Boolean_T, new BooleanFunction_T() },
-                { Library.Boolean_UO, new BooleanFunction_UO() },
-                { Library.BooleanB, new BooleanBFunction() },
-                { Library.BooleanB_T, new BooleanBFunction_T() },
-                { Library.BooleanN, new BooleanNFunction() },
-                { Library.BooleanN_T, new BooleanNFunction_T() },
-                { Library.BooleanW, new BooleanWFunction() },
-                { Library.BooleanW_T, new BooleanWFunction_T() },
-                { Library.Char, new CharFunction() },
-                { Library.CharT, new CharTFunction() },
-                { Library.Clock24, new IsClock24Function() },
-                { Library.Coalesce, new CoalesceFunction() },
-                { Library.ColorFade, new ColorFadeFunction() },
-                { Library.ColorFadeT, new ColorFadeTFunction() },
-                { Library.ColorValue, new ColorValueFunction() },
-                { Library.ColorValue_UO, new ColorValueFunction_UO() },
-                { Library.Column_UO, new ColumnFunction_UO() },
-                { Library.ColumnNames_UO, new ColumnNamesFunction_UO() },
-                { Library.Concat, new ConcatFunction() },
-                { Library.Concatenate, new ConcatenateFunction() },
-                { Library.ConcatenateT, new ConcatenateTableFunction() },
-                { Library.Cos, new CosFunction() },
-                { Library.CosT, new CosTableFunction() },
-                { Library.Cot, new CotFunction() },
-                { Library.CotT, new CotTableFunction() },
-                { Library.Count, new CountFunction() },
-                { Library.CountA, new CountAFunction() },
-                { Library.CountIf, new CountIfFunction() },
-                { Library.CountRows, new CountRowsFunction() },
-                { Library.CountRows_UO, new CountRowsFunction_UO() },
-                { Library.Date, new DateFunction() },
-                { Library.DateAdd, new DateAddFunction() },
-                { Library.DateAddT, new DateAddTFunction() },
-                { Library.DateDiff, new DateDiffFunction() },
-                { Library.DateDiffT, new DateDiffTFunction() },
-                { Library.DateTime, new DateTimeFunction() },
-                { Library.DateTimeValue, new DateTimeValueFunction() },
-                { Library.DateTimeValue_UO, new DateTimeValueFunction_UO() },
-                { Library.DateValue, new DateValueFunction() },
-                { Library.DateValue_UO, new DateValueFunction_UO() },
-                { Library.Day, new DayFunction() },
-                { Library.Dec2Hex, new Dec2HexFunction() },
-                { Library.Dec2HexT, new Dec2HexTFunction() },
-                { Library.Degrees, new DegreesFunction() },
-                { Library.DegreesT, new DegreesTableFunction() },
-                { Library.DropColumns, new DropColumnsFunction() },
-                { Library.EDate, new EDateFunction() },
-                { Library.EOMonth, new EOMonthFunction() },
-                { Library.EncodeHTML, new EncodeHTMLFunction() },
-                { Library.EncodeUrl, new EncodeUrlFunction() },
-                { Library.EndsWith, new EndsWithFunction() },
-                { Library.Error, new ErrorFunction() },
-                { Library.Exp, new ExpFunction() },
-                { Library.ExpT, new ExpTableFunction() },
-                { Library.Filter, new FilterFunction() },
-                { Library.Find, new FindFunction() },
-                { Library.FindT, new FindTFunction() },
-                { Library.First, new FirstLastFunction(isFirst: true) },
-                { Library.First_UO, new FirstLastFunction_UO(isFirst: true) },
-                { Library.FirstN, new FirstLastNFunction(isFirst: true) },
-                { Library.FirstN_UO, new FirstLastNFunction_UO(isFirst: true) },
-                { Library.ForAll, new ForAllFunction() },
-                { Library.ForAll_UO, new ForAllFunction_UO() },
-                { Library.GUID_UO, new GUIDPureFunction_UO() },
-                { Library.GUIDNoArg, new GUIDNoArgFunction() },
-                { Library.GUIDPure, new GUIDPureFunction() },
-                { Library.Hex2Dec, new Hex2DecFunction() },
-                { Library.Hex2DecT, new Hex2DecTFunction() },
-                { Library.Hour, new HourFunction() },
-                { Library.If, new IfFunction() },
-                { Library.IfError, new IfErrorFunction() },
-                { Library.Index, new IndexFunction() },
-                { Library.Index_UO, new IndexFunction_UO() },
-                { Library.Int, new IntFunction() },
-                { Library.IntT, new IntTableFunction() },
-                { Library.IsBlank, new IsBlankFunction() },
-                { Library.IsBlankOptionSetValue, new IsBlankOptionSetValueFunction() },
-                { Library.IsBlankOrError, new IsBlankOrErrorFunction() },
-                { Library.IsBlankOrErrorOptionSetValue, new IsBlankOrErrorOptionSetValueFunction() },
-                { Library.IsEmpty, new IsEmptyFunction() },
-                { Library.IsError, new IsErrorFunction() },
-                { Library.IsNumeric, new IsNumericFunction() },
-                { Library.ISOWeekNum, new ISOWeekNumFunction() },
-                { Library.IsToday, new IsTodayFunction() },
-                { Library.Language, new LanguageFunction() },
-                { Library.Last, new FirstLastFunction(isFirst: false) },
-                { Library.Last_UO, new FirstLastFunction_UO(isFirst: false) },
-                { Library.LastN, new FirstLastNFunction(isFirst: false) },
-                { Library.LastN_UO, new FirstLastNFunction_UO(isFirst: false) },
-                { Library.Left, new LeftRightScalarFunction(isLeft: true) },
-                { Library.LeftST, new LeftRightScalarTableFunction(isLeft: true) },
-                { Library.LeftTS, new LeftRightTableScalarFunction(isLeft: true) },
-                { Library.LeftTT, new LeftRightTableTableFunction(isLeft: true) },
-                { Library.Len, new LenFunction() },
-                { Library.LenT, new LenTFunction() },
-                { Library.Ln, new LnFunction() },
-                { Library.LnT, new LnTableFunction() },
-                { Library.Log, new LogFunction() },
-                { Library.LogT, new LogTFunction() },
-                { Library.LookUp, new LookUpFunction() },
-                { Library.Lower, new LowerUpperFunction(isLower: true) },
-                { Library.LowerT, new LowerUpperTFunction(isLower: true) },
-                { Library.Max, new MinMaxFunction(isMin: false) },
-                { Library.MaxT, new MinMaxTableFunction(isMin: false) },
-                { Library.Mid, new MidFunction() },
-                { Library.MidT, new MidTFunction() },
-                { Library.Min, new MinMaxFunction(isMin: true) },
-                { Library.MinT, new MinMaxTableFunction(isMin: true) },
-                { Library.Minute, new MinuteFunction() },
-                { Library.Mod, new ModFunction() },
-                { Library.ModT, new ModTFunction() },
-                { Library.Month, new MonthFunction() },
-                { Library.MonthsLong, new MonthsLongFunction() },
-                { Library.MonthsShort, new MonthsShortFunction() },
-                { Library.Not, new NotFunction() },
-                { Library.Now, new NowFunction() },
-                { Library.Or, new VariadicLogicalFunction(isAnd: false) },
-                { Library.ParseJSON, new ParseJSONFunction() },
-                { Library.PatchRecord, new PatchRecordFunction() },
-                { Library.Pi, new PiFunction() },
-                { Library.PlainText, new PlainTextFunction() },
-                { Library.Power, new PowerFunction() },
-                { Library.PowerT, new PowerTFunction() },
-                { Library.Proper, new ProperFunction() },
-                { Library.ProperT, new ProperTFunction() },
-                { Library.Radians, new RadiansFunction() },
-                { Library.RadiansT, new RadiansTableFunction() },
-                { Library.Rand, new RandFunction() },
-                { Library.RandBetween, new RandBetweenFunction() },
-                { Library.Refresh, new RefreshFunction() },
-                { Library.RenameColumns, new RenameColumnsFunction() },
-                { Library.Replace, new ReplaceFunction() },
-                { Library.ReplaceT, new ReplaceTFunction() },
-                { Library.RGBA, new RGBAFunction() },
-                { Library.Right, new LeftRightScalarFunction(isLeft: false) },
-                { Library.RightST, new LeftRightScalarTableFunction(isLeft: false) },
-                { Library.RightTS, new LeftRightTableScalarFunction(isLeft: false) },
-                { Library.RightTT, new LeftRightTableTableFunction(isLeft: false) },
-                { Library.Round, new RoundScalarFunction() },
-                { Library.RoundDown, new RoundDownScalarFunction() },
-                { Library.RoundDownT, new RoundDownTableFunction() },
-                { Library.RoundT, new RoundTableFunction() },
-                { Library.RoundUp, new RoundUpScalarFunction() },
-                { Library.RoundUpT, new RoundUpTableFunction() },
-                { Library.Search, new SearchFunction() },
-                { Library.Second, new SecondFunction() },
-                { Library.Sequence, new SequenceFunction() },
-                { Library.ShowColumns, new ShowColumnsFunction() },
-                { Library.Shuffle, new ShuffleFunction() },
-                { Library.Sin, new SinFunction() },
-                { Library.SinT, new SinTableFunction() },
-                { Library.Sort, new SortFunction() },
-                { Library.SortByColumns, new SortByColumnsFunction() },
-                { Library.Split, new SplitFunction() },
-                { Library.Sqrt, new SqrtFunction() },
-                { Library.SqrtT, new SqrtTableFunction() },
-                { Library.StartsWith, new StartsWithFunction() },
-                { Library.StdevP, new StdevPFunction() },
-                { Library.StdevPT, new StdevPTableFunction() },
-                { Library.Substitute, new SubstituteFunction() },
-                { Library.SubstituteT, new SubstituteTFunction() },
-                { Library.Sum, new SumFunction() },
-                { Library.SumT, new SumTableFunction() },
-                { Library.Switch, new SwitchFunction() },
-                { Library.Table, new TableFunction() },
-                { Library.Table_UO, new TableFunction_UO() },
-                { Library.Tan, new TanFunction() },
-                { Library.TanT, new TanTableFunction() },
-                { Library.Text, new TextFunction() },
-                { Library.Text_UO, new TextFunction_UO() },
-                { Library.Time, new TimeFunction() },
-                { Library.TimeValue, new TimeValueFunction() },
-                { Library.TimeValue_UO, new TimeValueFunction_UO() },
-                { Library.TimeZoneOffset, new TimeZoneOffsetFunction() },
-                { Library.Today, new TodayFunction() },
-                { Library.Trace, new TraceFunction() },
-                { Library.Trim, new TrimFunction() },
-                { Library.TrimEnds, new TrimEndsFunction() },
-                { Library.TrimEndsT, new TrimEndsTFunction() },
-                { Library.TrimT, new TrimTFunction() },
-                { Library.Trunc, new TruncFunction() },
-                { Library.TruncT, new TruncTableFunction() },
-                { Library.UniChar, new UniCharFunction() },
-                { Library.UniCharT, new UniCharTFunction() },
-                { Library.Upper, new LowerUpperFunction(isLower: false) },
-                { Library.UpperT, new LowerUpperTFunction(isLower: false) },
-                { Library.Value, new ValueFunction() },
-                { Library.Value_UO, new ValueFunction_UO() },
-                { Library.VarP, new VarPFunction() },
-                { Library.VarPT, new VarPTableFunction() },
-                { Library.Weekday, new WeekdayFunction() },
-                { Library.WeekdaysLong, new WeekdaysLongFunction() },
-                { Library.WeekdaysShort, new WeekdaysShortFunction() },
-                { Library.WeekNum, new WeekNumFunction() },
-                { Library.With, new WithFunction() },
-                { Library.Year, new YearFunction() }
-            };
+                Abs,
+                AbsT,
+                Acos,
+                AcosT,
+                Acot,
+                AcotT,
+                AddColumns,
+                AmPm,
+                AmPmShort,
+                And,
+                Asin,
+                AsinT,
+                AsType,
+                Atan,
+                Atan2,
+                AtanT,
+                Average,
+                AverageT,
+                Blank,
+                Boolean,
+                Boolean_T,
+                Boolean_UO,
+                BooleanB,
+                BooleanB_T,
+                BooleanN,
+                BooleanN_T,
+                BooleanW,
+                BooleanW_T,
+                Char,
+                CharT,
+                Clock24,
+                Coalesce,
+                ColorFade,
+                ColorFadeT,
+                ColorValue,
+                ColorValue_UO,
+                Column_UO,
+                ColumnNames_UO,
+                Concat,
+                Concatenate,
+                ConcatenateT,
+                Cos,
+                CosT,
+                Cot,
+                CotT,
+                Count,
+                CountA,
+                CountIf,
+                CountRows,
+                CountRows_UO,
+                Date,
+                DateAdd,
+                DateAddT,
+                DateDiff,
+                DateDiffT,
+                DateTime,
+                DateTimeValue,
+                DateTimeValue_UO,
+                DateValue,
+                DateValue_UO,
+                Day,
+                Dec2Hex,
+                Dec2HexT,
+                Degrees,
+                DegreesT,
+                DropColumns,
+                EDate,
+                EOMonth,
+                EncodeHTML,
+                EncodeUrl,
+                EndsWith,
+                Error,
+                Exp,
+                ExpT,
+                Filter,
+                Find,
+                FindT,
+                First,
+                First_UO,
+                FirstN,
+                FirstN_UO,
+                ForAll,
+                ForAll_UO,
+                GUID_UO,
+                GUIDNoArg,
+                GUIDPure,
+                Hex2Dec,
+                Hex2DecT,
+                Hour,
+                If,
+                IfError,
+                Index,
+                Index_UO,
+                Int,
+                IntT,
+                IsBlank,
+                IsBlankOptionSetValue,
+                IsBlankOrError,
+                IsBlankOrErrorOptionSetValue,
+                IsEmpty,
+                IsError,
+                IsNumeric,
+                ISOWeekNum,
+                IsToday,
+                Language,
+                Last,
+                Last_UO,
+                LastN,
+                LastN_UO,
+                Left,
+                LeftST,
+                LeftTS,
+                LeftTT,
+                Len,
+                LenT,
+                Ln,
+                LnT,
+                Log,
+                LogT,
+                LookUp,
+                Lower,
+                LowerT,
+                Max,
+                MaxT,
+                Mid,
+                MidT,
+                Min,
+                MinT,
+                Minute,
+                Mod,
+                ModT,
+                Month,
+                MonthsLong,
+                MonthsShort,
+                Not,
+                Now,
+                Or,
+                ParseJSON,
+                PatchRecord,
+                Pi,
+                PlainText,
+                Power,
+                PowerT,
+                Proper,
+                ProperT,
+                Radians,
+                RadiansT,
+                Rand,
+                RandBetween,
+                Refresh,
+                RenameColumns,
+                Replace,
+                ReplaceT,
+                RGBA,
+                Right,
+                RightST,
+                RightTS,
+                RightTT,
+                Round,
+                RoundDown,
+                RoundDownT,
+                RoundT,
+                RoundUp,
+                RoundUpT,
+                Search,
+                Second,
+                Sequence,
+                ShowColumns,
+                Shuffle,
+                Sin,
+                SinT,
+                Sort,
+                SortByColumns,
+                Split,
+                Sqrt,
+                SqrtT,
+                StartsWith,
+                StdevP,
+                StdevPT,
+                Substitute,
+                SubstituteT,
+                Sum,
+                SumT,
+                Switch,
+                Table,
+                Table_UO,
+                Tan,
+                TanT,
+                Text,
+                Text_UO,
+                Time,
+                TimeValue,
+                TimeValue_UO,
+                TimeZoneOffset,
+                Today,
+                Trace,
+                Trim,
+                TrimEnds,
+                TrimEndsT,
+                TrimT,
+                Trunc,
+                TruncT,
+                UniChar,
+                UniCharT,
+                Upper,
+                UpperT,
+                Value,
+                Value_UO,
+                VarP,
+                VarPT,
+                Weekday,
+                WeekdaysLong,
+                WeekdaysShort,
+                WeekNum,
+                With,
+                Year
+            });
 
-            _library = new TexlFunctionSet(functionDictionary.Values);
+            Decimal = new DecimalFunction();
+            Decimal_UO = new DecimalFunction_UO();
+            Float = new FloatFunction();
+            Float_UO = new FloatFunction_UO();
+            IsUTCToday = new IsUTCTodayFunction();
+            UTCNow = new UTCNowFunction();
+            UTCToday = new UTCTodayFunction();
+            BooleanL = new BooleanLFunction();
+            BooleanL_T = new BooleanLFunction_T();
+            Summarize = new SummarizeFunction();
 
-            Abs = functionDictionary[Library.Abs];
-            AbsT = functionDictionary[Library.AbsT];
-            Acos = functionDictionary[Library.Acos];
-            AcosT = functionDictionary[Library.AcosT];
-            Acot = functionDictionary[Library.Acot];
-            AcotT = functionDictionary[Library.AcotT];
-            AddColumns = functionDictionary[Library.AddColumns];
-            AmPm = functionDictionary[Library.AmPm];
-            AmPmShort = functionDictionary[Library.AmPmShort];
-            And = functionDictionary[Library.And];
-            Asin = functionDictionary[Library.Asin];
-            AsinT = functionDictionary[Library.AsinT];
-            AsType = functionDictionary[Library.AsType];
-            Atan = functionDictionary[Library.Atan];
-            Atan2 = functionDictionary[Library.Atan2];
-            AtanT = functionDictionary[Library.AtanT];
-            Average = functionDictionary[Library.Average];
-            AverageT = functionDictionary[Library.AverageT];
-            Blank = functionDictionary[Library.Blank];
-            Boolean = functionDictionary[Library.Boolean];
-            Boolean_T = functionDictionary[Library.Boolean_T];
-            Boolean_UO = functionDictionary[Library.Boolean_UO];
-            BooleanB = functionDictionary[Library.BooleanB];
-            BooleanB_T = functionDictionary[Library.BooleanB_T];
-            BooleanN = functionDictionary[Library.BooleanN];
-            BooleanN_T = functionDictionary[Library.BooleanN_T];
-            BooleanW = functionDictionary[Library.BooleanW];
-            BooleanW_T = functionDictionary[Library.BooleanW_T];
-            Char = functionDictionary[Library.Char];
-            CharT = functionDictionary[Library.CharT];
-            Clock24 = functionDictionary[Library.Clock24];
-            Coalesce = functionDictionary[Library.Coalesce];
-            ColorFade = functionDictionary[Library.ColorFade];
-            ColorFadeT = functionDictionary[Library.ColorFadeT];
-            ColorValue = functionDictionary[Library.ColorValue];
-            ColorValue_UO = functionDictionary[Library.ColorValue_UO];
-            Column_UO = functionDictionary[Library.Column_UO];
-            ColumnNames_UO = functionDictionary[Library.ColumnNames_UO];
-            Concat = functionDictionary[Library.Concat];
-            Concatenate = functionDictionary[Library.Concatenate];
-            ConcatenateT = functionDictionary[Library.ConcatenateT];
-            Cos = functionDictionary[Library.Cos];
-            CosT = functionDictionary[Library.CosT];
-            Cot = functionDictionary[Library.Cot];
-            CotT = functionDictionary[Library.CotT];
-            Count = functionDictionary[Library.Count];
-            CountA = functionDictionary[Library.CountA];
-            CountIf = functionDictionary[Library.CountIf];
-            CountRows = functionDictionary[Library.CountRows];
-            CountRows_UO = functionDictionary[Library.CountRows_UO];
-            Date = functionDictionary[Library.Date];
-            DateAdd = functionDictionary[Library.DateAdd];
-            DateAddT = functionDictionary[Library.DateAddT];
-            DateDiff = functionDictionary[Library.DateDiff];
-            DateDiffT = functionDictionary[Library.DateDiffT];
-            DateTime = functionDictionary[Library.DateTime];
-            DateTimeValue = functionDictionary[Library.DateTimeValue];
-            DateTimeValue_UO = functionDictionary[Library.DateTimeValue_UO];
-            DateValue = functionDictionary[Library.DateValue];
-            DateValue_UO = functionDictionary[Library.DateValue_UO];
-            Day = functionDictionary[Library.Day];
-            Dec2Hex = functionDictionary[Library.Dec2Hex];
-            Dec2HexT = functionDictionary[Library.Dec2HexT];
-            Degrees = functionDictionary[Library.Degrees];
-            DegreesT = functionDictionary[Library.DegreesT];
-            DropColumns = functionDictionary[Library.DropColumns];
-            EDate = functionDictionary[Library.EDate];
-            EOMonth = functionDictionary[Library.EOMonth];
-            EncodeHTML = functionDictionary[Library.EncodeHTML];
-            EncodeUrl = functionDictionary[Library.EncodeUrl];
-            EndsWith = functionDictionary[Library.EndsWith];
-            Error = functionDictionary[Library.Error];
-            Exp = functionDictionary[Library.Exp];
-            ExpT = functionDictionary[Library.ExpT];
-            Filter = functionDictionary[Library.Filter];
-            Find = functionDictionary[Library.Find];
-            FindT = functionDictionary[Library.FindT];
-            First = functionDictionary[Library.First];
-            First_UO = functionDictionary[Library.First_UO];
-            FirstN = functionDictionary[Library.FirstN];
-            FirstN_UO = functionDictionary[Library.FirstN_UO];
-            ForAll = functionDictionary[Library.ForAll];
-            ForAll_UO = functionDictionary[Library.ForAll_UO];
-            GUID_UO = functionDictionary[Library.GUID_UO];
-            GUIDNoArg = functionDictionary[Library.GUIDNoArg];
-            GUIDPure = functionDictionary[Library.GUIDPure];
-            Hex2Dec = functionDictionary[Library.Hex2Dec];
-            Hex2DecT = functionDictionary[Library.Hex2DecT];
-            Hour = functionDictionary[Library.Hour];
-            If = functionDictionary[Library.If];
-            IfError = functionDictionary[Library.IfError];
-            Index = functionDictionary[Library.Index];
-            Index_UO = functionDictionary[Library.Index_UO];
-            Int = functionDictionary[Library.Int];
-            IntT = functionDictionary[Library.IntT];
-            IsBlank = functionDictionary[Library.IsBlank];
-            IsBlankOptionSetValue = functionDictionary[Library.IsBlankOptionSetValue];
-            IsBlankOrError = functionDictionary[Library.IsBlankOrError];
-            IsBlankOrErrorOptionSetValue = functionDictionary[Library.IsBlankOrErrorOptionSetValue];
-            IsEmpty = functionDictionary[Library.IsEmpty];
-            IsError = functionDictionary[Library.IsError];
-            IsNumeric = functionDictionary[Library.IsNumeric];
-            ISOWeekNum = functionDictionary[Library.ISOWeekNum];
-            IsToday = functionDictionary[Library.IsToday];
-            Language = functionDictionary[Library.Language];
-            Last = functionDictionary[Library.Last];
-            Last_UO = functionDictionary[Library.Last_UO];
-            LastN = functionDictionary[Library.LastN];
-            LastN_UO = functionDictionary[Library.LastN_UO];
-            Left = functionDictionary[Library.Left];
-            LeftST = functionDictionary[Library.LeftST];
-            LeftTS = functionDictionary[Library.LeftTS];
-            LeftTT = functionDictionary[Library.LeftTT];
-            Len = functionDictionary[Library.Len];
-            LenT = functionDictionary[Library.LenT];
-            Ln = functionDictionary[Library.Ln];
-            LnT = functionDictionary[Library.LnT];
-            Log = functionDictionary[Library.Log];
-            LogT = functionDictionary[Library.LogT];
-            LookUp = functionDictionary[Library.LookUp];
-            Lower = functionDictionary[Library.Lower];
-            LowerT = functionDictionary[Library.LowerT];
-            Max = functionDictionary[Library.Max];
-            MaxT = functionDictionary[Library.MaxT];
-            Mid = functionDictionary[Library.Mid];
-            MidT = functionDictionary[Library.MidT];
-            Min = functionDictionary[Library.Min];
-            MinT = functionDictionary[Library.MinT];
-            Minute = functionDictionary[Library.Minute];
-            Mod = functionDictionary[Library.Mod];
-            ModT = functionDictionary[Library.ModT];
-            Month = functionDictionary[Library.Month];
-            MonthsLong = functionDictionary[Library.MonthsLong];
-            MonthsShort = functionDictionary[Library.MonthsShort];
-            Not = functionDictionary[Library.Not];
-            Now = functionDictionary[Library.Now];
-            Or = functionDictionary[Library.Or];
-            ParseJSON = functionDictionary[Library.ParseJSON];
-            PatchRecord = functionDictionary[Library.PatchRecord];
-            Pi = functionDictionary[Library.Pi];
-            PlainText = functionDictionary[Library.PlainText];
-            Power = functionDictionary[Library.Power];
-            PowerT = functionDictionary[Library.PowerT];
-            Proper = functionDictionary[Library.Proper];
-            ProperT = functionDictionary[Library.ProperT];
-            Radians = functionDictionary[Library.Radians];
-            RadiansT = functionDictionary[Library.RadiansT];
-            Rand = functionDictionary[Library.Rand];
-            RandBetween = functionDictionary[Library.RandBetween];
-            Refresh = functionDictionary[Library.Refresh];
-            RenameColumns = functionDictionary[Library.RenameColumns];
-            Replace = functionDictionary[Library.Replace];
-            ReplaceT = functionDictionary[Library.ReplaceT];
-            RGBA = functionDictionary[Library.RGBA];
-            Right = functionDictionary[Library.Right];
-            RightST = functionDictionary[Library.RightST];
-            RightTS = functionDictionary[Library.RightTS];
-            RightTT = functionDictionary[Library.RightTT];
-            Round = functionDictionary[Library.Round];
-            RoundDown = functionDictionary[Library.RoundDown];
-            RoundDownT = functionDictionary[Library.RoundDownT];
-            RoundT = functionDictionary[Library.RoundT];
-            RoundUp = functionDictionary[Library.RoundUp];
-            RoundUpT = functionDictionary[Library.RoundUpT];
-            Search = functionDictionary[Library.Search];
-            Second = functionDictionary[Library.Second];
-            Sequence = functionDictionary[Library.Sequence];
-            ShowColumns = functionDictionary[Library.ShowColumns];
-            Shuffle = functionDictionary[Library.Shuffle];
-            Sin = functionDictionary[Library.Sin];
-            SinT = functionDictionary[Library.SinT];
-            Sort = functionDictionary[Library.Sort];
-            SortByColumns = functionDictionary[Library.SortByColumns];
-            Split = functionDictionary[Library.Split];
-            Sqrt = functionDictionary[Library.Sqrt];
-            SqrtT = functionDictionary[Library.SqrtT];
-            StartsWith = functionDictionary[Library.StartsWith];
-            StdevP = functionDictionary[Library.StdevP];
-            StdevPT = functionDictionary[Library.StdevPT];
-            Substitute = functionDictionary[Library.Substitute];
-            SubstituteT = functionDictionary[Library.SubstituteT];
-            Sum = functionDictionary[Library.Sum];
-            SumT = functionDictionary[Library.SumT];
-            Switch = functionDictionary[Library.Switch];
-            Table = functionDictionary[Library.Table];
-            Table_UO = functionDictionary[Library.Table_UO];
-            Tan = functionDictionary[Library.Tan];
-            TanT = functionDictionary[Library.TanT];
-            Text = functionDictionary[Library.Text];
-            Text_UO = functionDictionary[Library.Text_UO];
-            Time = functionDictionary[Library.Time];
-            TimeValue = functionDictionary[Library.TimeValue];
-            TimeValue_UO = functionDictionary[Library.TimeValue_UO];
-            TimeZoneOffset = functionDictionary[Library.TimeZoneOffset];
-            Today = functionDictionary[Library.Today];
-            Trace = functionDictionary[Library.Trace];
-            Trim = functionDictionary[Library.Trim];
-            TrimEnds = functionDictionary[Library.TrimEnds];
-            TrimEndsT = functionDictionary[Library.TrimEndsT];
-            TrimT = functionDictionary[Library.TrimT];
-            Trunc = functionDictionary[Library.Trunc];
-            TruncT = functionDictionary[Library.TruncT];
-            UniChar = functionDictionary[Library.UniChar];
-            UniCharT = functionDictionary[Library.UniCharT];
-            Upper = functionDictionary[Library.Upper];
-            UpperT = functionDictionary[Library.UpperT];
-            Value = functionDictionary[Library.Value];
-            Value_UO = functionDictionary[Library.Value_UO];
-            VarP = functionDictionary[Library.VarP];
-            VarPT = functionDictionary[Library.VarPT];
-            Weekday = functionDictionary[Library.Weekday];
-            WeekdaysLong = functionDictionary[Library.WeekdaysLong];
-            WeekdaysShort = functionDictionary[Library.WeekdaysShort];
-            WeekNum = functionDictionary[Library.WeekNum];
-            With = functionDictionary[Library.With];
-            Year = functionDictionary[Library.Year];
-
-            Dictionary<FeatureGateFunctions, TexlFunction> featureGateFunctionDictionary = new Dictionary<FeatureGateFunctions, TexlFunction>()
+            _featureGateFunctions = new TexlFunctionSet(new[]
             {
-                { FeatureGateFunctions.Decimal, new DecimalFunction() },
-                { FeatureGateFunctions.Decimal_UO, new DecimalFunction_UO() },
-                { FeatureGateFunctions.Float, new FloatFunction() },
-                { FeatureGateFunctions.Float_UO, new FloatFunction_UO() },
-                { FeatureGateFunctions.IsUTCToday, new IsUTCTodayFunction() },
-                { FeatureGateFunctions.UTCNow, new UTCNowFunction() },
-                { FeatureGateFunctions.UTCToday, new UTCTodayFunction() },
-                { FeatureGateFunctions.BooleanL, new BooleanLFunction() },
-                { FeatureGateFunctions.BooleanL_T, new BooleanLFunction_T() },
-                { FeatureGateFunctions.Summarize, new SummarizeFunction() }
-            };
-
-            _featureGateFunctions = new TexlFunctionSet(featureGateFunctionDictionary.Values);
-
-            Decimal = featureGateFunctionDictionary[FeatureGateFunctions.Decimal];
-            Decimal_UO = featureGateFunctionDictionary[FeatureGateFunctions.Decimal_UO];
-            Float = featureGateFunctionDictionary[FeatureGateFunctions.Float];
-            Float_UO = featureGateFunctionDictionary[FeatureGateFunctions.Float_UO];
-            IsUTCToday = featureGateFunctionDictionary[FeatureGateFunctions.IsUTCToday];
-            UTCNow = featureGateFunctionDictionary[FeatureGateFunctions.UTCNow];
-            UTCToday = featureGateFunctionDictionary[FeatureGateFunctions.UTCToday];
-            BooleanL = featureGateFunctionDictionary[FeatureGateFunctions.BooleanL];
-            BooleanL_T = featureGateFunctionDictionary[FeatureGateFunctions.BooleanL_T];
-            Summarize = featureGateFunctionDictionary[FeatureGateFunctions.Summarize];
+                Decimal,
+                Decimal_UO,
+                Float,
+                Float_UO,
+                IsUTCToday,
+                UTCNow,
+                UTCToday,
+                BooleanL,
+                BooleanL_T,
+                Summarize
+            });            
 
             // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -501,227 +497,7 @@ namespace Microsoft.PowerFx.Core.Texl
         }
 
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library;
-
-        private enum Library : int
-        {
-            Abs,
-            AbsT,
-            Acos,
-            AcosT,
-            Acot,
-            AcotT,
-            AddColumns,
-            AmPm,
-            AmPmShort,
-            And,
-            Asin,
-            AsinT,
-            AsType,
-            Atan,
-            Atan2,
-            AtanT,
-            Average,
-            AverageT,
-            Blank,
-            Boolean,
-            Boolean_T,
-            Boolean_UO,
-            BooleanB,
-            BooleanB_T,
-            BooleanN,
-            BooleanN_T,
-            BooleanW,
-            BooleanW_T,
-            Char,
-            CharT,
-            Clock24,
-            Coalesce,
-            ColorFade,
-            ColorFadeT,
-            ColorValue,
-            ColorValue_UO,
-            Column_UO,
-            ColumnNames_UO,
-            Concat,
-            Concatenate,
-            ConcatenateT,
-            Cos,
-            CosT,
-            Cot,
-            CotT,
-            Count,
-            CountA,
-            CountIf,
-            CountRows,
-            CountRows_UO,
-            Date,
-            DateAdd,
-            DateAddT,
-            DateDiff,
-            DateDiffT,
-            DateTime,
-            DateTimeValue,
-            DateTimeValue_UO,
-            DateValue,
-            DateValue_UO,
-            Day,
-            Dec2Hex,
-            Dec2HexT,
-            Degrees,
-            DegreesT,
-            DropColumns,
-            EDate,
-            EOMonth,
-            EncodeHTML,
-            EncodeUrl,
-            EndsWith,
-            Error,
-            Exp,
-            ExpT,
-            Filter,
-            Find,
-            FindT,
-            First,
-            First_UO,
-            FirstN,
-            FirstN_UO,
-            ForAll,
-            ForAll_UO,
-            GUID_UO,
-            GUIDNoArg,
-            GUIDPure,
-            Hex2Dec,
-            Hex2DecT,
-            Hour,
-            If,
-            IfError,
-            Index,
-            Index_UO,
-            Int,
-            IntT,
-            IsBlank,
-            IsBlankOptionSetValue,
-            IsBlankOrError,
-            IsBlankOrErrorOptionSetValue,
-            IsEmpty,
-            IsError,
-            IsNumeric,
-            ISOWeekNum,
-            IsToday,
-            Language,
-            Last,
-            Last_UO,
-            LastN,
-            LastN_UO,
-            Left,
-            LeftST,
-            LeftTS,
-            LeftTT,
-            Len,
-            LenT,
-            Ln,
-            LnT,
-            Log,
-            LogT,
-            LookUp,
-            Lower,
-            LowerT,
-            Max,
-            MaxT,
-            Mid,
-            MidT,
-            Min,
-            MinT,
-            Minute,
-            Mod,
-            ModT,
-            Month,
-            MonthsLong,
-            MonthsShort,
-            Not,
-            Now,
-            Or,
-            ParseJSON,
-            PatchRecord,
-            Pi,
-            PlainText,
-            Power,
-            PowerT,
-            Proper,
-            ProperT,
-            Radians,
-            RadiansT,
-            Rand,
-            RandBetween,
-            Refresh,
-            RenameColumns,
-            Replace,
-            ReplaceT,
-            RGBA,
-            Right,
-            RightST,
-            RightTS,
-            RightTT,
-            Round,
-            RoundDown,
-            RoundDownT,
-            RoundT,
-            RoundUp,
-            RoundUpT,
-            Search,
-            Second,
-            Sequence,
-            ShowColumns,
-            Shuffle,
-            Sin,
-            SinT,
-            Sort,
-            SortByColumns,
-            Split,
-            Sqrt,
-            SqrtT,
-            StartsWith,
-            StdevP,
-            StdevPT,
-            Substitute,
-            SubstituteT,
-            Sum,
-            SumT,
-            Switch,
-            Table,
-            Table_UO,
-            Tan,
-            TanT,
-            Text,
-            Text_UO,
-            Time,
-            TimeValue,
-            TimeValue_UO,
-            TimeZoneOffset,
-            Today,
-            Trace,
-            Trim,
-            TrimEnds,
-            TrimEndsT,
-            TrimT,
-            Trunc,
-            TruncT,
-            UniChar,
-            UniCharT,
-            Upper,
-            UpperT,
-            Value,
-            Value_UO,
-            VarP,
-            VarPT,
-            Weekday,
-            WeekdaysLong,
-            WeekdaysShort,
-            WeekNum,
-            With,
-            Year
-        }
+        internal static readonly TexlFunctionSet _library;        
 
         public static readonly TexlFunction Abs;
         public static readonly TexlFunction AbsT;
@@ -941,21 +717,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year;
 
         // _featureGateFunctions functions, not present in all platforms
-        internal static readonly TexlFunctionSet _featureGateFunctions;
-
-        private enum FeatureGateFunctions : int
-        {
-            Decimal = 0,
-            Decimal_UO,
-            Float,
-            Float_UO,
-            IsUTCToday,
-            UTCNow,
-            UTCToday,
-            BooleanL,
-            BooleanL_T,
-            Summarize
-        }
+        internal static readonly TexlFunctionSet _featureGateFunctions;        
 
         public static readonly TexlFunction Decimal;
         public static readonly TexlFunction Decimal_UO;
@@ -973,7 +735,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
-       
+
         // Slow API, only use for backward compatibility
         internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _testOnlyLibrary.Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
