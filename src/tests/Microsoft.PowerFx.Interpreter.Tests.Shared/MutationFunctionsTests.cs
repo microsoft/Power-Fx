@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         protected void Check(Engine engine, string expression)
         {
-            var functionName = expression.Split("(")[0];
+            var functionName = expression.Split('(')[0];
             var errorMessage = $"The function '{functionName}' has some invalid arguments";
 
             var check = engine.Check(expression, options: _opts);

@@ -270,7 +270,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
             Assert.Equal(2.0m, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
 
+            // With .Net 5.0+, Persian decimal representation has changed
+#if NET7_0_OR_GREATER
+            // Note, the comma is 0x066B - Arabic Decimal Separator.
+            Assert.Equal("2٫01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
+#else
             Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
+#endif
         }
 
         // Verify that a single IR tree can be re-executed across multiple cultures.

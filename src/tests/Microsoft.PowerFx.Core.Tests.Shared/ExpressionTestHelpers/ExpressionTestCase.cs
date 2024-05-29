@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
 
@@ -47,7 +48,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            var str = $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+            var netVersion = RuntimeInformation.FrameworkDescription
+                                .Replace(".Net", string.Empty)
+                                .Replace(".NET", string.Empty)
+                                .Replace("Framework", string.Empty)
+                                .Replace("Core", string.Empty)
+                                .Trim();
+
+            var str = $"{netVersion} {Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
 
             if (!string.IsNullOrEmpty(SetupHandlerName))
             {

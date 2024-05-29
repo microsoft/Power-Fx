@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _output = output;
         }
 
+#if !NET462
         [Fact]
         public async Task ConnectorWizardTest()
         {
@@ -192,6 +193,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             (0..3).ForAll(i => Assert.Null(parameters.ParametersWithSuggestions[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
         }
+#endif 
 
         /*
          * TEMPORARY REMOVAL, need to update 'SQL Server TestAllFunctions.jsonSet'
@@ -252,6 +254,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
     }
 
+#if !NET462
     public static class TestExtensions
     {
         public static void ForAll(this Range range, Action<int> action)
@@ -282,6 +285,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
         }
     }
+#endif
 }
 
 #pragma warning restore SA1107 // Code should not contain multiple statements on one line

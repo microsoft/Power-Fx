@@ -264,9 +264,19 @@ namespace Microsoft.PowerFx.Intellisense
                 handler.Run(context, intellisenseData, resultSuggestions);
             }
 
-            intellisenseData.Suggestions.Sort(culture);
-            intellisenseData.SubstringSuggestions.Sort(culture);
-            resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
+            // InvariantCulture
+            if (culture?.LCID == 127)
+            {               
+                intellisenseData.Suggestions.Sort(null);
+                intellisenseData.SubstringSuggestions.Sort(null);
+                resultSuggestions.Sort(new IntellisenseSuggestionComparer(null));
+            }
+            else
+            {
+                intellisenseData.Suggestions.Sort(culture);
+                intellisenseData.SubstringSuggestions.Sort(culture);
+                resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
+            }           
 
             var allFunctionsOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
             return new IntellisenseResult(intellisenseData, resultSuggestions, allFunctionsOverloads);

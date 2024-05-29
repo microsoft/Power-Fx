@@ -76,6 +76,7 @@ namespace Microsoft.PowerFx.Tests
         // fail on intentionally large expressions. 
         private const int DefaultMemorySizeBytes = 100 * 1024;
 
+#if !NET462
         // Verify memory limits. 
         [Theory]
         [InlineData(10, 15)]
@@ -136,7 +137,9 @@ namespace Microsoft.PowerFx.Tests
             await Assert.ThrowsAsync<MyException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
 #endif
         }
+#endif
 
+#if !NET462
         // We can recover after a oom expression
         [Fact]
         public async Task MemoryLimitRecover()
@@ -178,6 +181,7 @@ namespace Microsoft.PowerFx.Tests
                 // nop. Ignore these warnings. Just rely on Poll.
             }
         }
+#endif
 
         // Verify cancellation.
         // Expression that takes a long time to run.  Doesn't need much stack or memory.  

@@ -654,6 +654,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 
+#if !NET462
         [Fact]
         public void Dataverse_Sample()
         {
@@ -739,6 +740,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[1].Visibility);
             Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[2].Visibility);
         }
+#endif
 
         [Fact]
         public void DynamicReturnValueTest()

@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Task.WaitAny(t, Task.Delay(Timeout));
 
-                if (t.IsCompletedSuccessfully)
+                if (t.IsCompleted && !t.IsFaulted)
                 {
                     return t.Result;
                 }
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
-                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split("|");
+                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split('|');
                         string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
                         bool isValid = true;
 
@@ -288,6 +288,48 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     return (TestResult.Pass, null);
                 }
+
+#if NET7_0_OR_GREATER
+                // .Net 7 has greater precision
+                // https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/7.0/datetime-add-precision
+                if (originalResult is DateValue originalDV)
+                {
+                    Match m = new Regex(@"Date\((?<y>[0-9]{1,4}),(?<m>[0-9]{1,2}),(?<d>[0-9]{1,2})\)").Match(expected);
+
+                    if (m.Success)
+                    {
+                        DateTime expectedDT = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                        long delta = Math.Abs(originalDV.Value.Ticks - expectedDT.Ticks);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                        if (delta < 10000) // 1ms
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                    }
+                }
+
+                if (originalResult is DateTimeValue originalDTV)
+                {
+                    Match m = new Regex(@"DateTime\((?<y>[0-9]{1,4}),(?<m>[0-9]{1,2}),(?<d>[0-9]{1,2}),(?<h>[0-9]{1,2}),(?<mm>[0-9]{1,2}),(?<s>[0-9]{1,2}),(?<ms>[0-9]{1,3})\)").Match(expected);
+
+                    if (m.Success)
+                    {
+                        DateTime expectedDTV = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value), int.Parse(m.Groups["h"].Value), int.Parse(m.Groups["mm"].Value), int.Parse(m.Groups["s"].Value), int.Parse(m.Groups["ms"].Value));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                        long delta = Math.Abs(originalDTV.Value.Ticks - expectedDTV.Ticks);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                        if (delta < 10000) // 1ms
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                    }
+                }
+#endif
 
                 // Check to see if it is a number, this test covers decimal too as decimal fits in double
                 if (double.TryParse(expected, out var expectedFloat))

@@ -819,13 +819,15 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Float( "123,456", "es-ES" )
 123.456
 
-//Excel allows only single parameter
->> Float("€1 234,56","fr")
-1234.56
+// Removed as .Net 7 generates a parsing error
+// //Excel allows only single parameter
+// >> Float("€1 234,56","fr")
+// 1234.56
 
-//Excel allows only single parameter
->> Float("€1.234,56","de")
-1234.56
+// Removed as .Net 7 generates a parsing error
+// //Excel allows only single parameter
+// >> Float("€1.234,56","de")
+// 1234.56
 
 // ******** DATE PARAMETERS ********
 

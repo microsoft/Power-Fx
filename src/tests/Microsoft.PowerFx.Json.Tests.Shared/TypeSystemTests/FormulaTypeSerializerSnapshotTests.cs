@@ -9,6 +9,7 @@ using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -23,7 +24,19 @@ namespace Microsoft.PowerFx.Json.Tests
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
-        /// </summary>
+        /// </summary>       
+
+#if NET7_0
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
+
+        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
+            _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "net70"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "net70"), string.Empty) :
+            _baseDirectory;
+#endif 
+
+#if NETCOREAPP3_1
         private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
 
         private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
@@ -31,11 +44,27 @@ namespace Microsoft.PowerFx.Json.Tests
                 .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
                 .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
             _baseDirectory;
+#endif 
+
+#if NET462
+        private static readonly string _baseDirectory = $@"{Directory.GetCurrentDirectory()}\TypeSystemTests\JsonTypeSnapshots";
+
+        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
+            _baseDirectory
+                .Replace(@"bin\Debug\net462", string.Empty)
+                .Replace(@"bin\Release\net462", string.Empty) :
+            _baseDirectory;
+#endif
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {
-            var directory = _typeSnapshotDirectory;
+            var directory = _typeSnapshotDirectory;            
+
+#if NETCOREAPP3_1_OR_GREATER
             var typeSnapshot = Path.Join(_typeSnapshotDirectory, testId + ".json");
+#else
+            var typeSnapshot = $@"{_typeSnapshotDirectory}\{testId}.json";
+#endif
 
             var actual = JsonSerializer.Serialize(type, options);
 

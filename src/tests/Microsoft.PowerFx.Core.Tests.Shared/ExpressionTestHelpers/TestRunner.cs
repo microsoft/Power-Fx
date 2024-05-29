@@ -135,7 +135,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public void AddDir(Dictionary<string, bool> setup, string directory = "")
         {
+#if NETCOREAPP3_1_OR_GREATER
             directory = Path.GetFullPath(directory, TestRoot);
+#endif
+
             var allFiles = Directory.EnumerateFiles(directory);
 
             AddFile(setup, allFiles);
@@ -179,8 +182,10 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public void AddFile(Dictionary<string, bool> setup, string thisFile)
-        {
+        {           
+#if NETCOREAPP3_1_OR_GREATER
             thisFile = Path.GetFullPath(thisFile, TestRoot);
+#endif
 
             var lines = File.ReadAllLines(thisFile);
 
@@ -188,8 +193,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // >> indicates input expression
             // next line is expected result.
 
-            Exception ParseError(int lineNumber, string message) => new InvalidOperationException(
-                $"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
+            Exception ParseError(int lineNumber, string message) => new InvalidOperationException($"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
 
             TestCase test = null;
 

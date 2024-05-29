@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             new () 
             { 
                 Type = "object", 
-                Required = properties.Where(p => p.Required).Select(p => p.PropertyName).ToHashSet(), 
+                Required = new HashSet<string>(properties.Where(p => p.Required).Select(p => p.PropertyName)), 
                 Properties = properties.ToDictionary(prop => prop.PropertyName, prop => prop.Schema)
             };
 

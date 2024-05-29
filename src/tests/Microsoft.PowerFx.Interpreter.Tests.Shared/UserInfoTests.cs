@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests

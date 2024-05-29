@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Configurations>Debug;Release;Debug462</Configurations>
+    <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);$(CustomConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.11.0" /> <!-- CVE-2024-29992 -->
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.1" /> <!-- CVE-2024-27086 -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" /> <!-- https://github.com/advisories/GHSA-8g9c-28fc-mcx2 -->
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
+    <PackageReference Include="YamlDotNet" Version="13.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Connectors\Microsoft.PowerFx.Connectors.csproj" />
+    <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
+    <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj" />
+    
+    <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.projitems" Label="Shared" />
+
+</Project>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -711,6 +712,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
+                Log?.Invoke($"{RuntimeInformation.FrameworkDescription}");
                 Log?.Invoke($"IR: {check.PrintIR()}");
 
                 var symbolValuesFromParams = SymbolValues.NewFromRecord(symbolTableFromParams, parameters);
@@ -741,8 +743,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 foreach (Action<RuntimeConfig> rc in runtimeConfiguration)
                 {
                     rc(runtimeConfig);
-                }            
+                }
 
+#if !NET462
                 // Ensure tests can run with governor on. 
                 // Some tests that use large memory can disable via:
                 //    #SETUP: DisableMemChecks
@@ -752,6 +755,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);
                     runtimeConfig.AddService<Governor>(mem);
                 }
+#endif
 
                 var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
 

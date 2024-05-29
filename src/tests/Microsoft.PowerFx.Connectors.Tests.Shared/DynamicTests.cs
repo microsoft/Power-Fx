@@ -42,7 +42,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 // lock managed by XUnit
                 if (!skip)
                 {
-                    using WebClient webClient = new WebClient();                    
+#pragma warning disable SYSLIB0014 // WebClient is obsolete
+                    using WebClient webClient = new WebClient();
+#pragma warning restore SYSLIB0014 // WebClient is obsolete
                     OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = ConnectorFunction.DefaultValidationRuleSet };
                     doc = new OpenApiStreamReader(oars).Read(webClient.OpenRead(SwaggerFile), out var diag);
 
@@ -68,7 +70,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             catch (WebException we)
             {
                 // "No connection could be made because the target machine actively refused it."
+#if !NET462
                 if (we.HResult == unchecked((int)0x80004005))
+#else
+                if (we.HResult == unchecked((int)0x80131509))
+#endif
                 {
                     skip = true;
                 }

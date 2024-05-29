@@ -92,7 +92,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
         protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+#if !NET462
             string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);
+#else
+            string[] lines = File.ReadAllLines(_fileName);
+#endif
+
             return lines.Select(line => DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(new NamedValue("line", FormulaValue.New(line))))).ToArray();
         }
     }

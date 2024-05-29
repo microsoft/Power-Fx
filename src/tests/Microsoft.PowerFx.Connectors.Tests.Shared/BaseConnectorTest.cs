@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext(GetNamespace(), client, console: _output, tzi: tzi));
             runtimeConfig.SetClock(new TestClockService());
-            runtimeConfig.SetTimeZone(tzi);            
+            runtimeConfig.SetTimeZone(tzi);
 
             return (testConnector, apiDoc, config, httpClient, client, connectorSettings, runtimeConfig);
         }
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 ErrorValue ev = Assert.IsType<ErrorValue>(fv);
                 string err2 = string.Join(",", ev.Errors.Select(er => er.Message));
 
-                foreach (string er in expectedResult.Substring(4).Split("|"))
+                foreach (string er in expectedResult.Substring(4).Split('|'))
                 {
                     Assert.Contains(er, err2);
                 }
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             if (!string.IsNullOrEmpty(extra))
             {
-                foreach (string e in extra.Split("|"))
+                foreach (string e in extra.Split('|'))
                 {
                     Assert.Contains(e, network);
                 }
@@ -267,4 +267,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             GC.SuppressFinalize(this);
         }
     }
+
+#if NET462
+    public static class Exts2
+    {
+        public static IEnumerable<T> Select<T>(this MatchCollection matchCollection, Func<Match, T> func)
+        {
+            List<T> list = new List<T>();
+
+            foreach (Match m in matchCollection)
+            {
+                list.Add(func(m));
+            }
+
+            return list;
+        }
+    }
+#endif
 }

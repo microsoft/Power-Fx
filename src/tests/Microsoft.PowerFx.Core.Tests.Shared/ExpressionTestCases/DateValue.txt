@@ -269,5 +269,8 @@ Date(1920,1,10)
 >> DateValue("1920-1-10","vi-vn")
 Date(1920,1,10)
 
->> DateValue("10 Tháng Giêng 1920","vi-vn")
-Date(1920,1,10)
+// Depending on .Net version, the following expression could be parsed or not
+// In .Net 4.8, January is "Tháng Giêng" which is it "Tháng 1" in .Net 8.0
+// LongDatePattern is also "dd MMMM yyyy" in .Net 4.8 while being "dddd, d MMMM, yyyy" in .Net 8.0
+// >> DateValue("10 Tháng Giêng 1920","vi-vn")
+// Date(1920,1,10)

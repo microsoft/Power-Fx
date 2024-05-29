@@ -57,9 +57,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (!string.IsNullOrEmpty(extraHeaders))
             {
-                foreach (var kvp in extraHeaders.Split(";"))
+                foreach (var kvp in extraHeaders.Split(';'))
                 {
-                    var hv = kvp.Split(":");
+                    var hv = kvp.Split(':');
                     request.Headers.Add(hv.First(), hv.Skip(1));
                 }
             }

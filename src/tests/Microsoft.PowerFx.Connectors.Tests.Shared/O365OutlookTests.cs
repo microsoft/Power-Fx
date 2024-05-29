@@ -775,7 +775,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "Response_O365Outlook_V4CalendarPatchItem.json")]
         public async Task Office365Outlook_Functions(string expr, string expectedResult, string xUrls, string xBodies, string expectedFiles, string extra = null)
         {
-            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles.Split("|").ToArray(), true, extra).ConfigureAwait(false);
+            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles.Split('|').ToArray(), true, extra).ConfigureAwait(false);
         }
 
         // This function has 2 "id" parameters, one required and one optional

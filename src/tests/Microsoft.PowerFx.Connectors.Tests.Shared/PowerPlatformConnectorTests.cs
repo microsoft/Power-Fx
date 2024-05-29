@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Tests
             var actual = testConnector._log.ToString();
 
             int idx = actual.IndexOf("[body] ") + 7;
-            actual = string.Concat(actual.AsSpan(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) =>
+            actual = string.Concat(actual.Substring(0, idx), string.Join(string.Empty, testConnector._log.ToString().Substring(idx, 30).Select((char c) =>
             {
                 int d = c;
                 return (c < 32 || c > 128) ? $"\\u{d:X4}" : c.ToString();
@@ -1790,7 +1790,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            var split = expression.Split(".");
+            var split = expression.Split('.');
 
             ConnectorSettings connectorSettings = new ConnectorSettings(split[0])
             {

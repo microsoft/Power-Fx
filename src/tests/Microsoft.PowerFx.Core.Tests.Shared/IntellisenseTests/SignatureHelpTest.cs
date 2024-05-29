@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>
+
+#if NET7_0
         private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
 
         private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
@@ -31,6 +33,27 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
                 .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
             _baseDirectory;
+#endif 
+
+#if NETCOREAPP3_1
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+            _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+            _baseDirectory;
+#endif 
+
+#if NET462
+        private static readonly string _baseDirectory = $@"{Directory.GetCurrentDirectory()}\IntellisenseTests\TestSignatures";
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+            _baseDirectory
+                .Replace(@"bin\Release\net462", string.Empty)
+                .Replace(@"bin\Release\net462", string.Empty) :
+            _baseDirectory;
+#endif
 
         /// <summary>
         /// Reads the current signature help test, located in the TestSignatures directory, deserializes and
@@ -43,7 +66,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         internal void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
         {
             var directory = _signatureHelpDirectory;
+
+#if NETCOREAPP3_1_OR_GREATER
             var signatureHelpPath = Path.Join(_signatureHelpDirectory, helpId + ".json");
+#else
+            var signatureHelpPath = $@"{_signatureHelpDirectory}\{helpId}.json";
+#endif
 
             if (File.Exists(signatureHelpPath))
             {
@@ -52,18 +80,18 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
                 if (RegenerateSignatureHelp)
                 {
-                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
+#pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     if (!JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp))
                     {
                         WriteSignatureHelp(signatureHelpPath, signatureHelp);
                     }
-                    #pragma warning restore CS0162
+#pragma warning restore CS0162
                 }
                 else
                 {
-                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
+#pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     Assert.True(JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp));
-                    #pragma warning restore CS0162
+#pragma warning restore CS0162
                 }
             }
             else

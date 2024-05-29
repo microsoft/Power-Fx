@@ -76,7 +76,7 @@ x+y
 Set(z, x * 5 + y)
 Notify(z)
 ";
-            var lines = file.Split("\n");
+            var lines = file.Split('\n');
             
             foreach (var line in lines)
             {

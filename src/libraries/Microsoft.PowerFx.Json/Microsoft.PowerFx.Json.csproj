@@ -4,7 +4,7 @@
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;Debug462</Configurations>
   </PropertyGroup>
 
   <!-- Nuget Properties -->
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.8" />
+    <PackageReference Include="System.Text.Json" Version="6.0.9" />
   </ItemGroup>
 
   <ItemGroup>

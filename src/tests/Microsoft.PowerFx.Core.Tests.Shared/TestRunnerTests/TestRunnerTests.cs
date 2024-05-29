@@ -173,11 +173,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Bad2.txt")]
         [InlineData("Bad3.txt")]
         public void TestBadParse(string file)
-        {
-            var runner = new TestRunner();
-
-            Assert.Throws<InvalidOperationException>(
-                () => AddFile(runner, file));
+        {            
+            Assert.Throws<InvalidOperationException>(() => AddFile(new TestRunner(), file));
         }
 
         // #DISABLE directive to remove an entire file. 
@@ -406,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 _hook = (expr, setup) =>
                 {
-                    Assert.Equal(setup, handlerName);
+                    Assert.Equal(handlerName, setup);
 
                     throw new SetupHandlerNotFoundException();
                 }
@@ -535,7 +532,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private static void AddFile(TestRunner runner, string filename)
         {
+#if NETCOREAPP3_1_OR_GREATER
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
+#else
+            var test1 = TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests") + @"\" + filename;
+#endif
             runner.AddFile(TestRunner.ParseSetupString(string.Empty), test1);
         }
     }

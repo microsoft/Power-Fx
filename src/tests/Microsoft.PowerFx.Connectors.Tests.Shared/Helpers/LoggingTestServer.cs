@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseSet(string filename)
         {
-            Responses = (Helpers.ReadStream(filename) as string).Split("~|~").ToArray();
+            Responses = (Helpers.ReadStream(filename) as string).Split(new string[] { "~|~" }, StringSplitOptions.None).ToArray();
             Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
             CurrentResponse = 0;
             ResponseSetMode = true;
@@ -190,10 +190,12 @@ namespace Microsoft.PowerFx.Tests
 
                 clone.Version = request.Version;
 
+#pragma warning disable CS0618 // Type or member is obsolete (HttpRequestMessage.Properties)
                 foreach (KeyValuePair<string, object> prop in request.Properties)
                 {
                     clone.Properties.Add(prop);
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
                 {

@@ -141,7 +141,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         // Here we assume UO implementation is JsonUntypedObject
                         string swagger = ((JsonUntypedObject)uo.Impl)._element.ToString();
 
+#if !NET462
                         await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger)).ConfigureAwait(false);
+#else
+                        File.WriteAllText($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
+#endif 
                         _output.WriteLine("OK");
                     }
                 }
