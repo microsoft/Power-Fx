@@ -3109,10 +3109,6 @@
     <value>记录</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>删除集合的所有记录。将保留集合的列。</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>删除集合中的所有记录。然后向同一集合添加另一组记录。</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型文字声明无效。</value>
+    <value>类型文字声明无效。表达式 '{0}' 不能用于类型定义。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>不支持确定数据源范围(使用 "As" 关键字)。</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>从集合中清除所有项目并返回空集合。</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>集合</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>要清除的集合。</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>要清除的源。</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>指定的数据源不能与此函数一起使用。</value>
     
   </data>
 </root>

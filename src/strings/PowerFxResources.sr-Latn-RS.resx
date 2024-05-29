@@ -3109,10 +3109,6 @@
     <value>zapis</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Briše sve zapise kolekcije. Kolone kolekcije će ostati.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Briše sve zapise iz kolekcije. Zatim dodaje drugi skup zapisa istoj kolekciji.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracija tipa literala nije važeća.</value>
+    <value>Deklaracija tipa literala je nevažeća. Izraz „{0}“ ne može da se koristi u definiciji tipa.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Određivanje opsega izvora podataka (upotreba ključne reči „As“) nije podržano.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Briše sve znakove iz kolekcije i vraća praznu kolekciju.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kolekcija</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Kolekcija za brisanje.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Izvor koji treba obrisati.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Navedeni izvor podataka ne može da se koristi sa ovom funkcijom.</value>
     
   </data>
 </root>

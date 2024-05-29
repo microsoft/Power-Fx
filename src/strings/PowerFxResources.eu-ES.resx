@@ -3109,10 +3109,6 @@
     <value>erregistroa</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Bilduma bateko erregistro guztiak ezabatzen ditu, baina bildumaren zutabeak gordeko dira.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Bilduma bateko erregistro guztiak ezabatzen ditu eta, ondoren, erregistro multzo desberdin bat gehitzen du bilduma berean.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Motaren adierazpen literala baliogabea da.</value>
+    <value>Idatzi duzun baieztapen literalak ez du balio. "{0}" adierazpena ezin da erabili motako definizio batean.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Ez da datu-iturburuaren esparrua onartzen ("As" gako-hitzaren erabilera).</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bilduma baten elementu guztiak garbitzen ditu eta bilduma hutsik itzultzen du.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>bilduma</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Garbituko den bilduma.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Ezabatuko den iturburua.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Ezin da erabili zehaztutako datu-iturburua funtzio honekin.</value>
     
   </data>
 </root>

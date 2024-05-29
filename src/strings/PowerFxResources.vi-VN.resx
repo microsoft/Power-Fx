@@ -3109,10 +3109,6 @@
     <value>record</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Xóa tất cả các bản ghi của một bộ sưu tập. Các cột của bộ sưu tập sẽ vẫn còn.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Xóa tất cả các bản ghi khỏi bộ sưu tập. Sau đó, thêm một bộ bản ghi khác nhau vào cùng một bộ sưu tập.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Khai báo ký tự loại không hợp lệ.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Không hỗ trợ xác định phạm vi nguồn dữ liệu (sử dụng từ khóa "As").</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Xóa tất cả các mục khỏi một bộ sưu tập và trả về bộ sưu tập trống.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>bộ_sưu_tập</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Bộ sưu tập cần xóa.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Không thể sử dụng nguồn dữ liệu được chỉ định với hàm này.</value>
     
   </data>
 </root>

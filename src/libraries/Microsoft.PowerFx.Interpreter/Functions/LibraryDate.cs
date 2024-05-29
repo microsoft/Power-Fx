@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -578,11 +579,23 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
+            var locale = runner.CultureInfo;
+
+            if (args.Length > 1)
+            {
+                var languageCode = args[1].Value;
+
+                if (!TextFormatUtils.TryGetCulture(languageCode, out locale))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                }
+            }
+
+            if (DateTime.TryParse(str, locale, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
             {
                 // Use epoch only for input that has time only.
                 // If value has time only, result has date of 1/1/0001 and dateTimeNS has current date of this year.
-                if (result.Date == DateTime.MinValue.Date && DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date)
+                if (result.Date == DateTime.MinValue.Date && DateTime.TryParse(str, locale, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date)
                 {
                     result = _epoch.Add(result.TimeOfDay);
                 }

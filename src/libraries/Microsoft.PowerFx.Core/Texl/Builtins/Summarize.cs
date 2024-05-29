@@ -206,7 +206,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
-            return index > 0 && node is not AsNode ? ParamIdentifierStatus.PossiblyIdentifier : ParamIdentifierStatus.NeverIdentifier;
+            if (index == 0)
+            {
+                return ParamIdentifierStatus.NeverIdentifier; // table name 
+            }
+            
+            if (node is AsNode)
+            {
+                return ParamIdentifierStatus.NeverIdentifier; // expression column
+            }
+
+            return ParamIdentifierStatus.AlwaysIdentifier; // A group by column 
         }
 
         public override bool IsLambdaParam(TexlNode node, int index)

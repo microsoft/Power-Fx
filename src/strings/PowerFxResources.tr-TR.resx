@@ -3109,10 +3109,6 @@
     <value>kayıt</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Bir koleksiyondaki tüm kayıtları siler. Koleksiyonun sütunları kalır.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Bir koleksiyondaki tüm kayıtları siler. Daha sonra aynı koleksiyona farklı bir kayıt kümesi ekler.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tür değişmez bildirimi geçersiz.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Veri kaynağının kapsamının belirlenmesi ('As' anahtar sözcüğünün kullanımı) desteklenmez.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm öğeleri siler ve boş koleksiyonu döndürür.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>koleksiyon</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Silinecek koleksiyon.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Belirtilen veri kaynağı bu işlevle kullanılamıyor.</value>
     
   </data>
 </root>

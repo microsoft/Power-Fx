@@ -3109,10 +3109,6 @@
     <value>post</value>
     
   </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Tar bort alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
-    
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Raderar alla poster från en samling. Och lägger sedan till en annan uppsättning poster i samma samling.</value>
     
@@ -4214,7 +4210,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Typdeklarationen var ogiltig.</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4449,6 +4445,24 @@
   </data>
   <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
     <value>Omfattning av datakällan (användning av nyckelordet "As") stöds inte.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Rensar alla objekt från en samling och returnerar den tomma samlingen.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>samling</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Samlingen som ska rensas.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Den angivna datakällan kan inte användas med den här funktionen.</value>
     
   </data>
 </root>
