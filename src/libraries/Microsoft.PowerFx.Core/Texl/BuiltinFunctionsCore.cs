@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
@@ -25,228 +27,482 @@ namespace Microsoft.PowerFx.Core.Texl
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
         };
 
-        private static readonly TexlFunction[] _functionArray = new TexlFunction[]
+        static BuiltinFunctionsCore()
         {
-             new AbsFunction(),
-             new AbsTableFunction(),
-             new AcosFunction(),
-             new AcosTableFunction(),
-             new AcotFunction(),
-             new AcotTableFunction(),
-             new AddColumnsFunction(),
-             new AmPmFunction(),
-             new AmPmShortFunction(),
-             new VariadicLogicalFunction(isAnd: true),
-             new AsinFunction(),
-             new AsinTableFunction(),
-             new AsTypeFunction(),
-             new AtanFunction(),
-             new Atan2Function(),
-             new AtanTableFunction(),
-             new AverageFunction(),
-             new AverageTableFunction(),
-             new BlankFunction(),
-             new BooleanFunction(),
-             new BooleanFunction_T(),
-             new BooleanFunction_UO(),
-             new BooleanBFunction(),
-             new BooleanBFunction_T(),
-             new BooleanNFunction(),
-             new BooleanNFunction_T(),
-             new BooleanWFunction(),
-             new BooleanWFunction_T(),
-             new CharFunction(),
-             new CharTFunction(),
-             new IsClock24Function(),
-             new CoalesceFunction(),
-             new ColorFadeFunction(),
-             new ColorFadeTFunction(),
-             new ColorValueFunction(),
-             new ColorValueFunction_UO(),
-             new ColumnFunction_UO(),
-             new ColumnNamesFunction_UO(),
-             new ConcatFunction(),
-             new ConcatenateFunction(),
-             new ConcatenateTableFunction(),
-             new CosFunction(),
-             new CosTableFunction(),
-             new CotFunction(),
-             new CotTableFunction(),
-             new CountFunction(),
-             new CountAFunction(),
-             new CountIfFunction(),
-             new CountRowsFunction(),
-             new CountRowsFunction_UO(),
-             new DateFunction(),
-             new DateAddFunction(),
-             new DateAddTFunction(),
-             new DateDiffFunction(),
-             new DateDiffTFunction(),
-             new DateTimeFunction(),
-             new DateTimeValueFunction(),
-             new DateTimeValueFunction_UO(),
-             new DateValueFunction(),
-             new DateValueFunction_UO(),
-             new DayFunction(),
-             new Dec2HexFunction(),
-             new Dec2HexTFunction(),
-             new DegreesFunction(),
-             new DegreesTableFunction(),
-             new DropColumnsFunction(),
-             new EDateFunction(),
-             new EOMonthFunction(),
-             new EncodeHTMLFunction(),
-             new EncodeUrlFunction(),
-             new EndsWithFunction(),
-             new ErrorFunction(),
-             new ExpFunction(),
-             new ExpTableFunction(),
-             new FilterFunction(),
-             new FindFunction(),
-             new FindTFunction(),
-             new FirstLastFunction(isFirst: true),
-             new FirstLastFunction_UO(isFirst: true),
-             new FirstLastNFunction(isFirst: true),
-             new FirstLastNFunction_UO(isFirst: true),
-             new ForAllFunction(),
-             new ForAllFunction_UO(),
-             new GUIDPureFunction_UO(),
-             new GUIDNoArgFunction(),
-             new GUIDPureFunction(),
-             new Hex2DecFunction(),
-             new Hex2DecTFunction(),
-             new HourFunction(),
-             new IfFunction(),
-             new IfErrorFunction(),
-             new IndexFunction(),
-             new IndexFunction_UO(),
-             new IntFunction(),
-             new IntTableFunction(),
-             new IsBlankFunction(),
-             new IsBlankOptionSetValueFunction(),
-             new IsBlankOrErrorFunction(),
-             new IsBlankOrErrorOptionSetValueFunction(),
-             new IsEmptyFunction(),
-             new IsErrorFunction(),
-             new IsNumericFunction(),
-             new ISOWeekNumFunction(),
-             new IsTodayFunction(),
-             new LanguageFunction(),
-             new FirstLastFunction(isFirst: false),
-             new FirstLastFunction_UO(isFirst: false),
-             new FirstLastNFunction(isFirst: false),
-             new FirstLastNFunction_UO(isFirst: false),
-             new LeftRightScalarFunction(isLeft: true),
-             new LeftRightScalarTableFunction(isLeft: true),
-             new LeftRightTableScalarFunction(isLeft: true),
-             new LeftRightTableTableFunction(isLeft: true),
-             new LenFunction(),
-             new LenTFunction(),
-             new LnFunction(),
-             new LnTableFunction(),
-             new LogFunction(),
-             new LogTFunction(),
-             new LookUpFunction(),
-             new LowerUpperFunction(isLower: true),
-             new LowerUpperTFunction(isLower: true),
-             new MinMaxFunction(isMin: false),
-             new MinMaxTableFunction(isMin: false),
-             new MidFunction(),
-             new MidTFunction(),
-             new MinMaxFunction(isMin: true),
-             new MinMaxTableFunction(isMin: true),
-             new MinuteFunction(),
-             new ModFunction(),
-             new ModTFunction(),
-             new MonthFunction(),
-             new MonthsLongFunction(),
-             new MonthsShortFunction(),
-             new NotFunction(),
-             new NowFunction(),
-             new VariadicLogicalFunction(isAnd: false),
-             new ParseJSONFunction(),
-             new PatchRecordFunction(),
-             new PiFunction(),
-             new PlainTextFunction(),
-             new PowerFunction(),
-             new PowerTFunction(),
-             new ProperFunction(),
-             new ProperTFunction(),
-             new RadiansFunction(),
-             new RadiansTableFunction(),
-             new RandFunction(),
-             new RandBetweenFunction(),
-             new RefreshFunction(),
-             new RenameColumnsFunction(),
-             new ReplaceFunction(),
-             new ReplaceTFunction(),
-             new RGBAFunction(),
-             new LeftRightScalarFunction(isLeft: false),
-             new LeftRightScalarTableFunction(isLeft: false),
-             new LeftRightTableScalarFunction(isLeft: false),
-             new LeftRightTableTableFunction(isLeft: false),
-             new RoundScalarFunction(),
-             new RoundDownScalarFunction(),
-             new RoundDownTableFunction(),
-             new RoundTableFunction(),
-             new RoundUpScalarFunction(),
-             new RoundUpTableFunction(),
-             new SearchFunction(),
-             new SecondFunction(),
-             new SequenceFunction(),
-             new ShowColumnsFunction(),
-             new ShuffleFunction(),
-             new SinFunction(),
-             new SinTableFunction(),
-             new SortFunction(),
-             new SortByColumnsFunction(),
-             new SplitFunction(),
-             new SqrtFunction(),
-             new SqrtTableFunction(),
-             new StartsWithFunction(),
-             new StdevPFunction(),
-             new StdevPTableFunction(),
-             new SubstituteFunction(),
-             new SubstituteTFunction(),
-             new SumFunction(),
-             new SumTableFunction(),
-             new SwitchFunction(),
-             new TableFunction(),
-             new TableFunction_UO(),
-             new TanFunction(),
-             new TanTableFunction(),
-             new TextFunction(),
-             new TextFunction_UO(),
-             new TimeFunction(),
-             new TimeValueFunction(),
-             new TimeValueFunction_UO(),
-             new TimeZoneOffsetFunction(),
-             new TodayFunction(),
-             new TraceFunction(),
-             new TrimFunction(),
-             new TrimEndsFunction(),
-             new TrimEndsTFunction(),
-             new TrimTFunction(),
-             new TruncFunction(),
-             new TruncTableFunction(),
-             new UniCharFunction(),
-             new UniCharTFunction(),
-             new LowerUpperFunction(isLower: false),
-             new LowerUpperTFunction(isLower: false),
-             new ValueFunction(),
-             new ValueFunction_UO(),
-             new VarPFunction(),
-             new VarPTableFunction(),
-             new WeekdayFunction(),
-             new WeekdaysLongFunction(),
-             new WeekdaysShortFunction(),
-             new WeekNumFunction(),
-             new WithFunction(),
-             new YearFunction(),
-        };
+            Dictionary<Library, TexlFunction> functionArray = new Dictionary<Library, TexlFunction>()
+            {
+                { Library.Abs, new AbsFunction() },
+                { Library.AbsT, new AbsTableFunction() },
+                { Library.Acos, new AcosFunction() },
+                { Library.AcosT, new AcosTableFunction() },
+                { Library.Acot, new AcotFunction() },
+                { Library.AcotT, new AcotTableFunction() },
+                { Library.AddColumns, new AddColumnsFunction() },
+                { Library.AmPm, new AmPmFunction() },
+                { Library.AmPmShort, new AmPmShortFunction() },
+                { Library.And, new VariadicLogicalFunction(isAnd: true) },
+                { Library.Asin, new AsinFunction() },
+                { Library.AsinT, new AsinTableFunction() },
+                { Library.AsType, new AsTypeFunction() },
+                { Library.Atan, new AtanFunction() },
+                { Library.Atan2, new Atan2Function() },
+                { Library.AtanT, new AtanTableFunction() },
+                { Library.Average, new AverageFunction() },
+                { Library.AverageT, new AverageTableFunction() },
+                { Library.Blank, new BlankFunction() },
+                { Library.Boolean, new BooleanFunction() },
+                { Library.Boolean_T, new BooleanFunction_T() },
+                { Library.Boolean_UO, new BooleanFunction_UO() },
+                { Library.BooleanB, new BooleanBFunction() },
+                { Library.BooleanB_T, new BooleanBFunction_T() },
+                { Library.BooleanN, new BooleanNFunction() },
+                { Library.BooleanN_T, new BooleanNFunction_T() },
+                { Library.BooleanW, new BooleanWFunction() },
+                { Library.BooleanW_T, new BooleanWFunction_T() },
+                { Library.Char, new CharFunction() },
+                { Library.CharT, new CharTFunction() },
+                { Library.Clock24, new IsClock24Function() },
+                { Library.Coalesce, new CoalesceFunction() },
+                { Library.ColorFade, new ColorFadeFunction() },
+                { Library.ColorFadeT, new ColorFadeTFunction() },
+                { Library.ColorValue, new ColorValueFunction() },
+                { Library.ColorValue_UO, new ColorValueFunction_UO() },
+                { Library.Column_UO, new ColumnFunction_UO() },
+                { Library.ColumnNames_UO, new ColumnNamesFunction_UO() },
+                { Library.Concat, new ConcatFunction() },
+                { Library.Concatenate, new ConcatenateFunction() },
+                { Library.ConcatenateT, new ConcatenateTableFunction() },
+                { Library.Cos, new CosFunction() },
+                { Library.CosT, new CosTableFunction() },
+                { Library.Cot, new CotFunction() },
+                { Library.CotT, new CotTableFunction() },
+                { Library.Count, new CountFunction() },
+                { Library.CountA, new CountAFunction() },
+                { Library.CountIf, new CountIfFunction() },
+                { Library.CountRows, new CountRowsFunction() },
+                { Library.CountRows_UO, new CountRowsFunction_UO() },
+                { Library.Date, new DateFunction() },
+                { Library.DateAdd, new DateAddFunction() },
+                { Library.DateAddT, new DateAddTFunction() },
+                { Library.DateDiff, new DateDiffFunction() },
+                { Library.DateDiffT, new DateDiffTFunction() },
+                { Library.DateTime, new DateTimeFunction() },
+                { Library.DateTimeValue, new DateTimeValueFunction() },
+                { Library.DateTimeValue_UO, new DateTimeValueFunction_UO() },
+                { Library.DateValue, new DateValueFunction() },
+                { Library.DateValue_UO, new DateValueFunction_UO() },
+                { Library.Day, new DayFunction() },
+                { Library.Dec2Hex, new Dec2HexFunction() },
+                { Library.Dec2HexT, new Dec2HexTFunction() },
+                { Library.Degrees, new DegreesFunction() },
+                { Library.DegreesT, new DegreesTableFunction() },
+                { Library.DropColumns, new DropColumnsFunction() },
+                { Library.EDate, new EDateFunction() },
+                { Library.EOMonth, new EOMonthFunction() },
+                { Library.EncodeHTML, new EncodeHTMLFunction() },
+                { Library.EncodeUrl, new EncodeUrlFunction() },
+                { Library.EndsWith, new EndsWithFunction() },
+                { Library.Error, new ErrorFunction() },
+                { Library.Exp, new ExpFunction() },
+                { Library.ExpT, new ExpTableFunction() },
+                { Library.Filter, new FilterFunction() },
+                { Library.Find, new FindFunction() },
+                { Library.FindT, new FindTFunction() },
+                { Library.First, new FirstLastFunction(isFirst: true) },
+                { Library.First_UO, new FirstLastFunction_UO(isFirst: true) },
+                { Library.FirstN, new FirstLastNFunction(isFirst: true) },
+                { Library.FirstN_UO, new FirstLastNFunction_UO(isFirst: true) },
+                { Library.ForAll, new ForAllFunction() },
+                { Library.ForAll_UO, new ForAllFunction_UO() },
+                { Library.GUID_UO, new GUIDPureFunction_UO() },
+                { Library.GUIDNoArg, new GUIDNoArgFunction() },
+                { Library.GUIDPure, new GUIDPureFunction() },
+                { Library.Hex2Dec, new Hex2DecFunction() },
+                { Library.Hex2DecT, new Hex2DecTFunction() },
+                { Library.Hour, new HourFunction() },
+                { Library.If, new IfFunction() },
+                { Library.IfError, new IfErrorFunction() },
+                { Library.Index, new IndexFunction() },
+                { Library.Index_UO, new IndexFunction_UO() },
+                { Library.Int, new IntFunction() },
+                { Library.IntT, new IntTableFunction() },
+                { Library.IsBlank, new IsBlankFunction() },
+                { Library.IsBlankOptionSetValue, new IsBlankOptionSetValueFunction() },
+                { Library.IsBlankOrError, new IsBlankOrErrorFunction() },
+                { Library.IsBlankOrErrorOptionSetValue, new IsBlankOrErrorOptionSetValueFunction() },
+                { Library.IsEmpty, new IsEmptyFunction() },
+                { Library.IsError, new IsErrorFunction() },
+                { Library.IsNumeric, new IsNumericFunction() },
+                { Library.ISOWeekNum, new ISOWeekNumFunction() },
+                { Library.IsToday, new IsTodayFunction() },
+                { Library.Language, new LanguageFunction() },
+                { Library.Last, new FirstLastFunction(isFirst: false) },
+                { Library.Last_UO, new FirstLastFunction_UO(isFirst: false) },
+                { Library.LastN, new FirstLastNFunction(isFirst: false) },
+                { Library.LastN_UO, new FirstLastNFunction_UO(isFirst: false) },
+                { Library.Left, new LeftRightScalarFunction(isLeft: true) },
+                { Library.LeftST, new LeftRightScalarTableFunction(isLeft: true) },
+                { Library.LeftTS, new LeftRightTableScalarFunction(isLeft: true) },
+                { Library.LeftTT, new LeftRightTableTableFunction(isLeft: true) },
+                { Library.Len, new LenFunction() },
+                { Library.LenT, new LenTFunction() },
+                { Library.Ln, new LnFunction() },
+                { Library.LnT, new LnTableFunction() },
+                { Library.Log, new LogFunction() },
+                { Library.LogT, new LogTFunction() },
+                { Library.LookUp, new LookUpFunction() },
+                { Library.Lower, new LowerUpperFunction(isLower: true) },
+                { Library.LowerT, new LowerUpperTFunction(isLower: true) },
+                { Library.Max, new MinMaxFunction(isMin: false) },
+                { Library.MaxT, new MinMaxTableFunction(isMin: false) },
+                { Library.Mid, new MidFunction() },
+                { Library.MidT, new MidTFunction() },
+                { Library.Min, new MinMaxFunction(isMin: true) },
+                { Library.MinT, new MinMaxTableFunction(isMin: true) },
+                { Library.Minute, new MinuteFunction() },
+                { Library.Mod, new ModFunction() },
+                { Library.ModT, new ModTFunction() },
+                { Library.Month, new MonthFunction() },
+                { Library.MonthsLong, new MonthsLongFunction() },
+                { Library.MonthsShort, new MonthsShortFunction() },
+                { Library.Not, new NotFunction() },
+                { Library.Now, new NowFunction() },
+                { Library.Or, new VariadicLogicalFunction(isAnd: false) },
+                { Library.ParseJSON, new ParseJSONFunction() },
+                { Library.PatchRecord, new PatchRecordFunction() },
+                { Library.Pi, new PiFunction() },
+                { Library.PlainText, new PlainTextFunction() },
+                { Library.Power, new PowerFunction() },
+                { Library.PowerT, new PowerTFunction() },
+                { Library.Proper, new ProperFunction() },
+                { Library.ProperT, new ProperTFunction() },
+                { Library.Radians, new RadiansFunction() },
+                { Library.RadiansT, new RadiansTableFunction() },
+                { Library.Rand, new RandFunction() },
+                { Library.RandBetween, new RandBetweenFunction() },
+                { Library.Refresh, new RefreshFunction() },
+                { Library.RenameColumns, new RenameColumnsFunction() },
+                { Library.Replace, new ReplaceFunction() },
+                { Library.ReplaceT, new ReplaceTFunction() },
+                { Library.RGBA, new RGBAFunction() },
+                { Library.Right, new LeftRightScalarFunction(isLeft: false) },
+                { Library.RightST, new LeftRightScalarTableFunction(isLeft: false) },
+                { Library.RightTS, new LeftRightTableScalarFunction(isLeft: false) },
+                { Library.RightTT, new LeftRightTableTableFunction(isLeft: false) },
+                { Library.Round, new RoundScalarFunction() },
+                { Library.RoundDown, new RoundDownScalarFunction() },
+                { Library.RoundDownT, new RoundDownTableFunction() },
+                { Library.RoundT, new RoundTableFunction() },
+                { Library.RoundUp, new RoundUpScalarFunction() },
+                { Library.RoundUpT, new RoundUpTableFunction() },
+                { Library.Search, new SearchFunction() },
+                { Library.Second, new SecondFunction() },
+                { Library.Sequence, new SequenceFunction() },
+                { Library.ShowColumns, new ShowColumnsFunction() },
+                { Library.Shuffle, new ShuffleFunction() },
+                { Library.Sin, new SinFunction() },
+                { Library.SinT, new SinTableFunction() },
+                { Library.Sort, new SortFunction() },
+                { Library.SortByColumns, new SortByColumnsFunction() },
+                { Library.Split, new SplitFunction() },
+                { Library.Sqrt, new SqrtFunction() },
+                { Library.SqrtT, new SqrtTableFunction() },
+                { Library.StartsWith, new StartsWithFunction() },
+                { Library.StdevP, new StdevPFunction() },
+                { Library.StdevPT, new StdevPTableFunction() },
+                { Library.Substitute, new SubstituteFunction() },
+                { Library.SubstituteT, new SubstituteTFunction() },
+                { Library.Sum, new SumFunction() },
+                { Library.SumT, new SumTableFunction() },
+                { Library.Switch, new SwitchFunction() },
+                { Library.Table, new TableFunction() },
+                { Library.Table_UO, new TableFunction_UO() },
+                { Library.Tan, new TanFunction() },
+                { Library.TanT, new TanTableFunction() },
+                { Library.Text, new TextFunction() },
+                { Library.Text_UO, new TextFunction_UO() },
+                { Library.Time, new TimeFunction() },
+                { Library.TimeValue, new TimeValueFunction() },
+                { Library.TimeValue_UO, new TimeValueFunction_UO() },
+                { Library.TimeZoneOffset, new TimeZoneOffsetFunction() },
+                { Library.Today, new TodayFunction() },
+                { Library.Trace, new TraceFunction() },
+                { Library.Trim, new TrimFunction() },
+                { Library.TrimEnds, new TrimEndsFunction() },
+                { Library.TrimEndsT, new TrimEndsTFunction() },
+                { Library.TrimT, new TrimTFunction() },
+                { Library.Trunc, new TruncFunction() },
+                { Library.TruncT, new TruncTableFunction() },
+                { Library.UniChar, new UniCharFunction() },
+                { Library.UniCharT, new UniCharTFunction() },
+                { Library.Upper, new LowerUpperFunction(isLower: false) },
+                { Library.UpperT, new LowerUpperTFunction(isLower: false) },
+                { Library.Value, new ValueFunction() },
+                { Library.Value_UO, new ValueFunction_UO() },
+                { Library.VarP, new VarPFunction() },
+                { Library.VarPT, new VarPTableFunction() },
+                { Library.Weekday, new WeekdayFunction() },
+                { Library.WeekdaysLong, new WeekdaysLongFunction() },
+                { Library.WeekdaysShort, new WeekdaysShortFunction() },
+                { Library.WeekNum, new WeekNumFunction() },
+                { Library.With, new WithFunction() },
+                { Library.Year, new YearFunction() }
+            };
+
+            _library = new TexlFunctionSet(functionArray.Values);
+
+            Abs = functionArray[Library.Abs];
+            AbsT = functionArray[Library.AbsT];
+            Acos = functionArray[Library.Acos];
+            AcosT = functionArray[Library.AcosT];
+            Acot = functionArray[Library.Acot];
+            AcotT = functionArray[Library.AcotT];
+            AddColumns = functionArray[Library.AddColumns];
+            AmPm = functionArray[Library.AmPm];
+            AmPmShort = functionArray[Library.AmPmShort];
+            And = functionArray[Library.And];
+            Asin = functionArray[Library.Asin];
+            AsinT = functionArray[Library.AsinT];
+            AsType = functionArray[Library.AsType];
+            Atan = functionArray[Library.Atan];
+            Atan2 = functionArray[Library.Atan2];
+            AtanT = functionArray[Library.AtanT];
+            Average = functionArray[Library.Average];
+            AverageT = functionArray[Library.AverageT];
+            Blank = functionArray[Library.Blank];
+            Boolean = functionArray[Library.Boolean];
+            Boolean_T = functionArray[Library.Boolean_T];
+            Boolean_UO = functionArray[Library.Boolean_UO];
+            BooleanB = functionArray[Library.BooleanB];
+            BooleanB_T = functionArray[Library.BooleanB_T];
+            BooleanN = functionArray[Library.BooleanN];
+            BooleanN_T = functionArray[Library.BooleanN_T];
+            BooleanW = functionArray[Library.BooleanW];
+            BooleanW_T = functionArray[Library.BooleanW_T];
+            Char = functionArray[Library.Char];
+            CharT = functionArray[Library.CharT];
+            Clock24 = functionArray[Library.Clock24];
+            Coalesce = functionArray[Library.Coalesce];
+            ColorFade = functionArray[Library.ColorFade];
+            ColorFadeT = functionArray[Library.ColorFadeT];
+            ColorValue = functionArray[Library.ColorValue];
+            ColorValue_UO = functionArray[Library.ColorValue_UO];
+            Column_UO = functionArray[Library.Column_UO];
+            ColumnNames_UO = functionArray[Library.ColumnNames_UO];
+            Concat = functionArray[Library.Concat];
+            Concatenate = functionArray[Library.Concatenate];
+            ConcatenateT = functionArray[Library.ConcatenateT];
+            Cos = functionArray[Library.Cos];
+            CosT = functionArray[Library.CosT];
+            Cot = functionArray[Library.Cot];
+            CotT = functionArray[Library.CotT];
+            Count = functionArray[Library.Count];
+            CountA = functionArray[Library.CountA];
+            CountIf = functionArray[Library.CountIf];
+            CountRows = functionArray[Library.CountRows];
+            CountRows_UO = functionArray[Library.CountRows_UO];
+            Date = functionArray[Library.Date];
+            DateAdd = functionArray[Library.DateAdd];
+            DateAddT = functionArray[Library.DateAddT];
+            DateDiff = functionArray[Library.DateDiff];
+            DateDiffT = functionArray[Library.DateDiffT];
+            DateTime = functionArray[Library.DateTime];
+            DateTimeValue = functionArray[Library.DateTimeValue];
+            DateTimeValue_UO = functionArray[Library.DateTimeValue_UO];
+            DateValue = functionArray[Library.DateValue];
+            DateValue_UO = functionArray[Library.DateValue_UO];
+            Day = functionArray[Library.Day];
+            Dec2Hex = functionArray[Library.Dec2Hex];
+            Dec2HexT = functionArray[Library.Dec2HexT];
+            Degrees = functionArray[Library.Degrees];
+            DegreesT = functionArray[Library.DegreesT];
+            DropColumns = functionArray[Library.DropColumns];
+            EDate = functionArray[Library.EDate];
+            EOMonth = functionArray[Library.EOMonth];
+            EncodeHTML = functionArray[Library.EncodeHTML];
+            EncodeUrl = functionArray[Library.EncodeUrl];
+            EndsWith = functionArray[Library.EndsWith];
+            Error = functionArray[Library.Error];
+            Exp = functionArray[Library.Exp];
+            ExpT = functionArray[Library.ExpT];
+            Filter = functionArray[Library.Filter];
+            Find = functionArray[Library.Find];
+            FindT = functionArray[Library.FindT];
+            First = functionArray[Library.First];
+            First_UO = functionArray[Library.First_UO];
+            FirstN = functionArray[Library.FirstN];
+            FirstN_UO = functionArray[Library.FirstN_UO];
+            ForAll = functionArray[Library.ForAll];
+            ForAll_UO = functionArray[Library.ForAll_UO];
+            GUID_UO = functionArray[Library.GUID_UO];
+            GUIDNoArg = functionArray[Library.GUIDNoArg];
+            GUIDPure = functionArray[Library.GUIDPure];
+            Hex2Dec = functionArray[Library.Hex2Dec];
+            Hex2DecT = functionArray[Library.Hex2DecT];
+            Hour = functionArray[Library.Hour];
+            If = functionArray[Library.If];
+            IfError = functionArray[Library.IfError];
+            Index = functionArray[Library.Index];
+            Index_UO = functionArray[Library.Index_UO];
+            Int = functionArray[Library.Int];
+            IntT = functionArray[Library.IntT];
+            IsBlank = functionArray[Library.IsBlank];
+            IsBlankOptionSetValue = functionArray[Library.IsBlankOptionSetValue];
+            IsBlankOrError = functionArray[Library.IsBlankOrError];
+            IsBlankOrErrorOptionSetValue = functionArray[Library.IsBlankOrErrorOptionSetValue];
+            IsEmpty = functionArray[Library.IsEmpty];
+            IsError = functionArray[Library.IsError];
+            IsNumeric = functionArray[Library.IsNumeric];
+            ISOWeekNum = functionArray[Library.ISOWeekNum];
+            IsToday = functionArray[Library.IsToday];
+            Language = functionArray[Library.Language];
+            Last = functionArray[Library.Last];
+            Last_UO = functionArray[Library.Last_UO];
+            LastN = functionArray[Library.LastN];
+            LastN_UO = functionArray[Library.LastN_UO];
+            Left = functionArray[Library.Left];
+            LeftST = functionArray[Library.LeftST];
+            LeftTS = functionArray[Library.LeftTS];
+            LeftTT = functionArray[Library.LeftTT];
+            Len = functionArray[Library.Len];
+            LenT = functionArray[Library.LenT];
+            Ln = functionArray[Library.Ln];
+            LnT = functionArray[Library.LnT];
+            Log = functionArray[Library.Log];
+            LogT = functionArray[Library.LogT];
+            LookUp = functionArray[Library.LookUp];
+            Lower = functionArray[Library.Lower];
+            LowerT = functionArray[Library.LowerT];
+            Max = functionArray[Library.Max];
+            MaxT = functionArray[Library.MaxT];
+            Mid = functionArray[Library.Mid];
+            MidT = functionArray[Library.MidT];
+            Min = functionArray[Library.Min];
+            MinT = functionArray[Library.MinT];
+            Minute = functionArray[Library.Minute];
+            Mod = functionArray[Library.Mod];
+            ModT = functionArray[Library.ModT];
+            Month = functionArray[Library.Month];
+            MonthsLong = functionArray[Library.MonthsLong];
+            MonthsShort = functionArray[Library.MonthsShort];
+            Not = functionArray[Library.Not];
+            Now = functionArray[Library.Now];
+            Or = functionArray[Library.Or];
+            ParseJSON = functionArray[Library.ParseJSON];
+            PatchRecord = functionArray[Library.PatchRecord];
+            Pi = functionArray[Library.Pi];
+            PlainText = functionArray[Library.PlainText];
+            Power = functionArray[Library.Power];
+            PowerT = functionArray[Library.PowerT];
+            Proper = functionArray[Library.Proper];
+            ProperT = functionArray[Library.ProperT];
+            Radians = functionArray[Library.Radians];
+            RadiansT = functionArray[Library.RadiansT];
+            Rand = functionArray[Library.Rand];
+            RandBetween = functionArray[Library.RandBetween];
+            Refresh = functionArray[Library.Refresh];
+            RenameColumns = functionArray[Library.RenameColumns];
+            Replace = functionArray[Library.Replace];
+            ReplaceT = functionArray[Library.ReplaceT];
+            RGBA = functionArray[Library.RGBA];
+            Right = functionArray[Library.Right];
+            RightST = functionArray[Library.RightST];
+            RightTS = functionArray[Library.RightTS];
+            RightTT = functionArray[Library.RightTT];
+            Round = functionArray[Library.Round];
+            RoundDown = functionArray[Library.RoundDown];
+            RoundDownT = functionArray[Library.RoundDownT];
+            RoundT = functionArray[Library.RoundT];
+            RoundUp = functionArray[Library.RoundUp];
+            RoundUpT = functionArray[Library.RoundUpT];
+            Search = functionArray[Library.Search];
+            Second = functionArray[Library.Second];
+            Sequence = functionArray[Library.Sequence];
+            ShowColumns = functionArray[Library.ShowColumns];
+            Shuffle = functionArray[Library.Shuffle];
+            Sin = functionArray[Library.Sin];
+            SinT = functionArray[Library.SinT];
+            Sort = functionArray[Library.Sort];
+            SortByColumns = functionArray[Library.SortByColumns];
+            Split = functionArray[Library.Split];
+            Sqrt = functionArray[Library.Sqrt];
+            SqrtT = functionArray[Library.SqrtT];
+            StartsWith = functionArray[Library.StartsWith];
+            StdevP = functionArray[Library.StdevP];
+            StdevPT = functionArray[Library.StdevPT];
+            Substitute = functionArray[Library.Substitute];
+            SubstituteT = functionArray[Library.SubstituteT];
+            Sum = functionArray[Library.Sum];
+            SumT = functionArray[Library.SumT];
+            Switch = functionArray[Library.Switch];
+            Table = functionArray[Library.Table];
+            Table_UO = functionArray[Library.Table_UO];
+            Tan = functionArray[Library.Tan];
+            TanT = functionArray[Library.TanT];
+            Text = functionArray[Library.Text];
+            Text_UO = functionArray[Library.Text_UO];
+            Time = functionArray[Library.Time];
+            TimeValue = functionArray[Library.TimeValue];
+            TimeValue_UO = functionArray[Library.TimeValue_UO];
+            TimeZoneOffset = functionArray[Library.TimeZoneOffset];
+            Today = functionArray[Library.Today];
+            Trace = functionArray[Library.Trace];
+            Trim = functionArray[Library.Trim];
+            TrimEnds = functionArray[Library.TrimEnds];
+            TrimEndsT = functionArray[Library.TrimEndsT];
+            TrimT = functionArray[Library.TrimT];
+            Trunc = functionArray[Library.Trunc];
+            TruncT = functionArray[Library.TruncT];
+            UniChar = functionArray[Library.UniChar];
+            UniCharT = functionArray[Library.UniCharT];
+            Upper = functionArray[Library.Upper];
+            UpperT = functionArray[Library.UpperT];
+            Value = functionArray[Library.Value];
+            Value_UO = functionArray[Library.Value_UO];
+            VarP = functionArray[Library.VarP];
+            VarPT = functionArray[Library.VarPT];
+            Weekday = functionArray[Library.Weekday];
+            WeekdaysLong = functionArray[Library.WeekdaysLong];
+            WeekdaysShort = functionArray[Library.WeekdaysShort];
+            WeekNum = functionArray[Library.WeekNum];
+            With = functionArray[Library.With];
+            Year = functionArray[Library.Year];
+
+            Dictionary<FeatureGateFunctions, TexlFunction> featureGateFunctionsArray = new Dictionary<FeatureGateFunctions, TexlFunction>()
+            {
+                { FeatureGateFunctions.Decimal , new DecimalFunction() },
+                { FeatureGateFunctions.Decimal_UO, new DecimalFunction_UO() },
+                { FeatureGateFunctions.Float, new FloatFunction() },
+                { FeatureGateFunctions.Float_UO, new FloatFunction_UO() },
+                { FeatureGateFunctions.IsUTCToday, new IsUTCTodayFunction() },
+                { FeatureGateFunctions.UTCNow, new UTCNowFunction() },
+                { FeatureGateFunctions.UTCToday, new UTCTodayFunction() },
+                { FeatureGateFunctions.BooleanL, new BooleanLFunction() },
+                { FeatureGateFunctions.BooleanL_T, new BooleanLFunction_T() },
+                { FeatureGateFunctions.Summarize, new SummarizeFunction() }
+            };
+
+            _featureGateFunctions = new TexlFunctionSet(featureGateFunctionsArray.Values);
+
+            Decimal = featureGateFunctionsArray[FeatureGateFunctions.Decimal];
+            Decimal_UO = featureGateFunctionsArray[FeatureGateFunctions.Decimal_UO];
+            Float = featureGateFunctionsArray[FeatureGateFunctions.Float];
+            Float_UO = featureGateFunctionsArray[FeatureGateFunctions.Float_UO];
+            IsUTCToday = featureGateFunctionsArray[FeatureGateFunctions.IsUTCToday];
+            UTCNow = featureGateFunctionsArray[FeatureGateFunctions.UTCNow];
+            UTCToday = featureGateFunctionsArray[FeatureGateFunctions.UTCToday];
+            BooleanL = featureGateFunctionsArray[FeatureGateFunctions.BooleanL];
+            BooleanL_T = featureGateFunctionsArray[FeatureGateFunctions.BooleanL_T];
+            Summarize = featureGateFunctionsArray[FeatureGateFunctions.Summarize];
+
+            // Slow API, only use for backward compatibility
+#pragma warning disable CS0618 // Type or member is obsolete
+            _testOnlyLibrary = new TexlFunctionSet(_library.Functions).Add(_featureGateFunctions);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
 
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library = new TexlFunctionSet(_functionArray);
+        internal static readonly TexlFunctionSet _library;
 
         private enum Library : int
         {
@@ -468,241 +724,227 @@ namespace Microsoft.PowerFx.Core.Texl
             Year
         }
 
-        public static readonly TexlFunction Abs = _functionArray[(int)Library.Abs];
-        public static readonly TexlFunction AbsT = _functionArray[(int)Library.AbsT];
-        public static readonly TexlFunction Acos = _functionArray[(int)Library.Acos];
-        public static readonly TexlFunction AcosT = _functionArray[(int)Library.AcosT];
-        public static readonly TexlFunction Acot = _functionArray[(int)Library.Acot];
-        public static readonly TexlFunction AcotT = _functionArray[(int)Library.AcotT];
-        public static readonly TexlFunction AddColumns = _functionArray[(int)Library.AddColumns];
-        public static readonly TexlFunction AmPm = _functionArray[(int)Library.AmPm];
-        public static readonly TexlFunction AmPmShort = _functionArray[(int)Library.AmPmShort];
-        public static readonly TexlFunction And = _functionArray[(int)Library.And];
-        public static readonly TexlFunction Asin = _functionArray[(int)Library.Asin];
-        public static readonly TexlFunction AsinT = _functionArray[(int)Library.AsinT];
-        public static readonly TexlFunction AsType = _functionArray[(int)Library.AsType];
-        public static readonly TexlFunction Atan = _functionArray[(int)Library.Atan];
-        public static readonly TexlFunction Atan2 = _functionArray[(int)Library.Atan2];
-        public static readonly TexlFunction AtanT = _functionArray[(int)Library.AtanT];
-        public static readonly TexlFunction Average = _functionArray[(int)Library.Average];
-        public static readonly TexlFunction AverageT = _functionArray[(int)Library.AverageT];
-        public static readonly TexlFunction Blank = _functionArray[(int)Library.Blank];
-        public static readonly TexlFunction Boolean = _functionArray[(int)Library.Boolean];
-        public static readonly TexlFunction Boolean_T = _functionArray[(int)Library.Boolean_T];
-        public static readonly TexlFunction Boolean_UO = _functionArray[(int)Library.Boolean_UO];
-        public static readonly TexlFunction BooleanB = _functionArray[(int)Library.BooleanB];
-        public static readonly TexlFunction BooleanB_T = _functionArray[(int)Library.BooleanB_T];
-        public static readonly TexlFunction BooleanN = _functionArray[(int)Library.BooleanN];
-        public static readonly TexlFunction BooleanN_T = _functionArray[(int)Library.BooleanN_T];
-        public static readonly TexlFunction BooleanW = _functionArray[(int)Library.BooleanW];
-        public static readonly TexlFunction BooleanW_T = _functionArray[(int)Library.BooleanW_T];
-        public static readonly TexlFunction Char = _functionArray[(int)Library.Char];
-        public static readonly TexlFunction CharT = _functionArray[(int)Library.CharT];
-        public static readonly TexlFunction Clock24 = _functionArray[(int)Library.Clock24];
-        public static readonly TexlFunction Coalesce = _functionArray[(int)Library.Coalesce];
-        public static readonly TexlFunction ColorFade = _functionArray[(int)Library.ColorFade];
-        public static readonly TexlFunction ColorFadeT = _functionArray[(int)Library.ColorFadeT];
-        public static readonly TexlFunction ColorValue = _functionArray[(int)Library.ColorValue];
-        public static readonly TexlFunction ColorValue_UO = _functionArray[(int)Library.ColorValue_UO];
-        public static readonly TexlFunction Column_UO = _functionArray[(int)Library.Column_UO];
-        public static readonly TexlFunction ColumnNames_UO = _functionArray[(int)Library.ColumnNames_UO];
-        public static readonly TexlFunction Concat = _functionArray[(int)Library.Concat];
-        public static readonly TexlFunction Concatenate = _functionArray[(int)Library.Concatenate];
-        public static readonly TexlFunction ConcatenateT = _functionArray[(int)Library.ConcatenateT];
-        public static readonly TexlFunction Cos = _functionArray[(int)Library.Cos];
-        public static readonly TexlFunction CosT = _functionArray[(int)Library.CosT];
-        public static readonly TexlFunction Cot = _functionArray[(int)Library.Cot];
-        public static readonly TexlFunction CotT = _functionArray[(int)Library.CotT];
-        public static readonly TexlFunction Count = _functionArray[(int)Library.Count];
-        public static readonly TexlFunction CountA = _functionArray[(int)Library.CountA];
-        public static readonly TexlFunction CountIf = _functionArray[(int)Library.CountIf];
-        public static readonly TexlFunction CountRows = _functionArray[(int)Library.CountRows];
-        public static readonly TexlFunction CountRows_UO = _functionArray[(int)Library.CountRows_UO];
-        public static readonly TexlFunction Date = _functionArray[(int)Library.Date];
-        public static readonly TexlFunction DateAdd = _functionArray[(int)Library.DateAdd];
-        public static readonly TexlFunction DateAddT = _functionArray[(int)Library.DateAddT];
-        public static readonly TexlFunction DateDiff = _functionArray[(int)Library.DateDiff];
-        public static readonly TexlFunction DateDiffT = _functionArray[(int)Library.DateDiffT];
-        public static readonly TexlFunction DateTime = _functionArray[(int)Library.DateTime];
-        public static readonly TexlFunction DateTimeValue = _functionArray[(int)Library.DateTimeValue];
-        public static readonly TexlFunction DateTimeValue_UO = _functionArray[(int)Library.DateTimeValue_UO];
-        public static readonly TexlFunction DateValue = _functionArray[(int)Library.DateValue];
-        public static readonly TexlFunction DateValue_UO = _functionArray[(int)Library.DateValue_UO];
-        public static readonly TexlFunction Day = _functionArray[(int)Library.Day];
-        public static readonly TexlFunction Dec2Hex = _functionArray[(int)Library.Dec2Hex];
-        public static readonly TexlFunction Dec2HexT = _functionArray[(int)Library.Dec2HexT];
-        public static readonly TexlFunction Degrees = _functionArray[(int)Library.Degrees];
-        public static readonly TexlFunction DegreesT = _functionArray[(int)Library.DegreesT];
-        public static readonly TexlFunction DropColumns = _functionArray[(int)Library.DropColumns];
-        public static readonly TexlFunction EDate = _functionArray[(int)Library.EDate];
-        public static readonly TexlFunction EOMonth = _functionArray[(int)Library.EOMonth];
-        public static readonly TexlFunction EncodeHTML = _functionArray[(int)Library.EncodeHTML];
-        public static readonly TexlFunction EncodeUrl = _functionArray[(int)Library.EncodeUrl];
-        public static readonly TexlFunction EndsWith = _functionArray[(int)Library.EndsWith];
-        public static readonly TexlFunction Error = _functionArray[(int)Library.Error];
-        public static readonly TexlFunction Exp = _functionArray[(int)Library.Exp];
-        public static readonly TexlFunction ExpT = _functionArray[(int)Library.ExpT];
-        public static readonly TexlFunction Filter = _functionArray[(int)Library.Filter];
-        public static readonly TexlFunction Find = _functionArray[(int)Library.Find];
-        public static readonly TexlFunction FindT = _functionArray[(int)Library.FindT];
-        public static readonly TexlFunction First = _functionArray[(int)Library.First];
-        public static readonly TexlFunction First_UO = _functionArray[(int)Library.First_UO];
-        public static readonly TexlFunction FirstN = _functionArray[(int)Library.FirstN];
-        public static readonly TexlFunction FirstN_UO = _functionArray[(int)Library.FirstN_UO];
-        public static readonly TexlFunction ForAll = _functionArray[(int)Library.ForAll];
-        public static readonly TexlFunction ForAll_UO = _functionArray[(int)Library.ForAll_UO];
-        public static readonly TexlFunction GUID_UO = _functionArray[(int)Library.GUID_UO];
-        public static readonly TexlFunction GUIDNoArg = _functionArray[(int)Library.GUIDNoArg];
-        public static readonly TexlFunction GUIDPure = _functionArray[(int)Library.GUIDPure];
-        public static readonly TexlFunction Hex2Dec = _functionArray[(int)Library.Hex2Dec];
-        public static readonly TexlFunction Hex2DecT = _functionArray[(int)Library.Hex2DecT];
-        public static readonly TexlFunction Hour = _functionArray[(int)Library.Hour];
-        public static readonly TexlFunction If = _functionArray[(int)Library.If];
-        public static readonly TexlFunction IfError = _functionArray[(int)Library.IfError];
-        public static readonly TexlFunction Index = _functionArray[(int)Library.Index];
-        public static readonly TexlFunction Index_UO = _functionArray[(int)Library.Index_UO];
-        public static readonly TexlFunction Int = _functionArray[(int)Library.Int];
-        public static readonly TexlFunction IntT = _functionArray[(int)Library.IntT];
-        public static readonly TexlFunction IsBlank = _functionArray[(int)Library.IsBlank];
-        public static readonly TexlFunction IsBlankOptionSetValue = _functionArray[(int)Library.IsBlankOptionSetValue];
-        public static readonly TexlFunction IsBlankOrError = _functionArray[(int)Library.IsBlankOrError];
-        public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _functionArray[(int)Library.IsBlankOrErrorOptionSetValue];
-        public static readonly TexlFunction IsEmpty = _functionArray[(int)Library.IsEmpty];
-        public static readonly TexlFunction IsError = _functionArray[(int)Library.IsError];
-        public static readonly TexlFunction IsNumeric = _functionArray[(int)Library.IsNumeric];
-        public static readonly TexlFunction ISOWeekNum = _functionArray[(int)Library.ISOWeekNum];
-        public static readonly TexlFunction IsToday = _functionArray[(int)Library.IsToday];
-        public static readonly TexlFunction Language = _functionArray[(int)Library.Language];
-        public static readonly TexlFunction Last = _functionArray[(int)Library.Last];
-        public static readonly TexlFunction Last_UO = _functionArray[(int)Library.Last_UO];
-        public static readonly TexlFunction LastN = _functionArray[(int)Library.LastN];
-        public static readonly TexlFunction LastN_UO = _functionArray[(int)Library.LastN_UO];
-        public static readonly TexlFunction Left = _functionArray[(int)Library.Left];
-        public static readonly TexlFunction LeftST = _functionArray[(int)Library.LeftST];
-        public static readonly TexlFunction LeftTS = _functionArray[(int)Library.LeftTS];
-        public static readonly TexlFunction LeftTT = _functionArray[(int)Library.LeftTT];
-        public static readonly TexlFunction Len = _functionArray[(int)Library.Len];
-        public static readonly TexlFunction LenT = _functionArray[(int)Library.LenT];
-        public static readonly TexlFunction Ln = _functionArray[(int)Library.Ln];
-        public static readonly TexlFunction LnT = _functionArray[(int)Library.LnT];
-        public static readonly TexlFunction Log = _functionArray[(int)Library.Log];
-        public static readonly TexlFunction LogT = _functionArray[(int)Library.LogT];
-        public static readonly TexlFunction LookUp = _functionArray[(int)Library.LookUp];
-        public static readonly TexlFunction Lower = _functionArray[(int)Library.Lower];
-        public static readonly TexlFunction LowerT = _functionArray[(int)Library.LowerT];
-        public static readonly TexlFunction Max = _functionArray[(int)Library.Max];
-        public static readonly TexlFunction MaxT = _functionArray[(int)Library.MaxT];
-        public static readonly TexlFunction Mid = _functionArray[(int)Library.Mid];
-        public static readonly TexlFunction MidT = _functionArray[(int)Library.MidT];
-        public static readonly TexlFunction Min = _functionArray[(int)Library.Min];
-        public static readonly TexlFunction MinT = _functionArray[(int)Library.MinT];
-        public static readonly TexlFunction Minute = _functionArray[(int)Library.Minute];
-        public static readonly TexlFunction Mod = _functionArray[(int)Library.Mod];
-        public static readonly TexlFunction ModT = _functionArray[(int)Library.ModT];
-        public static readonly TexlFunction Month = _functionArray[(int)Library.Month];
-        public static readonly TexlFunction MonthsLong = _functionArray[(int)Library.MonthsLong];
-        public static readonly TexlFunction MonthsShort = _functionArray[(int)Library.MonthsShort];
-        public static readonly TexlFunction Not = _functionArray[(int)Library.Not];
-        public static readonly TexlFunction Now = _functionArray[(int)Library.Now];
-        public static readonly TexlFunction Or = _functionArray[(int)Library.Or];
-        public static readonly TexlFunction ParseJSON = _functionArray[(int)Library.ParseJSON];
-        public static readonly TexlFunction PatchRecord = _functionArray[(int)Library.PatchRecord];
-        public static readonly TexlFunction Pi = _functionArray[(int)Library.Pi];
-        public static readonly TexlFunction PlainText = _functionArray[(int)Library.PlainText];
-        public static readonly TexlFunction Power = _functionArray[(int)Library.Power];
-        public static readonly TexlFunction PowerT = _functionArray[(int)Library.PowerT];
-        public static readonly TexlFunction Proper = _functionArray[(int)Library.Proper];
-        public static readonly TexlFunction ProperT = _functionArray[(int)Library.ProperT];
-        public static readonly TexlFunction Radians = _functionArray[(int)Library.Radians];
-        public static readonly TexlFunction RadiansT = _functionArray[(int)Library.RadiansT];
-        public static readonly TexlFunction Rand = _functionArray[(int)Library.Rand];
-        public static readonly TexlFunction RandBetween = _functionArray[(int)Library.RandBetween];
-        public static readonly TexlFunction Refresh = _functionArray[(int)Library.Refresh];
-        public static readonly TexlFunction RenameColumns = _functionArray[(int)Library.RenameColumns];
-        public static readonly TexlFunction Replace = _functionArray[(int)Library.Replace];
-        public static readonly TexlFunction ReplaceT = _functionArray[(int)Library.ReplaceT];
-        public static readonly TexlFunction RGBA = _functionArray[(int)Library.RGBA];
-        public static readonly TexlFunction Right = _functionArray[(int)Library.Right];
-        public static readonly TexlFunction RightST = _functionArray[(int)Library.RightST];
-        public static readonly TexlFunction RightTS = _functionArray[(int)Library.RightTS];
-        public static readonly TexlFunction RightTT = _functionArray[(int)Library.RightTT];
-        public static readonly TexlFunction Round = _functionArray[(int)Library.Round];
-        public static readonly TexlFunction RoundDown = _functionArray[(int)Library.RoundDown];
-        public static readonly TexlFunction RoundDownT = _functionArray[(int)Library.RoundDownT];
-        public static readonly TexlFunction RoundT = _functionArray[(int)Library.RoundT];
-        public static readonly TexlFunction RoundUp = _functionArray[(int)Library.RoundUp];
-        public static readonly TexlFunction RoundUpT = _functionArray[(int)Library.RoundUpT];
-        public static readonly TexlFunction Search = _functionArray[(int)Library.Search];
-        public static readonly TexlFunction Second = _functionArray[(int)Library.Second];
-        public static readonly TexlFunction Sequence = _functionArray[(int)Library.Sequence];
-        public static readonly TexlFunction ShowColumns = _functionArray[(int)Library.ShowColumns];
-        public static readonly TexlFunction Shuffle = _functionArray[(int)Library.Shuffle];
-        public static readonly TexlFunction Sin = _functionArray[(int)Library.Sin];
-        public static readonly TexlFunction SinT = _functionArray[(int)Library.SinT];
-        public static readonly TexlFunction Sort = _functionArray[(int)Library.Sort];
-        public static readonly TexlFunction SortByColumns = _functionArray[(int)Library.SortByColumns];
-        public static readonly TexlFunction Split = _functionArray[(int)Library.Split];
-        public static readonly TexlFunction Sqrt = _functionArray[(int)Library.Sqrt];
-        public static readonly TexlFunction SqrtT = _functionArray[(int)Library.SqrtT];
-        public static readonly TexlFunction StartsWith = _functionArray[(int)Library.StartsWith];
-        public static readonly TexlFunction StdevP = _functionArray[(int)Library.StdevP];
-        public static readonly TexlFunction StdevPT = _functionArray[(int)Library.StdevPT];
-        public static readonly TexlFunction Substitute = _functionArray[(int)Library.Substitute];
-        public static readonly TexlFunction SubstituteT = _functionArray[(int)Library.SubstituteT];
-        public static readonly TexlFunction Sum = _functionArray[(int)Library.Sum];
-        public static readonly TexlFunction SumT = _functionArray[(int)Library.SumT];
-        public static readonly TexlFunction Switch = _functionArray[(int)Library.Switch];
-        public static readonly TexlFunction Table = _functionArray[(int)Library.Table];
-        public static readonly TexlFunction Table_UO = _functionArray[(int)Library.Table_UO];
-        public static readonly TexlFunction Tan = _functionArray[(int)Library.Tan];
-        public static readonly TexlFunction TanT = _functionArray[(int)Library.TanT];
-        public static readonly TexlFunction Text = _functionArray[(int)Library.Text];
-        public static readonly TexlFunction Text_UO = _functionArray[(int)Library.Text_UO];
-        public static readonly TexlFunction Time = _functionArray[(int)Library.Time];
-        public static readonly TexlFunction TimeValue = _functionArray[(int)Library.TimeValue];
-        public static readonly TexlFunction TimeValue_UO = _functionArray[(int)Library.TimeValue_UO];
-        public static readonly TexlFunction TimeZoneOffset = _functionArray[(int)Library.TimeZoneOffset];
-        public static readonly TexlFunction Today = _functionArray[(int)Library.Today];
-        public static readonly TexlFunction Trace = _functionArray[(int)Library.Trace];
-        public static readonly TexlFunction Trim = _functionArray[(int)Library.Trim];
-        public static readonly TexlFunction TrimEnds = _functionArray[(int)Library.TrimEnds];
-        public static readonly TexlFunction TrimEndsT = _functionArray[(int)Library.TrimEndsT];
-        public static readonly TexlFunction TrimT = _functionArray[(int)Library.TrimT];
-        public static readonly TexlFunction Trunc = _functionArray[(int)Library.Trunc];
-        public static readonly TexlFunction TruncT = _functionArray[(int)Library.TruncT];
-        public static readonly TexlFunction UniChar = _functionArray[(int)Library.UniChar];
-        public static readonly TexlFunction UniCharT = _functionArray[(int)Library.UniCharT];
-        public static readonly TexlFunction Upper = _functionArray[(int)Library.Upper];
-        public static readonly TexlFunction UpperT = _functionArray[(int)Library.UpperT];
-        public static readonly TexlFunction Value = _functionArray[(int)Library.Value];
-        public static readonly TexlFunction Value_UO = _functionArray[(int)Library.Value_UO];
-        public static readonly TexlFunction VarP = _functionArray[(int)Library.VarP];
-        public static readonly TexlFunction VarPT = _functionArray[(int)Library.VarPT];
-        public static readonly TexlFunction Weekday = _functionArray[(int)Library.Weekday];
-        public static readonly TexlFunction WeekdaysLong = _functionArray[(int)Library.WeekdaysLong];
-        public static readonly TexlFunction WeekdaysShort = _functionArray[(int)Library.WeekdaysShort];
-        public static readonly TexlFunction WeekNum = _functionArray[(int)Library.WeekNum];
-        public static readonly TexlFunction With = _functionArray[(int)Library.With];
-        public static readonly TexlFunction Year = _functionArray[(int)Library.Year];
-
-        private static readonly TexlFunction[] _featureGateFunctionArray = new TexlFunction[]
-        {
-            new DecimalFunction(),
-            new DecimalFunction_UO(),
-            new FloatFunction(),
-            new FloatFunction_UO(),
-            new IsUTCTodayFunction(),
-            new UTCNowFunction(),
-            new UTCTodayFunction(),
-            new BooleanLFunction(),
-            new BooleanLFunction_T(),
-            new SummarizeFunction(),
-        };
+        public static readonly TexlFunction Abs;
+        public static readonly TexlFunction AbsT;
+        public static readonly TexlFunction Acos;
+        public static readonly TexlFunction AcosT;
+        public static readonly TexlFunction Acot;
+        public static readonly TexlFunction AcotT;
+        public static readonly TexlFunction AddColumns;
+        public static readonly TexlFunction AmPm;
+        public static readonly TexlFunction AmPmShort;
+        public static readonly TexlFunction And;
+        public static readonly TexlFunction Asin;
+        public static readonly TexlFunction AsinT;
+        public static readonly TexlFunction AsType;
+        public static readonly TexlFunction Atan;
+        public static readonly TexlFunction Atan2;
+        public static readonly TexlFunction AtanT;
+        public static readonly TexlFunction Average;
+        public static readonly TexlFunction AverageT;
+        public static readonly TexlFunction Blank;
+        public static readonly TexlFunction Boolean;
+        public static readonly TexlFunction Boolean_T;
+        public static readonly TexlFunction Boolean_UO;
+        public static readonly TexlFunction BooleanB;
+        public static readonly TexlFunction BooleanB_T;
+        public static readonly TexlFunction BooleanN;
+        public static readonly TexlFunction BooleanN_T;
+        public static readonly TexlFunction BooleanW;
+        public static readonly TexlFunction BooleanW_T;
+        public static readonly TexlFunction Char;
+        public static readonly TexlFunction CharT;
+        public static readonly TexlFunction Clock24;
+        public static readonly TexlFunction Coalesce;
+        public static readonly TexlFunction ColorFade;
+        public static readonly TexlFunction ColorFadeT;
+        public static readonly TexlFunction ColorValue;
+        public static readonly TexlFunction ColorValue_UO;
+        public static readonly TexlFunction Column_UO;
+        public static readonly TexlFunction ColumnNames_UO;
+        public static readonly TexlFunction Concat;
+        public static readonly TexlFunction Concatenate;
+        public static readonly TexlFunction ConcatenateT;
+        public static readonly TexlFunction Cos;
+        public static readonly TexlFunction CosT;
+        public static readonly TexlFunction Cot;
+        public static readonly TexlFunction CotT;
+        public static readonly TexlFunction Count;
+        public static readonly TexlFunction CountA;
+        public static readonly TexlFunction CountIf;
+        public static readonly TexlFunction CountRows;
+        public static readonly TexlFunction CountRows_UO;
+        public static readonly TexlFunction Date;
+        public static readonly TexlFunction DateAdd;
+        public static readonly TexlFunction DateAddT;
+        public static readonly TexlFunction DateDiff;
+        public static readonly TexlFunction DateDiffT;
+        public static readonly TexlFunction DateTime;
+        public static readonly TexlFunction DateTimeValue;
+        public static readonly TexlFunction DateTimeValue_UO;
+        public static readonly TexlFunction DateValue;
+        public static readonly TexlFunction DateValue_UO;
+        public static readonly TexlFunction Day;
+        public static readonly TexlFunction Dec2Hex;
+        public static readonly TexlFunction Dec2HexT;
+        public static readonly TexlFunction Degrees;
+        public static readonly TexlFunction DegreesT;
+        public static readonly TexlFunction DropColumns;
+        public static readonly TexlFunction EDate;
+        public static readonly TexlFunction EOMonth;
+        public static readonly TexlFunction EncodeHTML;
+        public static readonly TexlFunction EncodeUrl;
+        public static readonly TexlFunction EndsWith;
+        public static readonly TexlFunction Error;
+        public static readonly TexlFunction Exp;
+        public static readonly TexlFunction ExpT;
+        public static readonly TexlFunction Filter;
+        public static readonly TexlFunction Find;
+        public static readonly TexlFunction FindT;
+        public static readonly TexlFunction First;
+        public static readonly TexlFunction First_UO;
+        public static readonly TexlFunction FirstN;
+        public static readonly TexlFunction FirstN_UO;
+        public static readonly TexlFunction ForAll;
+        public static readonly TexlFunction ForAll_UO;
+        public static readonly TexlFunction GUID_UO;
+        public static readonly TexlFunction GUIDNoArg;
+        public static readonly TexlFunction GUIDPure;
+        public static readonly TexlFunction Hex2Dec;
+        public static readonly TexlFunction Hex2DecT;
+        public static readonly TexlFunction Hour;
+        public static readonly TexlFunction If;
+        public static readonly TexlFunction IfError;
+        public static readonly TexlFunction Index;
+        public static readonly TexlFunction Index_UO;
+        public static readonly TexlFunction Int;
+        public static readonly TexlFunction IntT;
+        public static readonly TexlFunction IsBlank;
+        public static readonly TexlFunction IsBlankOptionSetValue;
+        public static readonly TexlFunction IsBlankOrError;
+        public static readonly TexlFunction IsBlankOrErrorOptionSetValue;
+        public static readonly TexlFunction IsEmpty;
+        public static readonly TexlFunction IsError;
+        public static readonly TexlFunction IsNumeric;
+        public static readonly TexlFunction ISOWeekNum;
+        public static readonly TexlFunction IsToday;
+        public static readonly TexlFunction Language;
+        public static readonly TexlFunction Last;
+        public static readonly TexlFunction Last_UO;
+        public static readonly TexlFunction LastN;
+        public static readonly TexlFunction LastN_UO;
+        public static readonly TexlFunction Left;
+        public static readonly TexlFunction LeftST;
+        public static readonly TexlFunction LeftTS;
+        public static readonly TexlFunction LeftTT;
+        public static readonly TexlFunction Len;
+        public static readonly TexlFunction LenT;
+        public static readonly TexlFunction Ln;
+        public static readonly TexlFunction LnT;
+        public static readonly TexlFunction Log;
+        public static readonly TexlFunction LogT;
+        public static readonly TexlFunction LookUp;
+        public static readonly TexlFunction Lower;
+        public static readonly TexlFunction LowerT;
+        public static readonly TexlFunction Max;
+        public static readonly TexlFunction MaxT;
+        public static readonly TexlFunction Mid;
+        public static readonly TexlFunction MidT;
+        public static readonly TexlFunction Min;
+        public static readonly TexlFunction MinT;
+        public static readonly TexlFunction Minute;
+        public static readonly TexlFunction Mod;
+        public static readonly TexlFunction ModT;
+        public static readonly TexlFunction Month;
+        public static readonly TexlFunction MonthsLong;
+        public static readonly TexlFunction MonthsShort;
+        public static readonly TexlFunction Not;
+        public static readonly TexlFunction Now;
+        public static readonly TexlFunction Or;
+        public static readonly TexlFunction ParseJSON;
+        public static readonly TexlFunction PatchRecord;
+        public static readonly TexlFunction Pi;
+        public static readonly TexlFunction PlainText;
+        public static readonly TexlFunction Power;
+        public static readonly TexlFunction PowerT;
+        public static readonly TexlFunction Proper;
+        public static readonly TexlFunction ProperT;
+        public static readonly TexlFunction Radians;
+        public static readonly TexlFunction RadiansT;
+        public static readonly TexlFunction Rand;
+        public static readonly TexlFunction RandBetween;
+        public static readonly TexlFunction Refresh;
+        public static readonly TexlFunction RenameColumns;
+        public static readonly TexlFunction Replace;
+        public static readonly TexlFunction ReplaceT;
+        public static readonly TexlFunction RGBA;
+        public static readonly TexlFunction Right;
+        public static readonly TexlFunction RightST;
+        public static readonly TexlFunction RightTS;
+        public static readonly TexlFunction RightTT;
+        public static readonly TexlFunction Round;
+        public static readonly TexlFunction RoundDown;
+        public static readonly TexlFunction RoundDownT;
+        public static readonly TexlFunction RoundT;
+        public static readonly TexlFunction RoundUp;
+        public static readonly TexlFunction RoundUpT;
+        public static readonly TexlFunction Search;
+        public static readonly TexlFunction Second;
+        public static readonly TexlFunction Sequence;
+        public static readonly TexlFunction ShowColumns;
+        public static readonly TexlFunction Shuffle;
+        public static readonly TexlFunction Sin;
+        public static readonly TexlFunction SinT;
+        public static readonly TexlFunction Sort;
+        public static readonly TexlFunction SortByColumns;
+        public static readonly TexlFunction Split;
+        public static readonly TexlFunction Sqrt;
+        public static readonly TexlFunction SqrtT;
+        public static readonly TexlFunction StartsWith;
+        public static readonly TexlFunction StdevP;
+        public static readonly TexlFunction StdevPT;
+        public static readonly TexlFunction Substitute;
+        public static readonly TexlFunction SubstituteT;
+        public static readonly TexlFunction Sum;
+        public static readonly TexlFunction SumT;
+        public static readonly TexlFunction Switch;
+        public static readonly TexlFunction Table;
+        public static readonly TexlFunction Table_UO;
+        public static readonly TexlFunction Tan;
+        public static readonly TexlFunction TanT;
+        public static readonly TexlFunction Text;
+        public static readonly TexlFunction Text_UO;
+        public static readonly TexlFunction Time;
+        public static readonly TexlFunction TimeValue;
+        public static readonly TexlFunction TimeValue_UO;
+        public static readonly TexlFunction TimeZoneOffset;
+        public static readonly TexlFunction Today;
+        public static readonly TexlFunction Trace;
+        public static readonly TexlFunction Trim;
+        public static readonly TexlFunction TrimEnds;
+        public static readonly TexlFunction TrimEndsT;
+        public static readonly TexlFunction TrimT;
+        public static readonly TexlFunction Trunc;
+        public static readonly TexlFunction TruncT;
+        public static readonly TexlFunction UniChar;
+        public static readonly TexlFunction UniCharT;
+        public static readonly TexlFunction Upper;
+        public static readonly TexlFunction UpperT;
+        public static readonly TexlFunction Value;
+        public static readonly TexlFunction Value_UO;
+        public static readonly TexlFunction VarP;
+        public static readonly TexlFunction VarPT;
+        public static readonly TexlFunction Weekday;
+        public static readonly TexlFunction WeekdaysLong;
+        public static readonly TexlFunction WeekdaysShort;
+        public static readonly TexlFunction WeekNum;
+        public static readonly TexlFunction With;
+        public static readonly TexlFunction Year;
 
         // _featureGateFunctions functions, not present in all platforms
-        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet(_featureGateFunctionArray);
+        internal static readonly TexlFunctionSet _featureGateFunctions;
 
-        private enum FeaatureGateFunctions
+        private enum FeatureGateFunctions : int
         {
             Decimal = 0,
             Decimal_UO,
@@ -716,23 +958,23 @@ namespace Microsoft.PowerFx.Core.Texl
             Summarize
         }
 
-        public static readonly TexlFunction Decimal = _featureGateFunctionArray[(int)FeaatureGateFunctions.Decimal];
-        public static readonly TexlFunction Decimal_UO = _featureGateFunctionArray[(int)FeaatureGateFunctions.Decimal_UO];
-        public static readonly TexlFunction Float = _featureGateFunctionArray[(int)FeaatureGateFunctions.Float];
-        public static readonly TexlFunction Float_UO = _featureGateFunctionArray[(int)FeaatureGateFunctions.Float_UO];
-        public static readonly TexlFunction IsUTCToday = _featureGateFunctionArray[(int)FeaatureGateFunctions.IsUTCToday];
-        public static readonly TexlFunction UTCNow = _featureGateFunctionArray[(int)FeaatureGateFunctions.UTCNow];
-        public static readonly TexlFunction UTCToday = _featureGateFunctionArray[(int)FeaatureGateFunctions.UTCToday];
-        public static readonly TexlFunction BooleanL = _featureGateFunctionArray[(int)FeaatureGateFunctions.BooleanL];
-        public static readonly TexlFunction BooleanL_T = _featureGateFunctionArray[(int)FeaatureGateFunctions.BooleanL_T];
-        public static readonly TexlFunction Summarize = _featureGateFunctionArray[(int)FeaatureGateFunctions.Summarize];
+        public static readonly TexlFunction Decimal;
+        public static readonly TexlFunction Decimal_UO;
+        public static readonly TexlFunction Float;
+        public static readonly TexlFunction Float_UO;
+        public static readonly TexlFunction IsUTCToday;
+        public static readonly TexlFunction UTCNow;
+        public static readonly TexlFunction UTCToday;
+        public static readonly TexlFunction BooleanL;
+        public static readonly TexlFunction BooleanL_T;
+        public static readonly TexlFunction Summarize;
+
+        private static readonly TexlFunctionSet _testOnlyLibrary;
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library.Functions;
-
-        private static readonly TexlFunctionSet _testOnlyLibrary = new TexlFunctionSet(_library.Functions).Add(_featureGateFunctions);
-
+       
         // Slow API, only use for backward compatibility
         internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _testOnlyLibrary.Functions;
 #pragma warning restore CS0618 // Type or member is obsolete
