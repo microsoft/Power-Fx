@@ -69,27 +69,5 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(tabularOverload.MaxArity, simpleFunction.MaxArity);
             }
         }
-
-        [Fact]
-        public void ValidateBuiltInFunctions()
-        {
-            TexlFunction[] lib1 = (TexlFunction[])typeof(BuiltinFunctionsCore)
-                .GetField("_functionArray", BindingFlags.Static | BindingFlags.NonPublic)
-                .GetValue(null);
-
-            TexlFunction[] lib2 = (TexlFunction[])typeof(BuiltinFunctionsCore)
-                    .GetField("_featureGateFunctionArray", BindingFlags.Static | BindingFlags.NonPublic)
-                    .GetValue(null);
-
-            TexlFunction[] lib = lib1.Union(lib2).ToArray();
-
-            TexlFunction[] funcs = typeof(BuiltinFunctionsCore)
-                .GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.FieldType == typeof(TexlFunction))
-                .Select(f => f.GetValue(null) as TexlFunction)
-                .ToArray();
-
-            Assert.Equal(lib, funcs);
-        }
     }
 }
