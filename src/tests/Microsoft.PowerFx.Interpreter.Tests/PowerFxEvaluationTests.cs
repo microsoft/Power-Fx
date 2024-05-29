@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -41,6 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
             { "AllEnumsPlusTestEnumsSetup", (AllEnumsPlusTestEnumsSetup, null, null, null) },
+            { "AllEnumsAsTestOptionSetsSetup", (AllEnumsAsTestOptionSetsSetup, null, null, null) },
             { "Blob", (null, BlobSetup, null, null) },
             { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
@@ -96,6 +99,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             return newConfig;
         }
+
+        private static PowerFxConfig AllEnumsAsTestOptionSetsSetup(PowerFxConfig config)
+        {
+            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
+            store.TestOnly_WithCustomEnum(_testYesNo, append: true);
+            store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
+            store.TestOnly_WithCustomEnum(_testBooleanNoCoerce, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCoerceTo, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCompareNumeric, append: true);
+            store.TestOnly_WithCustomEnum(_testNumberCompareNumericCoerceFrom, append: true);
+            store.TestOnly_WithCustomEnum(_testBlueRampColors, append: true);
+            store.TestOnly_WithCustomEnum(_testRedRampColors, append: true);
+
+            config.AddEntity(_testNumberCoerceToOptionSet, new DName("TestNumberCoerceTo"));
+
+            // There are likewise no built in functions that take Boolean backed option sets as parameters
+            config.AddFunction(new TestXORBooleanFunction());
+            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
+            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerceFunction() : new Boolean_TestXORNoCoerceFunction());
+            config.AddFunction(new TestColorInvertFunction());
+            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+
+            return newConfig;
+        }
+
+        private static readonly NumberOptionSet _testNumberCoerceToOptionSet = new NumberOptionSet(
+            new DName("TestNumberCoerceTo"),
+            new Dictionary<int, DName>()
+            {
+                        { 10, new DName("X") },
+                        { 5, new DName("V") },
+                        { 5, new DName("V2") }, // intentionally the same value, should compare on value and not label
+                        { 1, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCoerceToBackingKind: true);
 
         private static PowerFxConfig AllEnumsPlusTestEnumsSetup(PowerFxConfig config)
         {
