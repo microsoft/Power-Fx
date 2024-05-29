@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void Canvas_Float(ExpressionTestCase testCase)
+        public void Canvas_Float(ExpressionTestCase t)
         {
             // current default features in Canvas abc
             var features = new Features()
@@ -48,13 +48,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 ConsistentOneColumnTableResult = true
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, features, numberIsFloat: true, Console);
         }
 
         // Canvas currently does not support decimal, but since this interpreter does, we can run tests with decimal here.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void Canvas_Float_PFxV1(ExpressionTestCase testCase)
+        public void Canvas_Float_PFxV1(ExpressionTestCase t)
         {
             // current default features in Canvas abc
             var features = new Features()
@@ -64,22 +64,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PowerFxV1CompatibilityRules = true,
             };
 
-            RunExpressionTestCase(testCase, features, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, features, numberIsFloat: true, Console);
         }
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport")]
-        public void V1_Decimal(ExpressionTestCase testCase)
+        public void V1_Decimal(ExpressionTestCase t)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false, Console);
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 
         // Although we are using numbers as floats by default, since this interpreter supports decimal, we can run tests with decimal here.        
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat,DecimalSupport")]
         [InterpreterTheory]
-        public void V1_Float(ExpressionTestCase testCase)
+        public void V1_Float(ExpressionTestCase t)
         {
-            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true, Console);
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: true, Console);
         }
 
 #if false
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     break;
 
                 case TestResult.Fail:
-                    Assert.True(false, prefix + msg);
+                    Assert.Fail(prefix + msg);
                     break;
 
                 case TestResult.Skip:
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (result.Fail > 0)
             {
-                Assert.True(false, result.Output);
+                Assert.Fail(result.Output);
             }
             else
             {

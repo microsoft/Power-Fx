@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class BlobTests
     {        
         [Fact]
-        public void BlobTest_NoCopy()
+        public async Task BlobTest_NoCopy()
         {
             PowerFxConfig config = new PowerFxConfig();
             config.EnableSetFunction();            
@@ -34,13 +34,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues);
             RecalcEngine engine = new RecalcEngine(config);
-            FormulaValue result = engine.EvalAsync("Set(var2, var1); var2", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig).Result;
+            FormulaValue result = await engine.EvalAsync("Set(var2, var1); var2", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig);
 
             Assert.Same(blob, result);
         }
 
         [Fact]
-        public void BlobTest_CannotConvert()
+        public async Task BlobTest_CannotConvert()
         {
             PowerFxConfig config = new PowerFxConfig();
             config.EnableSetFunction();
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RecalcEngine engine = new RecalcEngine(config);
 
             // IR: If:o(False:b, Lazy(ResolvedObject('var1:SymbolTable_5866477')), Lazy(TextToBlob:o(If:s(False:b, Lazy("a":s), Lazy(BlobToText:s(ResolvedObject('var1:SymbolTable_5866477')))))))                        
-            FormulaValue result = engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig).Result;
+            FormulaValue result = await engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
             Assert.Equal("Not implemented: Unary op TextToBlob", ev.Errors[0].Message);

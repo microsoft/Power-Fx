@@ -81,11 +81,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Get list of connectors
             string expr = $"PowerAppsForMakers.GetConnectors({{ showApisWithToS: true, '$filter': \"environment eq '{GetEnvironment()}'\"}})";
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
             if (fv is ErrorValue ev)
             {
-                Assert.True(false, $"{string.Join(", ", ev.Errors.Select(er => er.Message))}");
+                Assert.Fail($"{string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
 
             // Extract all connector names from result (key: name, value: display name)
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     // As we use ConnectorSettings with ReturnUnknownRecordFieldsAsUntypedObjects we'll get get a FormulaValue with 'swagger' field in "properties"
                     // We can't use '.properties" in the expression as the IR isn't containing 'swagger' field (as it's not described in the PowerAppsForMakers swagger definition) and it would be removed in RecordValue.GetFieldAsync
                     expr = $"PowerAppsForMakers.GetConnector(\"{connectorName.Key}\", {{'$filter': \"environment eq '{GetEnvironment()}'\"}})";
-                    fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
                     if (fv is ErrorValue ev2)
                     {
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         string swagger = ((JsonUntypedObject)uo.Impl)._element.ToString();
 
 #if !NET462
-                        await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger)).ConfigureAwait(false);
+                        await File.WriteAllTextAsync($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
 #else
                         File.WriteAllText($@"{swaggerRoot}\{connectorName.Value.Replace("/", "_")}.json", IndentJson(swagger));
 #endif 

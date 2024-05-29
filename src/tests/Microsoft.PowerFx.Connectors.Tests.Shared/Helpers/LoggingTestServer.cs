@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await httpContent.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Tests
                 var ms = new MemoryStream();
                 if (request.Content != null)
                 {
-                    await request.Content.CopyToAsync(ms).ConfigureAwait(false);
+                    await request.Content.CopyToAsync(ms);
                     ms.Position = 0;
                     clone.Content = new StreamContent(ms);
 
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Tests
                     clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
 
-                return await LiveClient.SendAsync(clone, cancellationToken).ConfigureAwait(false);
+                return await LiveClient.SendAsync(clone, cancellationToken);
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse], Statuses[CurrentResponse++]) : _nextResponse;

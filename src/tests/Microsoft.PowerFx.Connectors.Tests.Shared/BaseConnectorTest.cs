@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     : ($@"Responses\{ef.Substring(4)}", (HttpStatusCode)int.Parse(ef.Substring(0, 3)))).ToArray());
             }
 
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
             string network = testConnector._log.ToString();
             string urls = string.Join("|", Regex.Matches(network, @"x-ms-request-method: (?<r>[^ \r\n]+)\s*x-ms-request-url: (?<u>[^ \r\n]+)").Select(g => $"{g.Groups["r"].Value}:{g.Groups["u"].Value}"));
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Assert.IsAssignableFrom<BlobValue>(fv);
 
                 BlobValue bv = (BlobValue)fv;
-                string blobStr = await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false);
+                string blobStr = await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None);
                 Assert.StartsWith(expectedResult.Substring(8), blobStr);
             }
             else if (expectedResult.StartsWith("BLOB"))
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 Assert.IsAssignableFrom<BlobValue>(fv);
 
                 BlobValue bv = (BlobValue)fv;
-                string blobStr = await bv.GetAsBase64Async(CancellationToken.None).ConfigureAwait(false);
+                string blobStr = await bv.GetAsBase64Async(CancellationToken.None);
                 Assert.StartsWith(expectedResult.Substring(5), blobStr);
             }
             else if (expectedResult == "RAW")
@@ -179,7 +179,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 if (expectedResult.StartsWith("STARTSWITH:"))
                 {
                     // Not using Assert.StartsWith as in case of failure, we don't see where the issue is
+#if NET7_0_OR_GREATER
+                    Assert.Equal(expectedResult.AsSpan(11), sv.Value.AsSpan(0, expectedResult.Length - 11));
+#else
                     Assert.Equal(expectedResult.Substring(11), sv.Value.Substring(0, expectedResult.Length - 11));
+#endif
                 }
                 else
                 {

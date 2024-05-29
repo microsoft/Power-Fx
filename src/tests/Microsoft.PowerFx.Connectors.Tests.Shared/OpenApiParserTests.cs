@@ -346,7 +346,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None);
             httpClient.Dispose();
             client.Dispose();
             testConnector.Dispose();
@@ -361,7 +361,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2, console: _output);
 
-            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None);
 
             Assert.NotNull(httpResult2);
             Assert.True(httpResult2 is RecordValue);
@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -822,7 +822,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //    FormulaValue.New("connectortest"),
             //    FormulaValue.New("sp_1"),
             //    FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue("p1", FormulaValue.New(38)) })
-            //}, CancellationToken.None).ConfigureAwait(false);                        
+            //}, CancellationToken.None);                        
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
             ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(
@@ -833,7 +833,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 },
                 executeProcedureV2.RequiredParameters[2], // procedure
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
             Assert.NotNull(suggestions1);
@@ -850,7 +850,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 },
                 executeProcedureV2.RequiredParameters[3], // parameters
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
             Assert.NotNull(suggestions2);
@@ -868,7 +868,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     new NamedValue("procedure", FormulaValue.New("sp_1"))
                 },
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             Assert.NotNull(returnType);
             Assert.True(returnType.FormulaType is RecordType);
@@ -930,7 +930,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
                 },
                 createRecord.RequiredParameters[1], // entityName
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
             Assert.Equal(651, suggestions1.Suggestions.Count);
@@ -946,7 +946,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
                 },
                 createRecord.RequiredParameters[2], // item
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
             Assert.Equal(119, suggestions2.Suggestions.Count);
@@ -1025,7 +1025,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                                 new NamedValue("property2", FormulaValue.New("test2"))))),
                 },
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             string input = testConnector._log.ToString();
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
@@ -1064,7 +1064,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 },
                 createCardInstance.RequiredParameters[0], // cardid
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             ConnectorParameterWithSuggestions suggestions = parameters.ParametersWithSuggestions[0];
             Assert.Equal(2, suggestions.Suggestions.Count);
@@ -1093,7 +1093,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 },
                 getMessageDetails.RequiredParameters[2], // body
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             var bodyConnectorType = parameters.ParametersWithSuggestions[2].ConnectorType;
 
@@ -1111,7 +1111,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 },
                 bodyConnectorType.Fields[0].Fields[1], // channelId
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             Assert.Equal(2, connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions.Count);
             Assert.Equal("channelName", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[0].DisplayName);

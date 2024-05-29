@@ -4,6 +4,7 @@
 using System;
 using System.Data;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -190,7 +191,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateSimple()
+        public async Task UpdateSimple()
         {
             var symTable = new SymbolTable();
             var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
@@ -205,7 +206,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var expr = "Set(x, x+1);x";
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
             Assert.Equal(13.0, result.ToObject());
 
             result = sym.Get(slotX);
@@ -217,7 +218,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateSimple_Decimal()
+        public async Task UpdateSimple_Decimal()
         {
             var symTable = new SymbolTable();
             var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
@@ -232,7 +233,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var expr = "Set(x, x+1);x";
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
             Assert.Equal(13m, result.ToObject());
 
             result = sym.Get(slotX);
@@ -394,7 +395,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateRowScope()
+        public async Task UpdateRowScope()
         {
             var recordType = RecordType.Empty()
                 .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
@@ -414,7 +415,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
 
             Assert.Equal(12.0, result.ToObject());
 
@@ -427,7 +428,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Expression from 2 row scopes!
         [Fact]
-        public void UpdateRowScope2()
+        public async Task UpdateRowScope2()
         {
             var recordType1 = RecordType.Empty()
                 .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
@@ -469,7 +470,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Verify evaluation. 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
 
             Assert.Equal(25.0, result.ToObject());
 

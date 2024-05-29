@@ -637,7 +637,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, setup).ConfigureAwait(false);
+                var result = await verify.EvalAsync(engine, expr, setup);
                 return result;
             }
 
@@ -652,7 +652,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerNames?.Any(hn => string.Equals(hn, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase)) == true)
                 {
-                    return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
+                    return new RunResult(await RunVerifyAsync(expr, config, iSetup));
                 }
 
                 List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();                
@@ -757,7 +757,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 #endif
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -779,7 +779,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     // Serialization test. Serialized expression must produce an identical result.
                     // Serialization can't use TextFirst if enabled for the test, strings for example would have the wrong syntax.
                     options.TextFirst = false;
-                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -789,7 +789,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         // Serialization test. Serialized expression must produce an identical result.
                         options.NumberIsFloat = true;
-                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
                     }
                     else if (e.Message.Contains("Name isn't valid. 'CalculatedOptionSetValue' isn't recognized."))
                     {
@@ -835,7 +835,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
+                var replResult = await _repl.HandleCommandAsync(expr, default);
 
                 // .txt output format - if there are any Set(), compare those.
                 if (replResult.DeclaredVars.Count > 0)

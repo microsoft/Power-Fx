@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Text = "new_price * new_quantity"
                 }
             }, CustomProtocolNames.InitialFixup);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<TextDocumentItem>(rawResponse, payload.id);
 
             Assert.Equal(documentUri, response.Uri);
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Text = "Price * Quantity"
                 }
             }, CustomProtocolNames.InitialFixup);
-            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             response = AssertAndGetResponsePayload<TextDocumentItem>(rawResponse, payload.id);
             Assert.Equal(documentUri, response.Uri);
             Assert.Equal("Price * Quantity", response.Text);

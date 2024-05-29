@@ -1,4 +1,6 @@
 {
   "$schema": "https://xunit.net/schema/current/xunit.runner.schema.json",
-  "methodDisplay": "method"
+  "methodDisplay": "method",
+  "parallelAlgorithm": "aggressive",
+  "maxParallelThreads": 0
 }

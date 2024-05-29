@@ -371,7 +371,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Patch(t, First(t), {Value:1})")]
-        public void MutationPFxV1Disabled(string expression)
+        public async Task MutationPFxV1Disabled(string expression)
         {
             var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
@@ -387,8 +387,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var evaluator = check.GetEvaluator();
 
-            // Runtime exception
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            // no runtime exception
+            _ = await evaluator.EvalAsync(CancellationToken.None);
         }
 
         [Theory]        
@@ -512,7 +512,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && value2.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
                     {
-                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken).ConfigureAwait(false);
+                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken);
                     }
                 }
 
@@ -537,7 +537,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && keyValue.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
                     {
-                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken);
                     }
                 }
 

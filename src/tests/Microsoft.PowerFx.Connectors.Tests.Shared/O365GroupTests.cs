@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "Response_O365Groups_HttpRequestV2.json")]
         public async Task Office365Groups_Functions(string expr, string expectedResult, string xUrls, string xBodies, params string[] expectedFiles)
         {
-            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles, true).ConfigureAwait(false);
+            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles, true);
         }
 
         [Theory]

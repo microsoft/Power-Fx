@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("MSNWeather", client, console: _output));
             testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
 
-            var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.Equal(53.0m, result.ToObject()); // from response
 
             // PowerPlatform Connectors transform the request significantly from what was in the swagger.
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("MSNWeather", client, console: _output));
             testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response2.json");
 
-            var result = await engine.EvalAsync(@"MSNWeather.CurrentWeather(""Orléans"", ""C"").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"MSNWeather.CurrentWeather(""Orléans"", ""C"").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.Equal(9m, result.ToObject()); // from response
 
             // PowerPlatform Connectors transform the request significantly from what was in the swagger.
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("TestConnector12", client, console: _output));
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.NotNull(result);
 
@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx.Tests
                 var ev = (ErrorValue)result;
 
                 Assert.Equal(FormulaType.Decimal, ev.Type);
-                Assert.Equal(1, ev.Errors.Count);
+                Assert.Single(ev.Errors);
 
                 var err = ev.Errors[0];
 
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.NotNull(result2);
             Assert.IsType<StringValue>(result2);
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.NotNull(result3);
             Assert.IsType<StringValue>(result3);
@@ -306,11 +306,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(check.IsSuccess);
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
             if (result is ErrorValue ev)
             {
-                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+                Assert.Fail($"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
 
             dynamic res = result.ToObject();
@@ -377,11 +377,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
             if (result is ErrorValue ev)
             {
-                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+                Assert.Fail($"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
 
             dynamic res = result.ToObject();
@@ -481,7 +481,7 @@ namespace Microsoft.PowerFx.Tests
 
             // We can still call ListRootFolderV3 deprecated function
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_ListRootFolderV3_response.json");
-            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.False(fv is ErrorValue);
             Assert.True(fv is StringValue);
 
@@ -506,13 +506,13 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("azbs", ppClient, console: _output).Add("azbs2", ppClient));
 
             testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");
-            FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.False(fv is ErrorValue);
             Assert.True(fv is DecimalValue);
             Assert.Equal(12m, ((DecimalValue)fv).Value);
 
             testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json");
-            fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.True(fv is DecimalValue);
             Assert.Equal(7m, ((DecimalValue)fv).Value);
         }
@@ -550,15 +550,15 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(check.IsSuccess, string.Join(", ", check.Errors.Select(er => er.Message)));
             _output.WriteLine($"\r\nIR: {check.PrintIR()}");
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
             if (result is ErrorValue ev)
             {
-                Assert.True(false, $"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
+                Assert.Fail($"Error: {string.Join(", ", ev.Errors.Select(er => er.Message))}");
             }
 
             BlobValue bv = Assert.IsType<BlobValue>(result);
-            Assert.Equal("TEST FILE", bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult());
+            Assert.Equal("TEST FILE", await bv.GetAsStringAsync(Encoding.UTF8, CancellationToken.None));
         }
 
         [Theory]
@@ -713,7 +713,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
-            var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -743,7 +743,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
-            var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -773,7 +773,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_DirectsV2.json");
-            var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("Paris", (result as StringValue).Value);
@@ -803,7 +803,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_SearchV2.json");
-            var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("John Doe", (result as StringValue).Value);
@@ -840,7 +840,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetEmails.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmails({ top : 5 })).DateTimeReceived", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmails({ top : 5 })).DateTimeReceived", CancellationToken.None, runtimeConfig: runtimeConfig);
 
             Assert.IsType<DateTimeValue>(result);
 
@@ -875,7 +875,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetEmailsV2.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmailsV2().value).Id", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmailsV2().value).Id", CancellationToken.None, runtimeConfig: runtimeConfig);
             Assert.Equal(@"AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVEFDU0AAA=", (result as StringValue).Value);
 
             var actual = testConnector._log.ToString();
@@ -931,7 +931,7 @@ namespace Microsoft.PowerFx.Tests
             runtimeConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook V4CalendarPostItem.json");
-            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.Equal(@"![body:s, categories:*[Value:s], createdDateTime:d, end:d, endWithTimeZone:d, iCalUId:s, id:s, importance:s, isAllDay:b, isHtml:b, isReminderOn:b, lastModifiedDateTime:d, location:s, numberOfOccurences:w, optionalAttendees:s, organizer:s, recurrence:s, recurrenceEnd:D, reminderMinutesBeforeStart:w, requiredAttendees:s, resourceAttendees:s, responseRequested:b, responseTime:d, responseType:s, sensitivity:s, seriesMasterId:s, showAs:s, start:d, startWithTimeZone:d, subject:s, timeZone:s, webLink:s]", result.Type._type.ToString());
 
             var actual = testConnector._log.ToString();
@@ -978,8 +978,8 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook ExportEmailV2.txt");
-            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.ExportEmailV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA="")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
-            Assert.StartsWith("Received: from DBBPR83MB0507.EURPRD83", (result as BlobValue).Content.GetAsStringAsync(Encoding.UTF8, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult());
+            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.ExportEmailV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA="")", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
+            Assert.StartsWith("Received: from DBBPR83MB0507.EURPRD83", await (result as BlobValue).Content.GetAsStringAsync(Encoding.UTF8, CancellationToken.None));
 
             var actual = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
@@ -1023,7 +1023,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook FindMeetingTimesV2.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.FindMeetingTimesV2().meetingTimeSuggestions).meetingTimeSlot.start", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.FindMeetingTimesV2().meetingTimeSuggestions).meetingTimeSlot.start", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.Equal(@"{dateTime:""2023-09-26T12:00:00.0000000"",timeZone:""UTC""}", result.ToExpression());
 
             var actual = testConnector._log.ToString();
@@ -1070,7 +1070,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook FlagV2.json");
-            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.FlagV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA="", {flag: {flagStatus: ""flagged""}})", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"Office365Outlook.FlagV2(""AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA="", {flag: {flagStatus: ""flagged""}})", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.True(result is not ErrorValue);
 
             var actual = testConnector._log.ToString();
@@ -1117,7 +1117,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetMailTipsV2.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetMailTipsV2(""maxMessageSize"", [""jj@microsoft.com""]).value).maxMessageSize", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetMailTipsV2(""maxMessageSize"", [""jj@microsoft.com""]).value).maxMessageSize", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.Equal(37748736m, (result as DecimalValue).Value);
 
             var actual = testConnector._log.ToString();
@@ -1167,7 +1167,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetRoomListsV2.json");
-            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetRoomListsV2().value).address", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetRoomListsV2().value).address", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.Equal("li-rl-1000HENRY@microsoft.com", (result as StringValue).Value);
 
             var actual = testConnector._log.ToString();
@@ -1247,7 +1247,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetRooms.json");
-            var result = await engine.EvalAsync(@"Office365Outlook.GetRoomsV2()", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"Office365Outlook.GetRoomsV2()", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
 
             var record = result as RecordValue;
             Assert.NotNull(record);
@@ -1300,7 +1300,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("BingMaps", client));
 
             testConnector.SetResponseFromFile(@"Responses\Bing Maps GetRouteV3.json");
-            FormulaValue result = await engine.EvalAsync(@"BingMaps.GetRouteV3(""Driving"", ""47,396846, -0,499967"", ""47,395142, -0,480142"").travelDuration", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"BingMaps.GetRouteV3(""Driving"", ""47,396846, -0,499967"", ""47,395142, -0,480142"").travelDuration", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig);
             Assert.Equal(260m, (result as DecimalValue).Value);
 
             var actual = testConnector._log.ToString();
@@ -1344,7 +1344,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server GetProceduresV2.json");
-            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             var record = result as RecordValue;
             Assert.NotNull(record);
@@ -1393,7 +1393,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
             Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
@@ -1443,7 +1443,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
             Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
@@ -1485,7 +1485,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\EmptyResponse.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
             Assert.True(result is BlankValue);
         }
 
@@ -1506,7 +1506,7 @@ namespace Microsoft.PowerFx.Tests
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\Invalid.txt");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
             string message = ev.Errors[0].Message;
@@ -1549,24 +1549,24 @@ namespace Microsoft.PowerFx.Tests
 
             // -> https://auroraprojopsintegration01.sharepoint.com/sites/Site17
             testConnector.SetResponseFromFile(@"Responses\SPO_Response1.json");
-            FormulaValue fv1 = await engine.EvalAsync(@$"SP.GetDataSets()", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue fv1 = await engine.EvalAsync(@$"SP.GetDataSets()", CancellationToken.None, runtimeConfig: rc);
             string dataset = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First().Value.GetField("Name")).Value;
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response2.json");
-            FormulaValue fv2 = await engine.EvalAsync(@$"SP.GetDataSetsMetadata()", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue fv2 = await engine.EvalAsync(@$"SP.GetDataSetsMetadata()", CancellationToken.None, runtimeConfig: rc);
             Assert.Equal("double", ((StringValue)((RecordValue)((RecordValue)fv2).GetField("blob")).GetField("urlEncoding")).Value);
 
             // -> 3756de7d-cb20-4014-bab8-6ea7e5264b97
             testConnector.SetResponseFromFile(@"Responses\SPO_Response3.json");
-            FormulaValue fv3 = await engine.EvalAsync($@"SP.GetAllTables(""{dataset}"")", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue fv3 = await engine.EvalAsync($@"SP.GetAllTables(""{dataset}"")", CancellationToken.None, runtimeConfig: rc);
             string table = ((StringValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First().Value.GetField("Name")).Value;
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response4.json");
-            FormulaValue fv4 = await engine.EvalAsync($@"SP.GetTableViews(""{dataset}"", ""{table}"")", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue fv4 = await engine.EvalAsync($@"SP.GetTableViews(""{dataset}"", ""{table}"")", CancellationToken.None, runtimeConfig: rc);
             Assert.Equal("1e54c4b5-2a59-4a2a-9633-cc611a2ff718", ((StringValue)((TableValue)fv4).Rows.Skip(1).First().Value.GetField("Name")).Value);
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response5.json");
-            FormulaValue fv5 = await engine.EvalAsync($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue fv5 = await engine.EvalAsync($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})", CancellationToken.None, runtimeConfig: rc);
             Assert.Equal("Shared Documents/Document.docx", ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Impl.GetString());
 
             string version = PowerPlatformConnectorClient.Version;
@@ -1694,27 +1694,27 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             // Get "OneDrive" id = "b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response1.json");
-            FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None, runtimeConfig: runtimeConfig);
             string drive = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "OneDrive").Value.GetField("id")).Value;
 
             // Get file id for "AM Site.xlxs" = "01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response2.json");
-            FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None, runtimeConfig: runtimeConfig);
             string file = ((StringValue)((TableValue)fv2).Rows.First((DValue<RecordValue> row) => row.Value.GetField("Name") is StringValue sv && sv.Value == "AM Site.xlsx").Value.GetField("Id")).Value;
 
             // Get "Table1" id = "{00000000-000C-0000-FFFF-FFFF00000000}"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response3.json");
-            FormulaValue fv3 = await engine.EvalAsync(@$"exob.GetTables(""{source}"", ""{drive}"", ""{file}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv3 = await engine.EvalAsync(@$"exob.GetTables(""{source}"", ""{drive}"", ""{file}"")", CancellationToken.None, runtimeConfig: runtimeConfig);
             string table = ((StringValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "Table1").Value.GetField("id")).Value;
 
             // Get PowerApps id for 2nd row = "f830UPeAXoI"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response4.json");
-            FormulaValue fv4 = await engine.EvalAsync(@$"exob.GetItems(""{source}"", ""{drive}"", ""{file}"", ""{table}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv4 = await engine.EvalAsync(@$"exob.GetItems(""{source}"", ""{drive}"", ""{file}"", ""{table}"")", CancellationToken.None, runtimeConfig: runtimeConfig);
             string columnId = ((UntypedObjectValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Impl.GetString();
 
             // Get Item by columnId
             testConnector.SetResponseFromFile(@"Responses\EXO_Response5.json");
-            FormulaValue fv5 = await engine.EvalAsync(@$"exob.GetItem(""{source}"", ""{drive}"", ""{file}"", ""{table}"", ""__PowerAppsId__"", ""{columnId}"")", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            FormulaValue fv5 = await engine.EvalAsync(@$"exob.GetItem(""{source}"", ""{drive}"", ""{file}"", ""{table}"", ""__PowerAppsId__"", ""{columnId}"")", CancellationToken.None, runtimeConfig: runtimeConfig);
             RecordValue rv5 = (RecordValue)fv5;
 
             Assert.Equal(FormulaType.UntypedObject, rv5.GetField("Site").Type);
@@ -1743,7 +1743,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 },
                 performBoundActionWithOrganization.RequiredParameters[2], // actionName
                 runtimeContext,
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             // Received 8 suggestions
             Assert.Equal(8, parameters.ParametersWithSuggestions[2].Suggestions.Count());
@@ -1844,7 +1844,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             };
 
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 23).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
-            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None);
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
@@ -1902,7 +1902,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             // Now, only make a single network call and see the difference: none of the option set values are populated.
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
-            ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None);
             string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();            
 
             Assert.Equal(expected, ft2);
@@ -1939,7 +1939,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 new NamedValue("tableType", FormulaValue.New("sn_ex_sp_action"))
             };
 
-            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType returnType = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, 23, CancellationToken.None);
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
@@ -1980,7 +1980,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
 
             // The list of parameters is reduced here (compare with SQL_ExecuteStoredProc test)
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
             Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
@@ -2029,11 +2029,21 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
-                HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var text = response?.Content == null 
+                                    ? string.Empty
+#if NET7_0_OR_GREATER
+                                    : await response.Content.ReadAsStringAsync(cancellationToken);
+#else
+
+                                     // We cannot pass the cancellation token in .Net 4.6.2
+                                    : await response.Content.ReadAsStringAsync();
+#endif
                     _console.WriteLine($"[HTTP Status {(int)response.StatusCode} {response.StatusCode} - {text}");
                 }
 

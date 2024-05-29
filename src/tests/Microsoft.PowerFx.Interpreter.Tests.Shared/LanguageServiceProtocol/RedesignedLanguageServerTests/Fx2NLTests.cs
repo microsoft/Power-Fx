@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
             if (this.Delay)
             {
-                await Task.Delay(100, cancel).ConfigureAwait(false);
+                await Task.Delay(100, cancel);
             }
 
             if (this.Throw)
@@ -71,12 +71,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             if (!this.SupportsParameterHints)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
-                return await Fx2NLAsync(check, cancel).ConfigureAwait(false);
+                return await Fx2NLAsync(check, cancel);
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
             {
-                await Task.Delay(100, cancel).ConfigureAwait(false);
+                await Task.Delay(100, cancel);
             }
 
             if (this.Throw)
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = Fx2NlMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<CustomFx2NLResult>(rawResponse, payload.id);
 
             // Assert
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = Fx2NlMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<CustomFx2NLResult>(rawResponse, payload.id);
 
             // Assert
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = Fx2NlMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.MethodNotFound);
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = Fx2NlMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.InternalError);

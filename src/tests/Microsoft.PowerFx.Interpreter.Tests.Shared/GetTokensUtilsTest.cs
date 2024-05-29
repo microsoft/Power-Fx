@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = scope.Check(expr);
 
             var result = GetTokensUtils.GetTokens(checkResult.Binding, GetTokensFlags.None);
-            Assert.Equal(0, result.Count);
+            Assert.Empty(result);
 
             result = GetTokensUtils.GetTokens(checkResult.Binding, GetTokensFlags.UsedInExpression);
             Assert.Equal(expectedCount, result.Count);
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = scope.Check("A + CountRows(B) + C + NoFunction(123)");
 
             var result = GetTokensUtils.GetTokens(checkResult.Binding, GetTokensFlags.None);
-            Assert.Equal(0, result.Count);
+            Assert.Empty(result);
 
             result = GetTokensUtils.GetTokens(checkResult.Binding, GetTokensFlags.UsedInExpression);
             Assert.Equal(3, result.Count);

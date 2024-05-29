@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Get list of parameters for ExecuteProcedureV2 function, without knowing any parameter
             // Notice that GetParameters does NOT validate parameter types
-            ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None);
 
             // We'll always get 4 parameters and some fields are constant (see CheckParameters)
             CheckParameters(parameters.ParametersWithSuggestions);
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 2.json");
 
             // With first parameter defined (and valid)
-            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")) }, executeProcedureV2.RequiredParameters[1], context, CancellationToken.None).ConfigureAwait(false);
+            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")) }, executeProcedureV2.RequiredParameters[1], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
 
             // With two parameters defined (and valid)
-            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")) }, executeProcedureV2.RequiredParameters[2], context, CancellationToken.None).ConfigureAwait(false);
+            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")) }, executeProcedureV2.RequiredParameters[2], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With three parameters defined (and valid)
-            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None).ConfigureAwait(false);
+            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions, true);
             (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // With 4 parameters defined (and valid)
             // p1 is not specified here
-            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")), new NamedValue("p1", FormulaValue.New(50)) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None).ConfigureAwait(false);
+            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")), new NamedValue("p1", FormulaValue.New(50)) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions, true);
             (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With 5 parameters defined (and valid)
-            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")), new NamedValue("p1", FormulaValue.New(50)), new NamedValue("p2", FormulaValue.New("abc")) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None).ConfigureAwait(false);
+            parameters = await executeProcedureV2.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("server", FormulaValue.New(@"default")), new NamedValue("database", FormulaValue.New(@"default")), new NamedValue("procedure", FormulaValue.New(@"sp_2")), new NamedValue("p1", FormulaValue.New(50)), new NamedValue("p2", FormulaValue.New("abc")) }, executeProcedureV2.RequiredParameters[3], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions, true);
             (0..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None));
 
             // now let's try with throwOnError false
             functions = OpenApiParser.GetFunctions("SQL", apiDoc, new ConsoleLogger(_output));
@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             context = new TestConnectorRuntimeContext("SQL", client, throwOnError: false, console: _output);
-            ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters = await executeProcedureV2.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), executeProcedureV2.RequiredParameters[0], context, CancellationToken.None);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             foreach (ConnectorFunction function in functions)
             {
-                ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), function.RequiredParameters.Any() ? function.RequiredParameters[0].Name : null, context, CancellationToken.None).ConfigureAwait(false);
+                ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), function.RequiredParameters.Any() ? function.RequiredParameters[0].Name : null, context, CancellationToken.None);
                 Assert.NotNull(parameters);
             }
         }

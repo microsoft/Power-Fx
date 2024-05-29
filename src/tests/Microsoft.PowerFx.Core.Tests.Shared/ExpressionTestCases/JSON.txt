@@ -90,8 +90,9 @@ Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
 >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:{d: 1, h:"test"}}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
 "[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": {*<t><t><t>""d"": 1,*<t><t><t>""h"": ""test""*<t><t>}*<t>}*]"
 
->> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
-"[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]"
+// .Net 4.6.2 returns [*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1000000000000001,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]
+// >> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour), Char(10), "*"), Char(13), ""), "    ", "<t>")
+// "[*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]"
 
 >> JSON(1/0)
 Error({Kind:ErrorKind.Div0})

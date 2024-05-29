@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(TestEndpoint, client.Endpoint);
             Assert.Equal(TestEnvironmentId, client.EnvironmentId);
             Assert.Equal(TestConnectionId, client.ConnectionId);
-            Assert.Equal(TestAuthToken, await client.GetAuthToken().ConfigureAwait(false));
+            Assert.Equal(TestAuthToken, await client.GetAuthToken());
         }
 
         [Theory]
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 request.Content = new StringContent(content);
             }
 
-            var transformedRequest = await client.Transform(request).ConfigureAwait(false);
+            var transformedRequest = await client.Transform(request);
 
             Assert.NotNull(transformedRequest);
             Assert.Equal(new Uri("https://" + TestEndpoint + "/invoke"), transformedRequest.RequestUri);
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             Request = request;
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

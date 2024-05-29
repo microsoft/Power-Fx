@@ -48,14 +48,41 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            var netVersion = RuntimeInformation.FrameworkDescription
-                                .Replace(".Net", string.Empty)
-                                .Replace(".NET", string.Empty)
-                                .Replace("Framework", string.Empty)
-                                .Replace("Core", string.Empty)
-                                .Trim();
+            string netVersion = RuntimeInformation.FrameworkDescription;
+            string symbol = "\uFF1F"; // ?
 
-            var str = $"{netVersion} {Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+            if (netVersion.StartsWith(".NET Framework 4.6.") || 
+                netVersion.StartsWith(".NET Framework 4.7.") || 
+                netVersion.StartsWith(".NET Framework 4.8."))
+            {
+                symbol = "\uFF14"; // ④
+            }
+            else if (netVersion.StartsWith(".NET Core 3.1."))
+            {
+                symbol = "\uFF13"; // ③
+            }
+            else if (netVersion.StartsWith(".NET 5."))
+            {
+                symbol = "\uFF15"; // ⑤
+            }
+            else if (netVersion.StartsWith(".NET 6."))
+            {
+                symbol = "\uFF16"; // ⑥
+            }
+            else if (netVersion.StartsWith(".NET 7."))
+            {
+                symbol = "\uFF17"; // ⑦
+            }
+            else if (netVersion.StartsWith(".NET 8."))
+            {
+                symbol = "\uFF18"; // ⑧
+            }
+            else if (netVersion.StartsWith(".NET 9."))
+            {
+                symbol = "\uFF19"; // ⑨
+            }
+
+            var str = $"{symbol} {Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
 
             if (!string.IsNullOrEmpty(SetupHandlerName))
             {

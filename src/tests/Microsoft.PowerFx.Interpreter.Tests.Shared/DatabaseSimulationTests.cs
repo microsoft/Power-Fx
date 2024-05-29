@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             IExpressionEvaluator run = check.GetEvaluator();
 
-            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<InMemoryRecordValue>(result);
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
-                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
             }
         }
 
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
             Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues());
             Assert.IsType<VoidValue>(result);
         }
 
@@ -188,10 +188,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 if (PatchDelay > 0)
                 {
-                    await Task.Delay(PatchDelay, cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(PatchDelay, cancellationToken);
                 }
 
-                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
+                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
             }
         }
 

@@ -55,10 +55,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         internal static TableValue GetTable(RecordValue recordValue) => FormulaValue.NewTable(recordValue.Type, recordValue);
 
         internal static async Task<string> SerializeJsonAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
-            => await SerializeAsync<OpenApiJsonSerializer>(parameters, false, utcConverter, cancellationToken).ConfigureAwait(false);
+            => await SerializeAsync<OpenApiJsonSerializer>(parameters, false, utcConverter, cancellationToken);
 
         internal static async Task<string> SerializeUrlEncoderAsync(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
-            => await SerializeAsync<OpenApiFormUrlEncoder>(parameters, false, utcConverter, cancellationToken).ConfigureAwait(false);
+            => await SerializeAsync<OpenApiFormUrlEncoder>(parameters, false, utcConverter, cancellationToken);
 
         internal static async Task<string> SerializeAsync<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IConvertToUTC utcConverter = null, CancellationToken cancellationToken = default)
             where T : FormulaValueSerializer
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 foreach (var parameter in parameters)
                 {
-                    await jsonSerializer.SerializeValueAsync(parameter.Key, parameter.Value.Schema, parameter.Value.Value).ConfigureAwait(false);
+                    await jsonSerializer.SerializeValueAsync(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
                 }
             }
 
