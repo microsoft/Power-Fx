@@ -9,8 +9,8 @@
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>    
-    <!--<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 
     <!-- .Net 4.6.2 specifics -->    
