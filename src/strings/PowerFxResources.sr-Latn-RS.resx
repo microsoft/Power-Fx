@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Nevažeća upotreba „.“</value>
+    <value>Operator „.“ ne može da se koristi sa sledećim vrednostima: {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Vraća grupisanje navedene tabele, uz kombinovanje sa funkcijama za agregaciju.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>kolona_za_grupisanje</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregacija</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabela ili kolekcija za grupisanje.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Ime kolone po kojoj će se grupisati podaci.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Pozivanje funkcije za agregaciju.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Podiže broj x na stepen drugog broja y. Isto kao x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>zapis</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Briše sve zapise kolekcije. Kolone kolekcije će ostati.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Nedostaje tip argumenta funkcije, na primer „:Text“ u „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Navedeni tip rezultata funkcije {0} nevažeći.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Tip argumenta navedene funkcije {0} je nevažeći.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ već postoji.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracija tipa literala nije važeća</value>
+    <value>Deklaracija tipa literala je nevažeća. Izraz „{0}“ ne može da se koristi u definiciji tipa.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definicija tipa {0} je nevažeća.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definicija tipa {0} je nevažeća i može da sadrži cikluse.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Naziv ograničenog tipa {0} ne može da se koristi.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tip {0} je već definisan.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozorenje o delegiranju. Rezultat ovog argumenta „{0}“ može da bude skraćen za velike skupove podataka pre nego što bude prosleđen u funkciju „{1}“.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Očekivana je tekstualna, numerička, Bulova vrednost ili vrednost datum/vreme.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize zahteva najmanje jednu kolonu za grupisanje.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize argumenti moraju da budu postojeći nazivi kolona za grupisanje po formulama kojima je naziv dat pomoću ključne reči „As“.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolona „ThisGroup“ nije usaglašena sa rezervisanim nazivom. Koristite funkciju „RenameColumns“ da biste izabrali drugi naziv.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Izvor podataka sadrži kolonu pod nazivom „ThisGroup“, što nije usaglašeno sa rezervisanim nazivom. Koristite funkciju „RenameColumns“ da biste izabrali drugi naziv.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Određivanje opsega izvora podataka (upotreba ključne reči „As“) nije podržano.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Briše sve znakove iz kolekcije i vraća praznu kolekciju.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kolekcija</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Kolekcija za brisanje.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Izvor koji treba obrisati.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Navedeni izvor podataka ne može da se koristi sa ovom funkcijom.</value>
     
   </data>
 </root>

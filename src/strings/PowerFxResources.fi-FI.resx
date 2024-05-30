@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Virheellinen pisteen (.) käyttö</value>
+    <value>'.'-operaattoria ei voi käyttää {0} arvoissa.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>kaava</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Palauttaa määritetyn taulukon ryhmittelyn, joka yhdistetään koostamistoimintoihin.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>lähde</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>ryhmittelysarake</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>koostaminen</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Ryhmiteltävä taulukko tai kokoelma.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Sen sarakkeen nimi, jonka mukaan tiedot ryhmitellään.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Koostamistoiminnon kutsu.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Korottaa luvun x toisen luvun y potenssiin. Sama kuin x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Poistaa kaikki kokoelman tietueet. Kokoelman sarakkeet säilyvät.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Puuttuva funktion argumenttityyppi, esimerkiksi ":Text" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Ilmoitettu funktion palautustyyppi on {0} virheellinen.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Ilmoitettu funktion argumentin tyyppi {0} on virheellinen.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tyyppiliteraalin esittely oli virheellinen</value>
+    <value>Tyyppiliteraalin esittely on virheellinen. Lauseketta {0} ei voi käyttää tyypin määrittelynä.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tyypin {0} määritys on virheellinen.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Tyypin {0} määritys on virheellinen, ja se voi sisältää jaksoja.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Rajoitetun tyypin nimeä {0} ei voi käyttää.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tyyppi {0} on jo määritetty.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegointivaroitus. Tämän argumentin tulos {0} saatetaan katkaista suurille tietojoukoille ennen kuin se siirretään funktioon {1}.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Odotettiin tekstiarvoa, numeerista arvoa, totuusarvoa tai päivämäärä-/aika-arvoa.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize edellyttää vähintään yhtä ryhmittelysaraketta.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize-argumenttien on oltava joko olemassa olevia ryhmiteltäviä sarakkeiden nimiä  tai As-avainsanalla nimettyjä kaavoja.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Sarake ThisGroup on ristiriidassa varatun nimen kanssa. Voit valita toisen nimen käyttämällä  RenameColumns-toimintoa.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Tietolähde sisältää sarakkeen nimeltä ThisGroup, joka on ristiriidassa varatun nimen kanssa. Voit valita toisen nimen käyttämällä  RenameColumns-toimintoa.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Tietolähteen rajausta (As-avainsanan käyttöä) ei tueta.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Tyhjentää kaikki kohteet kokoelmasta ja palauttaa tyhjän kokoelman.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kokoelma</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Tyhjennettävä kokoelma.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Tyhjennettävä lähde.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Määritettyä tietolähdettä ei voi käyttää tämän funktion kanssa.</value>
     
   </data>
 </root>

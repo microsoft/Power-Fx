@@ -20,10 +20,13 @@ namespace Microsoft.PowerFx.Connectors
 
         protected internal readonly TabularService _tabularService;
 
-        public ConnectorTableValue(TabularService tabularService)
+        protected internal readonly ConnectorType _connectorType;
+
+        public ConnectorTableValue(TabularService tabularService, ConnectorType connectorType)
             : base(IRContext.NotInSource(new ConnectorTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
+            _connectorType = connectorType;
         }
 
         internal ConnectorTableValue(IRContext irContext)
@@ -52,13 +55,15 @@ namespace Microsoft.PowerFx.Connectors
         {
             DelegationParameterFeatures allowedFeatures = 
                 DelegationParameterFeatures.Filter | 
-                DelegationParameterFeatures.Top;
+                DelegationParameterFeatures.Top | 
+                DelegationParameterFeatures.Columns;
             parameters.EnsureOnlyFeatures(allowedFeatures);
 
-            ODataParameters op = new ODataParameters
+            ODataParameters op = new ODataParameters()
             {
                 Filter = parameters.GetOdataFilter(),
                 Top = parameters.Top.GetValueOrDefault(),
+                Select = parameters.GetColumns()
             };
 
             return op;

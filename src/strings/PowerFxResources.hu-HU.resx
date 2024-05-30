@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Érvénytelenül használt . (pont) karakter.</value>
+    <value>A '.' operátor nem használható {0} értékeken.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>képlet</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>A megadott tábla egy csoportosítását adja vissza, összesítési függvényekkel kombinálva.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>forrás</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>csoportosítási_oszlop</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregálás</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>A csoportosítandó tábla vagy gyűjtemény.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Annak az oszlopnak a neve, amelynek alapján csoportosítani kell az adatokat.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Aggregációs függvény hívása.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Egy számot (x) adott hatványra (y) emel. Ugyanaz, mint az x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>rekord</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Törli a gyűjtemény összes rekordját. A gyűjtemény oszlopai megmaradnak.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Hiányzó függvény argumentumtípus, például ":Text" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>A megadott függvény {0} visszaadási típusa érvénytelen.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>A megadott függvény {0} argumentumtípusa érvénytelen.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A(z) '{0}' NamedFormula már létezik.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A szó szerinti deklaráció típusa érvénytelen volt</value>
+    <value>A literális deklaráció típusa érvénytelen. A(z) '{0}' kifejezés nem használható típusmeghatározásban.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>A beírt {0} típusmeghatározás érvénytelen.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>A beírt {0} típusmeghatározás érvénytelen, és ciklusokat tartalmazhat.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>A(z) {0} korlátozott típusnév nem használható.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>A(z) {0} típus már meg van határozva.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegálási figyelmeztetés. Lehet, hogy ezen '{0}' argumentum eredményét a rendszer csonkolja nagy adathalmazokért, mielőtt átadja a(z) '{1}' függvénynek.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>A rendszer szöveg, szám, logikai vagy dátum-idő típusú értéket várt.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>A Summarize argumentumnak legalább egy csoportosítási oszlopra van szüksége.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>A Summarize argumentumoknak vagy létező oszlopneveknek kell lenniük a csoportosításhoz, vagy az "As" kulcsszóval megnevezett képleteknek.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>A 'ThisGroup' oszlop ütközik egy foglalt névvel. Használja a 'RenameColumns' függvényt egy másik név kiválasztásához.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Az adatforrásban van egy 'ThisGroup' nevű oszlop, amely ütközik egy foglalt névvel. Használja a 'RenameColumns' függvényt egy másik név kiválasztásához.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Az adatforrás skálázása (az 'As' kulcsszó használata) nem támogatott.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Töröl minden elemet a gyűjteményből, és az üres gyűjteményt adja vissza.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>gyűjtemény</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Az a gyűjtemény, amelynek törölni kell a tartalmát.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>A törölni kívánt forrás.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>A megadott adatforrás nem használható ezzel a függvénnyel.</value>
     
   </data>
 </root>

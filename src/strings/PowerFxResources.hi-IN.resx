@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>'.' का अमान्य उपयोग</value>
+    <value>'.' ऑपरेटर का उपयोग {0} मानों पर नहीं किया जा सकता है.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>सूत्र</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>एकत्रीकरण फ़ंक्शन के साथ संयोजन करते हुए, विस्तृत तालिका का समूहीकरण लौटाता है.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>स्रोत</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>समूहीकरण_स्तंभ</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>एकत्रीकरण</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>समूहीकृत की जाने वाली तालिका या संग्रह.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>उस स्तंभ का नाम जिससे डेटा समूहीकृत किया जाएगा.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>एक एकत्रीकरण फ़ंक्शन के लिए एक कॉल.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>x में अन्य संख्या पर y के घात से उसमें वृद्धि करता है. बिल्कुल x^y की तरह.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>रिकॉर्ड</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>एक संग्रह के सभी रिकॉर्ड हटा देता है. संग्रह के कॉलम बने रहेंगे.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>अनुपस्थित फ़ंक्शन तर्क प्रकार, उदाहरण के लिए "FindMonth( d:Text ):Number = Month( DateParse( d ))" में ":Text"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>बताया गया फ़ंक्शन रिटर्न प्रकार {0} अमान्य है.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>बताया गया फ़ंक्शन तर्क प्रकार {0} अमान्य है.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' पहले से मौजूद है.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>प्रकार लिटरल घोषणा अमान्य थी</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>प्रकार {0} की परिभाषा अमान्य है.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>प्रकार {0} की परिभाषा अमान्य है और इसमें चक्र शामिल हो सकते हैं.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>प्रतिबंधित प्रकार का नाम {0} उपयोग नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>प्रकार {0} पहले से ही परिभाषित है.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>प्रत्यायोजन चेतावनी. इस तर्क '{0}' के परिणाम को '{1}' फ़ंक्शन में पास करने से पहले बड़े डेटा सेट के लिए छोटा किया जा सकता है.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>कोई पाठ, सांख्यिक, बूलियन, या तिथि/समय अपेक्षित था.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize के लिए कम से कम एक समूहीकरण कॉलम की आवश्यकता होती है.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize तर्क या तो मौजूदा कॉलम नाम होने चाहिए जिन्हें समूहीकृत किया जाना चाहिए या 'As' कीवर्ड के साथ नाम दिए गए फ़ॉर्मूला होने चाहिए.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>कॉलम 'ThisGroup' एक आरक्षित नाम के साथ टकराव करता है. भिन्न नाम चुनने के लिए 'RenameColumns' फ़ंक्शन का इस्तेमाल करें.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>डेटा स्रोत में 'ThisGroup' नाम का एक कॉलम है, जो आरक्षित नाम के साथ टकराव करता है. भिन्न नाम चुनने के लिए 'RenameColumns' फ़ंक्शन का इस्तेमाल करें.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>डेटा स्रोत का दायरा बढ़ाना ('As' कीवर्ड का इस्तेमाल) समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>किसी संग्रह से सभी आइटम साफ़ करता है और संग्रह को रिक्त करता है.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>संग्रह</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>संग्रह साफ़ करने के लिए.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>
     
   </data>
 </root>

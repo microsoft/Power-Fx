@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Geçersiz "." kullanımı</value>
+    <value>'.'' işleci {0} değerlerinde kullanılamaz.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>formül</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Belirtilen tablonun gruplandırmasını, toplama işlevleriyle birleştirerek döndürür.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>gruplandırma_sütunu</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>toplama</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Gruplandırılacak olan tablo veya koleksiyon.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Verilerin gruplandırılacağı sütun adı.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Toplama işlevine yapılan çağrı.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Bir x sayısını, bir y sayısının üssüne yükseltir (x^y örneğinde olduğu gibi).</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>kayıt</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Bir koleksiyondaki tüm kayıtları siler. Koleksiyonun sütunları kalır.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>İşlev bağımsız değişken türü eksik. Örneğin, "FindMonth( d:Text ):Number = Month( DateParse( d ))" içindeki ":Text"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Belirtilen işlev dönüş türü {0} geçersiz.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Belirtilen işlev bağımsız değişkeni türü {0} geçersiz.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' zaten var.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tür değişmez bildirimi geçersiz</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tanım türü {0} geçersiz.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>{0} türünün tanımı geçersiz ve döngü içerebilir.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Kısıtlı tür adı {0} kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>{0} türü zaten tanımlandı.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Temsilci uyarısı. '{0}' bağımsız değişkeninin sonucu, '{1}' işlevine aktarılamadan önce büyük veri kümeleri için kısaltılabilir.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Bir metin, sayı, boole veya tarih/saat değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize en az bir gruplandırma sütunu gerektirir.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize bağımsız değişkenleri, gruplandırma ölçütü olarak kullanılacak mevcut sütun adları veya 'As' anahtar sözcüğüyle adlandırılmış formüller olmalıdır.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>'ThisGroup' sütunu, ayrılmış bir adla çakışıyor. Farklı bir ad seçmek için 'RenameColumns' işlevini kullanın.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Veri kaynağı, ayrılmış bir adla çakışan 'ThisGroup' adlı bir sütun içeriyor. Farklı bir ad seçmek için 'RenameColumns' işlevini kullanın.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Veri kaynağının kapsamının belirlenmesi ('As' anahtar sözcüğünün kullanımı) desteklenmez.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bir koleksiyondaki tüm öğeleri siler ve boş koleksiyonu döndürür.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>koleksiyon</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Silinecek koleksiyon.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Belirtilen veri kaynağı bu işlevle kullanılamıyor.</value>
     
   </data>
 </root>

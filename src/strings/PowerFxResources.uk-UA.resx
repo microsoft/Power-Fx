@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Неприпустиме використання символу "."</value>
+    <value>Оператор "." не можна використовувати для значень {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>формула</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Повертає групування вказаної таблиці в поєднанні з функціями агрегації.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>джерело</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>стовпець_групування</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>агрегація</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Таблиця або колекція, яку необхідно згрупувати.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Ім’я стовпця, за яким потрібно згрупувати дані.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Виклик функції агрегації.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Підносить число x до степеня іншого числа y. Те саме, що x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>запис</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Видаляються всі записи колекції. Стовпці колекції залишаються.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Відсутній тип аргументу функції, наприклад, ":Text" у полі "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Неприпустимий тип "{0}" повернення вказаної функції.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Неприпустимий тип "{0}" аргументу вказаної функції.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" вже існує.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Неприпустиме оголошення літерала типу</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Визначення типу "{0}" неприпустиме.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Визначення типу "{0}" неприпустиме та може містити цикли.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Ім’я типу з обмеженим доступом "{0}" не можна використовувати.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Тип "{0}" уже визначено.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Попередження про делегування. У випадку великих наборів даних результат цього аргументу "{0}" може бути обрізаний перед передачею до функції "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Очікувалося: текстове, числове чи логічне значення або дата й час.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Функції Summarize потрібен принаймні один стовпець групування.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Аргументи функції "Summarize" мають бути або іменами існуючих стовпців для групування, або формулами, названими з ключовим словом "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Стовпець "ThisGroup"  конфліктує з зарезервованим іменем. Скористайтеся функцією "RenameColumns", щоб вибрати інше ім’я.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Джерело даних містить стовпець "ThisGroup", який конфліктує з зарезервованим іменем. Скористайтеся функцією "RenameColumns", щоб вибрати інше ім’я.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Оцінка джерела даних (використання ключового слова "As") не підтримується.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Очищує всі елементи колекції й повертає пусту колекцію.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>колекція</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Колекція, яку потрібно очистити.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Указане джерело даних не можна використовувати з цією функцією.</value>
     
   </data>
 </root>
