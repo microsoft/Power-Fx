@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 #if NET8_0
         private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
 
-        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp
             ? _baseDirectory
                 .Replace(Path.Join("bin", "Debug", "net8.0"), string.Empty)
                 .Replace(Path.Join("bin", "Release", "net8.0"), string.Empty)
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 #if NET7_0
         private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
 
-        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp
             ? _baseDirectory
                 .Replace(Path.Join("bin", "Debug", "net7.0"), string.Empty)
                 .Replace(Path.Join("bin", "Release", "net7.0"), string.Empty)
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 #if NET462
         private static readonly string _baseDirectory = $@"{Directory.GetCurrentDirectory()}\IntellisenseTests\TestSignatures";
 
-        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp
             ? _baseDirectory
                 .Replace(@"bin\Debug\net462", string.Empty)
                 .Replace(@"bin\Release\net462", string.Empty)

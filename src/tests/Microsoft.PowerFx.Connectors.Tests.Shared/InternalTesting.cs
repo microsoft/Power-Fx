@@ -1400,7 +1400,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.Items);
                 if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(itemIdentifier))
                 {
+#if NET7_0_OR_GREATER
+                    sb.Append($"<circularRef:{itemIdentifier.AsSpan(2)}>]");
+#else
                     sb.Append($"<circularRef:{itemIdentifier.Substring(2)}>]");
+#endif
                     return;
                 }
 
@@ -1421,7 +1425,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.AdditionalProperties);
                 if (additionalPropIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(additionalPropIdentifier))
                 {
+#if NET7_0_OR_GREATER
+                    sb.Append($"<circularRef:{additionalPropIdentifier.AsSpan(2)}>]");
+#else
                     sb.Append($"<circularRef:{additionalPropIdentifier.Substring(2)}>]");
+#endif
                     return;
                 }
 
@@ -1448,7 +1456,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(prop.Value);
                     if (propIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(propIdentifier))
                     {
+#if NET7_0_OR_GREATER
+                        sb.Append($"<circularRef:{propIdentifier.AsSpan(2)}>]");
+#else
                         sb.Append($"<circularRef:{propIdentifier.Substring(2)}>]");
+#endif
                         return;
                     }
 
