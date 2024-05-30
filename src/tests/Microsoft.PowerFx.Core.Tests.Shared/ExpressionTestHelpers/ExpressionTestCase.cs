@@ -49,37 +49,37 @@ namespace Microsoft.PowerFx.Core.Tests
         public override string ToString()
         {
             string netVersion = RuntimeInformation.FrameworkDescription;
-            string symbol = "\uFF1F"; // ?
+            string symbol = "?";
 
             if (netVersion.StartsWith(".NET Framework 4.6.") || 
                 netVersion.StartsWith(".NET Framework 4.7.") || 
                 netVersion.StartsWith(".NET Framework 4.8."))
             {
-                symbol = "\uFF14"; // ④
+                symbol = "4";
             }
             else if (netVersion.StartsWith(".NET Core 3.1."))
             {
-                symbol = "\uFF13"; // ③
+                symbol = "3";
             }
             else if (netVersion.StartsWith(".NET 5."))
             {
-                symbol = "\uFF15"; // ⑤
+                symbol = "5";
             }
             else if (netVersion.StartsWith(".NET 6."))
             {
-                symbol = "\uFF16"; // ⑥
+                symbol = "6";
             }
             else if (netVersion.StartsWith(".NET 7."))
             {
-                symbol = "\uFF17"; // ⑦
+                symbol = "7";
             }
             else if (netVersion.StartsWith(".NET 8."))
             {
-                symbol = "\uFF18"; // ⑧
+                symbol = "8";
             }
             else if (netVersion.StartsWith(".NET 9."))
             {
-                symbol = "\uFF19"; // ⑨
+                symbol = "9";
             }
 
             var str = $"{symbol} {Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
