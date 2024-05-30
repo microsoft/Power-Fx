@@ -121,6 +121,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerce_OptionSetFunction() : new Boolean_TestXORNoCoerceFunction());
             newConfig.AddFunction(new TestColorInvertFunction());
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvert_OptionSetFunction() : new Color_TestColorBlueRampInvertFunction());
+            newConfig.AddFunction(new TestSignDecimalFunction());
+            newConfig.AddFunction(new TestSignNumberFunction());
 
             return newConfig;
         }
@@ -228,6 +230,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerceFunction() : new Boolean_TestXORNoCoerceFunction());
             newConfig.AddFunction(new TestColorInvertFunction());
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+            newConfig.AddFunction(new TestSignDecimalFunction());
+            newConfig.AddFunction(new TestSignNumberFunction());
 
             return newConfig;
         }
@@ -347,6 +351,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public FormulaValue Execute(ColorValue x)
             {
                 return ColorValue.New(System.Drawing.Color.FromArgb(x.Value.A, x.Value.R ^ 0xff, x.Value.G ^ 0xff, x.Value.B ^ 0xff));
+            }
+        }
+
+        private class TestSignNumberFunction : ReflectionFunction
+        {
+            public TestSignNumberFunction()
+                : base("TestSignNumber", FormulaType.Number, new[] { FormulaType.Number })
+            {
+            }
+
+            public FormulaValue Execute(NumberValue x)
+            {
+                return NumberValue.New((double)Math.Sign(x.Value));
+            }
+        }
+
+        private class TestSignDecimalFunction : ReflectionFunction
+        {
+            public TestSignDecimalFunction()
+                : base("TestSignDecimal", FormulaType.Decimal, new[] { FormulaType.Decimal })
+            {
+            }
+
+            public FormulaValue Execute(DecimalValue x)
+            {
+                return DecimalValue.New((decimal)Math.Sign(x.Value));
             }
         }
 
