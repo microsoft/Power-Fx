@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -21,7 +22,6 @@ using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
-using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -1663,6 +1663,14 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
 
+        // UDFs with Enitity Types should work in parameter and return types
+
+        [InlineData(
+            "f():TestEntity = Entity; g(e: TestEntity):Number = 1;",
+            "g(f())",
+            true,
+            1.0)]
+
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1675,6 +1683,10 @@ namespace Microsoft.PowerFx.Tests
 
             if (isValid)
             {
+                var entityType = new Interpreter.Tests.DatabaseSimulationTests.TestEntityType(new Tests.BindingEngineTests.LazyRecursiveRecordType().ToTable()._type);
+                var entityValue = new Interpreter.Tests.DatabaseSimulationTests.TestEntityValue(IRContext.NotInSource(entityType));
+                recalcEngine._symbolTable.AddType(new DName("TestEntity"), entityType);
+                recalcEngine._symbolValues.Add("Entity", entityValue);
                 recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
                 Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
             }

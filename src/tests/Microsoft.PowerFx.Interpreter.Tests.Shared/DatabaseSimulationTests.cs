@@ -263,6 +263,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
+            internal TestEntityType(DType tableType)
+                : base(DType.CreateExpandType(new TestExpandInfo(tableType)))
+            {
+            }
+
             public override void Visit(ITypeVisitor vistor)
             {
                 throw new NotImplementedException("TestEntityType.Visit");

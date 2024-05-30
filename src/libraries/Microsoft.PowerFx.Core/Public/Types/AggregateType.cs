@@ -186,10 +186,5 @@ namespace Microsoft.PowerFx.Types
                 return null;
             }
         }
-
-        internal bool HasRecuriveType()
-        {
-            return GetFieldTypes().Any(ct => ct.Type == this || (ct.Type is AggregateType aggType && aggType.HasRecuriveType()));
-        }
     }
 }

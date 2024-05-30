@@ -123,8 +123,6 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 var name = currentType.Ident.Name;
-                var type = FormulaType.Build(resolvedType);
-
                 definedTypeSymbolTable.AddType(name, FormulaType.Build(resolvedType));
             }
 
