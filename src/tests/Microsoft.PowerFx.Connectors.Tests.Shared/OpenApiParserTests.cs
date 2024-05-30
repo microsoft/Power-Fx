@@ -321,6 +321,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task ACSL_InvokeFunctionWithOutputOverride()
         {
+            // this test is asserting that we can provide the expected output type that should be used during deserialization
+            // this is useful in a situation when the output type is dynamic and is not available in the swagger
             using var testConnector = new LoggingTestServer(@"Swagger\TestConnectorDateTimeFormat.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
             ConsoleLogger logger = new ConsoleLogger(_output);
