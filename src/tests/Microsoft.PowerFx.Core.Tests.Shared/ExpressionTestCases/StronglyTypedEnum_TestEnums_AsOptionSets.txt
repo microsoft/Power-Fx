@@ -274,6 +274,30 @@ Errors: Error 24-28: Invalid argument type (OptionSetValue (TestYeaNay)). Expect
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.'0'
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.'0'
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+TBD
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+TBD
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+TBD
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+TBD
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
@@ -284,6 +308,12 @@ true
 
 >> Int( TestNumberCoerceTo.V )
 5
+
+>> Int( TestNumberCompareNumeric.V )
+Errors: Error 0-3: The function 'Int' has some invalid arguments.|Error 29-31: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Decimal value instead.
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Number value instead.
 
 >> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
 3125
@@ -735,7 +765,10 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-TestYesNo.CalculatedOptionSetValue
+TestYesNo.'0'
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 

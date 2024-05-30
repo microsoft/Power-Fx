@@ -112,10 +112,10 @@ true
 false
 
 >> TestYesNo.Yes = TestYeaNay.Nay
-false
+Errors: Error 14-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.Yes <> TestYeaNay.Nay
-true
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> Color.Red = TestRedRamp.Red100
 true
@@ -144,28 +144,28 @@ true
 // Booleans cannot be used in math expressions, even if they support coercion to backing kind
 
 >> TestBooleanNoCoerce.SuperFalse + 2
-2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestBooleanNoCoerce.SuperFalse * 2
-0
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestBooleanNoCoerce.SuperFalse / 2
-0
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestBooleanNoCoerce.SuperFalse ^ 2
-0
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> TestYesNo.Yes + 2
-3
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestYesNo.No * 2
-0
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestYesNo.Yes / 2
-0.5
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestYesNo.Yes ^ 2
-1
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 //===========================================================================================================
 //
@@ -191,7 +191,7 @@ true
 false
 
 >> TestBooleanNoCoerce.SuperTrue
-true
+TestBooleanNoCoerce.'1'
 
 >> And( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperTrue )
 true
@@ -213,13 +213,13 @@ true
 // Text can be called on all option set values
 
 >> Text( TestYesNo.Yes )
-"true"
+"Yes"
 
 >> Value( TestYesNo.Yes )
-1
+Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Float( TestYesNo.Yes )
-1
+Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Boolean( TestYesNo.No )
 false
@@ -281,6 +281,12 @@ true
 >> Int( TestNumberCoerceTo.V )
 5
 
+>> Int( TestNumberCompareNumeric.V )
+5
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+25
+
 >> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
 3125
 
@@ -311,7 +317,7 @@ true
 false
 
 >> TestYesNo.No
-false
+TestYesNo.'0'
 
 >> And( TestYesNo.Yes, TestYeaNay.Yea )
 true
@@ -415,130 +421,130 @@ false
 //
 
 >> Text( TestYesNo.No )
-"false"
+"No"
 
 >> "Label:" & TestYesNo.No
-"Label:false"
+"Label:No"
 
 >> Concatenate( "Label:", TestYesNo.No )
-"Label:false"
+"Label:No"
 
 >> TestYesNo.No & "Way"
-"falseWay"
+"NoWay"
 
 >> Concatenate( TestYesNo.No, "Way" )
-"falseWay"
+"NoWay"
 
 >> Text( TestYeaNay.Nay )
-"false"
+"Nay"
 
 >> "Label:" & TestYeaNay.Nay
-"Label:false"
+"Label:Nay"
 
 >> Text( TestBooleanNoCoerce.SuperTrue )
-"true"
+"SuperTrue"
 
 >> "Label:" & TestBooleanNoCoerce.SuperTrue
-"Label:true"
+"Label:SuperTrue"
 
 >> Text( TestYeaNay.Yea )
-"true"
+"Yea"
 
 >> "Label:" & TestYeaNay.Yea
-"Label:true"
+"Label:Yea"
 
 >> Text( TestBlueRamp.Blue50 )
-Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 18-25: Expected text or number. We expect text or a number at this point in the formula.
+"Blue50"
 
 >> "Label:" & TestBlueRamp.Blue50
-Errors: Error 23-30: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Label:Blue50"
 
 >> Concatenate( "Label:", TestBlueRamp.Blue50 )
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 35-42: Invalid argument type (Color). Expecting a Text value instead.
+"Label:Blue50"
 
 >> TestBlueRamp.Blue50 & " is the sky"
-Errors: Error 12-19: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Blue50 is the sky"
 
 >> Concatenate( TestBlueRamp.Blue50, " is the sky")
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 25-32: Invalid argument type (Color). Expecting a Text value instead.
+"Blue50 is the sky"
 
 >> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
-Errors: Error 36-43: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"The sky is so very Blue50 !!!"
 
 >> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 48-55: Invalid argument type (Color). Expecting a Text value instead.
+"The sky is so very Blue50 !!!"
 
 >> Mid( TestBlueRamp.Blue50, 2 )
-Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
+"lue50"
 
 >> Len( TestBlueRamp.Blue50 )
-Errors: Error 17-24: Invalid argument type (Color). Expecting a Text value instead.
+6
 
 >> Text( TestRedRamp.Red25 )
-Errors: Error 0-4: The function 'Text' has some invalid arguments.|Error 17-23: Expected text or number. We expect text or a number at this point in the formula.
+"Red25"
 
 >> "Label:" & TestRedRamp.Red25
-Errors: Error 22-28: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Label:Red25"
 
 >> Mid( TestRedRamp.Red25, 2 )
-Errors: Error 0-3: The function 'Mid' has some invalid arguments.|Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
+"ed25"
 
 >> Len( TestRedRamp.Red25 )
-Errors: Error 16-22: Invalid argument type (Color). Expecting a Text value instead.
+5
 
 >> true & TestRedRamp.Red25
-Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"trueRed25"
 
 >> 1 & TestRedRamp.Red25
-Errors: Error 15-21: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"1Red25"
 
 >> "hi" & TestRedRamp.Red25
-Errors: Error 18-24: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"hiRed25"
 
 >> TestRedRamp.Red25 & true
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Red25true"
 
 >> TestRedRamp.Red25 & 1
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Red251"
 
 >> TestRedRamp.Red25 & "hi"
-Errors: Error 11-17: Invalid argument type. Expecting one of the following: Text, Number, Decimal, Date, Time, DateTimeNoTimeZone, DateTime, Boolean, ViewValue, UntypedObject.
+"Red25hi"
 
 >> Concatenate( true, TestRedRamp.Red25 )
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-36: Invalid argument type (Color). Expecting a Text value instead.
+"trueRed25"
 
 >> Concatenate( 1, TestRedRamp.Red25 )
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 27-33: Invalid argument type (Color). Expecting a Text value instead.
+"1Red25"
 
 >> Concatenate( "hi", TestRedRamp.Red25 )
-Errors: Error 0-11: The function 'Concatenate' has some invalid arguments.|Error 30-36: Invalid argument type (Color). Expecting a Text value instead.
+"hiRed25"
 
 >> true & TestYeaNay.Yea
-"truetrue"
+"trueYea"
 
 >> 1 & TestYeaNay.Yea
-"1true"
+"1Yea"
 
 >> "hi" & TestYeaNay.Yea
-"hitrue"
+"hiYea"
 
 >> TestYeaNay.Yea & true
-"truetrue"
+"Yeatrue"
 
 >> TestYeaNay.Yea & 1
-"true1"
+"Yea1"
 
 >> TestYeaNay.Yea & "hi"
-"truehi"
+"Yeahi"
 
 >> Concatenate( true, TestYeaNay.Yea )
-"truetrue"
+"trueYea"
 
 >> Concatenate( 1, TestYeaNay.Yea )
-"1true"
+"1Yea"
 
 >> Concatenate( "hi", TestYeaNay.Yea )
-"hitrue"
+"hiYea"
 
 //===========================================================================================================
 //
@@ -570,16 +576,16 @@ true
 true
 
 >> TestYesNo.No >= Blank()
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 13-15: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> TestYesNo.No < Blank()
-Errors: Error 9-12: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 13-14: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> Blank() < TestYesNo.Yes
-Errors: Error 19-23: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-9: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> Blank() <= TestYesNo.Yes
-Errors: Error 20-24: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 8-10: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> TestNumberCompareNumeric.V < Blank()
 false
@@ -684,33 +690,33 @@ false
 // Coerces to string
 
 >> Text(TestYesNo.No)
-"false"
+"No"
 
 >> "Severity: "&TestYesNo.No
-"Severity: false"
+"Severity: No"
 
 >> Len(TestYesNo.No)
-5
+2
 
 >> Left(TestYesNo.No,3)
-"fal"
+"No"
 
 // Standard error cases for number backed enums
 
 >> Value( TestYesNo.No )
-0
+Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
 
 >> Float( TestYesNo.No )
-0
+Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
 
 >> TestYesNo.No = TestYeaNay.Yea
-false
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.No = TestYeaNay.Nay
-true
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.No <> TestYeaNay.Yea
-true
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Nay )
 false
@@ -730,21 +736,24 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-false
+TestYesNo.'0'
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 
 >> Sqrt( TestYesNo.No )
-0
+Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Number value instead.
 
 >> Mod( TestYesNo.No, 2 )
-0
+Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Decimal value instead.
 
 >> TestYesNo.No + 3
-3
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> TestYesNo.No + TestYesNo.Yes
-1
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
 
 >> If( false, true, TestYesNo.No )  // first type rule
 false
@@ -764,15 +773,15 @@ false
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> TestYesNo.Yes < TestYesNo.No
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 25-28: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-15: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> TestYesNo.Yes >= TestYesNo.No
-Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 26-29: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+Errors: Error 14-16: Unable to compare values of type OptionSetValue (TestYesNo).
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
 >> TestYesNo.Yes & TestYesNo.Yes & TestYesNo.No
-"truetruefalse"
+"YesYesNo"
 
 >> TestXORYesNo( TestYesNo.Yes & TestYesNo.No, true )
 Error({Kind:ErrorKind.InvalidArgument})

@@ -724,7 +724,10 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-TestYesNo.CalculatedOptionSetValue
+TestYesNo.No
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 

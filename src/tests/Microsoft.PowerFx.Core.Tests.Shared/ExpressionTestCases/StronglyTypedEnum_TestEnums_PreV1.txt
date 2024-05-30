@@ -721,6 +721,9 @@ false
 >> If( false, TestYesNo.Yes, false )
 false
 
+>> Text( If( false, TestYesNo.Yes, false ) )
+"false"
+
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 
 >> Sqrt( TestYesNo.No )
