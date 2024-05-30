@@ -2807,6 +2807,8 @@ namespace Microsoft.PowerFx.Core.Tests
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9", "n")]
         public async Task TexlExcessivelyLongButFlatRulesParseCorrectly(string script, string expectedType)
         {
+            // avoids CS1998 error and we need this to be async to use the Timeout attribute
+            await Task.Delay(0);
             TestSimpleBindingSuccess(script, TestUtils.DT(expectedType));
         }
 

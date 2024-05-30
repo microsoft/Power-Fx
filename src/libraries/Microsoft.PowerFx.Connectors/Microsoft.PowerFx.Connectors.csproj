@@ -24,8 +24,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.11" />   
     <PackageReference Include="System.Text.Json" Version="6.0.9" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
   <ItemGroup>
