@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitignore = ..\.gitignore
 		CodeCoverage.runsettings = CodeCoverage.runsettings
 		Directory.Build.Props = Directory.Build.Props
+		Local.runsettings = Local.runsettings
 		PowerFx.Off.ruleset = PowerFx.Off.ruleset
 		PowerFx.ruleset = PowerFx.ruleset
 		PowerFx.Tests.ruleset = PowerFx.Tests.ruleset

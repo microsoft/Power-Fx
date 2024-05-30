@@ -20,5 +20,6 @@ set TESTFILE10="tests\.Net 7.0\Microsoft.PowerFx.Performance.Tests\bin\%CONFIGUR
 set TESTFILE11="tests\.Net 7.0\Microsoft.PowerFx.Repl.Tests\bin\%CONFIGURATION%\net7.0\Microsoft.PowerFx.Repl.Tests.dll"
 
 set TESTFILES=%TESTFILE1% %TESTFILE2% %TESTFILE3% %TESTFILE4% %TESTFILE5% %TESTFILE6% %TESTFILE7% %TESTFILE8% %TESTFILE9% %TESTFILE10% %TESTFILE11%
+rem /EnableCodeCoverage /InIsolation
 
-"%VSTEST%" %TESTFILES% /settings:local.runsettings /EnableCodeCoverage /InIsolation
+"%VSTEST%" %TESTFILES% /settings:local.runsettings 
