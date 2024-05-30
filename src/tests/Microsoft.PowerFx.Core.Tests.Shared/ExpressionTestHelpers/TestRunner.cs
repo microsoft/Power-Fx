@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     return;
                 }
-            }        
+            }
 
             fileSetup = string.Join(",", fileSetupDict.Select(i => (i.Value ? string.Empty : "disable:") + i.Key));
 
@@ -319,7 +319,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
-                    test.Expected = line.Trim();                    
+                    test.Expected = line.Trim();
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         Tests.Add(test);
 
                         _keyToTests[key] = test;
-                    }                    
+                    }
 
                     test = null;
                 }
