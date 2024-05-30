@@ -35,9 +35,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 entityMetadata = null;
                 return false;
             }
-
-            // Getting Metadata isn't allowed for performance reasons only
-            throw new GettingMetadataNotAllowedException();
         }
     }
 
