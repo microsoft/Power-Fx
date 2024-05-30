@@ -281,16 +281,16 @@ TestYeaNay.'0'
 "Nay"
 
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
-TBD
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
-TBD
+"CalculatedOptionSetValue"
 
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
-TBD
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
-TBD
+"CalculatedOptionSetValue"
 
 //===========================================================================================================
 //

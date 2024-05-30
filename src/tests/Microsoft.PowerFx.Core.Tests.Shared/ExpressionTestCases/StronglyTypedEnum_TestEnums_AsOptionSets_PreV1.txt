@@ -270,6 +270,24 @@ true
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.'0'
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"CalculatedOptionSetValue"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"CalculatedOptionSetValue"
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number

@@ -269,6 +269,24 @@ true
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+false
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"false"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+10
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"10"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+11
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"11"
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
