@@ -893,7 +893,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 2, 1, false)]
         [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 2, 1, true)]
         [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 1, 0, false)]
-        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, 0, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 1, 0, 0, true)]
         [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, 1, true)]
         public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int validUdfCount, int namedFormulaCount, bool expectErrors)
         {
@@ -942,6 +942,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(x: Number, y:Number): Number = ;", 1, 0, true)]
         [InlineData("Valid(x: Number): Number = x; Invalid(x: Text): Text = {;};", 2, 1, true)]
         [InlineData("Invalid(x: Text): Text = ({); A(): Text = \"Hello\";", 2, 1, true)]
+        [InlineData("F(): Number = App", 1, 0, true)]
+        [InlineData("F1(): Number = A; F2(a: Boolean): Number = Some", 2, 1, true)]
+        [InlineData("F(): Number { Text; T", 1, 0, true)]
+        [InlineData("F1(): Number { Text; T }; F2(): Number = { Ap", 2, 1, true)]
         public void TestUDFInvalidBody(string script, int udfCount, int validUdfCount, bool expectErrors)
         {
             var parserOptions = new ParserOptions()
