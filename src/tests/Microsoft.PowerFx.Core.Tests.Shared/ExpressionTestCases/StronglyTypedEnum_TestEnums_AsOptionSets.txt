@@ -280,12 +280,6 @@ TestYeaNay.'0'
 >> Text( If( false, TestYeaNay.Yea, false ) )
 "Nay"
 
->> If( false, TestYeaNay.Yea, false )
-TestYeaNay.'0'
-
->> Text( If( false, TestYeaNay.Yea, false ) )
-"Nay"
-
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
 TBD
 
