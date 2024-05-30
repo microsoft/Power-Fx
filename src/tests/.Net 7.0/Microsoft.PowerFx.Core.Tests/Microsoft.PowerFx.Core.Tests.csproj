@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <!--Do not generate this package for public builds.  -->
-    <!--<IsPackable Condition="'$(InternalBuild)' == 'true'">true</IsPackable>
-    <IsPackable Condition="'$(InternalBuild)' != 'true'">false</IsPackable>-->
+    <IsPackable Condition="'$(InternalBuild)' == 'true'">true</IsPackable>
+    <IsPackable Condition="'$(InternalBuild)' != 'true'">false</IsPackable>
     <GeneratePackageOnBuild Condition="'$(InternalBuild)' == 'true'">$(GeneratePackages)</GeneratePackageOnBuild>    
     <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
