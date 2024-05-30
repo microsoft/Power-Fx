@@ -3518,7 +3518,8 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Color:
-                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && OptionSetInfo.CanCoerceToBackingKind;
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && 
+                                 (!usePowerFxV1CompatibilityRules || OptionSetInfo.CanCoerceToBackingKind);
                     break;
                 case DKind.Enum:
                     return CoercesTo(

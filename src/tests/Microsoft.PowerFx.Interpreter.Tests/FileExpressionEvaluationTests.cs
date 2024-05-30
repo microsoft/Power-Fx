@@ -118,12 +118,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-#if false
+#if true
         // Helper to run a single .txt 
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var path = @"D:\repos\to2\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_AsOptionSets_PreV1.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

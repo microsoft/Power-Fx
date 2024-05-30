@@ -102,38 +102,109 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static PowerFxConfig AllEnumsAsTestOptionSetsSetup(PowerFxConfig config)
         {
-            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
-            store.TestOnly_WithCustomEnum(_testYesNo, append: true);
-            store.TestOnly_WithCustomEnum(_testYeaNay, append: true);
-            store.TestOnly_WithCustomEnum(_testBooleanNoCoerce, append: true);
-            store.TestOnly_WithCustomEnum(_testNumberCoerceTo, append: true);
-            store.TestOnly_WithCustomEnum(_testNumberCompareNumeric, append: true);
-            store.TestOnly_WithCustomEnum(_testNumberCompareNumericCoerceFrom, append: true);
-            store.TestOnly_WithCustomEnum(_testBlueRampColors, append: true);
-            store.TestOnly_WithCustomEnum(_testRedRampColors, append: true);
+            var store = new EnumStoreBuilder().WithDefaultEnums();
+            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
 
-            config.AddEntity(_testNumberCoerceToOptionSet, new DName("TestNumberCoerceTo"));
+            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
+            newConfig.AddEntity(_testYesNo_OptionSet, _testYesNo_OptionSet.EntityName);
+            newConfig.AddEntity(_testYeaNay_OptionSet, _testYeaNay_OptionSet.EntityName);
+            newConfig.AddEntity(_testBooleanNoCoerce_OptionSet, _testBooleanNoCoerce_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCoerceTo_OptionSet, _testNumberCoerceTo_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCompareNumeric_OptionSet, _testNumberCompareNumeric_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCompareNumericCoerceFrom_OptionSet, _testNumberCompareNumericCoerceFrom_OptionSet.EntityName);
+            newConfig.AddEntity(_testBlueRampColors_OptionSet, _testBlueRampColors_OptionSet.EntityName);
+            newConfig.AddEntity(_testRedRampColors_OptionSet, _testRedRampColors_OptionSet.EntityName);
 
             // There are likewise no built in functions that take Boolean backed option sets as parameters
-            config.AddFunction(new TestXORBooleanFunction());
-            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNoFunction() : new Boolean_TestXORYesNoFunction());
-            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerceFunction() : new Boolean_TestXORNoCoerceFunction());
-            config.AddFunction(new TestColorInvertFunction());
-            config.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+            newConfig.AddFunction(new TestXORBooleanFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNo_OptionSetFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerce_OptionSetFunction() : new Boolean_TestXORNoCoerceFunction());
+            newConfig.AddFunction(new TestColorInvertFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvert_OptionSetFunction() : new Color_TestColorBlueRampInvertFunction());
 
             return newConfig;
         }
 
-        private static readonly NumberOptionSet _testNumberCoerceToOptionSet = new NumberOptionSet(
-            new DName("TestNumberCoerceTo"),
-            new Dictionary<int, DName>()
+        private static readonly BooleanOptionSet _testYesNo_OptionSet = new BooleanOptionSet(
+            "TestYesNo",
+            new Dictionary<bool, DName>()
             {
-                        { 10, new DName("X") },
-                        { 5, new DName("V") },
-                        { 5, new DName("V2") }, // intentionally the same value, should compare on value and not label
-                        { 1, new DName("I") }
+                { true, new DName("Yes") },
+                { false, new DName("No") }
+            }.ToImmutableDictionary(),
+            canCoerceFromBackingKind: true,
+            canCoerceToBackingKind: true);
+
+        private static readonly BooleanOptionSet _testYeaNay_OptionSet = new BooleanOptionSet(
+            "TestYeaNay",
+            new Dictionary<bool, DName>()
+            {
+                { true, new DName("Yea") },
+                { false, new DName("Nay") }
+            }.ToImmutableDictionary(),
+            canCoerceFromBackingKind: true,
+            canCoerceToBackingKind: true);
+
+        private static readonly BooleanOptionSet _testBooleanNoCoerce_OptionSet = new BooleanOptionSet(
+            "TestBooleanNoCoerce",
+            new Dictionary<bool, DName>()
+            {
+                { true, new DName("SuperTrue") },
+                { false, new DName("SuperFalse") }
+            }.ToImmutableDictionary());
+
+        private static readonly NumberOptionSet _testNumberCoerceTo_OptionSet = new NumberOptionSet(
+            "TestNumberCoerceTo",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
             }.ToImmutableDictionary(),
             canCoerceToBackingKind: true);
+
+        private static readonly NumberOptionSet _testNumberCompareNumeric_OptionSet = new NumberOptionSet(
+            "TestNumberCompareNumeric",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCompareNumeric: true);
+
+        private static readonly NumberOptionSet _testNumberCompareNumericCoerceFrom_OptionSet = new NumberOptionSet(
+            "TestNumberCompareNumericCoerceFrom",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCompareNumeric: true,
+            canCoerceFromBackingKind: true);
+
+        private static readonly ColorOptionSet _testBlueRampColors_OptionSet = new ColorOptionSet(
+            "TestBlueRamp",
+            new Dictionary<double, DName>()
+            {
+                { (double)0xFF0000FFU, new DName("Blue100") },
+                { (double)0xFF3F3FFFU, new DName("Blue75") },
+                { (double)0xFF7F7FFFU, new DName("Blue50") },
+                { (double)0xFFBFBFFFU, new DName("Blue25") },
+                { (double)0xFFFFFFFFU, new DName("Blue0") }
+            }.ToImmutableDictionary());
+
+        private static readonly ColorOptionSet _testRedRampColors_OptionSet = new ColorOptionSet(
+            "TestRedRamp",
+            new Dictionary<double, DName>()
+            {
+                { (double)0xFFFF0000U, new DName("Red100") },
+                { (double)0xFFFF3F3FU, new DName("Red75") },
+                { (double)0xFFFF7F7FU, new DName("Red50") },
+                { (double)0xFFFFBFBFU, new DName("Red25") },
+                { (double)0xFFFFFFFFU, new DName("Red0") }
+            }.ToImmutableDictionary());
 
         private static PowerFxConfig AllEnumsPlusTestEnumsSetup(PowerFxConfig config)
         {
@@ -298,6 +369,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private class STE_TestColorBlueRampInvert_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestColorBlueRampInvert_OptionSetFunction()
+                : base("TestColorBlueRampInvert", FormulaType.Color, new[] { _testBlueRampColors_OptionSet.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x)
+            {
+                var value = Convert.ToUInt32((double)x.ExecutionValue);
+                var c = Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
+                return ColorValue.New(Color.FromArgb(c.A, c.R ^ 0xff, c.G ^ 0xff, c.B ^ 0xff));
+            }
+        }
+
         private class Color_TestColorBlueRampInvertFunction : ReflectionFunction
         {
             public Color_TestColorBlueRampInvertFunction()
@@ -315,6 +405,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public STE_TestXORYesNoFunction()
                 : base("TestXORYesNo", FormulaType.Boolean, new[] { _testYesNo.FormulaType, _testYesNo.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
+        private class STE_TestXORYesNo_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestXORYesNo_OptionSetFunction()
+                : base("TestXORYesNo", FormulaType.Boolean, new[] { _testYesNo_OptionSet.FormulaType, _testYesNo_OptionSet.FormulaType })
             {
             }
 
@@ -342,6 +445,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public STE_TestXORNoCoerceFunction()
                 : base("TestXORNoCoerce", FormulaType.Boolean, new[] { _testBooleanNoCoerce.FormulaType, _testBooleanNoCoerce.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
+        private class STE_TestXORNoCoerce_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestXORNoCoerce_OptionSetFunction()
+                : base("TestXORNoCoerce", FormulaType.Boolean, new[] { _testBooleanNoCoerce_OptionSet.FormulaType, _testBooleanNoCoerce_OptionSet.FormulaType })
             {
             }
 
