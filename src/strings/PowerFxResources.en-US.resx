@@ -4669,4 +4669,8 @@
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="WarningStoredProcedureUntypedResult" xml:space="preserve">
+    <value>This stored procedure returns untyped result set.</value>
+    <comment>Warning Message.</comment>
+  </data>
 </root>

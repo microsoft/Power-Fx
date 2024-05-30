@@ -4683,6 +4683,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetMutable(node, mutable);
                 }
 
+                if (func.WarnIfUntypedReturn)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarningStoredProcedureUntypedResult);
+                }
+
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {

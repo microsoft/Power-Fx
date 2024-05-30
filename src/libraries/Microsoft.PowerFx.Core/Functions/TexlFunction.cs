@@ -85,6 +85,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function should be hidden from the formular bar, false otherwise.
         public virtual bool IsHidden => false;
 
+        public virtual bool WarnIfUntypedReturn => false;
+
         // Return true if the function expects lambda arguments, false otherwise.
         public virtual bool HasLambdas => !_maskLambdas.IsZero;
 
