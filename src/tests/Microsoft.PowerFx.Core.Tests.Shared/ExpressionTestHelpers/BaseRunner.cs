@@ -300,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         DateTime expectedDT = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value));
 
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete (DateValue.Value)
                         long delta = Math.Abs(originalDV.Value.Ticks - expectedDT.Ticks);
 #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -320,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         DateTime expectedDTV = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value), int.Parse(m.Groups["h"].Value), int.Parse(m.Groups["mm"].Value), int.Parse(m.Groups["s"].Value), int.Parse(m.Groups["ms"].Value));
 
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete (DateTimeValue.Value)
                         long delta = Math.Abs(originalDTV.Value.Ticks - expectedDTV.Ticks);
 #pragma warning restore CS0618 // Type or member is obsolete
 

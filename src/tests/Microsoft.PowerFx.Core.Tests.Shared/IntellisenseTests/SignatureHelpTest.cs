@@ -25,34 +25,46 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// built in debug or release mode.
         /// </summary>
 
+#if NET8_0
+        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
+
+        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
+            ? _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "net8.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "net8.0"), string.Empty)
+                .Replace(Path.Join("bin", "DebugAll", "net8.0"), string.Empty)
+                .Replace(Path.Join("bin", "ReleaseAll", "net8.0"), string.Empty)
+                .Replace(Path.Join("bin", "Debug80", "net8.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release80", "net8.0"), string.Empty)
+            : _baseDirectory;
+#endif 
+
 #if NET7_0
         private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
 
         private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
-            _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
-            _baseDirectory;
-#endif 
-
-#if NETCOREAPP3_1
-        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures");
-
-        private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
-            _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
-            _baseDirectory;
+            ? _baseDirectory
+                .Replace(Path.Join("bin", "Debug", "net7.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "net7.0"), string.Empty)
+                .Replace(Path.Join("bin", "DebugAll", "net7.0"), string.Empty)
+                .Replace(Path.Join("bin", "ReleaseAll", "net7.0"), string.Empty)
+                .Replace(Path.Join("bin", "Debug70", "net7.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release70", "net7.0"), string.Empty)
+            : _baseDirectory;
 #endif 
 
 #if NET462
         private static readonly string _baseDirectory = $@"{Directory.GetCurrentDirectory()}\IntellisenseTests\TestSignatures";
 
         private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
-            _baseDirectory
+            ? _baseDirectory
+                .Replace(@"bin\Debug\net462", string.Empty)
                 .Replace(@"bin\Release\net462", string.Empty)
-                .Replace(@"bin\Release\net462", string.Empty) :
-            _baseDirectory;
+                .Replace(@"bin\DebugAll\net462", string.Empty)
+                .Replace(@"bin\ReleaseAll\net462", string.Empty)
+                .Replace(@"bin\Debug462\net462", string.Empty)
+                .Replace(@"bin\Release462\net462", string.Empty)
+            : _baseDirectory;
 #endif
 
         /// <summary>
@@ -70,6 +82,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 #if NETCOREAPP3_1_OR_GREATER
             var signatureHelpPath = Path.Join(_signatureHelpDirectory, helpId + ".json");
 #else
+            // Can't define Shims on static classes
             var signatureHelpPath = $@"{_signatureHelpDirectory}\{helpId}.json";
 #endif
 

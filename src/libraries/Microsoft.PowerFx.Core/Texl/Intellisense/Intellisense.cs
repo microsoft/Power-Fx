@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(suggestionHandlers);
 
-            _config = config;            
+            _config = config;
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && 
+                if (!suggestion.Type.IsUnknown &&
 
                     // Most type acceptance is straightforward
                     (type.Accepts(suggestion.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
@@ -266,17 +266,13 @@ namespace Microsoft.PowerFx.Intellisense
 
             // InvariantCulture
             if (culture?.LCID == 127)
-            {               
-                intellisenseData.Suggestions.Sort(null);
-                intellisenseData.SubstringSuggestions.Sort(null);
-                resultSuggestions.Sort(new IntellisenseSuggestionComparer(null));
-            }
-            else
             {
-                intellisenseData.Suggestions.Sort(culture);
-                intellisenseData.SubstringSuggestions.Sort(culture);
-                resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
-            }           
+                culture = null;
+            }
+
+            intellisenseData.Suggestions.Sort(culture);
+            intellisenseData.SubstringSuggestions.Sort(culture);
+            resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
 
             var allFunctionsOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
             return new IntellisenseResult(intellisenseData, resultSuggestions, allFunctionsOverloads);

@@ -178,10 +178,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 if (expectedResult.StartsWith("STARTSWITH:"))
                 {
-                    // Not using Assert.StartsWith as in case of failure, we don't see where the issue is
+                    // Not using Assert.StartsWith as in case of failure, we don't see where the issue i                    
+
 #if NET7_0_OR_GREATER
                     Assert.Equal(expectedResult.AsSpan(11), sv.Value.AsSpan(0, expectedResult.Length - 11));
-#else
+#else                    
+                    // Spans aren't allowed in .Net 4.6.2 - https://learn.microsoft.com/en-us/dotnet/api/system.span-1
+                    // error CS0306: The type 'ReadOnlySpan<char>' may not be used as a type argument
                     Assert.Equal(expectedResult.Substring(11), sv.Value.Substring(0, expectedResult.Length - 11));
 #endif
                 }
@@ -271,21 +274,4 @@ namespace Microsoft.PowerFx.Connectors.Tests
             GC.SuppressFinalize(this);
         }
     }
-
-#if NET462
-    public static class Exts2
-    {
-        public static IEnumerable<T> Select<T>(this MatchCollection matchCollection, Func<Match, T> func)
-        {
-            List<T> list = new List<T>();
-
-            foreach (Match m in matchCollection)
-            {
-                list.Add(func(m));
-            }
-
-            return list;
-        }
-    }
-#endif
 }

@@ -136,6 +136,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void AddDir(Dictionary<string, bool> setup, string directory = "")
         {
 #if NETCOREAPP3_1_OR_GREATER
+            // Can't define Shims on static classes
             directory = Path.GetFullPath(directory, TestRoot);
 #endif
 
@@ -182,8 +183,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public void AddFile(Dictionary<string, bool> setup, string thisFile)
-        {           
+        {
 #if NETCOREAPP3_1_OR_GREATER
+            // Can't define Shims on static classes
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 #endif
 

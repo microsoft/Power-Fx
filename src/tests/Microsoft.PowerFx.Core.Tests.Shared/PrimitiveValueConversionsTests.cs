@@ -290,6 +290,7 @@ namespace Microsoft.PowerFx.Core.Tests
 #if NETCOREAPP3_1_OR_GREATER
                 unaryOpCoercionKind = Enum.Parse<UnaryOpKind>(coercionKindStr.Substring("UnaryOpKind.".Length));
 #else
+                // Can't define Shims on static methods
                 unaryOpCoercionKind = (UnaryOpKind)Enum.Parse(typeof(UnaryOpKind), coercionKindStr.Substring("UnaryOpKind.".Length));
 #endif
             }

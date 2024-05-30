@@ -2037,13 +2037,8 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 {
                     var text = response?.Content == null 
                                     ? string.Empty
-#if NET7_0_OR_GREATER
                                     : await response.Content.ReadAsStringAsync(cancellationToken);
-#else
 
-                                     // We cannot pass the cancellation token in .Net 4.6.2
-                                    : await response.Content.ReadAsStringAsync();
-#endif
                     _console.WriteLine($"[HTTP Status {(int)response.StatusCode} {response.StatusCode} - {text}");
                 }
 

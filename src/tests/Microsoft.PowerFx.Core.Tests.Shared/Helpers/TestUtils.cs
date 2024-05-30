@@ -576,6 +576,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 #if NET7_0_OR_GREATER
                     if (uint.TryParse(token.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
 #else
+                    // Spans aren't allowed in .Net 4.6.2 - https://learn.microsoft.com/en-us/dotnet/api/system.span-1
+                    // error CS0306: The type 'ReadOnlySpan<char>' may not be used as a type argument
                     if (uint.TryParse(token.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
 #endif
                     {
