@@ -1,4 +1,4 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsAsTestOptionSetsSetup,RegEx,EnableJsonFunctions
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsPlusTestOptionSetsSetup,RegEx,EnableJsonFunctions
 
 // **** Using test enums, V1 compat. ****
 // Some enum varients are not represented in the Builtin set, including for example, any Boolean enums.

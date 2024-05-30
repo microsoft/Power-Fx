@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
             { "AllEnumsPlusTestEnumsSetup", (AllEnumsPlusTestEnumsSetup, null, null, null) },
-            { "AllEnumsAsTestOptionSetsSetup", (AllEnumsAsTestOptionSetsSetup, null, null, null) },
+            { "AllEnumsPlusTestOptionSetsSetup", (AllEnumsPlusTestOptionSetsSetup, null, null, null) },
             { "Blob", (null, BlobSetup, null, null) },
             { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return newConfig;
         }
 
-        private static PowerFxConfig AllEnumsAsTestOptionSetsSetup(PowerFxConfig config)
+        private static PowerFxConfig AllEnumsPlusTestOptionSetsSetup(PowerFxConfig config)
         {
             var store = new EnumStoreBuilder().WithDefaultEnums();
             var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
