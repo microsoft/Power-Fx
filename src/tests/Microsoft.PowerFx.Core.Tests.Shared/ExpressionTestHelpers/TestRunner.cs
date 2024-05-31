@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -88,6 +88,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             possible.Add("AllEnumsSetup");
             possible.Add("AllEnumsPlusTestEnumsSetup");
+            possible.Add("AllEnumsPlusTestOptionSetsSetup");
             possible.Add("AsyncTestSetup");
             possible.Add("Blob");
             possible.Add("DecimalSupport");
