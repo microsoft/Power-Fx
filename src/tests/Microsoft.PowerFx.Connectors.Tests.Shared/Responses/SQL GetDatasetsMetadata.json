@@ -1,0 +1,35 @@
+{
+  "tabular": {
+    "source": "mru",
+    "displayName": "dataset",
+    "urlEncoding": "single",
+    "tableDisplayName": "Table",
+    "tablePluralName": "Tables"
+  },
+  "blob": null,
+  "datasetFormat": "{server},{database}",
+  "parameters": [
+    {
+      "name": "server",
+      "type": "string",
+      "urlEncoding": "double",
+      "description": "Server name.",
+      "required": true,
+      "x-ms-summary": "Server name"
+    },
+    {
+      "name": "database",
+      "type": "string",
+      "urlEncoding": "double",
+      "description": "Database name.",
+      "required": true,
+      "x-ms-summary": "Database name",
+      "x-ms-dynamic-values": {
+        "path": "/v2/databases?server={server}",
+        "value-collection": "value",
+        "value-path": "Name",
+        "value-title": "DisplayName"
+      }
+    }
+  ]
+}

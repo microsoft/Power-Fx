@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>使用 '.' 無效。</value>
+    <value>'.' 運算子無法用於 {0} 值。</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>公式</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>傳回指定資料表的分組，並結合彙總函式。</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>來源</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>將資料行分組</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>彙總</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>要分組的資料表或集合。</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>將資料分組所依據的資料行名稱。</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>對彙總函式的呼叫。</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>對數字 x 上標另一個數字 y 次方。等同於 x^y。</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>記錄</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>刪除集合的所有記錄。將保留集合的資料行。</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>缺少函式引數類型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ))" 中的 ":Text"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>指示的函式傳回類型 {0} 無效。</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>指示的函式引數類型 {0} 無效。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型常值宣告無效</value>
+    <value>類型常值聲明無效。運算式 '{0}' 不能用於類型定義。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>類型 {0} 定義無效。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>類型定義 {0} 無效並可能包含迴圈。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>無法使用限制類型名稱 {0}。</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>類型 {0} 已經定義。</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>委派警告。對於大型資料集，此引數 '{0}' 的結果在傳遞至 '{1}' 函式前可能遭到截斷。</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>應為文字、數字、布林值或日期/時間值。</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize 至少需要一個分組資料行。</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize 引數必須是分組所依據的現有資料行名稱，或以 'As' 關鍵字命名的公式。</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>資料行 'ThisGroup' 與保留名稱相衝突。請使用 'RenameColumns' 函式來選擇不同的名稱。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>資料來源包含名為 'ThisGroup' 的資料行，其與保留名稱相衝突。請使用 'RenameColumns' 函式來選擇不同的名稱。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>不支援確定資料來源範圍 (使用 'As' 關鍵字)。</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>清除集合中的所有項目，並傳回空的集合。</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>集合</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>要清除的集合。</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>要清除的來源。</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>指定的資料來源無法與此函數一起使用。</value>
     
   </data>
 </root>

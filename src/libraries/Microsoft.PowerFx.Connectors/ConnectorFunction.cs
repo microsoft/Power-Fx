@@ -647,6 +647,8 @@ namespace Microsoft.PowerFx.Connectors
                         runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
                     }
 
+                    // field's name correspond to the key of the fhe field in the record, we need to set it to wire it up correctly to the updated record type
+                    newFieldType.Name = field.Name;
                     fieldTypes.Add(newFieldType);
                     recordType = recordType.Add(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }
@@ -981,23 +983,39 @@ namespace Microsoft.PowerFx.Connectors
             return GetConnectorTypeInternal(compatibility, je);
         }
 
-        // Only called by CdpTabularService.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string valuePath, StringValue sv, ConnectorCompatibility compatibility, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
-        {                       
+        // Only called by ConnectorTable.GetSchema
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _);            
-            tableCapabilities = schema.GetTableCapabilities();
+            OpenApiSchema tableSchema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _);
+            tableCapabilities = tableSchema.GetTableCapabilities();
 
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
-            return GetConnectorTypeInternal(compatibility, je);
+            return GetConnectorTypeInternal(compatibility, je, name, datasetName, tableSchema, tableCapabilities);
         }
 
-        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
+        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je, string name = null, string datasetName = null, OpenApiSchema tableSchema = null, ServiceCapabilities tableCapabilities = null)
         {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
             ConnectorType connectorType = new ConnectorType(schema, compatibility);
+
+            if (tableSchema != null)
+            {
+                ConnectorPermission tablePermission = tableSchema.GetPermission();
+                bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+
+                List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
+
+                if (primaryKeyParts.Count == 0)
+                {
+                    // $$$ need to check what triggers RO for SQL 
+                    //isTableReadOnly = true;
+                }
+
+                connectorType.AddDataSource(new DName(name), datasetName, tableCapabilities, isTableReadOnly);
+            }
 
             return connectorType;
         }
@@ -1456,7 +1474,7 @@ namespace Microsoft.PowerFx.Connectors
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
-            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.ConnectorType.Binary))
             {
                 errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }

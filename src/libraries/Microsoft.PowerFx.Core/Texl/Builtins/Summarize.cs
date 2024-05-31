@@ -124,9 +124,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // All args starting at index 1 need to be identifiers or aggregate functions (wrapped in AsNode node).
                 switch (arg)
                 {
-                    case AsNode nameNode:
+                    case AsNode asNode:
+
+                        if (asNode.Left is FirstNameNode)
+                        {
+                            isValid = false;
+                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeInvalidArg);
+                        }
+
                         existingType = argType;
-                        columnName = nameNode.Right.Name;
+                        columnName = asNode.Right.Name;
                         break;
 
                     case FirstNameNode:
@@ -199,7 +206,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
-            return index > 0 && node is not AsNode ? ParamIdentifierStatus.PossiblyIdentifier : ParamIdentifierStatus.NeverIdentifier;
+            if (index == 0)
+            {
+                return ParamIdentifierStatus.NeverIdentifier; // table name 
+            }
+            
+            if (node is AsNode)
+            {
+                return ParamIdentifierStatus.NeverIdentifier; // expression column
+            }
+
+            return ParamIdentifierStatus.AlwaysIdentifier; // A group by column 
         }
 
         public override bool IsLambdaParam(TexlNode node, int index)
