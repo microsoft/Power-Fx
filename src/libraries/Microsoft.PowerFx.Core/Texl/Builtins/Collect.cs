@@ -284,8 +284,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
                 }
             }
-            
-            if (fValid)
+
+            if (returnType.IsAggregate)
             {
                 if (context.Features.PowerFxV1CompatibilityRules && argTypes.Length == 2 && (argTypes[1].IsRecord || argTypes[1].IsPrimitive))
                 {

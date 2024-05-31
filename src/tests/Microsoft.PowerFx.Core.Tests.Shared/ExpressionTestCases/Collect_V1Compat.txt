@@ -73,4 +73,4 @@ Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name 
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(t1,{Price:200}).Price
-Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.|Error 23-29: Deprecated use of '.'. Please use the 'ShowColumns' function instead.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.
