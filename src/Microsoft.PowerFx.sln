@@ -534,6 +534,7 @@ Global
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{9d4a55fe-d7ad-47ae-969e-6e329eafaa10}*SharedItemsImports = 5
 		tests\Microsoft.PowerFx.Performance.Tests.Shared\Microsoft.PowerFx.Performance.Tests.Shared.projitems*{9e699744-029a-4f6e-a1e2-1d50d5a2f941}*SharedItemsImports = 5
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{9e699744-029a-4f6e-a1e2-1d50d5a2f941}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems*{a5969202-b136-424d-90fd-452d0b99af35}*SharedItemsImports = 5
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{a5969202-b136-424d-90fd-452d0b99af35}*SharedItemsImports = 5
 		tests\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems*{b23198d8-6652-4ce5-aee3-8646202e6bbd}*SharedItemsImports = 13
 		tests\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.projitems*{b91ccc91-2a8d-4411-9a50-709a11b61adc}*SharedItemsImports = 13
@@ -541,6 +542,7 @@ Global
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{b9f8461a-1919-43c6-b6fa-8908a658a882}*SharedItemsImports = 5
 		tests\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems*{ce79fb62-9f71-4be7-aa0d-c31c45c1e4ae}*SharedItemsImports = 5
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{ce79fb62-9f71-4be7-aa0d-c31c45c1e4ae}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems*{cffafb5d-fd5b-4d31-8f31-0dc12c45a4d8}*SharedItemsImports = 5
 		tests\UsePowerFxShims\UsePowerFxShims.projitems*{cffafb5d-fd5b-4d31-8f31-0dc12c45a4d8}*SharedItemsImports = 5
 		tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems*{d274e7b2-0fed-4f9e-b39a-9fa4a8accf39}*SharedItemsImports = 13
 		tests\Microsoft.PowerFx.Interpreter.Tests.Shared\Microsoft.PowerFx.Interpreter.Tests.Shared.projitems*{dfd41e8e-f548-4d44-bffd-3a0ee4e97413}*SharedItemsImports = 5

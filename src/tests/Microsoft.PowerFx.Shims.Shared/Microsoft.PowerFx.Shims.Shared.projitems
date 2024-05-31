@@ -10,6 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
-    <Compile Include="C:\Data\3\Power-Fx\src\tests\Microsoft.PowerFx.Shims.Shared\Shims.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shims.cs" />
   </ItemGroup>
 </Project>
