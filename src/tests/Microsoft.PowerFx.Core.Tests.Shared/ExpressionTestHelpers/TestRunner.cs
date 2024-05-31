@@ -88,7 +88,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
             possible.Add("AllEnumsSetup");
             possible.Add("AllEnumsPlusTestEnumsSetup");
-            possible.Add("AllEnumsPlusTestOptionSetsSetup");
             possible.Add("AsyncTestSetup");
             possible.Add("Blob");
             possible.Add("DecimalSupport");
