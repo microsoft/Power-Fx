@@ -279,12 +279,14 @@ TestYeaNay.Nay
 >> Text( If( false, TestYeaNay.Yea, false ) )
 "Nay"
 
+// 10 is a part of the option set.  In the future we may want to have this return .X instead.
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
 TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
 "CalculatedOptionSetValue"
 
+// 11 is not a part of the option set.
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
 TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
