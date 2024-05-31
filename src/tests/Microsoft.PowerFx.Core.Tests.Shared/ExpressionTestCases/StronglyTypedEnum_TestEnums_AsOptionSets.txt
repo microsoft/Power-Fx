@@ -1,8 +1,9 @@
-﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsPlusTestEnumsSetup,RegEx,EnableJsonFunctions
+﻿#SETUP: StronglyTypedBuiltinEnums,PowerFxV1CompatibilityRules,AllEnumsPlusTestOptionSetsSetup,RegEx,EnableJsonFunctions
 
-// **** Using test enums, V1 compat. ****
+// **** Using test enums AS OPTION SETS, V1 compat. ****
 // Some enum varients are not represented in the Builtin set, including for example, any Boolean enums.
 // The companion _BuiltInEnums version of this file uses only the built in enums.
+// This version of the file usess Option Sets insetead of Enums, which helps test the use of host registered option sets, such as Dataverse option sets.
 
 // Strongly typed enums were strengthened to:
 //    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
@@ -53,22 +54,22 @@ true
 //
 
 >> TestXORYesNo( TestYeaNay.Yea, TestYeaNay.Nay )
-Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+Errors: Error 24-28: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 40-44: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
 
 >> TestColorBlueRampInvert( TestRedRamp.Red25 )
-Errors: Error 36-42: Invalid argument type (Enum (TestRedRamp)). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
+Errors: Error 36-42: Invalid argument type (OptionSetValue (TestRedRamp)). Expecting a OptionSetValue (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
 
 >> TestColorBlueRampInvert( Color.Purple )
-Errors: Error 30-37: Invalid argument type (Enum (Color)). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
+Errors: Error 30-37: Invalid argument type (Enum (Color)). Expecting a OptionSetValue (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
 
 >> TestColorBlueRampInvert( ColorFade( Color.Yellow, 25% ) )
-Errors: Error 25-55: Invalid argument type (Color). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
+Errors: Error 25-55: Invalid argument type (Color). Expecting a OptionSetValue (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
 
 >> ColorFade( TestRedRamp.Red25, 10% )
-Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 22-28: Invalid argument type (Enum (TestRedRamp)). Expecting a Color value instead.
+Errors: Error 0-9: The function 'ColorFade' has some invalid arguments.|Error 22-28: Invalid argument type (OptionSetValue (TestRedRamp)). Expecting a Color value instead.
 
 >> TestColorInvert( TestRedRamp.Red50 )
-Errors: Error 28-34: Invalid argument type (Enum (TestRedRamp)). Expecting a Color value instead.|Error 0-15: The function 'TestColorInvert' has some invalid arguments.
+Errors: Error 28-34: Invalid argument type (OptionSetValue (TestRedRamp)). Expecting a Color value instead.|Error 0-15: The function 'TestColorInvert' has some invalid arguments.
 
 //===========================================================================================================
 //
@@ -81,7 +82,7 @@ Errors: Error 28-34: Invalid argument type (Enum (TestRedRamp)). Expecting a Col
 //
 
 >> TestColorBlueRampInvert( RGBA( 128, 128, 128, 100% ) )
-Errors: Error 25-52: Invalid argument type (Color). Expecting a Enum (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
+Errors: Error 25-52: Invalid argument type (Color). Expecting a OptionSetValue (TestBlueRamp) value instead.|Error 0-23: The function 'TestColorBlueRampInvert' has some invalid arguments.
 
 //===========================================================================================================
 //
@@ -103,22 +104,23 @@ false
 >> TestBooleanNoCoerce.SuperTrue <> TestBooleanNoCoerce.SuperFalse
 true
 
->> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
-true
+// option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
+// true
 
 // Not supported between different enums, even if the same backing kind or if CanCoerceToBackindKind is true
 
 >> TestNumberCoerceTo.V = ErrorKind.Div0
-Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), Enum (ErrorKind).
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCoerceTo), Enum (ErrorKind).
 
 >> TestYesNo.Yes = TestYeaNay.Nay
-Errors: Error 14-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+Errors: Error 14-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.Yes <> TestYeaNay.Nay
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> Color.Red = TestRedRamp.Red100
-Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Enum (Color), Enum (TestRedRamp).
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Enum (Color), OptionSetValue (TestRedRamp).
 
 //===========================================================================================================
 //
@@ -126,10 +128,10 @@ Errors: Error 10-11: Incompatible types for comparison. These types can't be com
 //
 
 >> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
-Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: Enum (TestRedRamp), Color.
+Errors: Error 18-19: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestRedRamp), Color.
 
 >> TestBooleanNoCoerce.SuperTrue = true
-Errors: Error 30-31: Incompatible types for comparison. These types can't be compared: Enum (TestBooleanNoCoerce), Boolean.
+Errors: Error 30-31: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestBooleanNoCoerce), Boolean.
 
 //===========================================================================================================
 //
@@ -191,19 +193,19 @@ Errors: Error 36-46: Invalid argument type. Expecting one of the following: Bool
 Errors: Error 23-33: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.|Error 61-72: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, UntypedObject.
 
 >> TestBooleanNoCoerce.SuperTrue
-TestBooleanNoCoerce.SuperTrue
+TestBooleanNoCoerce.'1'
 
 >> And( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperTrue )
-Errors: Error 24-34: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 55-65: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
+Errors: Error 24-34: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 55-65: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'And' has some invalid arguments.
 
 >> Not( TestBooleanNoCoerce.SuperTrue )
-Errors: Error 24-34: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
+Errors: Error 24-34: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-3: The function 'Not' has some invalid arguments.
 
 >> Or( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperFalse )
-Errors: Error 23-33: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 54-65: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
+Errors: Error 23-33: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 54-65: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 0-2: The function 'Or' has some invalid arguments.
 
 >> Or(Not(TestBooleanNoCoerce.SuperFalse),  Not(TestBooleanNoCoerce.SuperTrue))
-Errors: Error 26-37: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 64-74: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 41-44: The function 'Not' has some invalid arguments.
+Errors: Error 26-37: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 3-6: The function 'Not' has some invalid arguments.|Error 64-74: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a Boolean value instead.|Error 41-44: The function 'Not' has some invalid arguments.
 
 //===========================================================================================================
 //
@@ -250,34 +252,46 @@ false
 //
 
 >> TestXORNoCoerce( true, false )
-Errors: Error 17-21: Invalid argument type (Boolean). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 23-28: Invalid argument type (Boolean). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+Errors: Error 17-21: Invalid argument type (Boolean). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 23-28: Invalid argument type (Boolean). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
 
 >> TestXORNoCoerce( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
 true
 
 >> TestXORNoCoerce( TestYeaNay.Yea, TestYeaNay.Nay )
-Errors: Error 27-31: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 43-47: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+Errors: Error 27-31: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 43-47: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
 
 >> TestXORNoCoerce( TestYesNo.No, TestYesNo.Yes )
-Errors: Error 26-29: Invalid argument type (Enum (TestYesNo)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 40-44: Invalid argument type (Enum (TestYesNo)). Expecting a Enum (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
+Errors: Error 26-29: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 40-44: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a OptionSetValue (TestBooleanNoCoerce) value instead.|Error 0-15: The function 'TestXORNoCoerce' has some invalid arguments.
 
 >> TestXORYesNo( true, false )
 true
 
 >> TestXORYesNo( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
-Errors: Error 33-44: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Enum (TestYesNo) value instead.|Error 65-75: Invalid argument type (Enum (TestBooleanNoCoerce)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+Errors: Error 33-44: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 65-75: Invalid argument type (OptionSetValue (TestBooleanNoCoerce)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
 
 >> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Yea )
-Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+Errors: Error 24-28: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 40-44: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
 
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> TestXORYesNo( TestYesNo.No, true )
+true
+
+>> TestXORYesNo( TestYesNo.No, false )
+false
+
 >> If( false, TestYeaNay.Yea, false )
-TestYeaNay.Nay
+TestYeaNay.'0'
 
 >> Text( If( false, TestYeaNay.Yea, false ) )
 "Nay"
+
+>> If( false, TestYeaNay.Yea, Blank() )
+Blank()
+
+>> Text( If( false, TestYeaNay.Yea, Blank() ) )
+Blank()
 
 // 10 is a part of the option set.  In the future we may want to have this return .X instead.
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
@@ -292,6 +306,18 @@ TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
 "CalculatedOptionSetValue"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, Blank() )
+Blank()
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, Blank() ) )
+Blank()
+
+>> If( false, TestBlueRamp.Blue50, Blank() )
+Blank()
+
+>> Text( If( false, TestBlueRamp.Blue50, Blank() ) )
+Blank()
 
 //===========================================================================================================
 //
@@ -317,19 +343,19 @@ TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 3125
 
 >> Int( TestNumberCompareNumeric.V )
-Errors: Error 0-3: The function 'Int' has some invalid arguments.|Error 29-31: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.
+Errors: Error 0-3: The function 'Int' has some invalid arguments.|Error 29-31: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Decimal value instead.
 
 >> Power( TestNumberCompareNumeric.V, 2 )
-Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Number value instead.
 
 >> TestSignNumber( TestNumberCompareNumeric.V )
-Errors: Error 40-42: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 0-14: The function 'TestSignNumber' has some invalid arguments.
+Errors: Error 40-42: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 0-14: The function 'TestSignNumber' has some invalid arguments.
 
 >> TestSignDecimal( TestNumberCompareNumeric.V )
-Errors: Error 41-43: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.|Error 0-15: The function 'TestSignDecimal' has some invalid arguments.
+Errors: Error 41-43: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Decimal value instead.|Error 0-15: The function 'TestSignDecimal' has some invalid arguments.
 
 >> Power( TestNumberCompareNumeric.V, TestNumberCompareNumeric.V )
-Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 59-61: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 59-61: Invalid argument type (OptionSetValue (TestNumberCompareNumeric)). Expecting a Number value instead.
 
 // Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
 
@@ -358,7 +384,7 @@ true
 false
 
 >> TestYesNo.No
-TestYesNo.No
+TestYesNo.'0'
 
 >> And( TestYesNo.Yes, TestYeaNay.Yea )
 true
@@ -396,43 +422,53 @@ true
 // 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
 //
 
->> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
-false
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
+// false
 
->> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
-true
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
+// true
 
->> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
-true
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
+// true
 
->> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
-false
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
+// false
 
->> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
-false
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
+// false
 
->> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
-true
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
+// true
 
->> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
-true
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
+// true
 
->> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
-false
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
+// false
 
 // Paired with CoerceFromBackingKind, can compare with backing kind
 
 >> TestNumberCompareNumeric.V < 5
-Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
+Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), Decimal.
 
->> TestNumberCompareNumeric.V2 < 5
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), Decimal.
+// option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 < 5
+// Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), Decimal.
 
 >> TestNumberCompareNumericCoerceFrom.V < 5
 false
 
->> TestNumberCompareNumericCoerceFrom.V2 < 5
-false
+// option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 < 5
+// false
 
 //===========================================================================================================
 //
@@ -605,55 +641,55 @@ true
 true
 
 >> TestYesNo.No >= Blank()
-Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), ObjNull.
 
 >> TestYesNo.No < Blank()
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), ObjNull.
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), ObjNull.
 
 >> Blank() < TestYesNo.Yes
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestYesNo).
 
 >> Blank() <= TestYesNo.Yes
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestYesNo).
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestYesNo).
 
->> TestNumberCompareNumeric.V2 < Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+>> TestNumberCompareNumeric.V < Blank()
+Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), ObjNull.
 
->> TestNumberCompareNumeric.V2 <= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+>> TestNumberCompareNumeric.V <= Blank()
+Errors: Error 27-29: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), ObjNull.
 
->> TestNumberCompareNumeric.V2 >= Blank()
-Errors: Error 28-30: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+>> TestNumberCompareNumeric.V >= Blank()
+Errors: Error 27-29: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), ObjNull.
 
->> TestNumberCompareNumeric.V2 > Blank()
-Errors: Error 28-29: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCompareNumeric), ObjNull.
+>> TestNumberCompareNumeric.V > Blank()
+Errors: Error 27-28: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCompareNumeric), ObjNull.
 
->> TestNumberCompareNumeric.V2 = Blank()
+>> TestNumberCompareNumeric.V = Blank()
 false
 
->> TestNumberCompareNumeric.V2 <> Blank()
+>> TestNumberCompareNumeric.V <> Blank()
 true
 
->> Blank() < TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+>> Blank() < TestNumberCompareNumeric.V
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestNumberCompareNumeric).
 
->> Blank() <= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+>> Blank() <= TestNumberCompareNumeric.V
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestNumberCompareNumeric).
 
->> Blank() >= TestNumberCompareNumeric.V2
-Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+>> Blank() >= TestNumberCompareNumeric.V
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestNumberCompareNumeric).
 
->> Blank() > TestNumberCompareNumeric.V2
-Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, Enum (TestNumberCompareNumeric).
+>> Blank() > TestNumberCompareNumeric.V
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: ObjNull, OptionSetValue (TestNumberCompareNumeric).
 
->> Blank() = TestNumberCompareNumeric.V2
+>> Blank() = TestNumberCompareNumeric.V
 false
 
->> Blank() <> TestNumberCompareNumeric.V2
+>> Blank() <> TestNumberCompareNumeric.V
 true
 
 >> TestNumberCoerceTo.V > Blank()
-Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: Enum (TestNumberCoerceTo), ObjNull.
+Errors: Error 21-22: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestNumberCoerceTo), ObjNull.
 
 >> TestNumberCoerceTo.V = Blank()
 false
@@ -742,16 +778,16 @@ Errors: Error 0-7: The function 'Decimal' has some invalid arguments.|Error 18-2
 Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
 
 >> TestYesNo.No = TestYeaNay.Yea
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.No = TestYeaNay.Nay
-Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestYesNo.No <> TestYeaNay.Yea
-Errors: Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Enum (TestYesNo), Enum (TestYeaNay).
+Errors: Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
 
 >> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Nay )
-Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 40-44: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+Errors: Error 24-28: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 40-44: Invalid argument type (OptionSetValue (TestYeaNay)). Expecting a OptionSetValue (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
 
 // Boolean can be used in place (CanCoerceFromBackingKind = true)
 
@@ -768,7 +804,7 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-TestYesNo.No
+TestYesNo.'0'
 
 >> Text( If( false, TestYesNo.Yes, false ) )
 "No"
@@ -776,10 +812,10 @@ TestYesNo.No
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 
 >> Sqrt( TestYesNo.No )
-Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: Invalid argument type (Enum (TestYesNo)). Expecting a Number value instead.
+Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Number value instead.
 
 >> Mod( TestYesNo.No, 2 )
-Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (Enum (TestYesNo)). Expecting a Decimal value instead.
+Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Decimal value instead.
 
 >> TestYesNo.No + 3
 Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
@@ -805,10 +841,10 @@ false
 // Can't compare numerically (CanCompareNumeric = false)
 
 >> TestYesNo.Yes < TestYesNo.No
-Errors: Error 14-15: Unable to compare values of type Enum (TestYesNo).
+Errors: Error 14-15: Unable to compare values of type OptionSetValue (TestYesNo).
 
 >> TestYesNo.Yes >= TestYesNo.No
-Errors: Error 14-16: Unable to compare values of type Enum (TestYesNo).
+Errors: Error 14-16: Unable to compare values of type OptionSetValue (TestYesNo).
 
 // Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
 
@@ -816,4 +852,4 @@ Errors: Error 14-16: Unable to compare values of type Enum (TestYesNo).
 "YesYesNo"
 
 >> TestXORYesNo( TestYesNo.Yes & TestYesNo.No, true )
-Errors: Error 28-29: Invalid argument type (Text). Expecting a Enum (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
+Errors: Error 28-29: Invalid argument type (Text). Expecting a OptionSetValue (TestYesNo) value instead.|Error 0-12: The function 'TestXORYesNo' has some invalid arguments.
