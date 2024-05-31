@@ -3416,7 +3416,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && OptionSetInfo.CanCoerceToBackingKind);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules));
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
@@ -3437,7 +3437,7 @@ namespace Microsoft.PowerFx.Core.Types
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && OptionSetInfo.CanCoerceToBackingKind);
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules));
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
@@ -3520,7 +3520,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Color:
-                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && OptionSetInfo.CanCoerceToBackingKind;
+                    doesCoerce = Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Color && (OptionSetInfo.CanCoerceToBackingKind || !usePowerFxV1CompatibilityRules);
                     break;
                 case DKind.Enum:
                     return CoercesTo(
