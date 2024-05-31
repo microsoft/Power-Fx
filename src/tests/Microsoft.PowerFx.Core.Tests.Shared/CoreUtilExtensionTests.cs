@@ -45,15 +45,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void GetDetailedExceptionMessage_Inner()
         {
-#if NETCOREAPP3_1_OR_GREATER
-            Exception ex = new HttpRequestException("Some HTTP error", new Exception("Some inner exception") { HResult = unchecked((int)0x80740BC0) }) { HResult = unchecked((int)0x80190477) };
-#else
-            Exception innerEx = new Exception("Some inner exception");
-            typeof(Exception).GetField("_HResult", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(innerEx, unchecked((int)0x80740BC0));
-
-            Exception ex = new HttpRequestException("Some HTTP error", innerEx);
-            typeof(Exception).GetField("_HResult", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(ex, unchecked((int)0x80190477));
-#endif
+            Exception ex = NewException<HttpRequestException>(
+                                "Some HTTP error", 
+                                0x80190477, 
+                                NewException<Exception>(
+                                    "Some inner exception", 
+                                    0x80740BC0));
 
             string msg = ex.GetDetailedExceptionMessage();
             string expected = @"Exception System.Net.Http.HttpRequestException: Message='Some HTTP error', HResult=0x80190477, StackTrace=''

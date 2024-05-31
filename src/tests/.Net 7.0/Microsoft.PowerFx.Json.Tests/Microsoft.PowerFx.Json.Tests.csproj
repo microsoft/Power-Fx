@@ -27,7 +27,10 @@
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
 
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
+
   </ItemGroup>
 
-  <Import Project="..\..\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems" Label="Shared" />  
+  <Import Project="..\..\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
 </Project>

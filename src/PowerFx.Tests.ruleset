@@ -472,7 +472,7 @@
     <Rule Id="CA1842" Action="Warning" />
     <Rule Id="CA1843" Action="Warning" />
     <Rule Id="CA1844" Action="Warning" />
-    <Rule Id="CA1846" Action="Warning" />
+    <Rule Id="CA1846" Action="None" />
     <Rule Id="CA1847" Action="Warning" />
     <Rule Id="CA1848" Action="Warning" />
     <Rule Id="CA1849" Action="Warning" />

@@ -71,12 +71,7 @@ namespace Microsoft.PowerFx.Json.Tests
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {
             var directory = _typeSnapshotDirectory;            
-
-#if NETCOREAPP3_1_OR_GREATER
-            var typeSnapshot = Path.Join(_typeSnapshotDirectory, testId + ".json");
-#else
-            var typeSnapshot = $@"{_typeSnapshotDirectory}\{testId}.json";
-#endif
+            var typeSnapshot = PathJoin(_typeSnapshotDirectory, testId + ".json");
 
             var actual = JsonSerializer.Serialize(type, options);
 

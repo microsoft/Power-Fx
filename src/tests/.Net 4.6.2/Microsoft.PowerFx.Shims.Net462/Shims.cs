@@ -39,5 +39,10 @@ namespace Microsoft.PowerFx.Shims.Net462
             cancellationToken.ThrowIfCancellationRequested();
             return content.CopyToAsync(stream);
         }
+
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
+        {
+            return new HashSet<T>(source);
+        }
     } 
 }

@@ -40,9 +40,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
 
   <!--<Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
     <ItemGroup>

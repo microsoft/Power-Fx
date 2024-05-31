@@ -35,13 +35,11 @@
     
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <Compile Update="C:\Data\3\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests.Shared\AssemblyProperties.cs" Link="AssemblyProperties.cs" />
-  </ItemGroup>
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
 
 </Project>

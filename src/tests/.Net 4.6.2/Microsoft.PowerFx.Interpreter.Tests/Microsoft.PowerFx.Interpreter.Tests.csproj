@@ -36,8 +36,11 @@
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj" />
 
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
+
   </ItemGroup>
 
 
   <Import Project="..\..\Microsoft.PowerFx.Interpreter.Tests.Shared\Microsoft.PowerFx.Interpreter.Tests.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
 </Project>
