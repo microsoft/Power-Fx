@@ -912,7 +912,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(returnType);
             Assert.True(returnType.FormulaType is RecordType);
 
-            string input = testConnector._log.ToString();
+            string input = testConnector._log.ToString().Replace("\r", string.Empty);
             var version = PowerPlatformConnectorClient.Version;
             string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
@@ -992,7 +992,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
             Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
 
-            string input = testConnector._log.ToString();
+            string input = testConnector._log.ToString().Replace("\r", string.Empty);
             var version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
  authority: tip1-shared.azure-apim.net
@@ -1066,7 +1066,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 runtimeContext,
                 CancellationToken.None).ConfigureAwait(false);
 
-            string input = testConnector._log.ToString();
+            string input = testConnector._log.ToString().Replace("\r", string.Empty);
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
             Assert.Equal(
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
