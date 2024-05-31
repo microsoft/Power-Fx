@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -41,6 +43,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             { "AllEnumsSetup", (AllEnumsSetup, null, null, null) },
             { "AllEnumsPlusTestEnumsSetup", (AllEnumsPlusTestEnumsSetup, null, null, null) },
+            { "AllEnumsPlusTestOptionSetsSetup", (AllEnumsPlusTestOptionSetsSetup, null, null, null) },
             { "Blob", (null, BlobSetup, null, null) },
             { "DecimalSupport", (null, null, null, null) }, // Decimal is enabled in the C# interpreter
             { "EnableJsonFunctions", (null, EnableJsonFunctions, null, null) },
@@ -97,6 +100,114 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return newConfig;
         }
 
+        private static PowerFxConfig AllEnumsPlusTestOptionSetsSetup(PowerFxConfig config)
+        {
+            var store = new EnumStoreBuilder().WithDefaultEnums();
+            var newConfig = PowerFxConfig.BuildWithEnumStore(store, new TexlFunctionSet(), config.Features);
+
+            // There are no built in enums with boolean values and only one with colors.  Adding these for testing purposes.
+            newConfig.AddEntity(_testYesNo_OptionSet, _testYesNo_OptionSet.EntityName);
+            newConfig.AddEntity(_testYeaNay_OptionSet, _testYeaNay_OptionSet.EntityName);
+            newConfig.AddEntity(_testBooleanNoCoerce_OptionSet, _testBooleanNoCoerce_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCoerceTo_OptionSet, _testNumberCoerceTo_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCompareNumeric_OptionSet, _testNumberCompareNumeric_OptionSet.EntityName);
+            newConfig.AddEntity(_testNumberCompareNumericCoerceFrom_OptionSet, _testNumberCompareNumericCoerceFrom_OptionSet.EntityName);
+            newConfig.AddEntity(_testBlueRampColors_OptionSet, _testBlueRampColors_OptionSet.EntityName);
+            newConfig.AddEntity(_testRedRampColors_OptionSet, _testRedRampColors_OptionSet.EntityName);
+
+            // There are likewise no built in functions that take Boolean backed option sets as parameters
+            newConfig.AddFunction(new TestXORBooleanFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORYesNo_OptionSetFunction() : new Boolean_TestXORYesNoFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerce_OptionSetFunction() : new Boolean_TestXORNoCoerceFunction());
+            newConfig.AddFunction(new TestColorInvertFunction());
+            newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvert_OptionSetFunction() : new Color_TestColorBlueRampInvertFunction());
+            newConfig.AddFunction(new TestSignDecimalFunction());
+            newConfig.AddFunction(new TestSignNumberFunction());
+
+            return newConfig;
+        }
+
+        private static readonly BooleanOptionSet _testYesNo_OptionSet = new BooleanOptionSet(
+            "TestYesNo",
+            new Dictionary<bool, DName>()
+            {
+                { true, new DName("Yes") },
+                { false, new DName("No") }
+            }.ToImmutableDictionary(),
+            canCoerceFromBackingKind: true,
+            canCoerceToBackingKind: true);
+
+        private static readonly BooleanOptionSet _testYeaNay_OptionSet = new BooleanOptionSet(
+            "TestYeaNay",
+            new Dictionary<bool, DName>()
+            {
+                { true, new DName("Yea") },
+                { false, new DName("Nay") }
+            }.ToImmutableDictionary(),
+            canCoerceFromBackingKind: true,
+            canCoerceToBackingKind: true);
+
+        private static readonly BooleanOptionSet _testBooleanNoCoerce_OptionSet = new BooleanOptionSet(
+            "TestBooleanNoCoerce",
+            new Dictionary<bool, DName>()
+            {
+                { true, new DName("SuperTrue") },
+                { false, new DName("SuperFalse") }
+            }.ToImmutableDictionary());
+
+        private static readonly NumberOptionSet _testNumberCoerceTo_OptionSet = new NumberOptionSet(
+            "TestNumberCoerceTo",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCoerceToBackingKind: true);
+
+        private static readonly NumberOptionSet _testNumberCompareNumeric_OptionSet = new NumberOptionSet(
+            "TestNumberCompareNumeric",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCompareNumeric: true);
+
+        private static readonly NumberOptionSet _testNumberCompareNumericCoerceFrom_OptionSet = new NumberOptionSet(
+            "TestNumberCompareNumericCoerceFrom",
+            new Dictionary<double, DName>()
+            {
+                { 10D, new DName("X") },
+                { 5D, new DName("V") },
+                { 1D, new DName("I") }
+            }.ToImmutableDictionary(),
+            canCompareNumeric: true,
+            canCoerceFromBackingKind: true);
+
+        private static readonly ColorOptionSet _testBlueRampColors_OptionSet = new ColorOptionSet(
+            "TestBlueRamp",
+            new Dictionary<double, DName>()
+            {
+                { (double)0xFF0000FFU, new DName("Blue100") },
+                { (double)0xFF3F3FFFU, new DName("Blue75") },
+                { (double)0xFF7F7FFFU, new DName("Blue50") },
+                { (double)0xFFBFBFFFU, new DName("Blue25") },
+                { (double)0xFFFFFFFFU, new DName("Blue0") }
+            }.ToImmutableDictionary());
+
+        private static readonly ColorOptionSet _testRedRampColors_OptionSet = new ColorOptionSet(
+            "TestRedRamp",
+            new Dictionary<double, DName>()
+            {
+                { (double)0xFFFF0000U, new DName("Red100") },
+                { (double)0xFFFF3F3FU, new DName("Red75") },
+                { (double)0xFFFF7F7FU, new DName("Red50") },
+                { (double)0xFFFFBFBFU, new DName("Red25") },
+                { (double)0xFFFFFFFFU, new DName("Red0") }
+            }.ToImmutableDictionary());
+
         private static PowerFxConfig AllEnumsPlusTestEnumsSetup(PowerFxConfig config)
         {
             var store = new EnumStoreBuilder().WithDefaultEnums();
@@ -119,6 +230,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestXORNoCoerceFunction() : new Boolean_TestXORNoCoerceFunction());
             newConfig.AddFunction(new TestColorInvertFunction());
             newConfig.AddFunction(config.Features.StronglyTypedBuiltinEnums ? new STE_TestColorBlueRampInvertFunction() : new Color_TestColorBlueRampInvertFunction());
+            newConfig.AddFunction(new TestSignDecimalFunction());
+            newConfig.AddFunction(new TestSignNumberFunction());
 
             return newConfig;
         }
@@ -228,6 +341,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private class TestSignNumberFunction : ReflectionFunction
+        {
+            public TestSignNumberFunction()
+                : base("TestSignNumber", FormulaType.Number, new[] { FormulaType.Number })
+            {
+            }
+
+            public FormulaValue Execute(NumberValue x)
+            {
+                return NumberValue.New((double)Math.Sign(x.Value));
+            }
+        }
+
+        private class TestSignDecimalFunction : ReflectionFunction
+        {
+            public TestSignDecimalFunction()
+                : base("TestSignDecimal", FormulaType.Decimal, new[] { FormulaType.Decimal })
+            {
+            }
+
+            public FormulaValue Execute(DecimalValue x)
+            {
+                return DecimalValue.New((decimal)Math.Sign(x.Value));
+            }
+        }
+
         private class TestColorInvertFunction : ReflectionFunction
         {
             public TestColorInvertFunction()
@@ -245,6 +384,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public STE_TestColorBlueRampInvertFunction()
                 : base("TestColorBlueRampInvert", FormulaType.Color, new[] { _testBlueRampColors.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x)
+            {
+                var value = Convert.ToUInt32((double)x.ExecutionValue);
+                var c = Color.FromArgb(
+                            (byte)((value >> 24) & 0xFF),
+                            (byte)((value >> 16) & 0xFF),
+                            (byte)((value >> 8) & 0xFF),
+                            (byte)(value & 0xFF));
+                return ColorValue.New(Color.FromArgb(c.A, c.R ^ 0xff, c.G ^ 0xff, c.B ^ 0xff));
+            }
+        }
+
+        private class STE_TestColorBlueRampInvert_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestColorBlueRampInvert_OptionSetFunction()
+                : base("TestColorBlueRampInvert", FormulaType.Color, new[] { _testBlueRampColors_OptionSet.FormulaType })
             {
             }
 
@@ -286,6 +444,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private class STE_TestXORYesNo_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestXORYesNo_OptionSetFunction()
+                : base("TestXORYesNo", FormulaType.Boolean, new[] { _testYesNo_OptionSet.FormulaType, _testYesNo_OptionSet.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
         // Reflection functions don't know how to coerce an enum to a Boolean, if STE is turned off
         private class Boolean_TestXORYesNoFunction : ReflectionFunction
         {
@@ -304,6 +475,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public STE_TestXORNoCoerceFunction()
                 : base("TestXORNoCoerce", FormulaType.Boolean, new[] { _testBooleanNoCoerce.FormulaType, _testBooleanNoCoerce.FormulaType })
+            {
+            }
+
+            public FormulaValue Execute(OptionSetValue x, OptionSetValue y)
+            {
+                return BooleanValue.New((bool)x.ExecutionValue ^ (bool)y.ExecutionValue);
+            }
+        }
+
+        private class STE_TestXORNoCoerce_OptionSetFunction : ReflectionFunction
+        {
+            public STE_TestXORNoCoerce_OptionSetFunction()
+                : base("TestXORNoCoerce", FormulaType.Boolean, new[] { _testBooleanNoCoerce_OptionSet.FormulaType, _testBooleanNoCoerce_OptionSet.FormulaType })
             {
             }
 
@@ -849,6 +1033,350 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var result = replResult.EvalResult;
                 return new RunResult(result);
+            }
+        }
+
+        // These option set classes are internal because they aren't final.
+        // They rely on converting back and forth from strings which isn't very efficient.
+        // They are heare for testing purposes only, matching behavior for hosts that expose Dataverse option sets.
+
+        private class NumberOptionSet : IExternalOptionSet
+        {
+            private readonly DisplayNameProvider _displayNameProvider;
+            private readonly DType _type;
+
+            private readonly bool _canCoerceFromBackingKind;
+            private readonly bool _canCoerceToBackingKind;
+            private readonly bool _canCompareNumeric;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="NumberOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCompareNumeric">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// NameCollisionException is thrown if display and logical names for options are not unique.
+            /// </param>
+            public NumberOptionSet(string name, ImmutableDictionary<double, DName> options, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false, bool canCompareNumeric = false)
+                : this(name, IntDisplayNameProvider(options), canCoerceFromBackingKind, canCoerceToBackingKind, canCompareNumeric)
+            {
+            }
+
+            private static DisplayNameProvider IntDisplayNameProvider(ImmutableDictionary<double, DName> optionSetValues)
+            {
+                return DisplayNameUtility.MakeUnique(optionSetValues.Select(kvp => new KeyValuePair<string, string>(kvp.Key.ToString(CultureInfo.InvariantCulture), kvp.Value)));
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="NumberOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCompareNumeric">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> to generate
+            /// the DisplayNameProvider.
+            /// </param>
+            public NumberOptionSet(string name, DisplayNameProvider displayNameProvider, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false, bool canCompareNumeric = false)
+            {
+                EntityName = new DName(name);
+                Options = displayNameProvider.LogicalToDisplayPairs;
+
+                _canCoerceFromBackingKind = canCoerceFromBackingKind;
+                _canCoerceToBackingKind = canCoerceToBackingKind;
+                _canCompareNumeric = canCompareNumeric;
+
+                _displayNameProvider = displayNameProvider;
+                FormulaType = new OptionSetValueType(this);
+                _type = DType.CreateOptionSetType(this);
+            }
+
+            /// <summary>
+            /// Name of the option set, referenceable from expressions.
+            /// </summary>
+            public DName EntityName { get; }
+
+            /// <summary>
+            /// Contains the members of the option set.
+            /// Key is logical/invariant name, value is display name.
+            /// </summary>
+            public IEnumerable<KeyValuePair<DName, DName>> Options { get; }
+
+            /// <summary>
+            /// Formula Type corresponding to this option set.
+            /// Use in record/table contexts to define the type of fields using this option set.
+            /// </summary>
+            public OptionSetValueType FormulaType { get; }
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                var osft = new OptionSetValueType(_type.OptionSetInfo);
+                optionSetValue = new OptionSetValue(fieldName.Value, osft, double.Parse(fieldName.Value, CultureInfo.InvariantCulture));
+                return true;
+            }
+
+            IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
+
+            DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
+
+            bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
+
+            DType IExternalEntity.Type => _type;
+
+            DKind IExternalOptionSet.BackingKind => DKind.Number;
+
+            bool IExternalOptionSet.CanCoerceFromBackingKind => _canCoerceFromBackingKind;
+
+            bool IExternalOptionSet.CanCoerceToBackingKind => _canCoerceToBackingKind;
+
+            bool IExternalOptionSet.CanCompareNumeric => _canCompareNumeric;
+
+            bool IExternalOptionSet.CanConcatenateStronglyTyped => false;
+
+            public override bool Equals(object obj)
+            {
+                return obj is NumberOptionSet other &&
+                    EntityName == other.EntityName &&
+                    this._type == other._type;
+            }
+
+            public override int GetHashCode()
+            {
+                return Hashing.CombineHash(EntityName.GetHashCode(), this._type.GetHashCode());
+            }
+        }
+
+        private class BooleanOptionSet : IExternalOptionSet
+        {
+            private readonly DisplayNameProvider _displayNameProvider;
+            private readonly DType _type;
+
+            private readonly bool _canCoerceFromBackingKind;
+            private readonly bool _canCoerceToBackingKind;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BooleanOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// NameCollisionException is thrown if display and logical names for options are not unique.
+            /// </param>
+            public BooleanOptionSet(string name, ImmutableDictionary<bool, DName> options, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false)
+                : this(name, IntDisplayNameProvider(options), canCoerceFromBackingKind, canCoerceToBackingKind)
+            {
+            }
+
+            private static DisplayNameProvider IntDisplayNameProvider(ImmutableDictionary<bool, DName> optionSetValues)
+            {
+                return DisplayNameUtility.MakeUnique(optionSetValues.Select(kvp => new KeyValuePair<string, string>(kvp.Key ? "1" : "0", kvp.Value)));
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BooleanOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> to generate
+            /// the DisplayNameProvider.
+            /// </param>
+            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false)
+            {
+                EntityName = new DName(name);
+                Options = displayNameProvider.LogicalToDisplayPairs;
+
+                Contracts.Assert(Options.Count() == 2);
+                Contracts.Assert((Options.First().Key == "0" && Options.Last().Key == "1") || (Options.First().Key == "1" && Options.Last().Key == "0"));
+
+                _canCoerceFromBackingKind = canCoerceFromBackingKind;
+                _canCoerceToBackingKind = canCoerceToBackingKind;
+
+                _displayNameProvider = displayNameProvider;
+                FormulaType = new OptionSetValueType(this);
+                _type = DType.CreateOptionSetType(this);
+            }
+
+            /// <summary>
+            /// Name of the option set, referenceable from expressions.
+            /// </summary>
+            public DName EntityName { get; }
+
+            /// <summary>
+            /// Contains the members of the option set.
+            /// Key is logical/invariant name, value is display name.
+            /// </summary>
+            public IEnumerable<KeyValuePair<DName, DName>> Options { get; }
+
+            /// <summary>
+            /// Formula Type corresponding to this option set.
+            /// Use in record/table contexts to define the type of fields using this option set.
+            /// </summary>
+            public OptionSetValueType FormulaType { get; }
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                var osft = new OptionSetValueType(_type.OptionSetInfo);
+                optionSetValue = new OptionSetValue(fieldName.Value, osft, fieldName.Value != "0");
+                return true;
+            }
+
+            IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
+
+            DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
+
+            bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
+
+            DType IExternalEntity.Type => _type;
+
+            DKind IExternalOptionSet.BackingKind => DKind.Boolean;
+
+            bool IExternalOptionSet.CanCoerceFromBackingKind => _canCoerceFromBackingKind;
+
+            bool IExternalOptionSet.CanCoerceToBackingKind => _canCoerceToBackingKind;
+
+            bool IExternalOptionSet.CanCompareNumeric => false;
+
+            bool IExternalOptionSet.CanConcatenateStronglyTyped => false;
+
+            public override bool Equals(object obj)
+            {
+                return obj is BooleanOptionSet other &&
+                    EntityName == other.EntityName &&
+                    this._type == other._type;
+            }
+
+            public override int GetHashCode()
+            {
+                return Hashing.CombineHash(EntityName.GetHashCode(), this._type.GetHashCode());
+            }
+        }
+
+        private class ColorOptionSet : IExternalOptionSet
+        {
+            private readonly DisplayNameProvider _displayNameProvider;
+            private readonly DType _type;
+
+            private readonly bool _canCoerceFromBackingKind;
+            private readonly bool _canCoerceToBackingKind;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ColorOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// NameCollisionException is thrown if display and logical names for options are not unique.
+            /// </param>
+            public ColorOptionSet(string name, ImmutableDictionary<double, DName> options, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false)
+                : this(name, IntDisplayNameProvider(options), canCoerceFromBackingKind, canCoerceToBackingKind)
+            {
+            }
+
+            private static DisplayNameProvider IntDisplayNameProvider(ImmutableDictionary<double, DName> optionSetValues)
+            {
+                return DisplayNameUtility.MakeUnique(optionSetValues.Select(kvp => new KeyValuePair<string, string>(kvp.Key.ToString(CultureInfo.InvariantCulture), kvp.Value)));
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ColorOptionSet"/> class.
+            /// </summary>
+            /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.
+            /// <param name="canCoerceFromBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// <param name="canCoerceToBackingKind">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+            /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> to generate
+            /// the DisplayNameProvider.
+            /// </param>
+            public ColorOptionSet(string name, DisplayNameProvider displayNameProvider, bool canCoerceFromBackingKind = false, bool canCoerceToBackingKind = false)
+            {
+                EntityName = new DName(name);
+                Options = displayNameProvider.LogicalToDisplayPairs;
+
+                _canCoerceFromBackingKind = canCoerceFromBackingKind;
+                _canCoerceToBackingKind = canCoerceToBackingKind;
+
+                _displayNameProvider = displayNameProvider;
+                FormulaType = new OptionSetValueType(this);
+                _type = DType.CreateOptionSetType(this);
+            }
+
+            /// <summary>
+            /// Name of the option set, referenceable from expressions.
+            /// </summary>
+            public DName EntityName { get; }
+
+            /// <summary>
+            /// Contains the members of the option set.
+            /// Key is logical/invariant name, value is display name.
+            /// </summary>
+            public IEnumerable<KeyValuePair<DName, DName>> Options { get; }
+
+            /// <summary>
+            /// Formula Type corresponding to this option set.
+            /// Use in record/table contexts to define the type of fields using this option set.
+            /// </summary>
+            public OptionSetValueType FormulaType { get; }
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (!Options.Any(option => option.Key == fieldName))
+                {
+                    optionSetValue = null;
+                    return false;
+                }
+
+                var osft = new OptionSetValueType(_type.OptionSetInfo);
+                optionSetValue = new OptionSetValue(fieldName.Value, osft, double.Parse(fieldName.Value, CultureInfo.InvariantCulture));
+                return true;
+            }
+
+            IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Select(option => option.Key);
+
+            DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
+
+            bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
+
+            DType IExternalEntity.Type => _type;
+
+            DKind IExternalOptionSet.BackingKind => DKind.Color;
+
+            bool IExternalOptionSet.CanCoerceFromBackingKind => _canCoerceFromBackingKind;
+
+            bool IExternalOptionSet.CanCoerceToBackingKind => _canCoerceToBackingKind;
+
+            bool IExternalOptionSet.CanCompareNumeric => false;
+
+            bool IExternalOptionSet.CanConcatenateStronglyTyped => false;
+
+            public override bool Equals(object obj)
+            {
+                return obj is ColorOptionSet other &&
+                    EntityName == other.EntityName &&
+                    this._type == other._type;
+            }
+
+            public override int GetHashCode()
+            {
+                return Hashing.CombineHash(EntityName.GetHashCode(), this._type.GetHashCode());
             }
         }
     }

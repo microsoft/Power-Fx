@@ -269,6 +269,24 @@ true
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+false
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"false"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+10
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"10"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+11
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"11"
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
@@ -280,7 +298,31 @@ true
 >> Int( TestNumberCoerceTo.V )
 5
 
+>> Power( TestNumberCoerceTo.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCoerceTo.V )
+1
+
+>> TestSignDecimal( TestNumberCoerceTo.V )
+1
+
 >> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
+3125
+
+>> Int( TestNumberCompareNumeric.V )
+5
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCompareNumeric.V )
+1
+
+>> TestSignDecimal( TestNumberCompareNumeric.V )
+1
+
+>> Power( TestNumberCompareNumeric.V, TestNumberCompareNumeric.V )
 3125
 
 // Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
@@ -720,6 +762,9 @@ false
 
 >> If( false, TestYesNo.Yes, false )
 false
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"false"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 
