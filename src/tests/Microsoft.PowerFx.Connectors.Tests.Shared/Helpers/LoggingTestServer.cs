@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Tests
                 using HttpRequestMessage clone = new HttpRequestMessage(request.Method, request.RequestUri);
 
                 // Copy the request's content (via a MemoryStream) into the cloned object
-                var ms = new MemoryStream();
+                using var ms = new MemoryStream();
                 if (request.Content != null)
                 {                    
                     await request.Content.CopyToAsync(ms, cancellationToken);

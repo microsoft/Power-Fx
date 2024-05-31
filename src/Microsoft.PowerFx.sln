@@ -100,7 +100,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{9D4A55FE-D7AD-47AE-969E-6E329EAFAA10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.PowerFx.Shims.Net462", "tests\.Net 4.6.2\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj", "{E18B7B09-5690-4124-9554-DA4B46A633E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims.Net462", "tests\.Net 4.6.2\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj", "{E18B7B09-5690-4124-9554-DA4B46A633E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
