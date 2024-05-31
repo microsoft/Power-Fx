@@ -275,23 +275,49 @@ Errors: Error 24-28: Invalid argument type (OptionSetValue (TestYeaNay)). Expect
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> TestXORYesNo( TestYesNo.No, true )
+true
+
+>> TestXORYesNo( TestYesNo.No, false )
+false
+
 >> If( false, TestYeaNay.Yea, false )
 TestYeaNay.'0'
 
 >> Text( If( false, TestYeaNay.Yea, false ) )
 "Nay"
 
+>> If( false, TestYeaNay.Yea, Blank() )
+Blank()
+
+>> Text( If( false, TestYeaNay.Yea, Blank() ) )
+Blank()
+
+// 10 is a part of the option set.  In the future we may want to have this return .X instead.
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
 TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
 "CalculatedOptionSetValue"
 
+// 11 is not a part of the option set.
 >> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
 TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
 
 >> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
 "CalculatedOptionSetValue"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, Blank() )
+Blank()
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, Blank() ) )
+Blank()
+
+>> If( false, TestBlueRamp.Blue50, Blank() )
+Blank()
+
+>> Text( If( false, TestBlueRamp.Blue50, Blank() ) )
+Blank()
 
 //===========================================================================================================
 //

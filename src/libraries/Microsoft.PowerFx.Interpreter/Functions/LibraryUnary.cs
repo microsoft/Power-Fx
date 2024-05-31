@@ -1078,8 +1078,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 foreach (var option in optionSetInfo.OptionNames)
                 {
-                    optionSetInfo.TryGetValue(option, out var value);
-                    if ((bool)value.ExecutionValue == (bool)args[0].Value)
+                    if (optionSetInfo.TryGetValue(option, out var value) && (bool)value.ExecutionValue == (bool)args[0].Value)
                     {
                         return value;
                     }
