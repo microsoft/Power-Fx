@@ -15,6 +15,7 @@
     <Description>The core library for all Microsoft Power Fx Compiler targets</Description>
     <Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
@@ -35,5 +36,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

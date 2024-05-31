@@ -13,6 +13,7 @@
     <PackageId>Microsoft.PowerFx.LanguageServerProtocol</PackageId>
     <Title>Microsoft Power Fx LanguageServerProtocol</Title>
     <Description>The LanguageServerProtocol of the Power Fx compiler. See more from https://microsoft.github.io/language-server-protocol/ </Description>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

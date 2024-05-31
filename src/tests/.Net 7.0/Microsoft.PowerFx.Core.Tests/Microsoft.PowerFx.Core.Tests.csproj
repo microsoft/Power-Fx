@@ -20,6 +20,7 @@
     <Title>Microsoft Power Fx Compiler Tests Core</Title>
     <Description>The core test suite for all Microsoft Power Fx Compiler targets</Description>
     <Summary>The core test suite for all Microsoft Power Fx Compiler targets</Summary>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +47,12 @@
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
   <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
 
+  <ItemGroup>
+    <None Include="..\..\..\libraries\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
   <!--<Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
     <ItemGroup>
       <PfxIcon Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\icon.png" />
