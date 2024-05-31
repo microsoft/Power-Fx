@@ -10,6 +10,7 @@
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <OutputType>Library</OutputType>
     <DefineConstants>$(DefineConstants);$(CustomConstants)</DefineConstants>
@@ -29,4 +30,10 @@
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.TexlFunctionExporter.Shared\Microsoft.PowerFx.TexlFunctionExporter.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <None Include="..\..\..\libraries\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
