@@ -65,61 +65,60 @@ Table({Value:1},{Value:6},{Value:5})
 // FUNCTIONS THAT DON'T PROPOGATE MUTABILITY
 
 >> Set( Index(FirstN(b,3),2).Value, 6 )
-Errors: Error 0-36: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 25-31: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Index(LastN(b,3),2).Value, 6 )
-Errors: Error 0-35: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 24-30: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Index(Filter(b,Value>0),2).Value, 6 )
-Errors: Error 0-42: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 31-37: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Index(Sort(b,Value),2).Value, 6 )
-Errors: Error 0-38: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 27-33: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Index(SortByColumns(b,Value),2).Value, 6 )
-Errors: Error 0-47: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 36-42: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(FirstN(b,3)).Value, 6 )
-Errors: Error 0-34: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 23-29: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(LastN(b,3)).Value, 6 )
-Errors: Error 0-33: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 22-28: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(Filter(b,Value>0)).Value, 6 )
-Errors: Error 0-40: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 29-35: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(Sort(b,Value)).Value, 6 )
-Errors: Error 0-36: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 25-31: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(SortByColumns(b,Value)).Value, 6 )
-Errors: Error 0-45: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 34-40: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Last(FirstN(b,3)).Value, 6 )
-Errors: Error 0-33: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 22-28: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Last(LastN(b,3)).Value, 6 )
-Errors: Error 0-32: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 21-27: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Last(Filter(b,Value>0)).Value, 6 )
-Errors: Error 0-39: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 28-34: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Last(Sort(b,Value)).Value, 6 )
-Errors: Error 0-35: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 24-30: The value passed to the 'Set' function cannot be changed.
 
 >> Set( Last(SortByColumns(b,Value)).Value, 6 )
-Errors: Error 0-44: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 33-39: The value passed to the 'Set' function cannot be changed.
 
 // LOOKUP
 
 // LITERALS
 
 >> Set( {a:1,b:2}.a, 3 )
-Errors: Error 0-21: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 14-16: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First([1,2,3]).Value, 4 )
-Errors: Error 0-30: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Errors: Error 19-25: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(Table({a:1},{a:2},{a:3})).a, 5 )
-Errors: Error 0-43: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
-
+Errors: Error 36-38: The value passed to the 'Set' function cannot be changed.
 

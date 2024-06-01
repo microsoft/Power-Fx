@@ -118,9 +118,12 @@ namespace Microsoft.PowerFx.Interpreter
                     return;
                 }
             }
-            else if (arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
-                    (arg0.IsNumeric && arg1.IsNumeric))
+            else if (binding.Features.PowerFxV1CompatibilityRules && 
+                    (arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+                    (arg0.IsNumeric && arg1.IsNumeric)))
             {
+                base.ValidateArgumentIsMutable(binding, args[0], errors);
+
                 return;
             }
 

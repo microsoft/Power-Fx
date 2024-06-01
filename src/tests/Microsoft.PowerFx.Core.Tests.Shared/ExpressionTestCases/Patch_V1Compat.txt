@@ -231,7 +231,7 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{F
 Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:Blank(),Field2:"mars",Field3:Blank(),Field4:Blank()})
 
 >> Patch(Blank(),Blank(),Blank())
-Errors: Error 0-30: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+Blank()
 
 >>Patch(If(false,Table()),{},{})
 Errors: Error 6-23: The value passed to the 'Patch' function cannot be changed.

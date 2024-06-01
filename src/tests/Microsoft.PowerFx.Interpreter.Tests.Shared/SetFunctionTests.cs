@@ -123,19 +123,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
             Assert.Equal(11m, r1.ToObject());
 
-<<<<<<< HEAD:src/tests/Microsoft.PowerFx.Interpreter.Tests/SetFunctionTests.cs
             // Can deep mutate record
             var r2 = engine.Eval("Set(obj.X, 31); obj.X", null, _opts);
             Assert.Equal(31m, r2.ToObject());
         }
 
-=======
-            // But SetField fails 
-            var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
-            Assert.False(r2.IsSuccess);
-        }
-
->>>>>>> d46881019d7342c9fab5f5ff375300b5f5755dda:src/tests/Microsoft.PowerFx.Interpreter.Tests.Shared/SetFunctionTests.cs
         [Fact]
         public void SetRecordFloat()
         {
