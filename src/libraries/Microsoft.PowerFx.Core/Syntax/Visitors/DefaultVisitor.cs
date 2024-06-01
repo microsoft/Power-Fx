@@ -104,5 +104,15 @@ namespace Microsoft.PowerFx.Syntax
         {
             return Default;
         }
+
+        public override TResult Visit(StrInterpNode node, TContext context)
+        {
+            return Default;
+        }
+
+        public override TResult Visit(TypeLiteralNode node, TContext context)
+        {
+            return Default;
+        }
     }
 }

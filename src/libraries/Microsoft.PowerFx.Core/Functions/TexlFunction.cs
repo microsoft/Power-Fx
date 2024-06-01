@@ -195,6 +195,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if this function affects screen aliases ("context variables").
         public virtual bool AffectsAliases => false;
 
+        // Return true if UDFs cannot override this function name.
+        public virtual bool IsRestrictedUDFName => false;
+
         // Return true if this function affects scope variable ("app scope variable or component scope variable").
         public virtual bool AffectsScopeVariable => false;
 

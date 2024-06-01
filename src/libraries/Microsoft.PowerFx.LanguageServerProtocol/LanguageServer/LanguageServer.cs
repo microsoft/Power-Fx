@@ -198,13 +198,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
             catch (Exception ex)
             {
-                _loggerInstance?.LogException(ex);
-
-                // this exists only for backward compat
-                LogUnhandledExceptionHandler?.Invoke(ex);
-                outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, ex.GetDetailedExceptionMessage());
-                return outputBuilder;
+                return HandleException(outputBuilder, input, cancellationToken, ex);
             }
+        }
+
+        private LanguageServerOutputBuilder HandleException(LanguageServerOutputBuilder outputBuilder, LanguageServerInput input, CancellationToken token, Exception exception)
+        {
+            _loggerInstance?.LogException(exception);
+
+            LogUnhandledExceptionHandler?.Invoke(exception);
+
+            // If the request was cancelled, we should interpret and try to add the specific error message with specific error code for cancellation
+            // Else just add the generic internal error message
+            if (!outputBuilder.TryAddRequestCancelledErrorIfApplicable(input.Id, token, exception))
+            {
+                outputBuilder.AddErrorResponse(input.Id, JsonRpcHelper.ErrorCode.InternalError, exception.GetDetailedExceptionMessage());
+            }
+
+            return outputBuilder;
         }
 
         /// <summary>

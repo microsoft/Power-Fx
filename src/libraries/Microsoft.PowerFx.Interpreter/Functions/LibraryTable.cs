@@ -1188,12 +1188,6 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
-            // Nothing to do for empty tables
-            if (tableValue.Rows.Count() == 0)
-            {
-                return CompileTimeTypeWrapperTableValue.AdjustType((TableType)irContext.ResultType, tableValue);
-            }
-
             var keyRecords = new Dictionary<string, RecordValue>();
             var groupByRecords = new Dictionary<string, List<RecordValue>>();
 

@@ -19,10 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpret
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.LanguageServerProtocol", "libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj", "{AC286BA6-D439-4EDA-A468-2B18DB53E163}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{70C7007C-3288-48F1-A1F0-02F5CC837D4E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BF2F760-4DBD-450B-ADED-81548000432D}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
@@ -38,10 +34,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Transport
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors", "libraries\Microsoft.PowerFx.Connectors\Microsoft.PowerFx.Connectors.csproj", "{CEE27893-EE7D-4832-858F-70AF6BA325E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{81586372-FE63-4F6D-923D-B47E94487676}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5EEC2873-35B5-4364-A2A0-97AAD7BF960D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repl", "tools\Repl\Repl.csproj", "{142854D7-409C-4C87-A5B8-39B51477F5B2}"
@@ -55,8 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json", "libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj", "{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{8986E836-2F55-4D71-B23E-50F4A8427A5B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{89514D49-4D5D-4423-A6EC-F0FF1D23EF43}"
 	ProjectSection(SolutionItems) = preProject
 		ReadBenchmarkData.ps1 = ReadBenchmarkData.ps1
@@ -65,9 +55,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl", "libraries\Microsoft.PowerFx.Repl\Microsoft.PowerFx.Repl.csproj", "{889A85AD-6450-4F5E-A404-01CC296C90D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{8A54017E-52C3-45BB-9E87-3F0876688D53}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Connectors.Tests.Shared", "tests\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.shproj", "{B91CCC91-2A8D-4411-9A50-709A11B61ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.PowerFx.TexlFunctionExporter", "tests\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj", "{06373068-0BDC-4BF8-9DAA-7B248C2B577E}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Core.Tests.Shared", "tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.shproj", "{D274E7B2-0FED-4F9E-B39A-9FA4A8ACCF39}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Interpreter.Tests.Shared", "tests\Microsoft.PowerFx.Interpreter.Tests.Shared\Microsoft.PowerFx.Interpreter.Tests.Shared.shproj", "{0DAA552E-5906-42C3-846F-2646EE2C33D3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Json.Tests.Shared", "tests\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.shproj", "{B23198D8-6652-4CE5-AEE3-8646202E6BBD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Performance.Tests.Shared", "tests\Microsoft.PowerFx.Performance.Tests.Shared\Microsoft.PowerFx.Performance.Tests.Shared.shproj", "{21E2744A-4C69-4862-894A-6922C2B8E2F8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Repl.Tests.Shared", "tests\Microsoft.PowerFx.Repl.Tests.Shared\Microsoft.PowerFx.Repl.Tests.Shared.shproj", "{F065BA6A-DB76-409B-9516-1F027753C2F4}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.TexlFunctionExporter.Shared", "tests\Microsoft.PowerFx.TexlFunctionExporter.Shared\Microsoft.PowerFx.TexlFunctionExporter.Shared.shproj", "{6BB3FA08-791F-4418-AD1C-FAB5EE67D88C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Net 3.1", ".Net 3.1", "{6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{0C397C3A-2331-4DCA-A5AF-8838308466E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{99BF2BF9-3A27-412A-A489-C31C7C9E236B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{68392322-F03E-4A71-8AA2-E4462031A491}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{0D2926E8-1577-4FDC-8591-5EB9B8420480}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net 3.1\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{33F53D1E-90E7-45E7-9A54-A140E4AF26AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.TexlFunctionExporter", "tests\.Net 3.1\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj", "{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,14 +103,6 @@ Global
 		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Release|Any CPU.Build.0 = Release|Any CPU
-		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -103,14 +111,6 @@ Global
 		{CEE27893-EE7D-4832-858F-70AF6BA325E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEE27893-EE7D-4832-858F-70AF6BA325E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEE27893-EE7D-4832-858F-70AF6BA325E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81586372-FE63-4F6D-923D-B47E94487676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81586372-FE63-4F6D-923D-B47E94487676}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81586372-FE63-4F6D-923D-B47E94487676}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81586372-FE63-4F6D-923D-B47E94487676}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{142854D7-409C-4C87-A5B8-39B51477F5B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{142854D7-409C-4C87-A5B8-39B51477F5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{142854D7-409C-4C87-A5B8-39B51477F5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -119,22 +119,38 @@ Global
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{889A85AD-6450-4F5E-A404-01CC296C90D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{889A85AD-6450-4F5E-A404-01CC296C90D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{889A85AD-6450-4F5E-A404-01CC296C90D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{889A85AD-6450-4F5E-A404-01CC296C90D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A54017E-52C3-45BB-9E87-3F0876688D53}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06373068-0BDC-4BF8-9DAA-7B248C2B577E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C397C3A-2331-4DCA-A5AF-8838308466E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C397C3A-2331-4DCA-A5AF-8838308466E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C397C3A-2331-4DCA-A5AF-8838308466E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C397C3A-2331-4DCA-A5AF-8838308466E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99BF2BF9-3A27-412A-A489-C31C7C9E236B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99BF2BF9-3A27-412A-A489-C31C7C9E236B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99BF2BF9-3A27-412A-A489-C31C7C9E236B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99BF2BF9-3A27-412A-A489-C31C7C9E236B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68392322-F03E-4A71-8AA2-E4462031A491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68392322-F03E-4A71-8AA2-E4462031A491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68392322-F03E-4A71-8AA2-E4462031A491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68392322-F03E-4A71-8AA2-E4462031A491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D2926E8-1577-4FDC-8591-5EB9B8420480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D2926E8-1577-4FDC-8591-5EB9B8420480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D2926E8-1577-4FDC-8591-5EB9B8420480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D2926E8-1577-4FDC-8591-5EB9B8420480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33F53D1E-90E7-45E7-9A54-A140E4AF26AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F53D1E-90E7-45E7-9A54-A140E4AF26AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33F53D1E-90E7-45E7-9A54-A140E4AF26AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33F53D1E-90E7-45E7-9A54-A140E4AF26AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,21 +159,45 @@ Global
 		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{E59979B0-F267-46DC-B628-941D31C3CB7C} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{AC286BA6-D439-4EDA-A468-2B18DB53E163} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
-		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
-		{70C7007C-3288-48F1-A1F0-02F5CC837D4E} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{CEE27893-EE7D-4832-858F-70AF6BA325E3} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
-		{81586372-FE63-4F6D-923D-B47E94487676} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
-		{5A2EEF08-7A8A-43E6-B498-EFB32B98CC5A} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{142854D7-409C-4C87-A5B8-39B51477F5B2} = {5EEC2873-35B5-4364-A2A0-97AAD7BF960D}
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
-		{8986E836-2F55-4D71-B23E-50F4A8427A5B} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{89514D49-4D5D-4423-A6EC-F0FF1D23EF43} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{889A85AD-6450-4F5E-A404-01CC296C90D9} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
-		{8A54017E-52C3-45BB-9E87-3F0876688D53} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
-		{06373068-0BDC-4BF8-9DAA-7B248C2B577E} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{B91CCC91-2A8D-4411-9A50-709A11B61ADC} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{D274E7B2-0FED-4F9E-B39A-9FA4A8ACCF39} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{0DAA552E-5906-42C3-846F-2646EE2C33D3} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{B23198D8-6652-4CE5-AEE3-8646202E6BBD} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{21E2744A-4C69-4862-894A-6922C2B8E2F8} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{F065BA6A-DB76-409B-9516-1F027753C2F4} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{6BB3FA08-791F-4418-AD1C-FAB5EE67D88C} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{6DEBA875-6D2F-4F19-8B7B-A2E385CB2182} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{0C397C3A-2331-4DCA-A5AF-8838308466E1} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{99BF2BF9-3A27-412A-A489-C31C7C9E236B} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{7CE0C1C3-E6B7-4AF0-B6A3-FF4D0002829F} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{68392322-F03E-4A71-8AA2-E4462031A491} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{0D2926E8-1577-4FDC-8591-5EB9B8420480} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{33F53D1E-90E7-45E7-9A54-A140E4AF26AE} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
+		{ACE89DC7-06E7-4919-B1DB-53E9B39E94F7} = {6DEBA875-6D2F-4F19-8B7B-A2E385CB2182}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		tests\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.projitems*{0c397c3a-2331-4dca-a5af-8838308466e1}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Performance.Tests.Shared\Microsoft.PowerFx.Performance.Tests.Shared.projitems*{0d2926e8-1577-4fdc-8591-5eb9b8420480}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Interpreter.Tests.Shared\Microsoft.PowerFx.Interpreter.Tests.Shared.projitems*{0daa552e-5906-42c3-846f-2646ee2c33d3}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Performance.Tests.Shared\Microsoft.PowerFx.Performance.Tests.Shared.projitems*{21e2744a-4c69-4862-894a-6922c2b8e2f8}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Repl.Tests.Shared\Microsoft.PowerFx.Repl.Tests.Shared.projitems*{33f53d1e-90e7-45e7-9a54-a140e4af26ae}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems*{68392322-f03e-4a71-8aa2-e4462031a491}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.TexlFunctionExporter.Shared\Microsoft.PowerFx.TexlFunctionExporter.Shared.projitems*{6bb3fa08-791f-4418-ad1c-fab5ee67d88c}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Interpreter.Tests.Shared\Microsoft.PowerFx.Interpreter.Tests.Shared.projitems*{7ce0c1c3-e6b7-4af0-b6a3-ff4d0002829f}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems*{99bf2bf9-3a27-412a-a489-c31c7c9e236b}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.TexlFunctionExporter.Shared\Microsoft.PowerFx.TexlFunctionExporter.Shared.projitems*{ace89dc7-06e7-4919-b1db-53e9b39e94f7}*SharedItemsImports = 5
+		tests\Microsoft.PowerFx.Json.Tests.Shared\Microsoft.PowerFx.Json.Tests.Shared.projitems*{b23198d8-6652-4ce5-aee3-8646202e6bbd}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Connectors.Tests.Shared\Microsoft.PowerFx.Connectors.Tests.Shared.projitems*{b91ccc91-2a8d-4411-9a50-709a11b61adc}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems*{d274e7b2-0fed-4f9e-b39a-9fa4a8accf39}*SharedItemsImports = 13
+		tests\Microsoft.PowerFx.Repl.Tests.Shared\Microsoft.PowerFx.Repl.Tests.Shared.projitems*{f065ba6a-db76-409b-9516-1f027753c2f4}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

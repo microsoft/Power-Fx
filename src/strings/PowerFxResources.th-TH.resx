@@ -1863,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>การใช้ '.' ไม่ถูกต้อง</value>
+    <value>ไม่สามารถใช้ตัวดำเนินการ '.' กับค่า {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2970,6 +2970,34 @@
     <value>สูตร</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>ส่งกลับการจัดกลุ่มของตารางที่ระบุ โดยรวมกับฟังก์ชันการรวม</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>แหล่งที่มา</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>คอลัมน์การจัดกลุ่ม</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>การรวม</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>ตารางหรือคอลเลกชันที่จะจัดกลุ่ม</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>ชื่อของคอลัมน์ที่จะจัดกลุ่มตาม</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>การเรียกไปยังฟังก์ชันการรวม</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>y ยกกำลัง x เหมือนกับ x^y</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>เรกคอร์ด</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>ลบเรกคอร์ดทั้งหมดของคอลเลกชัน คอลัมน์ของคอลเลกชันจะยังคงอยู่</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>ชนิดอาร์กิวเมนต์ของฟังก์ชันขาดหายไป ตัวอย่างเช่น ":Text" ใน "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>ชนิดการส่งคืนฟังก์ชันที่ระบุ {0} ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>ชนิดอาร์กิวเมนต์ฟังก์ชันที่ระบุ {0} ไม่ถูกต้อง</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>การกำหนดชนิด {0} ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>การกำหนดชนิด {0} ไม่ถูกต้องและอาจมีรอบ</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>ไม่สามารถใช้ชื่อชนิดที่จำกัด {0}</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>มีการกำหนดชนิด {0} ไว้แล้ว</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>คำเตือนการมอบสิทธิ์ ผลลัพธ์ของอาร์กิวเมนต์นี้ '{0}' อาจถูกตัดทอนสำหรับชุดข้อมูลขนาดใหญ่ก่อนที่จะส่งผ่านไปยังฟังก์ชัน '{1}'</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>ควรเป็นค่าข้อความ ตัวเลข บูลีน หรือวันที่/เวลา</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize ต้องมีคอลัมน์การจัดกลุ่มอย่างน้อยหนึ่งคอลัมน์</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>อาร์กิวเมนต์ Summarize ต้องเป็นชื่อคอลัมน์ที่มีอยู่เพื่อจัดกลุ่มตามหรือตั้งชื่อสูตรด้วยคำสำคัญ 'As'</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>คอลัมน์ 'ThisGroup' ขัดแย้งกับชื่อที่สงวนไว้ ใช้ฟังก์ชัน 'RenameColumns' เพื่อเลือกชื่ออื่น</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>แหล่งข้อมูลประกอบด้วยคอลัมน์ชื่อ 'ThisGroup' ซึ่งขัดแย้งกับชื่อที่สงวนไว้ ใช้ฟังก์ชัน 'RenameColumns' เพื่อเลือกชื่ออื่น</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>ไม่รองรับการกำหนดขอบเขตแหล่งข้อมูล (การใช้คำสำคัญ 'As')</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>ล้างรายการทั้งหมดจากคอลเลกชันและคืนค่าคอลเลกชันว่างเปล่า</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>คอลเลกชัน</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>คอลเลกชันที่จะล้าง</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>แหล่งข้อมูลที่ระบุไม่สามารถใช้กับฟังก์ชันนี้ได้</value>
     
   </data>
 </root>

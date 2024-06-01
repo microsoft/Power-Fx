@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// <summary>
     /// Response for a <see cref="CustomNL2FxParams"/> event.
     /// </summary>
-    public class CustomNL2FxResult
+    public class CustomNL2FxResult : BaseNLResult
     {
         /// <summary>
         /// Possible expression.
