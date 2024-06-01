@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg0(TexlNode arg) => true;
 
         // Unlike the other mutation functions, there is no need to Lazy evaluate the first argument since there is only one arg.
 

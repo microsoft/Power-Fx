@@ -3565,7 +3565,11 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrRequiresMutableFirstArg_ShortMessage" xml:space="preserve">
-    <value>First argument to this function cannot be modified.</value>
+    <value>The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrRequiresMutableFirstArg_LongMessage" xml:space="preserve">
+    <value>Most functions can't pass through modifications, even 'Filter' and 'Sort'. Only 'First', 'Last', 'Index', and 'LookUp' can be used.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">

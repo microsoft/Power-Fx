@@ -28,7 +28,8 @@ namespace Microsoft.PowerFx.Interpreter
         // Set() is a behavior function. 
         public override bool IsSelfContained => false;
 
-        public override bool MutatesArg0 => true;
+        // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
+        public override bool MutatesArg0(TexlNode arg) => arg.Kind != NodeKind.FirstName;
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {

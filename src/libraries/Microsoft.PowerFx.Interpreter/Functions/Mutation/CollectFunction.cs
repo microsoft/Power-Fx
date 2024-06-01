@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter
             return argNum >= 1;
         }
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg0(TexlNode arg) => true;
 
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {

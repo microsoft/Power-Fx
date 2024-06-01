@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Return true if this function affects datasource query options.
         public override bool AffectsDataSourceQueryOptions => true;
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg0(TexlNode arg) => true;
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create | RequiredDataSourcePermissions.Update;
 

@@ -1161,7 +1161,14 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
         {
-            return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
+            if (irContext.ResultType is BlankType)
+            {
+                return new BlankValue(irContext);
+            }
+            else
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
+            }
         }
 
         public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

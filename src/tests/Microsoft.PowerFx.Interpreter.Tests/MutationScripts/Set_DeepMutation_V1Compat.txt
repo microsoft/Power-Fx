@@ -2,11 +2,12 @@
 
 // BASICS
 
+// Newly declared vars are output as part of the testing infrastructure.  Set is actually returning Void.
 >> Set( x, {a:1, b:2})
-void
+{a:1,b:2}
 
 >> Set( y, x )
-void
+{a:1,b:2}
 
 >> Set( x.a, 3 )
 If(true, {test:1}, "Void value (result of the expression can't be used).")
@@ -26,32 +27,99 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 >> y // after set( y.b, ... )
 {a:1,b:4}
 
->> Set( {a:1,b:2}.a, 3 )
-Error 0-21: First argument to this function cannot be modified.
-
 // FUNCTIONS THAT PROPOGATE MUTABILITY
 
 >> Set( a, [1,2,3] )
-void
+Table({Value:1},{Value:2},{Value:3})
 
 >> Set( b, a )
-void
+Table({Value:1},{Value:2},{Value:3})
 
 >> Set( First(a).Value, 4 )
-void
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> a // after Set( First(a).Value, 4 )
-void
+Table({Value:4},{Value:2},{Value:3})
 
 >> b // after Set( First(a).Value, 4 )
-void
+Table({Value:1},{Value:2},{Value:3})
 
 >> Set( Last(b).Value, 5 )
-void
+If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> a // after Set( Last(b).Value, 5 )
-void
+Table({Value:4},{Value:2},{Value:3})
 
 >> b // after Set( Last(b).Value, 5 )
-void
+Table({Value:1},{Value:2},{Value:5})
+
+>> Set( Index(b,2).Value, 6 )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> a // after Set( Index(b,2).Value, 6 )
+Table({Value:4},{Value:2},{Value:3})
+
+>> b // after Set( Index(b,2).Value, 6 )
+Table({Value:1},{Value:6},{Value:5})
+
+// FUNCTIONS THAT DON'T PROPOGATE MUTABILITY
+
+>> Set( Index(FirstN(b,3),2).Value, 6 )
+Errors: Error 0-36: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Index(LastN(b,3),2).Value, 6 )
+Errors: Error 0-35: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Index(Filter(b,Value>0),2).Value, 6 )
+Errors: Error 0-42: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Index(Sort(b,Value),2).Value, 6 )
+Errors: Error 0-38: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Index(SortByColumns(b,Value),2).Value, 6 )
+Errors: Error 0-47: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(FirstN(b,3)).Value, 6 )
+Errors: Error 0-34: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(LastN(b,3)).Value, 6 )
+Errors: Error 0-33: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(Filter(b,Value>0)).Value, 6 )
+Errors: Error 0-40: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(Sort(b,Value)).Value, 6 )
+Errors: Error 0-36: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(SortByColumns(b,Value)).Value, 6 )
+Errors: Error 0-45: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Last(FirstN(b,3)).Value, 6 )
+Errors: Error 0-33: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Last(LastN(b,3)).Value, 6 )
+Errors: Error 0-32: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Last(Filter(b,Value>0)).Value, 6 )
+Errors: Error 0-39: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Last(Sort(b,Value)).Value, 6 )
+Errors: Error 0-35: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( Last(SortByColumns(b,Value)).Value, 6 )
+Errors: Error 0-44: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+// LOOKUP
+
+// LITERALS
+
+>> Set( {a:1,b:2}.a, 3 )
+Errors: Error 0-21: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First([1,2,3]).Value, 4 )
+Errors: Error 0-30: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
+>> Set( First(Table({a:1},{a:2},{a:3})).a, 5 )
+Errors: Error 0-43: The first argument can't be modified. It may be a literal, system, or database record, or use a function that cannot pass through modifications.
+
 
