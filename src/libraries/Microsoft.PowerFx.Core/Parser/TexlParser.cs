@@ -42,6 +42,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // Parse supports Attributes on Named Formulas/Udfs.
             AllowAttributes = 1 << 6,
+
+            // Apart from PA, should always be included.
+            PFxV1 = 1 << 7,
         }
 
         private bool _hasSemicolon = false;
@@ -317,7 +320,16 @@ namespace Microsoft.PowerFx.Core.Parser
                         var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            if (typeLiteralNode.IsValid(out var errors))
+                            {
+                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, true));
+                            }
+                            else
+                            {
+                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, false));
+                                CollectionUtils.Add(ref _errors, errors);
+                            }
+
                             continue;
                         }
 
@@ -376,31 +388,47 @@ namespace Microsoft.PowerFx.Core.Parser
                         _hasSemicolon = false;
                         ParseTrivia();
                         _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
+                      
+                        var errorCount = _errors?.Count;
+
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
                         if (TokEat(TokKind.CurlyClose) == null)
                         {
+                            // Add incomplete UDF as they are needed for intellisense
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: true));
+                        var bodyParseValid = _errors?.Count == errorCount;
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
                         _curs.TokMove();
                         ParseTrivia();
-                        var result = ParseExpr(Precedence.None);
+
+                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+
+                        var errorCount = _errors?.Count;
+                        
+                        var result = isImperative ? ParseUDFBody() : ParseExpr(Precedence.None);
                         ParseTrivia();
 
                         // Check if we're at EOF before a semicolon is found
                         if (_curs.TidCur == TokKind.Eof)
                         {
+                            // Add incomplete UDF as they are needed for intellisense 
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
                             CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat, isValid: true));
+                        var bodyParseValid = _errors?.Count == errorCount;
+
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else
                     {
@@ -427,6 +455,31 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
+        }
+
+        private TexlNode ParseUDFBody()
+        {
+            // Temporarily store flags
+            var flags = _flagsMode.Peek();
+            if (_curs.TidCur == TokKind.CurlyOpen)
+            {
+                _curs.TokMove();
+                ParseTrivia();
+                _flagsMode.Pop();
+                _flagsMode.Push(flags | Flags.EnableExpressionChaining);
+            }
+
+            var result = ParseExpr(Precedence.None);
+            ParseTrivia();
+
+            // Restore flags
+            _flagsMode.Pop();
+            _flagsMode.Push(flags);
+
+            // Expected curly close to terminate the UDF body
+            TokEat(TokKind.CurlyClose);
+
+            return result;
         }
 
         // Parse the script
@@ -536,7 +589,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(culture);
             var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
                              (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0) |
-                             (flags.HasFlag(Flags.TextFirst) ? TexlLexer.Flags.TextFirst : 0);
+                             (flags.HasFlag(Flags.TextFirst) ? TexlLexer.Flags.TextFirst : 0) |
+                             (flags.HasFlag(Flags.PFxV1) ? TexlLexer.Flags.PFxV1 : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
@@ -877,7 +931,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             tok = _curs.TokMove();
 
                             // Stop recursing if we reach a semicolon
-                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas) &&
+                                !_flagsMode.Peek().HasFlag(Flags.EnableExpressionChaining))
                             {
                                 return node;
                             }
@@ -926,7 +981,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Semicolon:
                             _hasSemicolon = true;
-                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            if (_flagsMode.Peek().HasFlag(Flags.NamedFormulas) && !_flagsMode.Peek().HasFlag(Flags.EnableExpressionChaining))
                             {
                                 goto default;
                             }

@@ -1,0 +1,1101 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "ServiceNow",
+    "description": "ServiceNow improves service levels, energizes employees, and enables your enterprise to work at lightspeed. Create, read and update records stored within ServiceNow including Incidents, Questions, Users and more.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "x-ms-keywords": [
+      "servicenow",
+      "service now",
+      "service-now",
+      "incident",
+      "incidents",
+      "task",
+      "tasks",
+      "ticket",
+      "tickets",
+      "user",
+      "users"
+    ],
+    "x-ms-openai-published-to-copilots": [
+      {
+        "AICopilot-enabled": true,
+        "AICopilotName": "Microsoft 365 Copilot"
+      }
+    ],
+    "contact": {
+      "name": "Microsoft"
+    }
+  },
+  "host": "tip1-shared.azure-apim.net",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{connectionId}/api/now/v2/table/{tableType}": {
+      "get": {
+        "summary": "List Records",
+        "description": "Gets records of a certain ServiceNow object type like 'Incidents'",
+        "operationId": "GetRecords",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          },
+          {
+            "$ref": "#/parameters/DisplaySystemRefs"
+          },
+          {
+            "$ref": "#/parameters/ExcludeRefLinks"
+          },
+          {
+            "name": "sysparm_query",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Query",
+            "description": "Encoded query used to filter the result set. Example: active=true^ORDERBYnumber^ORDERBYDESCcategory",
+            "type": "string",
+            "x-ms-visibility": "advanced",
+            "x-ms-test-value": "active=true^ORDERBYshort_description"
+          },
+          {
+            "name": "sysparm_limit",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Limit",
+            "description": "Limit to be applied on pagination. The default is 10000.",
+            "type": "integer",
+            "format": "int32",
+            "x-ms-visibility": "advanced",
+            "x-ms-test-value": 10000
+          },
+          {
+            "name": "sysparm_offset",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Offset",
+            "description": "Number of records to exclude from the query.",
+            "type": "integer",
+            "format": "int32",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetRecordsResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-openai-data": {
+          "openai-enabled": true,
+          "operations": [
+            {
+              "operationId": "GetRecords_incident",
+              "summary": "Gets incident records",
+              "description": "This operation allows to search on serviceNow incident objects. Available properties for incident objects can be found on the response schema for this API.",
+              "parameters": [
+                {
+                  "name": "tableType",
+                  "type": "delete",
+                  "value": "incident"
+                },
+                {
+                  "name": "sysparm_query",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "Encoded query used to filter the result set. Filter timestamps using > and <. Use ^ to separate multiple fields to query on. Example: active=true^sys_created_on>2023-04-08T00:00:00Z^sys_created_on<2023-04-09T00:00:00Z",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/GetRecords_incident"
+                  }
+                }
+              }
+            },
+            {
+              "operationId": "GetRecords_task",
+              "summary": "Gets task records",
+              "description": "This operation allows to search on serviceNow task objects. Available properties for task objects can be found on the response schema for this API.",
+              "parameters": [
+                {
+                  "name": "tableType",
+                  "type": "delete",
+                  "value": "task"
+                },
+                {
+                  "name": "sysparm_query",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "Encoded query used to filter the result set. Filter timestamps using > and <. Use ^ to separate multiple fields to query on. Example: active=true^sys_created_on>2023-04-08T00:00:00Z^sys_created_on<2023-04-09T00:00:00Z",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/GetRecords_task"
+                  }
+                }
+              }
+            },
+            {
+              "operationId": "GetRecords_ticket",
+              "summary": "Gets ticket records",
+              "description": "This operation allows to search on serviceNow ticket objects. Available properties for tticketask objects can be found on the response schema for this API.",
+              "parameters": [
+                {
+                  "name": "tableType",
+                  "type": "delete",
+                  "value": "ticket"
+                },
+                {
+                  "name": "sysparm_query",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "Encoded query used to filter the result set. Filter timestamps using > and <. Use ^ to separate multiple fields to query on. Example: active=true^sys_created_on>2023-04-08T00:00:00Z^sys_created_on<2023-04-09T00:00:00Z",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/GetRecords_ticket"
+                  }
+                }
+              }
+            },
+            {
+              "operationId": "GetRecords_sys_user",
+              "summary": "Gets user records for system users",
+              "description": "This operation allows to search on serviceNow sys_user objects which contains user data. Available properties for user objects can be found on the response schema for this API.",
+              "parameters": [
+                {
+                  "name": "tableType",
+                  "type": "delete",
+                  "value": "sys_user"
+                },
+                {
+                  "name": "sysparm_query",
+                  "type": "upsert",
+                  "properties": [
+                    {
+                      "name": "description",
+                      "value": "Encoded query used to filter the result set. Filter timestamps using > and <. Use ^ to separate multiple fields to query on. Example: active=true^sys_created_on>2023-04-08T00:00:00Z^sys_created_on<2023-04-09T00:00:00Z",
+                      "type": "upsert"
+                    }
+                  ]
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "schema": {
+                    "$ref": "#/x-ms-openai-data/static-schema/GetRecords_sys_user"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#list-records"
+        }
+      },
+      "post": {
+        "summary": "Create Record",
+        "description": "Create a record in a ServiceNow table.",
+        "operationId": "CreateRecord",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecordBody"
+            }
+          },
+          {
+            "$ref": "#/parameters/DisplaySystemRefs"
+          },
+          {
+            "$ref": "#/parameters/ExcludeRefLinks"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/SingleRecordResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#create-record"
+        }
+      }
+    },
+    "/{connectionId}/api/now/v2/table/{tableType}/{sysid}": {
+      "get": {
+        "summary": "Get Record",
+        "description": "Gets a record for a ServiceNow object type like 'Incidents'",
+        "operationId": "GetRecord",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          },
+          {
+            "$ref": "#/parameters/SysIdParameter"
+          },
+          {
+            "$ref": "#/parameters/DisplaySystemRefs"
+          },
+          {
+            "$ref": "#/parameters/ExcludeRefLinks"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SingleRecordResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#get-record"
+        }
+      },
+      "put": {
+        "summary": "Update Record",
+        "description": "Updates a record for a ServiceNow object type like 'Incidents'",
+        "operationId": "UpdateRecord",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          },
+          {
+            "$ref": "#/parameters/SysIdParameter"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecordBody"
+            }
+          },
+          {
+            "$ref": "#/parameters/DisplaySystemRefs"
+          },
+          {
+            "$ref": "#/parameters/ExcludeRefLinks"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SingleRecordResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#update-record"
+        }
+      },
+      "delete": {
+        "summary": "Delete Record",
+        "description": "Deletes a record for a ServiceNow object type like 'Incidents",
+        "operationId": "DeleteRecord",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          },
+          {
+            "$ref": "#/parameters/SysIdParameter"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default"
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#delete-record"
+        }
+      }
+    },
+    "/{connectionId}/api/now/doc/table/schema": {
+      "get": {
+        "summary": "Get Record Types",
+        "description": "Lists the available record types",
+        "operationId": "GetRecordTypes",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetTypesResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#get-record-types"
+        }
+      }
+    },
+    "/{connectionId}/api/now/ui/meta/{tableType}": {
+      "get": {
+        "summary": "Get Record Schema",
+        "description": "Gets the schema of a record type",
+        "operationId": "GetRecordSchema",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "$ref": "#/parameters/TypeParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetRecordSchemaResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#get-record-schema"
+        }
+      }
+    },
+    "/{connectionId}/api/sn_km_api/knowledge/articles": {
+      "get": {
+        "summary": "Get Knowledge Articles",
+        "description": "Returns a list of knowledge base (KB) articles which can be searched and filtered",
+        "operationId": "GetKnowledgeArticles",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Fields",
+            "description": "Comma-separated list of fields from the Knowledge table.",
+            "type": "string",
+            "x-ms-visibility": "important",
+            "x-ms-test-value": "None"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Limit",
+            "description": "Maximum number of records to return.",
+            "type": "integer",
+            "format": "int32",
+            "x-ms-visibility": "important",
+            "x-ms-test-value": 30
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "x-ms-summary": "Query",
+            "description": "Text to search for.",
+            "type": "string",
+            "x-ms-visibility": "important",
+            "x-ms-test-value": "Microsoft"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Filter",
+            "description": "Encoded query to use to filter the result set.",
+            "type": "string",
+            "x-ms-visibility": "advanced"
+          },
+          {
+            "name": "kb",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Kb",
+            "description": "Comma-separated list of knowledge base sys_ids.",
+            "type": "string",
+            "x-ms-visibility": "advanced"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetArticlesResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-no-generic-test": true,
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/service-now/#get-knowledge-articles"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GetTypesResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "description": "Result set of all record types for current instance.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "description": "Display name of the record type.",
+                "type": "string",
+                "x-ms-summary": "Display name"
+              },
+              "value": {
+                "description": "Value of the record type.",
+                "type": "string",
+                "x-ms-summary": "Value"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GetRecordSchemaResponse": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    },
+    "GetArticlesResponse": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "format": "int32",
+              "type": "integer",
+              "x-ms-summary": "Count",
+              "description": "Number of available KB articles"
+            },
+            "end": {
+              "format": "int32",
+              "type": "integer",
+              "x-ms-summary": "End",
+              "description": "Ending index of the result set"
+            },
+            "fields": {
+              "type": "string",
+              "x-ms-summary": "Fields",
+              "description": "Fields in the article"
+            },
+            "filter": {
+              "type": "string",
+              "x-ms-summary": "Filter",
+              "description": "Filter used to acquire the data"
+            },
+            "kb": {
+              "type": "string",
+              "x-ms-summary": "Kb",
+              "description": "List of knowledge base article sys_ids"
+            },
+            "language": {
+              "type": "string",
+              "x-ms-summary": "Language",
+              "description": "List of comma-separated languages of the KB articles that were requested"
+            },
+            "query": {
+              "type": "string",
+              "x-ms-summary": "Query",
+              "description": "Specified request query"
+            },
+            "start": {
+              "type": "string",
+              "x-ms-summary": "Start",
+              "description": "Starting index of result set"
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "x-ms-summary": "Status",
+                  "description": "Status of the call"
+                }
+              }
+            },
+            "ts_query_id": {
+              "type": "string",
+              "x-ms-summary": "Kb",
+              "description": "List of comma-separated languages of the KB articles that were requested"
+            }
+          }
+        },
+        "articles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fields": {
+                "type": "object",
+                "properties": {
+                  "display_value": {
+                    "type": "string",
+                    "x-ms-summary": "Display Value",
+                    "description": "Display value of the requested field"
+                  },
+                  "label": {
+                    "type": "string",
+                    "x-ms-summary": "Label",
+                    "description": "Label representing the requested field"
+                  },
+                  "name": {
+                    "type": "string",
+                    "x-ms-summary": "Name",
+                    "description": "Name of the requested field"
+                  },
+                  "type": {
+                    "type": "string",
+                    "x-ms-summary": "Type",
+                    "description": "Data type of requested field"
+                  },
+                  "value": {
+                    "type": "string",
+                    "x-ms-summary": "Value",
+                    "description": "Value of the requested field"
+                  }
+                },
+                "x-ms-summary": "fields"
+              },
+              "Link": {
+                "type": "string",
+                "x-ms-summary": "Link",
+                "description": "Link to the article"
+              },
+              "id": {
+                "type": "string",
+                "x-ms-summary": "id",
+                "description": "Knowledge article sys_id from the Knowledge [kb_knowledge] table"
+              },
+              "number": {
+                "type": "string",
+                "x-ms-summary": "Number",
+                "description": "Knowledge article sys_id from the Knowledge [kb_knowledge] table"
+              },
+              "rank": {
+                "type": "number",
+                "format": "float",
+                "x-ms-summary": "Rank",
+                "description": "Search rank of article specific to this search"
+              },
+              "score": {
+                "format": "float",
+                "type": "number",
+                "x-ms-summary": "Score",
+                "description": "Relevancy score, results sorted in descending order by score"
+              },
+              "snippet": {
+                "type": "string",
+                "x-ms-summary": "Snippet",
+                "description": "Text showing a small portion of the knowledge article"
+              },
+              "title": {
+                "type": "string",
+                "x-ms-summary": "Title",
+                "description": "Short description or title of the knowledge article"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GetRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {},
+            "x-ms-dynamic-schema": {
+              "operationId": "GetRecordSchema",
+              "parameters": {
+                "tableType": {
+                  "parameter": "tableType"
+                }
+              },
+              "value-path": "schema"
+            }
+          }
+        }
+      }
+    },
+    "RecordBody": {
+      "type": "object",
+      "properties": {},
+      "x-ms-dynamic-schema": {
+        "operationId": "GetRecordSchema",
+        "parameters": {
+          "tableType": {
+            "parameter": "tableType"
+          }
+        },
+        "value-path": "schema"
+      },
+      "x-ms-test-value": {
+        "short_description": "Test Incident"
+      }
+    },
+    "SingleRecordResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "object",
+          "properties": {},
+          "x-ms-dynamic-schema": {
+            "operationId": "GetRecordSchema",
+            "parameters": {
+              "tableType": {
+                "parameter": "tableType"
+              }
+            },
+            "value-path": "schema"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "TypeParameter": {
+      "name": "tableType",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "x-ms-summary": "Record Type",
+      "description": "Type of record to list",
+      "x-ms-test-value": "incident",
+      "x-ms-dynamic-values": {
+        "operationId": "GetRecordTypes",
+        "value-collection": "result",
+        "value-path": "value",
+        "value-title": "label"
+      }
+    },
+    "SysIdParameter": {
+      "name": "sysid",
+      "in": "path",
+      "type": "string",
+      "required": true,
+      "x-ms-summary": "System ID",
+      "description": "System ID for the record."
+    },
+    "DisplaySystemRefs": {
+      "name": "sysparm_display_value",
+      "in": "query",
+      "required": false,
+      "x-ms-summary": "Display System References",
+      "description": "Determines if system references should be included",
+      "x-ms-test-value": false,
+      "type": "boolean",
+      "x-ms-visibility": "advanced",
+      "default": false
+    },
+    "ExcludeRefLinks": {
+      "name": "sysparm_exclude_reference_link",
+      "in": "query",
+      "required": false,
+      "x-ms-summary": "Exclude Reference Links",
+      "description": "Determines if reference links should be excluded",
+      "x-ms-test-value": true,
+      "type": "boolean",
+      "x-ms-visibility": "advanced",
+      "default": true
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "basic"
+    }
+  },
+  "x-ms-capabilities": {
+    "testConnection": {
+      "operationId": "GetRecordTypes"
+    }
+  },
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://www.servicenow.com/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://www.servicenow.com/privacy-statement.html"
+    }
+  ],
+  "x-ms-openai-data": {
+    "static-schema": {
+      "GetRecords_incident": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "string",
+                  "title": "Number",
+                  "description": "the incident number"
+                },
+                "description": {
+                  "type": "string",
+                  "title": "Description",
+                  "description": ""
+                },
+                "sys_created_by": {
+                  "type": "string",
+                  "title": "Created by",
+                  "description": "user_name of the user that created the incident"
+                },
+                "sys_created_on": {
+                  "type": "string",
+                  "title": "Created",
+                  "description": "Timestamp that the incident was created on"
+                },
+                "closed_by": {
+                  "type": "string",
+                  "title": "Closed by",
+                  "description": ""
+                },
+                "closed_at": {
+                  "type": "string",
+                  "title": "Closed",
+                  "description": "Timestamp that the incident was closed on"
+                },
+                "calendar_duration": {
+                  "type": "string",
+                  "title": "Duration",
+                  "description": "Time elapsed before incident was closed"
+                },
+                "assigned_to": {
+                  "type": "string",
+                  "title": "Assigned to",
+                  "description": "Person primarily responsible for working this incident"
+                },
+                "state": {
+                  "type": "string",
+                  "title": "State",
+                  "description": ""
+                },
+                "urgency": {
+                  "type": "string",
+                  "title": "Urgency",
+                  "description": "Measure of the business criticality based on the impact and on the business needs of the Customer"
+                },
+                "category": {
+                  "type": "string",
+                  "title": "Category",
+                  "description": ""
+                },
+                "close_notes": {
+                  "type": "string",
+                  "title": "Resolution notes",
+                  "description": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetRecords_task": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "string",
+                  "title": "Number",
+                  "description": "the task number"
+                },
+                "description": {
+                  "type": "string",
+                  "title": "Description",
+                  "description": ""
+                },
+                "sys_created_by": {
+                  "type": "string",
+                  "title": "Created by",
+                  "description": "user_name of the user that created the task"
+                },
+                "sys_created_on": {
+                  "type": "string",
+                  "title": "Created",
+                  "description": "Timestamp that the task was created on"
+                },
+                "closed_by": {
+                  "type": "string",
+                  "title": "Closed by",
+                  "description": ""
+                },
+                "closed_at": {
+                  "type": "string",
+                  "title": "Closed",
+                  "description": "Timestamp that the task was closed on"
+                },
+                "calendar_duration": {
+                  "type": "string",
+                  "title": "Duration",
+                  "description": "Time elapsed before task was closed"
+                },
+                "assigned_to": {
+                  "type": "string",
+                  "title": "Assigned to",
+                  "description": "Person primarily responsible for working this task"
+                },
+                "state": {
+                  "type": "string",
+                  "title": "State",
+                  "description": ""
+                },
+                "urgency": {
+                  "type": "string",
+                  "title": "Urgency",
+                  "description": "Measure of the business criticality based on the impact and on the business needs of the Customer"
+                },
+                "close_notes": {
+                  "type": "string",
+                  "title": "Resolution notes",
+                  "description": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetRecords_ticket": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "type": "string",
+                  "title": "Number",
+                  "description": "the ticket number"
+                },
+                "description": {
+                  "type": "string",
+                  "title": "Description",
+                  "description": ""
+                },
+                "sys_created_by": {
+                  "type": "string",
+                  "title": "Created by",
+                  "description": "user_name of the user that created the ticket"
+                },
+                "sys_created_on": {
+                  "type": "string",
+                  "title": "Created",
+                  "description": "Timestamp that the ticket was created on"
+                },
+                "closed_by": {
+                  "type": "string",
+                  "title": "Closed by",
+                  "description": ""
+                },
+                "closed_at": {
+                  "type": "string",
+                  "title": "Closed",
+                  "description": "Timestamp that the ticket was closed on"
+                },
+                "calendar_duration": {
+                  "type": "string",
+                  "title": "Duration",
+                  "description": "Time elapsed before ticket was closed"
+                },
+                "assigned_to": {
+                  "type": "string",
+                  "title": "Assigned to",
+                  "description": "Person primarily responsible for working this ticket"
+                },
+                "state": {
+                  "type": "string",
+                  "title": "State",
+                  "description": ""
+                },
+                "urgency": {
+                  "type": "string",
+                  "title": "Urgency",
+                  "description": "Measure of the business criticality based on the impact and on the business needs of the Customer"
+                },
+                "close_notes": {
+                  "type": "string",
+                  "title": "Resolution notes",
+                  "description": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetRecords_sys_user": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sys_id": {
+                  "type": "string",
+                  "title": "Sys ID",
+                  "description": "The id of the user"
+                },
+                "name": {
+                  "type": "string",
+                  "title": "Name",
+                  "description": ""
+                },
+                "user_name": {
+                  "type": "string",
+                  "title": "User ID",
+                  "description": ""
+                },
+                "email": {
+                  "type": "string",
+                  "title": "Email",
+                  "description": ""
+                },
+                "title": {
+                  "type": "string",
+                  "title": "Title",
+                  "description": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/service-now"
+  },
+  "basePath": "/apim/service-now"
+}

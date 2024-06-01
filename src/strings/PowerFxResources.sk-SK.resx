@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textová hodnota, ktorá sa má konvertovať na desatinnú hodnotu.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkciu Decimal možno použiť len v prípade, že je povolená funkcia Kompatibilita s jazykom Power Fx 1.0.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Skonvertuje text predstavujúci číslo na hodnotu s pohyblivou desatinnou čiarkou.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Neplatné použitie „.“</value>
+    <value>Operátor „.“ nemožno používať v hodnotách {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Súčasť</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Prvku {0} chýba atribút {1}.</value>
     
@@ -2970,6 +2970,34 @@
     <value>vzorec</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Vráti zoskupenie zadanej tabuľky, a to skombinovaním s funkciami agregácie.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>zdroj</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>stĺpec_zoskupenia</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregácia</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabuľka alebo kolekcia na zoskupenie.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Názov stĺpca, podľa ktorého sa majú zoskupiť údaje.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Volanie funkcie agregácie.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Umocní číslo x mocniteľom iného čísla y. To isté ako x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>záznam</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Odstráni všetky záznamy kolekcie. Stĺpce kolekcie zostanú zachované.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Chýba typ argumentu funkcie, napríklad „:Text“ vo funkcii „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Uvedený typ vrátenia funkcie {0} je neplatný.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Uvedený typ argumentu funkcie {0} je neplatný.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} už existuje.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarácia explicitnej hodnoty premennej typu bola neplatná</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definícia typu {0} je neplatná.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definícia typu {0} je neplatná a môže obsahovať cykly.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Obmedzený názov typu {0} nemožno použiť.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Typ {0} je už definovaný.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozornenie na delegovanie. Pred odovzdaním funkcii {1} sa výsledok tohto argumentu {0} môže skrátiť pre veľké množiny údajov.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Očakávala sa textová hodnota, numerická hodnota, booleovská hodnota alebo hodnota dátumu/času.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize vyžaduje aspoň jeden stĺpec zoskupenia.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumenty Summarize musia byť buď existujúce názvy stĺpcov, podľa ktorých sa majú zoskupiť údaje, alebo vzorce pomenované pomocou kľúčového slova As.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Stĺpec ThisGroup je v konflikte s vyhradeným názvom. Použite funkciu RenameColumns na výber iného názvu.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Zdroj údajov obsahuje stĺpec s názvom ThisGroup, ktorý je v konflikte s vyhradeným názvom. Použite funkciu RenameColumns na výber iného názvu.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Určenie rozsahu zdroja údajov (použitie kľúčového slova As) nie je podporované.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Vymaže všetky položky z kolekcie a vráti prázdnu kolekciu.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kolekcia</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Kolekcia na vymazanie.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Zadaný zdroj údajov sa nedá použiť s touto funkciou.</value>
     
   </data>
 </root>

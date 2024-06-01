@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>10 進値に変換するテキスト値です。</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>'Decimal' 関数は、'Power Fx 1.0 互換性' 機能が有効である場合にのみ使用できます。</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>数値を表す 'テキスト' を浮動小数値に変換します。</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>'.' の無効な使用です</value>
+    <value>演算子 '.' は、{0} の値で使用できません。.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>コンポーネント</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>要素 '{0}' に属性 '{1}' がありません。</value>
     
@@ -2970,6 +2970,34 @@
     <value>数式</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>指定されたテーブルのグループ化に集計関数を組み合わせて返します。</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>ソース</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>グループ化_列</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>集計</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>グループ化するテーブルまたはコレクション。</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>データのグループ化に使用する列の名前。</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>集約関数の呼び出しです。</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>数値 x を別の数値 y のべき乗値に指定します。x^y と同じです。</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>レコード</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>コレクションのすべてのレコードを削除します。コレクションの列は残ります。</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>関数の引数の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ))" の ":Text") が見つかりません</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>定義された関数は、戻り値のタイプ {0} が正しくありません。</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>定義された関数は、引数タイプ {0} が正しくありません。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>タイプ リテラルの宣言が無効です</value>
+    <value>型リテラルの宣言が正しくありません。式 '{0}' を型の定義に使用することはできません。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>タイプ {0} の定義が正しくありません。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>タイプ {0} の定義が正しくありません。サイクルが含まれている可能性があります。</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>タイプ名 {0} は制限されており、使用できません。</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>タイプ {0} は既に定義されています。</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>委任の警告。この引数 '{0}' の結果となるデータ セットが大きい場合は、'{1}' 関数に渡される前に切り詰められる可能性があります。</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>テキスト、数値、ブール値、または日付/時刻値が必要です。</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize には 1 つ以上のグループ列が必要です。</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize 引数は、グループ化する既存の列名か、'As' キーワードで指定した式であることが必要です。</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>列 'ThisGroup' は予約された名前と競合します。'RenameColumns' 関数を使用し、別の名前を選んでください。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>データ ソースに 'ThisGroup' という名前の列が含まれますが、これは予約された名前と競合します。'RenameColumns' 関数を使用し、別の名前を選んでください。</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>データ ソースの (キーワードに 'As' を使用した) スコープ化はサポートされていません。</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>コレクション内のすべての項目をクリアし、空のコレクションを返します。</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>コレクション</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>クリアするコレクション。</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>消去するソースです。</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>指定されたデータ ソースは、この関数では使用できません。</value>
     
   </data>
 </root>

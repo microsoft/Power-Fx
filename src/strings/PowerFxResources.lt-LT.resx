@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į dešimtainio skaičiaus reikšmę.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkciją „Dešimtainis“ galima naudoti tik tada, jei įjungta funkcija „Suderinama su „Power Fx 1.0“.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konvertuoja tekstą, kuris išreiškia skaičių, į „float“ reikšmę.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Neleistinas „.“ naudojimas.</value>
+    <value>Operatoriaus „.“ negalima naudoti reikšmėse, kurių tipas „{0}“.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponentas</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elemente „{0}“ nėra atributo „{1}“.</value>
     
@@ -2970,6 +2970,34 @@
     <value>formulė</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Pateikia nurodytos lentelės grupavimą kartu su agregavimo funkcijomis.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>šaltinis</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grupavimo_stulpelis</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregavimas</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Lentelė arba rinkinys, kurį reikia sugrupuoti.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Stulpelio, pagal kurį grupuojami duomenys, pavadinimas.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Agregavimo funkcijos iškvietimas.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Pakelia skaičių x kito skaičiaus y laipsniu. Taip pat kaip x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>įrašas</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Panaikinami visi rinkinio įrašai. Rinkinio stulpeliai liks.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Trūksta funkcijos argumento tipo, pvz., „:Text“ funkcijoje „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Nurodytas funkcijos grąžinimo tipas {0} netinkamas.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Nurodytas funkcijos argumento tipas {0} netinkamas.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipo literalo deklaracija buvo neteisinga</value>
+    <value>Netinkamas tipo literalas. Tipo apraše negalima naudoti išraiškos „{0}“.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Netinkamas tipo {0} apibrėžimas.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Tipo {0} apibrėžimas netinkamas, jame gali būti ciklų.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Negalima naudoti apriboto tipo pavadinimo {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tipas {0} jau apibrėžtas.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Perdavimo įspėjimas. Šio argumento rezultatas „{0}“ dideliuose duomenų rinkiniuose gali būti sutrumpintas per perduodant „{1}“ funkcijai.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Tikimasi teksto, skaitinės, Bulio logikos arba datos / laiko reikšmės.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>„Summarize“ reikia bent vieno grupavimo stulpelio.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>„Summarize“ argumentai turi būti esami stulpelių pavadinimai, pagal kuriuos reikia grupuoti, arba formulės, pavadintos su raktažodžiu „As“.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Stulpelis „ThisGroup“ nesuderinamas su rezervuotu pavadinimu. Norėdami pasirinkti kitą pavadinimą, naudokite funkciją „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Duomenų šaltinyje yra stulpelis pavadinimu „ThisGroup“, kuris nesuderinamas su rezervuotu pavadinimu. Norėdami pasirinkti kitą pavadinimą, naudokite funkciją „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Duomenų šaltinio aprėpimas (raktažodžio „As“ naudojimas) nepalaikomas.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Išvalo visus elementus rinkinyje ir pateikia tuščią rinkinį.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>rinkinys</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Rinkinys, kurį reikia išvalyti.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Šaltinis, kurį reikia išvalyti.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Nurodyto duomenų šaltinio negalima naudoti su šia funkcija.</value>
     
   </data>
 </root>

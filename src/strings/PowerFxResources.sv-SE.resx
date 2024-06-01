@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Textvärdet som ska konverteras till ett decimalvärde.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funktionen "Decimaltal" kan bara användas om funktionen "Power Fx 1.0-kompatibilitet" är aktiverad.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Konverterar en text som motsvarar ett tal till ett flyttalsvärde.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Ogiltig användning av "."</value>
+    <value>Operatorn "." operatorn kan inte användas för {0}-värden.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponent</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elementet {0} saknar attributet {1}.</value>
     
@@ -2970,6 +2970,34 @@
     <value>formel</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returnerar en gruppering av den angivna tabellen i kombination med sammansättningsfunktioner.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>källa</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grupperingskolumn</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>sammansättning</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabellen eller samlingen att gruppera.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Namnet på en kolumn att gruppera datan efter.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Ett anrop till en sammansättningsfunktion.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Upphöjer ett tal x till potensen av ett annat tal y. Samma som x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>post</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Tar bort alla poster i en samling. Kolumnerna i samlingen förblir kvar.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Funktionsargumenttypen saknas, till exempel ":Text" i "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Den angivna funktionsreturtypen {0} är ogiltig.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Den angivna funktionsargumenttypen {0} är ogiltig.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' finns redan.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Typdeklarationen var ogiltig</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definitionen av typen {0} är ogiltig.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definitionen av typen {0} är ogiltig och kan innehålla cykler.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Det begränsade typnamnet {0} kan inte användas.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Typen {0} är redan definierad.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeringsvarning. Resultatet av det här argumentet "{0}" kan kortas av för stora datauppsättningar innan det skickas till funktionen "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Ett text-, numeriskt-, booleskt-, eller datum-/tid-värde förväntades.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize kräver minst en grupperingskolumn.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize-argument måste vara antingen befintliga kolumnnamn att gruppera efter eller formler som har namngivits med nyckelordet "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolumnnamnet "ThisGroup" står i konflikt med ett reserverat namn. Använd funktionen "RenameColumns" för att välja ett annat namn.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Datakällan innehåller en kolumn med namnet "ThisGroup", som står i konflikt med ett reserverat namn. Använd funktionen "RenameColumns" för att välja ett annat namn.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Omfattning av datakällan (användning av nyckelordet "As") stöds inte.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Rensar alla objekt från en samling och returnerar den tomma samlingen.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>samling</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Samlingen som ska rensas.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Den angivna datakällan kan inte användas med den här funktionen.</value>
     
   </data>
 </root>

@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Bạn chỉ có thể sử dụng hàm "Decimal" nếu bật tính năng "Tương thích với Power Fx 1.0".</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Sử dụng '.' không hợp lệ</value>
+    <value>Không được sử dụng toán tử "." trên các giá trị {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Thành phần</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Phần tử '{0}' thiếu thuộc tính '{1}'.</value>
     
@@ -2970,6 +2970,34 @@
     <value>công_thức</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Trả về một nhóm của bảng đã xác định, kết hợp với các hàm tổng hợp.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>nguồn</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>nhóm_cột</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>tổng hợp</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Bảng hoặc bộ sưu tập cần nhóm.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Tên của cột cần nhóm dữ liệu.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Một cuộc gọi đến một hàm tổng hợp.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Nâng lũy thừa số x với số mũ một số y khác. Tương tự như x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Xóa tất cả các bản ghi của một bộ sưu tập. Các cột của bộ sưu tập sẽ vẫn còn.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Thiếu kiểu đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Loại trả về hàm đã nêu {0} không hợp lệ.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Loại đối số hàm đã nêu {0} không hợp lệ.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" đã tồn tại.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Khai báo ký tự loại không hợp lệ</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Định nghĩa loại {0} không hợp lệ.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Định nghĩa loại {0} không hợp lệ và có thể chứa chu kỳ.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Không thể sử dụng tên loại bị hạn chế {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Loại {0} đã được xác định.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Cảnh báo về ủy quyền. Kết quả của đối số "{0}" này có thể bị cắt ngắn đối với các tập hợp dữ liệu lớn trước khi được chuyển đến hàm "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Đã dự kiến một giá trị văn bản, số, boolean hoặc ngày/giờ.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize yêu cầu ít nhất một cột nhóm.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Đối số Summarize phải là tên cột hiện có để nhóm hoặc công thức được đặt tên bằng từ khóa "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Cột "ThisGroup" xung đột với tên đặt trước. Hãy sử dụng hàm "RenameColumns" để chọn một tên khác.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Nguồn dữ liệu chứa một cột có tên "ThisGroup", xung đột với tên đặt trước. Hãy sử dụng hàm "RenameColumns" để chọn một tên khác.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ xác định phạm vi nguồn dữ liệu (sử dụng từ khóa "As").</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Xóa tất cả các mục khỏi một bộ sưu tập và trả về bộ sưu tập trống.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>bộ_sưu_tập</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Bộ sưu tập cần xóa.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Không thể sử dụng nguồn dữ liệu được chỉ định với hàm này.</value>
     
   </data>
 </root>

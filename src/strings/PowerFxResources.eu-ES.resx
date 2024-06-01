@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Balio hamartar balio bihurtuko den testu-balioa.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>"Hamartarra" funtzioa soilik "Power Fx 1.0 bertsioaren bateragarritasuna" eginbidea gaituta badago erabil daiteke.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Zenbaki bat adierazten duen "text" elementu bat balio higikari bihurtzen du.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Puntuaren (".") erabilerak ez du balio</value>
+    <value>"." eragilea ezin da erabili {0} balioetan.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Osagaia</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>'{0}' elementuak ez du '{1}' atributua.</value>
     
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Zehaztutako taularen taldekatze bat itzultzen du, agregazio-funtzioekin konbinatuz.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>iturburua</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>taldekatze_zutabea</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregazioa</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Taldekatuko den taula edo bilduma.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Datuak taldekatzeko erabiliko den zutabe baten izena.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Agregazio funtzio baterako deia.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>x zenbakia y zenbakiaz berretzen du. x^y funtzioa bezala.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>erregistroa</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Bilduma bateko erregistro guztiak ezabatzen ditu, baina bildumaren zutabeak gordeko dira.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Funtzio-argudio mota falta da, adibidez, ":Text" hemen: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Adierazitako funtzioaren itzultzeko {0} mota baliogabea da.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Adierazitako funtzioaren argumentuaren {0} mota baliogabea da.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarazio literalaren motak ez du balio</value>
+    <value>Idatzi duzun baieztapen literalak ez du balio. "{0}" adierazpena ezin da erabili motako definizio batean.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>{0} motaren definizioa baliogabea da.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>{0} motako definizioa baliogabea da eta zikloak izan ditzake.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Murriztutako motaren {0} izena ezin da erabili.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>{0} mota zehaztuta dago.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Ordezkatzearen abisua. "{0}" argumentuaren emaitza datu multzo handiengatik ebaki daiteke "{1}" funtziora igaro baino lehen.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Testu-balioa, zenbakizko balioa, balio boolearra edo dataren eta orduaren balioa espero zen.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize funtzioak, gutxienez, taldekatze-zutabe bat behar du.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize argumentuak taldekatzeko zutabe-izenak "As" gako-hitzarekin izendatutako formulak izan behar dute.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>"ThisGroup" zutabea izen erreserbatu batekin gatazkan dago. Erabili "RenameColumns" funtzioa beste izen bat hautatzeko.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Datu-iturburuak "ThisGroup" izeneko zutabe bat du, izen erreserbatu batekin gatazkan dagoena. Erabili "RenameColumns" funtzioa beste izen bat hautatzeko.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Ez da datu-iturburuaren esparrua onartzen ("As" gako-hitzaren erabilera).</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Bilduma baten elementu guztiak garbitzen ditu eta bilduma hutsik itzultzen du.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>bilduma</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Garbituko den bilduma.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Ezabatuko den iturburua.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Ezin da erabili zehaztutako datu-iturburua funtzio honekin.</value>
     
   </data>
 </root>

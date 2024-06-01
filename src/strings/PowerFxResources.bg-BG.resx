@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Текстовата стойност за преобразуване в десетична стойност.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Функцията Decimal може да се използва само ако функцията „Съвместимост с Power Fx 1.0“ е активирана.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Преобразува „текст“, който представлява число, в стойност с плаваща запетая.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Невалидно използване на „.“</value>
+    <value>Операторът . не може да се използва за стойности от тип {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Компонент</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>В елемента „{0}“ липсва атрибута „{1}“.</value>
     
@@ -2970,6 +2970,34 @@
     <value>формула</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Връща групиране на указаната таблица, комбинирано чрез функции за агрегиране.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>източник</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>колона_за_групиране</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>агрегиране</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Таблицата или колекцията за групиране.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Името на колоната, по която да се групират данните.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Извикване на функция за агрегиране.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Повдига число x на степента на друго число y. Същото като x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>запис</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Изтрива всички записи от колекция, като колоните ѝ остават.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Липсва тип на аргумент на функция, например „:Text“ във „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Декларираният тип на връщания резултат на функцията {0} е невалиден.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Декларираният тип аргумент на функцията {0} е невалиден.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ вече съществува.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларацията за типа на литерала е невалидна</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Дефиницията на тип {0} е невалидна.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Дефиницията на тип {0} е невалидна и може да съдържа цикли.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Ограниченото име на тип {0} не може да се използва.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Типът {0} вече е дефиниран.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Предупреждение за делегиране. Резултатът от този аргумент „{0}“ може да бъде отрязан за големи набори от данни, преди да бъде предаден на функцията {1}.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Очаквана е текстова, числова, булева или стойност за дата/час.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>За Summarize се изисква поне една колона за групиране.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Аргументите на Summarize трябва да са съществуващи имена на колони, по които да се групира, или формули, наименувани с ключовата дума As.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Колоната ThisGroup е в конфликт с резервирано име. Използвайте функцията RenameColumns, за да изберете друго име.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Източникът на данни съдържа колона на име ThisGroup, която е в конфликт с резервирано име. Използвайте функцията RenameColumns, за да изберете друго име.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Не се поддържа определяне на обхвата на източника на данни (използване на ключовата дума As).</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Изчиства всички елементи от дадена колекция и връща празната колекция.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>колекция</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Колекцията за изчистване.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Указаният източник на данни не може да се използва с тази функция.</value>
     
   </data>
 </root>

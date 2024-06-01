@@ -1164,6 +1164,88 @@ namespace Microsoft.PowerFx.Functions
             return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
         }
 
+        public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (args[0] is ErrorValue)
+            {
+                return args[0];
+            }
+
+            if (args[0] is not TableValue tableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            var keyRecords = new Dictionary<string, RecordValue>();
+            var groupByRecords = new Dictionary<string, List<RecordValue>>();
+
+            var stringArgs = args.Where(arg => arg is StringValue);
+
+            foreach (var row in tableValue.Rows)
+            {
+                runner.CancellationToken.ThrowIfCancellationRequested();
+
+                if (row.IsError)
+                {
+                    return row.Error;
+                }
+
+                // Blank rows are ignored.
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+
+                var showColumnsArgs = new List<FormulaValue>() { row.Value };
+                showColumnsArgs.AddRange(stringArgs);
+
+                var keyRecord = await ShowColumns(runner, context, IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), showColumnsArgs.ToArray()).ConfigureAwait(false);
+                var key = keyRecord.ToExpression();
+
+                if (!groupByRecords.ContainsKey(key))
+                {
+                    groupByRecords[key] = new List<RecordValue>();
+                }
+
+                keyRecords[key] = (RecordValue)keyRecord;
+                groupByRecords[key].Add(row.Value);
+            }
+
+            var finalRecords = new List<DValue<RecordValue>>();
+
+            foreach (var group in groupByRecords)
+            {
+                runner.CancellationToken.ThrowIfCancellationRequested();
+
+                var newTable = FormulaValue.NewTable((RecordType)FormulaType.Build(tableValue.Type._type.ToRecord()), group.Value);
+                var record = (InMemoryRecordValue)keyRecords[group.Key];
+                var fields = new Dictionary<string, FormulaValue>();
+
+                foreach (var field in record.Fields)
+                {
+                    fields.Add(field.Name, field.Value);
+                }
+
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(newTable);
+
+                foreach (LambdaFormulaValue arg in args.Where(arg => arg is LambdaFormulaValue))
+                {
+                    var result = (InMemoryRecordValue)(await arg.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false));
+
+                    fields[result.Fields.First().Name] = result.Fields.First().Value;
+                }
+
+                finalRecords.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), fields)));
+            }
+
+            return new InMemoryTableValue(irContext, finalRecords);
+        }
+
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
            EvalVisitor runner,
            EvalVisitorContext context,

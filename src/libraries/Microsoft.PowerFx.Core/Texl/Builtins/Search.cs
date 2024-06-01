@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this, appliesToArgument: (argIndex) => argIndex > 1);
         }
 
-        public override ParamIdentifierStatus GetIdentifierParamStatus(Features features, int index)
+        public override ParamIdentifierStatus GetIdentifierParamStatus(TexlNode node, Features features, int index)
         {
             if (!features.SupportColumnNamesAsIdentifiers)
             {

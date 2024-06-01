@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Tekstna vrijednost koja se pretvara u decimalnu vrijednost.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funkcija „Decimalno” može se upotrijebiti samo ako je omogućena značajka „Kompatibilnost s dodatkom Power Fx 1.0”.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Pretvara „tekst” koji predstavlja broj u vrijednost Float.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Korištenje znaka "." nije valjano</value>
+    <value>Operator „.” ne može se upotrijebiti na sljedećim vrijednostima: {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponenta</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elementu "{0}" nedostaje atribut "{1}".</value>
     
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Vraća grupiranje navedene tablice, kombinirajući je s funkcijama agregacije.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>izvor</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>stupac_grupiranja</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregacija</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tablica ili zbirka prema kojoj se treba grupirati.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Naziv stupca prema kojem se podaci trebaju grupirati.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Poziv na funkciju agregacije.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Podiže broj x na potenciju drugog broja y. Isto kao x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>zapis</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Briše sve zapise iz zbirke. Stupci zbirke će ostati.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Nedostaje vrsta argumenta funkcije, na primjer ":Text" u "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Navedena vrsta povrata funkcije {0} nije valjana.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Navedena vrsta argumenta funkcije {0} nije valjana.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” već postoji.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Vrsta doslovna vrijednost deklaracije nije valjana</value>
+    <value>Vrsta doslovne vrijednosti nije valjana. Izraz „{0}” ne može se upotrijebiti u definiciji vrste.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definicija vrste {0} nije valjana.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definicija vrste {0} nije valjana i možda sadrži cikluse.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Naziv ograničene vrste {0} ne može se upotrijebiti.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Vrsta {0} je već definirana.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozorenje delegiranja. Rezultat ovog argumenta „{0}” može se skratiti za velike skupove podataka prije prosljeđivanja funkciji „{1}”.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Očekuje se tekst, Booleanova vrijednost ili vrijednost datum/vrijeme.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Funkcija Summarize zahtijeva barem jedan stupac za grupiranje.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumenti funkcije Summarize moraju biti postojeći nazivi stupaca po kojima će se grupirati ili formule imenovane ključnom riječi „As”.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Stupac „ThisGroup” je u sukobu s rezerviranim nazivom. Upotrijebite funkciju „RenameColumns” za odabir drugog naziva.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Izvor podataka sadrži stupac naziva „ThisGroup”, koji je u sukobu s rezerviranim nazivom. Upotrijebite funkciju „RenameColumns” za odabir drugog naziva.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Određivanje opsega izvora podataka (upotreba ključne riječi „As”) nije podržano.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Briše sve stavke iz zbirke i vraća praznu zbirku.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>zbirka</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Zbirka koja se briše.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Izvor koji treba očistiti.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Navedeni se izvor podataka ne može koristiti s tom funkcijom.</value>
     
   </data>
 </root>

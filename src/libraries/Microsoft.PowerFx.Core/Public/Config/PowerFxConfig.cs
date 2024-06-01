@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
         internal static readonly int DefaultMaximumExpressionLength = 1000;
 
         /// <summary>
-        /// Global symbols. Additional symbols beyond default function set. 
+        /// Global symbols. Additional symbols beyond default function set and primitive types. 
         /// </summary>
         public SymbolTable SymbolTable { get; set; } = new SymbolTable
         {
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx
                 // and checking up to 20 arguments is enough for this validation
                 for (var i = 0; i < Math.Min(function.MaxArity, 20); i++)
                 {
-                    if (function.HasLambdas && function.HasColumnIdentifiers && function.IsLambdaParam(i) && function.ParameterCanBeIdentifier(Features, i))
+                    if (function.HasLambdas && function.HasColumnIdentifiers && function.IsLambdaParam(null, i) && function.ParameterCanBeIdentifier(null, i, Features))
                     {
                         (var message, var _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrInvalidFunction, null, out var errorResource);
                         throw new ArgumentException(message);
@@ -143,8 +143,8 @@ namespace Microsoft.PowerFx
                 {
                     for (var i = 0; i < Math.Min(function.MaxArity, 20); i++)
                     {
-                        if ((function.IsLambdaParam(i) && overloads.Any(ov => ov.HasColumnIdentifiers && ov.ParameterCanBeIdentifier(Features, i))) ||
-                            (function.ParameterCanBeIdentifier(Features, i) && overloads.Any(ov => ov.HasLambdas && ov.IsLambdaParam(i))))
+                        if ((function.IsLambdaParam(null, i) && overloads.Any(ov => ov.HasColumnIdentifiers && ov.ParameterCanBeIdentifier(null, i, Features))) ||
+                            (function.ParameterCanBeIdentifier(null, i, Features) && overloads.Any(ov => ov.HasLambdas && ov.IsLambdaParam(null, i))))
                         {
                             (var message, var _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrInvalidFunction, null, out var errorResource);
                             throw new ArgumentException(message);

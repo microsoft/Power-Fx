@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Nilai teks untuk dikonversi ke nilai Desimal.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Fungsi 'Desimal' hanya dapat digunakan jika fitur 'Kompatibilitas Power Fx 1.0' diaktifkan.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Mengonversi 'teks' yang mewakili angka ke nilai Float.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Penggunaan '.' tidak valid</value>
+    <value>Operator '.' tidak dapat digunakan pada nilai {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponen</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elemen '{0}' kehilangan atribut '{1}'.</value>
     
@@ -2970,6 +2970,34 @@
     <value>rumus</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Mengembalikan pengelompokan tabel tertentu, yang digabungkan dengan fungsi agregasi.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>pengelompokan_kolom</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregasi</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Tabel atau koleksi untuk dikelompokkan.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Nama kolom untuk mengelompokkan data.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Panggilan ke fungsi agregasi.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Meningkatkan jumlah x dengan pangkat y. Sama dengan x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>rekaman</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Menghapus semua rekaman dari suatu kumpulan. Kolom kumpulan akan tetap ada.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Jenis argumen fungsi tidak ada, misalnya ":Text" di "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Jenis pengembalian fungsi {0} yang disebutkan tidak valid.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Jenis argumen fungsi {0} yang disebutkan tidak valid.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarasi harfiah jenis tidak valid</value>
+    <value>Deklarasi harfiah jenis tidak valid. Ekspresi '{0}' tidak dapat digunakan dalam definisi jenis.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definisi jenis {0} tidak valid.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definisi jenis {0} tidak valid dan mungkin berisi siklus.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Nama jenis terbatas {0} tidak dapat digunakan.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Jenis {0} telah ditentukan.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Peringatan delegasi. Hasil argumen '{0}' ini dapat dipotong untuk himpunan data besar sebelum diteruskan ke fungsi '{1}'.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Diharapkan nilai teks, angka, boolean, atau tanggal/waktu.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize memerlukan minimal satu kolom pengelompokan.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Argumen Summarize harus berupa nama kolom yang ada untuk dikelompokkan atau rumus yang diberi nama dengan kata kunci 'As'.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolom 'ThisGroup' bertentangan dengan nama yang dicadangkan. Gunakan fungsi 'RenameColumns' untuk memilih nama lain.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Sumber data berisi kolom bernama 'ThisGroup', yang bertentangan dengan nama yang dicadangkan. Gunakan fungsi 'RenameColumns' untuk memilih nama lain.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Pencakupan sumber data (penggunaan kata kunci 'As') tidak didukung.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Menghapus semua item dari koleksi dan menampilkan koleksi kososng.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>koleksi</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Koleksi untuk dihapus.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Sumber yang akan dihapus.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Sumber data yang ditentukan tidak dapat digunakan dengan fungsi ini.</value>
     
   </data>
 </root>

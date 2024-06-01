@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Nilai teks untuk ditukar kepada nilai Perpuluhan.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Fungsi 'Perpuluhan' hanya boleh digunakan jika ciri 'Keserasian Power Fx 1.0' didayakan.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Menukar 'teks' yang mewakili nombor pada nilai Apungan.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Kegunaan '.' tidak sah</value>
+    <value>Operator '.' tidak boleh digunakan pada nilai {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponen</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Unsur '{0}' tiada atribut '{1}'.</value>
     
@@ -2970,6 +2970,34 @@
     <value>formula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Mengembalikan pengumpulan jadual yang ditentukan melalui penggabungan dengan fungsi pengagregatan.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>sumber</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>lajur_pengumpulan</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>pengagregatan</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Jadual atau koleksi untuk dikumpulkan.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Nama lajur yang digunakan untuk mengumpulkan data.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Panggilan kepada fungsi pengagregatan.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Meningkatkan nombor x kepada kuasa nombor y yang lain. Sama seperti x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>rekod</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Memadamkan semua rekod koleksi. Lajur koleksi akan dikekalkan.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Jenis argumen fungsi tiada, sebagai contoh ":Text" dalam "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Jenis kembali fungsi yang dinyatakan {0} tidak sah.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Jenis argumen fungsi yang dinyatakan {0} tidak sah.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah wujud.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Perisytiharan literal jenis tidak sah</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Takrif jenis {0} tidak sah.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Takrif jenis {0} tidak sah dan mungkin mengandungi kitaran.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Nama jenis yang disekat {0} tidak dapat digunakan.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Jenis {0} sudah ditakrifkan.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Amaran perwakilan. Hasil argumen '{0}' ini mungkin dipotong untuk set data yang besar sebelum dihantar kepada fungsi '{1}'.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Dijangkakan nilai teks, angka, boolean atau tarikh/masa.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize memerlukan sekurang-kurangnya satu lajur pengumpulan.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Fungsi argumen Summarize mestilah sama ada nama lajur yang sedia ada untuk pengumpulan atau formula yang dinamakan dengan kata kunci 'As'.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Lajur 'ThisGroup' bercanggah dengan nama simpanan. Gunakan fungsi 'RenameColumns' untuk memilih nama yang berbeza.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Sumber data mengandungi lajur bernama 'ThisGroup' yang bercanggah dengan nama simpanan. Gunakan fungsi 'RenameColumns' untuk memilih nama yang berbeza.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Penskopan sumber data (penggunaan kata kunci 'As') tidak disokong.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Mengosongkan semua item daripada koleksi dan mengembalikan koleksi yang kosong.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>koleksi</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Koleksi untuk dikosongkan.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Sumber data yang ditentukan tidak boleh digunakan dengan fungsi ini.</value>
     
   </data>
 </root>

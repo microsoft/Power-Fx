@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Kümnendväärtuseks teisendatav tekstväärtus.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Funktsiooni „Kümnendkoht“ saab kasutada ainult juhul, kui funktsioon „Power Fx 1.0 ühilduvus“ on lubatud.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Teisendab arvu tähistava teksti ujukomaarvväärtuseks.</value>
   </data>
@@ -1042,7 +1046,7 @@
     
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
-    <value>Kuupäev, millal funktsioon ''TimeZoneOffset' arvutatakse.</value>
+    <value>Kuupäev, millal funktsioon „TimeZoneOffset“ arvutatakse.</value>
     
   </data>
   <data name="AboutToday" xml:space="preserve">
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Märki "." kasutatakse valesti</value>
+    <value>Tehtemärki „.“ ei saa kasutada väärtuste {0} puhul.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Komponent</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Elemendil {0} puudub atribuut {1}.</value>
     
@@ -2970,6 +2970,34 @@
     <value>valem</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Tagastab määratud tabeli rühmitamise, ühendades selle koondamisfunktsioonidega.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>rühmitamise_veerg</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>koondamine</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Rühmitatav tabel või kogum.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Selle veeru nimi, mille alusel andmed rühmitatakse.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Kutse koondamisfunktsioonile.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Arvutab arvu x astme y. Sama mis x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>kirje</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Kustutab kõik kogumi kirjed. Kogumi veerud jäävad alles.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Puuduv funktsiooni argumendi tüüp, nt „:Text“ kohas „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Märgitud funktsiooni tagastustüüp {0} ei sobi.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Esitatud funktsiooni argumendi tüüp {0} ei sobi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on juba olemas.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tüübi sõnasõnaline deklaratsioon ei sobinud</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tüübi {0} määratlus ei sobi.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Tüübi {0} määratlus ei sobi ja võib sisaldada tsükleid.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Piiratud tüübi nime {0} ei saa kasutada.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Tüüp {0} on juba määratletud.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärpida suurte andmekogumite puhul.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Eeldati tekst-, arv-, loogika- või kuupäeva-/kellaajaväärtust.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize nõuab vähemalt ühte rühmitamisveergu.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Atribuudi Summarize argumendid peavad olema kas olemasolevad veerunimed, mille järgi rühmitada, või märksõnaga „As“ nimetatud valemid.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Veerg „ThisGroup“ on reserveeritud nimega vastuolus. Kasutage mõne muu nime valimiseks funktsiooni „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Andmeallikas sisaldab veergu nimega „ThisGroup“, mis on reserveeritud nimega vastuolus. Kasutage mõne muu nime valimiseks funktsiooni „RenameColumns“.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Andmeallika ulatuse määramist (märksõna „As“ kasutust) ei toetata.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Eemaldab kogumist kõik üksused ja tagastab tühja kogumi.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>kogum</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Tühjendatav kogum.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>
     
   </data>
 </root>

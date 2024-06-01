@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>De tekstwaarde die moet worden geconverteerd naar een decimale waarde.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>De functie Decimaal getal kan alleen worden gebruikt als de functie Compatibiliteit met Power Fx 1.0 is ingeschakeld.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een drijvende waarde.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Ongeldig gebruik van '.'</value>
+    <value>De operator '.' kan niet worden gebruikt voor de volgende waarden: {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Onderdeel</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Voor het element {0} ontbreekt kenmerk {1}.</value>
     
@@ -2970,6 +2970,34 @@
     <value>formule</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Hiermee wordt een groepering van de opgegeven tabel geretourneerd, gecombineerd met aggregatiefuncties.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>bron</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>groeperings_kolom</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregatie</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>De tabel of verzameling die moet worden gegroepeerd.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>De naam van een kolom op basis waarvan de gegevens moeten worden gegroepeerd.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Een aanroep naar een aggregatiefunctie.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Hiermee wordt het getal x verheven tot de macht van een ander getal y. Hetzelfde als x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Hiermee worden alle records van een verzameling verwijderd. De kolommen van de verzameling blijven behouden.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Ontbrekend argumenttype van functie, bijvoorbeeld de ':Text' in 'FindMonth( d:Text ):Number = Month( DateParse( d ))'</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Het vermelde retourtype van de functie {0} is ongeldig.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Het vermelde argumenttype van de functie {0} is ongeldig.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type letterlijke aangifte was ongeldig</value>
+    <value>Letterlijke aangifte van het type is ongeldig. De expressie {0} kan niet in een typedefinitie worden gebruikt.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definitie van type {0} is ongeldig.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definitie van het type {0} is ongeldig en bevat mogelijk cycli.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>De beperkte naam van type {0} kan niet worden gebruikt.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Type {0} is al gedefinieerd.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Waarschuwing bij overdracht. Het resultaat van dit argument {0} wordt mogelijk afgekapt voor grote gegevenssets voordat het wordt doorgegeven aan de functie {1}.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Er wordt een tekstwaarde, numerieke waarde, booleaanse waarde date/time-waarde verwacht.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize vereist ten minste één groeperingskolom.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize-argumenten moeten bestaande kolomnamen zijn om op te groeperen of formules die een naam hebben gekregen met het trefwoord As.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Kolom ThisGroup botst met een gereserveerde naam. Gebruik de functie RenameColumns om een andere naam te kiezen.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>De gegevensbron bevat een kolom met de naam ThisGroup, die botst met een gereserveerde naam. Gebruik de functie RenameColumns om een andere naam te kiezen.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Scoping van de gegevensbron (gebruik van trefwoord As) wordt niet ondersteund.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Hiermee worden alle items uit de verzameling gewist en wordt een lege verzameling geretourneerd.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>verzameling</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>De verzameling die moet worden gewist.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>De bron om te wissen.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>De opgegeven gegevensbron kan niet worden gebruikt met deze functie.</value>
     
   </data>
 </root>

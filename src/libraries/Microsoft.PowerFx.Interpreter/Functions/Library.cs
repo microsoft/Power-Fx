@@ -357,7 +357,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Concatenate.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: StringOrOptionSetBackedByString,
+                    checkRuntimeTypes: StringOrOptionSet,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Concatenate)
@@ -1609,6 +1609,10 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sum)
+            },
+            {
+                BuiltinFunctionsCore.Summarize,
+                NoErrorHandling(Summarize)
             },
             {
                 BuiltinFunctionsCore.SumT,

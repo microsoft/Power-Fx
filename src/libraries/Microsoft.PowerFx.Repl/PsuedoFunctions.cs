@@ -2,9 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Syntax;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -44,5 +45,46 @@ namespace Microsoft.PowerFx.Repl
         }
 
         public string Name => "IR";        
+    }
+
+    /// <summary>
+    /// Print the suggestions of an expression. 
+    /// </summary>
+    public class SuggestionsPseudoFunction : IPseudoFunction
+    {
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
+        {
+            var innerExp = checkResult.ApplyParse().Text;
+
+            if (innerExp.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && innerExp.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+            {
+                innerExp = innerExp.Substring(1, innerExp.Length - 2);
+            }
+
+            (var expression2, var cursorPosition) = Decode(innerExp);
+
+            var suggestions = repl.Engine.Suggest(repl.Engine.Check(expression2), cursorPosition);
+            var suggestionsText = string.Join(", ", suggestions.Suggestions.Select(s => s.DisplayText.Text));
+
+            await repl.Output.WriteLineAsync(suggestionsText, OutputKind.Repl, cancel)
+                .ConfigureAwait(false);
+        }
+
+        private static (string, int) Decode(string expression)
+        {
+            var cursorPosition = expression.Length;
+            var cursorMatches = Regex.Matches(expression, @"\|");
+
+            if (cursorMatches.Count > 0)
+            {
+                cursorPosition = cursorMatches[0].Index;
+            }
+
+            expression = expression.Replace("|", string.Empty);
+
+            return (expression, cursorPosition);
+        }
+
+        public string Name => "Suggestions";
     }
 }

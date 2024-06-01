@@ -10,6 +10,7 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -807,6 +808,76 @@ namespace Microsoft.PowerFx.Connectors
         internal static bool GetExplicitInput(this IOpenApiExtensible param)
         {
             return param.Extensions != null && param.Extensions.TryGetValue(XMsExplicitInput, out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;
+        }
+
+        internal static ConnectorKeyType GetKeyType(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsKeyType, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr != null && !string.IsNullOrEmpty(apiStr.Value))
+            {
+                if (Enum.TryParse(apiStr.Value, true, out ConnectorKeyType ckt))
+                {
+                    return ckt;
+                }
+            }
+
+            return ConnectorKeyType.Undefined;
+        }
+
+        internal static double GetKeyOrder(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsKeyOrder, out IOpenApiExtension ext) && ext is OpenApiDouble dbl)
+            {
+                return dbl.Value;
+            }
+
+            return 0.0;
+        }
+
+        internal static ConnectorPermission GetPermission(this IOpenApiExtensible param)
+        {
+            if (param.Extensions != null && param.Extensions.TryGetValue(XMsPermission, out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr != null && !string.IsNullOrEmpty(apiStr.Value))
+            {
+                if (apiStr.Value.Equals("read-only", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ConnectorPermission.PermissionReadOnly;
+                }
+                else if (apiStr.Value.Equals("read-write", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ConnectorPermission.PermissionReadWrite;
+                }
+            }
+
+            return ConnectorPermission.Undefined;
+        }
+
+        internal static ServiceCapabilities GetTableCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {                
+                return ServiceCapabilities.ParseTableCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
+        }
+
+        internal static ColumnCapabilities GetColumnCapabilities(this IOpenApiExtensible schema)
+        {
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
+            {
+                return ColumnCapabilities.ParseColumnCapabilities(ext as OpenApiObject);
+            }
+
+            return null;
+        }
+
+        internal static Dictionary<string, Relationship> GetRelationships(this IOpenApiExtensible schema)
+        {           
+            if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext))
+            {
+                return Relationship.ParseRelationships(ext as OpenApiObject);
+            }
+
+            return null;
         }
 
         // Get string content of x-ms-url-encoding parameter extension

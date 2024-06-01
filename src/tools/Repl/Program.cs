@@ -134,6 +134,7 @@ namespace Microsoft.PowerFx
                 this.AllowSetDefinitions = true;
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
+                this.AddPseudoFunction(new SuggestionsPseudoFunction());
 
                 this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }

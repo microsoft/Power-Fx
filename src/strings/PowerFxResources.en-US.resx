@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>The text value to convert to a Decimal value.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>The 'Decimal' function can only be used if the 'Power Fx 1.0 compatibility' feature is enabled.</value>
+    <comment>Error message shown when a user tries to use the 'Decimal' function in a version of Power Fx that does not support it.</comment>
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converts a 'text' that represents a number to a Float value.</value>
   </data>
@@ -1859,8 +1863,8 @@
     <comment>Description of the third parameter to Sequence</comment>
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Invalid use of '.'</value>
-    <comment>Error Message.</comment>
+    <value>The '.' operator cannot be used on {0} values.</value>
+    <comment>Error Message. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean). The operator (.) is not translated, should be the same character ('full stop', \u002E, decimal code 46) in all languages.</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function.</value>
@@ -2510,10 +2514,6 @@
     <value>Component</value>
     <comment>Function category name - function defined in components within the environment where it is running.</comment>
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    <comment>{StringContains=LCID}</comment>
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>The element '{0}' is missing attribute '{1}'.</value>
     <comment>Invalid xml error message.</comment>
@@ -3026,6 +3026,34 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Returns a grouping of the specified table, combining with aggregation functions.</value>
+    <comment>Description of 'Patch' function.</comment>
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Summarize function - the data source (table / collection) to operate on.</comment>
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>grouping_column</value>
+    <comment>function_parameter - Second argument to the Summarize function - the name of the column by which the data source will be grouped. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>aggregation</value>
+    <comment>function_parameter - Third argument to the Summarize function - a call to an aggregation function.</comment>
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>The table or collection to group.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>The name of a column to group the data by.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>A call to an aggregation function.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Raises a number x to the power of another number y. Same as x^y.</value>
     <comment>Description of 'Power' function.</comment>
@@ -3136,10 +3164,6 @@
   <data name="CollectRecordArg" xml:space="preserve">
     <value>record</value>
     <comment>function_parameter - Second parameter for the Collect function. The record to be added.</comment>
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Deletes all the records of a collection. The columns of the collection will remain.</value>
-    <comment>Description of 'Clear' function.</comment>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Deletes all the records from a collection. And then adds a different set of records to the same collection.</value>
@@ -4046,6 +4070,10 @@
     <value>Function {0} is already defined.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
   </data>
+    <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Function name {0} is restricted.</value>
+    <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is a duplicate.</value>
     <comment>This error message shows up when user defined function has a duplicate parameter</comment>
@@ -4065,6 +4093,14 @@
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+  </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>The stated function return type {0} is invalid.</value>
+    <comment>This error message shows up when function return type contains restricted primitive types.</comment>
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>The stated function argument type {0} is invalid.</value>
+    <comment>This error message shows up when function argument type contains restricted primitive types.</comment>
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
@@ -4382,8 +4418,24 @@
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
-    <comment>Error message when type binding is invalid</comment>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <comment>Error message when validation of type literal fails.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Definition of type {0} is invalid.</value>
+    <comment>Error message when type binding is invalid.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Definition of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type binding may have cycles.</comment>
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Restricted type name {0} cannot be used.</value>
+    <comment>Error message when using restricted type name.</comment>
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Type {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a type that already exists.</comment>
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
@@ -4582,5 +4634,47 @@
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegation warning. The result of this argument '{0}' may be truncated for large data sets before being passed to the '{1}' function.</value>
     <comment>Error message when an argument to non-delegable function has possible delegation and resulting rows may be truncated</comment>
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Expected a text, numeric, boolean, or date/time value.</value>
+    <comment>Error message shown to the user when a function expects an expression that returns a primitive value but it doesn't.</comment>
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize requires at least one grouping column.</value>
+    <comment>Summarize is the function name. Error message shown to the user when a function expects an grouping columns but none is present. {Locked=Summarize} </comment>
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Summarize arguments must be either existing column names to group by or formulas named with the 'As' keyword.</value>
+    <comment>Summarize is the function name. Error message shown to the user when any argument index greater than 0 is not an existing column name nor a formulas named with the As keyword. {Locked=Summarize} {Locked='As'}</comment>
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Column 'ThisGroup' conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when an argument conflicts with 'ThisGroup' reserved word. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>The data source contains a column named 'ThisGroup', which conflicts with a reserved name. Use the 'RenameColumns' function to pick a different name.</value>
+    <comment>Error message shown to the user when the provided data source contains a field called 'ThisGroup'. {Locked='ThisGroup'} {Locked='RenameColumns'}</comment>
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Scoping the data source (usage of 'As' keyword) is not supported.</value>
+    <comment>Error message shown to the user when the provided data source is followed by 'As' reserved word. {Locked='As'}</comment>
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Clears all the items from a collection and returns the empty collection.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>collection</value>
+    <comment>function_parameter - First argument to the Clear function - the name of the collection to be cleared.</comment>
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>The collection to clear.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>The specified data source cannot be used with this function.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>

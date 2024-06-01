@@ -109,10 +109,13 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal TypeLiteralNode Type { get; }
 
-        public DefinedType(IdentToken ident, TypeLiteralNode type)
+        internal bool IsParseValid { get; }
+
+        public DefinedType(IdentToken ident, TypeLiteralNode type, bool isParseValid)
         {
             Ident = ident;
             Type = type;
+            IsParseValid = isParseValid;
         }
     }
 

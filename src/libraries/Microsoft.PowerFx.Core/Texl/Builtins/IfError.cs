@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return false;
         }
 
-        public override bool IsLambdaParam(int index)
+        public override bool IsLambdaParam(TexlNode node, int index)
         {
             return index > 0;
         }

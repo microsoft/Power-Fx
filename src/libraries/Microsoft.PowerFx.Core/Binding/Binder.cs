@@ -378,7 +378,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </param>
         /// <param name="bindingConfig">
         /// Augments behavior in a similar way to the features argument, but for features
-        /// particular to Power Apps Client.  When possible, use Features instead. 
+        /// particular to Power Apps Client.  When possible, use Features instead.
         /// </param>
         /// <param name="updateDisplayNames">
         /// If true, the binder will update the display names of the nodes in the parse tree.
@@ -476,6 +476,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id].IsValid);
 
+            return GetTypeAllowInvalid(node);
+        }
+
+        public DType GetTypeAllowInvalid(TexlNode node)
+        {
             return _typeMap[node.Id];
         }
 
@@ -677,10 +682,13 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case NodeKind.FirstName:
                     return SupportsPaging(node.AsFirstName());
+
                 case NodeKind.DottedName:
                     return SupportsPaging(node.AsDottedName());
+
                 case NodeKind.Call:
                     return SupportsPaging(node.AsCall());
+
                 default:
                     Contracts.Assert(false, "This should only be called for FirstNameNode, DottedNameNode and CallNode.");
                     return false;
@@ -1046,10 +1054,13 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case NodeKind.DottedName:
                     return TryGetEntityInfo(node.AsDottedName(), out info);
+
                 case NodeKind.FirstName:
                     return TryGetEntityInfo(node.AsFirstName(), out info);
+
                 case NodeKind.Call:
                     return TryGetEntityInfo(node.AsCall(), out info);
+
                 default:
                     info = null;
                     return false;
@@ -1066,9 +1077,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 case NodeKind.DottedName:
                     data = GetInfo(node.AsDottedName())?.Data;
                     break;
+
                 case NodeKind.FirstName:
                     data = GetInfo(node.AsFirstName())?.Data;
                     break;
+
                 default:
                     data = null;
                     break;
@@ -1094,10 +1107,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     break;
+
                 case NodeKind.FirstName:
                     var firstNameNode = node.AsFirstName().VerifyValue();
                     dataSourceInfo = GetInfo(firstNameNode)?.Data as IExternalDataSource;
                     return dataSourceInfo != null;
+
                 case NodeKind.DottedName:
                     IExpandInfo info;
                     if (TryGetEntityInfo(node.AsDottedName(), out info))
@@ -1107,8 +1122,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     break;
+
                 case NodeKind.As:
                     return TryGetDataSourceInfo(node.AsAsNode().Left, out dataSourceInfo);
+
                 default:
                     break;
             }
@@ -2455,7 +2472,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example, 
+        /// Override the error container.  Should only be used for scenarios where the current error container needs to be updated, for example,
         /// to run validation logic that should not produce visible errors for the consumer.
         /// </summary>
         /// <param name="container">The new error container.</param>
@@ -2719,7 +2736,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         logicalNodeName = new DName(maybeLogicalName);
 
-                        // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name. 
+                        // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name.
                         if (!_txb.UpdateDisplayNames)
                         {
                             _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
@@ -3278,31 +3295,39 @@ namespace Microsoft.PowerFx.Core.Binding
                     case BindKind.WebResource:
                         _txb.UsesGlobals = true;
                         break;
+
                     case BindKind.Alias:
                         _txb.UsesAliases = true;
                         break;
+
                     case BindKind.ScopeCollection:
                         _txb.UsesScopeCollections = true;
                         break;
+
                     case BindKind.ScopeVariable:
                         _txb.UsesScopeVariables = true;
                         break;
+
                     case BindKind.DeprecatedImplicitThisItem:
                     case BindKind.ThisItem:
                         _txb.UsesThisItem = true;
                         break;
+
                     case BindKind.Resource:
                         _txb.UsesResources = true;
                         _txb.UsesGlobals = true;
                         break;
+
                     case BindKind.OptionSet:
                         _txb.UsesGlobals = true;
                         _txb.UsesOptionSets = true;
                         break;
+
                     case BindKind.View:
                         _txb.UsesGlobals = true;
                         _txb.UsesViews = true;
                         break;
+
                     default:
                         Contracts.Assert(bindKind == BindKind.LambdaField || bindKind == BindKind.LambdaFullRecord || bindKind == BindKind.Enum || bindKind == BindKind.Unknown);
                         break;
@@ -3343,7 +3368,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
-                    SetDottedNameError(node, TexlStrings.ErrInvalidDot);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidDot, leftType.GetKindString());
                     return;
                 }
 
@@ -4109,7 +4134,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
                         // Translate the set to the parent (invocation) scope, to indicate that we are moving outside the lambda.
-                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(i))
+                        if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(args[i], i))
                         {
                             argScopeUseSet = argScopeUseSet.TranslateToParentScope();
                         }
@@ -4386,7 +4411,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the 1st arg
                             required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
 
-                            if (scopeInfo.CheckInput(_txb.Features, nodeInp, _txb.GetType(nodeInp), out scope))
+                            if (scopeInfo.CheckInput(_txb.Features, node, nodeInp, _txb.GetType(nodeInp), out scope))
                             {
                                 if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
                                 {
@@ -4421,7 +4446,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(carg > 0);
 
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
-                Contracts.Assert(!maybeFunc.IsLambdaParam(0));
+                Contracts.Assert(!maybeFunc.IsLambdaParam(node.Args.Children[0], 0));
 
                 var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
@@ -4477,7 +4502,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, nodeInput, typeInput, out typeScope);
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
@@ -4544,14 +4569,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var isIdentifier = args[i] is FirstNameNode &&
                         _features.SupportColumnNamesAsIdentifiers &&
-                        maybeFunc.ParameterCanBeIdentifier(_features, i);
+                        maybeFunc.ParameterCanBeIdentifier(args[i], i, _features);
 
-                    var isLambdaArg = maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i);
+                    var isLambdaArg = maybeFunc.IsLambdaParam(args[i], i) && scopeInfo.AppliesToArgument(i);
 
                     // Use the new scope only for lambda or identifier args.
                     _currentScope = (isIdentifier || isLambdaArg) ? scopeNew : scopeNew.Parent;
 
-                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(_features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
+                    if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
                         args[i].Accept(this);
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
@@ -4561,6 +4586,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
+                        if (args[i] is FirstNameNode firstNameNode)
+                        {
+                            GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
+                        }
+
                         // This is an identifier, no associated type, let's make it invalid
                         argTypes[i] = DType.Invalid;
                     }
@@ -4587,20 +4617,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
-                if (maybeFunc.HasColumnIdentifiers && _features.SupportColumnNamesAsIdentifiers)
-                {
-                    var i = 0;
-
-                    foreach (var arg in args)
-                    {
-                        if (arg is FirstNameNode firstNameNode && maybeFunc.ParameterCanBeIdentifier(_features, i))
-                        {
-                            _ = GetLogicalNodeNameAndUpdateDisplayNames(argTypes[0], firstNameNode.Ident, out _);
-                        }
-
-                        i++;
-                    }
-                }
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid &= maybeFunc.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
@@ -5010,7 +5026,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Use the new scope only for lambda args and args with datasource scope for display name matching.
                     if (scopeNew != null)
                     {
-                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(i)))
+                        if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(args[i], i)))
                         {
                             _currentScope = scopeNew;
                         }

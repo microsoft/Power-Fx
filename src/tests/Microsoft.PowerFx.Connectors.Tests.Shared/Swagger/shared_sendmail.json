@@ -1,0 +1,448 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Mail",
+    "description": "Mail Connection Provider lets you send email notification.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "contact": {
+      "name": "Microsoft"
+    }
+  },
+  "host": "tip2-001.azure-apihub.net",
+  "basePath": "/apim/sendmail",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{connectionId}/mail/send": {
+      "post": {
+        "tags": [
+          "Mail"
+        ],
+        "summary": "Send an email notification",
+        "description": "Send an email notification to the specified email addresses.",
+        "operationId": "SendEmail",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "description": "The email message to send.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmailRequest"
+            },
+            "x-ms-summary": "Email to send"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Object"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error. Unknown error occurred"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": true,
+        "x-ms-visibility": "important",
+        "x-ms-api-annotation": {
+          "status": "Production",
+          "family": "SendEmail",
+          "revision": 1
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/sendmail/#send-an-email-notification-%5bdeprecated%5d"
+        }
+      }
+    },
+    "/{connectionId}/api/mail.send.json": {
+      "post": {
+        "tags": [
+          "Mail"
+        ],
+        "summary": "Send an email notification",
+        "description": "Send an email notification to the specified email addresses.",
+        "operationId": "SendEmailV2",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "description": "The email message to send.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmailRequest"
+            },
+            "x-ms-summary": "Email to send"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EmailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error. Unknown error occurred"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": true,
+        "x-ms-visibility": "internal",
+        "x-ms-api-annotation": {
+          "status": "Production",
+          "family": "SendEmail",
+          "revision": 2
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/sendmail/#send-an-email-notification-%5bdeprecated%5d"
+        }
+      }
+    },
+    "/{connectionId}/v3/mail/send": {
+      "post": {
+        "tags": [
+          "Mail"
+        ],
+        "summary": "Send an email notification (V3)",
+        "description": "Send an email notification to the specified email addresses.",
+        "operationId": "SendEmailV3",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "request",
+            "in": "body",
+            "description": "The email message to send.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmailRequestV3"
+            },
+            "x-ms-summary": "Email to send (V3)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Object"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error. Unknown error occurred"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-api-annotation": {
+          "status": "Production",
+          "family": "SendEmail",
+          "revision": 3
+        },
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/sendmail/#send-an-email-notification-(v3)"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EmailRequest": {
+      "description": "Email Request",
+      "required": [
+        "to",
+        "subject",
+        "text"
+      ],
+      "type": "object",
+      "properties": {
+        "to": {
+          "description": "A list of valid email addresses separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "To",
+          "x-ms-dynamic-values": {
+            "builtInOperation": "AadGraph.GetUsers",
+            "parameters": {},
+            "value-path": "mail"
+          }
+        },
+        "toname": {
+          "description": "A display name for each email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "To Names",
+          "x-ms-visibility": "advanced"
+        },
+        "subject": {
+          "description": "The subject of the email.",
+          "type": "string",
+          "x-ms-summary": "Subject"
+        },
+        "text": {
+          "description": "The content of the email.",
+          "type": "string",
+          "x-ms-summary": "Body"
+        },
+        "ishtml": {
+          "description": "Specify whether the content of the email is HTML or plain text.",
+          "default": true,
+          "type": "boolean",
+          "x-ms-summary": "Is Html",
+          "x-ms-visibility": "advanced"
+        },
+        "cc": {
+          "description": "A list valid email addresses to CC separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "CC",
+          "x-ms-visibility": "advanced"
+        },
+        "ccname": {
+          "description": "A display name for each CC email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "CC Names",
+          "x-ms-visibility": "advanced"
+        },
+        "bcc": {
+          "description": "A list of valid email addresses to BCC separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "BCC",
+          "x-ms-visibility": "advanced"
+        },
+        "bccname": {
+          "description": "A display name for each BCC email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "BCC Names",
+          "x-ms-visibility": "advanced"
+        },
+        "files": {
+          "format": "byte",
+          "description": "The file content to send as an attachment.",
+          "type": "string",
+          "x-ms-summary": "Attachment",
+          "x-ms-visibility": "advanced"
+        },
+        "filenames": {
+          "description": "The file name for the attachment.",
+          "type": "string",
+          "x-ms-summary": "Attachment File Name",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "Object": {
+      "type": "object",
+      "properties": {}
+    },
+    "EmailResponse": {
+      "description": "Send email response.",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The status message from send email response, either 'success' or 'failure'.",
+          "type": "string",
+          "x-ms-summary": "Status"
+        }
+      }
+    },
+    "EmailRequestV3": {
+      "description": "Email Request (V2)",
+      "required": [
+        "text",
+        "to",
+        "subject",
+        "ishtml"
+      ],
+      "type": "object",
+      "properties": {
+        "to": {
+          "description": "A list of valid email addresses separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "To",
+          "x-ms-dynamic-values": {
+            "builtInOperation": "AadGraph.GetUsers",
+            "parameters": {},
+            "value-path": "mail"
+          }
+        },
+        "toname": {
+          "description": "A display name for each email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "To Names",
+          "x-ms-visibility": "advanced"
+        },
+        "subject": {
+          "description": "The subject of the email.",
+          "type": "string",
+          "x-ms-summary": "Subject"
+        },
+        "text": {
+          "format": "html",
+          "description": "The content of the email.",
+          "type": "string",
+          "x-ms-summary": "Body"
+        },
+        "ishtml": {
+          "description": "Specify whether the content of the email is HTML or plain text.",
+          "default": true,
+          "type": "boolean",
+          "x-ms-summary": "Is Html",
+          "x-ms-visibility": "internal"
+        },
+        "cc": {
+          "description": "A list valid email addresses to CC separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "CC",
+          "x-ms-visibility": "advanced"
+        },
+        "ccname": {
+          "description": "A display name for each CC email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "CC Names",
+          "x-ms-visibility": "advanced"
+        },
+        "bcc": {
+          "description": "A list of valid email addresses to BCC separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "BCC",
+          "x-ms-visibility": "advanced"
+        },
+        "bccname": {
+          "description": "A display name for each BCC email address separated by a semicolon or a comma.",
+          "type": "string",
+          "x-ms-summary": "BCC Names",
+          "x-ms-visibility": "advanced"
+        },
+        "files": {
+          "format": "byte",
+          "description": "The file content to send as an attachment.",
+          "type": "string",
+          "x-ms-summary": "Attachment",
+          "x-ms-visibility": "advanced"
+        },
+        "filenames": {
+          "description": "The file name for the attachment.",
+          "type": "string",
+          "x-ms-summary": "Attachment File Name",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "url": "https://docs.microsoft.com/connectors/sendmail"
+  }
+}

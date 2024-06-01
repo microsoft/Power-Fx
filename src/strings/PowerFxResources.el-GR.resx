@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Η λειτουργία "Δεκαδικός" μπορεί να χρησιμοποιηθεί μόνο αν είναι ενεργοποιημένη η δυνατότητα "Συμβατότητα Power Fx 1.0".</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Μετατρέπει σε "κείμενο" που αντιπροσωπεύει έναν αριθμό σε τιμή κινητής υποδιαστολής.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Μη έγκυρη χρήση του '.'</value>
+    <value>Ο χειριστής '.' δεν μπορεί να χρησιμοποιηθεί σε τιμές {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Στοιχείο</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Από το στοιχείο '{0}' λείπει το χαρακτηριστικό '{1}'.</value>
     
@@ -2970,6 +2970,34 @@
     <value>τύπος</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Επιστρέφει μια ομαδοποίηση του καθορισμένου πίνακα, σε συνδυασμό συναρτήσεις συνάθροισης.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>προέλευση</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>στήλη_ομαδοποίησης</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>συνάθροιση</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Ο πίνακας ή η συλλογή προς ομαδοποίηση.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Το όνομα μιας στήλης για την ομαδοποίηση των δεδομένων.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Μια κλήση σε μια συνάρτηση συνάθροισης.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Υψώνει έναν αριθμό x στη δύναμη ενός άλλου αριθμού y. Είναι το ίδιο με το x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>καρτέλα</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Διαγράφει όλες τις καρτέλες μιας συλλογής. Οι στήλες της συλλογής θα παραμείνουν.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Λείπει ο τύπος ορίσματος συνάρτησης, για παράδειγμα το ":Text" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί {0} δεν είναι έγκυρος.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>Ο τύπος ορίσματος συνάρτησης που έχει δηλωθεί {0} δεν είναι έγκυρος.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Το όνομα NamedFormula '{0}' υπάρχει ήδη.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Η κυριολεκτική δήλωση τύπου δεν ήταν έγκυρη</value>
+    <value>Η κυριολεκτική δήλωση τύπου δεν είναι έγκυρη. Η παράσταση '{0}' δεν μπορεί να χρησιμοποιηθεί σε έναν ορισμό τύπου.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος και μπορεί να περιέχει κύκλους.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Το όνομα περιορισμένου τύπου {0} δεν μπορεί να χρησιμοποιηθεί.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>Ο τύπος {0} έχει ήδη οριστεί.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Προειδοποίηση ανάθεσης. Το αποτέλεσμα αυτού του ορίσματος '{0}' μπορεί να περικοπεί για μεγάλα σύνολα δεδομένων, προτού διαβιβαστεί στη συνάρτηση '{1}'.</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Αναμενόταν τιμή κειμένου, αριθμητική τιμή, δυαδική τιμή ή τιμή ημερομηνίας/ώρας.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Η συνάρτηση Summarize απαιτεί τουλάχιστον μία στήλη ομαδοποίησης.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Τα ορίσματα Summarize πρέπει να είναι είτε υπάρχοντα ονόματα στηλών για την ομαδοποίηση είτε τύποι που περιέχουν τη λέξη-κλειδί 'As' στο όνομά τους.</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>Το όνομα 'ThisGroup' είναι δεσμευμένο. Χρησιμοποιήστε τη συνάρτηση 'RenameColumns' για να επιλέξετε ένα διαφορετικό όνομα.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>Η προέλευση δεδομένων περιέχει μια στήλη με όνομα 'ThisGroup', το οποίο είναι δεσμευμένο. Χρησιμοποιήστε τη συνάρτηση 'RenameColumns' για να επιλέξετε ένα διαφορετικό όνομα.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>Δεν υποστηρίζεται ο έλεγχος της προέλευσης δεδομένων (χρήση της λέξης-κλειδιού 'As').</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Απαλείφει όλα τα στοιχεία από μια συλλογή και επιστρέφει την κενή συλλογή.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>συλλογή</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Η συλλογή προς απαλοιφή.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Η προέλευση για απαλοιφή.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>Η καθορισμένη προέλευση δεδομένων δεν μπορεί να χρησιμοποιηθεί με αυτήν τη συνάρτηση.</value>
     
   </data>
 </root>

@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
+using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -646,6 +647,8 @@ namespace Microsoft.PowerFx.Connectors
                         runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetConnectorTypeInternalAsync))}, callsLeft {maxCalls.CallsLeft}.");
                     }
 
+                    // field's name correspond to the key of the fhe field in the record, we need to set it to wire it up correctly to the updated record type
+                    newFieldType.Name = field.Name;
                     fieldTypes.Add(newFieldType);
                     recordType = recordType.SafeAdd(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }
@@ -792,13 +795,26 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="runtimeContext">RuntimeConnectorContext.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Function result.</returns>
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        {
+            return InvokeAsync(arguments, runtimeContext, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Call connector function.
+        /// </summary>
+        /// <param name="arguments">Arguments.</param>
+        /// <param name="runtimeContext">RuntimeConnectorContext.</param>
+        /// <param name="outputTypeOverride">The output type that should be used during output parsing.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Function result.</returns>
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(InvokeAsync))}, with {LogArguments(arguments)}");
-                FormulaValue formulaValue = await InvokeInternalAsync(arguments, runtimeContext, cancellationToken).ConfigureAwait(false);
+                FormulaValue formulaValue = await InvokeInternalAsync(arguments, runtimeContext, outputTypeOverride, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(InvokeAsync))}, returning from {nameof(InvokeInternalAsync)}, with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
             }
@@ -809,7 +825,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        internal Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        {
+            return InvokeInternalAsync(arguments, runtimeContext, null, cancellationToken);
+        }
+
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -829,7 +850,7 @@ namespace Microsoft.PowerFx.Connectors
 
             BaseRuntimeConnectorContext context = ReturnParameterType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
-            FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await invoker.InvokeAsync(arguments, context, outputTypeOverride, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
 
             runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(InvokeInternalAsync))}, returning {LogFormulaValue(formulaValue)}");
@@ -856,6 +877,11 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, runtimeContext, invoker, cancellationToken).ConfigureAwait(false), ConnectorSettings.MaxRows, cancellationToken);
                 }
+            }
+
+            if (ReturnParameterType.FormulaType is BlobType bt && result is StringValue str)
+            {
+                result = FormulaValue.NewBlob(str.Value, ReturnParameterType.Schema.Format == "byte");
             }
 
             return result;
@@ -975,17 +1001,39 @@ namespace Microsoft.PowerFx.Connectors
             return GetConnectorTypeInternal(compatibility, je);
         }
 
-        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility, out string name, out string displayName)
+        // Only called by ConnectorTable.GetSchema
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
+            // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
+            OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
+            OpenApiSchema tableSchema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _);
+            tableCapabilities = tableSchema.GetTableCapabilities();
+
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
-            return GetConnectorTypeInternal(compatibility, je);
+            return GetConnectorTypeInternal(compatibility, je, name, datasetName, tableSchema, tableCapabilities);
         }
 
-        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
+        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je, string name = null, string datasetName = null, OpenApiSchema tableSchema = null, ServiceCapabilities tableCapabilities = null)
         {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
             ConnectorType connectorType = new ConnectorType(schema, compatibility);
+
+            if (tableSchema != null)
+            {
+                ConnectorPermission tablePermission = tableSchema.GetPermission();
+                bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+
+                List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
+
+                if (primaryKeyParts.Count == 0)
+                {
+                    // $$$ need to check what triggers RO for SQL 
+                    //isTableReadOnly = true;
+                }
+
+                connectorType.AddDataSource(new DName(name), datasetName, tableCapabilities, isTableReadOnly);
+            }
 
             return connectorType;
         }
@@ -1444,7 +1492,7 @@ namespace Microsoft.PowerFx.Connectors
                 _configurationLogger?.LogWarning($"{msg}");
             }
 
-            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.FormulaType._type.Kind == DKind.Blob))
+            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.ConnectorType.Binary))
             {
                 errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }

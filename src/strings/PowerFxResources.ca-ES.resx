@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Valor de text que es convertirà en un valor decimal.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>La funció "Decimal" només es pot utilitzar si la característica "Compatibilitat amb el Power Fx 1.0" està habilitada.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converteix un element "text" que representa un nombre en un valor float.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>L'ús de '.' no és vàlid.</value>
+    <value>L'operador "." no es pot utilitzar en valors {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Component</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>Falta l'atribut '{1}' a l'element '{0}'.</value>
     
@@ -2970,6 +2970,34 @@
     <value>fórmula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Retorna un agrupament de la taula especificada, en combinació amb funcions d'agregació.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>font</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>columna_agrupament</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregació</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>Taula o col·lecció que s'agruparà.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>Nom d'una columna per la qual agrupar les dades.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Trucada a una funció d'agregació.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Eleva un número x a la potència d'un altre número y. Equival a x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>registre</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Suprimeix tots els registres d'una col·lecció. Es conservaran les columnes de la col·lecció.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Falta el tipus d'argument de la funció, per exemple, ":Text" a "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>El tipus de retorn de la funció declarat {0} no és vàlid.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>El tipus d'argument de la funció declarat {0} no és vàlid.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>La declaració literal de tipus no és vàlida</value>
+    <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>La definició de tipus {0} no és vàlida.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>La definició de tipus {0} no és vàlida i pot contenir cicles.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>El nom de tipus restringit {0} no es pot utilitzar.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>El tipus {0} ja està definit.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Advertiment de delegació. El resultat d'aquest argument "{0}" es pot truncar per als conjunts de dades grans abans d'enviar-se a la funció "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>S'esperava un valor de text, numèric, booleà o data/hora.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize requereix almenys una columna d'agrupament.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Els arguments de Summarize han de ser noms de columnes existents per les quals agrupar o fórmules amb nom amb la paraula clau "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>La columna "ThisGroup" entra en conflicte amb un nom reservat. Utilitzeu la funció "RenameColumns" per seleccionar un nom diferent.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>La font de dades conté una columna anomenada "ThisGroup", que entra en conflicte amb un nom reservat. Utilitzeu la funció "RenameColumns" per seleccionar un nom diferent.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>No s'admet definir un àmbit per a la font de dades (ús de la paraula clau "As").</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Esborra tots els elements d'una col·lecció i la retorna buida.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>col·lecció</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>Col·lecció que s'esborrarà.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>Origen que s'ha d'esborrar.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>No es pot utilitzar l'origen de dades especificat amb aquesta funció.</value>
     
   </data>
 </root>

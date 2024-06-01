@@ -34,11 +34,19 @@ namespace Microsoft.PowerFx
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
+        private readonly TexlFunctionSet _functions = new TexlFunctionSet();
+
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
+
+        private readonly IDictionary<DName, FormulaType> _namedTypes = new Dictionary<DName, FormulaType>();
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
+
+        IEnumerable<KeyValuePair<DName, FormulaType>> INameResolver.NamedTypes => _namedTypes;
+
+        internal IReadOnlyDictionary<DName, FormulaType> NamedTypes => _namedTypes.ToDictionary(v => v.Key, v => v.Value);
 
         internal const string UserInfoSymbolName = "User";
 
@@ -57,6 +65,8 @@ namespace Microsoft.PowerFx
 
             return new DName(name);
         }
+
+        TexlFunctionSet INameResolver.Functions => _guard.VerifyNoWriters(_functions);
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
         {
@@ -203,23 +213,32 @@ namespace Microsoft.PowerFx
         /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null)
+        /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
+        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
         {
             // Phase 1: Side affects are not allowed.
+            // Phase 2: Introduces side effects and parsing of function bodies.
             var options = new ParserOptions() 
             { 
-                AllowsSideEffects = false, 
+                AllowsSideEffects = allowSideEffects, 
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
             var sb = new StringBuilder();
 
-            UserDefinitions.ProcessUserDefinitions(script, options, out var userDefinitionResult);
+            var parseResult = UserDefinitions.Parse(script, options);
 
-            if (userDefinitionResult.HasErrors)
+            // Compose will handle null symbols
+            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
+
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
+
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (errors.Any())
             {
                 sb.AppendLine("Something went wrong when parsing user defined functions.");
 
-                foreach (var error in userDefinitionResult.Errors)
+                foreach (var error in errors)
                 {
                     error.FormatCore(sb);
                 }
@@ -227,17 +246,15 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            // Compose will handle null symbols
-            var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
-
-            foreach (var udf in userDefinitionResult.UDFs)
+            foreach (var udf in udfs)
             {
                 AddFunction(udf);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), BindingConfig.Default);
+                var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
+                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
 
-                List<TexlError> errors = new List<TexlError>();
+                List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref errors))
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
                     sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
                 }
@@ -411,6 +428,72 @@ namespace Microsoft.PowerFx
                 displayName: default);
 
             _variables.Add(hostDName, info);
+        }
+
+        /// <summary>
+        /// Adds a named type that can be referenced in expression.
+        /// </summary>
+        /// <param name="typeName">Name of the type to be added into Symbol table.</param>
+        /// <param name="type">Type associated with the name.</param>
+        public void AddType(DName typeName, FormulaType type)
+        {
+            Contracts.AssertValue(typeName.Value);
+            Contracts.AssertValue(type);
+            Contracts.Assert(typeName.Value.Length > 0);
+            Contracts.AssertValid(typeName);
+
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
+            if (_namedTypes.ContainsKey(typeName))
+            {
+                throw new InvalidOperationException($"{typeName} is already defined.");
+            }
+
+            _namedTypes.Add(typeName, type);
+        }
+
+        internal void AddTypes(IEnumerable<KeyValuePair<DName, FormulaType>> types)
+        {
+            Contracts.AssertValue(types);
+
+            using var guard = _guard.Enter(); // Region is single threaded.
+            Inc();
+
+            foreach (var type in types)
+            {
+                if (_namedTypes.ContainsKey(type.Key))
+                {
+                    throw new InvalidOperationException($"{type.Key} is already defined.");
+                }
+
+                _namedTypes.Add(type.Key, type.Value);
+            }
+        }
+
+        /// <summary>
+        /// Helper to create a symbol table with primitive types.
+        /// </summary>
+        /// <returns>SymbolTable with primitive types.</returns>
+        public static SymbolTable WithPrimitiveTypes()
+        {
+            var s = new SymbolTable
+            {
+                DebugName = $"SymbolTable with PrimitiveTypes"
+            };
+
+            s.AddTypes(FormulaType.PrimitiveTypes);
+            return s;
+        }
+
+        bool INameResolver.LookupType(DName name, out FormulaType fType)
+        {
+            if (_namedTypes.TryGetValue(name, out fType))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

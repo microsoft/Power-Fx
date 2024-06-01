@@ -1,0 +1,851 @@
+﻿#SETUP: DecimalSupport,PowerFxV1CompatibilityRules
+
+// Default to invariant
+>> Float("-5")
+-5
+
+>> Float("5")
+5
+
+>> Float("123,456.78")
+123456.78
+
+>> Float("xxx")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float( "$ 12.34" )
+12.34
+
+>> Float( "24e3" )
+24000
+
+>> Float( "12.34%" )
+0.1234
+
+>> IsError(Float("%"))
+true
+
+// leading and trailing whitespace ignored
+>> Float(" %10")
+0.1
+
+>> Float("10% ")
+0.1
+
+// percent can also be a prefix
+>> Float("%10")
+0.1
+
+// Value on a number is just passthrough
+>> Float(123)
+123
+
+// ******** VALID STRING PARAMETERS ********
+
+// ******** NUMBERS IN STRING PARAMETERS ********
+
+>> Float("0")
+0
+ 
+>> Float("1")
+1
+ 
+>> Float("-1")
+-1
+ 
+>> Float("-1000")
+-1000
+
+>> Float("0.0")
+0
+ 
+>> Float("1.23")
+1.23
+ 
+
+
+>> Float(" 1.23 ")
+1.23
+
+>> Float(" -1.23 ")
+-1.23
+
+>> Float("1.2")
+1.2
+ 
+>> Float(".123")
+0.123
+ 
+>> Float("123.")
+123
+ 
+>> Float("123.0")
+123
+ 
+>> Float("+.123")
+0.123
+ 
+>> Float("-.123")
+-0.123
+ 
+>> Float("-123.")
+-123
+ 
+>> Float("2e3")
+2000
+ 
+>> Float("2.1e3")
+2100
+ 
+>> Float("-2.1e3")
+-2100
+
+>> Float("100e-2")
+1
+
+>> Float("2e+3")
+2000
+
+>> Float("+2e3")
+2000
+
+>> Float("+100e-2")
+1
+
+>> Float("+2e+3")
+2000
+
+>> Float("-2e3")
+-2000
+
+>> Float("-100e-2")
+-1
+
+>> Float("-2e+3")
+-2000
+
+>> Float("-1,000")
+-1000
+
+>> Float("-1,000,000")
+-1000000
+
+>> Float("1,000,000")
+1000000
+
+>> Float("1,000")
+1000
+
+>> Float("$1234.567")
+1234.567
+
+>> Float("$ 1234.567")
+1234.567
+
+>> Float("$+1234.567")
+1234.567
+
+>> Float("$ +1234.567")
+1234.567
+
+>> Float("$-1234.567")
+-1234.567
+
+>> Float("$ -1234.567")
+-1234.567
+
+>> Float("-$1234.567")
+-1234.567
+
+>> Float("+$1234.567")
+1234.567
+
+>> Float("%123")
+1.23
+
+>> Float("%1.23")
+0.0123
+
+>> Float(" %123.")
+1.23
+
+>> Float("+%123")
+1.23
+
+>> Float("+%1.23")
+0.0123
+
+>> Float("+%123.")
+1.23
+
+>> Float("%+123")
+1.23
+
+>> Float("%+1.23")
+0.0123
+
+>> Float("%+123.")
+1.23
+
+>> Float("%-123")
+-1.23
+
+>> Float("%-1.23")
+-0.0123
+
+>> Float("%-123.")
+-1.23
+
+>> Float("-%123")
+-1.23
+
+>> Float("-%1.23")
+-0.0123
+
+>> Float("-%123.")
+-1.23
+
+>> Float("123%")
+1.23
+
+>> Float("1.23%")
+0.0123
+
+>> Float("123.%")
+1.23
+
+>> Float("+123%")
+1.23
+
+>> Float("+1.23%")
+0.0123
+
+>> Float("+123.%")
+1.23
+
+>> Float("-123%")
+-1.23
+
+>> Float("-1.23%")
+-0.0123
+
+>> Float("-123.%")
+-1.23
+
+>> Float("2.1e3%")
+21
+
+>> Float("%2e3")
+20
+
+>> Float("%100e-2")
+0.01
+
+>> Float("%2e+3")
+20
+
+>> Float("+%2e3")
+20
+
+>> Float("+%100e-2")
+0.01
+
+>> Float("+%2e+3")
+20
+
+>> Float("2e3%")
+20
+
+>> Float("100e-2%")
+0.01
+
+>> Float("2e+3%")
+20
+
+>> Float("-%100e-2")
+-0.01
+
+>> Float("+2e3%")
+20
+
+>> Float("+100e-2%")
+0.01
+
+>> Float("+2e+3%")
+20
+
+>> Float("-%2e3")
+-20
+
+>> Float("-%2e+3")
+-20
+
+>> Float("-2e3%")
+-20
+
+>> Float("-100e-2%")
+-0.01
+
+>> Float("-2e+3%")
+-20
+
+>> Float("% 123")
+1.23
+
+>> Float("% 1.23")
+0.0123
+
+>> Float("% 123.")
+1.23
+
+>> Float("% -123")
+-1.23
+
+>> Float("%" & Char(9) /* \t */ & "-123")
+-1.23
+
+>> Float("123 %")
+1.23
+
+>> Float("123" & Char(9) /* \t */ & "%")
+1.23
+
+>> Float("1.23 %")
+0.0123
+
+>> Float("+123 %")
+1.23
+
+>> Float("-123 %")
+-1.23
+
+>> Float("-123" & Char(9) /* \t */ & "%")
+-1.23
+
+>> Float("% 2e3")
+20
+
+>> Float("% 100e-2")
+0.01
+
+>> Float("% 2e+3")
+20
+
+>> Float("2e3 %")
+20
+
+>> Float("100e-2 %")
+0.01
+
+>> Float("- 123 %")
+-1.23
+
+>> Float("- 1000")
+-1000
+
+>> Float("+ 1000")
+1000
+
+>> Float("- 1,000,000")
+-1000000
+
+>> Float("+ 1,000,000")
+1000000
+
+>> Float("$+ 1234.567")
+1234.567
+
+>> Float("$ + 1234.567")
+1234.567
+
+>> Float("$- 1234.567")
+-1234.567
+
+>> Float("$ - 1234.567")
+-1234.567
+
+>> Float("- $1234.567")
+-1234.567
+
+>> Float("- $ 1234.567")
+-1234.567
+
+>> Float("+ $1234.567")
+1234.567
+
+>> Float("+ $ 1234.567")
+1234.567
+
+>> Float("+ .123")
+0.123
+
+>> Float("- .123")
+-0.123
+
+>> Float("- 123.")
+-123
+
+>> Float("+ 123.")
+123
+
+>> Float("+ %123")
+1.23
+
+>> Float("+% 123")
+1.23
+
+>> Float("+ % 123")
+1.23
+
+>> Float("%- 123")
+-1.23
+
+>> Float("% - 123")
+-1.23
+
+>> Float("+ 123%")
+1.23
+
+>> Float("+ 123 %")
+1.23
+
+>> Float("- 123%")
+-1.23
+
+>> Float("+ %2e3")
+20
+
+>> Float("+% 2e3")
+20
+
+>> Float("+ % 2e3")
+20
+
+>> Float("(123)")
+-123
+
+>> Float(" (123)")
+-123
+
+
+
+>> Float("(123 )")
+-123
+
+>> Float("(123) ")
+-123
+
+>> Float("%(123)")
+-1.23
+
+
+>> Float("(123) %")
+-1.23
+
+>> Float("$(123)")
+-123
+
+>> Float("($123)")
+-123
+
+>> Float(" $ (123)")
+-123
+
+// ******** NUMBER PARAMETERS ********
+
+>> Float(0)
+0
+
+>> Float(-123.456)
+-123.456
+
+// floating point error handling
+>> Float("1.2e-3")
+0.0012
+
+>> Float("123,456", "es-ES" )
+123.456
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Float(true)
+1
+
+>> Float(false)
+0
+
+// ******** DATE/TIME PARAMETERS ********
+
+>> Float(Date(2022,11,21))
+44886
+
+>> Float(DateTime(2022,11,21,6,0,0))
+44886.25
+
+>> Float(Time(12,0,0))
+0.5
+
+// ******** INVALID, NULL and ERROR PARAMETERS ********
+
+//Alphabetical String passed as parameter
+>> Float("Hello")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Excel return error (Error message : A value used in the formula is of the wrong data type)
+>> Float("")
+Blank()
+
+//Excel returns True
+>> IsError(Float(""))
+false
+
+//Excel returns 0
+>> Float(Blank())
+Blank()
+
+//Error message: Invalid operation - Division by zero
+>> Float(1/0)
+Error({Kind:ErrorKind.Div0})
+
+//Error message: We cannot convert the value to a number
+>> Float("%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function
+>> Float("1%00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Float("12$34")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Float("12$34.567")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Float("-12$34")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Error message: Invalid arguments to the Value function [Currency symbol allowed as prefix and not in between the string]
+>> Float("-12$34.567")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// +- together is not valid.
+>> Float("+-1")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// +- together is not valid.  
+>> Float("-+1")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// 'a' is not allowed.  
+>> Float("a")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'a' is not allowed.
+>> Float("a12")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'a' is not allowed.  
+>> Float("12a")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'b' is not allowed.  
+>> Float("1b2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 'c' is not allowed.
+>> Float("12.33c")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// 'A' is not allowed.  
+>> Float("12.33A")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ';' is not allowed as it's not a thousand separator.
+>> Float("123;456.789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// '#' is not allowed as it's not the default currency symbol for en-US.
+>> Float("#123,456.789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// '*' is not allowed as it's not the default decimal symbol.
+>> Float("123,456*789")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ; is not allowed.
+>> Float("123;")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ' is not allowed.
+>> Float("123'")
+Error({Kind:ErrorKind.InvalidArgument})
+ 
+// " is not allowed. 
+// >> Float("\"123\"")
+// Error({Kind:ErrorKind.Div0})
+
+// multiple decimal separators are not allowed.
+>> Float("2.3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// exponent form and decimal cannot be mixed.
+>> Float("2e3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// exponent form and decimal cannot be mixed.
+>> Float("2e-3.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// currency symbol and % cannot be mixed.
+>> Float("$%1.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// currency symbol and % cannot be mixed.
+>> Float("$%1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Float("%1.3%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Float("%%1.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Float("%1%.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Float("0.%3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Float("1%.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid occurrence of %.
+>> Float("1%2.3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Float("0.%%3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// multiple occurrences of %.
+>> Float("0.3%%")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// multiple occurrences of %.
+>> Float("0.%3%")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// -+ cannot be mixed.
+>> Float("-%+1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// -+ cannot be mixed.
+>> Float("+%-1")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// no +- after decimal symbol.
+>> Float("100.+3")
+Error({Kind:ErrorKind.InvalidArgument})
+ 
+// no +- after decimal symbol.
+>> Float("100.-3")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// space anywhere other than beginning/end is not allowed.
+>> Float("1 .23")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// just the decimal symbol is invalid.
+>> Float(".")
+Error({Kind:ErrorKind.InvalidArgument})
+  
+// invalid.
+>> Float("+.")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid.
+>> Float("-.")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e-")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e+3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e-3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" 2e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" 2e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e+ ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" 2e-")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("2e- ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" e3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" e+3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e+3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" e-3")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("e-3 ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("$12.3%+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("   ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("1 23")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123 .45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123. 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("1 23.45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("1  23.45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123 e45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123 e 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123e+ 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123e +45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123e- 45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float("123e -45")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and -
+>> Float("%(-123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and +
+>> Float("%(+123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and -
+>> Float("(-123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and +
+>> Float("(+123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Float(" 1.23")
+1.23
+
+>> Float("(123)%")
+-1.23
+
+>> Float("% (123)")
+-1.23
+
+>> Float(123.456)
+123.456
+
+// In en-us, comma is thousand separator. In fr-FR, it's decimal separate.
+>> Float("123,456")
+123456
+
+>> Float("123,456", "en-US")
+123456
+
+>> Float("123,456", "fr-FR")
+123.456
+
+//Excel allows only single parameter
+>> Float( "123,456", "es-ES" )
+123.456
+
+//Excel allows only single parameter
+>> Float("€1 234,56","fr")
+1234.56
+
+//Excel allows only single parameter
+>> Float("€1.234,56","de")
+1234.56
+
+// ******** DATE PARAMETERS ********
+
+// cannot have both () and -
+>> Float("$(-123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// cannot have both () and -
+>> Float("$-(123)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid format string for fr
+>> Float("$1,234.56","fr")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// invalid format string for de
+>> Float("$1,234.56","de")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Excel allows only single parameter
+//PowerFx message: Language code "12" not supported
+>> Float("$1,234.56","12")
+Error({Kind:ErrorKind.BadLanguageCode})

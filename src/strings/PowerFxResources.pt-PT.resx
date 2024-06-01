@@ -649,6 +649,10 @@
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Valor de texto a converter em valor Decimal.</value>
   </data>
+  <data name="ErrDecimalNeedsPowerFxV1" xml:space="preserve">
+    <value>Só é possível utilizar A função "Decimal" se a funcionalidade "Compatibilidade com o Power Fx 1.0" estiver ativada.</value>
+    
+  </data>
   <data name="AboutFloat" xml:space="preserve">
     <value>Converte um "texto" que representa um número num valor de Vírgula flutuante.</value>
   </data>
@@ -1859,7 +1863,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Utilização de "." inválida</value>
+    <value>Não é possível utilizar o operador "." em valores {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -2502,10 +2506,6 @@
     <value>Componente</value>
     
   </data>
-  <data name="FunctionReference_Link" xml:space="preserve">
-    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
-    
-  </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
     <value>O elemento "{0}" tem em falta o atributo "{1}".</value>
     
@@ -2970,6 +2970,34 @@
     <value>fórmula</value>
     
   </data>
+  <data name="AboutSummarize" xml:space="preserve">
+    <value>Devolve um agrupamento da tabela especificada, combinando com funções de agregação.</value>
+    
+  </data>
+  <data name="SummarizeArg1" xml:space="preserve">
+    <value>origem</value>
+    
+  </data>
+  <data name="SummarizeArg2" xml:space="preserve">
+    <value>coluna_de_agrupamento</value>
+    
+  </data>
+  <data name="SummarizeArg3" xml:space="preserve">
+    <value>agregação</value>
+    
+  </data>
+  <data name="AboutSummarize_source" xml:space="preserve">
+    <value>A tabela ou coleção para agrupar.</value>
+    
+  </data>
+  <data name="AboutSummarize_grouping_column" xml:space="preserve">
+    <value>O nome de uma coluna para agrupar os dados.</value>
+    
+  </data>
+  <data name="AboutSummarize_aggregation" xml:space="preserve">
+    <value>Uma chamada para uma função de agregação.</value>
+    
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Eleva um número x à potência de outro número y. Igual a x^y.</value>
     
@@ -3079,10 +3107,6 @@
   </data>
   <data name="CollectRecordArg" xml:space="preserve">
     <value>registo</value>
-    
-  </data>
-  <data name="AboutClear" xml:space="preserve">
-    <value>Elimina todos os registos de uma coleção. As colunas da coleção permanecerão.</value>
     
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
@@ -3862,6 +3886,14 @@
     <value>Tipo de argumento da função em falta; por exemplo, ":Text" em "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
+  <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
+    <value>O tipo de devolução da função declarado {0} é inválido.</value>
+    
+  </data>
+  <data name="ErrUDF_InvalidParamType" xml:space="preserve">
+    <value>O tipo de argumento da função declarado {0} é inválido.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula "{0}" já existe.</value>
   </data>
@@ -4178,7 +4210,23 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A declaração literal do tipo é inválida</value>
+    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
+    <value>A definição do tipo {0} é inválida.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
+    <value>A definição do tipo {0} é inválida e pode conter ciclos.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
+    <value>Não é possível utilizar o nome de tipo restrito {0}.</value>
+    
+  </data>
+  <data name="ErrNamedType_TypeAlreadyDefined" xml:space="preserve">
+    <value>O tipo {0} já está definido.</value>
     
   </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
@@ -4373,6 +4421,48 @@
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Aviso de delegação. O resultado deste argumento "{0}" poderá ser truncado para conjuntos de dados de grandes dimensões antes de ser transmitido para a função "{1}".</value>
+    
+  </data>
+  <data name="ErrNeedPrimitive" xml:space="preserve">
+    <value>Era esperado um valor numérico, de texto, booleano ou de data/hora.</value>
+    
+  </data>
+  <data name="ErrSummarizeNoGroupBy" xml:space="preserve">
+    <value>Summarize necessita de um mínimo de uma coluna de agrupamento.</value>
+    
+  </data>
+  <data name="ErrSummarizeInvalidArg" xml:space="preserve">
+    <value>Os argumentos de Summarize têm de ser nomes de colunas existentes para agrupamento ou fórmulas nomeadas com a palavra-chave "As".</value>
+    
+  </data>
+  <data name="ErrSummarizeThisGroupColumnName" xml:space="preserve">
+    <value>A coluna "ThisGroup" está em conflito com um nome reservado. utilize a função "RenameColumns" para escolher outro nome.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceContainsThisGroupColumn" xml:space="preserve">
+    <value>A origem de dados contém uma coluna chamada "ThisGroup", que está em conflito com um nome reservado. Utilize a função "RenameColumns" para escolher outro nome.</value>
+    
+  </data>
+  <data name="ErrSummarizeDataSourceScopeNotSupported" xml:space="preserve">
+    <value>O controlo do âmbito da origem de dados (utilização da palavra-chave "As") não é suportado.</value>
+    
+  </data>
+  <data name="AboutClear" xml:space="preserve">
+    <value>Limpa todos os itens de uma coleção e devolve a coleção vazia.</value>
+    
+  </data>
+  <data name="ClearArg1" xml:space="preserve">
+    <value>coleção</value>
+    
+  </data>
+  <data name="AboutClear_collection" xml:space="preserve">
+    <value>A coleção para desmarcar.</value>
+  </data>
+  <data name="AboutClear_source" xml:space="preserve">
+    <value>The source to clear.</value>
+  </data>
+  <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
+    <value>A origem de dados especificada não pode ser utilizada com esta função.</value>
     
   </data>
 </root>

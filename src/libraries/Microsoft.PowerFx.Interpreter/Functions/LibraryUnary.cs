@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
@@ -1070,7 +1072,20 @@ namespace Microsoft.PowerFx.Functions
 
         public static OptionSetValue BooleanToOptionSet(IRContext irContext, BooleanValue[] args)
         {
-            return new OptionSetValue(irContext, "CalculatedOptionSetValue", (OptionSetValueType)irContext.ResultType, (bool)args[0].Value);
+            var optionSetInfo = ((OptionSetValueType)irContext.ResultType)._type.OptionSetInfo;
+
+            if (optionSetInfo != null && optionSetInfo.BackingKind == Core.Types.DKind.Boolean && optionSetInfo.OptionNames.Count() == 2)
+            {
+                foreach (var option in optionSetInfo.OptionNames)
+                {
+                    if (optionSetInfo.TryGetValue(option, out var value) && (bool)value.ExecutionValue == (bool)args[0].Value)
+                    {
+                        return value;
+                    }
+                }
+            }
+
+            throw CommonExceptions.RuntimeMisMatch;
         }
 
         private static System.Drawing.Color ToColor(double doubValue)

@@ -1,0 +1,107 @@
+#SETUP: NumberIsFloat,DecimalSupport,PowerFxV1CompatibilityRules
+
+// ^ Exponentation
+
+>> Value(16)^Decimal("2.00000000000000000000000002")
+256
+
+>> Value("1e100")^Decimal("2.00000000000000000000000002")
+1E+200
+
+>> "16"^Decimal("2.000000000000000000000002")
+256
+
+>> "1e100"^Decimal("2.000000000000000000000002")
+1E+200
+
+>> "16"^Decimal("0.0000000000000000000000000")
+1
+
+>> "1e100"^Decimal("0")
+1
+
+>> true^Decimal("2.000000000000000000000002")
+1
+
+>> Blank()^Decimal("2.000000000000000000000002")
+0
+
+>> Blank()^Decimal("2.000000000000000000000002")+2.000000000000000000000002
+2
+
+>> Date(2000,1,1)^Decimal("2.000000000000000000000002")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^Decimal("2.0000000000000000000002")
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Decimal("0.125")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> 1+(Time(9,0,0)^Decimal("0.125")/1e20)
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Decimal("0.125000000000000000000001")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+// Decimal
+
+>> Decimal("16.000000000000000000000001")^Value(2)
+256
+
+>> Decimal("16.000000000000000000000001")^Value(0)
+1
+
+>> Decimal("16.000000000000000000000001")^Value("1E100")
+Error({Kind:ErrorKind.Numeric})
+
+// rounds to 32 in floating point
+>> Decimal("32.0000000000000001")^Value("8")
+1099511627776
+
+>> Decimal("16.000000000000000000000001")^"2"
+256
+
+>> Decimal("16.000000000000000000000001")^true
+16
+
+>> Decimal("16.000000000000000000000001")^Blank()
+1
+
+>> Decimal("16.0000000000000000000001")^Date(1900,1,7)
+Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
+Errors: Error 37-62: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.000000000000000000001")^Time(12,0,0)
+Errors: Error 36-48: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.000000000000000000000002")^Decimal("2.000000000000000000000001")
+256
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("2")
+256
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("0")
+1
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("false")
+1
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("true")
+16
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+// Untyped
+
+>> ParseJSON("16.000000000000000000000002")^Decimal("2.000000000000000000000000001")
+256
+
+>> ParseJSON("16.000000000000000000000002")^Decimal("0.000000000000000000000000001")
+1
+
+>> ParseJSON("1e100")^Decimal("2.000000000000000000000000001")
+1E+200

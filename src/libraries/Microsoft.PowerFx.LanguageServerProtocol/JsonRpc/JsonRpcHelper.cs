@@ -30,7 +30,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             InvalidParams = -32602,
             InternalError = -32603,
             PropertyValueRequired = -32604,
-            ServerError = -32000
+            ServerError = -32000,
+            RequestCancelled = -32800,
         }
 
         public static string CreateErrorResult(string id, ErrorCode code) => CreateErrorResult(id, new
