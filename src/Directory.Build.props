@@ -8,9 +8,9 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)outputpackages</PackageOutputPath>
   </PropertyGroup>
 
-  <Target Name="CleanOutputpackagesDir" AfterTargets="Clean">
+  <!--<Target Name="CleanOutputpackagesDir" AfterTargets="Clean">
     <RemoveDir Directories="$(MSBuildThisFileDirectory)outputpackages" />
-  </Target>
+  </Target>-->
 
   <PropertyGroup>
     <DebugType>Full</DebugType>

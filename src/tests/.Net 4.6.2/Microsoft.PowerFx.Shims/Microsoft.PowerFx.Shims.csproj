@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   
   <ItemGroup>
@@ -17,5 +22,5 @@
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.Shims.Shared\Microsoft.PowerFx.Shims.Shared.projitems" Label="Shared" />
-
+  <Import Project="..\..\UseNet462\UseNet462.projitems" Label="Shared" />
 </Project>

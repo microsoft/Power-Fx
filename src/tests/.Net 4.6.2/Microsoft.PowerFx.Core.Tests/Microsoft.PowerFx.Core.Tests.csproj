@@ -9,11 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     
     <!-- .Net 4.6.2 specific -->
     <PackageReference Include="System.Text.Json" Version="6.0.9" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
@@ -33,6 +34,8 @@
 
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
   <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
+  <Import Project="..\..\UseNet462\UseNet462.projitems" Label="Shared" />
+  
   <!--<Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
     <ItemGroup>
       <PfxIcon Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\icon.png" />
