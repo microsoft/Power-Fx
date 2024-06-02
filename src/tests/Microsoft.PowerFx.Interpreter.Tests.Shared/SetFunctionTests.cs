@@ -123,6 +123,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
             Assert.Equal(11m, r1.ToObject());
 
+            // But SetField fails 
+            var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecord_CanMutate()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10m, Y = 20m });
+
+            engine.UpdateVariable("obj", obj, new SymbolProperties { CanSet = true, CanSetMutate = true });
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
+            Assert.Equal(11m, r1.ToObject());
+
             // Can deep mutate record
             var r2 = engine.Eval("Set(obj.X, 31); obj.X", null, _opts);
             Assert.Equal(31m, r2.ToObject());
@@ -139,6 +160,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var obj = cache.Marshal(new { X = 10f, Y = 20f });
 
             engine.UpdateVariable("obj", obj);
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
+            Assert.Equal(11.0, r1.ToObject());
+
+            // But SetField fails 
+            var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecordFloat_SetMutate()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10f, Y = 20f });
+
+            engine.UpdateVariable("obj", obj, new SymbolProperties { CanSet = true, CanSetMutate = true });
 
             // Can update record
             var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);

@@ -185,8 +185,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
-            ExpressionEvaluationTests.MutationFunctionsTestSetup(engine, false);
-
             var rc = new RuntimeConfig();
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
@@ -199,6 +197,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var testRunner = new TestRunner(runner);
 
             testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
+
+            if (testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
+            {
+                ExpressionEvaluationTests.MutationFunctionsTestSetup(engine, false);
+            }
 
             var result = testRunner.RunTests();
 

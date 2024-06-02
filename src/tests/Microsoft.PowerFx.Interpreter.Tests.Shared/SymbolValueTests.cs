@@ -795,11 +795,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
-        public void MutationTests(bool canMutate, bool canSet)
+        [InlineData(true, true, true)]
+        [InlineData(true, false, true)]
+        [InlineData(false, true, true)]
+        [InlineData(false, false, true)]
+        [InlineData(true, true, false)]
+        [InlineData(true, false, false)]
+        [InlineData(false, true, false)]
+        [InlineData(false, false, false)]
+        public void MutationTests(bool canMutate, bool canSet, bool canSetMutate)
         {
             var recordType = RecordType.Empty().Add("Field1", FormulaType.Number);
             var tableType = recordType.ToTable();
@@ -808,7 +812,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbols.AddVariable("var", tableType, new SymbolProperties
             {
                  CanMutate = canMutate,
-                 CanSet = canSet
+                 CanSet = canSet,
+                 CanSetMutate = canSetMutate
             });
 
             var config = new PowerFxConfig();
@@ -823,9 +828,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var checkSet = engine.Check("Set(var, Table({ Field1 : 123}))", opts, symbols);
             var checkMutate = engine.Check("Collect(var, { Field1 : 123})", opts, symbols);
+            var checkSetMutate = engine.Check("Set( First(var).Field1, 123 )", opts, symbols);
 
             Assert.Equal(canSet, checkSet.IsSuccess);
             Assert.Equal(canMutate, checkMutate.IsSuccess);
+            Assert.Equal(canSetMutate, checkSetMutate.IsSuccess);
         }
 
         // Get a convenient string representation of a SymbolValue

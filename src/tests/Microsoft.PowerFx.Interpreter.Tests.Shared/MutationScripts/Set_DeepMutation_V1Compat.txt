@@ -1,117 +1,28 @@
-#SETUP: PowerFxV1CompatibilityRules
+#SETUP: PowerFxV1CompatibilityRules,MutationFunctionsTestSetup
 
-// BASICS
+// Newly declared vars are output as part of the testing infrastructure.  The Set function is actually returning Void.
 
-// Newly declared vars are output as part of the testing infrastructure.  Set is actually returning Void.
->> Set( x, {a:1, b:2})
-{a:1,b:2}
+// BASICS by default, variables are mutable but not set mutable
 
->> Set( y, x )
-{a:1,b:2}
+>> Set( x, {a:1} )
+{a:1}
 
 >> Set( x.a, 3 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+Errors: Error 6-8: The value passed to the 'Set' function cannot be changed.
 
->> x // after set( x.a, ... )
-{a:3,b:2}
-
->> y // after set( x.a, ... )
-{a:1,b:2}
-
->> Set( y.b, 4 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
->> x // after set( y.b, ... )
-{a:3,b:2}
-
->> y // after set( y.b, ... )
-{a:1,b:4}
-
-// FUNCTIONS THAT PROPOGATE MUTABILITY
-
->> Set( a, [1,2,3] )
+>> Set( y, [1,2,3] )
 Table({Value:1},{Value:2},{Value:3})
 
->> Set( b, a )
-Table({Value:1},{Value:2},{Value:3})
+>> Set( First(y).Value, 4 )
+Errors: Error 13-19: The value passed to the 'Set' function cannot be changed.
 
->> Set( First(a).Value, 4 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+>> Patch( y, First(y), {Value:5})
+{Value:5}
 
->> a // after Set( First(a).Value, 4 )
-Table({Value:4},{Value:2},{Value:3})
+>> y
+Table({Value:5},{Value:2},{Value:3})
 
->> b // after Set( First(a).Value, 4 )
-Table({Value:1},{Value:2},{Value:3})
-
->> Set( Last(b).Value, 5 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
->> a // after Set( Last(b).Value, 5 )
-Table({Value:4},{Value:2},{Value:3})
-
->> b // after Set( Last(b).Value, 5 )
-Table({Value:1},{Value:2},{Value:5})
-
->> Set( Index(b,2).Value, 6 )
-If(true, {test:1}, "Void value (result of the expression can't be used).")
-
->> a // after Set( Index(b,2).Value, 6 )
-Table({Value:4},{Value:2},{Value:3})
-
->> b // after Set( Index(b,2).Value, 6 )
-Table({Value:1},{Value:6},{Value:5})
-
-// FUNCTIONS THAT DON'T PROPOGATE MUTABILITY
-
->> Set( Index(FirstN(b,3),2).Value, 6 )
-Errors: Error 25-31: The value passed to the 'Set' function cannot be changed.
-
->> Set( Index(LastN(b,3),2).Value, 6 )
-Errors: Error 24-30: The value passed to the 'Set' function cannot be changed.
-
->> Set( Index(Filter(b,Value>0),2).Value, 6 )
-Errors: Error 31-37: The value passed to the 'Set' function cannot be changed.
-
->> Set( Index(Sort(b,Value),2).Value, 6 )
-Errors: Error 27-33: The value passed to the 'Set' function cannot be changed.
-
->> Set( Index(SortByColumns(b,Value),2).Value, 6 )
-Errors: Error 36-42: The value passed to the 'Set' function cannot be changed.
-
->> Set( First(FirstN(b,3)).Value, 6 )
-Errors: Error 23-29: The value passed to the 'Set' function cannot be changed.
-
->> Set( First(LastN(b,3)).Value, 6 )
-Errors: Error 22-28: The value passed to the 'Set' function cannot be changed.
-
->> Set( First(Filter(b,Value>0)).Value, 6 )
-Errors: Error 29-35: The value passed to the 'Set' function cannot be changed.
-
->> Set( First(Sort(b,Value)).Value, 6 )
-Errors: Error 25-31: The value passed to the 'Set' function cannot be changed.
-
->> Set( First(SortByColumns(b,Value)).Value, 6 )
-Errors: Error 34-40: The value passed to the 'Set' function cannot be changed.
-
->> Set( Last(FirstN(b,3)).Value, 6 )
-Errors: Error 22-28: The value passed to the 'Set' function cannot be changed.
-
->> Set( Last(LastN(b,3)).Value, 6 )
-Errors: Error 21-27: The value passed to the 'Set' function cannot be changed.
-
->> Set( Last(Filter(b,Value>0)).Value, 6 )
-Errors: Error 28-34: The value passed to the 'Set' function cannot be changed.
-
->> Set( Last(Sort(b,Value)).Value, 6 )
-Errors: Error 24-30: The value passed to the 'Set' function cannot be changed.
-
->> Set( Last(SortByColumns(b,Value)).Value, 6 )
-Errors: Error 33-39: The value passed to the 'Set' function cannot be changed.
-
-// LOOKUP
-
-// LITERALS
+// LITERALS can never be mutated
 
 >> Set( {a:1,b:2}.a, 3 )
 Errors: Error 14-16: The value passed to the 'Set' function cannot be changed.
@@ -121,4 +32,311 @@ Errors: Error 19-25: The value passed to the 'Set' function cannot be changed.
 
 >> Set( First(Table({a:1},{a:2},{a:3})).a, 5 )
 Errors: Error 36-38: The value passed to the 'Set' function cannot be changed.
+
+>> Patch( [1,2,3], {Value:1}, {Value:4} )
+Errors: Error 7-14: The value passed to the 'Patch' function cannot be changed.
+
+// SET MUTATION
+
+>> Set( r1_copy1, r1_SetMutateEnabled ); r1_copy1
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( r1_SetMutateEnabled.Field1, 25 ); r1_SetMutateEnabled
+{Field1:25,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> r1_copy1 // umodified due to copy on write
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( r1_copy2, r1_MutateEnabled_SetMutateEnabled ); r1_copy2
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( r1_MutateEnabled_SetMutateEnabled.Field1, 26 ); r1_MutateEnabled_SetMutateEnabled
+{Field1:26,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> r1_copy2 // umodified due to copy on write
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( r1_copy3, r1_MutateEnabled ); r1_copy3
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( r1_MutateEnabled.Field1, 27 ); r1_MutateEnabled_SetMutateEnabled
+Errors: Error 21-28: The value passed to the 'Set' function cannot be changed.
+
+>> r1_MutateEnabled // unmodified due to the error
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> r1_copy3 // umodified due to copy on write
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( t1_copy1, t1_SetMutateEnabled ); t1_copy1
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( First(t1_SetMutateEnabled).Field1, 29 ); t1_SetMutateEnabled
+Table({Field1:29,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( t1_copy2, t1_MutateEnabled_SetMutateEnabled ); t1_copy2
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( First(t1_MutateEnabled_SetMutateEnabled).Field1, 28 ); t1_MutateEnabled_SetMutateEnabled
+Table({Field1:28,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( t1_copy3, t1_MutateEnabled ); t1_copy3
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Set( First(t1_MutateEnabled).Field1, 21 ); t1_MutateEnabled
+Errors: Error 28-35: The value passed to the 'Set' function cannot be changed.
+
+// PATCH/CLEAR/REMOVE/ETC MUTATION
+
+>> Patch( t1_SetMutateEnabled, First(t1_SetMutateEnabled), {Field2: "neptune"})
+Errors: Error 7-26: The value passed to the 'Patch' function cannot be changed.
+
+>> Collect( t1_SetMutateEnabled, r2 )
+Errors: Error 9-28: The value passed to the 'Collect' function cannot be changed.
+
+>> t1_SetMutateEnabled // so far
+Table({Field1:29,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch( t1_MutateEnabled_SetMutateEnabled, First(t1_MutateEnabled_SetMutateEnabled), {Field2: "neptune"} )
+{Field1:28,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Collect( t1_MutateEnabled_SetMutateEnabled, r2 )
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> t1_MutateEnabled_SetMutateEnabled
+Table({Field1:28,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Patch( t1_MutateEnabled, First(t1_MutateEnabled), {Field2: "neptune"} )
+{Field1:1,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Collect( t1_MutateEnabled, r2 )
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> t1_MutateEnabled
+Table({Field1:1,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> t1_copy1 // umodified due to copy on write
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> t1_copy2 // umodified due to copy on write
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> t1_copy3 // umodified due to copy on write
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+// FUNCTIONS THAT PROPAGATE MUTABILITY
+
+>> Set( t1_copy4, t1_MutateEnabled_SetMutateEnabled )
+Table({Field1:28,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Set( First(t1_MutateEnabled_SetMutateEnabled).Field3, DateTime(1999,1,1,0,0,0,0) ); t1_MutateEnabled_SetMutateEnabled
+Table({Field1:28,Field2:"neptune",Field3:DateTime(1999,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Set( Last(t1_MutateEnabled_SetMutateEnabled).Field4, Blank() ); t1_MutateEnabled_SetMutateEnabled
+Table({Field1:28,Field2:"neptune",Field3:DateTime(1999,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Blank()})
+
+>> Set( Index(t1_MutateEnabled_SetMutateEnabled,2).Field2, "mars" ); t1_MutateEnabled_SetMutateEnabled
+Table({Field1:28,Field2:"neptune",Field3:DateTime(1999,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"mars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Blank()})
+
+// FUNCTIONS THAT DON'T PROPAGATE MUTABILITY
+
+>> Set( Index(FirstN(t1_MutateEnabled_SetMutateEnabled,3),2).Field1, 6 )
+Errors: Error 57-64: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Index(LastN(t1_MutateEnabled_SetMutateEnabled,3),2).Field1, 6 )
+Errors: Error 56-63: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Index(Filter(t1_MutateEnabled_SetMutateEnabled,Field1>0),2).Field1, 6 )
+Errors: Error 64-71: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Index(Sort(t1_MutateEnabled_SetMutateEnabled,Field1),2).Field1, 6 )
+Errors: Error 60-67: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Index(SortByColumns(t1_MutateEnabled_SetMutateEnabled,Field1),2).Field1, 6 )
+Errors: Error 69-76: The value passed to the 'Set' function cannot be changed.
+
+>> Set( First(FirstN(t1_MutateEnabled_SetMutateEnabled,3)).Field1, 6 )
+Errors: Error 55-62: The value passed to the 'Set' function cannot be changed.
+
+>> Set( First(LastN(t1_MutateEnabled_SetMutateEnabled,3)).Field1, 6 )
+Errors: Error 54-61: The value passed to the 'Set' function cannot be changed.
+
+>> Set( First(Filter(t1_MutateEnabled_SetMutateEnabled,Field1>0)).Field1, 6 )
+Errors: Error 62-69: The value passed to the 'Set' function cannot be changed.
+
+>> Set( First(Sort(t1_MutateEnabled_SetMutateEnabled,Field1)).Field1, 6 )
+Errors: Error 58-65: The value passed to the 'Set' function cannot be changed.
+
+>> Set( First(SortByColumns(t1_MutateEnabled_SetMutateEnabled,Field1)).Field1, 6 )
+Errors: Error 67-74: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(FirstN(t1_MutateEnabled_SetMutateEnabled,3)).Field1, 6 )
+Errors: Error 54-61: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(LastN(t1_MutateEnabled_SetMutateEnabled,3)).Field1, 6 )
+Errors: Error 53-60: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(Filter(t1_MutateEnabled_SetMutateEnabled,Field1>0)).Field1, 6 )
+Errors: Error 61-68: The value passed to the 'Set' function cannot be changed.
+
+>> Set( LookUp(t1_MutateEnabled_SetMutateEnabled,Field1>0).Field1, 6 )
+Errors: Error 55-62: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(Sort(t1_MutateEnabled_SetMutateEnabled,Field1)).Field1, 6 )
+Errors: Error 57-64: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(SortByColumns(t1_MutateEnabled_SetMutateEnabled,Field1)).Field1, 6 )
+Errors: Error 66-73: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last(Table(r1,r2)).Field1, 6 )
+Errors: Error 23-30: The value passed to the 'Set' function cannot be changed.
+
+>> Set( Last([r1,r2]).Field1, 6 )
+Errors: Error 18-25: The value passed to the 'Set' function cannot be changed.
+
+>> t1_MutateEnabled_SetMutateEnabled // all mods
+Table({Field1:28,Field2:"neptune",Field3:DateTime(1999,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"mars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:Blank()})
+
+>> t1_copy2 // unchanged due to copy on write, recheck
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> t1_copy4 // unchanged due to copy on write
+Table({Field1:28,Field2:"neptune",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+// DEEP, DEEP RECORD MUTATION
+
+// rwr1_SetMutateEnabled
+
+>> Set( rwr1_copy1, rwr1_SetMutateEnabled )
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+>> Set( rwr1_SetMutateEnabled.Field2.Field2_3.Field2_3_2, "very common" ); rwr1_SetMutateEnabled
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"very common"}},Field3:false}
+
+>> Set( rwr1_copy2, rwr1_SetMutateEnabled )
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"very common"}},Field3:false}
+
+>> Set( rwr1_SetMutateEnabled.Field2.Field2_3.Field2_3_1, 2112 ); rwr1_SetMutateEnabled
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:2112,Field2_3_2:"very common"}},Field3:false}
+
+>> rwr1_copy1 // unchanged due to copy on write
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+>> rwr1_copy2 // unchanged due to copy on write
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"very common"}},Field3:false}
+
+// rwr1_MutateEnabled
+
+>> Set( rwr1_copy4, rwr1_MutateEnabled )
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+>> Set( rwr1_MutateEnabled.Field2.Field2_3.Field2_3_2, "very common" ); rwr1_MutateEnabled
+Errors: Error 39-50: The value passed to the 'Set' function cannot be changed.
+
+>> Set( rwr1_MutateEnabled.Field2.Field2_3.Field2_3_1, 2112 ); rwr1_MutateEnabled
+Errors: Error 39-50: The value passed to the 'Set' function cannot be changed.
+
+>> rwr1_copy4 // unchanged due to errors
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+// rwr1_MutateEnabled_SetMutateEnabled
+
+>> Set( rwr1_copy5, rwr1_MutateEnabled_SetMutateEnabled )
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+>> Set( rwr1_MutateEnabled_SetMutateEnabled.Field2.Field2_3.Field2_3_2, "super common" ); rwr1_MutateEnabled_SetMutateEnabled
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"super common"}},Field3:false}
+
+>> Set( rwr1_copy6, rwr1_MutateEnabled_SetMutateEnabled )
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"super common"}},Field3:false}
+
+>> Set( rwr1_MutateEnabled_SetMutateEnabled.Field2.Field2_3.Field2_3_1, 4224 ); rwr1_MutateEnabled_SetMutateEnabled
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:4224,Field2_3_2:"super common"}},Field3:false}
+
+>> rwr1_copy5 // unchanged due to copy on write
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}
+
+>> rwr1_copy6 // unchanged due to copy on write
+{Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"super common"}},Field3:false}
+
+// DEEP, DEEP RECORD MUTATION WITH TABLE
+
+// rwt1_MutateEnabled_SetMutateEnabled
+
+>> rwt1_MutateEnabled_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( rwt1_copy1, rwt1_MutateEnabled_SetMutateEnabled )
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( First(rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4).Field2, "mercury" ); rwt1_MutateEnabled_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"mercury",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Collect( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, r2 ); rwt1_MutateEnabled_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"mercury",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})}}
+
+>> Set( Last(rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4).Field2, "jupiter" ); rwt1_MutateEnabled_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"mercury",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"jupiter",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})}}
+
+>> Patch( rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, LookUp(rwt1_MutateEnabled_SetMutateEnabled.Field2.Field2_4, Field2 = "jupiter"), { Field2: "stars" } )
+{Field1:2,Field2:"stars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> rwt1_MutateEnabled_SetMutateEnabled // after changes
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"mercury",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"stars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})}}
+
+>> rwt1_copy1
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+// rwt1_SetMutateEnabled
+
+>> rwt1_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( rwt1_copy2, rwt1_SetMutateEnabled )
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( First(rwt1_SetMutateEnabled.Field2.Field2_4).Field2, "mercury" ); rwt1_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"mercury",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Collect( rwt1_SetMutateEnabled.Field2.Field2_4, r2 ); rwt1_SetMutateEnabled
+Errors: Error 37-46: The value passed to the 'Collect' function cannot be changed.
+
+>> Set( Last(rwt1_SetMutateEnabled.Field2.Field2_4).Field2, "jupiter" ); rwt1_SetMutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"jupiter",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Patch( rwt1_SetMutateEnabled.Field2.Field2_4, LookUp(rwt1_SetMutateEnabled.Field2.Field2_4, Field2 = "jupiter"), { Field2: "stars" } )
+Errors: Error 35-44: The value passed to the 'Patch' function cannot be changed.
+
+>> rwt1_SetMutateEnabled // after changes
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"jupiter",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> rwt1_copy2
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+// rwt1_MutateEnabled
+
+>> rwt1_MutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( rwt1_copy3, rwt1_MutateEnabled )
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
+>> Set( First(rwt1_MutateEnabled.Field2.Field2_4).Field2, "mercury" ); rwt1_MutateEnabled
+Errors: Error 46-53: The value passed to the 'Set' function cannot be changed.
+
+>> Collect( rwt1_MutateEnabled.Field2.Field2_4, r2 ); rwt1_MutateEnabled
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})}}
+
+>> Set( Last(rwt1_MutateEnabled.Field2.Field2_4).Field2, "jupiter" ); rwt1_MutateEnabled
+Errors: Error 45-52: The value passed to the 'Set' function cannot be changed.
+
+>> Patch( rwt1_MutateEnabled.Field2.Field2_4, LookUp(rwt1_MutateEnabled.Field2.Field2_4, Field2 = "moon"), { Field2: "stars" } )
+{Field1:2,Field2:"stars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> rwt1_MutateEnabled // after changes
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"stars",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})}}
+
+>> rwt1_copy3
+{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
+
 

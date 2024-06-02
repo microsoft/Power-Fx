@@ -76,54 +76,53 @@ namespace Microsoft.PowerFx.Interpreter
             var arg0 = argTypes[0];
             var arg1 = argTypes[1];
 
+            // Type check
+            if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+                 (arg0.IsNumeric && arg1.IsNumeric)))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
+                return;
+            }
+
+            if (arg1.AggregateHasExpandedType())
+            {
+                if (binding.Features.SkipExpandableSetSemantics)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Warning, args[1], WrnSetExpandableType);
+                    return;
+                }
+                else
+                {
+                    if (arg1.IsTable)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
+                        return;
+                    }
+
+                    if (arg1.IsRecord)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
+                        return;
+                    }
+                }
+            }
+
             var firstName = args[0].AsFirstName();
 
             if (firstName != null)
             {
+                // Variable reference assignment, for example Set( x, 3 )
                 var info = binding.GetInfo(firstName);
                 if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
                 {
-                    // We have a variable. type check
-                    if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
-                         (arg0.IsNumeric && arg1.IsNumeric)))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
-                        return;
-                    }
-
-                    if (arg1.AggregateHasExpandedType())
-                    {
-                        if (binding.Features.SkipExpandableSetSemantics)
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Warning, args[1], WrnSetExpandableType);
-                            return;
-                        }
-                        else
-                        {
-                            if (arg1.IsTable)
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
-                                return;
-                            }
-
-                            if (arg1.IsRecord)
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
-                                return;
-                            }
-                        }
-                    }
-
-                    // Success
+                    // We have a variable, success
                     return;
                 }
             }
-            else if (binding.Features.PowerFxV1CompatibilityRules && 
-                    (arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
-                    (arg0.IsNumeric && arg1.IsNumeric)))
+            else if (binding.Features.PowerFxV1CompatibilityRules)
             {
+                // Deep mutation, for example Set( x.a, 4 )
                 base.ValidateArgumentIsSetMutable(binding, args[0], errors);
-
                 return;
             }
 

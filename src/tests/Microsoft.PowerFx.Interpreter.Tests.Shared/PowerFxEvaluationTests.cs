@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -656,6 +657,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     "DisplayNameField2_3")),
                 "DisplayNameField2"))
                 .Add(new NamedFormulaType("Field3", FormulaType.Boolean, "DisplayNameField3"));
+
+            var recordWithTableType = RecordType.Empty()
+                .Add(new NamedFormulaType("Field1", numberType, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field2", RecordType.Empty()
+                    .Add(new NamedFormulaType("Field2_1", numberType, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
+                    .Add(new NamedFormulaType("Field2_4", FormulaValue.NewTable(r1.Type).Type, "DisplayNameField2_4")),
+                "DisplayNameField2"));
 #pragma warning restore SA1117 // Parameters should be on same line or separate lines
 
             var recordWithRecordFields1 = new List<NamedValue>()
@@ -706,9 +715,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("Field3", FormulaValue.New(true))
             };
 
+            var recordWithTableFields1 = new List<NamedValue>()
+            {
+                new NamedValue("Field1", newNumber(3)),
+                new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                {
+                    new NamedValue("Field2_1", newNumber(321)),
+                    new NamedValue("Field2_2", FormulaValue.New("2_2")),
+                    new NamedValue("Field2_4", FormulaValue.NewTable(r1.Type, r1)),
+                }))
+            };
+
             var recordWithRecord1 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields1);
             var recordWithRecord2 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields2);
             var recordWithRecord3 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields3);
+            var recordWithTable1 = FormulaValue.NewRecordFromFields(recordWithTableType, recordWithTableFields1);
 
             var t2 = FormulaValue.NewTable(recordWithRecordType, new List<RecordValue>()
             {
@@ -735,6 +756,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("NewRecord", r1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
             engine.UpdateVariable("OldRecord", r2, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = false });
             engine.UpdateVariable("DataSource", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("NewRecord_SetEnabled_SetMutateEnabled", r1, new SymbolProperties { CanMutate = false, CanSet = true, CanSetMutate = true });
+
+            // Set and Patch/Collect/Remove/etc deep mutation testing
+            engine.UpdateVariable("t1_SetMutateEnabled", t1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("t1_MutateEnabled_SetMutateEnabled", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("t1_MutateEnabled", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("r1_SetMutateEnabled", r1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("r1_MutateEnabled_SetMutateEnabled", r1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("r1_MutateEnabled", r1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("rwr1_SetMutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwr1_MutateEnabled_SetMutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwr1_MutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("rwt1_SetMutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwt1_MutateEnabled_SetMutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwt1_MutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
 
             var valueTableType = TableType.Empty().Add("Value", numberType);
             var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());
