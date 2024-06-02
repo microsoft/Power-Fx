@@ -16,7 +16,7 @@ Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value inst
 Errors: Error 6-23: The value passed to the 'Clear' function cannot be changed.
 
 >> Clear(If(false,[1,2,3],Error("bad table")))
-Errors: Error 6-23: The value passed to the 'Clear' function cannot be changed.
+Errors: Error 6-42: The value passed to the 'Clear' function cannot be changed.
 
 >> IsError(Clear(1))
 Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 8-13: The function 'Clear' has some invalid arguments.

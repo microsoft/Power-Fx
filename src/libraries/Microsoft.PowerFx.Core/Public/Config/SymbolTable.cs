@@ -101,7 +101,8 @@ namespace Microsoft.PowerFx
             var props = new SymbolProperties
             {
                 CanSet = mutable,
-                CanMutate = mutable
+                CanMutate = mutable,
+                CanSetMutate = false
             };
             return AddVariable(name, type, props, displayName);
         }

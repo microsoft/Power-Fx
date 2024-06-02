@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Interpreter
                     (arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
                     (arg0.IsNumeric && arg1.IsNumeric)))
             {
-                base.ValidateArgumentIsMutable(binding, args[0], errors);
+                base.ValidateArgumentIsSetMutable(binding, args[0], errors);
 
                 return;
             }

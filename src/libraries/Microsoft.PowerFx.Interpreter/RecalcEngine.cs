@@ -131,8 +131,9 @@ namespace Microsoft.PowerFx
         /// Create or update a named variable to a value. 
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
+        /// <param name="newVarProps">symbol properties.</param> 
         /// <param name="value">constant value.</param>
-        public void UpdateVariable(string name, FormulaValue value)
+        public void UpdateVariable(string name, FormulaValue value, SymbolProperties newVarProps = null)
         {
             var x = value;
 
@@ -151,7 +152,12 @@ namespace Microsoft.PowerFx
             else
             {
                 // New
-                var slot = _symbolTable.AddVariable(name, value.Type, mutable: true);
+                if (newVarProps == null)
+                {
+                    newVarProps = new SymbolProperties { CanMutate = true, CanSet = true };
+                }
+
+                var slot = _symbolTable.AddVariable(name, value.Type, newVarProps);
 
                 Formulas[slot.SlotIndex] = RecalcFormulaInfo.NewVariable(slot, name, x.IRContext.ResultType);
                 _symbolValues.Set(slot, value);

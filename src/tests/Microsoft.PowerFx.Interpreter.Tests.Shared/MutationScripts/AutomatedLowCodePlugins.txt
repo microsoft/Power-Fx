@@ -1,0 +1,71 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+>> NewRecord
+{Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> OldRecord
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+// Can compare fields, can't compare records
+
+>> NewRecord.Field1 = OldRecord.Field1
+false
+
+>> NewRecord = OldRecord // can't compare records
+Errors: Error 17-18: Incompatible types for comparison. These types can't be compared: Record, Record.
+
+// NewRecord can be mutated but not set
+
+>> Set( NewRecord.Field1, 20 ); NewRecord
+{Field1:20,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord.Field2, "milton"); NewRecord
+{Field1:20,Field2:"milton",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( NewRecord, OldRecord )
+Errors: Error 5-14: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'NewRecord'
+
+// OldRecord can't be mutated or set
+
+>> Set( OldRecord.Field1, 30 ); NewRecord
+Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
+
+>> Set( OldRecord.Field2, "susan"); NewRecord
+Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
+
+>> Set( OldRecord, NewRecord )
+Errors: Error 5-14: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'OldRecord'
+
+// Copies of NewRecord and OldRecord can't be mutated (today, we may relax this limitation in the future)
+
+>> Set( x, NewRecord )
+{Field1:20,Field2:"milton",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( x.Field1, 40 )
+Errors: Error 6-13: The value passed to the 'Set' function cannot be changed.
+
+>> Set( y, OldRecord )
+{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Set( y.Field1, 50 )
+Errors: Error 6-13: The value passed to the 'Set' function cannot be changed.
+
+// Data source, can't use Set to mutate, Patch needs to be used
+
+>> DataSource
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+
+>> Patch( DataSource, First(DataSource), {Field2: "jean"} )
+{Field1:1,Field2:"jean",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+
+>> Set( DataSource, Table(First(DataSource)) )
+Errors: Error 5-15: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'DataSource'
+
+>> Set( DataSource.Field2, [{Name:"fred"}] )
+Errors: Error 15-22: Deprecated use of '.'. Please use the 'ShowColumns' function instead.
+
+>> Set( First(DataSource).Field2, "fred" )
+Errors: Error 22-29: The value passed to the 'Set' function cannot be changed.
+
+>> Failure
+Error

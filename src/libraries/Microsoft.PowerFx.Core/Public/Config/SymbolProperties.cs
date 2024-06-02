@@ -24,6 +24,10 @@ namespace Microsoft.PowerFx
         // This only applies to symbols of a tabular type. 
         public bool CanMutate { get; init; }
 
+        // Can this symbol be deep mutated with Set()
+        // This only applies to symbols of a tabular type. 
+        public bool CanSetMutate { get; init; }
+
         // Is Copyable?
     }
 }

@@ -253,6 +253,23 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
+        /// Adds an error to the container if the given argument is immutable.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="arg"></param>
+        /// <param name="errors"></param>
+        protected void ValidateArgumentIsSetMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsSetMutable(arg))
+            {
+                errors.EnsureError(
+                    arg,
+                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
+                    this.Name);
+            }
+        }
+
+        /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
         public virtual bool ModifiesValues => false;

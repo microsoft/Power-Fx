@@ -84,6 +84,7 @@ namespace Microsoft.PowerFx.Core.Binding
         private readonly BitArray _isConstant;
         private readonly BitArray _isSelfContainedConstant;
         private readonly BitArray _isMutable;
+        private readonly BitArray _isSetMutable;
 
         // Whether a node supports its rowscoped param exempted from delegation check. e.g. The 3rd argument in AddColumns function
         private readonly BitArray _supportsRowScopedParamDelegationExempted;
@@ -305,6 +306,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _isContextual = new BitArray(idLim);
             _isConstant = new BitArray(idLim);
             _isMutable = new BitArray(idLim);
+            _isSetMutable = new BitArray(idLim);
             _isSelfContainedConstant = new BitArray(idLim);
             _lambdaScopingMap = new ScopeUseSet[idLim];
             _isDelegatable = new BitArray(idLim);
@@ -550,6 +552,15 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(isMutable || !_isMutable.Get(node.Id));
 
             _isMutable.Set(node.Id, isMutable);
+        }
+
+        private void SetSetMutable(TexlNode node, bool isSetMutable)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _typeMap.Length);
+            Contracts.Assert(isSetMutable || !_isSetMutable.Get(node.Id));
+
+            _isSetMutable.Set(node.Id, isSetMutable);
         }
 
         private void SetSelfContainedConstant(TexlNode node, bool isConstant)
@@ -1330,6 +1341,14 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _isMutable.Length);
 
             return _isMutable.Get(node.Id);
+        }
+
+        public bool IsSetMutable(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _isSetMutable.Length);
+
+            return _isSetMutable.Get(node.Id);
         }
 
         public bool IsSelfContainedConstant(TexlNode node)
@@ -2890,6 +2909,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
                     _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
+                    _txb.SetSetMutable(node, nameSymbol?.Props.CanSetMutate ?? false);
                     if (lookupInfo.Data is IExternalNamedFormula formula)
                     {
                         isConstantNamedFormula = formula.IsConstant;
@@ -3715,6 +3735,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // An `a.b` expression will be mutable if `a` is mutable
                 _txb.SetMutable(node, _txb.IsMutable(node.Left));
+                _txb.SetSetMutable(node, _txb.IsSetMutable(node.Left));
 
                 _txb.SetConstant(node, isConstant);
                 _txb.SetSelfContainedConstant(node, leftType.IsEnum || (leftType.IsAggregate && _txb.IsSelfContainedConstant(node.Left)));
@@ -4681,6 +4702,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     _txb.SetMutable(node, mutable);
+                }
+
+                // Propagate mutability if supported by the function
+                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsSetMutable(node.Args.ChildNodes[0]))
+                {
+                    var firstChildNode = node.Args.ChildNodes[0];
+
+                    // Propagate mutability if it is *not* a connected data source
+                    var mutable = true;
+                    if (firstChildNode is FirstNameNode first &&
+                        _nameResolver?.Lookup(first.Ident.Name, out var lookupInfo) == true &&
+                        lookupInfo.Kind == BindKind.Data)
+                    {
+                        mutable = false;
+                    }
+
+                    _txb.SetSetMutable(node, mutable);
                 }
 
                 // Invalid datasources always result in error

@@ -10,10 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -589,7 +592,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return null;
         }
 
-        private static void MutationFunctionsTestSetup(RecalcEngine engine, bool numberIsFloat)
+        internal static void MutationFunctionsTestSetup(RecalcEngine engine, bool numberIsFloat)
         {
             /*
              * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
@@ -727,6 +730,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("rwr2", recordWithRecord2);
             engine.UpdateVariable("rwr3", recordWithRecord3);
             engine.UpdateVariable("r_empty", rEmpty);
+
+            // Low code plugin testing
+            engine.UpdateVariable("NewRecord", r1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("OldRecord", r2, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("DataSource", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
 
             var valueTableType = TableType.Empty().Add("Value", numberType);
             var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());

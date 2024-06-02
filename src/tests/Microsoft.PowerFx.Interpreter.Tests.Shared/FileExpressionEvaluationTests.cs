@@ -185,6 +185,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
+            ExpressionEvaluationTests.MutationFunctionsTestSetup(engine, false);
+
             var rc = new RuntimeConfig();
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
