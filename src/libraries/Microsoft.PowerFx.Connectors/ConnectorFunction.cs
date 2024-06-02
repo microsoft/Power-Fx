@@ -795,13 +795,26 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="runtimeContext">RuntimeConnectorContext.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Function result.</returns>
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        {
+            return InvokeAsync(arguments, runtimeContext, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Call connector function.
+        /// </summary>
+        /// <param name="arguments">Arguments.</param>
+        /// <param name="runtimeContext">RuntimeConnectorContext.</param>
+        /// <param name="outputTypeOverride">The output type that should be used during output parsing.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Function result.</returns>
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(InvokeAsync))}, with {LogArguments(arguments)}");
-                FormulaValue formulaValue = await InvokeInternalAsync(arguments, runtimeContext, cancellationToken).ConfigureAwait(false);
+                FormulaValue formulaValue = await InvokeInternalAsync(arguments, runtimeContext, outputTypeOverride, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(InvokeAsync))}, returning from {nameof(InvokeInternalAsync)}, with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
             }
@@ -812,7 +825,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        internal Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        {
+            return InvokeInternalAsync(arguments, runtimeContext, null, cancellationToken);
+        }
+
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -832,7 +850,7 @@ namespace Microsoft.PowerFx.Connectors
 
             BaseRuntimeConnectorContext context = ReturnParameterType.Binary ? runtimeContext.WithRawResults() : runtimeContext;
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, context), context.ThrowOnError);
-            FormulaValue result = await invoker.InvokeAsync(arguments, context, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await invoker.InvokeAsync(arguments, context, outputTypeOverride, cancellationToken).ConfigureAwait(false);
             FormulaValue formulaValue = await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
 
             runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(InvokeInternalAsync))}, returning {LogFormulaValue(formulaValue)}");
