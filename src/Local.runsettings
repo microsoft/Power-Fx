@@ -6,6 +6,7 @@
   </RunConfiguration>
   <DataCollectionRunSettings>
     <DataCollectors>
+      <!--
       <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
         <Configuration>
           <CodeCoverage>
@@ -17,6 +18,7 @@
                 <ModulePath>.*\Microsoft.PowerFx.LanguageServerProtocol.dll</ModulePath>
                 <ModulePath>.*\Microsoft.PowerFx.Transport.Attributes.dll</ModulePath>
                 <ModulePath>.*\Microsoft.PowerFx.Json.dll</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.Repl.dll</ModulePath>
               </Include>
               <Exclude>
                 <ModulePath>.*\*.Tests.dll</ModulePath>
@@ -28,11 +30,11 @@
           </CodeCoverage>
         </Configuration>
       </DataCollector>
+      -->
       <DataCollector friendlyName="blame" enabled="True">
         <Configuration>
           <ResultsDirectory>.\TestResults</ResultsDirectory>
-          <CollectDump />
-          <CollectDump />
+          <CollectDump />         
         </Configuration>
       </DataCollector>
     </DataCollectors>
