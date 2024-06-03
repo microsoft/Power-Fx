@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -26,6 +27,8 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class Engine
     {
+        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
+
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
         /// </summary>
@@ -102,7 +105,15 @@ namespace Microsoft.PowerFx
         private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
 
         public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
-        
+
+        internal readonly IList<IExpressionRewriter> InitialFixupLSPExpressionRewriter = new List<IExpressionRewriter>();
+
+        public void AddPostCheckExpressionRewriter(IExpressionRewriter expressionRewriter)
+        {
+            using var guard = _guard.Enter();
+            InitialFixupLSPExpressionRewriter.Add(expressionRewriter);
+        }
+
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        

@@ -86,6 +86,11 @@ namespace Microsoft.PowerFx
             var check = _getCheckResult(expression);
             var symbols = check._symbols;
             var engine = check.Engine;
+            foreach (var expressionConverter in engine.InitialFixupLSPExpressionRewriter)
+            {
+                expression = expressionConverter.Process(check);
+                check = _getCheckResult(expression);
+            }
 
             return engine.GetDisplayExpression(expression, symbols, check.ParserCultureInfo);
         }
