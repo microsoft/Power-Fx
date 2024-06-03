@@ -11,6 +11,9 @@ namespace Microsoft.PowerFx
     /// </summary>
     public interface IExpressionRewriter
     {
+        /// <summary>
+        /// Process the check result and return the re-written expression.
+        /// </summary>
         public string Process(CheckResult check);
     }
 }
