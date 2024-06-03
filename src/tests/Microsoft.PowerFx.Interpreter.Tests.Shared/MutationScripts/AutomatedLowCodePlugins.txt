@@ -79,7 +79,9 @@ Errors: Error 15-22: Deprecated use of '.'. Please use the 'ShowColumns' functio
 >> Set( First(DataSource).Field2, "saturn" )
 Errors: Error 22-29: The value passed to the 'Set' function cannot be changed.
 
-// Use in scope variables
+// USE IN SCOPE VARIABLES
+
+// Scope variables cannot be Set
 
 >> With( NewRecord, Field1 )
 20
@@ -108,13 +110,25 @@ Errors: Error 47-54: The value passed to the 'Set' function cannot be changed.
 >> ForAll( [NewRecord, NewRecord], Set( NewRecord.Field1, 23 ) ); NewRecord
 {Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
+// The following three tests are effecitvely the same, with different levels of explicitness
+// In all three cases, we are reading the scope variable Field1 that was copied at the point With started and using that value throughout
+// The double additions don't matter since the source is always the same.
+>> With( NewRecord, Set( NewRecord.Field1, Field1+1); Set( NewRecord.Field1, Field1+1) ); NewRecord.Field1
+24
+
+>> With( NewRecord, Set( NewRecord.Field1, ThisRecord.Field1+1); Set( NewRecord.Field1, ThisRecord.Field1+1) ); NewRecord.Field1
+25
+
+>> With( NewRecord As ThisRecord, Set( NewRecord.Field1, ThisRecord.Field1+1); Set( NewRecord.Field1, ThisRecord.Field1+1) ); NewRecord.Field1
+26
+
 // In the future, we may allow variables to set mutate, which would use copy on write
 
 >> NewRecord // before NewRecord_SetEnabled_SetMutateEnabled changes
-{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( NewRecord_SetEnabled_SetMutateEnabled, NewRecord )
-{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( NewRecord_SetEnabled_SetMutateEnabled.Field2, "saturn" )
 If(true, {test:1}, "Void value (result of the expression can't be used).")
@@ -126,19 +140,19 @@ If(true, {test:1}, "Void value (result of the expression can't be used).")
 If(true, {test:1}, "Void value (result of the expression can't be used).")
 
 >> NewRecord_SetEnabled_SetMutateEnabled // after mutations
-{Field1:23,Field2:"saturn",Field3:DateTime(2024,3,1,0,0,0,0),Field4:Blank()}
+{Field1:26,Field2:"saturn",Field3:DateTime(2024,3,1,0,0,0,0),Field4:Blank()}
 
 >> NewRecord // unchanged (copy on write prevented it from being updated)
-{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( z, NewRecord ) 
-{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( z, Patch( NewRecord, { Field2: "neptune", Field3: DateTime(2024,4,1,0,0,0,0), Field4: false } ) )
-{Field1:23,Field2:"neptune",Field3:DateTime(2024,4,1,0,0,0,0),Field4:false}
+{Field1:26,Field2:"neptune",Field3:DateTime(2024,4,1,0,0,0,0),Field4:false}
 
 >> NewRecord // unchanged after z copy (not a mutation, not a copy on write)
-{Field1:23,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
+{Field1:26,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 // Check data type compatibility, should be the same as any other variable
 
