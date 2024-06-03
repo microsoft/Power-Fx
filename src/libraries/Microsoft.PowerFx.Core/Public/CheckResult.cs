@@ -706,6 +706,18 @@ namespace Microsoft.PowerFx
 
             return summary;
         }
+
+        public bool IsNodeLambdaFullRecord(FirstNameNode node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            var fnInfo = this.Binding.GetInfo(node);
+
+            return fnInfo.Kind == BindKind.LambdaFullRecord;
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract

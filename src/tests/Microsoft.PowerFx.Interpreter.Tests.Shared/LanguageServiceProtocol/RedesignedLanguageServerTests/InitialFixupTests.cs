@@ -120,8 +120,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 {
                     if (node.Ident.Name == "ThisRecord")
                     {
-                        var fnInfo = _check.ApplyBindingInternal().GetInfo(node);
-                        if (fnInfo.Kind != Core.Binding.BindKind.LambdaFullRecord)
+                        if (_check.IsNodeLambdaFullRecord(node))
                         {
                             _replacements.Add(new KeyValuePair<Span, string>(node.GetTextSpan(), "NewRecord"));
                         }
