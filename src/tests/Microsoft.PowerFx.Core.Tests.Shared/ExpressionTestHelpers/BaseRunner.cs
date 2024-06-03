@@ -118,8 +118,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 () =>
                 {
                     var t = RunAsync2(testCase);
-                    t.ConfigureAwait(false);
-
                     return t.Result;
                 },
                 new CancellationToken(),
@@ -169,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2).ConfigureAwait(false);
+            var (result, msg) = await RunAsync2(case2);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -195,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName).ConfigureAwait(false);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
                 originalResult = runResult.OriginalValue;
 
@@ -223,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         // for tests that are run with and without NumberIsFloat set.
                         foreach (var exp in expectedStrArr)
                         {
-                            if (!actualStrArr.Contains(exp) && 
+                            if (!actualStrArr.Contains(exp) &&
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))) &&
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, " Decimal, Number, ", " Number, Decimal, "))))
                             {
@@ -256,7 +254,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase).ConfigureAwait(false);
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below
@@ -306,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
 
                         // 1ms
-                        if (delta < 10000) 
+                        if (delta < 10000)
                         {
                             return (TestResult.Pass, null);
                         }
@@ -326,7 +324,7 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning restore CS0618 // Type or member is obsolete
 
                         // 1ms
-                        if (delta < 10000) 
+                        if (delta < 10000)
                         {
                             return (TestResult.Pass, null);
                         }

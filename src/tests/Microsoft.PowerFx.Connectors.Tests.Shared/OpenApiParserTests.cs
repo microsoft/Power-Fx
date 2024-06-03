@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DType.TryParse("![createdDateTime:d, displayName:d]", out DType dtype);
             var expectedFormulaType = FormulaType.Build(dtype);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[0], context2, expectedFormulaType, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[0], context2, expectedFormulaType, CancellationToken.None);
 
             RecordValue httpResultValue = (RecordValue)httpResult;
             FormulaValue displayName = httpResultValue.GetField("displayName");
