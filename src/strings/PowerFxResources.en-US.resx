@@ -1867,7 +1867,7 @@
     <comment>Error Message. Error that occurs when you use the `.` operator on a type that doesn't support it. {0} is populated by a type name (e.g. Number, Text, Boolean). The operator (.) is not translated, should be the same character ('full stop', \u002E, decimal code 46) in all languages.</comment>
   </data>
   <data name="ErrInvalidDotOnPolymorphic" xml:space="preserve">
-    <value>The '.' operator cannot be used directly on Polymorphic lookups. Try using the AsType function to specify the type to treat it as.</value>
+    <value>The '.' operator cannot be used directly on polymorphic lookups. Try using the AsType function to specify the type to treat it as.</value>
     <comment>{Locked=Polymorphic} {Locked=AsType} Error Message. Error that occurs when you use the `.` operator on a type that doesn't support it. Polymorphic is a type name. The operator (.) is not translated, should be the same character ('full stop', \u002E, decimal code 46) in all languages.</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
