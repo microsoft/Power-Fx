@@ -127,12 +127,13 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool HasPreciseErrors => false;
 
         /// <summary>
-        /// Returns true if the function will mutate the value of the first argument, as is the case of Patch, Collect, Remove, etc.
+        /// Returns true if the function will mutate the argument, as is the case of Patch, Collect, Remove, etc.
         /// Set can also mutate, but needs to make a decision based on the argument's node.
         /// This function covers both CanMutate and CanSetMutate scenarios which is checked in CheckTypes/CheckSemantics.
         /// </summary>
-        /// <param name="arg"></param>
-        public virtual bool MutatesArg0(TexlNode arg) => false;
+        /// <param name="argIndex">Index of the argument.</param>
+        /// <param name="arg">Argument at that index.</param>
+        public virtual bool MutatesArg(int argIndex, TexlNode arg) => false;
 
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 

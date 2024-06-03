@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override bool IsSelfContained => false;
 
         // Set() of a simple identifier is not a mutation through a reference (a mutate), but rather changing the reference (a true set).
-        public override bool MutatesArg0(TexlNode arg) => arg.Kind != NodeKind.FirstName;
+        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0 && arg.Kind != NodeKind.FirstName;
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {

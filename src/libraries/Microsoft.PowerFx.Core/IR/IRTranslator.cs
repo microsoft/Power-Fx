@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
-                    var argContext = i == 0 && func.MutatesArg0(arg) ? new IRTranslatorContext(context, isMutation: true) : context;
+                    var argContext = func.MutatesArg(i, arg) ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.ParameterCanBeIdentifier(arg, i, context.Binding.Features))
