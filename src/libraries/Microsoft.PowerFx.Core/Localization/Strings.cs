@@ -613,6 +613,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTooManyUps = new ErrorResourceKey("ErrTooManyUps");
         public static ErrorResourceKey ErrRuleNestedTooDeeply = new ErrorResourceKey("ErrRuleNestedTooDeeply");
         public static ErrorResourceKey ErrInvalidDot = new ErrorResourceKey("ErrInvalidDot");
+        public static ErrorResourceKey ErrInvalidDotOnPolymorphic = new ErrorResourceKey("ErrInvalidDotOnPolymorphic");
         public static ErrorResourceKey ErrUnknownFunction = new ErrorResourceKey("ErrUnknownFunction");
         public static ErrorResourceKey ErrUnimplementedFunction = new ErrorResourceKey("ErrUnimplementedFunction");
         public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
