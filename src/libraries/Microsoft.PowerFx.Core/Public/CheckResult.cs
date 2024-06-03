@@ -707,16 +707,19 @@ namespace Microsoft.PowerFx
             return summary;
         }
 
-        public bool IsNodeLambdaFullRecord(FirstNameNode node)
+        /// <summary>
+        /// Used to check if given FirstNameNode(Variable) node is a valid variable or not.
+        /// </summary>
+        public bool IsNodeInvalid(FirstNameNode node)
         {
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
 
-            var fnInfo = this.Binding.GetInfo(node);
+            var fnInfo = this.ApplyBindingInternal().GetInfo(node);
 
-            return fnInfo.Kind == BindKind.LambdaFullRecord;
+            return fnInfo.Kind == BindKind.Min && fnInfo.Data == null;
         }
     }
 

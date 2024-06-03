@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                         Uri = documentUri,
                         LanguageId = "powerfx",
                         Version = 1,
-                        Text = "Filter([1], ThisRecord.Value = 2); ThisRecord.acc_name"
+                        Text = "Filter([1], ThisRecord.Value = 2); ThisRecord.acc_name; With({ThisRecord : 5}, ThisRecord + 2)"
                     }
                 }, CustomProtocolNames.InitialFixup);
 
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var response = AssertAndGetResponsePayload<TextDocumentItem>(rawResponse, payload.id);
 
             Assert.Equal(documentUri, response.Uri);
-            Assert.Equal("Filter([1], ThisRecord.Value = 2); NewRecord.'Account Name'", response.Text);
+            Assert.Equal("Filter([1], ThisRecord.Value = 2); NewRecord.'Account Name'; With({ThisRecord : 5}, ThisRecord + 2)", response.Text);
         }
 
         private class MockExpressionRewriter : IExpressionRewriter
@@ -120,7 +120,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 {
                     if (node.Ident.Name == "ThisRecord")
                     {
-                        if (_check.IsNodeLambdaFullRecord(node))
+                        // makes sure "ThisRecord" is not coming from a scope.
+                        if (_check.IsNodeInvalid(node))
                         {
                             _replacements.Add(new KeyValuePair<Span, string>(node.GetTextSpan(), "NewRecord"));
                         }
