@@ -532,11 +532,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private static void AddFile(TestRunner runner, string filename)
         {
-#if NETCOREAPP3_1_OR_GREATER
-            var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
-#else
-            var test1 = TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests") + @"\" + filename;
-#endif
+            var test1 = GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
             runner.AddFile(TestRunner.ParseSetupString(string.Empty), test1);
         }
     }

@@ -71,7 +71,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
+#if NET462
+                await Assert.ThrowsAnyAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+#else
                 await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+#endif
             }
         }
 
@@ -237,12 +241,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var st = Environment.StackTrace;
 
                 if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
-                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
+                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches") ||
+                    st.Contains("Microsoft.PowerFx.Types.LambdaFormulaValue"))
                 {
                     return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }
 
-                throw new NotImplementedException("Cannot call TryGetField");
+                throw new NotImplementedException($"Cannot call TryGetField - {st}");
             }
 
             // Doesn't perform a copy.  Not needed for testing purposes and 

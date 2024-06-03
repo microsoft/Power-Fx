@@ -31,6 +31,7 @@
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj" />
 
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
   </ItemGroup>
 

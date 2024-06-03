@@ -90,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning disable SYSLIB0012 // 'Assembly.CodeBase' is obsolete
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
 #pragma warning restore SYSLIB0012 // 'Assembly.CodeBase' is obsolete
+
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);
             return testDir;

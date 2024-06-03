@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -36,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
             SourceFile = test.SourceFile;
             SourceLine = test.SourceLine;
             SetupHandlerName = test.SetupHandlerName;
+            DisableDotNet = test.DisableDotNet;
         }
 
         public static ExpressionTestCase Fail(string message)
@@ -102,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 SourceLine = info.GetValue<int>("sourceLine");
                 SetupHandlerName = info.GetValue<string>("setupHandlerName");
                 FailMessage = info.GetValue<string>("failMessage");
+                DisableDotNet = info.GetValue<string>("disableDotNet");
             }
             catch (Exception e)
             {
@@ -117,6 +117,7 @@ namespace Microsoft.PowerFx.Core.Tests
             info.AddValue("sourceLine", SourceLine, typeof(int));
             info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
             info.AddValue("failMessage", FailMessage, typeof(string));
+            info.AddValue("disableDotNet", DisableDotNet, typeof(string));
         }
     }
 }

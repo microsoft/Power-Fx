@@ -12,8 +12,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Microsoft.PowerFx.Connectors</PackageId>
     <Title>Microsoft Power Fx Connector Support</Title>
-    <Description>Connectors</Description>
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <Description>Connectors</Description>    
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>

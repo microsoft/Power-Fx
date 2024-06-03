@@ -29,22 +29,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.Core.Tests.Shared\Microsoft.PowerFx.Core.Tests.Shared.projitems" Label="Shared" />
   <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
   <Import Project="..\..\UseNet462\UseNet462.projitems" Label="Shared" />
-  
-  <!--<Target Name="CopyPfxFiles" BeforeTargets="GenerateNuspec">
-    <ItemGroup>
-      <PfxIcon Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\icon.png" />
-      <PfxExpressionTestCases Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\*" Pack="true" />
-      <PfxExpressionTestCasesNotYetReady Include="..\..\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\NotYetReady\*" Pack="true" />
-    </ItemGroup>
-    <Copy SourceFiles="@(PfxIcon)" DestinationFolder="$(MSBuildProjectDirectory)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(PfxExpressionTestCases)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(PfxExpressionTestCasesNotYetReady)" DestinationFolder="$(MSBuildProjectDirectory)\$(BaseOutputPath)\$(Configuration)\$(TargetFrameworks)\ExpressionTestCases\NotYetReady" SkipUnchangedFiles="true" />
-  </Target>-->
 
 </Project>

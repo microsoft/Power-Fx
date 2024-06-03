@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj" />
     <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
   </ItemGroup>
 

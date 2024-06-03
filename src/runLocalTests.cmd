@@ -1,6 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+echo. | time | findstr /v new
+
 set CONFIGURATION=DebugAll
 if /i _%1 neq _ @set CONFIGURATION=%1
 @echo Testing %Configuration%
@@ -35,5 +37,10 @@ if exist %TESTFILE11% set TESTFILES70=%TESTFILES70% %TESTFILE11%
 
 rem /EnableCodeCoverage /InIsolation
 
-"%VSTEST%" %TESTFILES462% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=minimal /TestCaseFilter:"Net=462"
-"%VSTEST%" %TESTFILES70% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=minimal /TestCaseFilter:"Net=70"
+@echo Running .Net 4.6.2 tests...
+"%VSTEST%" %TESTFILES462% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=462"
+echo. | time | findstr /v new
+
+@echo Running .Net 7.0 tests...
+"%VSTEST%" %TESTFILES70% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=70"
+echo. | time | findstr /v new

@@ -251,12 +251,14 @@ Error({Kind:ErrorKind.Div0})
 Table({Value:Error({Kind:ErrorKind.Div0})})
 
 // .Net 4.6.2 returns -8.16588936419192E+15
-// >> Cot( 3.14159265358979323846264338327950288419716939937510 )
-// -8165619676597685
+#DISABLE.NET: 462
+>> Cot( 3.14159265358979323846264338327950288419716939937510 )
+-8165619676597685
 
 // .Net 4.6.2 returns Table({Value:-8.16588936419192E+15})
-// >> Cot( [3.14159265358979323846264338327950288419716939937510] )
-// Table({Value:-8165619676597685})
+#DISABLE.NET: 462
+>> Cot( [3.14159265358979323846264338327950288419716939937510] )
+Table({Value:-8165619676597685})
 
 >> Cot( Pi()/4 )
 1
@@ -280,8 +282,9 @@ Table({Value:1})
 1.5707963267948966
 
 // .Net 4.6.2 returns Table({Value:1.5707963267949})
-// >> Acos( [0] )
-// Table({Value:1.5707963267948966})
+#DISABLE.NET: 462
+>> Acos( [0] )
+Table({Value:1.5707963267948966})
 
 >> Acos( 1 )
 0
@@ -290,20 +293,24 @@ Table({Value:1})
 Table({Value:0})
 
 // .Net 4.6.2 returns Table({Value:1.5707963267949})
-// >> Acot( 0 )
-// 1.5707963267948966
+#DISABLE.NET: 462
+>> Acot( 0 )
+1.5707963267948966
 
 // .Net 4.6.2 returns Table({Value:1.5707963267949})
-// >> Acot( [0] )
-// Table({Value:1.5707963267948966})
+#DISABLE.NET: 462
+>> Acot( [0] )
+Table({Value:1.5707963267948966})
 
 // .Net 4.6.2 returns Table({Value:0.785398163397448})
-// >> Acot( 1 )
-// 0.7853981633974483
+#DISABLE.NET: 462
+>> Acot( 1 )
+0.7853981633974483
 
 // .Net 4.6.2 returns Table({Value:0.785398163397448})
-// >> Acot( [1] )
-// Table({Value:0.7853981633974483})
+#DISABLE.NET: 462
+>> Acot( [1] )
+Table({Value:0.7853981633974483})
 
 >> Asin( 0 )
 0
@@ -315,8 +322,9 @@ Table({Value:0})
 1.5707963267948966
 
 // .Net 4.6.2 returns Table({Value:1.5707963267949})
-// >> Asin( [1] )
-// Table({Value:1.5707963267948966})
+#DISABLE.NET: 462
+>> Asin( [1] )
+Table({Value:1.5707963267948966})
 
 >> Atan( 0 )
 0
@@ -328,8 +336,9 @@ Table({Value:0})
 0.7853981633974483
 
 // .Net 4.6.2 returns  Table({Value:0.785398163397448})
-// >> Atan( [1] )
-// Table({Value:0.7853981633974483})
+#DISABLE.NET: 462
+>> Atan( [1] )
+Table({Value:0.7853981633974483})
 
 >> 4 * Atan(1) - Pi()
 0

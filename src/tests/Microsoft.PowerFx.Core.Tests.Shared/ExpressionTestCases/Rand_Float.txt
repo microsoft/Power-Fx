@@ -3,12 +3,14 @@
 // Test Rand() - beware, rand is volatile. 
 
 // .Net 4.6.2 overflows
-// >> RandBetween( 1.7976931348623157e308 /* MaxValue */, 1.7976931348623157e308 /* MaxValue */ )
-// 1.7976931348623157e308
+#DISABLE.NET: 462
+>> RandBetween( 1.7976931348623157e308 /* MaxValue */, 1.7976931348623157e308 /* MaxValue */ )
+1.7976931348623157e308
 
 // .Net 4.6.2 overflows
-// >> RandBetween( -1.7976931348623157e308 /* MinValue */, -1.7976931348623157e308 /* MinValue */ )
-// -1.7976931348623157e308
+#DISABLE.NET: 462
+>> RandBetween( -1.7976931348623157e308 /* MinValue */, -1.7976931348623157e308 /* MinValue */ )
+-1.7976931348623157e308
 
 // output range at limits
 

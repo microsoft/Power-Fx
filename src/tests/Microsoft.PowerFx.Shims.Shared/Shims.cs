@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Xunit;
 
 namespace Microsoft.PowerFx.Shims
 {
@@ -33,14 +32,34 @@ namespace Microsoft.PowerFx.Shims
 #else
             return $@"{path1}\{path2}";
 #endif
-        }
+        }        
 
         public static string PathJoin(string path1, string path2, string path3)
         {
 #if NETCOREAPP3_1_OR_GREATER
             return Path.Combine(path1, path2, path3);
 #else
-            return $@"{path1}\{path2}\{path3}";
+            return $@"{path1}\{path2}\{path3}".Replace(@"\\", @"\");
+#endif
+        }
+
+        public static string GetFullPath(string path, string basePath)
+        {
+#if NETCOREAPP3_1_OR_GREATER
+            // Can't define Shims on static classes
+            return Path.GetFullPath(path, basePath);
+#else            
+            if (!Path.IsPathRooted(path))
+            {
+                return Path.Combine(basePath, path);
+            }
+            
+            if (path.StartsWith(@"\", StringComparison.Ordinal))
+            {
+                return (Path.GetPathRoot(basePath) + path).Replace(@"\\", @"\");
+            }
+
+            return path;            
 #endif
         }
 

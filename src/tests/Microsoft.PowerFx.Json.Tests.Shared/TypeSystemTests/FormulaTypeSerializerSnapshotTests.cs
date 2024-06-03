@@ -26,47 +26,21 @@ namespace Microsoft.PowerFx.Json.Tests
         /// built in debug or release mode.
         /// </summary>       
 
-#if NET8_0
-        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
+        private static readonly string _baseDirectory = PathJoin(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
 
         private static readonly string _typeSnapshotDirectory = RegenerateSnapshots
             ? _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "net8.0"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "net8.0"), string.Empty)
-                .Replace(Path.Join("bin", "DebugAll", "net8.0"), string.Empty)
-                .Replace(Path.Join("bin", "ReleaseAll", "net8.0"), string.Empty)
-                .Replace(Path.Join("bin", "Debug70", "net8.0"), string.Empty)
-                .Replace(Path.Join("bin", "Release70", "net8.0"), string.Empty)
+                .Replace(PathJoin("bin", "Debug", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "DebugAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "ReleaseAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
             : _baseDirectory;
-#endif 
-
-#if NET7_0
-        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
-
-        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots 
-            ? _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "net7.0"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "net7.0"), string.Empty)
-                .Replace(Path.Join("bin", "DebugAll", "net7.0"), string.Empty)
-                .Replace(Path.Join("bin", "ReleaseAll", "net7.0"), string.Empty)
-                .Replace(Path.Join("bin", "Debug70", "net7.0"), string.Empty)
-                .Replace(Path.Join("bin", "Release70", "net7.0"), string.Empty)
-            : _baseDirectory;
-#endif 
-
-#if NET462
-        private static readonly string _baseDirectory = $@"{Directory.GetCurrentDirectory()}\TypeSystemTests\JsonTypeSnapshots";
-
-        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots
-            ? _baseDirectory
-                .Replace(@"bin\Debug\net462", string.Empty)
-                .Replace(@"bin\Release\net462", string.Empty)
-                .Replace(@"bin\DebugAll\net462", string.Empty)
-                .Replace(@"bin\ReleaseAll\net462", string.Empty)
-                .Replace(@"bin\Debug462\net462", string.Empty)
-                .Replace(@"bin\Release462\net462", string.Empty)
-            : _baseDirectory;
-#endif
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {

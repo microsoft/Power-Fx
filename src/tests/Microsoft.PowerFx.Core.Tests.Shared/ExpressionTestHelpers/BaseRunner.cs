@@ -161,6 +161,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var case2 = new TestCase
             {
+                DisableDotNet = testCase.DisableDotNet,
                 SetupHandlerName = testCase.SetupHandlerName,
                 SourceLine = testCase.SourceLine,
                 SourceFile = testCase.SourceFile,

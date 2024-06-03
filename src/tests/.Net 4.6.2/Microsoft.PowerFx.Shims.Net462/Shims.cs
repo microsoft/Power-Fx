@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Shims.Net462
 {
+    // This class contains shims for .NET 4.6.2
+    // APIs that are missing in .Net 4.6.2
     public static class Shims
     {
         public static IEnumerable<T> Select<T>(this MatchCollection matchCollection, Func<Match, T> func)
@@ -43,6 +45,11 @@ namespace Microsoft.PowerFx.Shims.Net462
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
         {
             return new HashSet<T>(source);
+        }
+
+        public static string[] Split(this string str, string separator, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return str.Split(new[] { separator }, options);
         }
     } 
 }

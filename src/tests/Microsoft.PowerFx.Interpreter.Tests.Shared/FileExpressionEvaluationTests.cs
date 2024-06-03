@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
-using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
@@ -93,16 +91,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
+        private static string _currentNetVersion = null;
+        private static readonly object _cnvLock = new object();
+
         private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat, ITestOutputHelper output)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+
+            // If #DISABLE.NET directive is used, skip the test if the current .NET version is in the list.
+            if (!string.IsNullOrEmpty(testCase.DisableDotNet) && ShouldSkipDotNetVersion(testCase, prefix))
+            {
+                Skip.If(true, prefix + $"Net {_currentNetVersion} is excluded");
+                return;
+            }
+
             var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features, Log = (msg) => output.WriteLine(msg) };
             var (result, msg) = runner.RunTestCase(testCase);
 
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)
             {
                 case TestResult.Pass:
@@ -116,6 +125,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
+        }
+
+        private static bool ShouldSkipDotNetVersion(ExpressionTestCase testCase, string prefix)
+        {
+            lock (_cnvLock)
+            {
+                if (string.IsNullOrEmpty(_currentNetVersion))
+                {
+                    // Find [assembly: AssemblyTrait(...)] attribute in the test assembly to get the current .NET version.
+                    foreach (CustomAttributeData cad in CustomAttributeData.GetCustomAttributes(typeof(FileExpressionEvaluationTests).Assembly))
+                    {
+                        if (cad.AttributeType == typeof(AssemblyTraitAttribute))
+                        {
+                            _currentNetVersion = cad.ConstructorArguments[1].Value.ToString();
+                            break;
+                        }
+                    }
+                }
+
+                if (testCase.DisableDotNet.Split(",").Any(excludedVersion => excludedVersion == _currentNetVersion))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
 #if false
@@ -191,7 +226,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new ReplRunner(engine);
             runner._repl.EnableUserObject();
             runner._repl.UserInfo = UserInfoTestSetup.UserInfo.UserInfo;
-            
+
             // runner._repl.InnerServices = rc.ServiceProvider;
 
             var testRunner = new TestRunner(runner);
@@ -221,13 +256,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Verify this runs without throwing an exception.
             var list = attr.GetData(method);
+            int disableDotNet = 0;
 
             // And doesn't report back any test failures. 
             foreach (var batch in list)
             {
                 var item = (ExpressionTestCase)batch[0];
-                Assert.Null(item.FailMessage);
+                Assert.True(item.FailMessage == null, item.FailMessage);
+
+                if (!string.IsNullOrEmpty(item.DisableDotNet))
+                {
+                    disableDotNet++;
+                }
             }
+
+            Console.WriteLine($"Found {list.Count()} tests, {disableDotNet} with DisabledDotNet set.");
         }
 
         // Scan the "Not Yet Ready" directory to ensure the tests all parse.

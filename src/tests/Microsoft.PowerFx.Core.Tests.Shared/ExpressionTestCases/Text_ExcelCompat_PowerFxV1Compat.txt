@@ -986,16 +986,19 @@ true
 "5:30 PM"
 
 // .Net 7 produces "17:02:03" as LongTimePattern varies between .Net versions
-// >> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
-// "5:02:03 CH"
+#DISABLE.NET: 70
+>> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
+"5:02:03 CH"
 
 // .Net 7 produces "Thứ Hai, 27 tháng 2, 2023" as LongDatePattern varies between .Net versions
-// >> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
-// "27 Tháng Hai 2023"
+#DISABLE.NET: 70
+>> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
+"27 Tháng Hai 2023"
 
 // .Net 7 produces "Thứ Hai, 27 tháng 2, 2023 00:00:00 SA" as LongDateTimePattern varies between .Net versions
-// >> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
-// "27 Tháng Hai 2023 12:00:00 SA"
+#DISABLE.NET: 70
+>> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
+"27 Tháng Hai 2023 12:00:00 SA"
 
 //Excel doesn't support DateTimeValue function or the DateTimeFormat formats
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime24)

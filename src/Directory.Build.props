@@ -8,10 +8,6 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)outputpackages</PackageOutputPath>
   </PropertyGroup>
 
-  <!--<Target Name="CleanOutputpackagesDir" AfterTargets="Clean">
-    <RemoveDir Directories="$(MSBuildThisFileDirectory)outputpackages" />
-  </Target>-->
-
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
@@ -31,15 +27,7 @@
     </PackageReference>    
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True'" >
-    <EnableNETAnalyzers>false</EnableNETAnalyzers>    
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>  
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
-    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True' OR '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True'" >
+  <PropertyGroup>    
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>8.0.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -47,7 +35,14 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
   </PropertyGroup>
-  
+
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" 
+          Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">    
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" />
+    </ItemGroup>
+  </Target>
+
   <PropertyGroup>
     <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>    
@@ -56,7 +51,7 @@
   <PropertyGroup>
     <!--
       Disabled CS1591 (Missing XML Comment for Public). Reenable to track down remaining missing documentation
-      Disabled CS1998 (Async method lacks await operator): Exception handling for methods returning a task that don't use await is likely to cause confusion.
+      Disabled CS1998 (Async method lacks await operator): Exception handling for methods returning a task that don't use await is likely to cause confusion.      
     -->
     <NoWarn>$(NoWarn);CS1591;CS1998</NoWarn>
   </PropertyGroup>

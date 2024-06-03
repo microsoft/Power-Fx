@@ -109,8 +109,9 @@ Error({Kind:ErrorKind.Div0})
 0
 
 // .Net 4.6.2 returns 0
-// >> Mod( Decimal("1e28"), Decimal("2.00000000000000000000000002") )
-// 0.000000000000000000000001
+#DISABLE.NET: 462
+>> Mod( Decimal("1e28"), Decimal("2.00000000000000000000000002") )
+0.000000000000000000000001
 
 >> Mod( Float(19), ParseJSON("4") )
 3
@@ -178,8 +179,9 @@ Error({Kind:ErrorKind.Div0})
 0
 
 // .Net 4.6.2 returns 0
-// >> Mod( "1e28", Decimal(2.00000000000000001) )
-// 0.00000025
+#DISABLE.NET: 462
+>> Mod( "1e28", Decimal(2.00000000000000001) )
+0.00000025
 
 >> Mod( Float( "1e28" ), Decimal(2.00000000000000001) )
 0
@@ -616,8 +618,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 0
 
 // .Net 4.6.2 returns 0
-// >> Mod( ParseJSON("1e28"), Decimal(2.00000000000000001) )
-// 0.00000025
+#DISABLE.NET: 462
+>> Mod( ParseJSON("1e28"), Decimal(2.00000000000000001) )
+0.00000025
 
 >> Mod( Float( ParseJSON("1e28") ), Decimal(2.00000000000000001) )
 0
