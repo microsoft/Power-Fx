@@ -3366,6 +3366,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
+                if (leftType.IsPolymorphic)
+                {
+                    // Polymorphic is slightly different than the other cases below, this error contains specific suggestions on using AsType to get access to fields.
+                    SetDottedNameError(node, TexlStrings.ErrInvalidDotOnPolymorphic);
+                    return;
+                }
+
                 if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject && !leftType.IsDeferred)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot, leftType.GetKindString());
