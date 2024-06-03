@@ -263,6 +263,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Teams.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />
   </ItemGroup>
