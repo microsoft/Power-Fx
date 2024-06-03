@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -36,7 +37,17 @@ namespace Microsoft.PowerFx
     ///  This includes helpers to aide in customizing the editing experience. 
     /// </summary>
     public sealed class EditorContextScope : IPowerFxScope, IPowerFxScopeFx2NL
-    {        
+    {
+        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
+
+        private readonly IList<IExpressionRewriter> _initialFixupLSPExpressionRewriter = new List<IExpressionRewriter>();
+
+        public void AddPostCheckExpressionRewriter(IExpressionRewriter expressionRewriter)
+        {
+            using var guard = _guard.Enter();
+            _initialFixupLSPExpressionRewriter.Add(expressionRewriter);
+        }
+
         // List of handlers to get code-fix suggestions. 
         // Key is CodeFixHandler.HandlerName
         private readonly Dictionary<string, CodeFixHandler> _handlers = new Dictionary<string, CodeFixHandler>();
@@ -86,7 +97,7 @@ namespace Microsoft.PowerFx
             var check = _getCheckResult(expression);
             var symbols = check._symbols;
             var engine = check.Engine;
-            foreach (var expressionConverter in engine.InitialFixupLSPExpressionRewriter)
+            foreach (var expressionConverter in _initialFixupLSPExpressionRewriter)
             {
                 expression = expressionConverter.Process(check);
                 check = _getCheckResult(expression);

@@ -27,8 +27,6 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class Engine
     {
-        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
-
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
         /// </summary>
@@ -105,14 +103,6 @@ namespace Microsoft.PowerFx
         private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
 
         public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
-
-        internal readonly IList<IExpressionRewriter> InitialFixupLSPExpressionRewriter = new List<IExpressionRewriter>();
-
-        public void AddPostCheckExpressionRewriter(IExpressionRewriter expressionRewriter)
-        {
-            using var guard = _guard.Enter();
-            InitialFixupLSPExpressionRewriter.Add(expressionRewriter);
-        }
 
         /// <summary>
         /// Get all functions from the config and symbol tables. 
