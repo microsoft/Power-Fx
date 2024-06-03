@@ -66,14 +66,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         public async Task TestInitialFixupRewriter()
         {
             var engine = new RecalcEngine();
+            engine.AddPostCheckExpressionRewriter(new MockExpressionRewriter());
 
             var record = RecordType.Empty().Add("acc_name", FormulaType.String, "Account Name");
             var symbol = new SymbolTable();
             symbol.AddVariable("NewRecord", record);
 
             var editorContextScope = new EditorContextScope(engine: engine, parserOptions: null, symbols: symbol);
-            editorContextScope.AddPostCheckExpressionRewriter(new MockExpressionRewriter());
-
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editorContextScope);
             Init(new InitParams(scopeFactory: scopeFactory));
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";

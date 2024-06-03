@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.IPostCheckErrorHandler",
+                "Microsoft.PowerFx.IExpressionRewriter",
 
                 "Microsoft.PowerFx.EngineDocumentation",
 
