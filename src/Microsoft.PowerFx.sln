@@ -71,41 +71,41 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Repl.Test
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.TexlFunctionExporter.Shared", "tests\Microsoft.PowerFx.TexlFunctionExporter.Shared\Microsoft.PowerFx.TexlFunctionExporter.Shared.shproj", "{6BB3FA08-791F-4418-AD1C-FAB5EE67D88C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Net 4.6.2", ".Net 4.6.2", "{101EA8CC-4491-4BED-B379-F5EB7A9DFBEF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Net4.6.2", ".Net4.6.2", "{101EA8CC-4491-4BED-B379-F5EB7A9DFBEF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Net 7.0", ".Net 7.0", "{04292C40-764E-4FC1-9A1A-6F019EA53C08}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Net7.0", ".Net7.0", "{04292C40-764E-4FC1-9A1A-6F019EA53C08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{8CF1A53C-A812-4659-97B2-96170D57B685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\.Net7.0\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{8CF1A53C-A812-4659-97B2-96170D57B685}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{CFFAFB5D-FD5B-4D31-8F31-0DC12C45A4D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\.Net7.0\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{CFFAFB5D-FD5B-4D31-8F31-0DC12C45A4D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{B9F8461A-1919-43C6-B6FA-8908A658A882}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\.Net7.0\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{B9F8461A-1919-43C6-B6FA-8908A658A882}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{22C21DD2-677C-43DE-B14F-9FF59C5A0191}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\.Net7.0\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{22C21DD2-677C-43DE-B14F-9FF59C5A0191}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{9E699744-029A-4F6E-A1E2-1D50D5A2F941}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\.Net7.0\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{9E699744-029A-4F6E-A1E2-1D50D5A2F941}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net 7.0\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{90B0D90B-E2E3-4FE2-9C1D-43403076E2FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net7.0\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{90B0D90B-E2E3-4FE2-9C1D-43403076E2FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.TexlFunctionExporter", "tests\.Net 7.0\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj", "{2E42675C-2DE2-445D-801F-9A33A1056B09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.TexlFunctionExporter", "tests\.Net7.0\Microsoft.PowerFx.TexlFunctionExporter\Microsoft.PowerFx.TexlFunctionExporter.csproj", "{2E42675C-2DE2-445D-801F-9A33A1056B09}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{5C12D720-2863-472E-8DC2-B28984CB0248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Connectors.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Connectors.Tests\Microsoft.PowerFx.Connectors.Tests.csproj", "{5C12D720-2863-472E-8DC2-B28984CB0248}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{A5969202-B136-424D-90FD-452D0B99AF35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{A5969202-B136-424D-90FD-452D0B99AF35}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{DFD41E8E-F548-4D44-BFFD-3A0EE4E97413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{DFD41E8E-F548-4D44-BFFD-3A0EE4E97413}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{CE79FB62-9F71-4BE7-AA0D-C31C45C1E4AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Json.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Json.Tests\Microsoft.PowerFx.Json.Tests.csproj", "{CE79FB62-9F71-4BE7-AA0D-C31C45C1E4AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{184EEFCF-EF76-40D9-92E8-4671431AB86E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Performance.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Performance.Tests\Microsoft.PowerFx.Performance.Tests.csproj", "{184EEFCF-EF76-40D9-92E8-4671431AB86E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net 4.6.2\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{9D4A55FE-D7AD-47AE-969E-6E329EAFAA10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Repl.Tests", "tests\.Net4.6.2\Microsoft.PowerFx.Repl.Tests\Microsoft.PowerFx.Repl.Tests.csproj", "{9D4A55FE-D7AD-47AE-969E-6E329EAFAA10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims.Net462", "tests\.Net 4.6.2\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj", "{E18B7B09-5690-4124-9554-DA4B46A633E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims.Net462", "tests\.Net4.6.2\Microsoft.PowerFx.Shims.Net462\Microsoft.PowerFx.Shims.Net462.csproj", "{E18B7B09-5690-4124-9554-DA4B46A633E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims", "tests\.Net 4.6.2\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj", "{668F0772-3B4F-47B7-A26A-D84901C708A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims", "tests\.Net4.6.2\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj", "{668F0772-3B4F-47B7-A26A-D84901C708A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims", "tests\.Net 7.0\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj", "{8213336C-046A-4878-97D4-387121BE73F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Shims", "tests\.Net7.0\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj", "{8213336C-046A-4878-97D4-387121BE73F5}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.PowerFx.Shims.Shared", "tests\Microsoft.PowerFx.Shims.Shared\Microsoft.PowerFx.Shims.Shared.shproj", "{78A4B136-1F16-4471-BCE0-75EA1A04045D}"
 EndProject
