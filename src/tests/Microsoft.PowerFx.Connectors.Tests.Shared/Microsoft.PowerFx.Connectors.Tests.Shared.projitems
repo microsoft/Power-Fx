@@ -228,6 +228,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers DB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_InputType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\TestConnectorDateTimeFormatResponse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server TestAllFunctions.jsonSet" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetAttachment.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Invalid.txt" />
