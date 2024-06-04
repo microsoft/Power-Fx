@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task JsonSerializer_Empty()
         {
-            var str = await SerializeJsonAsync(null).ConfigureAwait(false);
+            var str = await SerializeJsonAsync(null);
             Assert.Equal("{}", str);
         }
 
@@ -31,26 +31,26 @@ namespace Microsoft.PowerFx.Tests
             string expected = "{}";
 
             // Test against blank value
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaNumber).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaInteger).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaString).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaBoolean).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayInteger).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayString).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayObject).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayDateTime).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaDateTime).ConfigureAwait(false));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaNumber));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaInteger));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaString));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaBoolean));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayInteger));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayString));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayObject));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaArrayDateTime));
+            Assert.Equal(expected, await SerializeSchemaAgainstBlankValueAsync(SchemaDateTime));
 
             // Test against error value
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaNumber).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaInteger).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaString).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaBoolean).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayInteger).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayString).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayObject).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayDateTime).ConfigureAwait(false));
-            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaDateTime).ConfigureAwait(false));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaNumber));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaInteger));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaString));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaBoolean));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayInteger));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayString));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayObject));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaArrayDateTime));
+            Assert.Equal(expected, await SerializeSchemaAgainstErrorValueAsync(SchemaDateTime));
         }    
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":1}", str);
         }
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New(1.17e-4))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":0.000117}", str);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a\\b\"c\""] = (SchemaInteger, FormulaValue.New(1))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a\\b\u0022c\u0022"":1}", str);
         }
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, null)
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);
         }
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (null, null)
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Missing schema for property a", ex.Message);
         }
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (integer) and got StringValue value, for property a", ex.Message);
         }
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (number) and got StringValue value, for property a", ex.Message);
         }
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New(11))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected StringValue and got DecimalValue value, for property a", ex.Message);
         }
@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected BooleanValue and got StringValue value, for property a", ex.Message);
         }
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1)),
                 ["b"] = (SchemaInteger, FormulaValue.New(-2))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":1,""b"":-2}", str);
         }
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New("abc"))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":""abc""}", str);
         }
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New(true)),
                 ["b"] = (SchemaBoolean, FormulaValue.New(false))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":true,""b"":false}", str);
         }
@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Not supported property type unknown for property a", ex.Message);
         }
@@ -204,7 +204,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "null" }, FormulaValue.New(1)),
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("null schema type not supported yet for property a", ex.Message);
         }
@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(1, 2))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":[1,2]}", str);
         }
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(Array.Empty<int>()))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":[]}", str);
         }
@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(GetRecord((TableValue.ValueName, FormulaValue.NewBlank()))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":[null]}", str);
         }
@@ -248,7 +248,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["z"] = (SchemaArrayInteger, GetArray("a", "b"))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""z"":[""a"",""b""]}", str);
         }
@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayString, GetArray(true, false))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":[true,false]}", str);
         }
@@ -273,7 +273,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["A"] = (SchemaArrayDateTime, GetArray(dt1, dt2))
-            }).ConfigureAwait(false);
+            });
 
             var obj = JsonSerializer.Deserialize<DateTimeArrayType>(str);
             Assert.Equal(new[] { dt1, dt2 }, obj.A);
@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName a", ex.Message);
         }
@@ -296,7 +296,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord((TableValue.ValueName, GetRecord(("z", FormulaValue.New(2)))))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Not supported type Microsoft.PowerFx.Types.InMemoryRecordValue for value", ex.Message);
         }
@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
         }
@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Tests
             var str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, false), ("y", SchemaString, false)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":{""x"":1,""y"":""foo""}}", str);
         }
@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Tests
                              ("x", FormulaValue.New(1)),
                              ("y", FormulaValue.New("foo")),
                              ("z", GetRecord(("a", FormulaValue.New(-1))))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal(@"{""a"":{""x"":1,""y"":""foo"",""z"":{""a"":-1}}}", str);
         }
@@ -349,16 +349,16 @@ namespace Microsoft.PowerFx.Tests
             Func<Task<string>> lambda = async () => await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, required)), GetRecord(("x", FormulaValue.New(1))))
-            }).ConfigureAwait(false);
+            });
 
             if (required)
             {
-                var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await lambda().ConfigureAwait(false)).ConfigureAwait(false);
+                var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await lambda());
                 Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
             }
             else
             {
-                Assert.False(string.IsNullOrEmpty(await lambda().ConfigureAwait(false)));
+                Assert.False(string.IsNullOrEmpty(await lambda()));
             }
         }
 
@@ -370,7 +370,7 @@ namespace Microsoft.PowerFx.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);
-            string str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local)).ConfigureAwait(false);
+            string str = await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
             date = TimeZoneInfo.ConvertTimeToUtc(date);
@@ -393,7 +393,7 @@ namespace Microsoft.PowerFx.Tests
             return await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (schema, FormulaValue.NewBlank())
-            }).ConfigureAwait(false);
+            });
         }
 
         private async Task<string> SerializeSchemaAgainstErrorValueAsync(OpenApiSchema schema)
@@ -401,7 +401,7 @@ namespace Microsoft.PowerFx.Tests
             return await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (schema, CommonErrors.DivByZeroError(IRContext.NotInSource(FormulaType.Decimal)))
-            }).ConfigureAwait(false);
+            });
         }
     }
 }

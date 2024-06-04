@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // test good formula
             var payload = GetSignatureHelpPayload(signatureHelpParams1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<SignatureHelp>(rawResponse, payload.id);
             var sig = response.Signatures.Single();
             Assert.Equal("AISummarize()", sig.Label);
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Position = GetPosition(offset2),
                     Context = GetSignatureHelpContext(",")
                 };
-                await TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, withAllowSideEffects).ConfigureAwait(false);
+                await TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, withAllowSideEffects);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Position = GetPosition(20),
                 Context = GetSignatureHelpContext(",")
             };
-            await TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, true).ConfigureAwait(false);
+            await TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, true);
         }
 
         private async Task TestSignatureHelpCore(SignatureHelpParams signatureHelpParams1, SignatureHelpParams signatureHelpParams2, bool withAllowSideEffects)
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // test good formula
             var payload = GetSignatureHelpPayload(signatureHelpParams1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<SignatureHelp>(rawResponse, payload.id);
             Assert.Equal(0U, response.ActiveSignature);
             Assert.Equal(0U, response.ActiveParameter);
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
 
             payload = GetSignatureHelpPayload(signatureHelpParams2);
-            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             response = AssertAndGetResponsePayload<SignatureHelp>(rawResponse, payload.id);
             Assert.Equal(0U, response.ActiveSignature);
             Assert.Equal(1U, response.ActiveParameter);
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 TextDocument = GetTextDocument("powerfx://test"),
                 Position = GetPosition(0),
             });
-            var errorResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var errorResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             AssertErrorPayload(errorResponse, payload.id, JsonRpcHelper.ErrorCode.InvalidParams);
         }
 

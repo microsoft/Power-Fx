@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(suggestionHandlers);
 
-            _config = config;            
+            _config = config;
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && 
+                if (!suggestion.Type.IsUnknown &&
 
                     // Most type acceptance is straightforward
                     (type.Accepts(suggestion.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
@@ -262,6 +262,12 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var handler in intellisenseData.CleanupHandlers)
             {
                 handler.Run(context, intellisenseData, resultSuggestions);
+            }
+
+            // InvariantCulture
+            if (culture?.LCID == 127)
+            {
+                culture = null;
             }
 
             intellisenseData.Suggestions.Sort(culture);

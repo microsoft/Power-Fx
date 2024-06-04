@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("FieldAccess(Last:![line:s](FirstN:*[line:s](InjectServiceProviderFunction:*[line:s](ResolvedObject('File:RuntimeValues_XXX')), Float:n(2:w))), line)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues);
             StringValue str = Assert.IsType<StringValue>(result);
             Assert.Equal("b", str.Value);
         }
@@ -92,7 +92,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
         protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken).ConfigureAwait(false);
+
+#if !NET462
+            string[] lines = await File.ReadAllLinesAsync(_fileName, cancellationToken);
+#else
+            string[] lines = File.ReadAllLines(_fileName);
+#endif
+
             return lines.Select(line => DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(new NamedValue("line", FormulaValue.New(line))))).ToArray();
         }
     }
