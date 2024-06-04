@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var evaluator = check.GetEvaluator();
 
             // Runtime exception
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(true);
         }
 
         [Theory]
