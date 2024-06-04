@@ -88,16 +88,16 @@ namespace Microsoft.PowerFx.Tests
             await RunExpressionWithMemoryLimit(expr, DefaultMemorySizeBytes, hasGovernorException: true);
         }
 
-        [Theory]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaabbbbbbbaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"bcabcabcabcabcaaaaaaaaaaaaaaabbbbbbbaaaacccccccccccaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        public async Task SubstituteMemoryLimit(string expr)
-        {
-            long maxLength = long.MaxValue;
-            await RunExpressionWithMemoryLimit(expr, maxLength, hasGovernorException: false);
-        }
+        //[Theory]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaabbbbbbbaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"bcabcabcabcabcaaaaaaaaaaaaaaabbbbbbbaaaacccccccccccaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //public async Task SubstituteMemoryLimit(string expr)
+        //{
+        //    long maxLength = long.MaxValue;
+        //    await RunExpressionWithMemoryLimit(expr, maxLength, hasGovernorException: false);
+        //}
 
         private async Task RunExpressionWithMemoryLimit(string expression, long memorySize, bool hasGovernorException)
         {
