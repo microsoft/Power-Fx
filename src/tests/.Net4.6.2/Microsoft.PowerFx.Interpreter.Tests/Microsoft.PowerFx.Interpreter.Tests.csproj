@@ -9,13 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-
     <!-- .Net 4.6.2 specifics -->    
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <Reference Include="System.Web" />
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">

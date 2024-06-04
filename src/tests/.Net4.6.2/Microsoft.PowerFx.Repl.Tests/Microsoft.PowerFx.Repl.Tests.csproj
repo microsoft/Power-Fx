@@ -8,10 +8,9 @@
     <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
   </PropertyGroup>
 
-  <ItemGroup>    
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-
+  <ItemGroup>        
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
