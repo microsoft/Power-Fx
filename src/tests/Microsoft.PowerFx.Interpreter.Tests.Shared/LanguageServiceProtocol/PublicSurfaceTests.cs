@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.EditorEngineExtensions",
                 "Microsoft.PowerFx.EditorContextScope",
                 "Microsoft.PowerFx.Core.IPowerFxScopeFactory",
+                "Microsoft.PowerFx.IExpressionRewriter",
 
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
 

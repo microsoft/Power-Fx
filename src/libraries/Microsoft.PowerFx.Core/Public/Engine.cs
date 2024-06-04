@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -102,7 +103,7 @@ namespace Microsoft.PowerFx
         private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
 
         public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
-        
+
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        
