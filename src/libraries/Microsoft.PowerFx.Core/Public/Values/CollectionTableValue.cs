@@ -123,35 +123,42 @@ namespace Microsoft.PowerFx.Types
             return DValue<BooleanValue>.Of(FormulaValue.New(true));
         }
 
-        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;
-            if (_sourceIndex != null)
+            if (_sourceIndex != null && index0 >= 0 && index0 < _sourceCount.Count)
             {
-                if (index0 < 0 || index0 >= _sourceCount.Count)
-                {
-                    record = null;
-                    return false;
-                }
-
-                if (mutationCopy && _sourceMutableIndex != null)
-                {
-                    RecordValue rec = Marshal(_sourceIndex[index0]).Value;
-                    RecordValue copyRecord = (RecordValue)rec.MaybeShallowCopy();
-                    _sourceMutableIndex[index0] = MarshalInverse(copyRecord);
-                    record = DValue<RecordValue>.Of(copyRecord);
-                }
-                else
-                {
-                    var item = _sourceIndex[index0];
-                    record = Marshal(item);
-                }
-
+                var item = _sourceIndex[index0];
+                record = Marshal(item);
                 return true;
             }
             else
             {
                 return base.TryGetIndex(index1, out record);
+            }
+        }
+
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy)
+        {
+            if (!mutationCopy)
+            {
+                return TryGetIndex(index1, out record);
+            }
+            else
+            {
+                var index0 = index1 - 1;
+                if (_sourceIndex != null && _sourceMutableIndex != null && index0 >= 0 && index0 < _sourceCount.Count)
+                {
+                    RecordValue rec = Marshal(_sourceIndex[index0]).Value;
+                    RecordValue copyRecord = (RecordValue)rec.MaybeShallowCopy();
+                    _sourceMutableIndex[index0] = MarshalInverse(copyRecord);
+                    record = DValue<RecordValue>.Of(copyRecord);
+                    return true;
+                }
+                else
+                {
+                    return base.TryGetIndex(index1, out record, mutationCopy);
+                }
             }
         }
 

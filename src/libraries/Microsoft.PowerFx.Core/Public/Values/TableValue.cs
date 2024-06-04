@@ -100,11 +100,26 @@ namespace Microsoft.PowerFx.Types
         /// Lookup the record at the given 1-based index, or return an error value if out of range.
         /// </summary>
         /// <param name="index1">1-based index.</param>
+        /// <returns>The record or an errorValue.</returns>
+        public DValue<RecordValue> Index(int index1)
+        {
+            if (TryGetIndex(index1, out var record))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+        }
+
+        /// <summary>
+        /// With mutation support, lookup the record at the given 1-based index, or return an error value if out of range.
+        /// </summary>
+        /// <param name="index1">1-based index.</param>
         /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
         /// <returns>The record or an errorValue.</returns>
-        public DValue<RecordValue> Index(int index1, bool mutationCopy = false)
+        public DValue<RecordValue> Index(int index1, bool mutationCopy)
         {
-            if (TryGetIndex(index1, out var record, mutationCopy: mutationCopy))
+            if (TryGetIndex(index1, out var record, mutationCopy))
             {
                 return record;
             }
@@ -113,11 +128,12 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Index() does standard error messaging and then call TryGetIndex().
-        // By default, can't mutate through a table, must be overrideen for specific table types.
-        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
+        // Can't mutate through this entry point.
+        // It is OK to just override this overload if the table is not mutable.
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;
-            if (index0 < 0 || mutationCopy)
+            if (index0 < 0)
             {
                 record = null;
                 return false;
@@ -125,6 +141,20 @@ namespace Microsoft.PowerFx.Types
 
             record = Rows.ElementAtOrDefault(index0);
             return record != null;
+        }
+
+        // Index() does standard error messaging and then call TryGetIndex().
+        // This needs to be overriden to support mutation.
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy)
+        {
+            if (!mutationCopy)
+            {
+                return TryGetIndex(index1, out record);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>

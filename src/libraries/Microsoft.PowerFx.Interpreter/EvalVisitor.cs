@@ -171,11 +171,15 @@ namespace Microsoft.PowerFx
             {
                 var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
                 
-                if (arg0value is RecordValue rv)
+                if (arg0value is RecordValue rv && arg0value is IMutationCopyField)
                 {
                     ((IMutationCopyField)rv).ShallowCopyFieldInPlace(rfan.Field);
                     rv.UpdateField(rfan.Field, newValue);
                     return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                }
+                else
+                {
+                    return CommonErrors.UnreachableCodeError(node.IRContext);
                 }
             }
 
