@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     }
                 }, CustomProtocolNames.InitialFixup);
 
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<TextDocumentItem>(rawResponse, payload.id);
 
             Assert.Equal(documentUri, response.Uri);
