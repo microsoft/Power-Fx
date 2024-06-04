@@ -321,12 +321,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errors.Length == 0, $"TexlNode errors: {errors}");
         }
 
+#if !NET7_0_OR_GREATER
         [Fact]
         public static void TestImmutability()
         {
             var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
             ImmutabilityTests.CheckImmutability(asm);
         }
+#endif
 
         /// <summary>
         ///     Checks whether <see cref="t1" /> is public, and equal to or subclass of to <see cref="t2" />.

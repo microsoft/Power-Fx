@@ -1,19 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework Condition="'$(BuildTarget)' == 'netcoreapp31'">netcoreapp3.1</TargetFramework>
-    <TargetFrameworks Condition="'$(BuildTarget)' == ''">netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup>        
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -30,7 +29,10 @@
     <ProjectReference Include="..\..\..\libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj" />
 
     <ProjectReference Include="..\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Shims\Microsoft.PowerFx.Shims.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\Microsoft.PowerFx.Repl.Tests.Shared\Microsoft.PowerFx.Repl.Tests.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UsePowerFxShims\UsePowerFxShims.projitems" Label="Shared" />
+  <Import Project="..\..\UseNet70\UseNet70.projitems" Label="Shared" />
 </Project>

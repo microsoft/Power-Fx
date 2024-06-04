@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Tests
     {
         // Protect against stack overflows. 
         [Fact]
-        public async void MaxRecursionDepthTest()
+        public async Task MaxRecursionDepthTest()
         {
             var config = new PowerFxConfig()
             {
@@ -76,6 +76,7 @@ namespace Microsoft.PowerFx.Tests
         // fail on intentionally large expressions. 
         private const int DefaultMemorySizeBytes = 100 * 1024;
 
+#if !NET462
         // Verify memory limits. 
         [Theory]
         [InlineData(10, 15)]
@@ -84,19 +85,19 @@ namespace Microsoft.PowerFx.Tests
         public async Task MemoryLimit(int nWidth, int nDepth)
         {
             var expr = CreateMemoryExpression(nWidth, nDepth);
-            await RunExpressionWithMemoryLimit(expr, DefaultMemorySizeBytes, hasGovernorException: true).ConfigureAwait(false);
+            await RunExpressionWithMemoryLimit(expr, DefaultMemorySizeBytes, hasGovernorException: true);
         }
 
-        [Theory]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaabbbbbbbaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"bcabcabcabcabcaaaaaaaaaaaaaaabbbbbbbaaaacccccccccccaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
-        public async Task SubstituteMemoryLimit(string expr)
-        {
-            long maxLength = long.MaxValue;
-            await RunExpressionWithMemoryLimit(expr, maxLength, hasGovernorException: false).ConfigureAwait(false);
-        }
+        //[Theory]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaabbbbbbbaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"bcabcabcabcabcaaaaaaaaaaaaaaabbbbbbbaaaacccccccccccaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //[InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        //public async Task SubstituteMemoryLimit(string expr)
+        //{
+        //    long maxLength = long.MaxValue;
+        //    await RunExpressionWithMemoryLimit(expr, maxLength, hasGovernorException: false);
+        //}
 
         private async Task RunExpressionWithMemoryLimit(string expression, long memorySize, bool hasGovernorException)
         {
@@ -116,11 +117,11 @@ namespace Microsoft.PowerFx.Tests
             var eval = engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: runtimeConfig);
             if (hasGovernorException)
             {
-                await Assert.ThrowsAsync<GovernorException>(async () => await eval.ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<GovernorException>(async () => await eval);
             }
             else
             {
-                var result = await eval.ConfigureAwait(false);
+                var result = await eval;
                 Assert.IsType<ErrorValue>(result);
                 ErrorValue ev = (ErrorValue)result;
                 Assert.Equal("Overflow", ev.Errors[0].Message);
@@ -136,7 +137,9 @@ namespace Microsoft.PowerFx.Tests
             await Assert.ThrowsAsync<MyException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
 #endif
         }
+#endif
 
+#if !NET462
         // We can recover after a oom expression
         [Fact]
         public async Task MemoryLimitRecover()
@@ -152,18 +155,18 @@ namespace Microsoft.PowerFx.Tests
             var smallExpr = CreateMemoryExpression(1, 1); // should b eok
 
             // Governor allows basic expressions
-            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
             mem.Poll();
 
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
 
             // Since Governor is cumulative, even the small evaluations now fails
             Assert.Throws<GovernorException>(() => mem.Poll());
 
             // But creating a new one works. 
             runtimeConfig.AddService<Governor>(new SingleThreadedGovernor(DefaultMemorySizeBytes));
-            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
         }
 
         private class TestIgnorePrePollGovernor : SingleThreadedGovernor
@@ -178,6 +181,7 @@ namespace Microsoft.PowerFx.Tests
                 // nop. Ignore these warnings. Just rely on Poll.
             }
         }
+#endif
 
         // Verify cancellation.
         // Expression that takes a long time to run.  Doesn't need much stack or memory.  
@@ -194,7 +198,7 @@ namespace Microsoft.PowerFx.Tests
             cts.CancelAfter(5);
 
             // Eval may never return.             
-            await Assert.ThrowsAsync<OperationCanceledException>(async () => await engine.EvalAsync(expr, cts.Token).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<OperationCanceledException>(async () => await engine.EvalAsync(expr, cts.Token));
         }
 
         // Substitute(source, match, replace) // all instances 

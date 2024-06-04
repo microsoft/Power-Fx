@@ -9,7 +9,9 @@
     <Import_RootNamespace>Microsoft.PowerFx.Repl.Tests.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mocks\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MultilineProcessorTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReplTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\TestReplOutput.cs" />
   </ItemGroup>
 </Project>

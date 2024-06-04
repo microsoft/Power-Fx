@@ -135,8 +135,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public void AddDir(Dictionary<string, bool> setup, string directory = "")
-        {
-            directory = Path.GetFullPath(directory, TestRoot);
+        {         
+            directory = GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
             AddFile(setup, allFiles);
@@ -180,8 +180,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public void AddFile(Dictionary<string, bool> setup, string thisFile)
-        {
-            thisFile = Path.GetFullPath(thisFile, TestRoot);
+        {            
+            thisFile = GetFullPath(thisFile, TestRoot);
 
             var lines = File.ReadAllLines(thisFile);
 
@@ -189,8 +189,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // >> indicates input expression
             // next line is expected result.
 
-            Exception ParseError(int lineNumber, string message) => new InvalidOperationException(
-                $"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
+            Exception ParseError(int lineNumber, string message) => new InvalidOperationException($"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
 
             TestCase test = null;
 
@@ -209,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     continue;
                 }
 
-                if (line.Length > 1 && line[0] == '#')
+                if (line.Length > 1 && line[0] == '#' && !line.StartsWith("#DISABLE.NET:", StringComparison.Ordinal))
                 {
                     if (TryParseDirective(line, "#DISABLE:", out var fileDisable))
                     {
@@ -270,6 +269,7 @@ namespace Microsoft.PowerFx.Core.Tests
             fileSetup = string.Join(",", fileSetupDict.Select(i => (i.Value ? string.Empty : "disable:") + i.Key));
 
             List<string> duplicateTests = new List<string>();
+            string disableDotNet = string.Empty;
 
             while (true)
             {
@@ -285,11 +285,32 @@ namespace Microsoft.PowerFx.Core.Tests
                     continue;
                 }
 
+                if (line.StartsWith("#DISABLE.NET:"))
+                {
+                    disableDotNet = line.Substring(13).Trim();
+
+                    string[] dnn = disableDotNet.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                    if (dnn.Length == 0)
+                    {
+                        throw ParseError(i, $"Parse error - #DISABLE.NET: expects at least one .NET version to disable");
+                    }
+
+                    foreach (var dn in dnn)
+                    {
+                        if (dn != "462" && dn != "70")
+                        {
+                            throw ParseError(i, $"Parse error - #DISABLE.NET: expects 462 or 70, got {dn}");
+                        }
+                    }
+
+                    continue;
+                }
+
                 if (line.StartsWith(">>"))
                 {
                     if (test != null)
                     {
-                        throw ParseError(i, $"parse error- multiple test inputs in a row. Previous input is: {test.Input}");
+                        throw ParseError(i, $"Parse error - multiple test inputs in a row. Previous input is: {test.Input}");
                     }
 
                     line = line.Substring(2).Trim();
@@ -298,8 +319,11 @@ namespace Microsoft.PowerFx.Core.Tests
                         Input = line,
                         SourceLine = i + 1, // 1-based
                         SourceFile = thisFile,
-                        SetupHandlerName = fileSetup
+                        SetupHandlerName = fileSetup,
+                        DisableDotNet = disableDotNet
                     };
+
+                    disableDotNet = string.Empty;
                     continue;
                 }
 

@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("t", t);
             symbol.AddConstant("r1", r1);
 
-            var result = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
-            var resultCount = await engine.EvalAsync("t", CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
+            var result = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol);
+            var resultCount = await engine.EvalAsync("t", CancellationToken.None, options: _opts, symbolTable: symbol);
 
             Assert.Equal(expected, ((TableValue)resultCount).Count());
         }

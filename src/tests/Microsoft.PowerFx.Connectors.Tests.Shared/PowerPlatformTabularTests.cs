@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorDataSource cds = new ConnectorDataSource("pfxdev-sql.database.windows.net,connectortest");
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
             Assert.Null(cds.DatasetMetadata.Blob);
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Database name", cds.DatasetMetadata.Parameters[1].XMsSummary);
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
             Assert.Equal(4, tables.Count());
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Customers", connectorTable.DisplayName);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
-            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
             ConnectorTableValue sqlTable = connectorTable.GetTableValue();
@@ -152,14 +152,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("Juigné", address.Value);
 
             // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
-            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
         }
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Customers", tabularService.TableName);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL Server Load Customers DB.json");
-            await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue sqlTable = tabularService.GetTableValue();
@@ -222,14 +222,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("Juigné", address.Value);
 
             // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
-            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc).ConfigureAwait(false);
+            result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
         }
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorDataSource cds = new ConnectorDataSource("https://microsofteur.sharepoint.com/teams/pfxtest");
 
             testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
 
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("4bd37916-0026-4726-94e8-5a0cbc8e476a", connectorTable.TableName);
 
             testConnector.SetResponseFromFiles(@"Responses\SP GetTable.json");
-            await connectorTable.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await connectorTable.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
             ConnectorTableValue spTable = connectorTable.GetTableValue();
@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
@@ -388,7 +388,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Documents", tabularService.TableName);
 
             testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTable.json");
-            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue spTable = tabularService.GetTableValue();
@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
@@ -457,7 +457,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorDataSource cds = new ConnectorDataSource("default");
 
             testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
             Assert.Null(cds.DatasetMetadata.Blob);
@@ -472,7 +472,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
 
             testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
             Assert.Equal(569, tables.Count());
@@ -482,7 +482,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(connectorTable.IsInitialized);
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
-            await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
             ConnectorTableValue sfTable = connectorTable.GetTableValue();
@@ -557,7 +557,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
@@ -585,7 +585,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Account", tabularService.TableName);
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetSchema.json");
-            await tabularService.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger).ConfigureAwait(false);
+            await tabularService.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
             ConnectorTableValue sfTable = tabularService.GetTableValue();
@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
-            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);

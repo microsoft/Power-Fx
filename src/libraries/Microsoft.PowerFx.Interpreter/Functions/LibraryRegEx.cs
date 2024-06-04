@@ -279,8 +279,11 @@ namespace Microsoft.PowerFx.Functions
                     }));
                 }
 
+#pragma warning disable SA1119  // Statement should not use unnecessary parenthesis
+                
                 // Internal exception till .Net 7 where it becomes public
-                catch (Exception rexParseEx) when (rexParseEx.GetType().Name.Equals("RegexParseException", StringComparison.OrdinalIgnoreCase))
+                // .Net 4.6.2 will throw ArgumentException
+                catch (Exception rexParseEx) when ((rexParseEx.GetType().Name.Equals("RegexParseException", StringComparison.OrdinalIgnoreCase)) || rexParseEx is ArgumentException)
                 {
                     return Task.FromResult<FormulaValue>(new ErrorValue(args[1].IRContext, new ExpressionError()
                     {
@@ -289,6 +292,8 @@ namespace Microsoft.PowerFx.Functions
                         Kind = ErrorKind.BadRegex
                     }));
                 }
+
+#pragma warning restore SA1119  // Statement should not use unnecessary parenthesis
             }
         }
     }

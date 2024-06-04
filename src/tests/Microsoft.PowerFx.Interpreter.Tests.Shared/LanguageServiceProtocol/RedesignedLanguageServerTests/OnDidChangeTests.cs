@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                         new TextDocumentContentChangeEvent() { Text = text }
                     }
             }, TextDocumentNames.DidChange);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload);
             var notification = GetDiagnosticsParams(rawResponse);
             Assert.Equal("powerfx://app?context={\"A\":1,\"B\":[1,2,3]}", notification.Uri);
             Assert.Empty(notification.Diagnostics);
@@ -64,21 +64,21 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     }
                 },
                 TextDocumentNames.DidChange);
-            rawResponse = await TestServer.OnDataReceivedAsync(payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(payload);
             notification = GetDiagnosticsParams(rawResponse);
             Assert.Equal("powerfx://app", notification.Uri);
             Assert.Single(notification.Diagnostics);
             Assert.Equal("Name isn't valid. 'AA' isn't recognized.", notification.Diagnostics[0].Message);
 
             // some invalid cases
-            rawResponse = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new { })).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new { }));
             AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.InvalidRequest);
 
             rawResponse = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange"
-            })).ConfigureAwait(false);
+            }));
             AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.InvalidRequest);
 
             rawResponse = await TestServer.OnDataReceivedAsync(JsonSerializer.Serialize(new
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
                 @params = string.Empty
-            })).ConfigureAwait(false);
+            }));
             AssertErrorPayload(rawResponse, null, LanguageServerProtocol.JsonRpcHelper.ErrorCode.ParseError);
 
             Assert.True(handler.CallCounts == 2);

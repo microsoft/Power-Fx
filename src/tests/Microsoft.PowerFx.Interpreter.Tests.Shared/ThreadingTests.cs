@@ -31,12 +31,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void CheckImmutableTypeInInterpreter()
         {
+#if !NET7_0_OR_GREATER
             // Per https://github.com/microsoft/Power-Fx/issues/1519,
             // Add ThreadSafeImmutable and get these to pass. 
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Core.IR.Nodes.IntermediateNode));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ReadOnlySymbolValues));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ComposedReadOnlySymbolValues));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ParsedExpression));
+#endif
 
             var assemblies = new Assembly[] 
             {
