@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetCodeActionPayload(codeActionParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             var response = AssertAndGetResponsePayload<Dictionary<string, CodeAction[]>>(rawResponse, payload.id);
             Assert.NotEmpty(response);
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
                     Context = GetDefaultCodeActionContext()
                 };
-                await TestCodeActionWithHandlerCore(codeActionParams, updated).ConfigureAwait(false);
+                await TestCodeActionWithHandlerCore(codeActionParams, updated);
             }
 
             await TestCodeActionWithHandlerCore(
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Text = original,
                     Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
                     Context = GetDefaultCodeActionContext()
-                }, updated).ConfigureAwait(false);
+                }, updated);
         }
 
         private async Task TestCodeActionWithHandlerCore(CodeActionParams codeActionParams, string updatedExpr)
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Init(new InitParams(scopeFactory: scopeFactory));
 
             var payload = GetCodeActionPayload(codeActionParams);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             var response = AssertAndGetResponsePayload<Dictionary<string, CodeAction[]>>(rawResponse, payload.id);
             Assert.NotEmpty(response);
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
             };
             var payload = GetCodeActionPayload(codeActionsParams1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<Dictionary<string, CodeAction[]>>(rawResponse, payload.id);
             Assert.NotEmpty(response);
 
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Argument = JsonRpcHelper.Serialize(codeActionResult)
             };
             var commandExecutedPayload = GetRequestPayload(commandExecutedParams, CustomProtocolNames.CommandExecuted);
-            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload);
             Assert.True(string.IsNullOrEmpty(rawResponse));
             
             commandExecutedParams = new CommandExecutedParams()
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Argument = string.Empty
             };
             commandExecutedPayload = GetRequestPayload(commandExecutedParams, CustomProtocolNames.CommandExecuted);
-            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload);
             AssertErrorPayload(rawResponse, commandExecutedPayload.id, JsonRpcHelper.ErrorCode.PropertyValueRequired);
 
             codeActionResult.ActionResultContext = null;
@@ -228,7 +228,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Argument = JsonRpcHelper.Serialize(codeActionResult)
             };
             commandExecutedPayload = GetRequestPayload(commandExecutedParams, CustomProtocolNames.CommandExecuted);
-            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(commandExecutedPayload.payload);
             AssertErrorPayload(rawResponse, commandExecutedPayload.id, JsonRpcHelper.ErrorCode.PropertyValueRequired);
         }
 

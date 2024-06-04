@@ -49,27 +49,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t1 = FormulaValue.NewTable(r1.Type, r1, r2, r3);
 
             // Remove single
-            var result_error = await t1.RemoveAsync(new List<RecordValue>() { rRemove_error }, false, CancellationToken.None).ConfigureAwait(false);
+            var result_error = await t1.RemoveAsync(new List<RecordValue>() { rRemove_error }, false, CancellationToken.None);
 
             Assert.IsType<ErrorValue>(result_error.ToFormulaValue());
             Assert.Equal(3, t1.Count());
 
             var list = new List<RecordValue>() { r1 };
 
-            await t1.RemoveAsync(list, false, CancellationToken.None).ConfigureAwait(false);
+            await t1.RemoveAsync(list, false, CancellationToken.None);
             Assert.Equal(2, t1.Count());
 
             var t2 = FormulaValue.NewTable(r1.Type, r1, r2, r3);
 
             // Remove all
-            await t2.RemoveAsync(list, true, CancellationToken.None).ConfigureAwait(false);
+            await t2.RemoveAsync(list, true, CancellationToken.None);
 
             Assert.Equal(2, t2.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1, r2, r3 };
             var t3 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t3.RemoveAsync(list, false, CancellationToken.None).ConfigureAwait(false);
+            var result = await t3.RemoveAsync(list, false, CancellationToken.None);
 
             Assert.True(result.IsError);
             Assert.Equal("RemoveAsync is not supported on this table instance.", result.Error.Errors[0].Message);

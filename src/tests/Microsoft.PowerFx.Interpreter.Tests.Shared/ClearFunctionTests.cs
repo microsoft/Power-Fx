@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Void, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                var result = await function.InvokeAsync(FormulaType.Void, new FormulaValue[] { arg }, CancellationToken.None);
 
                 if (arg is ErrorValue)
                 {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Boolean, new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
+                var result = await function.InvokeAsync(FormulaType.Boolean, new FormulaValue[] { arg }, CancellationToken.None);
 
                 if (arg is ErrorValue)
                 {

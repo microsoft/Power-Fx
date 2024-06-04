@@ -365,7 +365,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 serializer.EndSerialization();
                 string body = serializer.GetResult();
-                return new StringContent(body, Encoding.Default, ct);
+                return new StringContent(body, Encoding.UTF8, ct);
             }
             finally
             {

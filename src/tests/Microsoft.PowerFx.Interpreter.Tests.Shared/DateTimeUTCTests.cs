@@ -40,20 +40,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public async void NowTest()
+        public async Task NowTest()
         {
             // Test Now()
             var evaluator = _engine.Check("Now()", null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(_istNow.ToString("g"), ((DateTimeValue)result).GetConvertedValue(null).ToString("g"));
 
             // Test Now() again, but with SetTimeZone(Utc)
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(_utcNow.ToString("g"), ((DateTimeValue)utcResult).GetConvertedValue(null).ToString("g"));
         }
 
         [Fact]
-        public async void DateTimeFunctionTest()
+        public async Task DateTimeFunctionTest()
         {
             var currentTimeZoneKind = TimeZoneInfo.Local.Equals(TimeZoneInfo.Utc) ?
                 DateTimeKind.Utc :
@@ -64,27 +64,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             
             // DateTime function tests
             var evaluator = _engine.Check("DateTime(2023,1,1,0,0,0)", null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(localDateTimeExpected.ToString("o"), ((DateTimeValue)result).GetConvertedValue(_istTimeZone).ToString("o"));
 
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(utcDateTimeExpected.ToString("o"), ((DateTimeValue)utcResult).GetConvertedValue(null).ToString("o"));
             
             Assert.NotEqual(((DateTimeValue)result).GetConvertedValue(_istTimeZone).ToString("o"), ((DateTimeValue)utcResult).GetConvertedValue(null).ToString("o"));
 
             // Date function tests.
             evaluator = _engine.Check("Date(2023,1,1)", null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(localDateTimeExpected.ToString("o"), ((DateValue)result).GetConvertedValue(_istTimeZone).ToString("o"));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(utcDateTimeExpected.ToString("o"), ((DateValue)utcResult).GetConvertedValue(null).ToString("o"));
 
             Assert.NotEqual(((DateValue)result).GetConvertedValue(_istTimeZone).ToString("o"), ((DateValue)utcResult).GetConvertedValue(null).ToString("o"));
         }
 
         [Fact]
-        public async void IsTodayTest()
+        public async Task IsTodayTest()
         {
             // this is today's IST today's date 23:30:00, so when converted to IST this will change to next day. 
             var myDateTimeUTC = new DateTime(_istNow.Year, _istNow.Month, _istNow.Day, 23, 30, 0, DateTimeKind.Utc);
@@ -104,20 +104,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             _symbolValues.Set(myDateTimeUTCTodaySlot, FormulaValue.New(myDateTimeUTCToday));
 
             var evaluator = _engine.Check("IsToday(myDateTimeUTC)", null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.False(((BooleanValue)result).Value);
 
             evaluator = _engine.Check("IsToday(myDateTimeIST)", null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.True(((BooleanValue)result).Value);
 
             evaluator = _engine.Check("IsToday(myDateTimeUTCToday)", null, _symbolTable).GetEvaluator();
-            var utcresult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcresult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.True(((BooleanValue)utcresult).Value);
         }
 
         [Fact]
-        public async void DateDiffTest()
+        public async Task DateDiffTest()
         {
             var nonUTCDateTimeSlot = _symbolTable.AddVariable("nonUTCDateTime", FormulaType.DateTime);
             _symbolValues.Set(nonUTCDateTimeSlot, FormulaValue.New(new DateTime(2023, 1, 30)));
@@ -130,26 +130,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // In TZ Indian standard time (GMT+5:30) DateDiff(DateTime(2023,1,30,0,0,0), DateTime(2023,1,31,4,30,0)) = 1
             var evaluator = _engine.Check("DateDiff(nonUTCDateTime, utcDateTime)", options: null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(1, ((DecimalValue)result).Value);
 
             // In TZ UTC DateDiff(DateTime(2023,1,30,0,0,0), DateTime(2023,1,30,23,30,0)) = 0
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(0, ((DecimalValue)utcResult).Value);
         }
 
         [Fact]
-        public async void TodayTest()
+        public async Task TodayTest()
         {
             var utcToday = DateTime.UtcNow;
             var istToday = TimeZoneInfo.ConvertTime(utcToday, _istTimeZone).Date;
             utcToday = utcToday.Date;
             
             var evaluator = _engine.Check("Today()", options: null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(istToday, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(utcToday, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
         }
 
@@ -188,43 +188,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // UTC string
             var evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T12:13:30Z"")", options: null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
 
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // Local string
             evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T17:43:30.0000000+05:30"")", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // UnSpecified string
             evaluator = _engine.Check(@"DateTimeValue(""2022-11-21T17:43:30.0000000"")", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // With UntypedObject
             // UTC string
             evaluator = _engine.Check(@"DateTimeValue(ToUntypedObject(""2022-11-21T12:13:30Z""))", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
             
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // UnSpecified string
             evaluator = _engine.Check(@"DateTimeValue(ToUntypedObject(""2022-11-21T17:43:30.0000000""))", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateTimeValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateTimeValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
         }
 
@@ -241,43 +241,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // UTC string
             var evaluator = _engine.Check(@"DateValue(""2022-11-21T22:13:30Z"")", options: null, _symbolTable).GetEvaluator();
-            var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            var result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            var utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // Local string
             evaluator = _engine.Check(@"DateValue(""2022-11-22T03:43:30.0000000+05:30"")", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // UnSpecified string
             evaluator = _engine.Check(@"DateValue(""2022-11-22T03:43:30.0000000"")", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // With UntypedObject
             // UTC string
             evaluator = _engine.Check(@"DateValue(ToUntypedObject(""2022-11-21T22:13:30Z""))", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(expectedUTC, ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
 
             // UnSpecified string
             evaluator = _engine.Check(@"DateValue(ToUntypedObject(""2022-11-22T03:43:30.0000000""))", options: null, _symbolTable).GetEvaluator();
-            result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
+            result = await evaluator.EvalAsync(default, _localSymbol);
             Assert.Equal(expectedLocal, ((DateValue)result).GetConvertedValue(_istTimeZone));
 
-            utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
+            utcResult = await evaluator.EvalAsync(default, _utcSymbol);
             Assert.Equal(DateTime.SpecifyKind(expectedLocal, DateTimeKind.Utc), ((DateValue)utcResult).GetConvertedValue(TimeZoneInfo.Utc));
         }
 

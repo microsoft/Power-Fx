@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             BlobValue blob = args[0] as BlobValue;
 
-            if (args[0] is BlankValue || (blob != null && string.IsNullOrEmpty(await blob.GetAsStringAsync(null, CancellationToken.None).ConfigureAwait(false))))
+            if (args[0] is BlankValue || (blob != null && string.IsNullOrEmpty(await blob.GetAsStringAsync(null, CancellationToken.None))))
             {
                 return FormulaValue.NewBlank(FormulaType.String);
             }
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            return FormulaValue.New(await blob.GetAsStringAsync(null, CancellationToken.None).ConfigureAwait(false));
+            return FormulaValue.New(await blob.GetAsStringAsync(null, CancellationToken.None));
         }
 
         public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaValue[] args, CancellationToken cancellationToken)
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             BlobValue blobValue = args[0] as BlobValue;
 
-            if (args[0] is BlankValue || (blobValue != null && string.IsNullOrEmpty(await blobValue.GetAsBase64Async(cancellationToken).ConfigureAwait(false))))
+            if (args[0] is BlankValue || (blobValue != null && string.IsNullOrEmpty(await blobValue.GetAsBase64Async(cancellationToken))))
             {
                 return FormulaValue.NewBlank(FormulaType.String);
             }
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            return FormulaValue.New(await blobValue.Content.GetAsBase64Async(cancellationToken).ConfigureAwait(false));
+            return FormulaValue.New(await blobValue.Content.GetAsBase64Async(cancellationToken));
         }
     }
 }

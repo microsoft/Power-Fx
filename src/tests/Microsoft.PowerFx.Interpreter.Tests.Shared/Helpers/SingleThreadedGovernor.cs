@@ -6,6 +6,8 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
+    // GC.GetAllocatedBytesForCurrentThread is only valid for .Net 4.8+
+#if !NET462
     // Custom exception thrown by Governor object. 
     // Host implements the Governor and can control what's thrown. 
     // Host also calls eval and controls what's caught. 
@@ -72,4 +74,5 @@ namespace Microsoft.PowerFx.Tests
             governor2.Poll(); // safe
         }
     }
+#endif
 }

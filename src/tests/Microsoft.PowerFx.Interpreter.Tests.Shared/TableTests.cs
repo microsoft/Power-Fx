@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
 
-            var table = await recalcEngine.EvalAsync("Table({}, {}, {})", CancellationToken.None).ConfigureAwait(false);
+            var table = await recalcEngine.EvalAsync("Table({}, {}, {})", CancellationToken.None);
 
             Assert.NotNull(table);
 
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public async void TestEmptyFieldOfRecordTable()
+        public async Task TestEmptyFieldOfRecordTable()
         {
             string recordName = "BooleanRecord";
             string tableName = "BooleanTable";
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(recordName + "." + columnName);
             Assert.True(check.IsSuccess);
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             Assert.Null(result.ToObject());
 
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             check = engine.Check("First(" + tableName + ")." + columnName);
             Assert.True(check.IsSuccess);
 
-            result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             
             Assert.Null(result.ToObject());
         }

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Pacific Standard Time", "2023-03-11T01:30:00.000Z")]
         [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Tokyo Standard Time", "2023-03-10T08:30:00.000Z")]
         [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "SE Asia Standard Time", "2023-03-10T10:30:00.000Z")]
-        public async void TextDateTimeToUTC(string inputExp, string timeZoneId, string expectedDateTimeUTC)
+        public async Task TextDateTimeToUTC(string inputExp, string timeZoneId, string expectedDateTimeUTC)
         {
             var engine = new RecalcEngine();
             var rc = new RuntimeConfig();
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(inputExp);
             Assert.True(check.IsSuccess);
 
-            var utcResult = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            var utcResult = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             Assert.Equal(expectedDateTimeUTC, utcResult.ToObject());
         }
     }

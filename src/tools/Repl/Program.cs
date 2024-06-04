@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -248,18 +249,18 @@ namespace Microsoft.PowerFx
 
                 sb.Append("\n");
 
-                sb.Append($"{"FormatTable:",-42}{_standardFormatter.FormatTable}\n");
-                sb.Append($"{"HashCodes:",-42}{_standardFormatter.HashCodes}\n");
-                sb.Append($"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
-                sb.Append($"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
-                sb.Append($"{"StackTrace:",-42}{_stackTrace}\n");
-                sb.Append($"{"TextFirst:",-42}{_textFirst}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"FormatTable:",-42}{_standardFormatter.FormatTable}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"HashCodes:",-42}{_standardFormatter.HashCodes}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"NumberIsFloat:",-42}{_numberIsFloat}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
                     if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                     {
-                        sb.Append($"{prop.Name + ((bool)prop.GetValue(Features.PowerFxV1) ? " (V1)" : string.Empty) + ":",-42}{prop.GetValue(_features)}\n");
+                        sb.Append(CultureInfo.InvariantCulture, $"{prop.Name + ((bool)prop.GetValue(Features.PowerFxV1) ? " (V1)" : string.Empty) + ":",-42}{prop.GetValue(_features)}\n");
                     }
                 }
 

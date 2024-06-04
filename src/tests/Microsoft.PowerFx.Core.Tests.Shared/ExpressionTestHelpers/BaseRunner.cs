@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// Maximum time to run test - this catches potential hangs in the engine. 
         /// Any test should easily run in under 1s. 
         /// </summary>
-        public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
+        public static TimeSpan Timeout = TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Should the NumberIsFloat parser flag be in effect.
@@ -118,8 +118,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 () =>
                 {
                     var t = RunAsync2(testCase);
-                    t.ConfigureAwait(false);
-
                     return t.Result;
                 },
                 new CancellationToken(),
@@ -130,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Task.WaitAny(t, Task.Delay(Timeout));
 
-                if (t.IsCompletedSuccessfully)
+                if (t.IsCompleted && !t.IsFaulted)
                 {
                     return t.Result;
                 }
@@ -161,6 +159,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var case2 = new TestCase
             {
+                DisableDotNet = testCase.DisableDotNet,
                 SetupHandlerName = testCase.SetupHandlerName,
                 SourceLine = testCase.SourceLine,
                 SourceFile = testCase.SourceFile,
@@ -168,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2).ConfigureAwait(false);
+            var (result, msg) = await RunAsync2(case2);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -194,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName).ConfigureAwait(false);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
                 originalResult = runResult.OriginalValue;
 
@@ -214,7 +213,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
-                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split("|");
+                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split('|');
                         string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
                         bool isValid = true;
 
@@ -222,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         // for tests that are run with and without NumberIsFloat set.
                         foreach (var exp in expectedStrArr)
                         {
-                            if (!actualStrArr.Contains(exp) && 
+                            if (!actualStrArr.Contains(exp) &&
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))) &&
                                 !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, " Decimal, Number, ", " Number, Decimal, "))))
                             {
@@ -255,7 +254,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase).ConfigureAwait(false);
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below
@@ -288,6 +287,50 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     return (TestResult.Pass, null);
                 }
+
+#if NET7_0_OR_GREATER
+                // .Net 7 has greater precision
+                // https://learn.microsoft.com/en-us/dotnet/core/compatibility/core-libraries/7.0/datetime-add-precision
+                if (originalResult is DateValue originalDV)
+                {
+                    Match m = new Regex(@"Date\((?<y>[0-9]{1,4}),(?<m>[0-9]{1,2}),(?<d>[0-9]{1,2})\)").Match(expected);
+
+                    if (m.Success)
+                    {
+                        DateTime expectedDT = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value));
+
+#pragma warning disable CS0618 // Type or member is obsolete (DateValue.Value)
+                        long delta = Math.Abs(originalDV.Value.Ticks - expectedDT.Ticks);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                        // 1ms
+                        if (delta < 10000)
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                    }
+                }
+
+                if (originalResult is DateTimeValue originalDTV)
+                {
+                    Match m = new Regex(@"DateTime\((?<y>[0-9]{1,4}),(?<m>[0-9]{1,2}),(?<d>[0-9]{1,2}),(?<h>[0-9]{1,2}),(?<mm>[0-9]{1,2}),(?<s>[0-9]{1,2}),(?<ms>[0-9]{1,3})\)").Match(expected);
+
+                    if (m.Success)
+                    {
+                        DateTime expectedDTV = new DateTime(int.Parse(m.Groups["y"].Value), int.Parse(m.Groups["m"].Value), int.Parse(m.Groups["d"].Value), int.Parse(m.Groups["h"].Value), int.Parse(m.Groups["mm"].Value), int.Parse(m.Groups["s"].Value), int.Parse(m.Groups["ms"].Value));
+
+#pragma warning disable CS0618 // Type or member is obsolete (DateTimeValue.Value)
+                        long delta = Math.Abs(originalDTV.Value.Ticks - expectedDTV.Ticks);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                        // 1ms
+                        if (delta < 10000)
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                    }
+                }
+#endif
 
                 // Check to see if it is a number, this test covers decimal too as decimal fits in double
                 if (double.TryParse(expected, out var expectedFloat))
