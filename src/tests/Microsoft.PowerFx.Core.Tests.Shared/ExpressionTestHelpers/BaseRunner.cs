@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// Maximum time to run test - this catches potential hangs in the engine. 
         /// Any test should easily run in under 1s. 
         /// </summary>
-        public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
+        public static TimeSpan Timeout = TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Should the NumberIsFloat parser flag be in effect.

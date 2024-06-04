@@ -38,9 +38,9 @@ if exist %TESTFILE11% set TESTFILES70=%TESTFILES70% %TESTFILE11%
 rem /EnableCodeCoverage /InIsolation
 
 @echo Running .Net4.6.2 tests...
-"%VSTEST%" %TESTFILES462% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=462"
+"%VSTEST%" %TESTFILES462% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=462" 
 echo. | time | findstr /v new
 
 @echo Running .Net7.0 tests...
-"%VSTEST%" %TESTFILES70% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=70"
+"%VSTEST%" %TESTFILES70% /settings:local.runsettings /logger:trx /Parallel /logger:console;verbosity=quiet /TestCaseFilter:"Net=70" 
 echo. | time | findstr /v new

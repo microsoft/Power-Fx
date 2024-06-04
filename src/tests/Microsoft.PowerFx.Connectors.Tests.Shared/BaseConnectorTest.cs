@@ -180,8 +180,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 {
                     // Not using Assert.StartsWith as in case of failure, we don't see where the issue i                    
                     Assert.Equal(expectedResult.Substring(11), sv.Value.Substring(0, expectedResult.Length - 11));
-
-                    //AssertSubstring(expectedResult, 11, null, sv.Value, 0, expectedResult.Length - 11);
                 }
                 else
                 {
