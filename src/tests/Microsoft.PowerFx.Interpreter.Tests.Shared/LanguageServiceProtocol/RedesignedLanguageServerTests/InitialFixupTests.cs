@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     if (node.Ident.Name == "ThisRecord")
                     {
                         // makes sure "ThisRecord" is not coming from a scope.
-                        if (_check.IsNodeInvalid(node))
+                        if (!_check.IsNodeValidVariable(node))
                         {
                             _replacements.Add(new KeyValuePair<Span, string>(node.GetTextSpan(), "NewRecord"));
                         }

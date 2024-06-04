@@ -710,7 +710,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Used to check if given FirstNameNode(Variable) node is a valid variable or not.
         /// </summary>
-        public bool IsNodeInvalid(FirstNameNode node)
+        public bool IsNodeValidVariable(FirstNameNode node)
         {
             if (node == null)
             {
@@ -719,7 +719,7 @@ namespace Microsoft.PowerFx
 
             var fnInfo = this.ApplyBindingInternal().GetInfo(node);
 
-            return fnInfo.Kind == BindKind.Min && fnInfo.Data == null;
+            return !(fnInfo.Kind == BindKind.Min && fnInfo.Data == null);
         }
     }
 
