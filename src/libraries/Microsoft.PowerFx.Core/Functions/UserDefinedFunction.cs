@@ -31,13 +31,22 @@ namespace Microsoft.PowerFx.Core.Functions
     /// This includings the binding (and hence IR for evaluation) - 
     /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
     /// </summary>
-    internal class UserDefinedFunction : TexlFunction
+    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol, IExternalDelegatableSymbol
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
+
+        public bool IsPageable => _binding?.IsPageable(_binding.Top) ?? false;
+
+        public bool IsDelegatable => _binding?.IsDelegatable(_binding.Top) ?? false;
+
+        public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
+        {
+            return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
+        }
 
         public override bool SupportsParamCoercion => true;
 
