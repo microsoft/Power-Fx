@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Get the unified collected type on the RHS. This will generate appropriate
             // document errors for invalid arguments such as unsupported aggregate types.
-            if (context.Features.PowerFxV1CompatibilityRules)
+            if (context.Features.PowerFxV1CompatibilityRules && !context.AnalysisMode)
             {
                 fValid &= TryGetUnifiedCollectedTypeV1(args, argTypes, errors, context.Features, out collectedType);
             }

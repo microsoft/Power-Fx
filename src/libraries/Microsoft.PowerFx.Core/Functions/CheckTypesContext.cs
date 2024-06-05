@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Functions
             PropertyName = propertyName;
             AllowsSideEffects = allowsSideEffects;
             NumberIsFloat = numberIsFloat;
+            AnalysisMode = true;
         }
 
         public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool allowsSideEffects, bool numberIsFloat, bool analysisMode)

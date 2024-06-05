@@ -346,7 +346,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 entityName: EntityName,
                 propertyName: Property?.InvariantName ?? string.Empty,
                 allowsSideEffects: bindingConfig.AllowsSideEffects,
-                numberIsFloat: bindingConfig.NumberIsFloat);
+                numberIsFloat: bindingConfig.NumberIsFloat,
+                analysisMode: false);
         }
 
         /// <summary>
