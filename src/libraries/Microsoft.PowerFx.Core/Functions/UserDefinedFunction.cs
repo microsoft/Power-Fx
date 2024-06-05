@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -310,7 +310,9 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(ft);
 
-            if (ft is AggregateType aggType)
+            // Datasource types may contain fields that may expand to other datasource types or refernce themselves.
+            // We can avoid calling this method on these types containing expand info.
+            if (!ft._type.HasExpandInfo && ft is AggregateType aggType)
             {
                 if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
                 {
