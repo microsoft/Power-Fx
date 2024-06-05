@@ -128,11 +128,22 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create or update a named variable to a value. 
+        /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
         /// <param name="value">constant value.</param>
         public void UpdateVariable(string name, FormulaValue value)
+        {
+            UpdateVariable(name, value, new SymbolProperties { CanMutate = true, CanSet = true });
+        }
+
+        /// <summary>
+        /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
+        /// </summary>
+        /// <param name="name">variable name. This can be used in other formulas.</param>
+        /// <param name="value">constant value.</param>
+        /// <param name="newVarProps">symbol properties.</param>
+        public void UpdateVariable(string name, FormulaValue value, SymbolProperties newVarProps)
         {
             var x = value;
 
@@ -151,7 +162,12 @@ namespace Microsoft.PowerFx
             else
             {
                 // New
-                var slot = _symbolTable.AddVariable(name, value.Type, mutable: true);
+                if (newVarProps == null)
+                {
+                    newVarProps = new SymbolProperties { CanMutate = true, CanSet = true };
+                }
+
+                var slot = _symbolTable.AddVariable(name, value.Type, newVarProps);
 
                 Formulas[slot.SlotIndex] = RecalcFormulaInfo.NewVariable(slot, name, x.IRContext.ResultType);
                 _symbolValues.Set(slot, value);
