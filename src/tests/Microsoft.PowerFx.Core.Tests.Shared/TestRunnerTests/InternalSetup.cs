@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return iSetup;
             }
 
-            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
+            var parts = setupHandlerName.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
 
             foreach (var part in parts.ToArray())
             {

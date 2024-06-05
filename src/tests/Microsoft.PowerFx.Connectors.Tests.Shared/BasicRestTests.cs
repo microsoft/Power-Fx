@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(19, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
         [InlineData(20, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,444]")]
         [InlineData(21, @"Test.PostWeatherWithComplexInput({children: [{parent: { someNumbers: [123] }, otherString: ""xyz""}], someNumbers: [1,2,3]})", "POST http://localhost:5000/weatherPost4\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"complexInput\":{\"children\":[{\"parent\":{\"someNumbers\":[123]},\"otherString\":\"xyz\"}],\"someNumbers\":[1,2,3]}}")]
-        public async void ValidateHttpCalls(int i /* used for debugging */, string fxQuery, string httpQuery)
+        public async Task ValidateHttpCalls(int i /* used for debugging */, string fxQuery, string httpQuery)
         {
             var swaggerFile = @"Swagger\TestOpenAPI.json";
             Console.Write(i);
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Tests
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient, console: _output));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponse("55");
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));
         }
 
         // We can bind without calling.

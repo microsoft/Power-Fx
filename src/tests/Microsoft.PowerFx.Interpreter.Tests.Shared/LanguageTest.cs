@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
@@ -70,14 +71,14 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("vi-VN", @"Text(1234.5678, ""#.##0,00"")", "1.234,57")]
         [InlineData("fr-FR", "Text(1234.5678, \"#\u202f##0,00\")", "1\u202F234,57")]
         [InlineData("fi-FI", "Text(1234.5678, \"#\u00A0##0,00\")", "1\u00A0234,57")]
-        public void TextWithLanguageTest(string cultureName, string exp, string expectedResult)
+        public async Task TextWithLanguageTest(string cultureName, string exp, string expectedResult)
         {
             var culture = new CultureInfo(cultureName);
             var recalcEngine = new RecalcEngine(new PowerFxConfig(Features.None));
             var symbols = new RuntimeConfig();
             symbols.SetCulture(culture);
 
-            var result = recalcEngine.EvalAsync(exp, CancellationToken.None, runtimeConfig: symbols).Result;
+            var result = await recalcEngine.EvalAsync(exp, CancellationToken.None, runtimeConfig: symbols);
 
             Assert.Equal(expectedResult, (result as StringValue).Value);
         }
@@ -91,7 +92,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void TestTextInFrench()
+        public async Task TestTextInFrench()
         {
             var fr = new CultureInfo("fr-FR");
             fr.NumberFormat.NumberGroupSeparator = "\u00A0";
@@ -102,7 +103,7 @@ namespace Microsoft.PowerFx.Tests
             runtimeConfig.SetCulture(fr);
 
             var engine = new RecalcEngine(new PowerFxConfig());
-            FormulaValue result = engine.EvalAsync("Text(5/2)", CancellationToken.None, options: parserOptions, runtimeConfig: runtimeConfig).ConfigureAwait(false).GetAwaiter().GetResult();
+            FormulaValue result = await engine.EvalAsync("Text(5/2)", CancellationToken.None, options: parserOptions, runtimeConfig: runtimeConfig);
 
             Assert.IsNotType<ErrorValue>(result);
             Assert.IsType<StringValue>(result);

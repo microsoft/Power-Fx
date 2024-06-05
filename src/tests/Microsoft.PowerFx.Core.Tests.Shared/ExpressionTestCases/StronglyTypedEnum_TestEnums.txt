@@ -273,6 +273,26 @@ Errors: Error 24-28: Invalid argument type (Enum (TestYeaNay)). Expecting a Enum
 >> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
 true
 
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.Nay
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+// 10 is a part of the option set.  In the future we may want to have this return .X instead.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"CalculatedOptionSetValue"
+
+// 11 is not a part of the option set.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"CalculatedOptionSetValue"
+
 //===========================================================================================================
 //
 // 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
@@ -284,8 +304,32 @@ true
 >> Int( TestNumberCoerceTo.V )
 5
 
+>> Power( TestNumberCoerceTo.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCoerceTo.V )
+1
+
+>> TestSignDecimal( TestNumberCoerceTo.V )
+1
+
 >> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
 3125
+
+>> Int( TestNumberCompareNumeric.V )
+Errors: Error 0-3: The function 'Int' has some invalid arguments.|Error 29-31: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
+
+>> TestSignNumber( TestNumberCompareNumeric.V )
+Errors: Error 40-42: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 0-14: The function 'TestSignNumber' has some invalid arguments.
+
+>> TestSignDecimal( TestNumberCompareNumeric.V )
+Errors: Error 41-43: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Decimal value instead.|Error 0-15: The function 'TestSignDecimal' has some invalid arguments.
+
+>> Power( TestNumberCompareNumeric.V, TestNumberCompareNumeric.V )
+Errors: Error 0-5: The function 'Power' has some invalid arguments.|Error 31-33: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.|Error 59-61: Invalid argument type (Enum (TestNumberCompareNumeric)). Expecting a Number value instead.
 
 // Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
 
@@ -724,7 +768,10 @@ true
 false
 
 >> If( false, TestYesNo.Yes, false )
-TestYesNo.CalculatedOptionSetValue
+TestYesNo.No
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
 
 // Can be used as a Boolean (CanCoerceToBackingKind = true)
 

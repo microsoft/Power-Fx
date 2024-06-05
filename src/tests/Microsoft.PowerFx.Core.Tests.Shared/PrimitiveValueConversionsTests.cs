@@ -287,9 +287,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (coercionKindStr.StartsWith("UnaryOpKind."))
             {
-                unaryOpCoercionKind =
-                    Enum.Parse<UnaryOpKind>(
-                        coercionKindStr.Substring("UnaryOpKind.".Length));
+#if NETCOREAPP3_1_OR_GREATER
+                unaryOpCoercionKind = Enum.Parse<UnaryOpKind>(coercionKindStr.Substring("UnaryOpKind.".Length));
+#else
+                // Can't define Shims on static methods
+                unaryOpCoercionKind = (UnaryOpKind)Enum.Parse(typeof(UnaryOpKind), coercionKindStr.Substring("UnaryOpKind.".Length));
+#endif
             }
             else if (coercionKindStr.StartsWith("function:"))
             {
@@ -297,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else
             {
-                Assert.False(true, "Invalid coercionKindStr: " + coercionKindStr);
+                Assert.Fail("Invalid coercionKindStr: " + coercionKindStr);
             }
 
             var symbolTable = new SymbolTable();
@@ -332,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 if (elseNode.Child is ResolvedObjectNode)
                 {
-                    Assert.True(false, $"Conversion from {fromTypeSpec} to {toTypeSpec} should have a coercion node!");
+                    Assert.Fail($"Conversion from {fromTypeSpec} to {toTypeSpec} should have a coercion node!");
                 }
 
                 var unaryNode = elseNode.Child as UnaryOpNode;

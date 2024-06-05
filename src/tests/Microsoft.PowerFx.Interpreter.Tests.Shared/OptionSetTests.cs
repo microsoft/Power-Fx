@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 FormulaValue.NewRecordFromFields(record, new NamedValue("optionSet", optionSetFalseValue)));
             symVal.Set(tableSlot, tableValue);
 
-            var result = await check.GetEvaluator().EvalAsync(cancellationToken: default, symVal).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(cancellationToken: default, symVal);
 
             var resultTable = Assert.IsAssignableFrom<TableValue>(result);
 
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var result = await check.GetEvaluator().EvalAsync(cancellationToken: default).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(cancellationToken: default);
             Assert.Equal(expected, result.ToExpression());
         }
     }

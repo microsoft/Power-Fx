@@ -639,7 +639,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Binding to inner functions does not impact outer functions. 
         [Fact]
-        public void FunctionInner()
+        public async Task FunctionInner()
         {
             // Inner table 
             SymbolTable stInner = SymbolTable.WithPrimitiveTypes();
@@ -652,7 +652,7 @@ namespace Microsoft.PowerFx.Tests
             engine.AddUserDefinedFunction("Func1() : Text = \"Outer\";", symbolTable: st);
 
             // Func1() here should bind to the top-level "outer" one, not the "inner" one.
-            var result = engine.EvalAsync("Func1() & Func2()", default, symbolTable: st).Result;
+            var result = await engine.EvalAsync("Func1() & Func2()", default, symbolTable: st);
             var str = ((StringValue)result).Value;
             Assert.Equal("Outerinner2", str);
         }
@@ -1060,7 +1060,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("OptionSetInfo(OptionSet.Option1)", "option_1")]
         [InlineData("OptionSetInfo(Option1)", "option_1")]
         [InlineData("OptionSetInfo(If(1<0, Option1))", "")]
-        public async void OptionSetInfoTests(string expression, string expected)
+        public async Task OptionSetInfoTests(string expression, string expected)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -1082,7 +1082,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
 
-            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues).ConfigureAwait(false);
+            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues);
             Assert.Equal(expected, result.ToObject());
         }
 
@@ -1282,7 +1282,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void TestWithTimeZoneInfo()
+        public async Task TestWithTimeZoneInfo()
         {
             // CultureInfo not set in PowerFxConfig as we use Symbols
             var pfxConfig = new PowerFxConfig(Features.None);
@@ -1300,10 +1300,10 @@ namespace Microsoft.PowerFx.Tests
             Assert.Same(frTimeZone, symbols.GetService<TimeZoneInfo>());
             Assert.Same(jaCulture, symbols.GetService<CultureInfo>());
 
-            var fv = recalcEngine.EvalAsync(
+            var fv = await recalcEngine.EvalAsync(
                 @"Text(DateAdd(DateTimeValue(""dimanche 30 octobre 2022 01:34:03"", ""fr-FR""), ""2"", ""hours""), ""dddd, MMMM dd, yyyy hh:mm:ss"")",
                 CancellationToken.None,
-                runtimeConfig: symbols).Result;
+                runtimeConfig: symbols);
 
             Assert.NotNull(fv);
             Assert.IsType<StringValue>(fv);
@@ -1313,20 +1313,20 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void FunctionServices()
+        public async Task FunctionServices()
         {
             var engine = new RecalcEngine();
             var values = new RuntimeConfig();
             values.SetRandom(new TestRandService());
 
             // Rand 
-            var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
+            var result = await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values);
             Assert.Equal(0.5, result.ToObject());
 
             // 1 service can impact multiple functions. 
             // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
             // RandBetween maps 0.5 to 6. 
-            result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
+            result = await engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values);
             Assert.Equal(6.0m, result.ToObject());
         }
 
@@ -1345,7 +1345,7 @@ namespace Microsoft.PowerFx.Tests
 
             try
             {
-                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).ConfigureAwait(false);
+                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values);
                 Assert.False(true); // should have thrown on illegal IRandomService service.
             }
             catch (InvalidOperationException e)
@@ -1369,24 +1369,24 @@ namespace Microsoft.PowerFx.Tests
             var symValues = symTable.CreateValues();
             symValues.Set(slot, FormulaValue.New(10.0));
 
-            var result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
+            var result1 = await eval.EvalAsync(CancellationToken.None, symValues);
             Assert.Equal(11.0, result1.ToObject());
 
             // Adding a variable is ok. 
             var slotY = symTable.AddVariable("y", FormulaType.Number, null);
-            result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
+            result1 = await eval.EvalAsync(CancellationToken.None, symValues);
             Assert.Equal(11.0, result1.ToObject());
 
             // Executing an existing IR fails if it uses a deleted variable.
             symTable.RemoveVariable("x");
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues));
 
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
             var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
             symValues.Set(slot2, FormulaValue.New(20.0));
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues));
         }
 
         // execute w/ missing var (never adding to SymValues)

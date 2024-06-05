@@ -307,7 +307,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             }
 
             Assert.Equal(tokens.Count(), decodedTokens.Count());
-            Assert.All(tokens.Zip(decodedTokens), (tokens) =>
+#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
+            Assert.All(tokens.Zip(decodedTokens, (First, Second) => new { First, Second }), (tokens) =>
             {
                 var expectedToken = tokens.First;
                 var actualToken = tokens.Second;
@@ -315,6 +316,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 Assert.Equal(expectedToken.EndIndex, actualToken.EndIndex);
                 Assert.Equal(expectedToken.TokenType, actualToken.TokenType);
             });
+#pragma warning restore SA1313 // Parameter names should begin with lower-case letter
         }
 
         private static string ChooseEol(string expression)
@@ -349,11 +351,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             foreach (string expectedControlTokenIndices in controlTokenIndicesArray)
             {
                 var resultData = expectedControlTokenIndices.Split(',');
-                var rangeData = resultData[1..resultData.Length];
+                var rangeData = resultData.Skip(1).ToArray();
                 var rangeList = new List<uint[]>();
                 for (int idx = 0; idx < rangeData.Length; idx += 4)
                 {
-                    rangeList.Add(rangeData[idx.. (idx + 4)].Select(uint.Parse).ToArray());
+                    rangeList.Add(rangeData.Skip(idx).Take(4).Select(uint.Parse).ToArray());
                 }
 
                 ControlToken controlTokenTestObj = new ControlToken(resultData[0], rangeList);

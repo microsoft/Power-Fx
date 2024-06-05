@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
@@ -2804,8 +2805,10 @@ namespace Microsoft.PowerFx.Core.Tests
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+" +
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+" +
             "0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9+0+1+2+3+4+5+6+7+8+9", "n")]
-        public void TexlExcessivelyLongButFlatRulesParseCorrectly(string script, string expectedType)
+        public async Task TexlExcessivelyLongButFlatRulesParseCorrectly(string script, string expectedType)
         {
+            // avoids CS1998 error and we need this to be async to use the Timeout attribute
+            await Task.Delay(0);
             TestSimpleBindingSuccess(script, TestUtils.DT(expectedType));
         }
 

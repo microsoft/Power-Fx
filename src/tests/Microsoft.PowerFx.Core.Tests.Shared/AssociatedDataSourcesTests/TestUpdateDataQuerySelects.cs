@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 actualSelectsList.AddRange(queryOption.Selects);
             }
 
-            var expectedSelectsList = expectedSelects.Split(",").ToList();
+            var expectedSelectsList = expectedSelects.Split(',').ToList();
             Assert.Equal(expectedSelectsList.Count, actualSelectsList.Count);
             foreach (var expectedSelect in expectedSelectsList)
             {
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                 actualSelectsList.AddRange(queryOption.Selects);
             }
 
-            var expectedSelectsList = expectedSelects.Split(",").ToList();
+            var expectedSelectsList = expectedSelects.Split(',').ToList();
             Assert.Equal(expectedSelectsList.Count, actualSelectsList.Count);
             foreach (var expectedSelect in expectedSelectsList)
             {

@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("CustomAsync(3)", cts.Token).ConfigureAwait(false);
+            var result = await engine.EvalAsync("CustomAsync(3)", cts.Token);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token).ConfigureAwait(false);
+            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
             Assert.Equal(12.0, result.ToObject());
         }
 
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token).ConfigureAwait(false);
+            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
             Assert.Equal(12m, result.ToObject());
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Tests
             public async Task<FormulaValue> Worker2(FormulaValue[] args, CancellationToken cancel)
             {
                 await Task.Yield();
-                var result = await _waiter.Task.ConfigureAwait(false);
+                var result = await _waiter.Task;
 
                 var n = ((NumberValue)result).Value;
                 var x = FormulaValue.New(n * 2);
@@ -152,12 +152,12 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(5));
             Assert.False(task.IsCompleted);
 
             helper.SetResult(15.0);
 
-            var result = await task.ConfigureAwait(false);
+            var result = await task;
 
             Assert.Equal(30.0, result.ToObject());
         }
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Tests
         private static async Task<FormulaValue> WorkerWaitForCancel(FormulaValue[] args, CancellationToken cancel)
         {
             // Block forever until cancellation. 
-            await Task.Delay(-1, cancel).ConfigureAwait(false); // throws TaskCanceledException
+            await Task.Delay(-1, cancel); // throws TaskCanceledException
 
             throw new InvalidOperationException($"Shouldn't get here");
         }
@@ -191,12 +191,12 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(5));
             Assert.False(task.IsCompleted);
 
             cts.Cancel();
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task.ConfigureAwait(false); }).ConfigureAwait(false);
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task; });
         }
 
         // Test interleaved concurrent runs. 
@@ -224,8 +224,8 @@ namespace Microsoft.PowerFx.Tests
             helper1.SetResult(333.0);
             helper2.SetResult(444.0);
 
-            var result1 = await task1.ConfigureAwait(false);
-            var result2 = await task2.ConfigureAwait(false);
+            var result1 = await task1;
+            var result2 = await task2;
 
             Assert.Equal(333.0 * 2, result1.ToObject());
             Assert.Equal(444.0 * 2, result2.ToObject());
@@ -237,15 +237,15 @@ namespace Microsoft.PowerFx.Tests
         {
             var helper = new WaitForFunctionsHelper(null);
 
-            var result = await helper.Worker(0).ConfigureAwait(false);
+            var result = await helper.Worker(0);
             Assert.Equal(0, result);
 
-            var result1 = await helper.Worker(1).ConfigureAwait(false);
+            var result1 = await helper.Worker(1);
             Assert.Equal(1, result1);
 
             // WaitFor(3) fails if WaitFor(2) wasn't called. 
             // Must do WaitFor() in order.
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await helper.Worker(3).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await helper.Worker(3));
         }
 
         // Veriy Async() function infrastructure
@@ -254,16 +254,16 @@ namespace Microsoft.PowerFx.Tests
         {
             var helper = new AsyncFunctionsHelper(null);
 
-            var result = await helper.Worker(0).ConfigureAwait(false);
+            var result = await helper.Worker(0);
             Assert.Equal(0, result);
 
             // Async(2) won't complete until Async(1) is called. 
             var task2 = helper.Worker(2);
             Assert.False(task2.IsCompleted);
 
-            await helper.Worker(1).ConfigureAwait(false);
+            await helper.Worker(1);
 
-            var result2 = await task2.ConfigureAwait(false);
+            var result2 = await task2;
             Assert.Equal(2, result2);
         }
     }

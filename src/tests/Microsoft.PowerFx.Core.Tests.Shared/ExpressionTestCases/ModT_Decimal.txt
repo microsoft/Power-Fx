@@ -1,17 +1,25 @@
 #SETUP: ConsistentOneColumnTableResult,disable:NumberIsFloat,DecimalSupport
 
+// .Net 4.6.2 returns Table({Value:2},{Value:1.3776},{Value:1.7393431234})
+#DISABLE.NET: 462
 >> Mod([79228162514264337593543950335, 79228162514264337593543.1234,79228162514264337.5935431234], 3.5678)
 Table({Value:2.0834},{Value:1.3776},{Value:1.7393431234})
 
+// .Net 4.6.2 returns Table({Value:2},{Value:0.6234},{Value:Error({Kind:ErrorKind.NotApplicable})})
+#DISABLE.NET: 462
 >> Mod([79228162514264337593543950335, 79228162514264337593543.1234,79228162514264337.5935431234], [3.5678, 1.5])
 Table({Value:2.0834},{Value:0.6234},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Mod(79228162514264337593543.1234, [3.5678, 1.5])
 Table({Value:1.3776},{Value:0.6234})
 
+// .Net 4.6.2 returns Table({Value:1.5678},{Value:2.1902},{Value:1.8284568766})
+#DISABLE.NET: 462
 >> Mod([-79228162514264337593543950335, -79228162514264337593543.1234,-79228162514264337.5935431234], 3.5678)
 Table({Value:1.4844},{Value:2.1902},{Value:1.8284568766})
 
+// .Net 4.6.2 returns Table({Value:1.5678},{Value:0.8766},{Value:Error({Kind:ErrorKind.NotApplicable})})
+#DISABLE.NET: 462
 >> Mod([-79228162514264337593543950335, -79228162514264337593543.1234,-79228162514264337.5935431234], [3.5678, 1.5])
 Table({Value:1.4844},{Value:0.8766},{Value:Error({Kind:ErrorKind.NotApplicable})})
 

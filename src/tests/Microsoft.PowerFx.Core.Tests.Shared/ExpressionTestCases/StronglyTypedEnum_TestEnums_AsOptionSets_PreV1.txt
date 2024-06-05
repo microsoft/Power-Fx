@@ -1,0 +1,850 @@
+﻿#SETUP: disable:StronglyTypedBuiltinEnums,disable:PowerFxV1CompatibilityRules,AllEnumsPlusTestOptionSetsSetup,RegEx,EnableJsonFunctions
+
+// **** Using test enums AS OPTION SETS, Pre V1. ****
+// Some enum varients are not represented in the Builtin set, including for example, any Boolean enums.
+// The companion _BuiltInEnums version of this file uses only the built in enums.
+// This version of the file usess Option Sets insetead of Enums, which helps test the use of host registered option sets, such as Dataverse option sets.
+
+// Expected resutls in this file were captured before the April 2024 changes for testing compatibilty with the old settings.
+
+// Strongly typed enums were strengthened to:
+//    0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
+//    1. Avoid passing the wrong kind of enum to a function. For example JSON( [1,2,3], Match.IgnoreCase )
+//    2. Avoid passing an enum where a scalar was expected, except for text backed enums. For example Mid( "foo", StartOfWeek.Tuesday )
+//    3. Avoid passing a scalar where an enum was expected, excepf for text backed enums. For example Weekday( Now(), 12 )
+//
+// Default operations with backing type
+//    4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+//    5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//    6. By default, Order comparisons between number based enums are not supported, by default. For example StartOfWeek.Tuesday < StartOfWeek.Monday
+//    7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//    8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
+//    9. If the underlying value is desired, the Text, Value, Decimal, Float, and Boolean functions can be called to get the backing value.
+//
+// In addition, there are flags for each option set that govern how it can be used.  Default is no flags, used by Dataverse option sets.
+//   10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
+//   11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
+//   12. CanConcatenateStronglyTyped (text only) - For example, JSONFormat which can concatenate different members together to create a new member
+//   13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
+//   14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
+//
+// Misc
+//   15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+//   16. Everything coerces to string
+//   17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+
+//============================================================================================================
+//
+// 0. Strongly typed enum usage is the most common scenario and what Intellisense will suggest.
+//
+
+>> TestXORYesNo( TestYesNo.Yes, TestYesNo.No )
+true
+
+>> TestColorInvert( Color.Blue )
+RGBA(255,255,0,1)
+
+>> TestColorBlueRampInvert( TestBlueRamp.Blue25 )
+RGBA(64,64,0,1)
+
+//============================================================================================================
+//
+// 1. Avoid passing the wrong kind of enum to a function. For example JSON( [1,2,3], Match.IgnoreCase )
+//
+
+>> TestXORYesNo( TestYeaNay.Yea, TestYeaNay.Nay )
+true
+
+>> TestColorBlueRampInvert( TestRedRamp.Red25 )
+RGBA(0,64,64,1)
+
+>> TestColorBlueRampInvert( Color.Purple )
+RGBA(127,255,127,1)
+
+>> TestColorBlueRampInvert( ColorFade( Color.Yellow, 25% ) )
+RGBA(0,0,192,1)
+
+>> ColorFade( TestRedRamp.Red25, 10% )
+RGBA(255,197,197,1)
+
+>> TestColorInvert( TestRedRamp.Red50 )
+RGBA(0,128,128,1)
+
+//===========================================================================================================
+//
+// 2. Avoid passing an enum where a scalar was expected, except for text.  For example Mid( "foo", StartOfWeek.Tuesday ). 
+//
+
+//===========================================================================================================
+//
+// 3. Avoid passing a scalar where an enum was expected, excepf for text backed enums. For example Weekday( Now(), 12 )
+//
+
+>> TestColorBlueRampInvert( RGBA( 128, 128, 128, 100% ) )
+RGBA(127,127,127,1)
+
+//===========================================================================================================
+//
+// 4. Equals/not equals between enum values of the same enum is always supported.  For example, StartOfWeek.Tuesday = StartOfWeek.Monday
+//
+
+>> TestYesNo.Yes = TestYesNo.No
+false
+
+>> TestYesNo.Yes = TestYesNo.Yes
+true
+
+>> TestYesNo.Yes <> TestYesNo.No
+true
+
+>> TestBooleanNoCoerce.SuperTrue = TestBooleanNoCoerce.SuperFalse
+false
+
+>> TestBooleanNoCoerce.SuperTrue <> TestBooleanNoCoerce.SuperFalse
+true
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCoerceTo.V = TestNumberCoerceTo.V2
+// true
+
+// Not supported between different enums, even if the same backing kind or if CanCoerceToBackindKind is true
+
+>> TestNumberCoerceTo.V = ErrorKind.Div0
+false
+
+>> TestYesNo.Yes = TestYeaNay.Nay
+Errors: Error 14-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
+
+>> TestYesNo.Yes <> TestYeaNay.Nay
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
+
+>> Color.Red = TestRedRamp.Red100
+true
+
+//===========================================================================================================
+//
+//  5. By default, Equals/not equals with the backing kind is not supported.  For example, StartOfWeek.Tuesday = 12
+//
+
+>> TestRedRamp.Red25 = RGBA( 1,1,1,1 )
+false
+
+>> TestBooleanNoCoerce.SuperTrue = true
+true
+
+//===========================================================================================================
+//
+// 6. By default, Order comparisons between number based enums are not supported by default, for example StartOfWeek.Tuesday < StartOfWeek.Monday
+//
+
+//===========================================================================================================
+//
+// 7. By default, math operations between number based enums are never supported. For example, StartOfWeek.Tuesday + StartOfWeek.Monday 
+//
+
+// Booleans cannot be used in math expressions, even if they support coercion to backing kind
+
+>> TestBooleanNoCoerce.SuperFalse + 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerce.SuperFalse * 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerce.SuperFalse / 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestBooleanNoCoerce.SuperFalse ^ 2
+Errors: Error 19-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> TestYesNo.Yes + 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.No * 2
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes / 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.Yes ^ 2
+Errors: Error 9-13: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+//===========================================================================================================
+//
+// 8. By default, Boolean operations between Boolean based enums is not supported, but can be overriden with CanCoerceToBackingKind
+//
+
+>> TestYesNo.Yes && TestBooleanNoCoerce.SuperTrue
+true
+
+>> TestBooleanNoCoerce.SuperTrue && TestBooleanNoCoerce.SuperFalse
+false
+
+>> TestBooleanNoCoerce.SuperTrue && false
+false
+
+>> !TestBooleanNoCoerce.SuperTrue
+false
+
+>> TestYesNo.Yes Or TestBooleanNoCoerce.SuperTrue
+true
+
+>> Not TestBooleanNoCoerce.SuperTrue And Not TestBooleanNoCoerce.SuperFalse
+false
+
+>> TestBooleanNoCoerce.SuperTrue
+TestBooleanNoCoerce.'1'
+
+>> And( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> Not( TestBooleanNoCoerce.SuperTrue )
+false
+
+>> Or( TestBooleanNoCoerce.SuperTrue, TestBooleanNoCoerce.SuperFalse )
+true
+
+>> Or(Not(TestBooleanNoCoerce.SuperFalse),  Not(TestBooleanNoCoerce.SuperTrue))
+true
+
+//===========================================================================================================
+//
+// 9. If the underlying value is desired, the Text, Value, Float, and Boolean functions can be called to get the backing value.
+//
+
+// Text can be called on all option set values
+
+>> Text( TestYesNo.Yes )
+"Yes"
+
+>> Value( TestYesNo.Yes )
+Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Float( TestYesNo.Yes )
+Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-20: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Boolean( TestYesNo.No )
+false
+
+>> Boolean( TestYesNo.Yes )
+true
+
+>> Boolean( TestYeaNay.Nay )
+false
+
+>> Boolean( TestYeaNay.Yea )
+true
+
+>> Boolean( TestBooleanNoCoerce.SuperTrue )
+true
+
+>> Boolean( TestBooleanNoCoerce.SuperFalse )
+false
+
+// no constructor for Color values
+
+//===========================================================================================================
+//
+// 10. CanCoerceFromBackingKind - For example, Match which allows a string in place of the enum
+//
+
+>> TestXORNoCoerce( true, false )
+true
+
+>> TestXORNoCoerce( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> TestXORNoCoerce( TestYeaNay.Yea, TestYeaNay.Nay )
+true
+
+>> TestXORNoCoerce( TestYesNo.No, TestYesNo.Yes )
+true
+
+>> TestXORYesNo( true, false )
+true
+
+>> TestXORYesNo( TestBooleanNoCoerce.SuperFalse, TestBooleanNoCoerce.SuperTrue )
+true
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Yea )
+true
+
+>> TestXORYesNo( TestYesNo.No, TestYesNo.Yes )
+true
+
+>> TestXORYesNo( TestYesNo.No, true )
+true
+
+>> TestXORYesNo( TestYesNo.No, false )
+false
+
+>> If( false, TestYeaNay.Yea, false )
+TestYeaNay.'0'
+
+>> Text( If( false, TestYeaNay.Yea, false ) )
+"Nay"
+
+>> If( false, TestYeaNay.Yea, Blank() )
+Blank()
+
+>> Text( If( false, TestYeaNay.Yea, Blank() ) )
+Blank()
+
+// 10 is a part of the option set.  In the future we may want to have this return .X instead.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 10 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 10 ) )
+"CalculatedOptionSetValue"
+
+// 11 is not a part of the option set.
+>> If( false, TestNumberCompareNumericCoerceFrom.V, 11 )
+TestNumberCompareNumericCoerceFrom.CalculatedOptionSetValue
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, 11 ) )
+"CalculatedOptionSetValue"
+
+>> If( false, TestNumberCompareNumericCoerceFrom.V, Blank() )
+Blank()
+
+>> Text( If( false, TestNumberCompareNumericCoerceFrom.V, Blank() ) )
+Blank()
+
+>> If( false, TestBlueRamp.Blue50, Blank() )
+Blank()
+
+>> Text( If( false, TestBlueRamp.Blue50, Blank() ) )
+Blank()
+
+//===========================================================================================================
+//
+// 11. CanCoerceToBackingKind - For example, ErrorKind that can be used as a number
+//
+
+>> TestNumberCoerceTo.V + TestNumberCoerceTo.X
+15
+
+>> Int( TestNumberCoerceTo.V )
+5
+
+>> Power( TestNumberCoerceTo.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCoerceTo.V )
+1
+
+>> TestSignDecimal( TestNumberCoerceTo.V )
+1
+
+>> Power( TestNumberCoerceTo.V, TestNumberCoerceTo.V )
+3125
+
+>> Int( TestNumberCompareNumeric.V )
+5
+
+>> Power( TestNumberCompareNumeric.V, 2 )
+25
+
+>> TestSignNumber( TestNumberCompareNumeric.V )
+1
+
+>> TestSignDecimal( TestNumberCompareNumeric.V )
+1
+
+>> Power( TestNumberCompareNumeric.V, TestNumberCompareNumeric.V )
+3125
+
+// Unless there is a specific reason, CanCoerceToBackingKind is expected to be true for most Boolean option sets
+
+>> TestYesNo.Yes && TestYeaNay.Yea
+true
+
+>> !TestYesNo.Yes
+false
+
+>> TestYesNo.Yes || TestYeaNay.Nay
+true
+
+>> !TestYesNo.Yes || !TestYeaNay.Yea
+false
+
+>> TestYesNo.Yes And TestYeaNay.Yea
+true
+
+>> Not TestYesNo.Yes
+false
+
+>> TestYesNo.Yes Or TestYeaNay.Nay
+true
+
+>> Not TestYesNo.Yes And Not TestYeaNay.Yea
+false
+
+>> TestYesNo.No
+TestYesNo.'0'
+
+>> And( TestYesNo.Yes, TestYeaNay.Yea )
+true
+
+>> Not( TestYesNo.Yes )
+false
+
+>> Or( TestYesNo.Yes, TestYeaNay.Nay )
+true
+
+>> Or(Not(TestYesNo.Yes),  Not(TestYeaNay.Yea))
+false
+
+// Equals/not equals comparisons
+
+>> TestYesNo.Yes = false
+false
+
+>> TestYesNo.Yes <> true
+false
+
+>> TestYesNo.Yes = true
+true
+
+>> TestYesNo.Yes <> false
+true
+
+//===========================================================================================================
+//
+// 12. CanConcatenateStronglyTyped (text only) - For example, JSONFormat which can concatenate different members together to create a new member
+//
+
+//===========================================================================================================
+//
+// 13. CanCompareNumeric (numbers only) - For example, ErrorKind can compare values
+//
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 < TestNumberCompareNumeric.V
+// false
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 <= TestNumberCompareNumeric.V
+// true
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 >= TestNumberCompareNumeric.V
+// true
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 > TestNumberCompareNumeric.V
+// false
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 < TestNumberCompareNumericCoerceFrom.V
+// false
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 <= TestNumberCompareNumericCoerceFrom.V
+// true
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 >= TestNumberCompareNumericCoerceFrom.V
+// true
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 > TestNumberCompareNumericCoerceFrom.V
+// false
+
+// Paired with CoerceFromBackingKind, can compare with backing kind
+
+>> TestNumberCompareNumeric.V < 5
+false
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumeric.V2 < 5
+// false
+
+>> TestNumberCompareNumericCoerceFrom.V < 5
+false
+
+// unlike enums, option sets can't have the same value for two options; .V2 tests can't run as option sets
+// >> TestNumberCompareNumericCoerceFrom.V2 < 5
+// false
+
+// Most other number backeded enums can not, see section 5 above
+
+//===========================================================================================================
+//
+// 14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
+//
+
+//===========================================================================================================
+//
+// 15. Since there is no longer an Accepts relationship between enums and their backing kinds, more likely to get Void results
+//
+
+//===========================================================================================================
+//
+// 16. Everything coerces to string
+//
+
+>> Text( TestYesNo.No )
+"No"
+
+>> "Label:" & TestYesNo.No
+"Label:No"
+
+>> Concatenate( "Label:", TestYesNo.No )
+"Label:No"
+
+>> TestYesNo.No & "Way"
+"NoWay"
+
+>> Concatenate( TestYesNo.No, "Way" )
+"NoWay"
+
+>> Text( TestYeaNay.Nay )
+"Nay"
+
+>> "Label:" & TestYeaNay.Nay
+"Label:Nay"
+
+>> Text( TestBooleanNoCoerce.SuperTrue )
+"SuperTrue"
+
+>> "Label:" & TestBooleanNoCoerce.SuperTrue
+"Label:SuperTrue"
+
+>> Text( TestYeaNay.Yea )
+"Yea"
+
+>> "Label:" & TestYeaNay.Yea
+"Label:Yea"
+
+>> Text( TestBlueRamp.Blue50 )
+"Blue50"
+
+>> "Label:" & TestBlueRamp.Blue50
+"Label:Blue50"
+
+>> Concatenate( "Label:", TestBlueRamp.Blue50 )
+"Label:Blue50"
+
+>> TestBlueRamp.Blue50 & " is the sky"
+"Blue50 is the sky"
+
+>> Concatenate( TestBlueRamp.Blue50, " is the sky")
+"Blue50 is the sky"
+
+>> "The sky is so very " & TestBlueRamp.Blue50 & " !!!"
+"The sky is so very Blue50 !!!"
+
+>> Concatenate( "The sky is so very ", TestBlueRamp.Blue50, " !!!")
+"The sky is so very Blue50 !!!"
+
+>> Mid( TestBlueRamp.Blue50, 2 )
+"lue50"
+
+>> Len( TestBlueRamp.Blue50 )
+6
+
+>> Text( TestRedRamp.Red25 )
+"Red25"
+
+>> "Label:" & TestRedRamp.Red25
+"Label:Red25"
+
+>> Mid( TestRedRamp.Red25, 2 )
+"ed25"
+
+>> Len( TestRedRamp.Red25 )
+5
+
+>> true & TestRedRamp.Red25
+"trueRed25"
+
+>> 1 & TestRedRamp.Red25
+"1Red25"
+
+>> "hi" & TestRedRamp.Red25
+"hiRed25"
+
+>> TestRedRamp.Red25 & true
+"Red25true"
+
+>> TestRedRamp.Red25 & 1
+"Red251"
+
+>> TestRedRamp.Red25 & "hi"
+"Red25hi"
+
+>> Concatenate( true, TestRedRamp.Red25 )
+"trueRed25"
+
+>> Concatenate( 1, TestRedRamp.Red25 )
+"1Red25"
+
+>> Concatenate( "hi", TestRedRamp.Red25 )
+"hiRed25"
+
+>> true & TestYeaNay.Yea
+"trueYea"
+
+>> 1 & TestYeaNay.Yea
+"1Yea"
+
+>> "hi" & TestYeaNay.Yea
+"hiYea"
+
+>> TestYeaNay.Yea & true
+"Yeatrue"
+
+>> TestYeaNay.Yea & 1
+"Yea1"
+
+>> TestYeaNay.Yea & "hi"
+"Yeahi"
+
+>> Concatenate( true, TestYeaNay.Yea )
+"trueYea"
+
+>> Concatenate( 1, TestYeaNay.Yea )
+"1Yea"
+
+>> Concatenate( "hi", TestYeaNay.Yea )
+"hiYea"
+
+//===========================================================================================================
+//
+// 17. Everything equals compares to Blank() (ObjNull), can order compare with numbers and CanCompareNumerics set
+//
+
+>> TestYesNo.Yes = Blank()
+false
+
+>> TestYesNo.No = Blank()
+false
+
+>> TestYesNo.Yes <> Blank()
+true
+
+>> TestYesNo.No <> Blank()
+true
+
+>> Blank() = TestYesNo.Yes
+false
+
+>> Blank() = TestYesNo.No 
+false
+
+>> Blank() <> TestYesNo.Yes
+true
+
+>> Blank() <> TestYesNo.No
+true
+
+>> TestYesNo.No >= Blank()
+Errors: Error 13-15: Unable to compare values of type OptionSetValue (TestYesNo).
+
+>> TestYesNo.No < Blank()
+Errors: Error 13-14: Unable to compare values of type OptionSetValue (TestYesNo).
+
+>> Blank() < TestYesNo.Yes
+Errors: Error 8-9: Unable to compare values of type OptionSetValue (TestYesNo).
+
+>> Blank() <= TestYesNo.Yes
+Errors: Error 8-10: Unable to compare values of type OptionSetValue (TestYesNo).
+
+>> TestNumberCompareNumeric.V < Blank()
+false
+
+>> TestNumberCompareNumeric.V <= Blank()
+false
+
+>> TestNumberCompareNumeric.V >= Blank()
+true
+
+>> TestNumberCompareNumeric.V > Blank()
+true
+
+>> TestNumberCompareNumeric.V = Blank()
+false
+
+>> TestNumberCompareNumeric.V <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumeric.V
+true
+
+>> Blank() <= TestNumberCompareNumeric.V
+true
+
+>> Blank() >= TestNumberCompareNumeric.V
+false
+
+>> Blank() > TestNumberCompareNumeric.V
+false
+
+>> Blank() = TestNumberCompareNumeric.V
+false
+
+>> Blank() <> TestNumberCompareNumeric.V
+true
+
+>> TestNumberCoerceTo.V > Blank()
+true
+
+>> TestNumberCoerceTo.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V < Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <= Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V >= Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V > Blank()
+true
+
+>> TestNumberCompareNumericCoerceFrom.V = Blank()
+false
+
+>> TestNumberCompareNumericCoerceFrom.V <> Blank()
+true
+
+>> Blank() < TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() <= TestNumberCompareNumericCoerceFrom.V
+true
+
+>> Blank() >= TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() > TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() = TestNumberCompareNumericCoerceFrom.V
+false
+
+>> Blank() <> TestNumberCompareNumericCoerceFrom.V
+true
+
+//===========================================================================================================
+//
+// 18. Examples - TestYesNo - Standard DV Boolean backed option set, with CoerceToBackingKind and CoerceFromBackingKind
+//
+
+// Standard usage
+
+>> TestXORYesNo( TestYesNo.Yes, TestYesNo.Yes )
+false
+
+>> TestYesNo.Yes=TestYesNo.No
+false
+
+>> TestYesNo.Yes<>TestYesNo.No
+true
+
+>> TestYesNo.Yes=TestYesNo.Yes
+true
+
+>> Boolean(TestYesNo.No)
+false
+
+// Coerces to string
+
+>> Text(TestYesNo.No)
+"No"
+
+>> "Severity: "&TestYesNo.No
+"Severity: No"
+
+>> Len(TestYesNo.No)
+2
+
+>> Left(TestYesNo.No,3)
+"No"
+
+// Standard error cases for number backed enums
+
+>> Value( TestYesNo.No )
+Errors: Error 0-5: The function 'Value' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
+
+>> Float( TestYesNo.No )
+Errors: Error 0-5: The function 'Float' has some invalid arguments.|Error 16-19: Expected text or number. We expect text or a number at this point in the formula.
+
+>> TestYesNo.No = TestYeaNay.Yea
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
+
+>> TestYesNo.No = TestYeaNay.Nay
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
+
+>> TestYesNo.No <> TestYeaNay.Yea
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: OptionSetValue (TestYesNo), OptionSetValue (TestYeaNay).
+
+>> TestXORYesNo( TestYeaNay.Nay, TestYeaNay.Nay )
+false
+
+// Boolean can be used in place (CanCoerceFromBackingKind = true)
+
+>> TestXORYesNo( false, false )
+false
+
+>> TestYesNo.No = true
+false
+
+>> TestYesNo.No = false
+true
+
+>> TestYesNo.No <> false
+false
+
+>> If( false, TestYesNo.Yes, false )
+TestYesNo.'0'
+
+>> Text( If( false, TestYesNo.Yes, false ) )
+"No"
+
+// Can be used as a Boolean (CanCoerceToBackingKind = true)
+
+>> Sqrt( TestYesNo.No )
+Errors: Error 0-4: The function 'Sqrt' has some invalid arguments.|Error 15-18: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Number value instead.
+
+>> Mod( TestYesNo.No, 2 )
+Errors: Error 0-3: The function 'Mod' has some invalid arguments.|Error 14-17: Invalid argument type (OptionSetValue (TestYesNo)). Expecting a Decimal value instead.
+
+>> TestYesNo.No + 3
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> TestYesNo.No + TestYesNo.Yes
+Errors: Error 9-12: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.|Error 24-28: Invalid argument type. Expecting one of the following: Decimal, Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime, UntypedObject.
+
+>> If( false, true, TestYesNo.No )  // first type rule
+false
+
+>> Not( TestYesNo.No )
+true
+
+>> Not TestYesNo.No
+true
+
+>> TestYesNo.No Or TestYesNo.No Or TestYesNo.Yes
+true
+
+>> TestYesNo.Yes And TestYesNo.Yes And TestYesNo.No
+false
+
+// Can't compare numerically (CanCompareNumeric = false)
+
+>> TestYesNo.Yes < TestYesNo.No
+Errors: Error 14-15: Unable to compare values of type OptionSetValue (TestYesNo).
+
+>> TestYesNo.Yes >= TestYesNo.No
+Errors: Error 14-16: Unable to compare values of type OptionSetValue (TestYesNo).
+
+// Can't concatenate strongly typed (CanConcatenateStronglyTyped = false)
+
+>> TestYesNo.Yes & TestYesNo.Yes & TestYesNo.No
+"YesYesNo"
+
+>> TestXORYesNo( TestYesNo.Yes & TestYesNo.No, true )
+Error({Kind:ErrorKind.InvalidArgument})
