@@ -835,6 +835,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(canSetMutate, checkSetMutate.IsSuccess);
         }
 
+        [Fact]
+        public void SymbolTableBug()
+        {
+            var sym1 = new SymbolTable();
+            sym1.AddVariable("x", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
+            check.ApplyBinding();
+
+            var symVals = check.Symbols.CreateValues();
+            check.Symbols.TryLookupSlot("x", out var slot);
+            symVals.Set(slot, FormulaValue.New(1.0));
+            var runtimeConfig = new RuntimeConfig(symVals);
+
+            var eval = check.GetEvaluator();
+            var result = eval.EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig).GetAwaiter().GetResult();
+
+            Assert.Equal(1.0, result.ToObject());
+        }
+
         // Get a convenient string representation of a SymbolValue
         private static string Get(ReadOnlySymbolValues values)
         {
