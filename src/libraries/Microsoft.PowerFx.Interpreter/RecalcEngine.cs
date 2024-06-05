@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
         /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
-        /// <param name="value">constant value.</param>
+        /// <param name="value">constant value. The variable will take the type of this value on create.</param>
         public void UpdateVariable(string name, FormulaValue value)
         {
             UpdateVariable(name, value, new SymbolProperties { CanMutate = true, CanSet = true });
@@ -141,8 +141,8 @@ namespace Microsoft.PowerFx
         /// Create or update a named variable to a value, with custom CanSet/Mutate attributes. 
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
-        /// <param name="value">constant value.</param>
-        /// <param name="newVarProps">symbol properties.</param>
+        /// <param name="value">constant value. The variable will take the type of this value on create.</param>
+        /// <param name="newVarProps">symbol properties. This is only used on the intiail create of the variable.</param>
         public void UpdateVariable(string name, FormulaValue value, SymbolProperties newVarProps)
         {
             var x = value;
