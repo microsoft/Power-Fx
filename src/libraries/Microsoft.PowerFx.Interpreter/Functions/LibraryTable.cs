@@ -60,12 +60,12 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return arg0.Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            return arg0.First(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            return args[0].Last(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
         public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
@@ -526,7 +526,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (NumberValue)args[1];
             var rowIndex = (int)arg1.Value;
 
-            return arg0.Index(rowIndex).ToFormulaValue();
+            return arg0.Index(rowIndex, mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
         public static FormulaValue Shuffle(IServiceProvider services, IRContext irContext, FormulaValue[] args)
@@ -1161,7 +1161,14 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)
         {
-            return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
+            if (irContext.ResultType is BlankType)
+            {
+                return new BlankValue(irContext);
+            }
+            else
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType((RecordType)FormulaType.Build(irContext.ResultType._type), (RecordValue)MutationUtils.MergeRecords(args).ToFormulaValue());
+            }
         }
 
         public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

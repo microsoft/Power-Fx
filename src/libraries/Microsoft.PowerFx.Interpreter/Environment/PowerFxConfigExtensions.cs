@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue)"/>.
+        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
         /// </summary>
         /// <param name="powerFxConfig"></param>
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
