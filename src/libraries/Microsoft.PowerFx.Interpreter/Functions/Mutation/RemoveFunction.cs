@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
             return argNum >= 1;
         }
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {

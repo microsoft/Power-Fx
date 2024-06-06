@@ -104,7 +104,6 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             IsVariadicFunction = texlFunction.IsVariadicFunction;
             ManipulatesCollections = texlFunction.ManipulatesCollections;
             ModifiesValues = texlFunction.ModifiesValues;
-            MutatesArg0 = texlFunction.MutatesArg0;
             PropagatesMutability = texlFunction.PropagatesMutability;
             RequireAllParamColumns = texlFunction.RequireAllParamColumns;
             RequiresDataSourceScope = texlFunction.RequiresDataSourceScope;
@@ -167,7 +166,6 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
         public bool IsVariadicFunction;
         public bool ManipulatesCollections;
         public bool ModifiesValues;
-        public bool MutatesArg0;
         public bool PropagatesMutability;
         public bool RequireAllParamColumns;
         public bool RequiresDataSourceScope;

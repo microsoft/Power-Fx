@@ -233,6 +233,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
 
+            if (testRunner.Tests.Count > 0 && testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
+            {
+                ExpressionEvaluationTests.MutationFunctionsTestSetup(engine, false);
+            }
+
             var result = testRunner.RunTests();
 
             if (result.Fail > 0)
