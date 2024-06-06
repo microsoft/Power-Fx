@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Connectors
         internal string Summary;
         internal bool ExplicitInput;
 
-        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body)
+        internal ConnectorExtensions(IConnectorExtensions extension, IConnectorExtensions body)
         {
             Summary = (body ?? extension).GetSummary();
             ExplicitInput = (body ?? extension).GetExplicitInput();

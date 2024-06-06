@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public FormulaValue DefaultValue { get; }
 
-        internal OpenApiSchema Schema { get; }
+        internal IConnectorSchema Schema { get; }
 
         internal ConnectorExtensions ConnectorExtensions { get; }
 
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
         
-        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
+        internal ConnectorSchema(IConnectorParameter openApiParameter, IConnectorExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;

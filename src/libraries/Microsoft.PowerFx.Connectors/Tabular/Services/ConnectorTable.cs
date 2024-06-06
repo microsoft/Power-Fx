@@ -79,13 +79,13 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
             if (!string.IsNullOrWhiteSpace(text))
             {
-                SetTableType(GetSchema(text));
+                SetTableType(GetSchema(text, uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1]));
             }            
         }
 
-        private RecordType GetSchema(string text)
+        private RecordType GetSchema(string text, string connectorName)
         {
-            _connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities("Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
+            _connectorType = ConnectorFunction.GetConnectorTypeAndTableCapabilities(connectorName, "Schema/Items", FormulaValue.New(text), ConnectorCompatibility.SwaggerCompatibility, DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
             TableName = name;
             DisplayName = displayName;
             TableCapabilities = tableCapabilities;

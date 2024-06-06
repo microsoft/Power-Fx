@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -75,6 +77,123 @@ namespace Microsoft.PowerFx.Connectors.Tests
             doc.GetBasePath(errors);
             Assert.True(errors.HasErrors);
             Assert.Equal("Multiple servers in OpenApiDocument is not supported", errors.Errors.First());
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "b", FormulaType.String),
+                 ("c", "d", FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`b:s, c`d:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord2()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "c", FormulaType.String),
+                 ("c", "d", FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`c_1:s, c`d:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord3()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "d", FormulaType.String),
+                 ("c", "d", FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`d:s, c`d_1:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord4()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "c", FormulaType.String),
+                 ("c", "c", FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`c_1:s, c:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord5()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "b", FormulaType.String),
+                 ("b", "a", FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`b_1:s, b`a_1:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord6()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "c", FormulaType.String),
+                 ("c", null, FormulaType.Number)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`c_1:s, c:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord7()
+        {
+            var dict = new List<(string, string, FormulaType)>
+            {
+                 ("a", "c", FormulaType.String),
+                 ("c", "c", FormulaType.Number),
+                 ("b", "c", FormulaType.Decimal)
+            };
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![a`c_1:s, b`c_2:w, c:n]", str);
+        }
+
+        [Fact]
+        public void OpenApiExtension_ToRecord8()
+        {
+            var dict = new List<(string, string, FormulaType)>();
+
+            RecordType record = dict.ToRecordType();
+            string str = record.ToStringWithDisplayNames();
+
+            Assert.Equal("![]", str);
         }
     }
 }

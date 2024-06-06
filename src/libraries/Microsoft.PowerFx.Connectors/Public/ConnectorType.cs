@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -15,6 +16,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Connectors.ConnectorFunction;
 using static Microsoft.PowerFx.Connectors.Constants;
 
 namespace Microsoft.PowerFx.Connectors
@@ -109,9 +111,9 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-media-kind
         internal MediaKind MediaKind { get; private set; }
 
-        internal OpenApiSchema Schema { get; private set; } = null;
+        internal IConnectorSchema Schema { get; private set; } = null;
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
+        internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -180,25 +182,30 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = DefaultType;
         }
 
-        internal ConnectorType(OpenApiSchema schema, ConnectorCompatibility compatibility)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.GetConnectorType(compatibility))
+        internal ConnectorType(IConnectorSchema schema, ConnectorCompatibility compatibility)
+            : this(schema, null, new ConnectorApiParameter(null, true, schema, null).GetConnectorType(compatibility))
         {
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, ConnectorType connectorType)
+        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility)
+            : this(new ConnectorJsonSchema(schema), null, new ConnectorApiParameter(null, true, new ConnectorJsonSchema(schema), null).GetConnectorType(compatibility))
+        {
+        }
+
+        internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, ConnectorType connectorType)
             : this(schema, openApiParameter, connectorType.FormulaType)
         {
             Fields = connectorType.Fields;
             AggregateErrorsAndWarnings(connectorType);
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
+        internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
             : this(schema, openApiParameter, formulaType)
         {
             HiddenRecordType = hiddenRecordType;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
+        internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
             : this(schema, openApiParameter, tableType)
         {
             Fields = new ConnectorType[] { tableConnectorType };
@@ -206,7 +213,7 @@ namespace Microsoft.PowerFx.Connectors
             AggregateErrorsAndWarnings(tableConnectorType);
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
+        internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
             : this(schema, openApiParameter, recordType)
         {
             Fields = fields;
@@ -250,10 +257,13 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Invalid FormulaType");
             }
 
-            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new TabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
-            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
-
-            FormulaType = new KnownRecordType(newDType);
+            // $$$ Hack to enable IExternalTabularDataSource, will be removed later
+            if (name.Value.StartsWith("__", StringComparison.OrdinalIgnoreCase))
+            {
+                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new TabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+                DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
+                FormulaType = new KnownRecordType(newDType);
+            }            
         }
 
         private void AggregateErrors(ConnectorType[] types)
@@ -293,6 +303,26 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        // OneToMany relationships
+        internal void SetRelationships(List<FieldRelationship> relationships)
+        {
+            if (relationships == null)
+            {
+                return;
+            }
+
+            foreach (FieldRelationship rel in relationships)
+            {
+                ConnectorType field = Fields.FirstOrDefault(f => f.Name.Equals(rel.FieldName, StringComparison.OrdinalIgnoreCase));
+
+                if (field == null)
+                {
+                    int i = 0;
+                }
+
+            }
         }
     }
 }

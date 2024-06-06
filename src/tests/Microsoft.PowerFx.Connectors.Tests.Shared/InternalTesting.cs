@@ -561,7 +561,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #endif
         [TestPriority(1)]
         [InlineData("Library")] // Default Power-Fx library
-        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src", @"ppc")]
+        [InlineData("Aapt-Ppc", 0, "apidefinition*swagger*.json", @"aapt\src\Connectors", @"ppc")]
         [InlineData("Baseline", 1, "*.json", @"Power-Fx-TexlFunctions-Baseline\Swaggers")]
         public void GenerateYamlFiles(string reference, int folderExclusionIndex = -1, string pattern = null, params string[] folders)
         {
@@ -1262,7 +1262,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 };
             }
 
-            Schema = connectorType.Schema?.GetString();
+            Schema = (connectorType.Schema as ConnectorApiSchema)._schema.GetString();
         }
 
         public string Name;
@@ -1397,7 +1397,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 sb.Append($"[it:");
 
-                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.Items);
+                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(new ConnectorApiSchema(schema.Items));
                 if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(itemIdentifier))
                 {
                     sb.Append($"<circularRef:{itemIdentifier.Substring(2)}>]");
@@ -1418,7 +1418,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (schema.AdditionalProperties != null)
             {
                 sb.Append($"[ad:");
-                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(schema.AdditionalProperties);
+                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(new ConnectorApiSchema(schema.AdditionalProperties));
                 if (additionalPropIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(additionalPropIdentifier))
                 {
                     sb.Append($"<circularRef:{additionalPropIdentifier.Substring(2)}>]");
@@ -1445,7 +1445,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     sb.Append(prop.Key);
                     sb.Append(':');
 
-                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(prop.Value);
+                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(new ConnectorApiSchema(prop.Value));
                     if (propIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(propIdentifier))
                     {
                         sb.Append($"<circularRef:{propIdentifier.Substring(2)}>]");

@@ -31,10 +31,10 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>8.0.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="('$(Configuration)' == 'Release') Or ('$(Configuration)' == 'Release462') Or ('$(Configuration)' == 'Release70') Or ('$(Configuration)' == 'ReleaseAll')">true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
-  </PropertyGroup>
+  </PropertyGroup>   
 
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" 
           Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">    
