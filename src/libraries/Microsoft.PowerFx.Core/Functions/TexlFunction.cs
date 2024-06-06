@@ -129,6 +129,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Returns true if the function will mutate the argument, as is the case of Patch, Collect, Remove, etc.
         /// Set can also mutate, but needs to make a decision based on the argument's node.
+        /// For example, Set(x,{a:1}) is not a mutate and has a single FirstName node for the first argument, 
+        /// while Set(x.a,1) is a mutate and has a more complex node for the first argument.
         /// This function covers both CanMutate and CanSetMutate scenarios which is checked in CheckTypes/CheckSemantics.
         /// </summary>
         /// <param name="argIndex">Index of the argument.</param>

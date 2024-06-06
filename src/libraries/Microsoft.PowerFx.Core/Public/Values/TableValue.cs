@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Types
                 return record;
             }
 
-            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+            return DValue<RecordValue>.Of(ArgumentOutOfRangeError(IRContext));
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Types
                 return record;
             }
 
-            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+            return DValue<RecordValue>.Of(ArgumentOutOfRangeError(IRContext));
         }
 
         // Index() does standard error messaging and then call TryGetIndex().
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (mutationCopy)
             {
-                return DValue<RecordValue>.Of(ImmutableTable(IRContext));
+                return DValue<RecordValue>.Of(ImmutableTableError(IRContext));
             }
 
             return Rows.FirstOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
@@ -181,13 +181,13 @@ namespace Microsoft.PowerFx.Types
         {
             if (mutationCopy)
             {
-                return DValue<RecordValue>.Of(ImmutableTable(IRContext));
+                return DValue<RecordValue>.Of(ImmutableTableError(IRContext));
             }
 
             return Rows.LastOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
         }
 
-        private static ErrorValue ImmutableTable(IRContext irContext)
+        private static ErrorValue ImmutableTableError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
-        private static ErrorValue ArgumentOutOfRange(IRContext irContext)
+        private static ErrorValue ArgumentOutOfRangeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
-        private static ErrorValue NotImplemented(IRContext irContext, [CallerMemberName] string methodName = null)
+        private static ErrorValue NotImplementedError(IRContext irContext, [CallerMemberName] string methodName = null)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -223,17 +223,17 @@ namespace Microsoft.PowerFx.Types
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+            return DValue<RecordValue>.Of(NotImplementedError(IRContext));
         }
 
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
-            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+            return DValue<BooleanValue>.Of(NotImplementedError(IRContext));
         }
 
         public virtual async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
         {
-            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+            return DValue<BooleanValue>.Of(NotImplementedError(IRContext));
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+            return DValue<RecordValue>.Of(NotImplementedError(IRContext));
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ Errors: Error 10-11: Incompatible types for comparison. These types can't be com
 {Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( NewRecord, OldRecord )
-Errors: Error 5-14: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'NewRecord'
+Errors: Error 5-14: 'NewRecord' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 // OldRecord can't be mutated or set
 
@@ -46,7 +46,7 @@ Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
 Errors: Error 14-21: The value passed to the 'Set' function cannot be changed.
 
 >> Set( OldRecord, NewRecord )
-Errors: Error 5-14: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'OldRecord'
+Errors: Error 5-14: 'OldRecord' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 // Copies of NewRecord and OldRecord can't be mutated (today, we may relax this limitation in the future)
 
@@ -71,7 +71,7 @@ Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 {Field1:1,Field2:"saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Set( DataSource, Table(First(DataSource)) )
-Errors: Error 5-15: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'DataSource'
+Errors: Error 5-15: 'DataSource' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 >> Set( DataSource.Field2, [{Name:"saturn"}] )
 Errors: Error 15-22: Deprecated use of '.'. Please use the 'ShowColumns' function instead.
@@ -87,10 +87,10 @@ Errors: Error 22-29: The value passed to the 'Set' function cannot be changed.
 20
 
 >> With( NewRecord, Set( Field1, 2 ) )
-Errors: Error 22-28: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'Field1'
+Errors: Error 22-28: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 >> With( NewRecord, Set( Field1, Field1 ) )
-Errors: Error 22-28: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'Field1'
+Errors: Error 22-28: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 >> With( NewRecord, Set( NewRecord.Field1, 22 ) ); NewRecord
 {Field1:22,Field2:"venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
@@ -99,10 +99,10 @@ Errors: Error 22-28: The first argument of 'Set' should be a valid variable name
 Table({Value:22},{Value:22})
 
 >> ForAll( [NewRecord, NewRecord], Set( Field1, 2 ) )
-Errors: Error 37-43: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'Field1'
+Errors: Error 37-43: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
   
 >> ForAll( [NewRecord, NewRecord], Set( Field1, Field1 ) )
-Errors: Error 37-43: The first argument of 'Set' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type 'Field1'
+Errors: Error 37-43: 'Field1' can't be modified with 'Set' or conflicts with the name of an existing scope variable, data source, or other object.
 
 >> ForAll( [NewRecord, NewRecord], Set( ThisRecord.Field1, 3 ) )
 Errors: Error 47-54: The value passed to the 'Set' function cannot be changed.

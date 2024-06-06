@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="name">variable name. This can be used in other formulas.</param>
         /// <param name="value">constant value. The variable will take the type of this value on create.</param>
-        /// <param name="newVarProps">symbol properties. This is only used on the intiail create of the variable.</param>
+        /// <param name="newVarProps">symbol properties. This is only used on the initial create of the variable.</param>
         public void UpdateVariable(string name, FormulaValue value, SymbolProperties newVarProps)
         {
             var x = value;
