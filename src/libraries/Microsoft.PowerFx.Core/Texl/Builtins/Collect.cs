@@ -43,9 +43,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CanSuggestInputColumns => true;
 
-        public override bool MutatesArg0 => true;
+        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Create;
+
+        public override bool IsRestrictedUDFName => true;
 
         /// <summary>
         /// Since Arg1 and Arg2 depends on type of Arg1 return false for them.
