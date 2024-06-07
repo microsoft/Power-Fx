@@ -88,13 +88,13 @@ namespace Microsoft.PowerFx.Connectors
             // x-ms-enum-values is: array of { value :string, displayName:string}.
             if (openApiParameter.Extensions.TryGetValue(XMsEnumValues, out var enumValues))
             {
-                if (enumValues is OpenApiArray array)
+                if (enumValues is IList<IOpenApiAny> array)
                 {
-                    var list = new List<string>(array.Capacity);
+                    var list = new List<string>(array.Count);
 
                     foreach (var item in array)
                     {
-                        if (item is OpenApiObject obj)
+                        if (item is IDictionary<string, IOpenApiAny> obj)
                         {
                             // has keys, "value", and "displayName"
                             if (obj.TryGetValue("value", out IOpenApiAny value))
@@ -275,7 +275,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 formulaValue = FormulaValue.NewBlank();
             }
-            else if (openApiAny is OpenApiArray arr)
+            else if (openApiAny is IList<IOpenApiAny> arr)
             {
                 List<FormulaValue> lst = new List<FormulaValue>();
 
@@ -306,7 +306,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 formulaValue = FormulaValue.NewTable(recordType, recordValues);
             }
-            else if (openApiAny is OpenApiObject o)
+            else if (openApiAny is IDictionary<string, IOpenApiAny> o)
             {
                 Dictionary<string, FormulaValue> dvParams = new ();
 
@@ -329,9 +329,9 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        internal static bool IsInternal(this IOpenApiExtensible oae) => new ConnectorApiExtensions(oae).IsInternal();
+        internal static bool IsInternal(this IOpenApiExtensible oae) => ConnectorApiExtensions.New(oae)?.IsInternal() ?? false;
         
-        internal static string GetVisibility(this IOpenApiExtensible oae) => new ConnectorApiExtensions(oae).GetVisibility();
+        internal static string GetVisibility(this IOpenApiExtensible oae) => ConnectorApiExtensions.New(oae)?.GetVisibility();
 
         // Internal parameters are not showen to the user.
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
@@ -341,9 +341,9 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetMediaKind(this IConnectorExtensions schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
-        internal static (bool IsPresent, string Value) GetString(this OpenApiObject apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
+        internal static (bool IsPresent, string Value) GetString(this IDictionary<string, IOpenApiAny> apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
-        internal static void WhenPresent(this OpenApiObject apiObj, string propName, Action<string> action)
+        internal static void WhenPresent(this IDictionary<string, IOpenApiAny> apiObj, string propName, Action<string> action)
         {
             var (isPresent, value) = apiObj.GetString(propName);
             if (isPresent)
@@ -352,9 +352,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static void WhenPresent(this OpenApiObject apiObj, string str, Action<OpenApiObject> action)
+        internal static void WhenPresent(this IDictionary<string, IOpenApiAny> apiObj, string str, Action<IDictionary<string, IOpenApiAny>> action)
         {
-            if (apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiObject openApiObj)
+            if (apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> openApiObj)
             {
                 action(openApiObj);
             }
@@ -764,7 +764,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     //return new OpenApiParameter() { Name = "response", Required = true, Schema = openApiMediaType.Schema, Extensions = openApiMediaType.Schema.Extensions }.GetConnectorType(compatibility);
-                    return new ConnectorApiParameter("response", true, new ConnectorApiSchema(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(compatibility);
+                    return new ConnectorApiParameter("response", true, ConnectorApiSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(compatibility);
                 }
             }
 
@@ -832,7 +832,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string PageLink(this OpenApiOperation op)
             => op.Extensions.TryGetValue(XMsPageable, out IOpenApiExtension ext) &&
-               ext is OpenApiObject oao &&
+               ext is IDictionary<string, IOpenApiAny> oao &&
                oao.Any() &&
                oao.First().Key == "nextLinkName" &&
                oao.First().Value is OpenApiString oas
@@ -894,7 +894,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
             {                
-                return ServiceCapabilities.ParseTableCapabilities(ext as OpenApiObject);
+                return ServiceCapabilities.ParseTableCapabilities(ext as IDictionary<string, IOpenApiAny>);
             }
 
             return null;
@@ -904,7 +904,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
             {
-                return ColumnCapabilities.ParseColumnCapabilities(ext as OpenApiObject);
+                return ColumnCapabilities.ParseColumnCapabilities(ext as IDictionary<string, IOpenApiAny>);
             }
 
             return null;
@@ -914,7 +914,7 @@ namespace Microsoft.PowerFx.Connectors
         {           
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext))
             {
-                return Relationship.ParseRelationships(ext as OpenApiObject);
+                return Relationship.ParseRelationships(ext as IDictionary<string, IOpenApiAny>);
             }
 
             return null;
@@ -930,10 +930,10 @@ namespace Microsoft.PowerFx.Connectors
         internal static ConnectorDynamicValue GetDynamicValue(this IConnectorExtensions param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicValues, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicValues, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> apiObj)
             {
                 // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
-                OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
                 ConnectorDynamicValue cdv = new (op_prms);
 
                 // Mandatory operationId for connectors, except when capibility or builtInOperation are defined
@@ -956,13 +956,13 @@ namespace Microsoft.PowerFx.Connectors
         internal static ConnectorDynamicList GetDynamicList(this IConnectorExtensions param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicList, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicList, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> apiObj)
             {
                 // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
-                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                    IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
                     ConnectorDynamicList cdl = new (op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
@@ -994,7 +994,7 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this OpenApiObject opPrms, SupportsConnectorErrors errors, bool forceString = false)
+        internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this IDictionary<string, IOpenApiAny> opPrms, SupportsConnectorErrors errors, bool forceString = false)
         {
             Dictionary<string, IConnectorExtensionValue> dvParams = new ();
 
@@ -1082,20 +1082,18 @@ namespace Microsoft.PowerFx.Connectors
             return dvParams;
         }
 
-        internal static ConnectorDynamicSchema GetDynamicSchema(this OpenApiParameter oap) => new ConnectorApiParameter(oap).GetDynamicSchema();
-
         internal static ConnectorDynamicSchema GetDynamicSchema(this IConnectorExtensions param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicSchema, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicSchema, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> apiObj)
             {
                 // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
-                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                    IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
 
-                    ConnectorDynamicSchema cds = new (op_prms)
+                    ConnectorDynamicSchema cds = new(op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
                     };
@@ -1114,20 +1112,18 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return null;
-        }
-
-        internal static ConnectorDynamicProperty GetDynamicProperty(this OpenApiParameter oap) => new ConnectorApiParameter(oap).GetDynamicProperty();
+        }        
 
         internal static ConnectorDynamicProperty GetDynamicProperty(this IConnectorExtensions param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicProperties, out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
+            if (param?.Extensions != null && param.Extensions.TryGetValue(XMsDynamicProperties, out IOpenApiExtension ext) && ext is IDictionary<string, IOpenApiAny> apiObj)
             {
                 // Mandatory operationId for connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
-                    OpenApiObject op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is OpenApiObject apiString ? apiString : null;
+                    IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
 
                     ConnectorDynamicProperty cdp = new (op_prms)
                     {

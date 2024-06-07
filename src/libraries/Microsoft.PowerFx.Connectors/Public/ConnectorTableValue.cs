@@ -22,11 +22,15 @@ namespace Microsoft.PowerFx.Connectors
 
         protected internal readonly ConnectorType _connectorType;
 
+        public ConnectorRelationships Relationships { get; }
+
         public ConnectorTableValue(TabularService tabularService, ConnectorType connectorType)
             : base(IRContext.NotInSource(new ConnectorTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
             _connectorType = connectorType;
+
+            Relationships = connectorType != null ? new ConnectorRelationships(connectorType) : null;
         }
 
         internal ConnectorTableValue(IRContext irContext)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Connectors.Tabular.Capabilities;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -43,12 +44,12 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>();
         }
 
-        public static ColumnCapabilities ParseColumnCapabilities(OpenApiObject capabilitiesMetaData)
+        public static ColumnCapabilities ParseColumnCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             string[] filterFunctions = ServiceCapabilities.ParseFilterFunctions(capabilitiesMetaData);
 
             // Sharepoint specific capabilities
-            OpenApiObject sp = capabilitiesMetaData.GetObject(CapabilityConstants.SPDelegationSupport);
+            IDictionary<string, IOpenApiAny> sp = capabilitiesMetaData.GetObject(CapabilityConstants.SPDelegationSupport);
             string propertyAlias = sp?.GetStr(CapabilityConstants.SPQueryName);
             bool? isChoice = sp?.GetNullableBool(CapabilityConstants.SPIsChoice);
 

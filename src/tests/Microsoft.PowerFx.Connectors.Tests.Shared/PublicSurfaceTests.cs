@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorPermission",
+              "Microsoft.PowerFx.Connectors.ConnectorRelationships",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
               "Microsoft.PowerFx.Connectors.ConnectorTableValue",
@@ -56,6 +57,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.Tabular.ConnectorDataSource",
               "Microsoft.PowerFx.Connectors.Tabular.ConnectorServiceBase",
               "Microsoft.PowerFx.Connectors.Tabular.ConnectorTable",
+              "Microsoft.PowerFx.Connectors.Tabular.TabularRecordType",
               "Microsoft.PowerFx.Connectors.Tabular.TabularService",
               "Microsoft.PowerFx.Connectors.Visibility"
             };

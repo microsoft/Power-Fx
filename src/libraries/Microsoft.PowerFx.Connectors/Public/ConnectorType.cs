@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Tabular;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -113,6 +113,11 @@ namespace Microsoft.PowerFx.Connectors
 
         internal IConnectorSchema Schema { get; private set; } = null;
 
+        // Relationships to external tables
+        internal List<string> ExternalTables { get; }
+
+        internal string RelationshipName { get; }
+
         internal ConnectorType(IConnectorSchema schema, IConnectorParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
             Name = openApiParameter?.Name;
@@ -138,6 +143,14 @@ namespace Microsoft.PowerFx.Connectors
                 KeyOrder = schema.GetKeyOrder();
                 Permission = schema.GetPermission();                
 
+                // We only support one reference for now
+                // SalesForce only
+                if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
+                {
+                    ExternalTables = new List<string>(schema.ReferenceTo);
+                    RelationshipName = schema.RelationshipName;
+                }
+
                 Fields = Array.Empty<ConnectorType>();
                 IsEnum = schema.Enum != null && schema.Enum.Any();
 
@@ -155,7 +168,7 @@ namespace Microsoft.PowerFx.Connectors
                     }).ToArray();
 
                     // x-ms-enum-display-name
-                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
+                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is IList<IOpenApiAny> oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
                 }
@@ -188,7 +201,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility)
-            : this(new ConnectorJsonSchema(schema), null, new ConnectorApiParameter(null, true, new ConnectorJsonSchema(schema), null).GetConnectorType(compatibility))
+            : this(ConnectorJsonSchema.New(schema), null, new ConnectorApiParameter(null, true, ConnectorJsonSchema.New(schema), null).GetConnectorType(compatibility))
         {
         }
 
@@ -250,7 +263,7 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
-        internal void AddDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void AddTabularDataSource(DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             if (FormulaType is not RecordType)
             {
@@ -263,7 +276,17 @@ namespace Microsoft.PowerFx.Connectors
                 HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new TabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
                 DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
                 FormulaType = new KnownRecordType(newDType);
-            }            
+            }
+
+            FormulaType = new TabularRecordType(connectorType, FormulaType._type);
+        }
+
+        internal void AddReferencedEntities(List<ReferencedEntity> referencedEntities)
+        {
+            if (FormulaType is TabularRecordType trt)
+            {
+                trt.ReferencedEntities = referencedEntities;
+            }
         }
 
         private void AggregateErrors(ConnectorType[] types)
@@ -303,26 +326,6 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-
-        // OneToMany relationships
-        internal void SetRelationships(List<FieldRelationship> relationships)
-        {
-            if (relationships == null)
-            {
-                return;
-            }
-
-            foreach (FieldRelationship rel in relationships)
-            {
-                ConnectorType field = Fields.FirstOrDefault(f => f.Name.Equals(rel.FieldName, StringComparison.OrdinalIgnoreCase));
-
-                if (field == null)
-                {
-                    int i = 0;
-                }
-
-            }
-        }
+        }        
     }
 }

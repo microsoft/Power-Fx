@@ -690,7 +690,7 @@ namespace Microsoft.PowerFx.Connectors
             schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
 
             // For now, we keep the original formula type (number/string/bool...)
-            return new ConnectorType(schema, new ConnectorApiParameter(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
+            return new ConnectorType(schema, ConnectorApiParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
         }
 
         /// <summary>
@@ -1007,12 +1007,12 @@ namespace Microsoft.PowerFx.Connectors
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            ConnectorApiSchema tableSchema = new ConnectorApiSchema(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
+            IConnectorSchema tableSchema = ConnectorApiSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
             tableCapabilities = tableSchema.GetTableCapabilities();
 
-            // $$$ redo in Json for capabilities
-
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
+
+            // Json version to be able to read SalesForce unique properties
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
 
             if (tableSchema != null)
@@ -1028,17 +1028,17 @@ namespace Microsoft.PowerFx.Connectors
                     //isTableReadOnly = true;
                 }
 
-                connectorType.AddDataSource(new DName(name), datasetName, tableCapabilities, isTableReadOnly);
+                connectorType.AddTabularDataSource(new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);
             }
-            
+
             // referencedEntities
             if (connectorName == "salesforce")
             {
-                // OneToMany relationships
+                // OneToMany relationships that have this table in relation
                 JsonElement je2 = ExtractFromJson(sv, "referencedEntities", out name, out displayName);
-                List<FieldRelationship> refEntities = je2.Deserialize<Dictionary<string, SalesForceReferencedEntity>>()
+                List<ReferencedEntity> refEntities = je2.Deserialize<Dictionary<string, SalesForceReferencedEntity>>()
                                                          .Where(kvp => !string.IsNullOrEmpty(kvp.Value.RelationshipName))
-                                                         .Select(kvp => new FieldRelationship()
+                                                         .Select(kvp => new ReferencedEntity()
                                                          {
                                                              FieldName = kvp.Value.Field,
                                                              RelationshipName = kvp.Value.RelationshipName,
@@ -1046,18 +1046,17 @@ namespace Microsoft.PowerFx.Connectors
                                                          })
                                                          .ToList();
 
-                connectorType.SetRelationships(refEntities);
+                connectorType.AddReferencedEntities(refEntities);
             }
 
             return connectorType;
         }
-
-        // OneToMany relationship
-        public class FieldRelationship
+        
+        public class ReferencedEntity
         {
-            public string FieldName;
-            public string RelationshipName;
-            public string TableName;
+            public string FieldName { get; init; }
+            public string RelationshipName { get; init; }
+            public string TableName { get; init; }
         }
 
         // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Schema_ChildRelationship.htm
@@ -1093,23 +1092,13 @@ namespace Microsoft.PowerFx.Connectors
         {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(new ConnectorApiSchema(schema), compatibility);
-           
-            return connectorType;
+
+            return new ConnectorType(ConnectorApiSchema.New(schema), compatibility);
         }
 
         private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
         {
-            //OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            //OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            //ConnectorType connectorType = new ConnectorType(schema, compatibility);
-
-            // note: SF schema contains props "datatype": "id", is this a GUID?
-            // also: "datatype": "reference","referenceTo": [ "Account" ], "relationshipName": "MasterRecord", is this ManyToOne relationship?
-            // OpenApiSchema does not see those
-
-            throw new Exception("Not implemented!");
-            //return new ConnectorType(je, compatibility);
+            return new ConnectorType(je, compatibility);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -1412,7 +1401,7 @@ namespace Microsoft.PowerFx.Connectors
                     fatalError = true;
                 }
 
-                if (new ConnectorApiSchema(parameter.Schema).TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
+                if (ConnectorApiSchema.New(parameter.Schema).TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
                 {
                     parameterDefaultValues[parameter.Name] = (connectorParameter.ConnectorType.IsRequired, defaultValue, connectorParameter.FormulaType._type);
                 }

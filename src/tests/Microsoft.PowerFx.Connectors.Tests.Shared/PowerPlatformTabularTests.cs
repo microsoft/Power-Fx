@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -537,7 +538,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Kutch and Sons", ((StringValue)result).Value);
         }
 
-        [Fact]
+        [Fact(Skip = "Under development")]
         public async Task SF_CdpTabular_GetTables()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -547,8 +548,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(); // testConnector);
             string connectionId = "ba3b1db7bb854aedbad2058b66e36e83";
-            string jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCIsImtpZCI6IkwxS2ZLRklfam5YYndXYzIyeFp4dzFzVUhIMCJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC80YWJjMjRlYS0yZDBiLTQwMTEtODdkNC0zZGUzMmNhMWU5Y2MvIiwiaWF0IjoxNzE3NjA1NjQwLCJuYmYiOjE3MTc2MDU2NDAsImV4cCI6MTcxNzYwOTg0OCwiYWNyIjoiMSIsImFpbyI6IkFVUUJ1LzRXQUFBQWFDVGJBZW5uSlVubnNwblhoalZEYUM4WVpKRlRPd3k3Q1phdEJCQlR4S2FXTmVFOUN5Vkh0WlRWcXlZT0NNUDJ4R3V5SHZrOExmallXU0xSS1d4Rlo2MlRxazlqaVgxWjFYOEZrbmp1K3QrTHoreWp5cUtiSGJERUdzNTJjdkZVNk0vT0JEa0VaSWQxSnBpMU9QdXV2T2R3MEl6c0wxdVFtS1RPQkwrampBWlFSVm8rNTlVTzFYWnN2ajYzVytTOFQxOGdlUFMvaEY0NHo4dWJNTUFWTEdVVlFBL3BFOWkvZFI0aEhiOHlWMkpzNkVmeU5CQWpNYVpnWU1mOG9TSFVIZysvZXozR3NPNldhNktmOU84Mi9aejI3WElVS0JHVlM1TjZScDZvZmRrazBVTEZHbFAxR2xrOHJkS29DMVluRmZXQjhNMEdkOE5MSDhmOWoxSGNXZjJ4UDJ6NzJNWUNMcFRaM3Z4aVFNRkg1UWhVa0dZNEVlaFdqZDVSQ2JYVG1ZcmF4MDk5UGdvajhsQ2ZvdnhIZlhEWG5URzJBR21TM0FBY2NteVZlODA9IiwiYW1yIjpbInJzYSIsIm1mYSJdLCJhcHBpZCI6ImE4ZjdhNjVjLWY1YmEtNDg1OS1iMmQ2LWRmNzcyYzI2NGU5ZCIsImFwcGlkYWNyIjoiMCIsImZhbWlseV9uYW1lIjoiYXVyb3JhIiwiZ2l2ZW5fbmFtZSI6InVzZXIwMSIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjkwLjEwNC43My4yMDMiLCJuYW1lIjoiYXVyb3JhdXNlcjAxIiwib2lkIjoiZDhlOTBkYjYtZDA5Yy00YTkwLWJjMWUtODY1MTJhNzk3ZmQzIiwicHVpZCI6IjEwMDMyMDAyQkEwRDc0NTciLCJyaCI6IjAuQWJjQTZpUzhTZ3N0RVVDSDFEM2pMS0hwekY4OEJmNlNOaFJQcnZMdU5Qd0lISzYzQUJzLiIsInNjcCI6IlJ1bnRpbWUuQWxsIiwic3ViIjoiTjZUR0dhZnJBX2VVTmtybVJ2aC13QWJadklxRGpoOWFRWGRFWjdQWUtvSSIsInRpZCI6IjRhYmMyNGVhLTJkMGItNDAxMS04N2Q0LTNkZTMyY2ExZTljYyIsInVuaXF1ZV9uYW1lIjoiYXVyb3JhdXNlcjAxQGF1cm9yYWZpbmFuY2VpbnRlZ3JhdGlvbjAyLm9ubWljcm9zb2Z0LmNvbSIsInVwbiI6ImF1cm9yYXVzZXIwMUBhdXJvcmFmaW5hbmNlaW50ZWdyYXRpb24wMi5vbm1pY3Jvc29mdC5jb20iLCJ1dGkiOiI1R3pHWDN6NWtrMlI1RTQ5QVJoVUFBIiwidmVyIjoiMS4wIn0.hzRpeuQO8lIUA-QqpFm_EVBCvo1dxSdyv7-r0necG9fp_5ar-FVkbml6Tx6X6Qra_udj_5bV0baqs8sqYkpH7oKDy3Lr3ihIrXhLXcWIBA7JedPrcyJv6twB1C2GgGoeOwPanOzkkwpPD6ZO0dixQkEePZQQHAQUkyr4HvmnDVrJgWb6o7-dhVH2Sp6e5RZKW6ZIr8dY9LYKsyCtTWpArbyAjR-sjiahuW7U9SQ0UTj1HStxNATH9pCTLtTeFrWOvjK0_CjBdU29bHYQ8m1EDLPdd-b1xUTQjQg11SRk95FFTbHDf8hePBS-7lN-orQOflErjG1iXMMngYn_yWynBw";
-            using var client = new PowerPlatformConnectorClient("tip1002-002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            string jwt = "eyJ0eXAiO...";
+            using var client = new PowerPlatformConnectorClient("7526ddf1-6e97-eed6-86bb-8fd46790d670.05.common.tip1002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             ConnectorDataSource cds = new ConnectorDataSource("default");
 
@@ -574,13 +575,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(tables);
             Assert.Equal(569, tables.Count());
 
-            //foreach (ConnectorTable ct in tables)
-            //{
-            //    await ct.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            //}
-
-            //return;
-
             ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
             Assert.Equal("Account", connectorTable.TableName);
             Assert.False(connectorTable.IsInitialized);
@@ -595,12 +589,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(
                 "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
-                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':s, CreatedDate`'Created Date':d, Description`'Account " +
-                "Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By " +
-                "ID':s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':s, Name`'Account Name':s, NumberOfEmployees`Employees:w, " +
-                "OwnerId`'Owner ID'[->User.OwnerId]:s, ParentId`'Parent Account ID':s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping " +
-                "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
-                "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, " +
+                "Description`'Account Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last " +
+                "Modified By ID'[User]:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:s, Name`'Account " +
+                "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:s, ParentId`'Parent Account ID'[Account]:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
+                "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
+                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -743,6 +737,26 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+        }
+    }
+
+    public static class Exts2
+    {
+        public static string ToStringWithDisplayNames(this ConnectorTableValue ctv)
+        {
+            string str = ctv.Type.ToStringWithDisplayNames();
+            foreach (ConnectorType field in ctv._connectorType.Fields.Where(ft => ft.ExternalTables != null && ft.ExternalTables.Any()))
+            {
+                string fn = field.Name;
+                if (!string.IsNullOrEmpty(field.DisplayName))
+                {
+                    string dn = TexlLexer.EscapeName(field.DisplayName);
+                    fn = $"{fn}`{dn}";
+                }
+                string fn2 = $"{fn}[{string.Join(",", field.ExternalTables)}]";
+                str = str.Replace(fn, fn2);
+            }
+            return str;
         }
     }
 }

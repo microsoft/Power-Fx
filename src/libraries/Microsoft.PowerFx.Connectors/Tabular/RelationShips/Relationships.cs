@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public Dictionary<string, string> ReferentialConstraints;
 
-        public static Dictionary<string, Relationship> ParseRelationships(OpenApiObject relationships)
+        public static Dictionary<string, Relationship> ParseRelationships(IDictionary<string, IOpenApiAny> relationships)
         {
             Dictionary<string, Relationship> relations = new Dictionary<string, Relationship>();
 
@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
                 Relationship rel = new Relationship();
                 string name = kvp.Key;
 
-                foreach (KeyValuePair<string, IOpenApiAny> kvp2 in kvp.Value as OpenApiObject)
+                foreach (KeyValuePair<string, IOpenApiAny> kvp2 in kvp.Value as IDictionary<string, IOpenApiAny>)
                 {
                     if (kvp2.Key == "targetEntity")
                     {
@@ -32,9 +32,9 @@ namespace Microsoft.PowerFx.Connectors.Tabular
                     {
                         rel.ReferentialConstraints = new Dictionary<string, string>();
 
-                        foreach (KeyValuePair<string, IOpenApiAny> kvp3 in kvp2.Value as OpenApiObject)
+                        foreach (KeyValuePair<string, IOpenApiAny> kvp3 in kvp2.Value as IDictionary<string, IOpenApiAny>)
                         {
-                            rel.ReferentialConstraints.Add(kvp3.Key, ((kvp3.Value as OpenApiObject)["referencedProperty"] as OpenApiString).Value);
+                            rel.ReferentialConstraints.Add(kvp3.Key, ((kvp3.Value as IDictionary<string, IOpenApiAny>)["referencedProperty"] as OpenApiString).Value);
                         }
                     }
                 }
