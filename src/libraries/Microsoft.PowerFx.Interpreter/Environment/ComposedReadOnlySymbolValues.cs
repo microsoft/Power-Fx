@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx
                 var st = kv.Key;
                 var sv = kv.Value;
 
-                tw.WriteLine($"{indent}{st.DebugName} --> {sv.DebugName}_{sv.GetHashCode()}");
+                tw.WriteLine($"{indent}{st.DebugName} --> {sv.DebugNameWithId}");
             }
         }
 
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx
                 else
                 {
                     // Bad - different instance with conflicting values.
-                    throw new InvalidOperationException($"SymbolTable {symTable.DebugName()} already has SymbolValues '{existing.DebugName}' associated with it. Can't add '{symValues.DebugName}'");
+                    throw new InvalidOperationException($"SymbolTable {symTable.DebugName()} already has SymbolValues '{existing.DebugNameWithId}' associated with it. Can't add '{symValues.DebugNameWithId}'");
                 }
             }
             else 

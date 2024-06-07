@@ -883,10 +883,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
             check.ApplyBinding();
 
-            // Still does duplicate add....
-            //var symVals = check.Symbols.CreateValues(engine._symbolValues);
-
-            var symVals = sym1.CreateValues();
+            // Just doing this would fail because we miss the symbolValues on recalcEngine. 
+            // var symVals = sym1.CreateValues();
+            // Instead, do a CheckResult aware:
+            var symVals = check.CreateValues();            
 
             var ok = check.Symbols.TryLookupSlot("x", out var slot);
             Assert.True(ok);
