@@ -1050,17 +1050,10 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return connectorType;
-        }
-        
-        public class ReferencedEntity
-        {
-            public string FieldName { get; init; }
-            public string RelationshipName { get; init; }
-            public string TableName { get; init; }
-        }
+        }       
 
         // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Schema_ChildRelationship.htm
-        public class SalesForceReferencedEntity
+        internal class SalesForceReferencedEntity
         {
             [JsonPropertyName("cascadeDelete")]
             public bool CascadeDelete { get; set; }
@@ -1076,10 +1069,10 @@ namespace Microsoft.PowerFx.Connectors
 
             // ManyToMany
             [JsonPropertyName("junctionIdListNames")]
-            public List<string> JunctionIdListNames { get; set; }
+            public IList<string> JunctionIdListNames { get; set; }
 
             [JsonPropertyName("junctionReferenceTo")]
-            public List<string> JunctionReferenceTo { get; set; }
+            public IList<string> JunctionReferenceTo { get; set; }
 
             [JsonPropertyName("relationshipName")]
             public string RelationshipName { get; set; }
@@ -1345,13 +1338,13 @@ namespace Microsoft.PowerFx.Connectors
             // 1. required parameter
             // 2. has default value
             // 3. is marked "internal" in schema extension named "x-ms-visibility"
-            List<ConnectorParameter> requiredParameters = new();
-            List<ConnectorParameter> hiddenRequiredParameters = new();
-            List<ConnectorParameter> optionalParameters = new();
+            List<ConnectorParameter> requiredParameters = new ();
+            List<ConnectorParameter> hiddenRequiredParameters = new ();
+            List<ConnectorParameter> optionalParameters = new ();
 
             // parameters used in ConnectorParameterInternals
-            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new();
-            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new();
+            Dictionary<string, (bool, FormulaValue, DType)> parameterDefaultValues = new ();
+            Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new ();
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
             bool fatalError = false;

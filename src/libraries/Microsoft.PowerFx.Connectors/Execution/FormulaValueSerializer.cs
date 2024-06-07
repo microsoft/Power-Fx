@@ -100,17 +100,19 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 {
                     await WritePropertyAsync(
                         nv.Name,
-                        new ConnectorApiSchema(type: nv.Value.Type._type.Kind switch
-                        {
-                            DKind.Number => "number",
-                            DKind.Decimal => "number",
-                            DKind.String => "string",
-                            DKind.Boolean => "boolean",
-                            DKind.Record => "object",
-                            DKind.Table => "array",
-                            DKind.ObjNull => "null",
-                            _ => "unknown_dkind"
-                        }, format: null),
+                        new ConnectorApiSchema(
+                            type: nv.Value.Type._type.Kind switch
+                            {
+                                DKind.Number => "number",
+                                DKind.Decimal => "number",
+                                DKind.String => "string",
+                                DKind.Boolean => "boolean",
+                                DKind.Record => "object",
+                                DKind.Table => "array",
+                                DKind.ObjNull => "null",
+                                _ => "unknown_dkind"
+                            }, 
+                            format: null),
                         nv.Value).ConfigureAwait(false);
                 }
             }

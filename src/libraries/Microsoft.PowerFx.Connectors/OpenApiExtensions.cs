@@ -737,8 +737,6 @@ namespace Microsoft.PowerFx.Connectors
             if (response.Content.Count == 0)
             {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
-                //return new OpenApiParameter() { Name = "response", Required = true, Schema = schema, Extensions = response.Extensions }.GetConnectorType(compatibility);
-
                 return new ConnectorApiParameter("response", true, new ConnectorApiSchema("string", "no_format"), response.Extensions).GetConnectorType(compatibility);
             }
 
@@ -1093,7 +1091,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Parameters is required in the spec but there are examples where it's not specified and we'll support this condition with an empty list
                     IDictionary<string, IOpenApiAny> op_prms = apiObj.TryGetValue("parameters", out IOpenApiAny openApiAny) && openApiAny is IDictionary<string, IOpenApiAny> apiString ? apiString : null;
 
-                    ConnectorDynamicSchema cds = new(op_prms)
+                    ConnectorDynamicSchema cds = new (op_prms)
                     {
                         OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
                     };

@@ -14,10 +14,6 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly JsonElement _schema;
 
-        private readonly string _type = null;
-
-        private readonly string _format = null;
-
         public static IConnectorSchema New(JsonElement schema)
         {
             return schema.ValueKind != JsonValueKind.Object ? null : new ConnectorJsonSchema(schema);

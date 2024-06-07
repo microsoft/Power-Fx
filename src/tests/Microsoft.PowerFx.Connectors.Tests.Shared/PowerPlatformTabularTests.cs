@@ -753,9 +753,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     string dn = TexlLexer.EscapeName(field.DisplayName);
                     fn = $"{fn}`{dn}";
                 }
+
                 string fn2 = $"{fn}[{string.Join(",", field.ExternalTables)}]";
                 str = str.Replace(fn, fn2);
             }
+
             return str;
         }
     }

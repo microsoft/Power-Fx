@@ -13,10 +13,10 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType _connectorType;
 
         // Fields that have a relationship with another table
-        public List<ReferencedEntity> FieldsWithRelationship { get; }
+        public IList<ReferencedEntity> FieldsWithRelationship { get; }
 
         // External tables having a relationship with this table (could be be circular)
-        public List<ReferencedEntity> ReferencedEntities { get; }
+        public IList<ReferencedEntity> ReferencedEntities { get; }
         
         internal ConnectorRelationships(ConnectorType connectorType)
         {
