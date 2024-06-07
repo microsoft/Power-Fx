@@ -620,6 +620,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Multiple values are ok if they're the same. 
+        [Fact]
+        public void MultipleValuesSameObj()
+        {
+            var st1 = new SymbolTable { DebugName = "L1" };
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var st12 = ReadOnlySymbolTable.Compose(st1);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(99.0));
+
+            var sv12 = st12.CreateValues(sv1);
+
+            var sv12b = st12.CreateValues(sv12, sv1);
+
+            var val = sv12b.Get(slot);
+            Assert.Equal(99.0, val.ToObject());
+        }
+
         // Trying to eval with missing symbol values will fail
         [Fact]
         public async Task MissingSymbolValues()
@@ -835,6 +855,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(canSetMutate, checkSetMutate.IsSuccess);
         }
 
+        // Test mapping between Symbol Table and SymbolValues
+        [Fact]
+        public void Map1()
+        {
+            var st1 = new SymbolTable { DebugName = "CustomTable1" };
+
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(77.0));
+
+            // Map to same one, picks it up. 
+            var sv1b = st1.CreateValues(sv1);
+
+            var val2 = sv1b.Get(slot);
+            Assert.Equal(77.0, val2.ToObject());
+        }
+
         [Fact]
         public async Task SymbolTableBug()
         {
@@ -845,7 +883,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
             check.ApplyBinding();
 
-            var symVals = check.Symbols.CreateValues();
+            // Still does duplicate add....
+            //var symVals = check.Symbols.CreateValues(engine._symbolValues);
+
+            var symVals = sym1.CreateValues();
+
             var ok = check.Symbols.TryLookupSlot("x", out var slot);
             Assert.True(ok);
             Assert.Equal(slot1.DebugName(), slot.DebugName());
