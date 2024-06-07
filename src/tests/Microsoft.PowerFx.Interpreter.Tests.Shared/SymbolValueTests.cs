@@ -836,24 +836,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void SymbolTableBug()
+        public async Task SymbolTableBug()
         {
-            var sym1 = new SymbolTable();
-            sym1.AddVariable("x", FormulaType.Number);
+            var sym1 = new SymbolTable { DebugName = "CustomTable1" };
+            var slot1 = sym1.AddVariable("x", FormulaType.Number);
 
             var engine = new RecalcEngine();
             var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
             check.ApplyBinding();
 
             var symVals = check.Symbols.CreateValues();
-            check.Symbols.TryLookupSlot("x", out var slot);
-            symVals.Set(slot, FormulaValue.New(1.0));
+            var ok = check.Symbols.TryLookupSlot("x", out var slot);
+            Assert.True(ok);
+            Assert.Equal(slot1.DebugName(), slot.DebugName());
+
+            symVals.Set(slot, FormulaValue.New(99.0));
             var runtimeConfig = new RuntimeConfig(symVals);
 
             var eval = check.GetEvaluator();
-            var result = eval.EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig).GetAwaiter().GetResult();
+            var result = await eval.EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig);
 
-            Assert.Equal(1.0, result.ToObject());
+            Assert.Equal(99.0, result.ToObject());
         }
 
         // Get a convenient string representation of a SymbolValue
