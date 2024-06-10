@@ -53,11 +53,12 @@ namespace Microsoft.PowerFx.Intellisense
 
             if (_culture == null)
             {
-                // Invariant culture implements different sort orders between .Net versions
-                return string.Compare(x.Text, y.Text, StringComparison.OrdinalIgnoreCase);             
+#pragma warning disable CA1310 // Specify StringComparison for correctness
+                return x.Text.CompareTo(y.Text);
+#pragma warning restore CA1310 // Specify StringComparison for correctness
             }
-            
-            return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(x.Text, y.Text);            
+
+            return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(x.Text, y.Text);
         }
 
         private bool IsExactMatch(string input, string match)
