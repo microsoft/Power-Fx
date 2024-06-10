@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -27,8 +26,6 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
         }
 
-        //static int __i = 0;
-
         protected internal async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -46,9 +43,6 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
                 string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
                 logger?.LogInformation($"Exiting {log}, with Http Status {statusCode}{reasonPhrase}{(statusCode < 300 ? string.Empty : text)}");
-
-                //File.WriteAllText(@$"c:\temp\r\response_{__i:0000}", text);
-                //__i++;
 
                 return statusCode < 300 ? text : throw new PowerFxConnectorException($"CDP call to {uri} failed with {statusCode} error: {reasonPhrase} - {text}") { StatusCode = statusCode };
             }

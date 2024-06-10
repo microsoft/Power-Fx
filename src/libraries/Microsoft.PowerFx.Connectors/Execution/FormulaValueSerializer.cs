@@ -63,12 +63,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _utcConverter = utcConverter;
         }
 
-        internal async Task SerializeValueAsync(string paramName, IConnectorSchema schema, FormulaValue value)
+        internal async Task SerializeValueAsync(string paramName, ISwaggerSchema schema, FormulaValue value)
         {
             await WritePropertyAsync(paramName, schema, value).ConfigureAwait(false);
         }
 
-        private async Task WriteObjectAsync(string objectName, IConnectorSchema schema, IEnumerable<NamedValue> fields)
+        private async Task WriteObjectAsync(string objectName, ISwaggerSchema schema, IEnumerable<NamedValue> fields)
         {
             StartObject(objectName);
 
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 {
                     await WritePropertyAsync(
                         nv.Name,
-                        new ConnectorApiSchema(
+                        new SwaggerSchema(
                             type: nv.Value.Type._type.Kind switch
                             {
                                 DKind.Number => "number",
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             EndObject(objectName);
         }
 
-        private async Task WritePropertyAsync(string propertyName, IConnectorSchema propertySchema, FormulaValue fv)
+        private async Task WritePropertyAsync(string propertyName, ISwaggerSchema propertySchema, FormulaValue fv)
         {
             if (fv is BlankValue || fv is ErrorValue)
             {

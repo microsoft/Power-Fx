@@ -5,16 +5,16 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorApiReference : IConnectorReference
+    internal class SwaggerReference : ISwaggerReference
     {
         private readonly OpenApiReference _reference;
 
-        public static IConnectorReference New(OpenApiReference reference)
+        public static ISwaggerReference New(OpenApiReference reference)
         {
-            return reference == null ? null : new ConnectorApiReference(reference);
+            return reference == null ? null : new SwaggerReference(reference);
         }
 
-        private ConnectorApiReference(OpenApiReference reference)
+        private SwaggerReference(OpenApiReference reference)
         {
             _reference = reference;
         }

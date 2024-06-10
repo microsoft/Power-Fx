@@ -538,7 +538,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Kutch and Sons", ((StringValue)result).Value);
         }
 
-        [Fact(Skip = "Under development")]
+        [Fact]
         public async Task SF_CdpTabular_GetTables()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
@@ -546,14 +546,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var engine = new RecalcEngine(config);
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            using var httpClient = new HttpClient(); // testConnector);
+            using var httpClient = new HttpClient(testConnector);
             string connectionId = "ba3b1db7bb854aedbad2058b66e36e83";
-            string jwt = "eyJ0eXAiO...";
+            string jwt = "eyJ0eXAi...";
             using var client = new PowerPlatformConnectorClient("7526ddf1-6e97-eed6-86bb-8fd46790d670.05.common.tip1002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             ConnectorDataSource cds = new ConnectorDataSource("default");
 
-            //testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
+            testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
             await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
 
             // only one network call as we already read metadata
-            //testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
+            testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
             IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
@@ -579,7 +579,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Account", connectorTable.TableName);
             Assert.False(connectorTable.IsInitialized);
 
-            //testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
+            testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
@@ -587,6 +587,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sfTable._tabularService.IsInitialized);
             Assert.True(sfTable.IsDelegable);
 
+            // Note relationships with external tables (logicalName`displayName[externalTable]:type)
+            //   CreatedById`'Created By ID'[User]:s
+            //   LastModifiedById`'Last Modified By ID'[User]:s            
+            //   Modified By ID'[User]:s
+            //   MasterRecordId`'Master Record ID'[Account]:s
+            //   OwnerId`'Owner ID'[User]:s
+            //   ParentId`'Parent Account ID'[Account]:s
             Assert.Equal(
                 "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
                 "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, " +
@@ -595,6 +602,49 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:s, ParentId`'Parent Account ID'[Account]:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
                 "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
                 "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.ToStringWithDisplayNames());
+
+            Assert.NotNull(sfTable.Relationships);
+            Assert.NotNull(sfTable.Relationships.FieldsWithRelationship);
+            Assert.Equal(5, sfTable.Relationships.FieldsWithRelationship.Count);
+
+            Assert.Equal("MasterRecordId", sfTable.Relationships.FieldsWithRelationship[0].FieldName);
+            Assert.Equal("MasterRecord", sfTable.Relationships.FieldsWithRelationship[0].RelationshipName);
+            Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[0].TableName);
+            
+            Assert.Equal("ParentId", sfTable.Relationships.FieldsWithRelationship[1].FieldName);
+            Assert.Equal("Parent", sfTable.Relationships.FieldsWithRelationship[1].RelationshipName);
+            Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[1].TableName);
+            
+            Assert.Equal("OwnerId", sfTable.Relationships.FieldsWithRelationship[2].FieldName);
+            Assert.Equal("Owner", sfTable.Relationships.FieldsWithRelationship[2].RelationshipName);
+            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[2].TableName);
+            
+            Assert.Equal("CreatedById", sfTable.Relationships.FieldsWithRelationship[3].FieldName);
+            Assert.Equal("CreatedBy", sfTable.Relationships.FieldsWithRelationship[3].RelationshipName);
+            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[3].TableName);
+            
+            Assert.Equal("LastModifiedById", sfTable.Relationships.FieldsWithRelationship[4].FieldName);
+            Assert.Equal("LastModifiedBy", sfTable.Relationships.FieldsWithRelationship[4].RelationshipName);
+            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[4].TableName);
+
+            Assert.NotNull(sfTable.Relationships.ReferencedEntities);
+            Assert.Equal(49, sfTable.Relationships.ReferencedEntities.Count);
+            
+            Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[0].FieldName);
+            Assert.Equal("ChildAccounts", sfTable.Relationships.ReferencedEntities[0].RelationshipName);
+            Assert.Equal("Account", sfTable.Relationships.ReferencedEntities[0].TableName);
+            
+            Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[1].FieldName);
+            Assert.Equal("AccountContactRelations", sfTable.Relationships.ReferencedEntities[1].RelationshipName);
+            Assert.Equal("AccountContactRelation", sfTable.Relationships.ReferencedEntities[1].TableName);
+            
+            Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[2].FieldName);
+            Assert.Equal("AccountContactRoles", sfTable.Relationships.ReferencedEntities[2].RelationshipName);
+            Assert.Equal("AccountContactRole", sfTable.Relationships.ReferencedEntities[2].TableName);
+            
+            Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[3].FieldName);
+            Assert.Equal("Feeds", sfTable.Relationships.ReferencedEntities[3].RelationshipName);
+            Assert.Equal("AccountFeed", sfTable.Relationships.ReferencedEntities[3].TableName);
 
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -658,11 +708,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
 
             // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
-            //testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
+            testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue accountId = Assert.IsType<StringValue>(result);
-            Assert.Equal("001DR00001XksiMYAR", accountId.Value);
+            Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
         }
 
         [Fact]

@@ -10,16 +10,16 @@ using SharpYaml.Tokens;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorJsonSchema : ConnectorJsonExtensions, IConnectorSchema
+    internal class SwaggerJsonSchema : SwaggerJsonExtensions, ISwaggerSchema
     {
         private readonly JsonElement _schema;
 
-        public static IConnectorSchema New(JsonElement schema)
+        public static ISwaggerSchema New(JsonElement schema)
         {
-            return schema.ValueKind != JsonValueKind.Object ? null : new ConnectorJsonSchema(schema);
+            return schema.ValueKind != JsonValueKind.Object ? null : new SwaggerJsonSchema(schema);
         }
 
-        private ConnectorJsonSchema(JsonElement schema)
+        private SwaggerJsonSchema(JsonElement schema)
             : base(schema)
         {
             _schema = schema;
@@ -56,14 +56,14 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Not supported yet
-        public IConnectorSchema AdditionalProperties => null;
+        public ISwaggerSchema AdditionalProperties => null;
 
-        public IDictionary<string, IConnectorSchema> Properties 
+        public IDictionary<string, ISwaggerSchema> Properties 
         {
             get
             {
                 JsonElement jprops = _schema.GetProperty("properties");
-                Dictionary<string, IConnectorSchema> props = new Dictionary<string, IConnectorSchema>();                                
+                Dictionary<string, ISwaggerSchema> props = new Dictionary<string, ISwaggerSchema>();                                
 
                 if (jprops.ValueKind != JsonValueKind.Object)
                 {
@@ -72,14 +72,14 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (JsonProperty prop in jprops.EnumerateObject())
                 {
-                    props.Add(prop.Name, new ConnectorJsonSchema(prop.Value));
+                    props.Add(prop.Name, new SwaggerJsonSchema(prop.Value));
                 }
 
                 return props;
             }
         }
 
-        public IConnectorSchema Items => throw new NotImplementedException();
+        public ISwaggerSchema Items => throw new NotImplementedException();
 
         public IList<IOpenApiAny> Enum
         {
@@ -90,10 +90,10 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Not supported yet
-        public IConnectorReference Reference => null;
+        public ISwaggerReference Reference => null;
 
         // Not supported yet
-        public IConnectorDiscriminator Discriminator => null;
+        public ISwaggerDiscriminator Discriminator => null;
 
         public ISet<string> ReferenceTo => DataType == "reference" && _schema.TryGetProperty("referenceTo", out JsonElement val) && val.ValueKind == JsonValueKind.Array
                                                 ? new HashSet<string>(val.EnumerateArray().Select(je => je.GetString()))

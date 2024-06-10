@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorApiSchema : ConnectorApiExtensions, IConnectorSchema
+    internal class SwaggerSchema : SwaggerExtensions, ISwaggerSchema
     {
         internal readonly OpenApiSchema _schema;
 
@@ -17,18 +17,18 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly string _format = null;
 
-        public static IConnectorSchema New(OpenApiSchema schema)
+        public static ISwaggerSchema New(OpenApiSchema schema)
         {           
-            return schema == null ? null : new ConnectorApiSchema(schema);
+            return schema == null ? null : new SwaggerSchema(schema);
         }
 
-        private ConnectorApiSchema(OpenApiSchema schema)
+        private SwaggerSchema(OpenApiSchema schema)
             : base(schema)
         {
             _schema = schema;
         }
 
-        public ConnectorApiSchema(IConnectorSchema schema)
+        public SwaggerSchema(ISwaggerSchema schema)
             : base()
         {
             if (schema is OpenApiSchema oas)
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
                 _schema = oas;
                 base._extensions = oas.Extensions;
             }
-            else if (schema is ConnectorApiSchema cas)
+            else if (schema is SwaggerSchema cas)
             {
                 _schema = cas._schema;
                 base._extensions = cas.Extensions;
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public ConnectorApiSchema(string type, string format)
+        public SwaggerSchema(string type, string format)
         {
             _schema = null;
             _type = type;
@@ -66,15 +66,15 @@ namespace Microsoft.PowerFx.Connectors
 
         public ISet<string> Required => _schema?.Required;
 
-        public IConnectorDiscriminator Discriminator => ConnectorApiDiscriminator.New(_schema?.Discriminator);
+        public ISwaggerDiscriminator Discriminator => SwaggerDiscriminator.New(_schema?.Discriminator);
 
-        public IConnectorSchema AdditionalProperties => ConnectorApiSchema.New(_schema?.AdditionalProperties);
+        public ISwaggerSchema AdditionalProperties => SwaggerSchema.New(_schema?.AdditionalProperties);
 
-        public IDictionary<string, IConnectorSchema> Properties => _schema?.Properties == null
-                                                                        ? new Dictionary<string, IConnectorSchema>()
-                                                                        : _schema.Properties.ToDictionary(kvp => kvp.Key, kvp => ConnectorApiSchema.New(kvp.Value));
+        public IDictionary<string, ISwaggerSchema> Properties => _schema?.Properties == null
+                                                                        ? new Dictionary<string, ISwaggerSchema>()
+                                                                        : _schema.Properties.ToDictionary(kvp => kvp.Key, kvp => SwaggerSchema.New(kvp.Value));
 
-        public IConnectorSchema Items => _schema.Items == null ? null : new ConnectorApiSchema(_schema.Items);
+        public ISwaggerSchema Items => _schema.Items == null ? null : new SwaggerSchema(_schema.Items);
 
         private IList<IOpenApiAny> _enum = null;
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
             set => _enum = value;
         }
 
-        public IConnectorReference Reference => ConnectorApiReference.New(_schema.Reference);
+        public ISwaggerReference Reference => SwaggerReference.New(_schema.Reference);
 
         // SalesForce specific
         public ISet<string> ReferenceTo => null;

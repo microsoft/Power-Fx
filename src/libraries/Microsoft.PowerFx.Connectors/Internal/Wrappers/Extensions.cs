@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal static class WrapperExtensions
+    internal static class Extensions
     {
         public static IOpenApiExtension ToIOpenApiExtension(this JsonElement je)
         {
@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Connectors
                 JsonValueKind.False => new OpenApiBoolean(false),
                 JsonValueKind.Null => new OpenApiNull(),
 
-                JsonValueKind.Object => new JsonObjectExtension(je),
-                JsonValueKind.Array => new JsonArrayExtension(je),
+                JsonValueKind.Object => new SwaggerJsonObject(je),
+                JsonValueKind.Array => new SwaggerJsonArray(je),
 
                 JsonValueKind.Undefined => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()

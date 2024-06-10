@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
-            : base(ConnectorApiParameter.New(openApiParameter), ConnectorApiExtensions.New(bodyExtensions), useHiddenTypes, compatibility)
+            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, compatibility)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;

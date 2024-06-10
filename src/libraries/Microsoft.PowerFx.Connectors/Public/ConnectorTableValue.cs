@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Connectors
             _tabularService = tabularService;
             _connectorType = connectorType;
 
+            // $$$ Should probably be in ConnectorTableType.AssociatedDataSources
             Relationships = connectorType != null ? new ConnectorRelationships(connectorType) : null;
         }
 

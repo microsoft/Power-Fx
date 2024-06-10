@@ -1262,7 +1262,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 };
             }
 
-            Schema = (connectorType.Schema as ConnectorApiSchema)._schema.GetString();
+            Schema = (connectorType.Schema as SwaggerSchema)._schema.GetString();
         }
 
         public string Name;
@@ -1397,7 +1397,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 sb.Append($"[it:");
 
-                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(ConnectorApiSchema.New(schema.Items));
+                var itemIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(schema.Items));
                 if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(itemIdentifier))
                 {
                     sb.Append($"<circularRef:{itemIdentifier.Substring(2)}>]");
@@ -1418,7 +1418,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (schema.AdditionalProperties != null)
             {
                 sb.Append($"[ad:");
-                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(ConnectorApiSchema.New(schema.AdditionalProperties));
+                var additionalPropIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(schema.AdditionalProperties));
                 if (additionalPropIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(additionalPropIdentifier))
                 {
                     sb.Append($"<circularRef:{additionalPropIdentifier.Substring(2)}>]");
@@ -1445,7 +1445,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     sb.Append(prop.Key);
                     sb.Append(':');
 
-                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(ConnectorApiSchema.New(prop.Value));
+                    var propIdentifier = OpenApiExtensions.GetUniqueIdentifier(SwaggerSchema.New(prop.Value));
                     if (propIdentifier.StartsWith("R:", StringComparison.Ordinal) && ctgs.Chain.Contains(propIdentifier))
                     {
                         sb.Append($"<circularRef:{propIdentifier.Substring(2)}>]");

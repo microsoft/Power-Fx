@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Any;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal interface IConnectorSchema : IConnectorExtensions
+    internal interface ISwaggerSchema : ISwaggerExtensions
     {
         string Description { get; }
 
@@ -20,17 +20,17 @@ namespace Microsoft.PowerFx.Connectors
 
         ISet<string> Required { get; }
 
-        IConnectorSchema AdditionalProperties { get; }
+        ISwaggerSchema AdditionalProperties { get; }
 
-        IDictionary<string, IConnectorSchema> Properties { get; }
+        IDictionary<string, ISwaggerSchema> Properties { get; }
 
-        IConnectorSchema Items { get; }
+        ISwaggerSchema Items { get; }
 
         IList<IOpenApiAny> Enum { get; set; }
 
-        IConnectorReference Reference { get; }
+        ISwaggerReference Reference { get; }
 
-        IConnectorDiscriminator Discriminator { get; }
+        ISwaggerDiscriminator Discriminator { get; }
 
         // SalesForce specific
         ISet<string> ReferenceTo { get; }

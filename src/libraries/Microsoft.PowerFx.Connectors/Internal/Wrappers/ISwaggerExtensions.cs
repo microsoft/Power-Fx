@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal interface IConnectorExtensions
+    internal interface ISwaggerExtensions
     {
         IDictionary<string, IOpenApiExtension> Extensions { get; }
     }

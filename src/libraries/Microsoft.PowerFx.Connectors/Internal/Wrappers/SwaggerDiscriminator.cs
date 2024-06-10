@@ -5,16 +5,16 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorApiDiscriminator : IConnectorDiscriminator
+    internal class SwaggerDiscriminator : ISwaggerDiscriminator
     {
         private readonly OpenApiDiscriminator _discriminator;
 
-        public static ConnectorApiDiscriminator New(OpenApiDiscriminator discriminator)
+        public static SwaggerDiscriminator New(OpenApiDiscriminator discriminator)
         {
-            return discriminator == null ? null : new ConnectorApiDiscriminator(discriminator);
+            return discriminator == null ? null : new SwaggerDiscriminator(discriminator);
         }
 
-        private ConnectorApiDiscriminator(OpenApiDiscriminator discriminator)
+        private SwaggerDiscriminator(OpenApiDiscriminator discriminator)
         {
             _discriminator = discriminator;
         }

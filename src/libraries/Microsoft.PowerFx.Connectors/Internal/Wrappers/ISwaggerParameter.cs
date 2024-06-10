@@ -3,9 +3,9 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal interface IConnectorParameter : IConnectorExtensions
+    internal interface ISwaggerParameter : ISwaggerExtensions
     {
-        public IConnectorSchema Schema { get; }
+        public ISwaggerSchema Schema { get; }
 
         public string Name { get; }
 

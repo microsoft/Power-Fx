@@ -3,8 +3,8 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal interface IConnectorDiscriminator
+    internal interface ISwaggerReference
     {
-        string PropertyName { get; }
+        string Id { get; }
     }
 }

@@ -679,7 +679,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             };
 
-            IConnectorSchema schema = new ConnectorApiSchema(connectorType.Schema)
+            ISwaggerSchema schema = new SwaggerSchema(connectorType.Schema)
             {
                 Enum = optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiDouble((double)kvp.Value.Object) as IOpenApiAny).ToList()
             };
@@ -690,7 +690,7 @@ namespace Microsoft.PowerFx.Connectors
             schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
 
             // For now, we keep the original formula type (number/string/bool...)
-            return new ConnectorType(schema, ConnectorApiParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
+            return new ConnectorType(schema, SwaggerParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
         }
 
         /// <summary>
@@ -1007,7 +1007,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            IConnectorSchema tableSchema = ConnectorApiSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
+            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
             tableCapabilities = tableSchema.GetTableCapabilities();
 
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
@@ -1086,7 +1086,7 @@ namespace Microsoft.PowerFx.Connectors
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new ConnectorType(ConnectorApiSchema.New(schema), compatibility);
+            return new ConnectorType(SwaggerSchema.New(schema), compatibility);
         }
 
         private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
@@ -1394,7 +1394,7 @@ namespace Microsoft.PowerFx.Connectors
                     fatalError = true;
                 }
 
-                if (ConnectorApiSchema.New(parameter.Schema).TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
+                if (SwaggerSchema.New(parameter.Schema).TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
                 {
                     parameterDefaultValues[parameter.Name] = (connectorParameter.ConnectorType.IsRequired, defaultValue, connectorParameter.FormulaType._type);
                 }

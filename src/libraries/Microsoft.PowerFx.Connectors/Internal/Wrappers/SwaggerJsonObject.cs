@@ -13,11 +13,11 @@ using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class JsonObjectExtension : IDictionary<string, IOpenApiAny>, IOpenApiExtension, IOpenApiAny
+    internal class SwaggerJsonObject : IDictionary<string, IOpenApiAny>, IOpenApiExtension, IOpenApiAny
     {
         private readonly JsonElement _je;
 
-        public JsonObjectExtension(JsonElement je)
+        public SwaggerJsonObject(JsonElement je)
         {
             _je = je;
         }

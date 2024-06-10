@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Connectors.Tabular;
-using static Microsoft.PowerFx.Connectors.ConnectorFunction;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -15,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors
         // Fields that have a relationship with another table
         public IList<ReferencedEntity> FieldsWithRelationship { get; }
 
-        // External tables having a relationship with this table (could be be circular)
+        // External tables having a relationship with this table (could be circular)
         public IList<ReferencedEntity> ReferencedEntities { get; }
         
         internal ConnectorRelationships(ConnectorType connectorType)
