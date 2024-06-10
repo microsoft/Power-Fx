@@ -285,8 +285,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name:\"test name\", |}")]
         [InlineData(
             "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|",
-            "nested2:",
-            "nested:")]
+            "nested:",
+            "nested2:")]
 
         // nested record field.
         [InlineData(
@@ -319,8 +319,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // table type arg.
         [InlineData(
             "RecordInputTest( {field1 : 5}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [{|",
-            "nested2:",
-            "nested:")]
+            "nested:",
+            "nested2:")]
 
         // table type arg with nested record field.
         [InlineData(
