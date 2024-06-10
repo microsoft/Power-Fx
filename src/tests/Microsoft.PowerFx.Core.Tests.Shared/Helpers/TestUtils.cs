@@ -73,12 +73,12 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                     foreach (var property in expectedProperties.Except(actualProperties))
                     {
-                        Assert.True(false, $"Property \"{property}\" missing from actual object.");
+                        Assert.Fail($"Property \"{property}\" missing from actual object.");
                     }
 
                     foreach (var property in actualProperties.Except(expectedProperties))
                     {
-                        Assert.True(false, $"Actual object defines additional property \"{property}\".");
+                        Assert.Fail($"Actual object defines additional property \"{property}\".");
                     }
 
                     foreach (var name in expectedProperties)
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     Assert.Equal(expected.GetRawText(), actual.GetRawText());
                     break;
                 default:
-                    Assert.True(false, $"Unexpected JsonValueKind: JsonValueKind.{valueKind}.");
+                    Assert.Fail($"Unexpected JsonValueKind: JsonValueKind.{valueKind}.");
                     break;
             }
         }
@@ -573,7 +573,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 // Number (hex) support
                 if (token[0] == '#' && token.Length > 1)
                 {
-                    if (uint.TryParse(token.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
+                    if (uint.TryParse(token.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var intValue))
                     {
                         value = new EquatableObject((double)intValue);
                         return true;

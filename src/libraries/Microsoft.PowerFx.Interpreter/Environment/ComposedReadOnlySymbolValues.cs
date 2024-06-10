@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
@@ -23,6 +24,18 @@ namespace Microsoft.PowerFx
         {
             _map = map;
             DebugName = symbolTable.DebugName;
+        }
+
+        // Helper for debugging.
+        internal void DebugDumpChildren(TextWriter tw, string indent = "")
+        {
+            foreach (var kv in _map)
+            {
+                var st = kv.Key;
+                var sv = kv.Value;
+
+                tw.WriteLine($"{indent}{st.DebugName} --> {sv.DebugNameWithId}");
+            }
         }
 
         // Create SymbolValues to match the SymbolTable.
@@ -91,18 +104,24 @@ namespace Microsoft.PowerFx
         private static void Add(Dictionary<ReadOnlySymbolTable, ReadOnlySymbolValues> map, ReadOnlySymbolValues symValues)
         {
             var symTable = symValues.SymbolTable;
-            try
+
+            if (map.TryGetValue(symTable, out var existing))
             {
-                map.Add(symTable, symValues);
-            }
-            catch
-            {
-                // Give better error.
-                if (map.TryGetValue(symTable, out var existingSymValues))
+                if (object.ReferenceEquals(existing, symValues))
                 {
-                    throw new InvalidOperationException($"SymbolTable {symTable.DebugName()} already has SymbolValues '{existingSymValues.DebugName}' associated with it. Can't add '{symValues.DebugName}'");
+                    // Ok, same instance already added 
+                    return;
+                }
+                else
+                {
+                    // Bad - different instance with conflicting values.
+                    throw new InvalidOperationException($"SymbolTable {symTable.DebugName()} already has SymbolValues '{existing.DebugNameWithId}' associated with it. Can't add '{symValues.DebugNameWithId}'");
                 }
             }
+            else 
+            {                
+                map.Add(symTable, symValues);
+            }            
         }
 
         // Walk the symbolTable tree and for each node, create the corresponding symbol values. 

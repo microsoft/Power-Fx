@@ -4,7 +4,7 @@
     <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
     <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
-    <Configurations>Debug;Release</Configurations>    
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>    
   </PropertyGroup>
 
   <!-- Nuget Properties -->
@@ -12,8 +12,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Microsoft.PowerFx.Connectors</PackageId>
     <Title>Microsoft Power Fx Connector Support</Title>
-    <Description>Connectors</Description>
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <Description>Connectors</Description>    
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.11" />   
     <PackageReference Include="System.Text.Json" Version="6.0.8" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,12 @@
     <EmbeddedResource Include="..\..\strings\PowerFxConnectorResources.*.resx">
       <Link>strings\%(Filename)%(Extension)</Link>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\readme.md" Link="readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

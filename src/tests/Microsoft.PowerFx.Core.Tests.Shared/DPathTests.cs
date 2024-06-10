@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private DPath CreateDPath(string path)
         {
-            var segments = path.Split(".", StringSplitOptions.RemoveEmptyEntries);
+            var segments = path.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             var dPath = DPath.Root;
             foreach (var name in segments)
             {

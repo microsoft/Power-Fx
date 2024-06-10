@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void TestMissingRegular()
+        public async Task TestMissingRegular()
         {
             var symTable = new SymbolTable();
             var symValues = new SymbolValues(symTable);
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // In an expression, becomes blank. 
             var engine = new RecalcEngine();
-            result = engine.EvalAsync("x", CancellationToken.None, runtimeConfig: symValues).Result;
+            result = await engine.EvalAsync("x", CancellationToken.None, runtimeConfig: symValues);
             Assert.IsType<BlankValue>(result);
             Assert.IsType<NumberType>(result.Type);
         }
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void TestRowScope()
+        public async Task TestRowScope()
         {
             var r1 = new SymbolValues();
             r1.Add("b", FormulaValue.New(1));
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
+            var result = await engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2);
 
             Assert.Equal(21m, result.ToObject());
         }
@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void TestRowScopeNoParent()
+        public async Task TestRowScopeNoParent()
         {
             var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("a", FormulaValue.New(10)));
@@ -257,14 +257,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, runtimeConfig: r2).Result;
+            var result = await engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, runtimeConfig: r2);
 
             Assert.Equal(20m, result.ToObject());
         }
 
         // Ensure the RowScope is lazy and doesn't call fields. 
         [Fact]
-        public void TestRowScopeLazy()
+        public async Task TestRowScopeLazy()
         {
             var r1 = new SymbolValues();
             r1.Add("b", FormulaValue.New(1));
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
+            var result = await engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2);
 
             Assert.Equal(21m, result.ToObject());
         }
@@ -371,7 +371,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void TestNew()
+        public async Task TestNew()
         {
             var dict = new Dictionary<string, NumberValue>
             {
@@ -385,18 +385,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = ReadOnlySymbolValues.New(dict, r1);
 
             var engine = new RecalcEngine();
-            var result = engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2).Result;
+            var result = await engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2);
 
             Assert.Equal(111.0, result.ToObject());
 
             // Without a parent
             var r3 = ReadOnlySymbolValues.New(dict);
-            var result3 = engine.EvalAsync("a + b", CancellationToken.None, runtimeConfig: r2).Result;
+            var result3 = await engine.EvalAsync("a + b", CancellationToken.None, runtimeConfig: r2);
             Assert.Equal(11.0, result3.ToObject());
         }
 
         [Fact]
-        public void Test1()
+        public async Task Test1()
         {
             var symbolTable = new SymbolTable
             {
@@ -411,7 +411,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(10.0, result.ToObject());
 
             var engine = new RecalcEngine();
-            result = engine.EvalAsync("x+1", CancellationToken.None, runtimeConfig: values).Result;
+            result = await engine.EvalAsync("x+1", CancellationToken.None, runtimeConfig: values);
 
             Assert.Equal(11.0, result.ToObject());
         }
@@ -564,7 +564,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var eval = check.GetEvaluator();
 
             // Fails when trying a row-scope symbol values 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await eval.EvalAsync(CancellationToken.None, record).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentException>(async () => await eval.EvalAsync(CancellationToken.None, record));
 
             // Succeeds when trying  a symbol values associated with the original symbol table.
             var symValues = new SymbolValues(symTable1);
@@ -620,6 +620,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Multiple values are ok if they're the same. 
+        [Fact]
+        public void MultipleValuesSameObj()
+        {
+            var st1 = new SymbolTable { DebugName = "L1" };
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var st12 = ReadOnlySymbolTable.Compose(st1);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(99.0));
+
+            var sv12 = st12.CreateValues(sv1);
+
+            var sv12b = st12.CreateValues(sv12, sv1);
+
+            var val = sv12b.Get(slot);
+            Assert.Equal(99.0, val.ToObject());
+        }
+
         // Trying to eval with missing symbol values will fail
         [Fact]
         public async Task MissingSymbolValues()
@@ -639,7 +659,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotSame(symTable1, symValues2.SymbolTable);
 
             // Catch and proactively get error. 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2));
 
             // Works when we pass in right symbol values (tied to what we checked against)
             var symValues1 = symTable1.CreateValues();
@@ -654,7 +674,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Succeeds since eval will get the symbol table from values 
-            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue).ConfigureAwait(false);
+            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue);
 
             // Check() without binding to a symbol table
             var check = engine.Check("1+2");
@@ -663,10 +683,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var run = check.GetEvaluator();
 
             // Succeeds, no extra SymbolValues
-            await run.EvalAsync(CancellationToken.None, new RuntimeConfig()).ConfigureAwait(false);
+            await run.EvalAsync(CancellationToken.None, new RuntimeConfig());
 
             // Fails, extra symbol Values 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)));
         }
 
         // Demonstrate how to use ThisItem in a loop.
@@ -734,7 +754,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var opts = new ParserOptions { AllowsSideEffects = true };
 
                 var runtimeConfig = new RuntimeConfig(symValuesAll);
-                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig);
 
                 Assert.Equal(5.0, result.ToObject());
 
@@ -795,11 +815,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
-        public void MutationTests(bool canMutate, bool canSet)
+        [InlineData(true, true, true)]
+        [InlineData(true, false, true)]
+        [InlineData(false, true, true)]
+        [InlineData(false, false, true)]
+        [InlineData(true, true, false)]
+        [InlineData(true, false, false)]
+        [InlineData(false, true, false)]
+        [InlineData(false, false, false)]
+        public void MutationTests(bool canMutate, bool canSet, bool canSetMutate)
         {
             var recordType = RecordType.Empty().Add("Field1", FormulaType.Number);
             var tableType = recordType.ToTable();
@@ -808,7 +832,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbols.AddVariable("var", tableType, new SymbolProperties
             {
                  CanMutate = canMutate,
-                 CanSet = canSet
+                 CanSet = canSet,
+                 CanSetMutate = canSetMutate
             });
 
             var config = new PowerFxConfig();
@@ -823,9 +848,57 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var checkSet = engine.Check("Set(var, Table({ Field1 : 123}))", opts, symbols);
             var checkMutate = engine.Check("Collect(var, { Field1 : 123})", opts, symbols);
+            var checkSetMutate = engine.Check("Set( First(var).Field1, 123 )", opts, symbols);
 
             Assert.Equal(canSet, checkSet.IsSuccess);
             Assert.Equal(canMutate, checkMutate.IsSuccess);
+            Assert.Equal(canSetMutate, checkSetMutate.IsSuccess);
+        }
+
+        // Test mapping between Symbol Table and SymbolValues
+        [Fact]
+        public void Map1()
+        {
+            var st1 = new SymbolTable { DebugName = "CustomTable1" };
+
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(77.0));
+
+            // Map to same one, picks it up. 
+            var sv1b = st1.CreateValues(sv1);
+
+            var val2 = sv1b.Get(slot);
+            Assert.Equal(77.0, val2.ToObject());
+        }
+
+        [Fact]
+        public async Task SymbolTableBug()
+        {
+            var sym1 = new SymbolTable { DebugName = "CustomTable1" };
+            var slot1 = sym1.AddVariable("x", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
+            check.ApplyBinding();
+
+            // Just doing this would fail because we miss the symbolValues on recalcEngine. 
+            // var symVals = sym1.CreateValues();
+            // Instead, do a CheckResult aware:
+            var symVals = check.CreateValues();            
+
+            var ok = check.Symbols.TryLookupSlot("x", out var slot);
+            Assert.True(ok);
+            Assert.Equal(slot1.DebugName(), slot.DebugName());
+
+            symVals.Set(slot, FormulaValue.New(99.0));
+            var runtimeConfig = new RuntimeConfig(symVals);
+
+            var eval = check.GetEvaluator();
+            var result = await eval.EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig);
+
+            Assert.Equal(99.0, result.ToObject());
         }
 
         // Get a convenient string representation of a SymbolValue

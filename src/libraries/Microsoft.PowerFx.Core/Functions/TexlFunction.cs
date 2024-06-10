@@ -126,8 +126,16 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool HasPreciseErrors => false;
 
-        // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
-        public virtual bool MutatesArg0 => false;
+        /// <summary>
+        /// Returns true if the function will mutate the argument, as is the case of Patch, Collect, Remove, etc.
+        /// Set can also mutate, but needs to make a decision based on the argument's node.
+        /// For example, Set(x,{a:1}) is not a mutate and has a single FirstName node for the first argument, 
+        /// while Set(x.a,1) is a mutate and has a more complex node for the first argument.
+        /// This function covers both CanMutate and CanSetMutate scenarios which is checked in CheckTypes/CheckSemantics.
+        /// </summary>
+        /// <param name="argIndex">Index of the argument.</param>
+        /// <param name="arg">Argument at that index.</param>
+        public virtual bool MutatesArg(int argIndex, TexlNode arg) => false;
 
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 
@@ -239,6 +247,23 @@ namespace Microsoft.PowerFx.Core.Functions
         protected void ValidateArgumentIsMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
         {
             if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(arg))
+            {
+                errors.EnsureError(
+                    arg,
+                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
+                    this.Name);
+            }
+        }
+
+        /// <summary>
+        /// Adds an error to the container if the given argument is immutable.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="arg"></param>
+        /// <param name="errors"></param>
+        protected void ValidateArgumentIsSetMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsSetMutable(arg))
             {
                 errors.EnsureError(
                     arg,

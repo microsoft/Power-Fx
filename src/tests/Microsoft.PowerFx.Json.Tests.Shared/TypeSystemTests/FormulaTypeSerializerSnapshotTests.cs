@@ -9,6 +9,7 @@ using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -23,19 +24,28 @@ namespace Microsoft.PowerFx.Json.Tests
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
-        /// </summary>
-        private static readonly string _baseDirectory = Path.Join(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
+        /// </summary>       
 
-        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
-            _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
-            _baseDirectory;
+        private static readonly string _baseDirectory = PathJoin(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
+
+        private static readonly string _typeSnapshotDirectory = RegenerateSnapshots
+            ? _baseDirectory
+                .Replace(PathJoin("bin", "Debug", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "DebugAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "ReleaseAll", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release462", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Debug80", FrameworkVersion()), string.Empty)
+                .Replace(PathJoin("bin", "Release80", FrameworkVersion()), string.Empty)
+            : _baseDirectory;
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)
         {
-            var directory = _typeSnapshotDirectory;
-            var typeSnapshot = Path.Join(_typeSnapshotDirectory, testId + ".json");
+            var directory = _typeSnapshotDirectory;            
+            var typeSnapshot = PathJoin(_typeSnapshotDirectory, testId + ".json");
 
             var actual = JsonSerializer.Serialize(type, options);
 

@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             source.CancelAfter(500);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload, source.Token).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload, source.Token);
 
             // Assert
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.RequestCancelled);

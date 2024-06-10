@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             "Response_O365Groups_HttpRequestV2.json")]
         public async Task Office365Groups_Functions(string expr, string expectedResult, string xUrls, string xBodies, params string[] expectedFiles)
         {
-            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles, true).ConfigureAwait(false);
+            await RunConnectorTestAsync(false, expr, expectedResult, xUrls, xBodies, expectedFiles, true);
         }
 
         [Theory]
@@ -166,9 +166,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("First(Office365Groups.Lis", "ListGroupMembers|ListGroups|ListOwnedGroups|ListOwnedGroupsV2|ListOwnedGroupsV3")]
         [InlineData("First(Office365Groups.ListGroups(", "ListGroups({ $filter:String,$top:Decimal,$skiptoken:String })")]
         [InlineData("First(Filter(Office365Groups.ListGroups().", "value:Table|'OData context':String|'OData NextLink':String")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().value,", "Classification:String|'Created Date-Time':DateTime|Description:String|Email:String|'Group Id':String|'Mail Enabled':Boolean|Name:String|Nickname:String|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|ThisRecord:Record|Visibility:String")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().value, ThisRecord.", "Classification:String|'Created Date-Time':DateTime|Description:String|Email:String|'Group Id':String|'Mail Enabled':Boolean|Name:String|Nickname:String|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|Visibility:String")]
-        [InlineData("First(Filter(Office365Groups.ListGroups().value, mail", "Email:String|'Mail Enabled':Boolean")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value,", "'Created Date-Time':DateTime|'Group Id':String|'Mail Enabled':Boolean|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|Classification:String|Description:String|Email:String|Name:String|Nickname:String|ThisRecord:Record|Visibility:String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value, ThisRecord.", "'Created Date-Time':DateTime|'Group Id':String|'Mail Enabled':Boolean|'On-Premises Last Sync Date-Time':String|'On-Premises Security Identifier':String|'On-Premises Sync Enabled':Boolean|'Renewed Date-Time':DateTime|'Security Enabled':Boolean|Classification:String|Description:String|Email:String|Name:String|Nickname:String|Visibility:String")]
+        [InlineData("First(Filter(Office365Groups.ListGroups().value, mail", "'Mail Enabled':Boolean|Email:String")]
         public async Task Office365Groups_ListGroups_Intellisense(string expr, string expectedSuggestions)
         {
             RunIntellisenseTest(expr, expectedSuggestions);

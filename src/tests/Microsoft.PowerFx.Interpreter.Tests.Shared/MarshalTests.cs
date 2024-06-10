@@ -482,12 +482,12 @@ namespace Microsoft.PowerFx.Tests
             if (shouldSucceed)
             {
                 // For comparison, verify we can succeed. 
-                var result = await engine.EvalAsync("x.field1", CancellationToken.None).ConfigureAwait(false);
+                var result = await engine.EvalAsync("x.field1", CancellationToken.None);
                 Assert.Equal(999m, result.ToObject());
             }
             else
             {
-                await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("x.field1", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+                await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("x.field1", CancellationToken.None));
             }
         }
 

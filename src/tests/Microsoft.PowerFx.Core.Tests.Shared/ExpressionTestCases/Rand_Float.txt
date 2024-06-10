@@ -2,9 +2,13 @@
 
 // Test Rand() - beware, rand is volatile. 
 
+// .Net 4.6.2 overflows
+#DISABLE.NET: 462
 >> RandBetween( 1.7976931348623157e308 /* MaxValue */, 1.7976931348623157e308 /* MaxValue */ )
 1.7976931348623157e308
 
+// .Net 4.6.2 overflows
+#DISABLE.NET: 462
 >> RandBetween( -1.7976931348623157e308 /* MinValue */, -1.7976931348623157e308 /* MinValue */ )
 -1.7976931348623157e308
 
@@ -36,6 +40,4 @@
 
 >> Sum(Sequence(100),  With( { r: RandBetween( -1.7976931348623157e308 /* MinValue */, 1.7976931348623157e308 /* MaxValue */ ) }, If( -1.7976931348623157e308 <= r And r <= 1.7976931348623157e308 /* MaxValue */, 1, Error( "Result out of range" ) ) ) )
 100
-
-
 

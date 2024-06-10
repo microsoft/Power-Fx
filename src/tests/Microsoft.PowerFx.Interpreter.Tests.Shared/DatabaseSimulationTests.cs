@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             IExpressionEvaluator run = check.GetEvaluator();
 
-            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<InMemoryRecordValue>(result);
         }
 
@@ -71,7 +71,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
-                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
+#if NET462
+                await Assert.ThrowsAnyAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+#else
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+#endif
             }
         }
 
@@ -124,7 +128,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
             Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
 
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues());
             Assert.IsType<VoidValue>(result);
         }
 
@@ -188,10 +192,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 if (PatchDelay > 0)
                 {
-                    await Task.Delay(PatchDelay, cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(PatchDelay, cancellationToken);
                 }
 
-                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
+                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
             }
         }
 
@@ -237,12 +241,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var st = Environment.StackTrace;
 
                 if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
-                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
+                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches") ||
+                    st.Contains("Microsoft.PowerFx.Types.LambdaFormulaValue"))
                 {
                     return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }
 
-                throw new NotImplementedException("Cannot call TryGetField");
+                throw new NotImplementedException($"Cannot call TryGetField - {st}");
             }
 
             // Doesn't perform a copy.  Not needed for testing purposes and 
@@ -260,6 +265,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             internal TestEntityType()
                 : base(DType.CreateExpandType(new TestExpandInfo()))
+            {
+            }
+
+            internal TestEntityType(DType tableType)
+                : base(DType.CreateExpandType(new TestExpandInfo(tableType)))
             {
             }
 
