@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
