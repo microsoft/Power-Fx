@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Connectors.Tabular;
 
 namespace Microsoft.PowerFx.Connectors
 {

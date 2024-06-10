@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -261,7 +260,7 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
-        internal void AddTabularDataSource(DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void AddTabularDataSource(ITabularTableResolver tableResolver, List<ReferencedEntity> referencedEntities, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             if (FormulaType is not RecordType)
             {
@@ -271,20 +270,12 @@ namespace Microsoft.PowerFx.Connectors
             // $$$ Hack to enable IExternalTabularDataSource, will be removed later
             if (name.Value.StartsWith("__", StringComparison.OrdinalIgnoreCase))
             {
-                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new TabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalTabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
                 DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
                 FormulaType = new KnownRecordType(newDType);
             }
 
-            FormulaType = new TabularRecordType(connectorType, FormulaType._type);
-        }
-
-        internal void AddReferencedEntities(List<ReferencedEntity> referencedEntities)
-        {
-            if (FormulaType is TabularRecordType trt)
-            {
-                trt.ReferencedEntities = referencedEntities;
-            }
+            FormulaType = new TabularRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities);
         }
 
         private void AggregateErrors(ConnectorType[] types)

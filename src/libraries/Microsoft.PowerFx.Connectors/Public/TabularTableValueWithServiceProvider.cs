@@ -9,11 +9,11 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTableValueWithServiceProvider : ConnectorTableValue
+    internal class TabularTableValueWithServiceProvider : TabularTableValue
     {
         internal IServiceProvider ServiceProvider { get; }
 
-        internal ConnectorTableValueWithServiceProvider(ConnectorTableValue tableValue, IServiceProvider serviceProvider)
+        internal TabularTableValueWithServiceProvider(TabularTableValue tableValue, IServiceProvider serviceProvider)
             : base(tableValue._tabularService, tableValue._connectorType)
         {
             ServiceProvider = serviceProvider;

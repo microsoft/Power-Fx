@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
-using Microsoft.PowerFx.Connectors.Tabular.Capabilities;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
@@ -17,7 +16,7 @@ using Microsoft.PowerFx.Core.Utils;
 // src/Language/PowerFx.Dataverse.Parser/Importers/DataDescription/ServiceCapabilities.cs
 // </summary>
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal sealed class ServiceCapabilities : IColumnsCapabilities
     {

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -14,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     // Created by TabularService.GetTableValue
     // Doesn't contain any ServiceProvider which is runtime only
-    public class ConnectorTableValue : TableValue, IRefreshable, IDelegatableTableValue
+    public class TabularTableValue : TableValue, IRefreshable, IDelegatableTableValue
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
@@ -22,19 +21,18 @@ namespace Microsoft.PowerFx.Connectors
 
         protected internal readonly ConnectorType _connectorType;
 
-        public ConnectorRelationships Relationships { get; }
+        public RecordType TabularRecordType => _tabularService?.TabularRecordType;
+        
+        public ConnectorRelationships Relationships => new ConnectorRelationships(_connectorType);
 
-        public ConnectorTableValue(TabularService tabularService, ConnectorType connectorType)
-            : base(IRContext.NotInSource(new ConnectorTableType(tabularService.TableType)))
+        public TabularTableValue(TabularService tabularService, ConnectorType connectorType)
+            : base(IRContext.NotInSource(new TabularTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
-            _connectorType = connectorType;
-
-            // $$$ Should probably be in ConnectorTableType.AssociatedDataSources
-            Relationships = connectorType != null ? new ConnectorRelationships(connectorType) : null;
+            _connectorType = connectorType;           
         }
 
-        internal ConnectorTableValue(IRContext irContext)
+        internal TabularTableValue(IRContext irContext)
             : base(irContext)
         {
         }
@@ -51,7 +49,7 @@ namespace Microsoft.PowerFx.Connectors
             var rows = await _tabularService.GetItemsAsync(services, op, cancel).ConfigureAwait(false);
 
             return rows;
-        }
+        }        
     }   
 
     internal static class ODataParametersExtensions

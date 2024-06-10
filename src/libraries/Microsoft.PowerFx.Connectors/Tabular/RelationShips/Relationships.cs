@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     // x-ms-relationships
     internal sealed class Relationship

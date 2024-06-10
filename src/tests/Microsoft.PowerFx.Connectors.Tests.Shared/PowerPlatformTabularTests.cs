@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Connectors.Tabular;
+
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests;
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eXAiOiJKV1QiL...";
             using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
-            ConnectorDataSource cds = new ConnectorDataSource("pfxdev-sql.database.windows.net,connectortest");
+            TabularDataSource cds = new TabularDataSource("pfxdev-sql.database.windows.net,connectortest");
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
             await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
@@ -80,14 +80,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Database name", cds.DatasetMetadata.Parameters[1].XMsSummary);
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
             Assert.Equal(4, tables.Count());
             Assert.Equal("[dbo].[Customers],[dbo].[Orders],[dbo].[Products],[sys].[database_firewall_rules]", string.Join(",", tables.Select(t => t.TableName)));
             Assert.Equal("Customers,Orders,Products,sys.database_firewall_rules", string.Join(",", tables.Select(t => t.DisplayName)));
 
-            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Customers");
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Customers");
 
             Assert.False(connectorTable.IsInitialized);
             Assert.Equal("Customers", connectorTable.DisplayName);
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
-            ConnectorTableValue sqlTable = connectorTable.GetTableValue();
+            TabularTableValue sqlTable = connectorTable.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorTable tabularService = new ConnectorTable("pfxdev-sql.database.windows.net,connectortest", "Customers");
+            TabularTable tabularService = new TabularTable("pfxdev-sql.database.windows.net,connectortest", "Customers");
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Customers", tabularService.TableName);
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await tabularService.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue sqlTable = tabularService.GetTableValue();
+            TabularTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
@@ -252,10 +252,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             ConsoleLogger logger = new ConsoleLogger(_output);
-            ConnectorDataSource cds = new ConnectorDataSource("https://microsofteur.sharepoint.com/teams/pfxtest");
+            TabularDataSource cds = new TabularDataSource("https://microsofteur.sharepoint.com/teams/pfxtest");
 
             testConnector.SetResponseFromFiles(@"Responses\SP GetDatasetsMetadata.json", @"Responses\SP GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
 
@@ -279,7 +279,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("4bd37916-0026-4726-94e8-5a0cbc8e476a,5266fcd9-45ef-4b8f-8014-5d5c397db6f0", string.Join(",", tables.Select(t => t.TableName)));
             Assert.Equal("Documents,MikeTestList", string.Join(",", tables.Select(t => t.DisplayName)));
 
-            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Documents");
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Documents");
 
             Assert.False(connectorTable.IsInitialized);
             Assert.Equal("4bd37916-0026-4726-94e8-5a0cbc8e476a", connectorTable.TableName);
@@ -288,7 +288,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
-            ConnectorTableValue spTable = connectorTable.GetTableValue();
+            TabularTableValue spTable = connectorTable.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
             Assert.True(spTable.IsDelegable);
 
@@ -391,7 +391,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            ConnectorTable tabularService = new ConnectorTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents");
+            TabularTable tabularService = new TabularTable("https://microsofteur.sharepoint.com/teams/pfxtest", "Documents");
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Documents", tabularService.TableName);
@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await tabularService.InitAsync(client, $"/apim/sharepointonline/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue spTable = tabularService.GetTableValue();
+            TabularTableValue spTable = tabularService.GetTableValue();
             Assert.True(spTable._tabularService.IsInitialized);
             Assert.True(spTable.IsDelegable);
 
@@ -463,15 +463,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eXAiOiJK...";
             using var client = new PowerPlatformConnectorClient("tip1002-002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
-            ConnectorDataSource cds = new ConnectorDataSource("default");
+            TabularDataSource cds = new TabularDataSource("default");
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
             
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            ConnectorTableValue sfTable = connectorTable.GetTableValue();
+            TabularTableValue sfTable = connectorTable.GetTableValue();
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -508,15 +508,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eXAiOi...";
             using var client = new PowerPlatformConnectorClient("tip1002-002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
-            ConnectorDataSource cds = new ConnectorDataSource("default");
+            TabularDataSource cds = new TabularDataSource("default");
 
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $" / apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $" / apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-            ConnectorTableValue sfTable = connectorTable.GetTableValue();
+            TabularTableValue sfTable = connectorTable.GetTableValue();
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -548,10 +548,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(testConnector);
             string connectionId = "ba3b1db7bb854aedbad2058b66e36e83";
-            string jwt = "eyJ0eXAi...";
+            string jwt = "eyJ0eXAiOi...";
             using var client = new PowerPlatformConnectorClient("7526ddf1-6e97-eed6-86bb-8fd46790d670.05.common.tip1002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
-            ConnectorDataSource cds = new ConnectorDataSource("default");
+            TabularDataSource cds = new TabularDataSource("default");
 
             testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
             await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
@@ -570,12 +570,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // only one network call as we already read metadata
             testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
-            IEnumerable<ConnectorTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
             Assert.Equal(569, tables.Count());
 
-            ConnectorTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
             Assert.Equal("Account", connectorTable.TableName);
             Assert.False(connectorTable.IsInitialized);
 
@@ -583,7 +583,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
-            ConnectorTableValue sfTable = connectorTable.GetTableValue();
+            TabularTableValue sfTable = connectorTable.GetTableValue();
             Assert.True(sfTable._tabularService.IsInitialized);
             Assert.True(sfTable.IsDelegable);
 
@@ -595,13 +595,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //   OwnerId`'Owner ID'[User]:s
             //   ParentId`'Parent Account ID'[Account]:s
             Assert.Equal(
-                "*[AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "![AccountSource`'Account Source':s, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':s, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
                 "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, " +
                 "Description`'Account Description':s, Id`'Account ID':s, Industry:s, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last " +
                 "Modified By ID'[User]:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:s, Name`'Account " +
                 "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:s, ParentId`'Parent Account ID'[Account]:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
                 "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
-                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.ToStringWithDisplayNames());
+                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", ((TabularRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
 
             Assert.NotNull(sfTable.Relationships);
             Assert.NotNull(sfTable.Relationships.FieldsWithRelationship);
@@ -677,8 +677,52 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #endif
 
             Assert.NotNull(sfTable._connectorType);
+
+            // SF doesn't use x-ms-releationships extension
             Assert.Null(sfTable._connectorType.Relationships);
+
+            testConnector.SetResponseFromFile(@"Responses\SF GetSchema Users.json");
+            bool b = sfTable.TabularRecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
             
+            Assert.True(b);
+            TabularRecordType userTable = Assert.IsType<TabularRecordType>(ownerIdType);
+
+            Assert.Equal(
+                "![AboutMe`'About Me':s, AccountId`'Account ID'[Account]:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call Center ID':s, City:s, CommunityNickname`Nickname:s, " +
+                "CompanyName`'Company Name':s, ContactId`'Contact ID'[Contact]:s, Country:s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency " +
+                "when Joining Groups':s, DelegatedApproverId`'Delegated Approver ID':s, Department:s, DigestFrequency`'Chatter Email Highlights Frequency':s, Division:s, Email:s, EmailEncodingKey`'Email Encoding':s, EmailPreferencesAutoBcc`AutoBcc:b, " +
+                "EmailPreferencesAutoBccStayInTouch`AutoBccStayInTouch:b, EmailPreferencesStayInTouchReminder`StayInTouchReminder:b, EmployeeNumber`'Employee Number':s, Extension:s, Fax:s, FederationIdentifier`'SAML Federation " +
+                "ID':s, FirstName`'First Name':s, ForecastEnabled`'Allow Forecasting':b, FullPhotoUrl`'Url for full-sized Photo':s, GeocodeAccuracy`'Geocode Accuracy':s, Id`'User ID':s, IsActive`Active:b, IsExtIndicatorVisible`'Show " +
+                "external indicator':b, IsProfilePhotoActive`'Has Profile Photo':b, LanguageLocaleKey`Language:s, LastLoginDate`'Last Login':d, LastModifiedById`'Last Modified By ID'[User]:s, LastModifiedDate`'Last Modified " +
+                "Date':d, LastName`'Last Name':s, LastPasswordChangeDate`'Last Password Change or Reset':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, Latitude:w, LocaleSidKey`Locale:s, " +
+                "Longitude:w, ManagerId`'Manager ID'[User]:s, MediumBannerPhotoUrl`'Url for Android banner photo':s, MediumPhotoUrl`'Url for medium profile photo':s, MiddleName`'Middle Name':s, MobilePhone`Mobile:s, Name`'Full " +
+                "Name':s, OfflinePdaTrialExpirationDate`'Sales Anywhere Trial Expiration Date':d, OfflineTrialExpirationDate`'Offline Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, " +
+                "PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[Profile]:s, ReceivesAdminInfoEmails`'Admin Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email " +
+                "Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url for IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch " +
+                "Email Signature':s, StayInTouchSubject`'Stay-in-Touch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':s, Title:s, UserPermissionsAvantgoUser`'AvantGo " +
+                "User':b, UserPermissionsCallCenterAutoLogin`'Auto-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat " +
+                "User':b, UserPermissionsMarketingUser`'Marketing User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content " +
+                "User':b, UserPermissionsSupportUser`'Service Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDiagnostics`CacheDiagnostics:b, " +
+                "UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b, UserPreferencesDisProfPostCommentEmail`DisProfP" +
+                "ostCommentEmail:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmarkEmail:b, UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, " +
+                "UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`DisableFileShareNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, " +
+                "UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`DisableLikeEmail:b, UserPreferencesDisableMentionsPostEmail`DisableMentionsPostEmail:b, UserPreferencesDisableMessageEmail`DisableMessageEmai" +
+                "l:b, UserPreferencesDisableProfilePostEmail`DisableProfilePostEmail:b, UserPreferencesDisableSharePostEmail`DisableSharePostEmail:b, UserPreferencesEnableAutoSubForFeeds`EnableAutoSubForFeeds:b, UserPreferencesEventRemindersCheckboxDefault`E" +
+                "ventRemindersCheckboxDefault:b, UserPreferencesExcludeMailAppAttachments`ExcludeMailAppAttachments:b, UserPreferencesFavoritesShowTopFavorites`FavoritesShowTopFavorites:b, UserPreferencesFavoritesWTShown`FavoritesWTShown:b, " +
+                "UserPreferencesGlobalNavBarWTShown`GlobalNavBarWTShown:b, UserPreferencesGlobalNavGridMenuWTShown`GlobalNavGridMenuWTShown:b, UserPreferencesHideBiggerPhotoCallout`HideBiggerPhotoCallout:b, UserPreferencesHideCSNDesktopTask`HideCSNDesktopTas" +
+                "k:b, UserPreferencesHideCSNGetChatterMobileTask`HideCSNGetChatterMobileTask:b, UserPreferencesHideChatterOnboardingSplash`HideChatterOnboardingSplash:b, UserPreferencesHideEndUserOnboardingAssistantModal`HideEndUserOnboardingAssistantModal:b" +
+                ", UserPreferencesHideLightningMigrationModal`HideLightningMigrationModal:b, UserPreferencesHideS1BrowserUI`HideS1BrowserUI:b, UserPreferencesHideSecondChatterOnboardingSplash`HideSecondChatterOnboardingSplash:b, " +
+                "UserPreferencesHideSfxWelcomeMat`HideSfxWelcomeMat:b, UserPreferencesLightningExperiencePreferred`LightningExperiencePreferred:b, UserPreferencesPathAssistantCollapsed`PathAssistantCollapsed:b, UserPreferencesPreviewLightning`PreviewLightnin" +
+                "g:b, UserPreferencesRecordHomeReservedWTShown`RecordHomeReservedWTShown:b, UserPreferencesRecordHomeSectionCollapseWTShown`RecordHomeSectionCollapseWTShown:b, UserPreferencesReminderSoundOff`ReminderSoundOff:b, " +
+                "UserPreferencesShowCityToExternalUsers`ShowCityToExternalUsers:b, UserPreferencesShowCityToGuestUsers`ShowCityToGuestUsers:b, UserPreferencesShowCountryToExternalUsers`ShowCountryToExternalUsers:b, UserPreferencesShowCountryToGuestUsers`Show" +
+                "CountryToGuestUsers:b, UserPreferencesShowEmailToExternalUsers`ShowEmailToExternalUsers:b, UserPreferencesShowEmailToGuestUsers`ShowEmailToGuestUsers:b, UserPreferencesShowFaxToExternalUsers`ShowFaxToExternalUsers:b, " +
+                "UserPreferencesShowFaxToGuestUsers`ShowFaxToGuestUsers:b, UserPreferencesShowManagerToExternalUsers`ShowManagerToExternalUsers:b, UserPreferencesShowManagerToGuestUsers`ShowManagerToGuestUsers:b, UserPreferencesShowMobilePhoneToExternalUsers" +
+                "`ShowMobilePhoneToExternalUsers:b, UserPreferencesShowMobilePhoneToGuestUsers`ShowMobilePhoneToGuestUsers:b, UserPreferencesShowPostalCodeToExternalUsers`ShowPostalCodeToExternalUsers:b, UserPreferencesShowPostalCodeToGuestUsers`ShowPostalCo" +
+                "deToGuestUsers:b, UserPreferencesShowProfilePicToGuestUsers`ShowProfilePicToGuestUsers:b, UserPreferencesShowStateToExternalUsers`ShowStateToExternalUsers:b, UserPreferencesShowStateToGuestUsers`ShowStateToGuestUsers:b, " +
+                "UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, " +
+                "UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUsers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, " +
+                "UserPreferencesSortFeedByComment`SortFeedByComment:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:s, UserType`'User Type':s, Username:s]", userTable.ToStringWithDisplayNames());
+
 #pragma warning disable CS0618 // Type or member is obsolete
 
             // Enable IR rewritter to auto-inject ServiceProvider where needed
@@ -731,7 +775,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832384"
             };
 
-            ConnectorTable tabularService = new ConnectorTable("default", "Account");
+            TabularTable tabularService = new TabularTable("default", "Account");
 
             Assert.False(tabularService.IsInitialized);
             Assert.Equal("Account", tabularService.TableName);
@@ -740,7 +784,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await tabularService.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             Assert.True(tabularService.IsInitialized);
 
-            ConnectorTableValue sfTable = tabularService.GetTableValue();
+            TabularTableValue sfTable = tabularService.GetTableValue();
             Assert.True(sfTable._tabularService.IsInitialized);
             Assert.True(sfTable.IsDelegable);
 
@@ -792,10 +836,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
     public static class Exts2
     {
-        public static string ToStringWithDisplayNames(this ConnectorTableValue ctv)
+        public static string ToStringWithDisplayNames(this TabularRecordType trt)
         {
-            string str = ctv.Type.ToStringWithDisplayNames();
-            foreach (ConnectorType field in ctv._connectorType.Fields.Where(ft => ft.ExternalTables != null && ft.ExternalTables.Any()))
+            string str = ((FormulaType)trt).ToStringWithDisplayNames();
+            foreach (ConnectorType field in trt.ConnectorType.Fields.Where(ft => ft.ExternalTables != null && ft.ExternalTables.Any()))
             {
                 string fn = field.Name;
                 if (!string.IsNullOrEmpty(field.DisplayName))

@@ -17,7 +17,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
-using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -1003,7 +1002,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ITabularTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1014,43 +1013,43 @@ namespace Microsoft.PowerFx.Connectors
 
             // Json version to be able to read SalesForce unique properties
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
+            List<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
 
-            if (tableSchema != null)
+            ConnectorPermission tablePermission = tableSchema.GetPermission();
+            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+
+            List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
+
+            if (primaryKeyParts.Count == 0)
             {
-                ConnectorPermission tablePermission = tableSchema.GetPermission();
-                bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
-
-                List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
-
-                if (primaryKeyParts.Count == 0)
-                {
-                    // $$$ need to check what triggers RO for SQL 
-                    //isTableReadOnly = true;
-                }
-
-                connectorType.AddTabularDataSource(new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);
+                // $$$ need to check what triggers RO for SQL 
+                //isTableReadOnly = true;
             }
 
-            // referencedEntities
+            connectorType.AddTabularDataSource(tableResolver, referencedEntities, new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);           
+
+            return connectorType;
+        }
+
+        private static List<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
+        {            
             if (connectorName == "salesforce")
             {
                 // OneToMany relationships that have this table in relation
-                JsonElement je2 = ExtractFromJson(sv, "referencedEntities", out name, out displayName);
-                List<ReferencedEntity> refEntities = je2.Deserialize<Dictionary<string, SalesForceReferencedEntity>>()
-                                                         .Where(kvp => !string.IsNullOrEmpty(kvp.Value.RelationshipName))
-                                                         .Select(kvp => new ReferencedEntity()
-                                                         {
-                                                             FieldName = kvp.Value.Field,
-                                                             RelationshipName = kvp.Value.RelationshipName,
-                                                             TableName = kvp.Value.ChildSObject
-                                                         })
-                                                         .ToList();
-
-                connectorType.AddReferencedEntities(refEntities);
+                JsonElement je2 = ExtractFromJson(sv, "referencedEntities", out _, out _);
+                return je2.Deserialize<Dictionary<string, SalesForceReferencedEntity>>()
+                          .Where(kvp => !string.IsNullOrEmpty(kvp.Value.RelationshipName))
+                          .Select(kvp => new ReferencedEntity()
+                          {
+                              FieldName = kvp.Value.Field,
+                              RelationshipName = kvp.Value.RelationshipName,
+                              TableName = kvp.Value.ChildSObject
+                          })
+                          .ToList();
             }
 
-            return connectorType;
-        }       
+            return null;
+        }
 
         // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Schema_ChildRelationship.htm
         internal class SalesForceReferencedEntity

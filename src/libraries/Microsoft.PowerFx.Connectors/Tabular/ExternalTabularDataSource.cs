@@ -11,11 +11,11 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
-    internal class TabularDataSource : IExternalTabularDataSource
+    internal class ExternalTabularDataSource : IExternalTabularDataSource
     {
-        public TabularDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        public ExternalTabularDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = name;
             ServiceCapabilities = serviceCapabilities;

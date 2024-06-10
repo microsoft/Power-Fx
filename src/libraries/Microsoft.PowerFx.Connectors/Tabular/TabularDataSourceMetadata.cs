@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal class TabularDataSourceMetadata : IDataEntityMetadata
     {

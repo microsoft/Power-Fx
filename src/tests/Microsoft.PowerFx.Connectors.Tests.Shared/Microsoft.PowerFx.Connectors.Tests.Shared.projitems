@@ -203,6 +203,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema Users.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetDatasetsMetadata.json" />

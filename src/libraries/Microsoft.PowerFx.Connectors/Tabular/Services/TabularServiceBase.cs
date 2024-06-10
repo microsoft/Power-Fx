@@ -9,15 +9,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
-    public class ConnectorServiceBase
+    public class TabularServiceBase
     {
-        protected ConnectorServiceBase()
+        protected TabularServiceBase()
         {
         }
 
-        protected internal async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal static async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
             where T : class, new()
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
         }
 
-        protected internal async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal static async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
         {
             cancellationToken.ThrowIfCancellationRequested();
             string log = $"{callingMethod}.{nameof(GetObject)} for {message}, Uri {uri}";
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             }
         }
 
-        protected virtual string DoubleEncode(string param)
+        internal static string DoubleEncode(string param)
         {
             return HttpUtility.UrlEncode(HttpUtility.UrlEncode(param));
         }
