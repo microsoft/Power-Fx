@@ -171,9 +171,9 @@ namespace Microsoft.PowerFx
             {
                 var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
                 
-                if (arg0value is RecordValue rv && arg0value is IMutationCopyField)
+                if (arg0value is RecordValue rv)
                 {
-                    ((IMutationCopyField)rv).ShallowCopyFieldInPlace(rfan.Field);
+                    rv.ShallowCopyFieldInPlace(rfan.Field);
                     rv.UpdateField(rfan.Field, newValue);
                     return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
                 }
@@ -702,9 +702,7 @@ namespace Microsoft.PowerFx
 
             if (node.IRContext.IsMutation)
             {
-                // Records that are not mutable should have been stopped by the compiler before we get here.
-                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
-                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
+                record.ShallowCopyFieldInPlace(node.Field.Value);
             }
 
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
