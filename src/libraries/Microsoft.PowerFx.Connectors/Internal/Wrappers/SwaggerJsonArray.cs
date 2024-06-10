@@ -55,8 +55,15 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public IEnumerator<IOpenApiAny> GetEnumerator()
-        {
-            throw new NotImplementedException();
+        {            
+            List<IOpenApiAny> list = new List<IOpenApiAny>();
+
+            foreach (JsonElement jp in _je.EnumerateArray())
+            {
+                list.Add((IOpenApiAny)jp.ToIOpenApiExtension());
+            }
+
+            return list.GetEnumerator();
         }
 
         public int IndexOf(IOpenApiAny item)

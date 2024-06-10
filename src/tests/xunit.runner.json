@@ -3,5 +3,7 @@
   "methodDisplay": "method",
   "parallelAlgorithm": "aggressive",
   "maxParallelThreads": 0,
-  "diagnosticMessages":  false
+  "diagnosticMessages": false,
+  "parallelizeTestCollections": true,
+  "parallelizeAssembly":  true
 }
