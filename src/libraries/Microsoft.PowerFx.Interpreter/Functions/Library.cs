@@ -1236,6 +1236,10 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(CalendarMonthsLong)
             },
             {
+                BuiltinFunctionsCore.MonthsShort,
+                NoErrorHandling(CalendarMonthsShort)
+            },
+            {
                 BuiltinFunctionsCore.Not,
                 StandardErrorHandling<BooleanValue>(
                     BuiltinFunctionsCore.Not.Name,
@@ -1870,6 +1874,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.WeekdaysLong,
                 NoErrorHandling(CalendarWeekdaysLong)
+            },
+            {
+                BuiltinFunctionsCore.WeekdaysShort,
+                NoErrorHandling(CalendarWeekdaysShort)
             },
             {
                 BuiltinFunctionsCore.WeekNum,

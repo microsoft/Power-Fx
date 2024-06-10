@@ -934,12 +934,33 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
+        private static FormulaValue CalendarMonthsShort(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var rows = Enumerable
+                .Range(1, 12)
+                .Select(month => new DateTime(2024, month, 2).ToString("MMM", runner.CultureInfo).TrimEnd('.'))
+                .Select(monthName => new StringValue(IRContext.NotInSource(FormulaType.String), monthName));
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
+        }
+
         private static FormulaValue CalendarWeekdaysLong(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var anySunday = new DateTime(2024, 6, 2);
             var rows = Enumerable
                 .Range(0, 7)
-                .Select(weekday => anySunday.AddDays(weekday).ToString("DDDD", runner.CultureInfo))
+                .Select(weekday => anySunday.AddDays(weekday).ToString("dddd", runner.CultureInfo))
+                .Select(weekdayName => new StringValue(IRContext.NotInSource(FormulaType.String), weekdayName));
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
+        }
+
+        private static FormulaValue CalendarWeekdaysShort(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var anySunday = new DateTime(2024, 6, 2);
+            var rows = Enumerable
+                .Range(0, 7)
+                .Select(weekday => anySunday.AddDays(weekday).ToString("ddd", runner.CultureInfo).TrimEnd('.'))
                 .Select(weekdayName => new StringValue(IRContext.NotInSource(FormulaType.String), weekdayName));
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
