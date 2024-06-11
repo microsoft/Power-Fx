@@ -27,25 +27,25 @@
     </PackageReference>    
   </ItemGroup>
 
-  <PropertyGroup>    
+  <PropertyGroup>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>8.0.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <TreatWarningsAsErrors Condition="('$(Configuration)' == 'Release') Or ('$(Configuration)' == 'Release462') Or ('$(Configuration)' == 'Release70') Or ('$(Configuration)' == 'ReleaseAll')">true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
-  </PropertyGroup>   
+  </PropertyGroup>
 
-  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" 
-          Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">    
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile"
+          Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" />
     </ItemGroup>
   </Target>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests')) Or $(MSBuildProjectName.EndsWith('.Shims')) Or $(MSBuildProjectName.EndsWith('.Net462'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) Or $(MSBuildProjectName.EndsWith('.Shims')) Or $(MSBuildProjectName.EndsWith('.Net462')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>    
+    <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
