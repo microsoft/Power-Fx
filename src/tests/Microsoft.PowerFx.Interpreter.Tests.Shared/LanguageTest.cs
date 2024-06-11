@@ -376,25 +376,32 @@ namespace Microsoft.PowerFx.Tests
             var weekdaysLongResult = await recalcEngine.EvalAsync("Calendar.WeekdaysLong()", CancellationToken.None, runtimeConfig: runtimeConfig);
             var weekdaysShortResult = await recalcEngine.EvalAsync("Calendar.WeekdaysShort()", CancellationToken.None, runtimeConfig: runtimeConfig);
 
-            var compare = (FormulaValue actual, string expected) =>
+            var tableResultToCSV = (FormulaValue result) =>
             {
-                var tableResult = actual as TableValue;
-                var actualResult = tableResult.Rows
-                    .Select(r => r.Value.GetField("Value"))
-                    .Select(v => (v as StringValue).Value)
-                    .ToArray();
-                var expectedResult = expected.Split(',');
-                Assert.Equal(expectedResult.Length, actualResult.Length);
-                for (var i = 0; i < expectedResult.Length; i++)
-                {
-                    Assert.Equal(expectedResult[i], actualResult[i]);
-                }
+                var tableResult = result as TableValue;
+                var csvResult = string.Join(
+                    ",",
+                    tableResult.Rows
+                        .Select(r => r.Value.GetField("Value"))
+                        .Select(v => (v as StringValue).Value));
+                return csvResult;
             };
 
-            compare(monthsLongResult, monthsLong);
-            compare(monthsShortResult, monthsShort);
-            compare(weekdaysLongResult, weekdaysLong);
-            compare(weekdaysShortResult, weekdaysShort);
+            var allActualResults = string.Format(
+                "{0}|{1}|{2}|{3}",
+                tableResultToCSV(monthsLongResult),
+                tableResultToCSV(monthsShortResult),
+                tableResultToCSV(weekdaysLongResult),
+                tableResultToCSV(weekdaysShortResult));
+            var allExpectedResults = string.Format(
+                "{0}|{1}|{2}|{3}",
+                monthsLong,
+                monthsShort,
+                weekdaysLong,
+                weekdaysShort);
+
+            // Single comparison makes it easier to see all differences in the logs from the lab
+            Assert.Equal(allExpectedResults, allActualResults);
         }
     }
 }
