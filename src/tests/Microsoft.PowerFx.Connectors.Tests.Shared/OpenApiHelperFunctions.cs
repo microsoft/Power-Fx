@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 foreach (var parameter in parameters)
                 {
-                    await jsonSerializer.SerializeValueAsync(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
+                    await jsonSerializer.SerializeValueAsync(parameter.Key, SwaggerSchema.New(parameter.Value.Schema), parameter.Value.Value);
                 }
             }
 

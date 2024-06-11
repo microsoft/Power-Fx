@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public static string ToStringWithDisplayNames(this FormulaType ftype)
         {
             return ftype._type.ToStringWithDisplayNames();
-        }
+        }        
 
         internal static string ToStringWithDisplayNames(this DType dtype)
         {

@@ -284,7 +284,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (isSupported && failOnUnknownExtensions)
             {
-                List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
+                List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is IList<IOpenApiAny> oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
 
                 // Only metadata that can be ignored
                 // https://learn.microsoft.com/en-us/connectors/custom-connectors/certification-submission

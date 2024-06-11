@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (ISwaggerSchema, FormulaValue)> bodyParts = new ();
             Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
             string contentType = null;
 
@@ -327,14 +327,14 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (NamedValue nv in lst)
             {
-                rt = rt.SafeAdd(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
+                rt = rt.Add(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
             }
 
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
+        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (ISwaggerSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValueSerializer serializer = null;
@@ -358,7 +358,7 @@ namespace Microsoft.PowerFx.Connectors
                 };
 
                 serializer.StartSerialization(referenceId);
-                foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
+                foreach (KeyValuePair<string, (ISwaggerSchema Schema, FormulaValue Value)> kv in map)
                 {
                     await serializer.SerializeValueAsync(kv.Key, kv.Value.Schema, kv.Value.Value).ConfigureAwait(false);
                 }
