@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public abstract class TabularService : TabularServiceBase
+    public abstract class CdpService : CdpServiceBase
     {
         private const string NotInitialized = "Tabular service is not initialized.";
 
@@ -23,10 +23,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public abstract ConnectorType ConnectorType { get; }
 
-        public virtual TabularTableValue GetTableValue()
+        public virtual CdpTableValue GetTableValue()
         {
             return IsInitialized
-                ? new TabularTableValue(this, ConnectorType)
+                ? new CdpTableValue(this, ConnectorType)
                 : throw new InvalidOperationException(NotInitialized);
         }
 

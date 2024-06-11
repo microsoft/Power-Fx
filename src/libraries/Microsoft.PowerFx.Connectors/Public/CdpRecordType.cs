@@ -10,15 +10,15 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class TabularRecordType : RecordType
+    internal class CdpRecordType : RecordType
     {
         internal ConnectorType ConnectorType { get; }
 
         internal IList<ReferencedEntity> ReferencedEntities { get; }
 
-        internal ITabularTableResolver TableResolver { get; }
+        internal ICdpTableResolver TableResolver { get; }
 
-        internal TabularRecordType(ConnectorType connectorType, DType recordType, ITabularTableResolver tableResolver, IList<ReferencedEntity> referencedEntities)
+        internal CdpRecordType(ConnectorType connectorType, DType recordType, ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities)
             : base(recordType)
         {
             ConnectorType = connectorType;
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                TabularTableDescriptor ttd = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                CdpTableDescriptor ttd = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 type = ttd.ConnectorType.FormulaType;
                 return true;

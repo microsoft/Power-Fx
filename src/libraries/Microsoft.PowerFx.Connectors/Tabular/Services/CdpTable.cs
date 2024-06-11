@@ -14,14 +14,14 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Implements CDP protocol for Tabular connectors
-    public sealed class TabularTable : TabularService
+    public sealed class CdpTable : CdpService
     {
         public string TableName { get; private set; }
 
         public string DisplayName { get; internal set; }
 
         public string DatasetName { get; private set; }
-        
+
         public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
 
         public override ConnectorType ConnectorType => TabularTableDescriptor.ConnectorType;
@@ -30,19 +30,19 @@ namespace Microsoft.PowerFx.Connectors
 
         internal DatasetMetadata DatasetMetadata;
 
-        internal TabularTableDescriptor TabularTableDescriptor;
+        internal CdpTableDescriptor TabularTableDescriptor;
 
         private string _uriPrefix;
 
-        public TabularTable(string dataset, string table)
+        public CdpTable(string dataset, string table)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
         }
 
-        internal TabularTable(string dataset, string table, DatasetMetadata datasetMetadata)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata)
             : this(dataset, table)
-        { 
+        {
             DatasetMetadata = datasetMetadata;
         }
 
@@ -64,20 +64,20 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            TabularTableResolver tableResolver = new TabularTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
-            SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);           
+            SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            TabularDataSource cds = new TabularDataSource(DatasetName);
+            CdpDataSource cds = new CdpDataSource(DatasetName);
             await cds.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
-            DatasetMetadata = cds.DatasetMetadata ?? throw new InvalidOperationException("Dataset metadata is not available");            
+            DatasetMetadata = cds.DatasetMetadata ?? throw new InvalidOperationException("Dataset metadata is not available");
         }
 
         // TABLE DATA SERVICE - CREATE
@@ -99,9 +99,9 @@ namespace Microsoft.PowerFx.Connectors
                    (_uriPrefix ?? string.Empty) +
                    (_uriPrefix.Contains("/sql/") ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
-            
-            string text = await GetObject(httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);         
-            return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();           
+
+            string text = await GetObject(httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);
+            return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
         }
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)

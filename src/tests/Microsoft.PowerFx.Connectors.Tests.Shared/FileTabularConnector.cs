@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             tabularService.Init();
             Assert.True(tabularService.IsInitialized);
 
-            TabularTableValue fileTable = tabularService.GetTableValue();
+            CdpTableValue fileTable = tabularService.GetTableValue();
             Assert.True(fileTable._tabularService.IsInitialized);
 
             // This one is not delegatable
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
     }
 
-    internal class FileTabularService : TabularService
+    internal class FileTabularService : CdpService
     {
         private readonly string _fileName;
 

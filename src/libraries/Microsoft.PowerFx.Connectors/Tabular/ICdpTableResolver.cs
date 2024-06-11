@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal interface ITabularTableResolver
+    internal interface ICdpTableResolver
     {
         ConnectorLogger Logger { get; }
 
-        Task<TabularTableDescriptor> ResolveTableAsync(string tableName, CancellationToken cancellationToken);
+        Task<CdpTableDescriptor> ResolveTableAsync(string tableName, CancellationToken cancellationToken);
     }
 }

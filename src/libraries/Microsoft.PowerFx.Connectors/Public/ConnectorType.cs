@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
-        internal void AddTabularDataSource(ITabularTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             if (FormulaType is not RecordType)
             {
@@ -270,12 +270,12 @@ namespace Microsoft.PowerFx.Connectors
             // $$$ Hack to enable IExternalTabularDataSource, will be removed later
             if (name.Value.StartsWith("__", StringComparison.OrdinalIgnoreCase))
             {
-                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalTabularDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
                 DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
                 FormulaType = new KnownRecordType(newDType);
             }
 
-            FormulaType = new TabularRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities);
+            FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities);
         }
 
         private void AggregateErrors(ConnectorType[] types)

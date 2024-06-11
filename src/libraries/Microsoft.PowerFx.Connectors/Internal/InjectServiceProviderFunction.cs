@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
 
             // Creation of the table with its context
-            TabularTableValueWithServiceProvider connectorTableWithServiceProvider = new TabularTableValueWithServiceProvider(args[0] as TabularTableValue, context);
+            CdpTableValueWithServiceProvider connectorTableWithServiceProvider = new CdpTableValueWithServiceProvider(args[0] as CdpTableValue, context);
             return Task.FromResult<FormulaValue>(connectorTableWithServiceProvider);
         }
 

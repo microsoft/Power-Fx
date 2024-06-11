@@ -13,16 +13,16 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ExternalTabularDataSource : IExternalTabularDataSource
+    internal class ExternalCdpDataSource : IExternalTabularDataSource
     {
-        public ExternalTabularDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        public ExternalCdpDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = name;
             ServiceCapabilities = serviceCapabilities;
             IsWritable = !isReadOnly;
 
             CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
-            TabularDataSourceMetadata tabularDataSourceMetadata = new TabularDataSourceMetadata(name.Value, datasetName);
+            CdpDataSourceMetadata tabularDataSourceMetadata = new CdpDataSourceMetadata(name.Value, datasetName);
             tabularDataSourceMetadata.LoadClientSemantics();
             metadataProvider.AddSource(name.Value, tabularDataSourceMetadata);
 

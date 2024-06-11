@@ -13,24 +13,24 @@ namespace Microsoft.PowerFx.Connectors
 {
     // Created by TabularService.GetTableValue
     // Doesn't contain any ServiceProvider which is runtime only
-    public class TabularTableValue : TableValue, IRefreshable, IDelegatableTableValue
+    public class CdpTableValue : TableValue, IRefreshable, IDelegatableTableValue
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
-        protected internal readonly TabularService _tabularService;
+        protected internal readonly CdpService _tabularService;
 
         protected internal readonly ConnectorType _connectorType;
 
         public RecordType TabularRecordType => _tabularService?.TabularRecordType;
         
-        public TabularTableValue(TabularService tabularService, ConnectorType connectorType)
-            : base(IRContext.NotInSource(new TabularTableType(tabularService.TableType)))
+        public CdpTableValue(CdpService tabularService, ConnectorType connectorType)
+            : base(IRContext.NotInSource(new CdpTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
             _connectorType = connectorType;           
         }
 
-        internal TabularTableValue(IRContext irContext)
+        internal CdpTableValue(IRContext irContext)
             : base(irContext)
         {
         }

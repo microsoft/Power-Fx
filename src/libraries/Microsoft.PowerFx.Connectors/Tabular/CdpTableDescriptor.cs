@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal readonly struct TabularTableDescriptor
+    internal readonly struct CdpTableDescriptor
     {
         public ConnectorType ConnectorType { get; init; }
 

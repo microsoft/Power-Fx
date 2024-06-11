@@ -8,10 +8,10 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Used in ConnectorTableValue
-    internal class TabularTableType : TableType
+    internal class CdpTableType : TableType
     {
-        public TabularTableType(TableType tableType)
-            : base(new TabularDType(tableType))
+        public CdpTableType(TableType tableType)
+            : base(new CdpDtype(tableType))
         {
         }
 

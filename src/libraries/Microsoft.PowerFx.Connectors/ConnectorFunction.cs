@@ -1002,7 +1002,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ITabularTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };

@@ -11,9 +11,9 @@ using System.Web;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class TabularServiceBase
+    public class CdpServiceBase
     {
-        protected TabularServiceBase()
+        protected CdpServiceBase()
         {
         }
 

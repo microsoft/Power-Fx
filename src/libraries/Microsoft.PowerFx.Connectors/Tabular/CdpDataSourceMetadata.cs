@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Core.UtilityDataStructures;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class TabularDataSourceMetadata : IDataEntityMetadata
+    internal class CdpDataSourceMetadata : IDataEntityMetadata
     {
         public string EntityName { get; private set; }
 
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public IExternalTableDefinition EntityDefinition => throw new NotImplementedException();
 
-        public TabularDataSourceMetadata(string entityName, string datasetName, BidirectionalDictionary<string, string> displayNameMapping = null)
+        public CdpDataSourceMetadata(string entityName, string datasetName, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = entityName;
             DatasetName = datasetName;

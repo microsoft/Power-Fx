@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class TabularDataSource : TabularServiceBase
+    public class CdpDataSource : CdpServiceBase
     {
         public string DatasetName { get; protected set; }
 
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal DatasetMetadata DatasetMetadata { get; private set; }
 
-        public TabularDataSource(string dataset)
+        public CdpDataSource(string dataset)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
         }
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors
             DatasetMetadata = await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, cancellationToken, logger).ConfigureAwait(false);            
         }
         
-        public async Task<IEnumerable<TabularTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             if (DatasetMetadata == null)
             {
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
                 + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, cancellationToken, logger).ConfigureAwait(false);
-            return tables?.Value?.Select(rt => new TabularTable(DatasetName, rt.Name, DatasetMetadata) { DisplayName = rt.DisplayName });
+            return tables?.Value?.Select(rt => new CdpTable(DatasetName, rt.Name, DatasetMetadata) { DisplayName = rt.DisplayName });
         }
     }
 }

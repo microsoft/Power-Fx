@@ -27,6 +27,11 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.CdpDataSource",
+              "Microsoft.PowerFx.Connectors.CdpService",
+              "Microsoft.PowerFx.Connectors.CdpServiceBase",
+              "Microsoft.PowerFx.Connectors.CdpTable",
+              "Microsoft.PowerFx.Connectors.CdpTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
@@ -49,16 +54,9 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
-              "Microsoft.PowerFx.Connectors.ReferencedEntity",
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
-              "Microsoft.PowerFx.Connectors.TabularDataSource",
-              "Microsoft.PowerFx.Connectors.TabularRecordType",              
-              "Microsoft.PowerFx.Connectors.TabularService",
-              "Microsoft.PowerFx.Connectors.TabularServiceBase",
-              "Microsoft.PowerFx.Connectors.TabularTable",              
-              "Microsoft.PowerFx.Connectors.TabularTableValue",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 
