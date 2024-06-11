@@ -25,7 +25,6 @@ namespace Microsoft.PowerFx.Json.Tests
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode.
         /// </summary>       
-
         private static readonly string _baseDirectory = PathJoin(Directory.GetCurrentDirectory(), "TypeSystemTests", "JsonTypeSnapshots");
 
         private static readonly string _typeSnapshotDirectory = RegenerateSnapshots

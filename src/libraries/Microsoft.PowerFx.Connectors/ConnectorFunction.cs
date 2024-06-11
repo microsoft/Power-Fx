@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
@@ -16,7 +17,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
-using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Connectors
                     // field's name correspond to the key of the fhe field in the record, we need to set it to wire it up correctly to the updated record type
                     newFieldType.Name = field.Name;
                     fieldTypes.Add(newFieldType);
-                    recordType = recordType.SafeAdd(field.Name, newFieldType.FormulaType, field.DisplayName);
+                    recordType = recordType.Add(field.Name, newFieldType.FormulaType, field.DisplayName);
                 }
 
                 FormulaType formulaType = connectorType.FormulaType is RecordType ? recordType : recordType.ToTable();
@@ -678,7 +678,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             };
 
-            OpenApiSchema schema = new OpenApiSchema(connectorType.Schema)
+            ISwaggerSchema schema = new SwaggerSchema(connectorType.Schema)
             {
                 Enum = optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiDouble((double)kvp.Value.Object) as IOpenApiAny).ToList()
             };
@@ -689,7 +689,7 @@ namespace Microsoft.PowerFx.Connectors
             schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
 
             // For now, we keep the original formula type (number/string/bool...)
-            return new ConnectorType(schema, openApiParameter, connectorType.FormulaType /* optionSet.FormulaType */);
+            return new ConnectorType(schema, SwaggerParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
         }
 
         /// <summary>
@@ -1002,40 +1002,96 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            OpenApiSchema tableSchema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _);
+            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
             tableCapabilities = tableSchema.GetTableCapabilities();
 
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
-            return GetConnectorTypeInternal(compatibility, je, name, datasetName, tableSchema, tableCapabilities);
+
+            // Json version to be able to read SalesForce unique properties
+            ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
+            connectorType.Name = name;
+            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
+
+            ConnectorPermission tablePermission = tableSchema.GetPermission();
+            bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+
+            List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
+
+            if (primaryKeyParts.Count == 0)
+            {
+                // $$$ need to check what triggers RO for SQL 
+                //isTableReadOnly = true;
+            }
+
+            connectorType.AddTabularDataSource(tableResolver, referencedEntities, new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);           
+
+            return connectorType;
         }
 
-        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je, string name = null, string datasetName = null, OpenApiSchema tableSchema = null, ServiceCapabilities tableCapabilities = null)
+        private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
+        {            
+            if (connectorName == "salesforce")
+            {
+                // OneToMany relationships that have this table in relation
+                JsonElement je2 = ExtractFromJson(sv, "referencedEntities", out _, out _);
+                return je2.Deserialize<Dictionary<string, SalesForceReferencedEntity>>()
+                          .Where(kvp => !string.IsNullOrEmpty(kvp.Value.RelationshipName))
+                          .Select(kvp => new ReferencedEntity()
+                          {
+                              FieldName = kvp.Value.Field,
+                              RelationshipName = kvp.Value.RelationshipName,
+                              TableName = kvp.Value.ChildSObject
+                          })
+                          .ToList();
+            }
+
+            return new List<ReferencedEntity>();
+        }
+
+        // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Schema_ChildRelationship.htm
+        internal class SalesForceReferencedEntity
+        {
+            [JsonPropertyName("cascadeDelete")]
+            public bool CascadeDelete { get; set; }
+
+            [JsonPropertyName("childSObject")]
+            public string ChildSObject { get; set; }
+
+            [JsonPropertyName("deprecatedAndHidden")]
+            public bool DeprecatedAndHidden { get; set; }
+
+            [JsonPropertyName("field")]
+            public string Field { get; set; }
+
+            // ManyToMany
+            [JsonPropertyName("junctionIdListNames")]
+            public IList<string> JunctionIdListNames { get; set; }
+
+            [JsonPropertyName("junctionReferenceTo")]
+            public IList<string> JunctionReferenceTo { get; set; }
+
+            [JsonPropertyName("relationshipName")]
+            public string RelationshipName { get; set; }
+
+            [JsonPropertyName("restrictedDelete")]
+            public bool RestrictedDelete { get; set; }
+        }
+
+        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
         {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
-            ConnectorType connectorType = new ConnectorType(schema, compatibility);
 
-            if (tableSchema != null)
-            {
-                ConnectorPermission tablePermission = tableSchema.GetPermission();
-                bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+            return new ConnectorType(SwaggerSchema.New(schema), compatibility);
+        }
 
-                List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
-
-                if (primaryKeyParts.Count == 0)
-                {
-                    // $$$ need to check what triggers RO for SQL 
-                    //isTableReadOnly = true;
-                }
-
-                connectorType.AddDataSource(new DName(name), datasetName, tableCapabilities, isTableReadOnly);
-            }
-
-            return connectorType;
+        private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
+        {
+            return new ConnectorType(je, compatibility);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -1338,7 +1394,7 @@ namespace Microsoft.PowerFx.Connectors
                     fatalError = true;
                 }
 
-                if (parameter.Schema.TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
+                if (SwaggerSchema.New(parameter.Schema).TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, errorsAndWarnings))
                 {
                     parameterDefaultValues[parameter.Name] = (connectorParameter.ConnectorType.IsRequired, defaultValue, connectorParameter.FormulaType._type);
                 }
