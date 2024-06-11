@@ -1013,7 +1013,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // Json version to be able to read SalesForce unique properties
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
-            List<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
+            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
 
             ConnectorPermission tablePermission = tableSchema.GetPermission();
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
@@ -1031,7 +1031,7 @@ namespace Microsoft.PowerFx.Connectors
             return connectorType;
         }
 
-        private static List<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
+        private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
         {            
             if (connectorName == "salesforce")
             {
@@ -1048,7 +1048,7 @@ namespace Microsoft.PowerFx.Connectors
                           .ToList();
             }
 
-            return null;
+            return new List<ReferencedEntity>();
         }
 
         // https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_Schema_ChildRelationship.htm

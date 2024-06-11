@@ -14,11 +14,11 @@ namespace Microsoft.PowerFx.Connectors
     {
         internal ConnectorType ConnectorType { get; }
 
-        internal List<ReferencedEntity> ReferencedEntities { get; }
+        internal IList<ReferencedEntity> ReferencedEntities { get; }
 
         internal ITabularTableResolver TableResolver { get; }
 
-        internal TabularRecordType(ConnectorType connectorType, DType recordType, ITabularTableResolver tableResolver, List<ReferencedEntity> referencedEntities)
+        internal TabularRecordType(ConnectorType connectorType, DType recordType, ITabularTableResolver tableResolver, IList<ReferencedEntity> referencedEntities)
             : base(recordType)
         {
             ConnectorType = connectorType;

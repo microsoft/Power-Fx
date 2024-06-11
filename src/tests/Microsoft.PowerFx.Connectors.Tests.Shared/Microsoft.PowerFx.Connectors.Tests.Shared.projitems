@@ -44,9 +44,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ExportEmail.eml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language v2.1_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language_Response.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_GetFileContentV2.raw" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_ListRootFolderV3_response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_Paging_Response1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_Paging_Response2.json" />
@@ -59,15 +59,17 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_3.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EmptyResponse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EXO_Response1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EXO_Response2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EXO_Response3.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EXO_Response4.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EXO_Response5.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\EmptyResponse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\HttpCall_1.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Invalid.txt" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\MSNWeather_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\MSNWeather_Response2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office 365 Outlook ExportEmailV2.txt" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office 365 Outlook FindMeetingTimesV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office 365 Outlook FlagV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office 365 Outlook GetEmails.json" />
@@ -126,9 +128,9 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_CalendarPatchItem.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_CalendarPostItem.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetItem.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetItemV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetItems.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetItemsV2.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetItemV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetTable.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactGetTablesV2.json" />
@@ -136,17 +138,19 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactPatchItemV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactPostItem.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ContactPostItemV2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_ExportEmail.eml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_FindMeetingTimes.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_FindMeetingTimesV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_FlagV2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetAttachment.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetAttachmentV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetDataSets.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetDataSetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmail.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmailV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmails.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmailsV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmailsV3.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEmailV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEventsCalendarView.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEventsCalendarViewV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetEventsCalendarViewV3.json" />
@@ -202,8 +206,8 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_ServiceNowReturnType.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetDatasetsMetadata.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema Users.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SP GetDatasetsMetadata.json" />
@@ -227,14 +231,14 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Response2 1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Response2 2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers DB.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server TestAllFunctions.jsonSet" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_GetSuggestionsForChannel.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Teams_GetMessageDetails_InputType.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\TestConnectorDateTimeFormatResponse.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server TestAllFunctions.jsonSet" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Outlook_GetAttachment.png" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Invalid.txt" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office 365 Outlook ExportEmailV2.txt" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_GetFileContentV2.raw" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD GetDatasetsMetadata.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD GetTables.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetRows.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language.json" />
@@ -258,15 +262,15 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PetStore.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SalesForce.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SharePoint.json" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Teams.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
   </ItemGroup>
 </Project>

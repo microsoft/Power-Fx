@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.NotNull(sqlTable._connectorType);
             Assert.Null(sqlTable._connectorType.Relationships);
-            
+
 #pragma warning disable CS0618 // Type or member is obsolete
 
             // Enable IR rewritter to auto-inject ServiceProvider where needed
@@ -466,7 +466,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
             IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             TabularTable connectorTable = tables.First(t => t.DisplayName == "Accounts");
-            
+
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema.json");
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             TabularTableValue sfTable = connectorTable.GetTableValue();
@@ -608,38 +608,38 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("MasterRecordId", sfTable.Relationships.FieldsWithRelationship[0].FieldName);
             Assert.Equal("MasterRecord", sfTable.Relationships.FieldsWithRelationship[0].RelationshipName);
             Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[0].TableName);
-            
+
             Assert.Equal("ParentId", sfTable.Relationships.FieldsWithRelationship[1].FieldName);
             Assert.Equal("Parent", sfTable.Relationships.FieldsWithRelationship[1].RelationshipName);
             Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[1].TableName);
-            
+
             Assert.Equal("OwnerId", sfTable.Relationships.FieldsWithRelationship[2].FieldName);
             Assert.Equal("Owner", sfTable.Relationships.FieldsWithRelationship[2].RelationshipName);
             Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[2].TableName);
-            
+
             Assert.Equal("CreatedById", sfTable.Relationships.FieldsWithRelationship[3].FieldName);
             Assert.Equal("CreatedBy", sfTable.Relationships.FieldsWithRelationship[3].RelationshipName);
             Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[3].TableName);
-            
+
             Assert.Equal("LastModifiedById", sfTable.Relationships.FieldsWithRelationship[4].FieldName);
             Assert.Equal("LastModifiedBy", sfTable.Relationships.FieldsWithRelationship[4].RelationshipName);
             Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[4].TableName);
 
             Assert.NotNull(sfTable.Relationships.ReferencedEntities);
             Assert.Equal(49, sfTable.Relationships.ReferencedEntities.Count);
-            
+
             Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[0].FieldName);
             Assert.Equal("ChildAccounts", sfTable.Relationships.ReferencedEntities[0].RelationshipName);
             Assert.Equal("Account", sfTable.Relationships.ReferencedEntities[0].TableName);
-            
+
             Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[1].FieldName);
             Assert.Equal("AccountContactRelations", sfTable.Relationships.ReferencedEntities[1].RelationshipName);
             Assert.Equal("AccountContactRelation", sfTable.Relationships.ReferencedEntities[1].TableName);
-            
+
             Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[2].FieldName);
             Assert.Equal("AccountContactRoles", sfTable.Relationships.ReferencedEntities[2].RelationshipName);
             Assert.Equal("AccountContactRole", sfTable.Relationships.ReferencedEntities[2].TableName);
-            
+
             Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[3].FieldName);
             Assert.Equal("Feeds", sfTable.Relationships.ReferencedEntities[3].RelationshipName);
             Assert.Equal("AccountFeed", sfTable.Relationships.ReferencedEntities[3].TableName);
@@ -681,7 +681,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema Users.json");
             bool b = sfTable.TabularRecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
-            
+
             Assert.True(b);
             TabularRecordType userTable = Assert.IsType<TabularRecordType>(ownerIdType);
 
@@ -829,6 +829,98 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+        }
+
+        [Fact]
+        public async Task ZD_CdpTabular_GetTables()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "7a82a84f1b454132920a2654b00d45be";
+            string uriPrefix = $"/apim/zendesk/{connectionId}";
+            string jwt = "eyJ0eXAiOiJ...";
+            using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            TabularDataSource cds = new TabularDataSource("default");
+
+            testConnector.SetResponseFromFile(@"Responses\ZD GetDatasetsMetadata.json");
+            await cds.GetDatasetsMetadataAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(cds.DatasetMetadata);
+            Assert.Null(cds.DatasetMetadata.Blob);
+            Assert.Null(cds.DatasetMetadata.DatasetFormat);
+            Assert.Null(cds.DatasetMetadata.Parameters);
+
+            Assert.NotNull(cds.DatasetMetadata.Tabular);
+            Assert.Equal("dataset", cds.DatasetMetadata.Tabular.DisplayName);
+            Assert.Equal("singleton", cds.DatasetMetadata.Tabular.Source);
+            Assert.Equal("table", cds.DatasetMetadata.Tabular.TableDisplayName);
+            Assert.Equal("tables", cds.DatasetMetadata.Tabular.TablePluralName);
+            Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
+
+            // only one network call as we already read metadata
+            testConnector.SetResponseFromFile(@"Responses\ZD GetTables.json");
+            IEnumerable<TabularTable> tables = await cds.GetTablesAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(tables);
+            Assert.Equal(18, tables.Count());
+
+            TabularTable connectorTable = tables.First(t => t.DisplayName == "Users");
+            Assert.Equal("users", connectorTable.TableName);
+            Assert.False(connectorTable.IsInitialized);
+
+            testConnector.SetResponseFromFile(@"Responses\ZD Users GetSchema.json");
+            await connectorTable.InitAsync(client, uriPrefix, CancellationToken.None, logger);
+            Assert.True(connectorTable.IsInitialized);
+
+            TabularTableValue zdTable = connectorTable.GetTableValue();
+            Assert.True(zdTable._tabularService.IsInitialized);
+            Assert.True(zdTable.IsDelegable);
+
+            Assert.Equal(
+                "![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
+                "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((TabularRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
+
+            Assert.NotNull(zdTable.Relationships);
+            Assert.Empty(zdTable.Relationships.FieldsWithRelationship);
+            Assert.Empty(zdTable.Relationships.ReferencedEntities);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+            // Enable IR rewritter to auto-inject ServiceProvider where needed
+            engine.EnableTabularConnectors();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            SymbolValues symbolValues = new SymbolValues().Add("Users", zdTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues)
+                                    .AddService<ConnectorLogger>(logger)
+                                    .AddService<HttpClient>(client);
+
+            // Expression with tabular connector
+            string expr = @"First(Users).name";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Confirm that InjectServiceProviderFunction has properly been added
+            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
+            Assert.Equal(
+                "FieldAccess(First:![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, " +
+                "organization_id:w, phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b](InjectServiceProviderFunction:*[a" +
+                "ctive:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
+                "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b](ResolvedObject('Users:RuntimeValues_XXX'))), " +
+                "name)", ir);
+
+            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\ZD Users GetRows.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            StringValue userName = Assert.IsType<StringValue>(result);
+            Assert.Equal("Ram Sitwat", userName.Value);
         }
     }
 
