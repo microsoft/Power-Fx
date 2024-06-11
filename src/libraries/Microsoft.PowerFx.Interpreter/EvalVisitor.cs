@@ -167,6 +167,22 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
+            if (arg0.IRContext.IsMutation && arg0 is RecordFieldAccessNode rfan)
+            {
+                var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
+                
+                if (arg0value is RecordValue rv)
+                {
+                    rv.ShallowCopyFieldInPlace(rfan.Field);
+                    rv.UpdateField(rfan.Field, newValue);
+                    return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                }
+                else
+                {
+                    return CommonErrors.UnreachableCodeError(node.IRContext);
+                }
+            }
+
             // Binder has already ensured this is a first name node as well as mutable symbol. 
             if (arg0 is ResolvedObjectNode obj)
             {
@@ -686,9 +702,7 @@ namespace Microsoft.PowerFx
 
             if (node.IRContext.IsMutation)
             {
-                // Records that are not mutable should have been stopped by the compiler before we get here.
-                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
-                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
+                record.ShallowCopyFieldInPlace(node.Field.Value);
             }
 
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);

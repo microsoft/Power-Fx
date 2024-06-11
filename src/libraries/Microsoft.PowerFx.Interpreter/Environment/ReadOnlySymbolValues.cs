@@ -13,13 +13,16 @@ namespace Microsoft.PowerFx
     /// Runtime values corresponding to static values described in a <see cref="SymbolTable"/>.
     /// See <see cref="SymbolValues"/> for a mutable derived class. 
     /// </summary>
-    [DebuggerDisplay("{this.GetType().Name}({DebugName})")]
+    [DebuggerDisplay("{this.GetType().Name}({DebugNameWithId})")]
     public abstract class ReadOnlySymbolValues
     {
         private readonly ReadOnlySymbolTable _symbolTable;
 
         // Helper in debugging. Useful when we have multiple symbol tables chained. 
         public string DebugName { get; init; } = "RuntimeValues";
+
+        // Include the hashcodfe as a unique id to tell difference between 2 symbol values that share same name. 
+        public string DebugNameWithId => $"{this.DebugName}_{this.GetHashCode()}";
 
         /// <summary>
         /// Get the symbol table that these values correspond to.
