@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Used in ConnectorTableValue
-    public class TabularTableType : TableType
+    internal class TabularTableType : TableType
     {
         public TabularTableType(TableType tableType)
             : base(new TabularDType(tableType))

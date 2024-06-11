@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public RecordType TabularRecordType => _tabularService?.TabularRecordType;
         
-        public ConnectorRelationships Relationships => new ConnectorRelationships(_connectorType);
+        public TabularRelationships Relationships => new TabularRelationships(_connectorType);
 
         public TabularTableValue(TabularService tabularService, ConnectorType connectorType)
             : base(IRContext.NotInSource(new TabularTableType(tabularService.TableType)))

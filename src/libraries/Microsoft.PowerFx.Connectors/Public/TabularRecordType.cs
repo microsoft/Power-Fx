@@ -53,9 +53,7 @@ namespace Microsoft.PowerFx.Connectors
             catch (Exception ex)
             {
                 TableResolver?.Logger.LogException(ex, $"Cannot resolve external table {tableName}");
-
-                type = null;
-                return false;
+                throw;
             }
         }
 

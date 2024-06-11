@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class ConnectorRelationships
+    public class TabularRelationships
     {
         internal ConnectorType _connectorType;
 
@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
         // External tables having a relationship with this table (could be circular)
         public IList<ReferencedEntity> ReferencedEntities { get; }
         
-        internal ConnectorRelationships(ConnectorType connectorType)
+        internal TabularRelationships(ConnectorType connectorType)
         {
             _connectorType = connectorType;
 
