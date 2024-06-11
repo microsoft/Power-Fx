@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -23,6 +25,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -53,6 +56,13 @@ namespace Microsoft.PowerFx.Core.Functions
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
+
+        public TexlBinding Binding => _binding;
+
+        public bool TryGetExternalDataSource(out IExternalDataSource dataSource)
+        {
+            return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
