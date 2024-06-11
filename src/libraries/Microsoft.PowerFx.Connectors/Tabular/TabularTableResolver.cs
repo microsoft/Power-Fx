@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Connectors
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
+            
             Logger = logger;
         }
 

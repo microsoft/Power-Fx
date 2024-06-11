@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
 
             ConnectorType cr = ConnectorType.Fields.First(ct => ct.Name == name);
 
-            if (!cr.ExternalTables.Any())
+            if (cr.ExternalTables?.Any() != true)
             {
                 return base.TryGetFieldType(name, out type);
             }
@@ -57,24 +57,18 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
         public override bool Equals(object other)
         {
-            if (other is not TabularRecordType otherRecordType)
-            {
-                return false;
-            }
-
-            if (_type.IsLazyType && otherRecordType._type.IsLazyType && _type.IsRecord == otherRecordType._type.IsRecord)
-            {
-                return _type.LazyTypeProvider.BackingFormulaType.Equals(otherRecordType._type.LazyTypeProvider.BackingFormulaType);
-            }
-
-            return _type.Equals(otherRecordType._type);
+            throw new NotImplementedException();
         }
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         public override int GetHashCode()
         {
             return _type.GetHashCode();
         }
+
+        public override string TableSymbolName => ConnectorType.Name;
     }
 }

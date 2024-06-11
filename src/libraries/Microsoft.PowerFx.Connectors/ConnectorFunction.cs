@@ -1013,6 +1013,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // Json version to be able to read SalesForce unique properties
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
+            connectorType.Name = name;
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
 
             ConnectorPermission tablePermission = tableSchema.GetPermission();

@@ -601,48 +601,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
                 "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", ((TabularRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
 
-            Assert.NotNull(sfTable.Relationships);
-            Assert.NotNull(sfTable.Relationships.FieldsWithRelationship);
-            Assert.Equal(5, sfTable.Relationships.FieldsWithRelationship.Count);
-
-            Assert.Equal("MasterRecordId", sfTable.Relationships.FieldsWithRelationship[0].FieldName);
-            Assert.Equal("MasterRecord", sfTable.Relationships.FieldsWithRelationship[0].RelationshipName);
-            Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[0].TableName);
-
-            Assert.Equal("ParentId", sfTable.Relationships.FieldsWithRelationship[1].FieldName);
-            Assert.Equal("Parent", sfTable.Relationships.FieldsWithRelationship[1].RelationshipName);
-            Assert.Equal("Account", sfTable.Relationships.FieldsWithRelationship[1].TableName);
-
-            Assert.Equal("OwnerId", sfTable.Relationships.FieldsWithRelationship[2].FieldName);
-            Assert.Equal("Owner", sfTable.Relationships.FieldsWithRelationship[2].RelationshipName);
-            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[2].TableName);
-
-            Assert.Equal("CreatedById", sfTable.Relationships.FieldsWithRelationship[3].FieldName);
-            Assert.Equal("CreatedBy", sfTable.Relationships.FieldsWithRelationship[3].RelationshipName);
-            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[3].TableName);
-
-            Assert.Equal("LastModifiedById", sfTable.Relationships.FieldsWithRelationship[4].FieldName);
-            Assert.Equal("LastModifiedBy", sfTable.Relationships.FieldsWithRelationship[4].RelationshipName);
-            Assert.Equal("User", sfTable.Relationships.FieldsWithRelationship[4].TableName);
-
-            Assert.NotNull(sfTable.Relationships.ReferencedEntities);
-            Assert.Equal(49, sfTable.Relationships.ReferencedEntities.Count);
-
-            Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[0].FieldName);
-            Assert.Equal("ChildAccounts", sfTable.Relationships.ReferencedEntities[0].RelationshipName);
-            Assert.Equal("Account", sfTable.Relationships.ReferencedEntities[0].TableName);
-
-            Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[1].FieldName);
-            Assert.Equal("AccountContactRelations", sfTable.Relationships.ReferencedEntities[1].RelationshipName);
-            Assert.Equal("AccountContactRelation", sfTable.Relationships.ReferencedEntities[1].TableName);
-
-            Assert.Equal("AccountId", sfTable.Relationships.ReferencedEntities[2].FieldName);
-            Assert.Equal("AccountContactRoles", sfTable.Relationships.ReferencedEntities[2].RelationshipName);
-            Assert.Equal("AccountContactRole", sfTable.Relationships.ReferencedEntities[2].TableName);
-
-            Assert.Equal("ParentId", sfTable.Relationships.ReferencedEntities[3].FieldName);
-            Assert.Equal("Feeds", sfTable.Relationships.ReferencedEntities[3].RelationshipName);
-            Assert.Equal("AccountFeed", sfTable.Relationships.ReferencedEntities[3].TableName);
+            Assert.Equal("Account", sfTable.TabularRecordType.TableSymbolName);
 
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -685,6 +644,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(b);
             TabularRecordType userTable = Assert.IsType<TabularRecordType>(ownerIdType);
 
+            // External relationship table name
+            Assert.Equal("User", userTable.TableSymbolName);
+
             Assert.Equal(
                 "![AboutMe`'About Me':s, AccountId`'Account ID'[Account]:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call Center ID':s, City:s, CommunityNickname`Nickname:s, " +
                 "CompanyName`'Company Name':s, ContactId`'Contact ID'[Contact]:s, Country:s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency " +
@@ -720,6 +682,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, " +
                 "UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUsers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, " +
                 "UserPreferencesSortFeedByComment`SortFeedByComment:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:s, UserType`'User Type':s, Username:s]", userTable.ToStringWithDisplayNames());
+
+            // Missing field
+            b = sfTable.TabularRecordType.TryGetFieldType("XYZ", out FormulaType xyzType);
+            Assert.False(b);
+            Assert.Null(xyzType);
+
+            // Field with no relationship
+            b = sfTable.TabularRecordType.TryGetFieldType("BillingCountry", out FormulaType billingCountryType);
+            Assert.True(b);
+            Assert.Equal("s", billingCountryType._type.ToString());
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -884,10 +856,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 "![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((TabularRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
-
-            Assert.NotNull(zdTable.Relationships);
-            Assert.Empty(zdTable.Relationships.FieldsWithRelationship);
-            Assert.Empty(zdTable.Relationships.ReferencedEntities);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
