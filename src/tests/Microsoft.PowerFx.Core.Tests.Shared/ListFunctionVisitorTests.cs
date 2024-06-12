@@ -31,7 +31,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 var check = engine.Check(expression, options);
                 var checkResult = new CheckResult(engine).SetText(expression, options);
 
-                // Different overloads should produce the same result.
                 var functionsNames1 = check.GetFunctionNames();
                 var functionsNames2 = checkResult.GetFunctionNames();
 
