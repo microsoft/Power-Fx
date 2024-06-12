@@ -709,8 +709,7 @@ namespace Microsoft.PowerFx
 
         public IEnumerable<string> GetFunctionNames()
         {
-            var visitor = ListFunctionVisitor.Run(ApplyParse());
-            return visitor._functionNames.Keys;
+            return ListFunctionVisitor.Run(ApplyParse());
         }
     }
 

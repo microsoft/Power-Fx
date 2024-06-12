@@ -9,13 +9,13 @@ namespace Microsoft.PowerFx.Syntax
     {
         // FullName --> Name 
         // Use Fullname as key because it's unique. 
-        public Dictionary<string, string> _functionNames = new Dictionary<string, string>();
+        private readonly HashSet<string> _functionNames = new HashSet<string>();
 
-        public static ListFunctionVisitor Run(ParseResult parse)
+        public static IEnumerable<string> Run(ParseResult parse)
         {
             var visitor = new ListFunctionVisitor();
             parse.Root.Accept(visitor);
-            return visitor;
+            return visitor._functionNames;
         }
 
         public override bool PreVisit(CallNode node)
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Syntax
                     node.Head.Namespace + "." + name :
                     name;
 
-            _functionNames[fullName] = name;
+            _functionNames.Add(fullName);
 
             return base.PreVisit(node);
         }

@@ -24,20 +24,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     expression = $"={expression}";
                 }
 
-                var options = new ParserOptions() { TextFirst = textFirst };
-
-                var engine = new Engine();
-                var check = engine.Check(expression, options);
-                var checkResult = new CheckResult(engine).SetText(expression, options);
-
-                var functionsNames1 = check.GetFunctionNames();
-                var functionsNames2 = checkResult.GetFunctionNames();
-
-                var actualNames1 = string.Join(",", functionsNames1);
-                var actualNames2 = string.Join(",", functionsNames2);
-
-                Assert.Equal(expectedNames, actualNames1);
-                Assert.Equal(expectedNames, actualNames2);
+                CheckFunctionNames(textFirst, expression, expectedNames);
             }
         }
 
@@ -46,8 +33,19 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("3 ' {} ${Upper(3+3)} \" ${Lower($\"{7+7}\")}", "Upper,Lower")]
         public void ListFunctionNamesTextFirstTest(string expression, string expectedNames)
         {
-            var options = new ParserOptions() { TextFirst = true };
+            CheckFunctionNames(true, expression, expectedNames);
+        }
 
+        [Fact]
+        public void ListFunctionNamesErrorTest()
+        {
+            var checkResult = new CheckResult(new Engine());
+            Assert.Throws<InvalidOperationException>(() => checkResult.GetFunctionNames());
+        }
+
+        private static void CheckFunctionNames(bool textFirst, string expression, string expectedNames)
+        {
+            var options = new ParserOptions() { TextFirst = textFirst };
             var engine = new Engine();
             var check = engine.Check(expression, options);
             var checkResult = new CheckResult(engine).SetText(expression, options);
@@ -60,13 +58,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(expectedNames, actualNames1);
             Assert.Equal(expectedNames, actualNames2);
-        }
-
-        [Fact]
-        public void ListFunctionNamesErrorTest()
-        {
-            var checkResult = new CheckResult(new Engine());
-            Assert.Throws<InvalidOperationException>(() => checkResult.GetFunctionNames());
         }
     }
 }
