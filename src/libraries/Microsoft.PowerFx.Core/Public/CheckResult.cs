@@ -707,7 +707,7 @@ namespace Microsoft.PowerFx
             return summary;
         }
 
-        public IEnumerable<string> GetFunctionNames(bool fullNames = false)
+        public IEnumerable<string> GetFunctionNames(bool fullNames = true)
         {
             var visitor = ListFunctionVisitor.Run(ApplyParse());
             return fullNames ? visitor._functionNames.Keys : visitor._functionNames.Values;

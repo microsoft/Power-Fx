@@ -30,8 +30,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 var check = engine.Check(expression, options);
                 var checkResult = new CheckResult(engine).SetText(expression, options);
 
-                var functionsNames1 = check.GetFunctionNames();
-                var functionsNames2 = checkResult.GetFunctionNames();
+                var functionsNames1 = check.GetFunctionNames(false);
+                var functionsNames2 = checkResult.GetFunctionNames(false);
 
                 var actualNames1 = string.Join(",", functionsNames1);
                 var actualNames2 = string.Join(",", functionsNames2);
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (expectedFullNames != null)
                 {
-                    var functionsFullNames = checkResult.GetFunctionNames(true);
+                    var functionsFullNames = checkResult.GetFunctionNames();
                     var actualFullNames2 = string.Join(",", functionsFullNames);
 
                     Assert.Equal(expectedFullNames, actualFullNames2);
