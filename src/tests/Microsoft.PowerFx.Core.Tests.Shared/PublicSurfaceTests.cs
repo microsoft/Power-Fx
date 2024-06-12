@@ -105,7 +105,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",
                 "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Syntax.TexlVisitor",
-                "Microsoft.PowerFx.Syntax.ListFunctionVisitor",
 
                 // Power Fx Type system and Values. 
                 "Microsoft.PowerFx.Types.AggregateType",

@@ -1,22 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
-using Microsoft.PowerFx.Syntax;
 using Xunit;
 
-namespace Microsoft.PowerFx.Core.Tests.Shared
+namespace Microsoft.PowerFx.Core.Tests
 {
     public class ListFunctionVisitorTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Abs(1)", "Abs")]
-        [InlineData("Abs(Abs(Abs(Abs(Abs(1)))))", "Abs")]
-        [InlineData("With({x:Today()}, x+1)", "With,Today")]
-        [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "SomeNameSpace.Foo,SomeNameSpace.Bar")]
-        [InlineData("true And true", "")]
-        [InlineData("If(true, Blank(),Error())", "If,Blank,Error")]
-        public void ListFuntionsFromParserTests(string expression, string expected)
+        [InlineData("Abs(1)", "Abs", null)]
+        [InlineData("Abs(Abs(Abs(Abs(Abs(1)))))", "Abs", null)]
+        [InlineData("With({x:Today()}, x+1)", "With,Today", null)]
+        [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "Foo,Bar", "SomeNameSpace.Foo,SomeNameSpace.Bar")]
+        [InlineData("true And true", "", null)]
+        [InlineData("If(true, Blank(),Error())", "If,Blank,Error", null)]
+        public void ListFunctionNamesTest(string expression, string expectedNames, string expectedFullNames)
         {
             foreach (var textFirst in new bool[] { false, true })
             {
@@ -28,22 +28,34 @@ namespace Microsoft.PowerFx.Core.Tests.Shared
                 var options = new ParserOptions() { TextFirst = textFirst };
 
                 var engine = new Engine();
-                var parse = engine.Parse(expression, options);
-                var check = engine.Check(parse);
+                var check = engine.Check(expression, options);
+                var checkResult = new CheckResult(engine).SetText(expression, options);
 
                 // Different overloads should produce the same result.
-                var functionsList1 = ListFunctionVisitor.Run(parse);
-                var functionsList2 = ListFunctionVisitor.Run(check);
-                var functionsList3 = ListFunctionVisitor.Run(expression, options);
+                var functionsNames1 = check.GetFunctionNames();
+                var functionsNames2 = checkResult.GetFunctionNames();
 
-                var actualStr1 = string.Join(",", functionsList1._functionNames.Select(n => n.Key));
-                var actualStr2 = string.Join(",", functionsList2._functionNames.Select(n => n.Key));
-                var actualStr3 = string.Join(",", functionsList3._functionNames.Select(n => n.Key));
+                var actualNames1 = string.Join(",", functionsNames1);
+                var actualNames2 = string.Join(",", functionsNames2);
 
-                Assert.Equal(expected, actualStr1);
-                Assert.Equal(expected, actualStr2);
-                Assert.Equal(expected, actualStr3);
+                Assert.Equal(expectedNames, actualNames1);
+                Assert.Equal(expectedNames, actualNames2);
+
+                if (expectedFullNames != null)
+                {
+                    var functionsFullNames = checkResult.GetFunctionNames(true);
+                    var actualFullNames2 = string.Join(",", functionsFullNames);
+
+                    Assert.Equal(expectedFullNames, actualFullNames2);
+                }
             }
+        }
+
+        [Fact]
+        public void ListFunctionNamesErrorTest()
+        {
+            var checkResult = new CheckResult(new Engine());
+            Assert.Throws<InvalidOperationException>(() => checkResult.GetFunctionNames());
         }
     }
 }

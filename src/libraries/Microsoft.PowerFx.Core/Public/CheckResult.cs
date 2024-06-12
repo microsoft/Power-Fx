@@ -706,6 +706,12 @@ namespace Microsoft.PowerFx
 
             return summary;
         }
+
+        public IEnumerable<string> GetFunctionNames(bool fullNames = false)
+        {
+            var visitor = ListFunctionVisitor.Run(ApplyParse());
+            return fullNames ? visitor._functionNames.Keys : visitor._functionNames.Values;
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract
