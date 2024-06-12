@@ -707,10 +707,10 @@ namespace Microsoft.PowerFx
             return summary;
         }
 
-        public IEnumerable<string> GetFunctionNames(bool fullNames = true)
+        public IEnumerable<string> GetFunctionNames()
         {
             var visitor = ListFunctionVisitor.Run(ApplyParse());
-            return fullNames ? visitor._functionNames.Keys : visitor._functionNames.Values;
+            return visitor._functionNames.Keys;
         }
     }
 

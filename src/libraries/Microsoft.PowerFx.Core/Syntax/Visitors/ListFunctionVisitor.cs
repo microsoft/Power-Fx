@@ -7,8 +7,6 @@ namespace Microsoft.PowerFx.Syntax
 {
     internal class ListFunctionVisitor : IdentityTexlVisitor
     {
-        public HashSet<string> _functionNamespaces = new HashSet<string>();
-
         // FullName --> Name 
         // Use Fullname as key because it's unique. 
         public Dictionary<string, string> _functionNames = new Dictionary<string, string>();
@@ -23,11 +21,6 @@ namespace Microsoft.PowerFx.Syntax
         public override bool PreVisit(CallNode node)
         {
             var hasNamespace = node.Head.Namespace.Length > 0;
-
-            if (hasNamespace)
-            {
-                _functionNamespaces.Add(node.Head.Namespace.ToString());
-            }
 
             var name = node.Head.Name;
             var fullName = hasNamespace ?

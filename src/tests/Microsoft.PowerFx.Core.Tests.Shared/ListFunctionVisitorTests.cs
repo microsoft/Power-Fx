@@ -9,13 +9,13 @@ namespace Microsoft.PowerFx.Core.Tests
     public class ListFunctionVisitorTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Abs(1)", "Abs", null)]
-        [InlineData("Abs(Abs(Abs(Abs(Abs(1)))))", "Abs", null)]
-        [InlineData("With({x:Today()}, x+1)", "With,Today", null)]
-        [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "Foo,Bar", "SomeNameSpace.Foo,SomeNameSpace.Bar")]
-        [InlineData("true And true", "", null)]
-        [InlineData("If(true, Blank(),Error())", "If,Blank,Error", null)]
-        public void ListFunctionNamesTest(string expression, string expectedNames, string expectedFullNames)
+        [InlineData("Abs(1)", "Abs")]
+        [InlineData("Abs(Abs(Abs(Abs(Abs(1)))))", "Abs")]
+        [InlineData("With({x:Today()}, x+1)", "With,Today")]
+        [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "SomeNameSpace.Foo,SomeNameSpace.Bar")]
+        [InlineData("true And true", "")]
+        [InlineData("If(true, Blank(),Error())", "If,Blank,Error")]
+        public void ListFunctionNamesTest(string expression, string expectedNames)
         {
             foreach (var textFirst in new bool[] { false, true })
             {
@@ -30,23 +30,36 @@ namespace Microsoft.PowerFx.Core.Tests
                 var check = engine.Check(expression, options);
                 var checkResult = new CheckResult(engine).SetText(expression, options);
 
-                var functionsNames1 = check.GetFunctionNames(false);
-                var functionsNames2 = checkResult.GetFunctionNames(false);
+                var functionsNames1 = check.GetFunctionNames();
+                var functionsNames2 = checkResult.GetFunctionNames();
 
                 var actualNames1 = string.Join(",", functionsNames1);
                 var actualNames2 = string.Join(",", functionsNames2);
 
                 Assert.Equal(expectedNames, actualNames1);
                 Assert.Equal(expectedNames, actualNames2);
-
-                if (expectedFullNames != null)
-                {
-                    var functionsFullNames = checkResult.GetFunctionNames();
-                    var actualFullNames2 = string.Join(",", functionsFullNames);
-
-                    Assert.Equal(expectedFullNames, actualFullNames2);
-                }
             }
+        }
+
+        [Theory]
+        [InlineData("Hello ${Sum(1,Sqrt(2))} world", "Sum,Sqrt")]
+        [InlineData("3 ' {} ${Upper(3+3)} \" ${Lower($\"{7+7}\")}", "Upper,Lower")]
+        public void ListFunctionNamesTextFirstTest(string expression, string expectedNames)
+        {
+            var options = new ParserOptions() { TextFirst = true };
+
+            var engine = new Engine();
+            var check = engine.Check(expression, options);
+            var checkResult = new CheckResult(engine).SetText(expression, options);
+
+            var functionsNames1 = check.GetFunctionNames();
+            var functionsNames2 = checkResult.GetFunctionNames();
+
+            var actualNames1 = string.Join(",", functionsNames1);
+            var actualNames2 = string.Join(",", functionsNames2);
+
+            Assert.Equal(expectedNames, actualNames1);
+            Assert.Equal(expectedNames, actualNames2);
         }
 
         [Fact]
