@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -244,13 +244,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return await new CollectProcess().Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 
     internal class CollectProcess
     {
-        internal async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        internal static async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             FormulaValue arg0;
             var argc = args.Length;
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (resultRows.Count == 0)
             {
-                return FormulaValue.NewBlank(arg0.Type);
+                return FormulaValue.NewBlank(irContext);
             }
 
             if (irContext._type.IsTable)

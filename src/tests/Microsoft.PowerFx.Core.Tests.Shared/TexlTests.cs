@@ -142,6 +142,16 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Collect(t1, Table({a:1}))", "*[a:w, b:s]", false)]
         [InlineData("Collect(t2, 2)", "*[Value:w]", false)]
         [InlineData("Collect(t2, 2, 3, 4)", "*[Value:w]", false)]
+
+        [InlineData("ClearCollect(t1, {a:1})", "![a:w, b:s]")]
+        [InlineData("ClearCollect(t1, {a:1},{a:2})", "*[a:w, b:s]")]
+        [InlineData("ClearCollect(t1, Table({a:1}))", "*[a:w, b:s]")]
+        [InlineData("ClearCollect(t2, 2, 3, 4)", "*[Value:w]")]
+        [InlineData("ClearCollect(t1, {a:1})", "*[a:w, b:s]", false)]
+        [InlineData("ClearCollect(t1, {a:1},{a:2})", "*[a:w, b:s]", false)]
+        [InlineData("ClearCollect(t1, Table({a:1}))", "*[a:w, b:s]", false)]
+        [InlineData("ClearCollect(t2, 2)", "*[Value:w]", false)]
+        [InlineData("ClearCollect(t2, 2, 3, 4)", "*[Value:w]", false)]
         public void TexlMutationFunctionsV1Tests(string expression, string expectedType, bool isPFxV1 = true)
         {
             var engine = new Engine(new PowerFxConfig(isPFxV1 ? Features.PowerFxV1 : Features.None));
@@ -152,10 +162,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             engine.Config.SymbolTable.AddFunction(new CollectFunction());
             engine.Config.SymbolTable.AddFunction(new CollectScalarFunction());
-            engine.Config.SymbolTable.AddFunction(new PatchFunction());
-            engine.Config.SymbolTable.AddFunction(new PatchSingleRecordFunction());
-            engine.Config.SymbolTable.AddFunction(new PatchAggregateFunction());
-            engine.Config.SymbolTable.AddFunction(new PatchAggregateSingleTableFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectFunction());
+            engine.Config.SymbolTable.AddFunction(new ClearCollectScalarFunction());
+            
             engine.Config.SymbolTable.AddVariable("t1", FormulaType.Build(expectedDType), mutable: true);
             engine.Config.SymbolTable.AddVariable("t2", FormulaType.Build(expectedDTypeScalar), mutable: true);
 

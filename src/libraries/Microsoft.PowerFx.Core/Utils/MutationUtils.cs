@@ -70,44 +70,5 @@ namespace Microsoft.PowerFx.Core.Utils
                 return;
             }
         }
-
-        public static string GetScalarSingleColumnNameForType(Features features, DKind kind)
-        {
-            return kind switch
-            {
-                DKind.Image or
-                DKind.Hyperlink or
-                DKind.Media or
-                DKind.Blob or
-                DKind.PenImage => features.ConsistentOneColumnTableResult ? TableValue.ValueName : "Url",
-
-                _ => TableValue.ValueName
-            };
-        }
-
-        public static List<IntermediateNode> CreateIRCallNodeCollect(CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
-        {
-            var newArgs = new List<IntermediateNode>() { args[0] };
-
-            foreach (var arg in args.Skip(1))
-            {
-                if (arg.IRContext.ResultType._type.IsPrimitive)
-                {
-                    newArgs.Add(
-                        new RecordNode(
-                            new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)),
-                            new Dictionary<DName, IntermediateNode>
-                            {
-                                { TableValue.ValueDName, arg }
-                            }));
-                }
-                else
-                {
-                    newArgs.Add(arg);
-                }
-            }
-
-            return newArgs;
-        }
     }
 }

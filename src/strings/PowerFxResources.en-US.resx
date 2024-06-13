@@ -3146,8 +3146,8 @@
     <comment>Display text representing the Contrast value of TeamsTheme enum (TeamsTheme_Contrast_Name). The possible values for this enumeration are: Default, Dark, Contrast.</comment>
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified 'collection'. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
-    <comment>Description of 'Collect' function.</comment>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <comment>{Locked=Collect(collection, source_collection)} {Locked=Collect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'Collect' function.</comment>
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
@@ -3168,8 +3168,8 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified 'collection'. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
-    <comment>Description of 'ClearCollect' function.</comment>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <comment>{Locked=ClearCollect(collection, source_collection)} {Locked=ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'ClearCollect' function.</comment>
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
     <value>A new or existing collection to augment.</value>
@@ -4628,7 +4628,7 @@
       It's used to determine how to combine multiple expressions with the same name and operator.</comment>
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The data source that you want to add data to.</value>
+    <value>The datasource to add data to.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
     <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>

@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -116,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argType;
         }
 
-        private bool TryGetUnifiedCollectedTypeCanvas(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -176,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Attempt to get the unified schema of the items being collected by an invocation.
-        private bool TryGetUnifiedCollectedTypeV1(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeDontAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -265,13 +266,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Get the unified collected type on the RHS. This will generate appropriate
             // document errors for invalid arguments such as unsupported aggregate types.
-            if (context.Features.PowerFxV1CompatibilityRules && !context.AnalysisMode)
+            if (context.AnalysisMode)
             {
-                fValid &= TryGetUnifiedCollectedTypeV1(args, argTypes, errors, context.Features, out collectedType);
+                fValid &= TryGetUnifiedCollectedTypeAllowTypeExpansion(args, argTypes, errors, context.Features, out collectedType);
             }
             else
             {
-                fValid &= TryGetUnifiedCollectedTypeCanvas(args, argTypes, errors, context.Features, out collectedType);
+                fValid &= TryGetUnifiedCollectedTypeDontAllowTypeExpansion(args, argTypes, errors, context.Features, out collectedType);
             }
 
             Contracts.Assert(collectedType.IsTable);
@@ -415,7 +416,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.Assert(dKind >= DKind._Min && dKind < DKind._Lim);
 
-            return MutationUtils.GetScalarSingleColumnNameForType(features, dKind);
+            return GetScalarSingleColumnNameForType(features, dKind);
+        }
+
+        protected static string GetScalarSingleColumnNameForType(Features features, DKind kind)
+        {
+            return kind switch
+            {
+                DKind.Image or
+                DKind.Hyperlink or
+                DKind.Media or
+                DKind.Blob or
+                DKind.PenImage => features.ConsistentOneColumnTableResult ? TableValue.ValueName : "Url",
+
+                _ => TableValue.ValueName
+            };
+        }
+
+        protected static List<IntermediateNode> CreateIRCallNodeCollect(CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
+        {
+            var newArgs = new List<IntermediateNode>() { args[0] };
+
+            foreach (var arg in args.Skip(1))
+            {
+                if (arg.IRContext.ResultType._type.IsPrimitive)
+                {
+                    newArgs.Add(
+                        new RecordNode(
+                            new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)),
+                            new Dictionary<DName, IntermediateNode>
+                            {
+                                { TableValue.ValueDName, arg }
+                            }));
+                }
+                else
+                {
+                    newArgs.Add(arg);
+                }
+            }
+
+            return newArgs;
         }
     }
 
@@ -440,7 +480,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            return base.CreateIRCallNode(node, context, MutationUtils.CreateIRCallNodeCollect(node, context, args, scope), scope);
+            return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
         }
     }
 
@@ -486,7 +526,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
-            return base.CreateIRCallNode(node, context, MutationUtils.CreateIRCallNodeCollect(node, context, args, scope), scope);
+            return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
         }
     }
 }

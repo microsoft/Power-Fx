@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx
                 _globals = globals,
                 _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters,
-                _additionalFunctions = result.Engine.Config.AdditionalFunctions,
+                _additionalFunctions = result.Engine.Config.AdditionalFunctions
             };
 
             return expr;
