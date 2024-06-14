@@ -41,6 +41,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool SupportsParamCoercion => true;
 
+        private const int MaxParameterCount = 30;
+
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
@@ -224,7 +226,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
-                if (udf.Args.Count > 30)
+                if (udf.Args.Count > MaxParameterCount)
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName));
                     continue;
