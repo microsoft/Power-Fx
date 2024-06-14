@@ -50,6 +50,12 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new CollectScalarImpl());
         }
 
+        [Obsolete("FileFunctions are still in preview.")]
+        public static void EnableFileFunctions(this SymbolTable symbolTable)
+        {
+            symbolTable.AddFunction(new FileInfoFunctionImpl());
+        }
+
         [Obsolete("RegEx is still in preview. Grammar may change.")]
         public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {

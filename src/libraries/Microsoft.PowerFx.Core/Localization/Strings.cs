@@ -482,6 +482,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
         public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
 
+        public static StringGetter AboutFileInfo = (b) => StringResources.Get("AboutFileInfo", b);
+        public static StringGetter FileInfoArg1 = (b) => StringResources.Get("FileInfoArg1", b);
+
         public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);

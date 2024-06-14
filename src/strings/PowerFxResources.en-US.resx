@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>A percentage (or column of percentage values) by which the color (or column of color values) will be faded. A negative percentage produces a darker shade. A positive percentage produces a lighter shade.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    <comment>Description of 'FileInfo' function.</comment>
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    <comment>function_parameter - First argument to the FileInfo function.</comment>
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returns the absolute value of a number, a number without its sign.</value>
     <comment>Description of 'Abs' function.</comment>
