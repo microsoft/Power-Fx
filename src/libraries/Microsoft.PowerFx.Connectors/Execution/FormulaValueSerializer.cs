@@ -63,12 +63,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _utcConverter = utcConverter;
         }
 
-        internal async Task SerializeValueAsync(string paramName, OpenApiSchema schema, FormulaValue value)
+        internal async Task SerializeValueAsync(string paramName, ISwaggerSchema schema, FormulaValue value)
         {
             await WritePropertyAsync(paramName, schema, value).ConfigureAwait(false);
         }
 
-        private async Task WriteObjectAsync(string objectName, OpenApiSchema schema, IEnumerable<NamedValue> fields)
+        private async Task WriteObjectAsync(string objectName, ISwaggerSchema schema, IEnumerable<NamedValue> fields)
         {
             StartObject(objectName);
 
@@ -100,9 +100,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 {
                     await WritePropertyAsync(
                         nv.Name,
-                        new OpenApiSchema()
-                        {
-                            Type = nv.Value.Type._type.Kind switch
+                        new SwaggerSchema(
+                            type: nv.Value.Type._type.Kind switch
                             {
                                 DKind.Number => "number",
                                 DKind.Decimal => "number",
@@ -112,8 +111,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 DKind.Table => "array",
                                 DKind.ObjNull => "null",
                                 _ => "unknown_dkind"
-                            }
-                        },
+                            }, 
+                            format: null),
                         nv.Value).ConfigureAwait(false);
                 }
             }
@@ -121,7 +120,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             EndObject(objectName);
         }
 
-        private async Task WritePropertyAsync(string propertyName, OpenApiSchema propertySchema, FormulaValue fv)
+        private async Task WritePropertyAsync(string propertyName, ISwaggerSchema propertySchema, FormulaValue fv)
         {
             if (fv is BlankValue || fv is ErrorValue)
             {
@@ -134,7 +133,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
 
             // if connector has null as a type but "array" is provided, let's write it down. this is possible in case of x-ms-dynamic-properties
-            if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array")) 
+            if (fv is TableValue tableValue && ((propertySchema.Type ?? "array") == "array"))
             {
                 StartArray(propertyName);
 
@@ -254,8 +253,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         WriteDateValue(dv.GetConvertedValue(null));
                     }
                     else if (fv is BlobValue bv)
-                    {                        
-                        await WriteBlobValueAsync(bv).ConfigureAwait(false);                                                
+                    {
+                        await WriteBlobValueAsync(bv).ConfigureAwait(false);
                     }
                     else
                     {

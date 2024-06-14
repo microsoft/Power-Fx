@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -15,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public FormulaValue DefaultValue { get; }
 
-        internal OpenApiSchema Schema { get; }
+        internal ISwaggerSchema Schema { get; }
 
         internal ConnectorExtensions ConnectorExtensions { get; }
 
@@ -31,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
         
-        internal ConnectorSchema(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;

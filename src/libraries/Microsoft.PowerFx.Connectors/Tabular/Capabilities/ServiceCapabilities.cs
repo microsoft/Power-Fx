@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
-using Microsoft.PowerFx.Connectors.Tabular.Capabilities;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
@@ -17,7 +16,7 @@ using Microsoft.PowerFx.Core.Utils;
 // src/Language/PowerFx.Dataverse.Parser/Importers/DataDescription/ServiceCapabilities.cs
 // </summary>
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal sealed class ServiceCapabilities : IColumnsCapabilities
     {
@@ -137,7 +136,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
         }
 
         // From PowerApps-Client repo, src\AppMagic\dll\AuthoringCore\Importers\DataDescription\ServiceCapabilitiesParser.cs
-        public static ServiceCapabilities ParseTableCapabilities(OpenApiObject capabilitiesMetaData)
+        public static ServiceCapabilities ParseTableCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             FilterRestriction filterRestriction = ParseFilterRestriction(capabilitiesMetaData);
             SortRestriction sortRestriction = ParseSortRestriction(capabilitiesMetaData);
@@ -157,54 +156,54 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion);
         }
 
-        private static FilterRestriction ParseFilterRestriction(OpenApiObject capabilitiesMetaData)
+        private static FilterRestriction ParseFilterRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject filterRestritionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.FilterRestrictions);
+            IDictionary<string, IOpenApiAny> filterRestritionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.FilterRestrictions);
             return filterRestritionMetaData?.GetBool(CapabilityConstants.Filterable) == true
                         ? new FilterRestriction(filterRestritionMetaData.GetList(CapabilityConstants.FilterRequiredProperties), filterRestritionMetaData.GetList(CapabilityConstants.NonFilterableProperties))
                         : null;
         }
 
-        private static SortRestriction ParseSortRestriction(OpenApiObject capabilitiesMetaData)
+        private static SortRestriction ParseSortRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
+            IDictionary<string, IOpenApiAny> sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
                         ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
                         : null;
         }
 
-        private static SelectionRestriction ParseSelectionRestriction(OpenApiObject capabilitiesMetaData)
+        private static SelectionRestriction ParseSelectionRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject selectRestrictionsMetadata = capabilitiesMetaData.GetObject(CapabilityConstants.SelectionRestriction);
+            IDictionary<string, IOpenApiAny> selectRestrictionsMetadata = capabilitiesMetaData.GetObject(CapabilityConstants.SelectionRestriction);
             return selectRestrictionsMetadata == null
                         ? null
                         : new SelectionRestriction(selectRestrictionsMetadata.GetBool(CapabilityConstants.Selectable, "selectable property is mandatory and not found."));
         }
 
-        private static GroupRestriction ParseGroupRestriction(OpenApiObject capabilitiesMetaData)
+        private static GroupRestriction ParseGroupRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
-            OpenApiObject groupRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.GroupRestriction);
+            IDictionary<string, IOpenApiAny> groupRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.GroupRestriction);
             return groupRestrictionMetaData == null
                         ? null
                         : new GroupRestriction(groupRestrictionMetaData.GetList(CapabilityConstants.UngroupableProperties));
         }
 
-        internal static string[] ParseFilterFunctions(OpenApiObject capabilitiesMetaData)
+        internal static string[] ParseFilterFunctions(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetArray(CapabilityConstants.FilterFunctions);
         }
 
-        private static string[] ParseFilterSupportedFunctions(OpenApiObject capabilitiesMetaData)
+        private static string[] ParseFilterSupportedFunctions(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetArray(CapabilityConstants.FilterFunctionSupport);
         }
 
-        private static PagingCapabilities ParsePagingCapabilities(OpenApiObject capabilitiesMetaData)
+        private static PagingCapabilities ParsePagingCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return new PagingCapabilities(capabilitiesMetaData.GetBool(CapabilityConstants.IsOnlyServerPagable), capabilitiesMetaData.GetArray(CapabilityConstants.ServerPagingOptions));
         }
 
-        private static bool ParseRecordPermissionCapabilities(OpenApiObject capabilitiesMetaData)
+        private static bool ParseRecordPermissionCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetBool(CapabilityConstants.SupportsRecordPermission);
         }

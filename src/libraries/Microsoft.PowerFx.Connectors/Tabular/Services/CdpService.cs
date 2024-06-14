@@ -7,13 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
-    public abstract class TabularService : ConnectorServiceBase
+    public abstract class CdpService : CdpServiceBase
     {
         private const string NotInitialized = "Tabular service is not initialized.";
 
-        public TableType TableType { get; private set; } = null;
+        public TableType TableType => TabularRecordType?.ToTable();
+
+        public RecordType TabularRecordType { get; private set; } = null;
 
         public bool IsInitialized => TableType != null;
 
@@ -21,16 +23,16 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public abstract ConnectorType ConnectorType { get; }
 
-        public virtual ConnectorTableValue GetTableValue()
+        public virtual CdpTableValue GetTableValue()
         {
             return IsInitialized
-                ? new ConnectorTableValue(this, ConnectorType)
+                ? new CdpTableValue(this, ConnectorType)
                 : throw new InvalidOperationException(NotInitialized);
         }
 
-        protected void SetTableType(RecordType recordType)
+        protected void SetRecordType(RecordType recordType)
         {
-            TableType = recordType?.ToTable();
+            TabularRecordType = recordType;
         }
 
         // TABLE METADATA SERVICE

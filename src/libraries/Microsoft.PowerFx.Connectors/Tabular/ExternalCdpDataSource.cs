@@ -11,18 +11,18 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
-    internal class TabularDataSource : IExternalTabularDataSource
+    internal class ExternalCdpDataSource : IExternalTabularDataSource
     {
-        public TabularDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        public ExternalCdpDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = name;
             ServiceCapabilities = serviceCapabilities;
             IsWritable = !isReadOnly;
 
             CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
-            TabularDataSourceMetadata tabularDataSourceMetadata = new TabularDataSourceMetadata(name.Value, datasetName);
+            CdpDataSourceMetadata tabularDataSourceMetadata = new CdpDataSourceMetadata(name.Value, datasetName);
             tabularDataSourceMetadata.LoadClientSemantics();
             metadataProvider.AddSource(name.Value, tabularDataSourceMetadata);
 
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public DataSourceKind Kind => DataSourceKind.Connected;
 
-        public IExternalTableMetadata TableMetadata => throw new NotImplementedException();
+        public IExternalTableMetadata TableMetadata => null; /* _tableMetadata; */
 
         public IDelegationMetadata DelegationMetadata => throw new NotImplementedException();
 
@@ -70,29 +70,17 @@ namespace Microsoft.PowerFx.Connectors.Tabular
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping { get; protected set; }
 
-        public bool CanIncludeExpand(IExpandInfo expandToAdd)
-        {
-            throw new NotImplementedException();
-        }
+        public bool CanIncludeExpand(IExpandInfo expandToAdd) => true;
 
-        public bool CanIncludeExpand(IExpandInfo parentExpandInfo, IExpandInfo expandToAdd)
-        {
-            throw new NotImplementedException();
-        }
+        public bool CanIncludeExpand(IExpandInfo parentExpandInfo, IExpandInfo expandToAdd) => true;
 
-        public bool CanIncludeSelect(string selectColumnName)
-        {
-            throw new NotImplementedException();
-        }
+        public bool CanIncludeSelect(string selectColumnName) => TableMetadata != null; /* && TableMetadata.CanIncludeSelect(selectColumnName);*/
 
-        public bool CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName)
-        {
-            throw new NotImplementedException();
-        }
+        public bool CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName) => true;
 
         public IReadOnlyList<string> GetKeyColumns()
-        {
-            throw new NotImplementedException();
+        {            
+            return /*TableMetadata?.KeyColumns ??*/ new List<string>();
         }
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)

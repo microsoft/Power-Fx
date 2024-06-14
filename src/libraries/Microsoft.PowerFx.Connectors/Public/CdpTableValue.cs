@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Connectors.Tabular;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -14,22 +13,24 @@ namespace Microsoft.PowerFx.Connectors
 {
     // Created by TabularService.GetTableValue
     // Doesn't contain any ServiceProvider which is runtime only
-    public class ConnectorTableValue : TableValue, IRefreshable, IDelegatableTableValue
+    public class CdpTableValue : TableValue, IRefreshable, IDelegatableTableValue
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
-        protected internal readonly TabularService _tabularService;
+        protected internal readonly CdpService _tabularService;
 
         protected internal readonly ConnectorType _connectorType;
 
-        public ConnectorTableValue(TabularService tabularService, ConnectorType connectorType)
-            : base(IRContext.NotInSource(new ConnectorTableType(tabularService.TableType)))
+        public RecordType TabularRecordType => _tabularService?.TabularRecordType;
+        
+        public CdpTableValue(CdpService tabularService, ConnectorType connectorType)
+            : base(IRContext.NotInSource(new CdpTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
-            _connectorType = connectorType;
+            _connectorType = connectorType;           
         }
 
-        internal ConnectorTableValue(IRContext irContext)
+        internal CdpTableValue(IRContext irContext)
             : base(irContext)
         {
         }
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
             var rows = await _tabularService.GetItemsAsync(services, op, cancel).ConfigureAwait(false);
 
             return rows;
-        }
+        }        
     }   
 
     internal static class ODataParametersExtensions
