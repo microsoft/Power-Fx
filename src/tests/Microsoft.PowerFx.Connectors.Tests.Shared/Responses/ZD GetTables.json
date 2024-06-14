@@ -1,0 +1,77 @@
+{
+  "@odata.context": "https://zendesk-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables",
+  "value": [
+    {
+      "Name": "activities",
+      "DisplayName": "Activities"
+    },
+    {
+      "Name": "articles",
+      "DisplayName": "Articles"
+    },
+    {
+      "Name": "groups",
+      "DisplayName": "Groups"
+    },
+    {
+      "Name": "group_memberships",
+      "DisplayName": "Group Memberships"
+    },
+    {
+      "Name": "organizations",
+      "DisplayName": "Organizations"
+    },
+    {
+      "Name": "requests",
+      "DisplayName": "Requests"
+    },
+    {
+      "Name": "satisfaction_ratings",
+      "DisplayName": "Satisfaction Ratings"
+    },
+    {
+      "Name": "sessions",
+      "DisplayName": "Sessions"
+    },
+    {
+      "Name": "tags",
+      "DisplayName": "Tags"
+    },
+    {
+      "Name": "targets",
+      "DisplayName": "Targets"
+    },
+    {
+      "Name": "tickets",
+      "DisplayName": "Tickets"
+    },
+    {
+      "Name": "ticket_audits",
+      "DisplayName": "Ticket Audits"
+    },
+    {
+      "Name": "ticket_comments",
+      "DisplayName": "Ticket Comments"
+    },
+    {
+      "Name": "ticket_fields",
+      "DisplayName": "Ticket Fields"
+    },
+    {
+      "Name": "ticket_metrics",
+      "DisplayName": "Ticket Metrics"
+    },
+    {
+      "Name": "triggers",
+      "DisplayName": "Triggers"
+    },
+    {
+      "Name": "users",
+      "DisplayName": "Users"
+    },
+    {
+      "Name": "views",
+      "DisplayName": "Views"
+    }
+  ]
+}

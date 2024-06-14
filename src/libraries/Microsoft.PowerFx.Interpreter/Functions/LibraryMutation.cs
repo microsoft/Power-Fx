@@ -8,9 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -229,6 +232,111 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    internal class CollectImpl : CollectFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    internal class CollectProcess
+    {
+        internal static async Task<FormulaValue> Process(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            FormulaValue arg0;
+            var argc = args.Length;
+
+            // Need to check if the Lazy first argument has been evaluated since it may have already been
+            // evaluated in the ClearCollect case.
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                arg0 = args[0];
+            }
+
+            if (arg0 is BlankValue)
+            {
+                return arg0;
+            }
+
+            if (arg0 is ErrorValue)
+            {
+                return arg0;
+            }
+
+            if (arg0 is not TableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type));
+            }
+
+            var tableValue = arg0 as TableValue;
+
+            List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
+
+            for (int i = 1; i < argc; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var arg = args[i];
+
+                if (arg is TableValue argTableValue)
+                {
+                    foreach (DValue<RecordValue> row in argTableValue.Rows)
+                    {
+                        if (row.IsBlank)
+                        {
+                            continue;
+                        }
+                        else if (row.IsError)
+                        {
+                            return row.Error;
+                        }
+                        else
+                        {
+                            var recordValueCopy = (RecordValue)row.ToFormulaValue().MaybeShallowCopy();
+                            resultRows.Add(await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false));
+                        }
+                    }
+                }
+                else if (arg is RecordValue)
+                {
+                    var recordValueCopy = CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)arg.MaybeShallowCopy());
+                    resultRows.Add(await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false));
+                }
+                else if (arg is ErrorValue)
+                {
+                    return arg;
+                }
+            }
+
+            if (resultRows.Count == 0)
+            {
+                return FormulaValue.NewBlank(irContext);
+            }
+
+            if (irContext._type.IsTable)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(tableValue.Type, new InMemoryTableValue(IRContext.NotInSource(arg0.Type), resultRows));
+            }
+            else
+            {
+                return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
+            }
+        }
+    }
+  
     // Clear(collection_or_table)
     internal class ClearImpl : ClearFunction, IAsyncTexlFunction3
     {
@@ -255,6 +363,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return ret.ToFormulaValue();
             }
+        }
+    }
+
+    // ClearCollect(table_or_collection, table|record, ...)
+    internal class ClearCollectImpl : ClearCollectFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                args[0] = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+
+            var clearFunction = new ClearImpl();
+
+            var cleared = await clearFunction.InvokeAsync(FormulaType.Void, args, cancellationToken).ConfigureAwait(false);
+
+            if (cleared is ErrorValue)
+            {
+                return cleared;
+            }
+
+            var collectFunction = new CollectImpl();
+
+            return await collectFunction.InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // ClearCollect(table_or_collection, scalar, ...)
+    internal class ClearCollectScalarImpl : ClearCollectScalarFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await new ClearCollectImpl().InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
 }

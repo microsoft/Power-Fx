@@ -620,6 +620,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Multiple values are ok if they're the same. 
+        [Fact]
+        public void MultipleValuesSameObj()
+        {
+            var st1 = new SymbolTable { DebugName = "L1" };
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var st12 = ReadOnlySymbolTable.Compose(st1);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(99.0));
+
+            var sv12 = st12.CreateValues(sv1);
+
+            var sv12b = st12.CreateValues(sv12, sv1);
+
+            var val = sv12b.Get(slot);
+            Assert.Equal(99.0, val.ToObject());
+        }
+
         // Trying to eval with missing symbol values will fail
         [Fact]
         public async Task MissingSymbolValues()
@@ -795,11 +815,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData(true, true)]
-        [InlineData(true, false)]
-        [InlineData(false, true)]
-        [InlineData(false, false)]
-        public void MutationTests(bool canMutate, bool canSet)
+        [InlineData(true, true, true)]
+        [InlineData(true, false, true)]
+        [InlineData(false, true, true)]
+        [InlineData(false, false, true)]
+        [InlineData(true, true, false)]
+        [InlineData(true, false, false)]
+        [InlineData(false, true, false)]
+        [InlineData(false, false, false)]
+        public void MutationTests(bool canMutate, bool canSet, bool canSetMutate)
         {
             var recordType = RecordType.Empty().Add("Field1", FormulaType.Number);
             var tableType = recordType.ToTable();
@@ -808,7 +832,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbols.AddVariable("var", tableType, new SymbolProperties
             {
                  CanMutate = canMutate,
-                 CanSet = canSet
+                 CanSet = canSet,
+                 CanSetMutate = canSetMutate
             });
 
             var config = new PowerFxConfig();
@@ -823,9 +848,57 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var checkSet = engine.Check("Set(var, Table({ Field1 : 123}))", opts, symbols);
             var checkMutate = engine.Check("Collect(var, { Field1 : 123})", opts, symbols);
+            var checkSetMutate = engine.Check("Set( First(var).Field1, 123 )", opts, symbols);
 
             Assert.Equal(canSet, checkSet.IsSuccess);
             Assert.Equal(canMutate, checkMutate.IsSuccess);
+            Assert.Equal(canSetMutate, checkSetMutate.IsSuccess);
+        }
+
+        // Test mapping between Symbol Table and SymbolValues
+        [Fact]
+        public void Map1()
+        {
+            var st1 = new SymbolTable { DebugName = "CustomTable1" };
+
+            var slot = st1.AddVariable("x", FormulaType.Number);
+
+            var sv1 = st1.CreateValues();
+            sv1.Set(slot, FormulaValue.New(77.0));
+
+            // Map to same one, picks it up. 
+            var sv1b = st1.CreateValues(sv1);
+
+            var val2 = sv1b.Get(slot);
+            Assert.Equal(77.0, val2.ToObject());
+        }
+
+        [Fact]
+        public async Task SymbolTableBug()
+        {
+            var sym1 = new SymbolTable { DebugName = "CustomTable1" };
+            var slot1 = sym1.AddVariable("x", FormulaType.Number);
+
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine).SetText("x").SetBindingInfo(sym1);
+            check.ApplyBinding();
+
+            // Just doing this would fail because we miss the symbolValues on recalcEngine. 
+            // var symVals = sym1.CreateValues();
+            // Instead, do a CheckResult aware:
+            var symVals = check.CreateValues();            
+
+            var ok = check.Symbols.TryLookupSlot("x", out var slot);
+            Assert.True(ok);
+            Assert.Equal(slot1.DebugName(), slot.DebugName());
+
+            symVals.Set(slot, FormulaValue.New(99.0));
+            var runtimeConfig = new RuntimeConfig(symVals);
+
+            var eval = check.GetEvaluator();
+            var result = await eval.EvalAsync(cancellationToken: CancellationToken.None, runtimeConfig);
+
+            Assert.Equal(99.0, result.ToObject());
         }
 
         // Get a convenient string representation of a SymbolValue
