@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal class CdpEntityMetadataProvider : IExternalDataEntityMetadataProvider
     {

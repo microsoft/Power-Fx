@@ -7,16 +7,16 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class TabularIRVisitor : RewritingIRVisitor<TabularIRVisitor.RetVal, TabularIRVisitor.Context>
+    internal class CdpIRVisitor : RewritingIRVisitor<CdpIRVisitor.RetVal, CdpIRVisitor.Context>
     {
-        public TabularIRVisitor()
+        public CdpIRVisitor()
         {
         }
 
         public override RetVal Visit(ResolvedObjectNode node, Context context)
         {
             // Key test to determine when we will add InjectServiceProviderFunction call: only for TabularDType nodes (created in ConnectorTableType constructor)
-            if (node.IRContext.ResultType._type is TabularDType dType)
+            if (node.IRContext.ResultType._type is CdpDtype dType)
             {
                 return new RetVal(node, true, dType);
             }
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors
 
             internal readonly TableType TableType;
 
-            public RetVal(IntermediateNode node, bool needsInjection = false, TabularDType dType = null)
+            public RetVal(IntermediateNode node, bool needsInjection = false, CdpDtype dType = null)
             {
                 OriginalNode = node;
                 NeedsInjection = needsInjection;
