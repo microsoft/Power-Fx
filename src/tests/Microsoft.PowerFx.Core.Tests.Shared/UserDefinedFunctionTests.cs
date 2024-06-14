@@ -576,5 +576,40 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
         }
+
+        [Theory]
+        [InlineData(1, false)]
+        [InlineData(20, false)]
+        [InlineData(30, true)]
+        [InlineData(31, true)]
+        [InlineData(1000, true)]
+        public void TestUDFsBlockTooManyParameters(int count, bool errorExpected)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            var parameters = new List<string>();
+            for (int i = 0; i <= count; i++)
+            {
+                parameters.Add($"parameter{i}: Number");
+            }
+
+            string script = $"test({string.Join(", ", parameters)}):Number = 1;";
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (errorExpected)
+            {
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_TooManyParameters");
+            }
+            else
+            {
+                Assert.True(errors.Count == 0);
+            }
+        }
     }
 }

@@ -224,6 +224,13 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
+
+                if (udf.Args.Count > 30)
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName));
+                    continue;
+                }
+
                 var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
                 var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
                 if (!parametersOk || !returnTypeOk)
