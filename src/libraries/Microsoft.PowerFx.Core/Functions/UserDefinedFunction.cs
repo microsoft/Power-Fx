@@ -224,7 +224,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
-
                 if (udf.Args.Count > 30)
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName));
