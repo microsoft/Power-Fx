@@ -579,7 +579,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData(1, false)]
-        [InlineData(20, false)]
+        [InlineData(29, false)]
         [InlineData(30, true)]
         [InlineData(31, true)]
         [InlineData(1000, true)]
