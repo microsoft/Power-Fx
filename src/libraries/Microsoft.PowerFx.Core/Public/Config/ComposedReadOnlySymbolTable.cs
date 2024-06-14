@@ -19,12 +19,12 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class ComposedReadOnlySymbolTable : ReadOnlySymbolTable, INameResolver, IGlobalSymbolNameResolver, IEnumStore
     {
-        private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
+        private readonly List<ReadOnlySymbolTable> _symbolTables;        
 
         // In priority order. 
         public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
-            _symbolTables = symbolTables.Where(x => x != null);
+            _symbolTables = symbolTables.Where(x => x != null).ToList();
 
             DebugName = "(" + string.Join(",", _symbolTables.Select(t => t.DebugName)) + ")";
         }
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                return _nameResolverFunctions;                
+                return _nameResolverFunctions;               
             }
         }
 

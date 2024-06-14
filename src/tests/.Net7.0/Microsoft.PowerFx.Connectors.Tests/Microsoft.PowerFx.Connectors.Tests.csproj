@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.11.0" /> <!-- CVE-2024-29992 -->
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.1" /> <!-- CVE-2024-27086 -->
+    <PackageReference Include="Azure.Identity" Version="1.11.4" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" /> 
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />    
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />        
     <PackageReference Include="YamlDotNet" Version="13.4.0" />

@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
-            if (functions._count == 0)
+            if (functions.Count() == 0)
             {
                 return;
             }
