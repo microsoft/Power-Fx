@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private List<string> _enums;
 
         // Count of functions
-        internal int _count;
+        private int _count;
 
         internal bool _canremove;
 
@@ -161,11 +161,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                 }
             }
-        }
-
-        public void PreventRemoval()
-        {
-            _canremove = false;            
         }
 
         internal TexlFunction Add(TexlFunction function)
