@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Throws<ArgumentNullException>(() => tfs.Add((TexlFunction)null));
             Assert.Throws<ArgumentNullException>(() => tfs.Add((TexlFunctionSet)null));
-            //Assert.Throws<ArgumentNullException>(() => tfs.Add((IEnumerable<TexlFunction>)null));
+            Assert.Throws<ArgumentNullException>(() => tfs.Add((IEnumerable<TexlFunction>)null));
 
             tfs.Add(func1);
 
