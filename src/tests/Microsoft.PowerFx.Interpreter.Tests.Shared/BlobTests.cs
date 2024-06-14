@@ -87,6 +87,78 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(@"""YWJj8J+Yig==""", sv.Value);
         }
 
+        // Derived class to override GetFileInfoAsync
+        private class MyBlobValue : BlobValue
+        {
+            public MyBlobValue()
+                : base(new StringBlob("abc"))
+            {
+            }
+
+            public override async Task<PowerFxFileInfo> GetFileInfoAsync()
+            {
+                return new PowerFxFileInfo
+                {
+                    Size = 12,
+                    MIMEType = "mime",
+                    Name = "name.txt"
+                };
+            }
+        }
+
+        [Theory]
+        [InlineData("FileInfo(file).Size", 12)]
+        [InlineData("With({x:FileInfo(file)}, x.Size & \",\" & x.Name & \",\" &  x.MIMEType)", "12,name.txt,mime")]
+        [InlineData("FileInfo(Blank()).Size", null)]
+        [InlineData("FileInfo(If(1/0, file)).Size", "#error")]
+        [InlineData("IsError(FileInfo(notFile))", true)]
+        public void FileInfoTest(string expr, object expectedValue)
+        {
+            var config = new PowerFxConfig();
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.SymbolTable.EnableFileFunctions();
+#pragma warning restore CS0618 // Type or member is obsolete
+            var engine = new RecalcEngine(config);
+
+            // A blob that supports file 
+            var blob = new MyBlobValue();
+            engine.UpdateVariable("file", blob);
+
+            // A blob that does not support file. 
+            BlobValue blob2 = new BlobValue(new StringBlob("abc"));
+            engine.UpdateVariable("notFile", blob2);
+
+            var val = engine.Eval(expr);
+
+            if (expectedValue?.ToString() == "#error")
+            {
+                Assert.IsType<ErrorValue>(val);
+            }
+            else
+            {
+                var objStr = val.ToObject()?.ToString();
+                var expectedToStr = expectedValue?.ToString();
+                Assert.Equal(expectedToStr, objStr);
+            }            
+        }
+
+        // Must call EnableFileFunctions() to get file functions. 
+        [Fact]
+        public void FileInfoTestNotInDefault()
+        {
+            var config = new PowerFxConfig();
+                        
+            var engine = new RecalcEngine(config);
+
+            var blob = new MyBlobValue();
+            engine.UpdateVariable("blob", blob);
+
+            var check = engine.Check("FileInfo(blob).Size");
+            var errors = check.ApplyErrors();
+
+            Assert.NotEmpty(errors);
+        }
+
         internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
         {
             public AsBlobFunctionImpl()
