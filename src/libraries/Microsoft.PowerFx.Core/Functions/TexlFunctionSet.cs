@@ -13,24 +13,24 @@ namespace Microsoft.PowerFx.Core.Functions
     [DebuggerDisplay("Composed {_composed} - Funcs {Count()}")]
     internal class TexlFunctionSet
     {
-        public delegate bool Func<in TexlFunctionSet>(TexlFunctionSet tfs, out IEnumerable<TexlFunction>);
+        private delegate bool FuncOut(TexlFunctionSet tfs, out List<TexlFunction> result);
 
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
         // Dictionary key: function.Name
-        private readonly Dictionary<string, List<TexlFunction>> _functions;
+        private Dictionary<string, List<TexlFunction>> _functions;
 
         // Dictionary key: function.LocaleInvariantName
-        private readonly Dictionary<string, List<TexlFunction>> _functionsInvariant;
+        private Dictionary<string, List<TexlFunction>> _functionsInvariant;
 
         // Dictionary key: function.Namespace
-        private readonly Dictionary<DPath, List<TexlFunction>> _namespaces;
+        private Dictionary<DPath, List<TexlFunction>> _namespaces;
 
         // List of all function.GetRequiredEnumNames()
-        private readonly List<string> _enums;
+        private List<string> _enums;
 
         // Count of functions
-        internal int _count;
+        internal int _count;   
 
         internal IEnumerable<string> FunctionNames => Sets.SelectMany(tfs => tfs._functions.Keys).Distinct();
 
@@ -42,19 +42,19 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal IEnumerable<TexlFunction> WithName(string name) => WithNameInternal(name);
 
-        private IEnumerable<TexlFunction> WithNameInternal(string name) => Get(Sets, tfs => { bool b = tfs._functions.TryGetValue(name, out List<TexlFunction> result); return (b, result); });
+        private IEnumerable<TexlFunction> WithNameInternal(string name) => Get(Sets, (TexlFunctionSet tfs, out List<TexlFunction> result) => tfs._functions.TryGetValue(name, out result));
 
         internal IEnumerable<TexlFunction> WithName(string name, DPath ns) => WithNameInternal(name).Where(f => f.Namespace == ns);
 
         internal IEnumerable<TexlFunction> WithInvariantName(string name) => WithInvariantNameInternal(name);
 
-        private IEnumerable<TexlFunction> WithInvariantNameInternal(string name) => Get(Sets, tfs => { bool b = tfs._functionsInvariant.TryGetValue(name, out List<TexlFunction> result); return (b, result); });
+        private IEnumerable<TexlFunction> WithInvariantNameInternal(string name) => Get(Sets, (TexlFunctionSet tfs, out List<TexlFunction> result) => tfs._functionsInvariant.TryGetValue(name, out result));
 
         internal IEnumerable<TexlFunction> WithInvariantName(string name, DPath ns) => WithInvariantNameInternal(name).Where(f => f.Namespace == ns);
 
         internal IEnumerable<TexlFunction> WithNamespace(DPath ns) => WithNamespaceInternal(ns);
 
-        private IEnumerable<TexlFunction> WithNamespaceInternal(DPath ns) => Get(Sets, tfs => { bool b = tfs._namespaces.TryGetValue(ns, out List<TexlFunction> result); return (b, result); });
+        private IEnumerable<TexlFunction> WithNamespaceInternal(DPath ns) => Get(Sets, (TexlFunctionSet tfs, out List<TexlFunction> result) => tfs._namespaces.TryGetValue(ns, out result));
 
         internal IEnumerable<string> Enums => _enums;
 
@@ -62,13 +62,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal List<TexlFunctionSet> _texlFunctionSets = null;
 
-        private static IEnumerable<TexlFunction> Get(IEnumerable<TexlFunctionSet> sets, _delegate<TexlFunctionSet, bool, IEnumerable<TexlFunction> f)
+        private static IEnumerable<TexlFunction> Get(IEnumerable<TexlFunctionSet> sets, FuncOut filter)
         {
             foreach (TexlFunctionSet set in sets)
-            {
-                (bool b, IEnumerable<TexlFunction> fs) = f(set);
-
-                if (b)
+            {                
+                if (filter(set, out List<TexlFunction> fs))
                 {
                     foreach (TexlFunction func in fs)
                     {
@@ -274,6 +272,26 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 Add(t);
             }
+        }
+
+        internal TexlFunctionSet Clone()
+        {
+            TexlFunctionSet tfs = new TexlFunctionSet()
+            {
+                _functions = new Dictionary<string, List<TexlFunction>>(_functions, StringComparer.Ordinal),
+                _functionsInvariant = new Dictionary<string, List<TexlFunction>>(_functionsInvariant, StringComparer.OrdinalIgnoreCase),
+                _namespaces = new Dictionary<DPath, List<TexlFunction>>(_namespaces),
+                _enums = new List<string>(_enums),
+                _count = _count,
+                _composed = _composed                
+            };
+
+            if (_composed)
+            {
+                tfs._texlFunctionSets = _texlFunctionSets.Select(tfs => tfs.Clone()).ToList();
+            }
+
+            return tfs;
         }
 
         internal int Count() => Sets.Sum(t => t._count);

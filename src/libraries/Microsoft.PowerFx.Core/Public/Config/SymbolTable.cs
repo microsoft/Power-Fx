@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
-        private readonly TexlFunctionSet _functions = new TexlFunctionSet();
+        private TexlFunctionSet _functions = new TexlFunctionSet();
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx
             _functions.RemoveAll(function);
         }
 
-        internal void AddFunctions(TexlFunctionSet functions)
+        internal void AddFunctions(TexlFunctionSet functions, bool makeCopy = false)
         {
             using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
@@ -338,10 +338,12 @@ namespace Microsoft.PowerFx
                 return;
             }
 
-            _functions.Add(functions);
+            TexlFunctionSet funcsToAdd = makeCopy ? functions.Clone() : functions;
+           
+            _functions.Add(funcsToAdd);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(functions);
+            EnumStoreBuilder?.WithRequiredEnums(funcsToAdd);
         }
 
         internal void AddFunction(TexlFunction function)

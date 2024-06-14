@@ -338,7 +338,7 @@ namespace Microsoft.PowerFx
                 DebugName = DebugName + " (Functions only)",
             };
 
-            s.AddFunctions(this.Functions);
+            s.AddFunctions(this.Functions, true);
 
             return s;
         }
