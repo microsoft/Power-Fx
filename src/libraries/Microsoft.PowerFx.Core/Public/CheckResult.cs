@@ -706,6 +706,11 @@ namespace Microsoft.PowerFx
 
             return summary;
         }
+
+        public IEnumerable<string> GetFunctionNames()
+        {
+            return ListFunctionVisitor.Run(ApplyParse());
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract
