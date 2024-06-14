@@ -142,6 +142,55 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
     }
+
+    // AsType(UntypedObject:P, Type:*[]): ![]
+    internal class AsTypeUOFunction : BuiltinFunction
+    {
+        public const string AsTypeInvariantFunctionName = "AsType";
+
+        public override bool IsAsync => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsRestrictedUDFName => true;
+
+        public override bool HasTypeArgs => true;
+
+        public override bool ArgIsType(int argIndex)
+        {
+            return argIndex == 1;
+        }
+
+        public AsTypeUOFunction()
+            : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsType, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.AsTypeArg1, TexlStrings.AsTypeArg2 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == 2);
+            Contracts.Assert(argTypes.Length == 2);
+            Contracts.AssertValue(errors);
+
+            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
+                return false;
+            }
+
+            returnType = argTypes[1];
+            return true;
+        }
+    }
 }
 
 #pragma warning restore SA1402 // File may only contain a single type

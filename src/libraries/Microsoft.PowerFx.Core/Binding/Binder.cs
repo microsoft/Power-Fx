@@ -19,6 +19,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -2641,6 +2642,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, DType.ObjNull);
             }
 
+            public override void Visit(TypeLiteralNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+                _txb.SetType(node, DTypeVisitor.Run(node.TypeRoot, _nameResolver));
+            }
+
             public override void Visit(BoolLitNode node)
             {
                 AssertValid();
@@ -4357,9 +4365,35 @@ namespace Microsoft.PowerFx.Core.Binding
                         startArg++;
                     }
 
-                    PreVisitHeadNode(node);
-                    PreVisitBottomUp(node, startArg, maybeScope);
-                    FinalizeCall(node);
+                    if (overloads.Where(func => func.HasTypeArgs).Any() && node.Args.Count > 0)
+                    {
+                        var nodeInp = node.Args.Children[0];
+                        nodeInp.Accept(this);
+                        if (_txb.GetType(nodeInp) == DType.UntypedObject 
+                            && node.Args.Count == 2 
+                            && node.Args.Children[1] is FirstNameNode typeName
+                            && _nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
+                        {
+                            PreVisitHeadNode(node);
+                            _txb.SetType(typeName, typeArgType._type);
+                            _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedTypeName, typeArgType._type, DPath.Root, 0)));
+                            PreVisitBottomUp(node, 2, null);
+                            FinalizeCall(node);
+                        }
+                        else
+                        {
+                            PreVisitHeadNode(node);
+                            PreVisitBottomUp(node, 1, maybeScope);
+                            FinalizeCall(node);
+                        }
+                    }
+                    else
+                    {
+                        PreVisitHeadNode(node);
+                        PreVisitBottomUp(node, startArg, maybeScope);
+                        FinalizeCall(node);
+                    }
+
                     return false;
                 }
 
@@ -5262,6 +5296,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 var args = node.Args.Children.ToArray();
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
+
+                // temp
+                if (overloads.Where(f => f.HasTypeArgs).Any() && _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
+                {
+                    overloads = overloads.Where(f => f.HasTypeArgs).ToArray();
+                }
 
                 if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {

@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         TypeName,
 
-        Lim
+        NamedTypeName,
+
+        Lim,
     }
 }
