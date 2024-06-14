@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -102,8 +103,90 @@ namespace Microsoft.PowerFx
             return new RecalcEngine(config);
         }
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+        public static void Test2()
+        {
+            List<object> list = new List<object>();
+
+            Console.WriteLine($"Starting main-2...");
+
+            var start = GC.GetTotalMemory(false);
+
+            PowerFxConfig config = new PowerFxConfig();
+
+            config.EnableJsonFunctions();
+            Engine engine = new Engine(config);
+
+            var sw = Stopwatch.StartNew();
+
+            int numLoops = 10 * 1000;
+            for (int i = 0; i < numLoops; i++)
+            {
+                var record = RecordType.Empty().Add("a", FormulaType.String).Add("b", FormulaType.Decimal);
+                ReadOnlySymbolTable symbolTable = ReadOnlySymbolTable.NewFromRecord(record);
+
+                CheckResult checkResult = engine.Check("Abs(1)", new ParserOptions() { Culture = CultureInfo.InvariantCulture }, symbolTable);
+
+                list.Add(new { config, engine, symbolTable, checkResult });
+
+                checkResult.GetEvaluator().Eval();
+            }
+
+            var timeMS = sw.ElapsedMilliseconds;
+            var timeNanoSeconds = timeMS * 1000 * 1000;
+
+            var end = GC.GetTotalMemory(false);
+
+            var diff = end - start;
+
+            Console.WriteLine($"Pausing...: {start}, {end}");
+            Console.WriteLine($"{numLoops} loops");
+            Console.WriteLine($"{diff / 1000} kb");
+            Console.WriteLine($"{diff / numLoops / 1000} kb/loop");
+            Console.WriteLine($"{timeMS} total Ms");
+            Console.WriteLine($"{(double)timeMS / numLoops}  MS/loop");
+            Environment.Exit(1);
+        }
+
+        public static void Test()
+        {
+            List<object> list = new List<object>();
+
+            Console.WriteLine($"Starting...");
+
+            var start = GC.GetTotalMemory(false);
+
+            int numLoops = 10 * 1000;
+            for (int i = 0; i < numLoops; i++)
+            {
+                PowerFxConfig config = new PowerFxConfig();
+                config.EnableJsonFunctions();
+                Engine engine = new Engine(config);
+                var record = RecordType.Empty().Add("a", FormulaType.String).Add("b", FormulaType.Decimal);
+                ReadOnlySymbolTable symbolTable = ReadOnlySymbolTable.NewFromRecord(record);
+
+                CheckResult checkResult = engine.Check("Abs(1)", new ParserOptions() { Culture = CultureInfo.InvariantCulture }, symbolTable);
+
+                list.Add(new { config, engine, symbolTable, checkResult });
+
+                checkResult.GetEvaluator().Eval();
+            }
+
+            var end = GC.GetTotalMemory(false);
+
+            var diff = end - start;
+
+            Console.WriteLine($"Pausing...: {start}, {end}");
+            Console.WriteLine($"{numLoops} loops");
+            Console.WriteLine($"{diff / 1000} kb");
+            Console.WriteLine($"{diff / numLoops / 1000} kb/loop");
+            Console.ReadLine();
+        }
+
         public static void Main()
         {
+            Test2();
+
             var enabled = new StringBuilder();
 
             Console.InputEncoding = System.Text.Encoding.UTF8;

@@ -319,10 +319,170 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Fact]
+        public void Snapshot1()
+        {
+            var func1 = new TestTexlFunction("func1");
+            var func2 = new TestTexlFunction("func2");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var set2 = new TexlFunctionSet(new TexlFunctionSet[] { set1 });
+
+            set1.Add(func2);
+
+            var has = set2.AnyWithName("func2");
+            Assert.False(has);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Snapshot2(bool notEmpty)
+        {
+            var func1 = new TestTexlFunction("func1");
+            var func2 = new TestTexlFunction("func2");
+
+            var set1 = new TexlFunctionSet();
+            if (notEmpty)
+            {
+                set1.Add(func1);
+            }
+
+            // $$$ We could repeat most tests above for composition! 
+            var set2 = Wrap(set1);
+
+            set1.Add(func2);
+
+            var has = set2.AnyWithName("func2");
+            Assert.False(has);
+        }
+
+        [Fact]
+        public void TestComposedEnums()
+        {
+            var set1 = new TexlFunctionSet();
+            var func1 = new TestTexlFunction("func1", requiredEnums: 1);
+            var func2 = new TestTexlFunction("func1", DType.Number, requiredEnums: 2);
+
+            set1.Add(func1);
+            Assert.Single(set1.Enums);
+
+            set1.Add(func2);
+            Assert.Equal(3, set1.Enums.Count());
+            Assert.Equal(2, set1.Enums.Distinct().Count());
+
+            var set2 = Wrap(set1);
+
+            Assert.Equal(3, set2.Enums.Count());
+            Assert.Equal(2, set2.Enums.Distinct().Count());
+        }
+
+        [Fact]
+        public void TestComposedNamespaces()
+        {
+            var func1 = new TestTexlFunction("NS1", "func1");
+            var func2 = new TestTexlFunction("NS2", "func1");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var ns1 = GetNamespaces(set1);
+            Assert.Equal("NS1", ns1);
+
+            var set2 = Wrap(set1);
+
+            set1.Add(func2); // snapshot on old 
+
+            var ns2 = GetNamespaces(set2);
+            Assert.Equal("NS1", ns2);
+
+            set2.Add(func2);
+
+            ns2 = GetNamespaces(set2);
+            Assert.Equal("NS1,NS2", ns2);
+        }
+
+        [Fact]
+        public void TestComposedNamespaces1()
+        {
+            var func1 = new TestTexlFunction("NS1", "func1");
+            var func2 = new TestTexlFunction("NS1", "func2");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var set2 = new TexlFunctionSet();
+            set2.Add(func2);
+
+            var set3 = Wrap(set1, set2);
+            var ns3 = GetNamespaces(set3);
+            Assert.Equal("NS1", ns3); // distinct
+        }
+
+        private static string GetNamespaces(TexlFunctionSet set)
+        {
+            var nsDpaths = set.Namespaces; 
+            string str = string.Join(",", nsDpaths.Select(x => x.ToString()).Order());
+            return str;            
+        }
+
+        // ctor will flatten via SelectMany 
+        [Fact]
+        public void Test2()
+        {
+            var func1 = new TestTexlFunction("func1");
+            var func2 = new TestTexlFunction("func2");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var set2 = Wrap(set1);
+
+            set2.Add(func2);
+
+            var set3 = Wrap(set2);
+
+            string names = string.Join(",", set3.FunctionNames.Order());
+            Assert.Equal("func1,func2", names);
+        }
+
+        // ctor will flatten via SelectMany 
+        [Fact]
+        public void Triple()
+        {
+            var func1 = new TestTexlFunction("func1");
+            var func2 = new TestTexlFunction("func2");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var set2 = Wrap(set1);
+
+            var set3 = Wrap(set2);
+
+            var count = set3.Count();
+            Assert.Equal(1, count);
+        }
+
+        private static TexlFunctionSet Wrap(params TexlFunctionSet[] sets)
+        {
+            // Current semantics are to take a snapshot of sets. 
+            // So if original set is modified, the returned snapshot is not affected.
+            return new TexlFunctionSet(sets);
+        }
+
         private class TestTexlFunction : TexlFunction
         {
             private readonly int _requiredEnums = 0;
-                
+
+            public TestTexlFunction(string @namespace, string name, DType type = null, int requiredEnums = 0)
+      : this(DPath.Root.Append(new DName(@namespace)), name, name, (string locale) => name, FunctionCategories.Text, type ?? DType.String, 0, 1, 1, type ?? DType.String)
+            {
+                _requiredEnums = requiredEnums;
+            }
+
             public TestTexlFunction(string name, DType type = null, int requiredEnums = 0, DPath? path = null)
                 : this(path ?? DPath.Root, name, name, (string locale) => name, FunctionCategories.Text, type ?? DType.String, 0, 1, 1, type ?? DType.String)
             {

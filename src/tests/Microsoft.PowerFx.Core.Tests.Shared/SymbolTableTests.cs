@@ -387,6 +387,76 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Fact]
+        public void Cache1()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            var table2 = new SymbolTable { DebugName = "Table2" };
+
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1, table2);
+
+            // Same args, cache returns identical instance
+            {
+                var c1b = cache.GetComposedCached(table1, table2);
+
+                Assert.True(object.ReferenceEquals(c1, c1b));
+            }
+
+            // Mutating an existing talbe is ok - ComposedSymbolTable will catch that
+            {
+                table1.AddFunction(new BlankFunction());
+                var c1c = cache.GetComposedCached(table1, table2);
+                Assert.True(object.ReferenceEquals(c1, c1c));
+
+                bool hasFunc = c1c.Functions.AnyWithName("Blank");
+                Assert.True(hasFunc);
+            }
+
+            // But using different table instances will invalidate
+            {
+                var table1b = new SymbolTable { DebugName = "Table1b" };
+                Assert.False(object.ReferenceEquals(table1, table1b)); // different instances!!!
+
+                var c2 = cache.GetComposedCached(table1b, table2);
+                Assert.False(object.ReferenceEquals(c1, c2));
+
+                var hasFunc = c2.Functions.AnyWithName("Blank");
+                Assert.False(hasFunc);
+            }
+        }
+
+        // We can't change the lenght to GetComposedCached()
+        [Fact]
+        public void CacheLengthChange()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            var table2 = new SymbolTable { DebugName = "Table2" };
+
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1);
+
+            // Can't change 
+            Assert.Throws<InvalidOperationException>(() => cache.GetComposedCached(table1, table2));
+        }
+
+        // Since it's ok to pass nulls to ComposedReadOnlySymbolTable,
+        // It's ok to pass nulls to GetComposedCached. 
+        [Fact]
+        public void CacheNullOk()
+        {
+            var table1 = new SymbolTable { DebugName = "Table1" };
+            table1.AddConstant("c1", FormulaValue.New("constant"));
+            ReadOnlySymbolTable nullTable = null;
+            
+            ComposedSymbolTableCache cache = new ComposedSymbolTableCache();
+            var c1 = cache.GetComposedCached(table1, nullTable);
+
+            var ok = c1.TryGetSymbolType("c1", out var type);
+            Assert.True(ok);
+            Assert.Equal(FormulaType.String, type);            
+        }
+
         // Type is wrong: https://github.com/microsoft/Power-Fx/issues/2342
         // Option Set returns as a record. 
         private void AssertOptionSetType(FormulaType actualType, OptionSet expected)
