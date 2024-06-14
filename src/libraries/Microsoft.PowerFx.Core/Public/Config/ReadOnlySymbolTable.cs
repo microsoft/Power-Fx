@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx
 
         internal static ReadOnlySymbolTable NewDefault(IEnumerable<TexlFunction> functions)
         {            
-            TexlFunctionSet tfs = new TexlFunctionSet();
+            TexlFunctionSet tfs = new TexlFunctionSet(canRemove: false);
 
             foreach (TexlFunction function in functions)
             {

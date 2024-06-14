@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
-        internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _library = new TexlFunctionSet(canRemove: false);
 
         public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
@@ -248,7 +248,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // Don't add new functions here, follow alpha order
 
         // _featureGateFunctions functions, not present in all platforms
-        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet(canRemove: false);
 
         public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());

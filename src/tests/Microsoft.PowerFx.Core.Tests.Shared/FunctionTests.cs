@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TextFunctionSet_Ctor()
+        public void TexlFunctionSet_Ctor()
         {
             var tfs = new TexlFunctionSet();
 
@@ -82,21 +83,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TextFunctionSet_Ctor_NullFunction()
+        public void TexlFunctionSet_Ctor_NullFunction()
         {
             Assert.Throws<ArgumentNullException>(() => new TexlFunctionSet((TexlFunction)null));
             Assert.Throws<ArgumentNullException>(() => new TexlFunctionSet((IEnumerable<TexlFunctionSet>)null));
         }
 
         [Fact]
-        public void TextFunctionSet_Ctor_NullFunction2()
+        public void TexlFunctionSet_Ctor_NullFunction2()
         {
             Assert.Throws<ArgumentNullException>(() => new TexlFunctionSet((IEnumerable<TexlFunction>)null));
         }
 
         [Fact]
         [Obsolete("Contains testing Obsolete functions")]
-        public void TextFunctionSet_OneFunc()
+        public void TexlFunctionSet_OneFunc()
         {
             var tfs = new TexlFunctionSet();            
             var func1 = new TestTexlFunction("func1");
@@ -127,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         [Obsolete("Contains testing Obsolete functions")]
-        public void TextFunctionSet_TwoFunc()
+        public void TexlFunctionSet_TwoFunc()
         {
             var tfs = new TexlFunctionSet();
             var func1 = new TestTexlFunction("func1");
@@ -166,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         [Obsolete("Contains testing Obsolete functions")]
-        public void TextFunctionSet_TwoOverloads()
+        public void TexlFunctionSet_TwoOverloads()
         {
             var tfs = new TexlFunctionSet();
             var func1 = new TestTexlFunction("func1");
@@ -192,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TextFunctionSet_WithEnums()
+        public void TexlFunctionSet_WithEnums()
         {
             var tfs = new TexlFunctionSet();
             var func1 = new TestTexlFunction("func1", requiredEnums: 1);
@@ -208,7 +209,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         [Obsolete("Contains testing Obsolete functions")]
-        public void TextFunctionSet_Remove()
+        public void TexlFunctionSet_Remove()
         {
             var tfs = new TexlFunctionSet();
             var func1 = new TestTexlFunction("func1", requiredEnums: 1);
@@ -240,7 +241,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         [Obsolete("Contains testing Obsolete functions")]
-        public void TextFunctionSet_Remove2()
+        public void TexlFunctionSet_Remove2()
         {
             var tfs = new TexlFunctionSet();
             var func1 = new TestTexlFunction("func1", requiredEnums: 1);
@@ -292,6 +293,19 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(tfs.WithName("func1"));
             Assert.Empty(tfs.WithInvariantName("func1"));
             Assert.Empty(tfs.WithNamespace(DPath.Root));
+        }
+
+        [Fact]
+        public void TexlFunctionSet_RemoveFromLibrary()
+        {
+            PowerFxConfig config = new PowerFxConfig();
+            Engine engine = new Engine(config);
+
+            InvalidOperationException ioe = Assert.Throws<InvalidOperationException>(() => engine.SupportedFunctions.Functions.RemoveAll("Abs"));
+            Assert.Equal("Cannot remove functions from this function set.", ioe.Message);
+
+            SymbolTable symbolTable = engine.SupportedFunctions.GetMutableCopyOfFunctions();
+            symbolTable.Functions.RemoveAll("Abs");
         }
 
         [Fact]

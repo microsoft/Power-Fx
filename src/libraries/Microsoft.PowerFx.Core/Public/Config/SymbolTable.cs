@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx
     {
         private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
 
-        private TexlFunctionSet _functions = new TexlFunctionSet();
+        private readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 

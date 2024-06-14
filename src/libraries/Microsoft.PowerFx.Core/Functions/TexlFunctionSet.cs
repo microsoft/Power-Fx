@@ -30,7 +30,9 @@ namespace Microsoft.PowerFx.Core.Functions
         private List<string> _enums;
 
         // Count of functions
-        internal int _count;   
+        internal int _count;
+
+        internal bool _canremove;
 
         internal IEnumerable<string> FunctionNames => Sets.SelectMany(tfs => tfs._functions.Keys).Distinct();
 
@@ -79,18 +81,19 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return an empty TexlFucntion set that can never be added to.
         internal static TexlFunctionSet Empty()
         {
-            var set = new TexlFunctionSet();
-            set._guard.ForbidWriters();
+            var set = new TexlFunctionSet(canRemove: false);
+            set._guard.ForbidWriters();            
             return set;
         }
 
-        internal TexlFunctionSet()
+        internal TexlFunctionSet(bool canRemove = true)
         {
             _functions = new Dictionary<string, List<TexlFunction>>(StringComparer.Ordinal);
             _functionsInvariant = new Dictionary<string, List<TexlFunction>>(StringComparer.OrdinalIgnoreCase);
             _namespaces = new Dictionary<DPath, List<TexlFunction>>();
             _enums = new List<string>();
             _count = 0;
+            _canremove = canRemove;
         }
 
         internal TexlFunctionSet(TexlFunction function)
@@ -106,6 +109,7 @@ namespace Microsoft.PowerFx.Core.Functions
             _namespaces.Add(function.Namespace, new List<TexlFunction> { function });
             _enums = new List<string>(function.GetRequiredEnumNames());
             _count = 1;
+            _canremove = true;
         }
 
         internal TexlFunctionSet(IEnumerable<TexlFunction> functions)
@@ -157,6 +161,11 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                 }
             }
+        }
+
+        public void PreventRemoval()
+        {
+            _canremove = false;            
         }
 
         internal TexlFunction Add(TexlFunction function)
@@ -276,7 +285,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet Clone()
         {
-            TexlFunctionSet tfs = new TexlFunctionSet()
+            TexlFunctionSet tfs = new TexlFunctionSet(canRemove: true)
             {
                 _functions = new Dictionary<string, List<TexlFunction>>(_functions, StringComparer.Ordinal),
                 _functionsInvariant = new Dictionary<string, List<TexlFunction>>(_functionsInvariant, StringComparer.OrdinalIgnoreCase),
@@ -302,10 +311,15 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(string name)
         {
-            using var guard = _guard.Enter(); // Region is single threaded.
+            using var guard = _guard.Enter(); // Region is single threaded.            
 
             foreach (var set in Sets)
             {
+                if (!set._canremove)
+                {
+                    throw new InvalidOperationException("Cannot remove functions from this function set.");
+                }
+
                 if (set._functions.TryGetValue(name, out List<TexlFunction> removed))
                 {
                     set._count -= removed.Count();
@@ -342,10 +356,15 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(TexlFunction function)
         {
-            using var guard = _guard.Enter(); // Region is single threaded.
+            using var guard = _guard.Enter(); // Region is single threaded.            
 
             foreach (var set in Sets)
             {
+                if (!set._canremove)
+                {
+                    throw new InvalidOperationException("Cannot remove functions from this function set.");
+                }
+
                 if (set._functions.TryGetValue(function.Name, out List<TexlFunction> funcs))
                 {
                     set._count--;
