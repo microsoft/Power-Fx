@@ -319,6 +319,23 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        [Fact]
+        public void Snapshot1()
+        {
+            var func1 = new TestTexlFunction("func1");
+            var func2 = new TestTexlFunction("func2");
+
+            var set1 = new TexlFunctionSet();
+            set1.Add(func1);
+
+            var set2 = new TexlFunctionSet(new TexlFunctionSet[] { set1 });
+
+            set1.Add(func2);
+
+            var has = set2.AnyWithName("func2");
+            Assert.False(has);
+        }
+
         private class TestTexlFunction : TexlFunction
         {
             private readonly int _requiredEnums = 0;
