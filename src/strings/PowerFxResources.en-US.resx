@@ -4094,7 +4094,7 @@
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
-    <value>Function {0} has too many parameters.</value>
+    <value>Function {0} has too many parameters. User defined functions support up to 30 parameters.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
