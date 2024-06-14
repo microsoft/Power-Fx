@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Egy százalék (vagy a százalékok egy oszlopa), amellyel el kell halványítani a színt (vagy a színértékek oszlopát). Negatív százalék megadása sötétebb árnyalatot eredményez. Pozitív százalék megadása világosabb százalékot eredményez.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Egy szám abszolút értékét (előjel nélküli értékét) adja vissza.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Rekordokat ad hozzá egy adatforráshoz.</value>
+    <value>Felvesz egy vagy több elemet a gyűjtemény argumentumban megadott gyűjteménybe. Az elemek származhatnak más táblából vagy gyűjteményből (például Collect(collection, source_collection)), vagy egy vagy több gyűjteményből Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>adat_forrás</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekord</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>gyűjtemény</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elem</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>A kibővítendő új vagy meglévő gyűjtemény.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Törli az összes rekordot egy gyűjteményből. Ezután különböző rekordhalmazokat ad hozzá ugyanahhoz a gyűjteményhez.</value>
+    <value>Először törli a gyűjtemény tartalmát, majd hozzáad egy vagy több elemet a gyűjteményhez. Az elemek származhatnak más táblából vagy gyűjteményből (például ClearCollect(collection, source_collection)), vagy egy vagy több rekordból ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>adat_forrás</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>A kibővítendő új vagy meglévő gyűjtemény.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>adat_forrás</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekord</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény a gyűjteményhez. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény a gyűjteményhez.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Alkalmazza a frissítéseket megadott sorra, és módosítja a sort a megadott adatforrásban. A frissített sort adja vissza.</value>
@@ -3866,6 +3881,10 @@
     <value>A(z) {0} funkció már meg van határozva.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>A(z) {0} függvénynév korlátozva van.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>A {0} paraméter duplikált elem.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
+    <value>A funkció visszaadott '{0}' típusa nem egyezik meg a(z) '{1}' függvénytest visszaküldési típusával.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>
+    <value>A(z) '{1}' nem módosítható a következővel: '{0}', vagy ütközik egy meglévő hatókörű változó, adatforrás vagy más objektum nevével.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ismeretlen Partial operátor.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Az az adatforrás, amelyhez adatokat kell hozzáadni.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény az adatforráshoz. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény az adatforráshoz.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>elem</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

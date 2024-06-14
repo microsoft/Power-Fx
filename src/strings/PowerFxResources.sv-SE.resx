@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ett procentvärde (eller kolumn med procentvärden) som färgen (eller kolumnen med färgvärden) ska tonas med. Ett negativt procentvärde skapar en mörkare nyans. Ett positivt procentvärde skapar en ljusare nyans.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returnerar det absoluta värdet för ett tal, ett tal utan dess tecken.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lägger till poster i en datakälla.</value>
+    <value>Lägger till ett eller flera objekt till den angivna samlingen. Objekten kan vara från en annan tabell eller samling (till exempel Collect(collection, source_collection)) eller en eller flera poster Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>datakälla</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>post</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>samling</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>objekt</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>En ny eller befintlig samling att utöka.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Raderar alla poster från en samling. Och lägger sedan till en annan uppsättning poster i samma samling.</value>
+    <value>Rensar först samlingen och lägger till ett eller flera objekt till den angivna samlingen. Objekten kan vara från en annan tabell eller samling (till exempel ClearCollect(collection, source_collection)), eller en eller flera poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>datakälla</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>En ny eller befintlig samling att utöka.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>datakälla</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>post</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>En post eller tabell att samla in. En post kommer att läggas till samlingen. En tabell får sina rader tillagda till samlingen.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Tillämpar uppdateringarna på den angivna raden och ändrar raden i den angivna datakällan. Returnerar den uppdaterade raden.</value>
@@ -3866,6 +3881,10 @@
     <value>Funktionen {0} är redan definierad.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funktionsnamnet {0} är begränsat.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametern {0} är en dubblett.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Den angivna funktionens returtyp överensstämmer inte med funktionstextens returtyp.</value>
+    <value>Den angivna funktionens returtyp "{0}" överensstämmer inte med funktionstextens returtyp "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Det första argumentet för {0} ska vara ett giltigt variabelnamn och kan inte vara i konflikt med något befintligt namn på en kontroll, skärm, samling eller datakälla. Hittade typen {1}</value>
+    <value>"{1}" kan inte ändras med "{0}" eller står i konflikt med namnet på en befintlig omfattningsvariabel, datakälla eller annat objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Deklarationen för literal typ är ogiltig. Uttrycket "{0}" kan inte användas i en typdefinition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Okänd Partial-operator.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Den datakälla som data ska läggas till i.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>En post eller tabell att samla in. En post kommer att läggas till i datakällan. En tabell får sina rader tillagda till datasamlingen.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>objekt</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeringsvarning. Resultatet av det här argumentet "{0}" kan kortas av för stora datauppsättningar innan det skickas till funktionen "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Samlingen som ska rensas.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Källan som ska rensas.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Den angivna datakällan kan inte användas med den här funktionen.</value>

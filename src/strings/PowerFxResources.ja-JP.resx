@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>色 (または色の値の列) をフェードするパーセンテージ (またはパーセンテージの値の列)。負のパーセンテージは暗い網掛けとなり、正のパーセンテージは明るい網掛けを生成します。</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>数値の絶対値 (つまり符号を取った数値) を返します。</value>
     
@@ -1863,7 +1874,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>演算子 '.' は、{0} の値で使用できません。.</value>
+    <value>演算子 '.' は、{0} の値で使用できません。</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>データ ソースにレコードを追加します。</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>データ ソース</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>レコード</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>コレクション</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>項目</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>強化する新規コレクションまたは既存のコレクション。</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>コレクションからすべてのレコードを削除します。その後、別のレコード セットを同じコレクションに追加します。</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>データ ソース</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>強化する新規コレクションまたは既存のコレクション。</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>データ ソース</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>レコード</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>収集するレコードまたはテーブル。レコードはコレクションに追加されます。テーブルには、コレクションに追加された行が含まれます。</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>指定された行に更新を適用し、指定されたデータソースの行を変更します。更新された行を返します。</value>
@@ -3866,6 +3881,10 @@
     <value>関数 {0} は既に定義されています。</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>関数名 {0} は制限されています。</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>パラメーター {0} が重複しています。</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>宣言した関数の戻り値タイプが、関数本文の戻り値タイプと一致しません。</value>
+    <value>宣言した関数の戻り値タイプ '{0}' が、関数本文の戻り値タイプ '{1}' と一致しません。</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>最初の引数 '{0}' は有効な変数名である必要があります。これは、既存のコントロール、画面、コレクション、またはデータ ソースの名前と競合することができません。見つかった型 '{1}'</value>
+    <value>'{1}' は '{0}' で変更できません。また、スコープ変数、データ ソース、その他のオブジェクトと競合する名前を付けることもできません。</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>不明な Partial 演算子です。</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

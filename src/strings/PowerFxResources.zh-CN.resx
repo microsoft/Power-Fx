@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>颜色(或颜色值组成的列)进行淡化的百分比(或百分比值组成的列)。负百分比生成较深的底纹。正百分比生成较浅的底纹。</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>返回数字的绝对值(不带符号的数字)。</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>将记录添加到数据源。</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>数据源</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>记录</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>集合</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>项</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>要扩大的新的或现有集合。</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>删除集合中的所有记录。然后向同一集合添加另一组记录。</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>数据源</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>要扩大的新的或现有集合。</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>数据源</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>记录</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>要收集的记录或表。记录会附加到集合。表会将其行附加到集合。</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>将更新应用到指定行并更改指定数据源中的行。返回更新的行。</value>
@@ -3866,6 +3881,10 @@
     <value>函数 {0} 已定义。</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>函数名称 {0} 受限制。</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>参数 {0} 重复。</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>所说明的函数返回类型与函数正文的返回类型不匹配。</value>
+    <value>所说明的函数返回类型 '{0}' 与函数正文 '{1}' 的返回类型不匹配。</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>“{0}”的第一个参数应为有效的变量名，且不能与任何现有控件、屏幕、集合或数据源名称冲突。找到的类型为“{1}”</value>
+    <value>'{1}' 无法用 '{0}' 进行修改，或者与现有范围变量、数据源或其他对象的名称冲突。</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>未知 Partial 运算符。</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

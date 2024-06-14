@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Процент (или колона с процентни стойности) на избледняване, който ще се приложи за цвета (или колоната със стойности на цвят). Даден отрицателен процент създава по-тъмен оттенък. Даден положителен процент създава по-светъл тъмен оттенък.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Връща абсолютната стойност на число, число без знака му.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Добавя записи към източник на данни.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>източник_на_данни</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>запис</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>колекция</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>елемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Нова или съществуваща колекция за увеличаване.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Изтрива всички записи от колекция, след което добавя друг набор от записи към същата колекция.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>източник_на_данни</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Нова или съществуваща колекция за увеличаване.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>източник_на_данни</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>запис</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Запис или таблица за събиране. Към колекцията ще се добави запис. Редовете на дадена таблица ще се добавят към колекцията.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Прилага актуализациите към указания ред и променя реда в указания източник на данни. Връща актуализирания ред.</value>
@@ -3866,6 +3881,10 @@
     <value>Функцията {0} вече е дефинирана.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Името на функцията {0} е ограничено.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Параметърът {0} се дублира.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Посоченият тип на върната стойност на функцията не съответства на типа на върнатата стойност в тялото ѝ.</value>
+    <value>Посоченият тип на върната стойност на функцията „{0}“ не съответства на типа на върнатата стойност в основния ѝ текст „{1}“.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Първият аргумент на „{0}“ трябва да е валидно име на променлива и не може да е в конфликт с име на съществуваща контрола, екран, колекция или източник на данни. Открит е тип „{1}“</value>
+    <value>„{1}“ не може да се промени с „{0}“ или конфликти с името на съществуваща променлива за обхват, източник на данни или друг обект.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Декларацията на литерала за типа е невалидна. Изразът „{0}“ не може да се използва в дефиниция на тип.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Неизвестен оператор Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Предупреждение за делегиране. Резултатът от този аргумент „{0}“ може да бъде отрязан за големи набори от данни, преди да бъде предаден на функцията {1}.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Колекцията за изчистване.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Източникът, който да се изчисти.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указаният източник на данни не може да се използва с тази функция.</value>

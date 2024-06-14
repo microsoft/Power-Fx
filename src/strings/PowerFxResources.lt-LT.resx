@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Procentinė reikšmė (arba procentinių reikšmių stulpelis), pagal kurią bus išblukinta spalva (arba spalvos reikšmių stulpelis). Neigiama procentinė reikšmė lems tamsesnį atspalvį. Teigiama procentinė reikšmė sukurs šviesesnį atspalvį.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Pateikia absoliučiąją skaičiaus reikšmę, skaičių be ženklo.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Į duomenų šaltinį įtraukiami įrašai.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>duomenų_šaltinis</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>įrašas</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>rinkinys</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elementas</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Naujas ar esamas rinkinys, kurį reikia papildyti.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Panaikinami visi rinkinio įrašai. Tada į tą patį rinkinį įtraukiamas kitas įrašų rinkinys.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>duomenų_šaltinis</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Naujas ar esamas rinkinys, kurį reikia papildyti.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>duomenų_šaltinis</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>įrašas</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Įrašas arba lentelė, kurią reikia surinkti. Įrašas bus įtrauktas į rinkinį. Lentelės eilutės bus įtrauktos į rinkinį.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Taiko naujinimus nurodytai eilutei ir pakeičia eilutę į nurodytą duomenų šaltinį. Pateikia atnaujintą eilutę.</value>
@@ -3866,6 +3881,10 @@
     <value>Funkcija {0} jau apibrėžta.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funkcijos pavadinimas „{0}“ yra apribotas.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametras {0} kartojasi.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Nurodytas funkcijos grąžinimo tipas neatitinka funkcijos teksto grąžinimo tipo.</value>
+    <value>Nurodytas funkcijos pateikimo tipas „{0}“ neatitinka funkcijos pateikimo tipo pagrindinio teksto „{1}“.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Pirmasis {0} argumentas turi būti tinkamas kintamojo pavadinimas ir negali būti nesuderinamas su esamais valdiklių, ekranų, rinkinių arba duomenų šaltinių pavadinimais. Rastas tipas {1}</value>
+    <value>„{1}“ negalima modifikuoti naudojant „{0}“ arba kyla nesuderinamumų su esamos aprėpties kintamojo, duomenų šaltinio ar kito objekto pavadinimu.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nežinomas Partial operatorius.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
