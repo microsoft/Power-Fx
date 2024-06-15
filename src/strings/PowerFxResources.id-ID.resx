@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Persentase (atau kolom nilai persentase) warna (atau kolom nilai warna) yang akan memudar. Persentase negatif menghasilkan bayangan yang lebih gelap. Persentase positif menghasilkan bayangan yang lebih terang.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Menampilkan nilai absolut angka, angka tanpa tanda.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Menambahkan rekaman ke sumber data.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>sumber_data</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksi</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>butir</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Catatan atau tabel untuk dikumpulkan. Catatan akan ditambahkan ke koleksi. Kolom tabel akan ditambahkan ke koleksi.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
@@ -3866,6 +3881,10 @@
     <value>Fungsi {0} telah ditentukan.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Nama fungsi {0} dibatasi.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} adalah duplikat.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
+    <value>Jenis pengembalian fungsi '{0}' yang dinyatakan tidak cocok dengan jenis pengembalian isi fungsi '{1}'.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Argumen pertama dari '{0}' harus berisi nama variabel yang valid, dan tidak boleh bertentangan dengan kontrol, layar, koleksi, atau nama sumber data yang ada. Jenis '{1}' ditemukan</value>
+    <value>'{1}' tidak dapat dimodifikasi dengan '{0}' atau bertentangan dengan nama variabel cakupan, sumber data, atau objek lain yang ada.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial tidak diketahui.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

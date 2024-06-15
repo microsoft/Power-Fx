@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ein Prozentsatz (oder eine Spalte mit Prozentsätzen), der das Maß der Ausbleichung der Farbe (oder einer Spalte mit Farbwerten) angibt. Negative Prozentsätze führen zu dunkleren Farbtönen, positive zu helleren.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Gibt den Absolutwert einer Zahl zurück, eine Zahl ohne Vorzeichen.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Fügt Datensätze zu einer Datenquelle hinzu.</value>
+    <value>Fügt der angegebenen Sammlung ein oder mehrere Element(e) hinzu. Die Elemente können aus einer anderen Tabelle oder Sammlung (z. B. Collect(collection, source_collection)) oder aus Datensätzen (Collect(collection, {key1: val1, key2: val2, ...}, ...)) stammen.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>Datenquelle</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>Datensatz</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>Sammlung</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>Element</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Eine neue oder vorhandene, zu vergrößernde Sammlung.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Löscht alle Datensätze aus einer Sammlung, und fügt dann einen anderen Datensatz zu derselben Sammlung hinzu.</value>
+    <value>Löscht zuerst die Sammlung und fügt der angegebenen Sammlung ein oder mehrere Element(e) hinzu. Die Elemente können aus einer anderen Tabelle oder Sammlung (z. B. ClearCollect(collection, source_collection)) oder aus Datensätzen (ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)) stammen.</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>Datenquelle</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Eine neue oder vorhandene, zu vergrößernde Sammlung.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>Datenquelle</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>Datensatz</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Ein zu erfassender Datensatz oder eine zu erfassende Tabelle. Ein Datensatz wird an die Sammlung angefügt. Bei einer Tabelle werden die Zeilen an die Sammlung angefügt.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Wendet die Updates auf die angegebene Zeile an und ändert die Zeile in der angegebenen Datenquelle. Gibt die aktualisierte Zeile zurück.</value>
@@ -3866,6 +3881,10 @@
     <value>Funktion {0} ist bereits definiert.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Der Funktionsname {0} ist eingeschränkt.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} ist ein Duplikat.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Der Rückgabetyp der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers.</value>
+    <value>Der Rückgabetyp „{0}“ der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers „{1}“.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Das erste Argument von "{0}" muss ein gültiger Variablenname sein, der nicht in Konflikt mit vorhandenen Steuerelement-, Bildschirm-, Sammlungs- oder Datenquellennamen stehen darf. Gefundener Typ: "{1}"</value>
+    <value>„{1}“ kann nicht mit „{0}“ geändert werden bzw. steht im Konflikt mit dem Namen einer vorhandenen Bereichsvariable, Datenquelle oder einem anderen Objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Unbekannter Partial-Operator</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Die Datenquelle, der Daten hinzugefügt werden</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Ein zu erfassender Datensatz oder eine zu erfassende Tabelle. Ein Datensatz wird an die Datenquelle angefügt. Bei einer Tabelle werden die Zeilen an die Datenquelle angefügt.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>Element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
