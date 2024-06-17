@@ -126,14 +126,8 @@ namespace Microsoft.PowerFx.Types
         protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;
-            if (_sourceIndex != null)
+            if (_sourceIndex != null && index0 >= 0 && index0 < _sourceCount.Count)
             {
-                if (index0 < 0 || index0 >= _sourceCount.Count)
-                {
-                    record = null;
-                    return false;
-                }
-
                 var item = _sourceIndex[index0];
                 record = Marshal(item);
                 return true;
@@ -142,6 +136,50 @@ namespace Microsoft.PowerFx.Types
             {
                 return base.TryGetIndex(index1, out record);
             }
+        }
+
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy)
+        {
+            if (!mutationCopy)
+            {
+                return TryGetIndex(index1, out record);
+            }
+            else
+            {
+                var index0 = index1 - 1;
+                if (_sourceIndex != null && _sourceMutableIndex != null && index0 >= 0 && index0 < _sourceCount.Count)
+                {
+                    RecordValue rec = Marshal(_sourceIndex[index0]).Value;
+                    RecordValue copyRecord = (RecordValue)rec.MaybeShallowCopy();
+                    _sourceMutableIndex[index0] = MarshalInverse(copyRecord);
+                    record = DValue<RecordValue>.Of(copyRecord);
+                    return true;
+                }
+                else
+                {
+                    return base.TryGetIndex(index1, out record, mutationCopy);
+                }
+            }
+        }
+
+        public override DValue<RecordValue> First(bool mutationCopy = false)
+        {
+            if (TryGetIndex(1, out var record, mutationCopy: mutationCopy))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        public override DValue<RecordValue> Last(bool mutationCopy = false)
+        {
+            if (TryGetIndex(Count(), out var record, mutationCopy: mutationCopy))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(FormulaValue.NewBlank());
         }
 
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)

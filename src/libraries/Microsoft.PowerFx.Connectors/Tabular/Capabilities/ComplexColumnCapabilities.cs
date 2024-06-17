@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     // renamed from PowerApps client ComplexColumnCapabiltiesConverter, ComplexColumnCapablities
     [JsonConverter(typeof(ComplexColumnCapabilitiesConverter))]

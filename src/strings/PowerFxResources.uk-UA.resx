@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Відсоток (або стовпець відсоткових значень) для визначення інтенсивності затемнення кольору (або стовпця колірних значень). Якщо вказати негативний відсоток, відтінок стане темнішим. Якщо вказати позитивний відсоток, – світлішим.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Повертає абсолютне числове значення (без знаку).</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Додаються записи до джерела даних.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>джерело_даних</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>запис</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>колекція</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>елемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Нова або наявна колекція, яку потрібно поповнити.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Видаляються всі записи з колекції, після чого до тієї ж колекції додається інший набір записів.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>джерело_даних</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Нова або наявна колекція, яку потрібно поповнити.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>джерело_даних</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>запис</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Запис або таблиця, що потрібно додати до колекції (у випадку з таблицею додаються її рядки).</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Застосовує оновлення до вказаного рядка й змінює його в зазначеному джерелі даних. Повертає оновлений рядок.</value>
@@ -3866,6 +3881,10 @@
     <value>Функцію {0} уже визначено.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Ім’я функції "{0}" не можна використовувати.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Параметр {0} є дублікатом.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Зазначений тип повернення функції не відповідає типу повернення тіла функції.</value>
+    <value>Зазначений тип повернення функції "{0}" не відповідає типу повернення тіла функції "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Як перший аргумент функції "{0}" слід указати припустиме ім’я змінної, що не має конфліктувати з будь-якими іменами наявних елементів керування, екранів, колекцій або джерел даних. Знайдено тип "{1}".</value>
+    <value>"{1}" не можна змінити на "{0}", або цей елемент конфліктує з іменем наявної змінної області застосування, джерела даних чи іншого об’єкта.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Неприпустиме оголошення літералу типу. Вираз "{0}" не можна використовувати у визначенні типу.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Невідомий оператор Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Попередження про делегування. У випадку великих наборів даних результат цього аргументу "{0}" може бути обрізаний перед передачею до функції "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Колекція, яку потрібно очистити.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Джерело, яке потрібно очистити.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указане джерело даних не можна використовувати з цією функцією.</value>

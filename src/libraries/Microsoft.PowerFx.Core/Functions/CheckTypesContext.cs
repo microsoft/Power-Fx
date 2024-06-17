@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool NumberIsFloat { get; }
 
+        public bool AnalysisMode { get; }
+
         public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool allowsSideEffects, bool numberIsFloat)
         {
             Features = features;
@@ -30,6 +32,13 @@ namespace Microsoft.PowerFx.Core.Functions
             PropertyName = propertyName;
             AllowsSideEffects = allowsSideEffects;
             NumberIsFloat = numberIsFloat;
+            AnalysisMode = true;
+        }
+
+        public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool allowsSideEffects, bool numberIsFloat, bool analysisMode)
+            : this(features, nameResolver, entityName, propertyName, allowsSideEffects, numberIsFloat)
+        {
+            AnalysisMode = analysisMode;
         }
     }
 }

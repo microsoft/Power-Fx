@@ -1,0 +1,10 @@
+{
+  "tabular": {
+    "source": "singleton",
+    "displayName": "dataset",
+    "urlEncoding": "double",
+    "tableDisplayName": "table",
+    "tablePluralName": "tables"
+  },
+  "blob": null
+}

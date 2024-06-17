@@ -49,6 +49,8 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        public IEnumerable<NamedValue> OriginalFields => GetOriginalFieldsCore();
+
         public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
         {
             fieldName = null;
@@ -98,6 +100,11 @@ namespace Microsoft.PowerFx.Types
                 Type.TryGetBackingDType(fieldName, out var backingDType);
                 yield return new NamedValue(fieldName, async () => GetField(fieldName), backingDType);
             }
+        }
+
+        protected virtual IEnumerable<NamedValue> GetOriginalFieldsCore()
+        {
+            yield return null;
         }
 
         public async IAsyncEnumerable<NamedValue> GetFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
@@ -364,22 +371,24 @@ namespace Microsoft.PowerFx.Types
         }
 
         public override bool CanShallowCopy => true;
-    }
 
-    /// <summary>
-    /// Copy a single record field and shallow copy contents, used during mutation copy-on-write.
-    /// For example: Set( aa, [[1,2,3], [4,5,6]] ); Set( ab, First(aa) ); Patch( ab.Value, {Value:2}, {Value:9});
-    /// No copies are made until the mutation in Patch, and then copies are made as the first argument's 
-    /// value is traversed through EvalVisitor:
-    /// 1. ab (record) shallow copies the root record and dictionary which references fields with IMutationCopy.
-    /// 2. .Value (field) is copied with IMutationCopyField, which shallow copies the inner table with IMutationCopy.
-    /// </summary>
-    internal interface IMutationCopyField
-    {
         /// <summary>
+        /// Copy a single record field and shallow copy contents, used during mutation copy-on-write.
+        /// For example: Set( aa, [[1,2,3], [4,5,6]] ); Set( ab, First(aa) ); Patch( ab.Value, {Value:2}, {Value:9});
+        /// No copies are made until the mutation in Patch, and then copies are made as the first argument's 
+        /// value is traversed through EvalVisitor:
+        /// 1. ab (record) shallow copies the root record and dictionary which references fields with IMutationCopy.
+        /// 2. .Value (field) is copied with IMutationCopyField, which shallow copies the inner table with IMutationCopy.
+        /// 
         /// Makes a shallow copy of a field within a record, in place, and does not return the copy.
-        /// Earlier copies of the record will reference the original field.
+        /// Earlier copies of the record will reference the original field.        
         /// </summary>
-        void ShallowCopyFieldInPlace(string fieldName);
+        public virtual void ShallowCopyFieldInPlace(string fieldName)
+        {
+            // Records that are not mutable should have been stopped by the compiler before we get here.
+            // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
+
+            throw new InvalidOperationException($"Record doesn't support copying: {this.GetType().FullName}");
+        }
     }
 }

@@ -108,10 +108,28 @@ namespace Microsoft.PowerFx.Types
                 return record;
             }
 
-            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+            return DValue<RecordValue>.Of(ArgumentOutOfRangeError(IRContext));
+        }
+
+        /// <summary>
+        /// With mutation support, lookup the record at the given 1-based index, or return an error value if out of range.
+        /// </summary>
+        /// <param name="index1">1-based index.</param>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
+        /// <returns>The record or an errorValue.</returns>
+        public DValue<RecordValue> Index(int index1, bool mutationCopy)
+        {
+            if (TryGetIndex(index1, out var record, mutationCopy))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(ArgumentOutOfRangeError(IRContext));
         }
 
         // Index() does standard error messaging and then call TryGetIndex().
+        // Can't mutate through this entry point.
+        // It is OK to just override this overload if the table is not mutable.
         protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
             var index0 = index1 - 1;
@@ -125,7 +143,61 @@ namespace Microsoft.PowerFx.Types
             return record != null;
         }
 
-        private static ErrorValue ArgumentOutOfRange(IRContext irContext)
+        // Index() does standard error messaging and then call TryGetIndex().
+        // This needs to be overriden to support mutation.
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy)
+        {
+            if (!mutationCopy)
+            {
+                return TryGetIndex(index1, out record);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Lookup the first record, or return blank if the table is empty.
+        /// </summary>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
+        /// <returns>The record or blank.</returns>
+        public virtual DValue<RecordValue> First(bool mutationCopy = false)
+        {
+            if (mutationCopy)
+            {
+                return DValue<RecordValue>.Of(ImmutableTableError(IRContext));
+            }
+
+            return Rows.FirstOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        /// <summary>
+        /// Lookup the last record, or return blank if the table is empty.
+        /// </summary>
+        /// <param name="mutationCopy">copies the element, and the table entry pointing to it, when in a mutation context.</param>
+        /// <returns>The record or blank.</returns>
+        public virtual DValue<RecordValue> Last(bool mutationCopy = false)
+        {
+            if (mutationCopy)
+            {
+                return DValue<RecordValue>.Of(ImmutableTableError(IRContext));
+            }
+
+            return Rows.LastOrDefault() ?? DValue<RecordValue>.Of(FormulaValue.NewBlank());
+        }
+
+        private static ErrorValue ImmutableTableError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Table is immutable",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        private static ErrorValue ArgumentOutOfRangeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -135,7 +207,7 @@ namespace Microsoft.PowerFx.Types
             });
         }
 
-        private static ErrorValue NotImplemented(IRContext irContext, [CallerMemberName] string methodName = null)
+        private static ErrorValue NotImplementedError(IRContext irContext, [CallerMemberName] string methodName = null)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -151,17 +223,17 @@ namespace Microsoft.PowerFx.Types
         // Async because derived classes may back this with a network call. 
         public virtual async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+            return DValue<RecordValue>.Of(NotImplementedError(IRContext));
         }
 
         public virtual async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
-            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+            return DValue<BooleanValue>.Of(NotImplementedError(IRContext));
         }
 
         public virtual async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
         {
-            return DValue<BooleanValue>.Of(NotImplemented(IRContext));
+            return DValue<BooleanValue>.Of(NotImplementedError(IRContext));
         }
 
         /// <summary>
@@ -173,7 +245,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(NotImplemented(IRContext));
+            return DValue<RecordValue>.Of(NotImplementedError(IRContext));
         }
 
         /// <summary>

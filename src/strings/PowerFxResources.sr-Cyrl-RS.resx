@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Проценат (или колона са вредностима процената) по којем ће боја избледети. Негативни проценат ствара тамнију нијансу. Позитиван проценат ствара светлију нијансу.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Враћа апсолутну вредност броја, број без његовог знака.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Додаје записе извору података.</value>
+    <value>Додаје неке ставке у наведену колекцију. Ставке могу да буду из различите табеле или колекције (нпр. Collect(collection, source_collection)) или неки записи Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_source</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>запис</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>колекција</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>ставка</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Нова или постојећа колекција за повећање.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Брише све записе из колекције. Затим додаје други скуп записа истој колекцији.</value>
+    <value>Прво брише колекцију и додаје неке ставке у наведену колекцију. Ставке могу да буду из различите табеле или колекције (нпр. ClearCollect(collection, source_collection)) или неки записи ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_source</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Нова или постојећа колекција за повећање.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>запис</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Запис или табела за прикупљање. Запис ће бити додат у колекцију. Табела ће имати редове који су додати у колекцију.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Примењује исправке на наведени ред и мења ред у наведени извор података. Враћа ажурирани ред.</value>
@@ -3866,6 +3881,10 @@
     <value>Функција {0} је већ дефинисана.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Назив функције {0} је ограничен.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Параметар {0} је дупликат.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Наведени тип враћања функције не подудара се са типом враћања тела функције.</value>
+    <value>Наведени тип резултата функције „{0}“ не подудара се са типом резултата тела функције „{1}“.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Први аргумент за „{0}“ треба да буде важеће име променљиве и не може да буде неусаглашено ни са једним именом постојеће контроле, екрана, колекције или извора података. Пронађен је тип „{1}“</value>
+    <value>„{1}“ не може да се мења помоћу „{0}“ или постоји неусаглашеност са називом постојеће променљиве опсега, извора података или другог објекта.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Непознат Partial оператер.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Извор података у који треба додати податке.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Запис или табела за прикупљање. Запис ће бити додат у извор података. Табела ће имати редове који су додати у извор података.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>ставка</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

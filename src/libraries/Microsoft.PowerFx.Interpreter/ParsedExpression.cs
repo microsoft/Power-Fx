@@ -91,6 +91,29 @@ namespace Microsoft.PowerFx
 
             return expr;
         }
+
+        /// <summary>
+        /// Create SymbolValues that match against <see cref="CheckResult.Symbols"/>.
+        /// </summary>
+        /// <param name="check"></param>
+        /// <returns></returns>
+        public static ReadOnlySymbolValues CreateValues(this CheckResult check)
+        {
+            // We don't bother taking an existing symbolValues, since we're pulling everything from Check.
+
+            // This should match what we do in GetEvaluator().
+            ReadOnlySymbolValues globals = null;
+            if (check.Engine is RecalcEngine recalcEngine)
+            {
+                // Pull global values from the engine. 
+                globals = recalcEngine._symbolValues;                
+            }
+
+            ReadOnlySymbolTable st = check.Symbols;
+
+            var values = st.CreateValues(globals);
+            return values;
+        }
     }
 
     internal class ParsedExpression : IExpressionEvaluator
@@ -98,7 +121,7 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
-        private readonly StackDepthCounter _stackMarker;
+        private readonly StackDepthCounter _stackMarker;        
 
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;

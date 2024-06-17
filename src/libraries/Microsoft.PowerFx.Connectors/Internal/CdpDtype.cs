@@ -8,11 +8,11 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Used in TabularIRVisitor
-    internal class TabularDType : DType
+    internal class CdpDtype : DType
     {
         internal TableType TableType;
 
-        internal TabularDType(TableType tableType)
+        internal CdpDtype(TableType tableType)
             : base(DKind.Table, tableType._type.TypeTree, null, tableType._type.DisplayNameProvider)
         {
             TableType = tableType;
