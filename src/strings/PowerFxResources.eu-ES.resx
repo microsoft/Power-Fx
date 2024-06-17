@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Kolorea lausotzeko erabiliko den ehunekoa (edo ehuneko-balioen zutabea). Ehunekoa negatiboa bada, itzaldura ilunagoa izango da. Positiboa bada, ordea, itzaldura argiagoa izango da.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Zenbaki baten balio absolutua itzultzen du (ikurrik ez duen zenbaki bat).</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Erregistroak gehitzen ditu datu-iturburu batean.</value>
+    <value>Elementu bat edo gehiago gehitzen ditu zehaztutako bilduman. Elementuak beste taula edo bilduma batekoak izan daitezke (adibidez, Collect(collection, source_collection)) edo Collect(collection, {key1: val1, key2: val2, ...}, ...) erregistro batekoak edo gehiagokoak.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>datu_iturburua</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>erregistroa</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>bilduma</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elementua</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Handituko den lehendik dagoen edo berria den bilduma.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Bilduma bateko erregistro guztiak ezabatzen ditu eta, ondoren, erregistro multzo desberdin bat gehitzen du bilduma berean.</value>
+    <value>Lehenbizi, bilduma garbitzen du eta elementu bat edo gehiago gehitzen ditu zehaztutako bilduman. Elementuak beste taula edo bilduma batekoak izan daitezke (adibidez, ClearCollect(collection, source_collection)) edo ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) erregistro batekoak edo gehiagokoak.</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>datu_iturburua</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Handituko den lehendik dagoen edo berria den bilduma.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>datu_iturburua</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>erregistroa</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Bilduko den erregistroa edo taula. Erregistroa bildumari erantsiko zaio. Taularen errenkadak bildumari erantsiko zaizkio.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Zehaztutako errenkadan aplikatzen ditu eguneratzeak eta zehaztutako datu-iturburuko errenkada aldatzen du. Errenkada eguneratua itzultzen du.</value>
@@ -3866,6 +3881,10 @@
     <value>{0} funtzioa zehaztuta dago.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funtzioaren {0} izena mugatuta dago.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>{0} parametroa bikoiztua da.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Adierazitako funtzioak itzulitako elementu mota ez dator bat funtzioaren gorputzaren itzulitako elementu motarekin.</value>
+    <value>Adierazitako funtzioaren itzulketaren "{0}" mota ez dator bat funtzioaren "{1}" gorputzaren itzulketa motarekin.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>"{0}" elementuaren lehen argumentuak balio duen aldagai-izen bat izan behar du eta ezin da gatazkan egon lehendik dauden kontrolen, pantailen, bildumen edo datu-iturburuen izenekin. Hau da aurkitutako mota: "{1}".</value>
+    <value>"{1}" ezin da aldatu honekin: "{0}", edo dagoen esparruaren aldagaiaren, datu-iturburuaren edo beste objekturen izena duen gatazkekin.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Partial eragile ezezaguna.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Datuetan gehituko den datu-iturburua.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Bilduko den erregistroa edo taula. Erregistroa bildumari erantsiko zaio. Taularen errenkadak bildumari erantsiko zaizkio.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>elementua</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
