@@ -424,7 +424,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private static string GetNamespaces(TexlFunctionSet set)
         {
             var nsDpaths = set.Namespaces; 
-            string str = string.Join(",", nsDpaths.Select(x => x.ToString()).Order());
+            string str = string.Join(",", nsDpaths.Select(x => x.ToString()).OrderBy(x => x));
             return str;            
         }
 
@@ -444,7 +444,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var set3 = Wrap(set2);
 
-            string names = string.Join(",", set3.FunctionNames.Order());
+            string names = string.Join(",", set3.FunctionNames.OrderBy(x => x));
             Assert.Equal("func1,func2", names);
         }
 
