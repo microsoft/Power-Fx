@@ -369,6 +369,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("x", fileObjectRecordValue.SomeProperty);
         }
 
+        [Fact]
+        public void SymbolTableEnableMutationFuntionsTest()
+        {
+            var expr = "Collect()";
+            var engine = new RecalcEngine();
+
+            var symbolTable = new SymbolTable();
+            var symbolTableEnabled = new SymbolTable();
+
+            symbolTableEnabled.EnableMutationFunctions();
+
+            // Mutation functions not listed.
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            Assert.DoesNotContain(check.Symbols.Functions.FunctionNames, f => f == "Collect");
+
+            // Mutation functions is listed.
+            var checkEnabled = engine.Check(expr, symbolTable: symbolTableEnabled);
+            Assert.Contains(checkEnabled.Symbols.Functions.FunctionNames, f => f == "Collect");
+        }
+
         [Theory]
         [InlineData("Patch(t, First(t), {Value:1})")]
         public async Task MutationPFxV1Disabled(string expression)
@@ -479,6 +499,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(expectedSuggestions.Length, suggestions.Suggestions.Count());
             Assert.Equal(string.Join("-", expectedSuggestions), string.Join("-", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
+        }
+
+        [Fact]
+        public void AppendErrorTests()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            engine.UpdateVariable("t1", new ErrorTableValue());
+
+            var check = engine.Check("Collect(t1, {a:\"abc\"})", options: new ParserOptions() { AllowsSideEffects = true });
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<ErrorValue>(result);
         }
 
         /// <summary>
@@ -610,6 +646,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("t1", varTableValue);
 
                 return engine;
+            }
+        }
+
+        internal class ErrorTableValue : TableValue
+        {
+            public ErrorTableValue()
+                : base(TableType.Empty().Add("a", FormulaType.String))
+            {
+            }
+
+            public override IEnumerable<DValue<RecordValue>> Rows => throw new NotImplementedException();
+
+            public override bool CanShallowCopy => true;
+
+            // This simulates a possible scenario wher Dataverse turns an error when trying to append a record.
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound())));
             }
         }
     }

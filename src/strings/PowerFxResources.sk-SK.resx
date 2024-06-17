@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Percento (alebo stĺpec percentuálnych hodnôt), podľa ktorého vybledne farba (alebo stĺpec hodnôt farieb). Záporné percento znamená tmavší odtieň. Kladné percento znamená svetlejší odtieň.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>súbor</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Vráti absolútnu hodnotu čísla, t. j. číslo bez znamienka.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Pridá záznamy do zdroja údajov.</value>
+    <value>Pridá aspoň jednu položku do zadanej kolekcie. Položky môžu byť z inej tabuľky alebo kolekcie (napríklad Collect(collection, source_collection)) alebo jeden či viaceré záznamy Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>zdroj_údajov</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kolekcia</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>položka</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Nová alebo existujúca kolekcia na rozšírenie.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Odstráni všetky záznamy z kolekcie. Potom do tej istej kolekcie pridá inú množinu záznamov.</value>
+    <value>Najprv vymaže kolekciu a potom pridá aspoň jednu položku do zadanej kolekcie. Položky môžu byť z inej tabuľky alebo kolekcie (napríklad ClearCollect(collection, source_collection)) alebo ich tvorí minimálne jeden záznam ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>zdroj_údajov</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Nová alebo existujúca kolekcia na rozšírenie.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>zdroj_údajov</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Záznam alebo tabuľka na zhromaždenie do kolekcie. Záznam sa pripojí ku kolekcii. Tabuľka bude mať riadky pripojené ku kolekcii.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Použije aktualizácie na zadaný riadok a zmení riadok v zadanom zdroji údajov. Vráti aktualizovaný riadok.</value>
@@ -3866,6 +3881,10 @@
     <value>Funkcia {0} je už definovaná.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Názov funkcie {0} je obmedzený.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} je duplikát.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Uvedený typ vrátenej hodnoty funkcie sa nezhoduje s typom vrátenej hodnoty tela funkcie.</value>
+    <value>Uvedený typ vrátenej hodnoty funkcie {0} sa nezhoduje s typom vrátenej hodnoty tela funkcie {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Prvý argument pre {0} musí byť platný názov premennej a nemôže byť v konflikte so žiadnym existujúcim názvom ovládacieho prvku, obrazovky, kolekcie alebo zdroja údajov. Nájdený typ: {1}</value>
+    <value>{1} nie je možné upraviť pomocou {0} alebo je v konflikte s názvom existujúcej premennej rozsahu, zdroja údajov alebo iného objektu.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Deklarácia explicitnej hodnoty premennej typu je neplatná. Výraz {0} nemožno použiť v definícii typu.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Neznámy operátor Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Zdroj údajov, do ktorého sa majú pridať údaje.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Záznam alebo tabuľka na zhromaždenie do kolekcie. Záznam sa pripojí k zdroju údajov. Tabuľka bude mať riadky pripojené k zdroju údajov.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>položka</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozornenie na delegovanie. Pred odovzdaním funkcii {1} sa výsledok tohto argumentu {0} môže skrátiť pre veľké množiny údajov.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Kolekcia na vymazanie.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Zdroj, ktorý sa má vyčistiť.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Zadaný zdroj údajov sa nedá použiť s touto funkciou.</value>

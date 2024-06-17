@@ -27,17 +27,20 @@
     </PackageReference>    
   </ItemGroup>
 
-  <PropertyGroup>    
+  <PropertyGroup>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>8.0.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
-  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile" 
-          Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">    
+  <PropertyGroup Condition="$(Configuration.Contains('Release'))">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile"
+          Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">
     <ItemGroup>
       <Analyzer Remove="@(Analyzer)" />
     </ItemGroup>
@@ -45,7 +48,7 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>    
+    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>

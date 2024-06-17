@@ -26,10 +26,10 @@ namespace Microsoft.PowerFx.Connectors
 
             public override IntermediateNode Transform(IntermediateNode node, ICollection<ExpressionError> errors)
             {
-                TabularIRVisitor visitor = new TabularIRVisitor();
-                TabularIRVisitor.Context context = new TabularIRVisitor.Context();
+                CdpIRVisitor visitor = new CdpIRVisitor();
+                CdpIRVisitor.Context context = new CdpIRVisitor.Context();
 
-                TabularIRVisitor.RetVal ret = node.Accept(visitor, context);
+                CdpIRVisitor.RetVal ret = node.Accept(visitor, context);
                 IntermediateNode result = visitor.Materialize(ret);
                 return result;
             }

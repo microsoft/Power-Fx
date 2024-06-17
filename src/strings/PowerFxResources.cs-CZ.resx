@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Procentuální hodnota (nebo sloupec procentuálních hodnot), o kterou má barva (nebo sloupec hodnot barev) vyblednout. Záporná procentuální hodnota vytvoří tmavší odstín. Kladná procentuální hodnota vytvoří světlejší odstín.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Vrátí absolutní hodnotu čísla bez znaménka.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Přidá záznamy do zdroje dat.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>datový_zdroj</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kolekce</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>položka</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Nová nebo existující kolekce, která se má rozšířit</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Odstraní všechny záznamy z kolekce. A poté do stejné kolekce přidá jinou sadu záznamů.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>datový_zdroj</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Nová nebo existující kolekce, která se má rozšířit</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>datový_zdroj</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>záznam</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Záznam nebo tabulka, které se mají zařadit do kolekce. Záznam bude ke kolekci připojen. Řádky tabulky budou ke kolekci připojeny.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplikuje aktualizace pro zadaný řádek a změní řádek v zadaném zdroji dat. Vrátí aktualizovaný řádek.</value>
@@ -3866,6 +3881,10 @@
     <value>Funkce {0} je již definována.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Název funkce {0} je omezený.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametr {0} je duplicitní.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Uvedený návratový typ funkce neodpovídá návratovému typu těla funkce.</value>
+    <value>Uvedený návratový typ funkce „{0}“ neodpovídá návratovému typu těla funkce „{1}“.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>První argument funkce {0} by měl být platný název proměnné a nemůže být v konfliktu s existujícím názvem ovládacího prvku, obrazovky, kolekce nebo zdroje dat. Našel se typ {1}.</value>
+    <value>„{1}“ nelze upravit pomocí „{0}“ nebo je v konfliktu s názvem existující proměnné rozsahu, zdroje dat nebo jiného objektu.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Deklarace literálu typu je neplatná. Výraz „{0}” nelze použít v definici typu.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Neznámý operátor Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Upozornění na delegování. Výsledek tohoto argumentu „{0}“ může být u velkých souborů dat před předáním funkci „{1}“ zkrácen.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Kolekce, která se má vymazat</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Zdroj, který chcete vymazat.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Zadaný zdroj dat nelze s touto funkcí použít.</value>

@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Peratusan (atau lajur nilai peratusan) yang warna (atau lajur nilai warna) akan dipudarkan. Peratusan negatif menghasilkan warna yang lebih gelap. Peratusan positif menghasilkan warna yang lebih cerah.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Mengembalikan nilai mutlak nombor, iaitu nombor tanpa tandanya.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Menambahkan rekod kepada sumber data.</value>
+    <value>Menambahkan satu atau lebih item pada koleksi yang ditentukan. Item boleh terdiri daripada jadual atau koleksi (cth. Collect(collection, source_collection)) yang berbeza atau satu atau lebih rekod Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>sumber_data</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekod</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksi</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sedia ada untuk menambah.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Memadamkan semua rekod daripada koleksi. Kemudian, menambahkan set rekod yang berbeza kepada koleksi yang sama.</value>
+    <value>Mengosongkan koleksi terlebih dahulu dan menambahkan satu atau lebih item pada koleksi yang ditentukan. Item boleh terdiri daripada jadual atau koleksi (cth. ClearCollect(collection, source_collection)) yang berbeza atau satu atau lebih rekod ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sedia ada untuk menambah.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekod</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Rekod atau jadual untuk dikumpul. Rekod akan ditambahkan pada koleksi. Jadual akan mempunyai barisnya yang ditambahkan pada koleksi.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menggunakan kemaskinian pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
@@ -3866,6 +3881,10 @@
     <value>Fungsi {0} sudah ditakrifkan.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Nama fungsi {0} dihadkan.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} ialah duplikasi.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Jenis kembali fungsi yang dinyatakan tidak sepadan dengan jenis kembali isi fungsi.</value>
+    <value>Jenis kembali fungsi yang dinyatakan '{0}' tidak sepadan dengan jenis kembali isi fungsi '{1}'.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Argumen pertama '{0}' mestilah nama pemboleh ubah yang sah dan tidak boleh berkonflik dengan sebarang nama kawalan, skrin, koleksi atau sumber data sedia ada. Jenis ditemui '{1}'</value>
+    <value>'{1}' tidak boleh diubah suai dengan '{0}' atau bercanggah dengan nama pemboleh ubah skop, sumber data atau objek lain yang sedia ada.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Perisytiharan harfiah jenis tidak sah. Ungkapan '{0}' tidak dapat digunakan dalam takrif jenis.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Operator Partial tidak diketahui.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Sumber data untuk menambahkan data.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Rekod atau jadual untuk dikumpulkan. Rekod akan ditambahkan pada sumber data. Jadual akan mempunyai baris yang ditambahkan pada sumber data.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Amaran perwakilan. Hasil argumen '{0}' ini mungkin dipotong untuk set data yang besar sebelum dihantar kepada fungsi '{1}'.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Koleksi untuk dikosongkan.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Sumber untuk dikosongkan.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Sumber data yang ditentukan tidak boleh digunakan dengan fungsi ini.</value>

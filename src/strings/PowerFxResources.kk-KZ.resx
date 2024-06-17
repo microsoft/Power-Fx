@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Түске (немесе түс мәндерінің бағанына) қолданылатын мөлдірлік пайызы (немесе пайыз мәндерінің бағаны). Пайыздың теріс мәні қарарақ реңкті жасайды. Пайыздың оң мәні ашығырақ реңкті жасайды.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Санның абсолюттік мәнін, яғни таңбасыз мәнді қайтарады.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Жазбаларды деректер көзіне қосады.</value>
+    <value>Көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, Collect(collection, source_collection)) немесе бір не одан көп Collect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>деректер_көзі</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>жазу</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>жиынтық</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>элемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Жиыннан барлық жазбаны жояды. Одан кейін бір жиынға басқа жазбалар жиынын қосады.</value>
+    <value>Алдымен жиынды өшіріп, көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, ClearCollect(collection, source_collection)) немесе бір не одан көп ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>деректер_көзі</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>деректер_көзі</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>жазу</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Жиналатын жазба немесе кесте. Жазба жиынтыққа қосылады. Кестенің жолдары жиынтыққа қосылады.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
@@ -3866,6 +3881,10 @@
     <value>{0} функциясы анықталып қойған.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>{0} функция атауы шектелген.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>{0} параметрі көшірме болып табылады.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Мәлімделген функцияны қайтару түрі функцияның негізгі мәтінінің қайтару түріне сәйкес келмейді.</value>
+    <value>Мәлімделген "{0}" функциясын қайтару түрі "{1}" функциясының негізгі мәтінін қайтару түріне сәйкес келмейді.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>"{0}" бірінші аргументі жарамды айнымалы атауы болуы тиіс және ол бар басқару элементі, экран, жиынтық немесе деректер көзі атауларына қайшы келмеуі тиіс. Табылған түрі: "{1}"</value>
+    <value>"{1}" қолданыстағы ауқым айнымалысы, деректер көзі немесе басқа нысан атауы бар "{0}" немесе қайшылықтар арқылы өзгертілмейді.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Белгісіз Partial амалы.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Деректер қосылатын дереккөз.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Жиналатын жазба немесе кесте. Жазба дереккөзге қосылады. Кестеде оның дереккөзге қосылған жолдары болады.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>элемент</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
