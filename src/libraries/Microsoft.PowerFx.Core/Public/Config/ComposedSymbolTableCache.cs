@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx
         // The symbol tables that were composed for _result.
         private ReadOnlySymbolTable[] _list;
 
+        private readonly object _lock = new object();
+
         // Determine if the cache should be invalidated. 
         // this will set _result to null to force a recompute.
         private void MaybeInvalidateCache(ReadOnlySymbolTable[] tables)
@@ -50,9 +52,7 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolTable GetComposedCached(params ReadOnlySymbolTable[] tables)
         {
             // This is a conceptually read-only operation, so it could be called on multiple threads. 
-            // CA2002 - Lock(this) is safe since it's a private object that doesn't cross AD boundaries.
-#pragma warning disable CA2002 // Do not lock on objects with weak identity
-            lock (this)
+            lock (_lock)
             {
                 MaybeInvalidateCache(tables);
 
@@ -66,7 +66,6 @@ namespace Microsoft.PowerFx
 
                 return _result;
             }
-#pragma warning restore CA2002 // Do not lock on objects with weak identity
         }
     }
 }

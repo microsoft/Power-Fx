@@ -403,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.True(object.ReferenceEquals(c1, c1b));
             }
 
-            // Mutating an existing talbe is ok - ComposedSymbolTable will catch that
+            // Mutating an existing table is ok - ComposedSymbolTable will catch that
             {
                 table1.AddFunction(new BlankFunction());
                 var c1c = cache.GetComposedCached(table1, table2);
@@ -454,7 +454,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ok = c1.TryGetSymbolType("c1", out var type);
             Assert.True(ok);
-            Assert.Equal(FormulaType.String, type);            
+            Assert.Equal(FormulaType.String, type);
+
+            // Shorter args 
+            ComposedSymbolTableCache cache1arg = new ComposedSymbolTableCache();
+            cache1arg.GetComposedCached(nullTable);
+
+            // Shorter args 
+            ComposedSymbolTableCache cache0args = new ComposedSymbolTableCache();
+            cache0args.GetComposedCached();
         }
 
         // Type is wrong: https://github.com/microsoft/Power-Fx/issues/2342
