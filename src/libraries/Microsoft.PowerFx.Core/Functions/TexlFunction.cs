@@ -193,6 +193,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if UDFs cannot override this function name.
         public virtual bool IsRestrictedUDFName => false;
 
+        // Return true if this function cannot be used inside a UDF.
+        public virtual bool IsRestrictedInUDFBody => false;
+
         // Return true if this function affects scope variable ("app scope variable or component scope variable").
         public virtual bool AffectsScopeVariable => false;
 
