@@ -539,6 +539,22 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, suggestion);
         }
 
+        [Theory]
+        [InlineData("Filter(TableLoop,|")]
+        [InlineData("Filter(Accounts,|")]
+        public void LazyTypesStackOverflowTest(string expression)
+        {
+            var lazyInstance = new LazyRecursiveRecordType();
+            var config = PowerFxConfig.BuildWithEnumStore(
+                new EnumStoreBuilder(),
+                new TexlFunctionSet(new[] { BuiltinFunctionsCore.Filter }));
+
+            var suggestions = SuggestStrings(expression, config, null, lazyInstance);
+
+            // Just check that the execution didn't stack overflow.
+            Assert.True(suggestions.Any());
+        }
+
         private class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();

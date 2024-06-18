@@ -343,7 +343,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 if (info.Function.IsLambdaParam(null, argPosition) && !info.Function.HasSuggestionsForParam(argPosition) && type.IsValid)
                 {
-                    if (type.ContainsDataEntityType(DPath.Root))
+                    if (ContainsDataEntityType(type, type.MaxDepth))
                     {
                         var error = false;
                         type = type.DropAllOfTableRelationships(ref error, DPath.Root);
@@ -897,6 +897,19 @@ namespace Microsoft.PowerFx.Intellisense
 
             var colonLen = TexlLexer.PunctuatorColon.Length;
             return script.Length >= cursorPos + colonLen && script.Substring(cursorPos, colonLen) == TexlLexer.PunctuatorColon;
+        }
+
+        internal static bool ContainsDataEntityType(DType type, int maxDepth, int currentDepth = 1)
+        {
+            Contracts.AssertValid(type);
+
+            if (currentDepth > maxDepth)
+            {
+                return false;
+            }
+
+            return type.GetNames(DPath.Root).Any(n => n.Type.IsExpandEntity ||
+                (n.Type.IsAggregate && ContainsDataEntityType(n.Type, maxDepth, currentDepth + 1)));
         }
     }
 }
