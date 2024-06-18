@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Phần trăm (hoặc cột giá trị phần trăm) màu sắc (hoặc cột giá trị màu) sẽ mờ dần. Phần trăm âm tạo ra bóng tối hơn. Phần trăm dương tạo ra bóng sáng hơn.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Trả về giá trị tuyệt đối của một số, một số không có dấu.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Thêm bản ghi vào nguồn dữ liệu.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>nguồn_dữ_liệu</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>bộ_sưu_tập</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>mục</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có cần bổ sung.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Xóa tất cả các bản ghi khỏi bộ sưu tập. Sau đó, thêm một bộ bản ghi khác nhau vào cùng một bộ sưu tập.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có cần bổ sung.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào bộ sưu tập. Bảng sẽ có các hàng được nối vào bộ sưu tập.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
@@ -3866,6 +3881,10 @@
     <value>Chức năng {0} đã được xác định.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Tên hàm {0} bị hạn chế.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Tham số {0} là một bản sao.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
+    <value>Loại trả về hàm đã nêu "{0}" không khớp với kiểu trả về của nội dung hàm "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>
+    <value>"{1}" không thể được sửa đổi bằng "{0}" hoặc xung đột với tên của biến phạm vi, nguồn dữ liệu hoặc đối tượng khác hiện có.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Nội dung khai báo ký tự kiểu dữ liệu không hợp lệ. Không thể sử dụng biểu thức "{0}" trong định nghĩa kiểu dữ liệu.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Toán tử Partial không xác định.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Cảnh báo về ủy quyền. Kết quả của đối số "{0}" này có thể bị cắt ngắn đối với các tập hợp dữ liệu lớn trước khi được chuyển đến hàm "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Bộ sưu tập cần xóa.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Nguồn cần xóa.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Không thể sử dụng nguồn dữ liệu được chỉ định với hàm này.</value>

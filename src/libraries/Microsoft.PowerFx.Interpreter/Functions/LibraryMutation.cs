@@ -332,7 +332,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
+                if (resultRows.First().IsValue)
+                {
+                    return CompileTimeTypeWrapperRecordValue.AdjustType(tableValue.Type.ToRecord(), (RecordValue)resultRows.First().ToFormulaValue());
+                }
+                
+                return resultRows.First().ToFormulaValue();
             }
         }
     }

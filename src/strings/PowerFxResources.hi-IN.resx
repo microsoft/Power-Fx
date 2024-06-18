@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>ऐसा प्रतिशत (या प्रतिशत मानों का स्तंभ) जिससे रंग (या रंग मानों का स्तंभ) फ़ेड हो जाएगा. एक नकारात्मक प्रतिशत से गहरी छाया उत्पन्न होती है. एक सकारात्मक प्रतिशत से हल्की छाया उत्पन्न होती है.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>किसी संख्या का निरपेक्ष मान लौटाता है, चिह्न रहित एक संख्या.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>डेटा स्रोत में रिकार्ड्स जोड़ता है.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>डेटा_सोर्स</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>रिकॉर्ड</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>संग्रह</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>आइटम</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>एक नया या मौजूदा संग्रह बढ़ाने के लिए.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>एक संग्रह से सभी रिकॉर्ड हटा देता है. और फिर उसी संग्रह में रिकॉर्ड्स के अलग सेट जोड़ता है.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>डेटा_सोर्स</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>एक नया या मौजूदा संग्रह बढ़ाने के लिए.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>डेटा_सोर्स</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>रिकॉर्ड</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>एक रेकॉर्ड या तालिका संग्रहीत करने के लिए. संग्रह में एक रेकॉर्ड जोड़ दिया जाएगा. संग्रह में तालिका की अपनी पंक्तियाँ जुड़ी होंगी.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
@@ -3866,6 +3881,10 @@
     <value>फ़ंक्शन {0} पहले से ही परिभाषित है.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>फ़ंक्शन नाम {0} प्रतिबंधित है.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>पैरामीटर {0} डुप्लीकेट है.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>कथित फ़ंक्शन, रिटर्न प्रकार फ़ंक्शन बॉडी के रिटर्न प्रकार से मेल नहीं खाता है.</value>
+    <value>कथित फ़ंक्शन, रिटर्न प्रकार '{0}' फ़ंक्शन बॉडी '{1}' के रिटर्न प्रकार से मेल नहीं खाता है.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{0}' का पहला तर्क कोई मान्य चर नाम होना चाहिए और इसका किसी मौजूदा नियंत्रण, स्क्रीन, संग्रहण या डेटा स्रोत नामों से विरोध नहीं हो सकता. प्रकार '{1}' ढ़ूंढ़ा गया</value>
+    <value>{1}' को '{0}' के साथ संशोधित नहीं किया जा सकता है या यह किसी मौजूदा कार्यक्षेत्र वैरिएबल, डेटा स्रोत या अन्य ऑब्जेक्ट के नाम के साथ टकराव नहीं करता है.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>प्रकार की लिटरल घोषणा अमान्य है. अभिव्यक्ति '{0}' का इस्तेमाल किसी प्रकार की परिभाषा में नहीं किया जा सकता है.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>अज्ञात Partial संचाकल.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>प्रत्यायोजन चेतावनी. इस तर्क '{0}' के परिणाम को '{1}' फ़ंक्शन में पास करने से पहले बड़े डेटा सेट के लिए छोटा किया जा सकता है.</value>
     
@@ -4459,7 +4488,7 @@
     <value>संग्रह साफ़ करने के लिए.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>स्पष्ट करने के लिए स्रोत.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>

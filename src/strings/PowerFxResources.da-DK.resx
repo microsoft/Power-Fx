@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>En procentdel (eller kolonne med procentværdier), hvormed farven (eller kolonne med farveværdier) skal udtones. En negativ procentdel frembringer en mørkere nuance. En positiv procentdel frembringer en lysere nuance.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returnerer den absolutte værdi af et tal, et tal uden fortegn.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Føjer poster til en datakilde.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>data_kilde</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>post</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>samling</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>element</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>En ny eller eksisterende samling, der skal forøges.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Sletter alle poster fra en samling. Og tilføjer derefter et andet sæt poster til den samme samling.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>data_kilde</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>En ny eller eksisterende samling, der skal forøges.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>data_kilde</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>post</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>En post eller tabel, som skal samles. En post vil blive føjet til samlingen. En tabel får vedhæftet sine rækker til samlingen.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Anvender opdateringerne til den angivne række og ændrer rækken i den angivne datakilde. Returnerer den opdaterede række.</value>
@@ -3866,6 +3881,10 @@
     <value>Funktionen {0} er allerede defineret.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funktionsnavnet {0} er begrænset.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameteren {0} er en dublet.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Den angivne funktionsreturtype matcher ikke returtypen af funktionens brødtekst.</value>
+    <value>Den angivne funktionsreturtype '{0}' matcher ikke returtypen af funktionens brødtekst '{1}'.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Det første argument for "{0}" skal være et gyldigt variabelnavn, og navnet må ikke være i konflikt med navne på eksisterende kontrolelementer, skærme, samlinger eller datakilder. Funden type: "{1}"</value>
+    <value>'{1}' kan ikke ændres med '{0}' eller er i konflikt med navnet på en eksisterende omfangsvariabel, datakilde eller et andet objekt.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Erklæringen af typekonstant er ugyldig. Udtrykket '{0}' kan ikke bruges i en typedefinition.</value>
+    <value>Erklæringen af typekonstant er ugyldig. Udtrykket "{0}" kan ikke bruges i en typedefinition.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Ukendt Partial-operator.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

@@ -354,6 +354,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody, cancellationToken),
                     OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody, cancellationToken),
+                    OpenApiExtensions.ContentType_Multipart => new OpenApiMultipart(utcConverter, schemaLessBody, cancellationToken),
                     _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody, cancellationToken)
                 };
 
@@ -364,8 +365,16 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 serializer.EndSerialization();
-                string body = serializer.GetResult();
-                return new StringContent(body, Encoding.UTF8, ct);
+
+                if (serializer.GeneratesHttpContent)
+                {
+                    return serializer.GetHttpContent();
+                }
+                else
+                {
+                    string body = serializer.GetResult();
+                    return new StringContent(body, Encoding.UTF8, ct);
+                }
             }
             finally
             {
@@ -437,7 +446,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(typeToUse)
-                    : _returnRawResults
+                    : _returnRawResults || response.Content.Headers.ContentType.MediaType == OpenApiExtensions.ContentType_TextPlain
                     ? FormulaValue.New(text)
                     : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, typeToUse);
             }
