@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly string _format = null;
 
         public static ISwaggerSchema New(OpenApiSchema schema)
-        {           
+        {
             return schema == null ? null : new SwaggerSchema(schema);
         }
 
@@ -60,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Format => _format ?? _schema?.Format;
 
-        public string Type => _type ?? _schema?.Type;
+        public string Type => _type ?? _schema?.Type ?? GetTypeFromExtension(_schema);
 
         public IOpenApiAny Default => _schema?.Default;
 
@@ -94,5 +95,23 @@ namespace Microsoft.PowerFx.Connectors
 
         // SalesForce specific
         public string DataType => null;
+
+        private static string GetTypeFromExtension(OpenApiSchema schema)
+        {
+            if (schema == null || schema.Extensions == null)
+            {
+                return null;
+            }
+
+            // OpenAI special extension to indicate the type of the property
+            if (schema.Extensions.TryGetValue("x-oaiTypeLabel", out IOpenApiExtension ext) && 
+                ext is OpenApiString str && 
+                !string.IsNullOrEmpty(str.Value))
+            {
+                return str.Value;
+            }
+
+            return null;
+        }
     }
 }
