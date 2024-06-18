@@ -348,7 +348,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 entityName: EntityName,
                 propertyName: Property?.InvariantName ?? string.Empty,
                 allowsSideEffects: bindingConfig.AllowsSideEffects,
-                numberIsFloat: bindingConfig.NumberIsFloat);
+                numberIsFloat: bindingConfig.NumberIsFloat,
+                analysisMode: bindingConfig.AnalysisMode);
         }
 
         /// <summary>
@@ -2921,6 +2922,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.SetMutable(node, true);
                     }
+                    else if (lookupInfo.Data is IExternalDataSource ds)
+                    {
+                        _txb.SetMutable(node, ds.IsWritable);
+                    }
+                }
+                else if (lookupInfo.Kind == BindKind.ScopeCollection)
+                {
+                    _txb.SetMutable(node, true);
                 }
                 else if (lookupInfo.Kind == BindKind.ScopeCollection)
                 {
