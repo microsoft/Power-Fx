@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
 
-            if (binding.Features.PowerFxV1CompatibilityRules)
+            if (!binding.CheckTypesContext.AnalysisMode)
             {
                 MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(1).ToArray(), argTypes.Skip(1).ToArray(), errors);
             }
