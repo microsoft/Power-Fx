@@ -580,7 +580,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData(1, false)]
         [InlineData(29, false)]
-        [InlineData(30, true)]
+        [InlineData(30, false)]
         [InlineData(31, true)]
         [InlineData(1000, true)]
         public void TestUDFsBlockTooManyParameters(int count, bool errorExpected)
@@ -591,7 +591,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var parameters = new List<string>();
-            for (int i = 0; i <= count; i++)
+            for (int i = 0; i < count; i++)
             {
                 parameters.Add($"parameter{i}: Number");
             }

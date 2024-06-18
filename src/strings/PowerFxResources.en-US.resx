@@ -4095,11 +4095,11 @@
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
     <value>Function {0} has too many parameters. User defined functions support up to 30 parameters.</value>
-    <comment>This error message shows up when user tries to define a function that already exists</comment>
+    <comment>This error message shows up when a user tries to define a function with more than 30 parameters.</comment>
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    <comment>This error message shows up when a user tries to define a function with more than 30 parameters.</comment>
+    <comment>This error message shows up when return type is not provided for user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
