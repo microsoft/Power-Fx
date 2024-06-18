@@ -70,5 +70,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override string TableSymbolName => ConnectorType.Name;
+
+        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
     }
 }
