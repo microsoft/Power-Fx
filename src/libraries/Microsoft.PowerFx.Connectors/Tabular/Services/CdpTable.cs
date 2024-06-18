@@ -58,10 +58,10 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // $$$ This is a hack to generate ADS
-            bool _adsHack = false;            
-            if (uriPrefix.StartsWith("*"))
+            bool adsHack = false;            
+            if (uriPrefix.StartsWith("*", StringComparison.Ordinal))
             {
-                _adsHack = true;
+                adsHack = true;
                 uriPrefix = uriPrefix.Substring(1);
             }
 
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger) { GenerateADS = _adsHack };
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger) { GenerateADS = adsHack };
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
             SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);
