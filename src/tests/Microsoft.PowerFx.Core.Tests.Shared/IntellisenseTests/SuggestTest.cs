@@ -379,6 +379,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
         [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Filter(TableLoop,|", true, "Loop", "Record", "SomeString", "TableLoop", "ThisRecord")]
         [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {

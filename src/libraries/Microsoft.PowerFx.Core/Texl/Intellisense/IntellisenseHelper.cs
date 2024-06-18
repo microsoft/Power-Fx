@@ -899,17 +899,17 @@ namespace Microsoft.PowerFx.Intellisense
             return script.Length >= cursorPos + colonLen && script.Substring(cursorPos, colonLen) == TexlLexer.PunctuatorColon;
         }
 
-        internal static bool ContainsDataEntityType(DType type, int maxDepth, int currentDepth = 1)
+        internal static bool ContainsDataEntityType(DType type, int currentDepth)
         {
             Contracts.AssertValid(type);
 
-            if (currentDepth > maxDepth)
+            if (currentDepth < 1)
             {
                 return false;
             }
 
             return type.GetNames(DPath.Root).Any(n => n.Type.IsExpandEntity ||
-                (n.Type.IsAggregate && ContainsDataEntityType(n.Type, maxDepth, currentDepth + 1)));
+                (n.Type.IsAggregate && ContainsDataEntityType(n.Type, currentDepth - 1)));
         }
     }
 }
