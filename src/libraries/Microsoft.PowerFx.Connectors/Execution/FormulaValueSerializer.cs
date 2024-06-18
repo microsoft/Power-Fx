@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -18,7 +18,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
         internal const string UtcDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fff";
 
-        internal abstract string GetResult();
+        // if true, need to override GetHttpClient
+        // if false, need to override GetResult
+        internal virtual bool GeneratesHttpContent { get; } = false;
+
+        internal virtual string GetResult() => null;
+
+        internal virtual HttpContent GetHttpContent() => null;
 
         internal abstract void StartSerialization(string referenceId);
 
@@ -55,6 +61,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteDateValue(DateTime dateValue);
 
         protected readonly bool _schemaLessBody;
+
         protected readonly IConvertToUTC _utcConverter;
 
         internal FormulaValueSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
@@ -111,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 DKind.Table => "array",
                                 DKind.ObjNull => "null",
                                 _ => "unknown_dkind"
-                            }, 
+                            },
                             format: null),
                         nv.Value).ConfigureAwait(false);
                 }
@@ -170,11 +177,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "null":
+
                     // nullable
                     throw new PowerFxConnectorException($"null schema type not supported yet for property {propertyName}");
 
                 case "number":
-                    // float, double                    
+
+                    // float, double
                     WritePropertyName(propertyName);
 
                     if (fv is NumberValue numberValue)
@@ -191,7 +200,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     }
 
                     break;
+
                 case "boolean":
+
                     // bool
                     WritePropertyName(propertyName);
 
@@ -207,7 +218,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 case "integer":
-                    // int16, int32, int64  
+
+                    // int16, int32, int64
                     WritePropertyName(propertyName);
 
                     if (fv is NumberValue integerValue)
@@ -226,6 +238,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 case "string":
+
                     // string, binary, date, date-time, password, byte (base64)
                     WritePropertyName(propertyName);
 
@@ -261,6 +274,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         throw new PowerFxConnectorException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
 
+                    break;
+
+                case "file" when fv is BlobValue blobValue:
+                    WritePropertyName(propertyName);
+                    await WriteBlobValueAsync(blobValue).ConfigureAwait(false);
                     break;
 
                 // some connectors don't set "type" when they have dynamic schema

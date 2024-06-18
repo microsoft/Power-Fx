@@ -29,6 +29,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Threading.InterlockedIncrement.
                 "VersionHash._hashStarter",
 
+                "TexlFunctionSet._empty", // points to an immutable object. 
+
                 // readonly arrays / dictionary - is there an IReadOnly type to changes these too instead? 
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "BuiltinFunctionsCore._featureGateFunctions",

@@ -57,6 +57,14 @@ namespace Microsoft.PowerFx.Connectors
                 throw new InvalidOperationException("TabularService already initialized");
             }
 
+            // $$$ This is a hack to generate ADS
+            bool adsHack = false;            
+            if (uriPrefix.StartsWith("*", StringComparison.Ordinal))
+            {
+                adsHack = true;
+                uriPrefix = uriPrefix.Substring(1);
+            }
+
             if (DatasetMetadata == null)
             {
                 await InitializeDatasetMetadata(httpClient, uriPrefix, logger, cancellationToken).ConfigureAwait(false);
@@ -64,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _uriPrefix = uriPrefix;
 
-            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger) { GenerateADS = adsHack };
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
             SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);

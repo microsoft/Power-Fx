@@ -268,12 +268,14 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // $$$ Hack to enable IExternalTabularDataSource, will be removed later
-            if (name.Value.StartsWith("__", StringComparison.OrdinalIgnoreCase))
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (tableResolver.GenerateADS)
             {
                 HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
                 DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
                 FormulaType = new KnownRecordType(newDType);
             }
+#pragma warning restore CS0618 // Type or member is obsolete
 
             FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities);
         }

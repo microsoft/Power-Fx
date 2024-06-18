@@ -777,7 +777,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Switch default function set.
             // This removes Sum() and adds Func1(). 
-            var defaultFunctions = new SymbolTable();
+            var defaultFunctions = new SymbolTable { DebugName = "NewSet" };
             defaultFunctions.AddFunction(new Func1Function());
             engine.UpdateSupportedFunctions(defaultFunctions);
 
@@ -786,6 +786,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             result = engine.Check(expr2);
             Assert.True(result.IsSuccess);
+        }
+
+        // Verify we can mutate the config. 
+        [Fact]
+        public async Task DefaultFunctions2()
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(new Func1Function());
+            
+            var engine = new Engine(config);
+           
+            var result = engine.Check("Func1(3)"); // 6
+            Assert.True(result.IsSuccess);
+
+            config.AddFunction(new MultiplyFunction());
+            result = engine.Check("Multiply(4)"); // 8
+            Assert.True(result.IsSuccess);            
         }
 
         // Helper to set Engine.SupportedFunctions.
