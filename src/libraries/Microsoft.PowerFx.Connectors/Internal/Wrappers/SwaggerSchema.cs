@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors
                                                                         ? new Dictionary<string, ISwaggerSchema>()
                                                                         : _schema.Properties.ToDictionary(kvp => kvp.Key, kvp => SwaggerSchema.New(kvp.Value));
 
-        public ISwaggerSchema Items => _schema.Items == null ? null : new SwaggerSchema(_schema.Items);
+        public ISwaggerSchema Items => _schema?.Items == null ? null : new SwaggerSchema(_schema.Items);
 
         private IList<IOpenApiAny> _enum = null;
 
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors
             set => _enum = value;
         }
 
-        public ISwaggerReference Reference => SwaggerReference.New(_schema.Reference);
+        public ISwaggerReference Reference => SwaggerReference.New(_schema?.Reference);
 
         // SalesForce specific
         public ISet<string> ReferenceTo => null;
