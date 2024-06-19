@@ -583,6 +583,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(30, false)]
         [InlineData(31, true)]
         [InlineData(1000, true)]
+        [InlineData(10000, true)]
         public void TestUDFsBlockTooManyParameters(int count, bool errorExpected)
         {
             var parserOptions = new ParserOptions()

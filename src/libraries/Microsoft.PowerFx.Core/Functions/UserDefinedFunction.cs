@@ -228,7 +228,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 if (udf.Args.Count > MaxParameterCount)
                 {
-                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName));
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
                     continue;
                 }
 
