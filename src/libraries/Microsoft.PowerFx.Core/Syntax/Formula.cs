@@ -32,10 +32,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal List<CommentToken> Comments { get; private set; }
 
-        // This is needed for determining if behavior function intellisense suggestions are appropriate.
-        public readonly bool IsImperativeUdf;
-
-        public Formula(string script, TexlNode tree, CultureInfo loc = null, bool isImperativeUdf = false)
+        public Formula(string script, TexlNode tree, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -43,11 +40,10 @@ namespace Microsoft.PowerFx.Syntax
             Script = script;
             ParseTree = tree;
             Loc = loc;
-            IsImperativeUdf = isImperativeUdf;
             AssertValid();
         }
 
-        public Formula(string script, CultureInfo loc = null, bool isImperativeUdf = false)
+        public Formula(string script, CultureInfo loc = null)
             : this(script, null, loc)
         {
         }
