@@ -1313,7 +1313,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        runtimeContext.ExecutionLogger?.LogWarning($"Provided parameter is expected to be a record but is {parameterToUse.Type._type.SafeDTypeToString()}");
+                        runtimeContext.ExecutionLogger?.LogWarning($"Provided parameter is expected to be a record but is {parameterToUse.Type._type.ToAnonymousString()}");
                         return null;
                     }
                 }

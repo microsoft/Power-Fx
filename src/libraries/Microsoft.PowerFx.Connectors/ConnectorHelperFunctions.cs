@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Connectors
                 return "no parameter";
             }
 
-            return $"{knownParameters.Length} parameters {string.Join(" | ", knownParameters.Select(nv => $"{nv.Name}:{nv.Value.Type._type.SafeDTypeToString()}"))}";
+            return $"{knownParameters.Length} parameters {string.Join(" | ", knownParameters.Select(nv => $"{nv.Name}:{nv.Value.Type._type.ToAnonymousString()}"))}";
         }
 
         internal static string LogConnectorType(ConnectorType connectorType)
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors
                 return Null(nameof(ConnectorType));
             }
 
-            string log = $"{nameof(ConnectorType)} {connectorType?.Name ?? Null(nameof(connectorType.Name))} {connectorType?.FormulaType._type.SafeDTypeToString() ?? Null(nameof(ConnectorType.FormulaType))}";
+            string log = $"{nameof(ConnectorType)} {connectorType?.Name ?? Null(nameof(connectorType.Name))} {connectorType?.FormulaType._type.ToAnonymousString() ?? Null(nameof(ConnectorType.FormulaType))}";
 
             if (connectorType.HasErrors)
             {
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
                 return "no argument";
             }
 
-            return $"{arguments.Length} argument{(arguments.Length > 1 ? "s" : string.Empty)} {string.Join(" | ", arguments.Select(a => a.Type._type.SafeDTypeToString()))}";
+            return $"{arguments.Length} argument{(arguments.Length > 1 ? "s" : string.Empty)} {string.Join(" | ", arguments.Select(a => a.Type._type.ToAnonymousString()))}";
         }
 
         internal static string LogFormulaValue(FormulaValue formulaValue)
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Connectors
                 return $"ErrorValue {string.Join(", ", ev.Errors.Select(er => er.Message))}";
             }
 
-            return $"{formulaValue.Type._type.SafeDTypeToString()}";
+            return $"{formulaValue.Type._type.ToAnonymousString()}";
         }
 
         internal static string LogConnectorEnhancedSuggestions(ConnectorEnhancedSuggestions suggestions)
@@ -153,14 +153,14 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // DType.ToString() equivalent which is safe for logging (column names are not displayed)
-        internal static string SafeDTypeToString(this DType dType)
+        internal static string ToAnonymousString(this DType dType)
         {
             var sb = new StringBuilder();
-            SafeAppendTo(dType, sb);
+            ToAnonymousAppendTo(dType, sb);
             return sb.ToString();
         }
 
-        private static void SafeAppendTo(DType dType, StringBuilder sb)
+        private static void ToAnonymousAppendTo(DType dType, StringBuilder sb)
         {
             sb.Append(DType.MapKindToStr(dType.Kind));
 
@@ -168,38 +168,38 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case DKind.Record:
                 case DKind.Table:
-                    SafeAppendAggregateType(sb, dType.TypeTree);
+                    ToAnonymousStringAppendAggregateType(sb, dType.TypeTree);
                     break;
                 case DKind.OptionSet:
                 case DKind.View:
-                    SafeAppendOptionSetOrViewType(sb, dType.TypeTree);
+                    ToAnonymousStringAppendOptionSetOrViewType(sb, dType.TypeTree);
                     break;
                 case DKind.Enum:
-                    SafeAppendEnumType(sb, dType.ValueTree, dType.EnumSuperkind);
+                    ToAnonymousStringAppendEnumType(sb, dType.ValueTree, dType.EnumSuperkind);
                     break;
             }
         }
 
-        private static void SafeAppendAggregateType(StringBuilder sb, TypeTree tree)
+        private static void ToAnonymousStringAppendAggregateType(StringBuilder sb, TypeTree tree)
         {
             sb.Append("[");
 
-            string strPre = string.Empty;
+            string separator = string.Empty;
             int i = 1;
             foreach (KeyValuePair<string, DType> kvp in tree.GetPairs())
             {
-                sb.Append(strPre);
+                sb.Append(separator);
                 sb.Append("field");
                 sb.Append(i++);
                 sb.Append(':');
-                SafeAppendTo(kvp.Value, sb);
-                strPre = ", ";
+                ToAnonymousAppendTo(kvp.Value, sb);
+                separator = ", ";
             }
 
             sb.Append("]");
         }
 
-        private static void SafeAppendOptionSetOrViewType(StringBuilder sb, TypeTree tree)
+        private static void ToAnonymousStringAppendOptionSetOrViewType(StringBuilder sb, TypeTree tree)
         {
             sb.Append("{");
 
@@ -211,34 +211,34 @@ namespace Microsoft.PowerFx.Connectors
                 sb.Append("optionSet");
                 sb.Append(i++);
                 sb.Append(':');
-                SafeAppendTo(kvp.Value, sb);
+                ToAnonymousAppendTo(kvp.Value, sb);
                 strPre = ", ";
             }
 
             sb.Append("}");
         }
 
-        private static void SafeAppendEnumType(StringBuilder sb, ValueTree tree, DKind enumSuperkind)
+        private static void ToAnonymousStringAppendEnumType(StringBuilder sb, ValueTree tree, DKind enumSuperkind)
         {
             sb.Append(DType.MapKindToStr(enumSuperkind));
             sb.Append("[");
 
-            string strPre = string.Empty;
+            string separator = string.Empty;
             int i = 1;
             foreach (KeyValuePair<string, EquatableObject> kvp in tree.GetPairs())
             {               
-                sb.Append(strPre);
+                sb.Append(separator);
                 sb.Append("enum");
                 sb.Append(i++);
                 sb.Append(':');
-                SafeAppendTo(kvp.Value, sb);
-                strPre = ", ";
+                ToAnonymousStringAppendTo(kvp.Value, sb);
+                separator = ", ";
             }
 
             sb.Append("]");
         }
 
-        private static void SafeAppendTo(EquatableObject eqo, StringBuilder sb)
+        private static void ToAnonymousStringAppendTo(EquatableObject eqo, StringBuilder sb)
         {
             if (eqo.Object == null)
             {
