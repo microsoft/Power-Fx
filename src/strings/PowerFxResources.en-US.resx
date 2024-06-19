@@ -4095,7 +4095,7 @@
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
     <value>Function {0} has too many parameters. User defined functions support up to {1} parameters.</value>
-    <comment>This error message shows up when a user tries to define a function with more than {1} parameters.</comment>
+    <comment>This error message shows up when a user tries to define a function with too many parameters. {0} - the name of the user defined function, {1} - the max number of parameters allowed.</comment>
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
