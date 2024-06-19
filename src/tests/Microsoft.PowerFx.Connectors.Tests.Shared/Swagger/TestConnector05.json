@@ -38,11 +38,7 @@
           "multipart/form-data"
         ],
         "produces": [
-          "text/plain",
-          "application/json",
-          "text/json",
-          "application/xml",
-          "text/xml"
+          "text/plain"
         ],
         "parameters": [
           {

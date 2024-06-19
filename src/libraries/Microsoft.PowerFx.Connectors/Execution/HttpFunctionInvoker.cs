@@ -446,7 +446,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(typeToUse)
-                    : _returnRawResults || response.Content.Headers.ContentType.MediaType == OpenApiExtensions.ContentType_TextPlain
+                    : _returnRawResults
                     ? FormulaValue.New(text)
                     : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, typeToUse);
             }
