@@ -384,7 +384,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     if (_curs.TidCur == TokKind.CurlyOpen)
                     {
-                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+                        var isImperative = parserOptions.AllowsSideEffects;
 
                         _curs.TokMove();
                         _hasSemicolon = false;
