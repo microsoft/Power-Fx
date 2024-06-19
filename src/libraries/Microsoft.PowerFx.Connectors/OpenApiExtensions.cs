@@ -535,7 +535,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        return new ConnectorType(error: $"Unsupported type of array ({arrayType.FormulaType._type})");
+                        return new ConnectorType(error: $"Unsupported type of array ({arrayType.FormulaType._type.ToAnonymousString()})");
                     }
 
                 case "object":
