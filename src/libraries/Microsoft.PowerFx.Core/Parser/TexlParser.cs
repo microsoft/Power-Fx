@@ -384,6 +384,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     if (_curs.TidCur == TokKind.CurlyOpen)
                     {
+                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
@@ -397,13 +399,13 @@ namespace Microsoft.PowerFx.Core.Parser
                         if (TokEat(TokKind.CurlyClose) == null)
                         {
                             // Add incomplete UDF as they are needed for intellisense
-                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
                             break;
                         }
 
                         var bodyParseValid = _errors?.Count == errorCount;
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: bodyParseValid));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
