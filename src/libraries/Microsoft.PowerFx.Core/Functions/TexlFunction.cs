@@ -201,6 +201,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if UDFs cannot override this function name.
         public virtual bool IsRestrictedUDFName => false;
 
+        // Return true if this function is associated with a specific screen.
+        public virtual bool CreatesImplicitScreenDependency => false;
+
         // Return true if this function affects scope variable ("app scope variable or component scope variable").
         public virtual bool AffectsScopeVariable => false;
 
