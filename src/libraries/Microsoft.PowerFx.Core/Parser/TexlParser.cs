@@ -384,6 +384,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     if (_curs.TidCur == TokKind.CurlyOpen)
                     {
+                        // Functions defined with a curly body will always be considered imperative, so mark this UDF if parser flag has been passed.
                         var isImperative = parserOptions.AllowsSideEffects;
 
                         _curs.TokMove();
