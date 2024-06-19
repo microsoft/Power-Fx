@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
@@ -22,6 +23,8 @@ namespace Microsoft.PowerFx.Connectors
         public abstract bool IsDelegable { get; }
 
         public abstract ConnectorType ConnectorType { get; }
+
+        public abstract HttpClient HttpClient { get; }
 
         public virtual CdpTableValue GetTableValue()
         {
