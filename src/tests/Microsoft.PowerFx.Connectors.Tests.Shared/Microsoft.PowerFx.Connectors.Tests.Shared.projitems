@@ -38,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)PriorityOrderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PriorityOrdererTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PublicSurfaceTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
