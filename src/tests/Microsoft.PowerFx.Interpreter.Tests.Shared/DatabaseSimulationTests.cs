@@ -102,9 +102,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(anonymized, check.ApplyGetLogging());
         }
 
+        // This was previously allowed to unblock Cards team. This is not longer allowed.
         [Theory]
         [InlineData("Set(x, Table)")]
-        public async Task SkipExpandableSetSemanticsFeatureTest(string expr)
+        public async Task RemovingSkipExpandableSetSemanticsFeatureTest(string expr)
         {
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
             var symbols = new SymbolTable();
@@ -113,23 +114,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbols.EnableMutationFunctions();
 
             // Temporary feature to unblock Cards team
-#pragma warning disable CS0612 // Type or member is obsolete
-            var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
-#pragma warning restore CS0612 // Type or member is obsolete
-            var engine = new RecalcEngine(config);
+            //var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
+            var engine = new RecalcEngine(new PowerFxConfig());
             var runtimeConfig = new SymbolValues(symbols);
 
             engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
             runtimeConfig.Set(slot, databaseTable);
 
             var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
-
-            // This will be success due to SkipExpandableSetSemantics feature that loosens some Set semantics conditions.
-            Assert.True(check.IsSuccess);
-            Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
-
-            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues());
-            Assert.IsType<VoidValue>(result);
+            Assert.False(check.IsSuccess);
         }
 
         [Theory]
