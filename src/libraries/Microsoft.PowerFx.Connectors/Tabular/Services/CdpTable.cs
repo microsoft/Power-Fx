@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public string DatasetName { get; private set; }
 
+        public override HttpClient HttpClient => _httpClient;
+
         public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
 
         public override ConnectorType ConnectorType => TabularTableDescriptor.ConnectorType;
@@ -33,6 +35,8 @@ namespace Microsoft.PowerFx.Connectors
         internal CdpTableDescriptor TabularTableDescriptor;
 
         private string _uriPrefix;
+
+        private HttpClient _httpClient;
 
         public CdpTable(string dataset, string table)
         {
@@ -56,6 +60,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 throw new InvalidOperationException("TabularService already initialized");
             }
+
+            _httpClient = httpClient;
 
             // $$$ This is a hack to generate ADS
             bool adsHack = false;            
@@ -99,8 +105,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
-            HttpClient httpClient = serviceProvider?.GetService<HttpClient>() ?? throw new InvalidOperationException("HttpClient is required on IServiceProvider");
-
+            
             string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
 
             Uri uri = new Uri(
@@ -108,7 +113,7 @@ namespace Microsoft.PowerFx.Connectors
                    (_uriPrefix.Contains("/sql/") ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
 
-            string text = await GetObject(httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);
+            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
         }
 
