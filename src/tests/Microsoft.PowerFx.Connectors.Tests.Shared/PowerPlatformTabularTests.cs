@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(connectorTable.IsInitialized);
             Assert.Equal("Customers", connectorTable.DisplayName);
 
-            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Load Customers DB.json");            
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
             Assert.True(connectorTable.IsInitialized);
 
@@ -132,35 +132,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(sqlTable._connectorType);
             Assert.Null(sqlTable._connectorType.Relationships);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("Juigné", address.Value);
 
-            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            // Rows are not cached here as the cache is stored in CdpTableValue which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
@@ -202,35 +189,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);                                    
 
             // Expression with tabular connector
             string expr = @"First(Customers).Address";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal("FieldAccess(First:![Address:s, Country:s, CustomerId:w, Name:s, Phone:s](InjectServiceProviderFunction:*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s](ResolvedObject('Customers:RuntimeValues_XXX'))), Address)", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("Juigné", address.Value);
 
-            // Rows are not cached here as the cache is stored in ConnectorTableValueWithServiceProvider which is created by InjectServiceProviderFunction, itself added during Engine.Check
+            // Rows are not cached here as the cache is stored in CdpTableValue which is created by InjectServiceProviderFunction, itself added during Engine.Check
             testConnector.SetResponseFromFile(@"Responses\SQL Server Get First Customers.json");
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
@@ -335,37 +309,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => kvp.Value.TargetEntity)));
             Assert.Equal("Editor#Claims-Claims, Author#Claims-Claims, CheckoutUser#Claims-Claims", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => string.Join("|", kvp.Value.ReferentialConstraints.Select(kvp2 => $"{kvp2.Key}-{kvp2.Value}")))));
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Documents).Name";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal(
-                "FieldAccess(First:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
-                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
-                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
-                "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
-                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
-                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
-                "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
-                "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +
-                "'{TriggerWindowStartToken}':s, '{VersionNumber}':s](ResolvedObject('Documents:RuntimeValues_XXX'))), {Name})", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
@@ -410,37 +362,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
                 "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);                                    
 
             // Expression with tabular connector
             string expr = @"First(Documents).Name";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal(
-                "FieldAccess(First:![Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
-                "ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, OData__DisplayName:s, " +
-                "OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, '{IsFolder}':b, " +
-                "'{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, '{TriggerWindowStartToken}':s, " +
-                "'{VersionNumber}':s](InjectServiceProviderFunction:*[Author:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser:![Claims:s, Department:s, DisplayName:s, " +
-                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId:s, Created:d, Editor:![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag:s, " +
-                "OData__DisplayName:s, OData__ExtendedDescription:s, OData__ip_UnifiedCompliancePolicyProperties:s, Title:s, '{FilenameWithExtension}':s, '{FullPath}':s, '{Identifier}':s, '{IsCheckedOut}':b, " +
-                "'{IsFolder}':b, '{Link}':s, '{ModerationComment}':s, '{ModerationStatus}':s, '{Name}':s, '{Path}':s, '{Thumbnail}':![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}':s, " +
-                "'{TriggerWindowStartToken}':s, '{VersionNumber}':s](ResolvedObject('Documents:RuntimeValues_XXX'))), {Name})", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SP GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
@@ -471,17 +401,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             CdpTableValue sfTable = connectorTable.GetTableValue();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"CountRows(Accounts)";
@@ -516,15 +437,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             await connectorTable.InitAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
             CdpTableValue sfTable = connectorTable.GetTableValue();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger).AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Filter(Accounts, 'Account ID' = ""001DR00001Xlq74YAB"")).'Account Name'";
@@ -545,9 +459,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(testConnector);
-            string connectionId = "ba3b1db7bb854aedbad2058b66e36e83";
-            string jwt = "eyJ0eXAiOi...";
-            using var client = new PowerPlatformConnectorClient("7526ddf1-6e97-eed6-86bb-8fd46790d670.05.common.tip1002.azure-apihub.net", "7526ddf1-6e97-eed6-86bb-8fd46790d670", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            string connectionId = "3b997639fd9c4d808ecf723eb4b55c64";
+            string jwt = "eyJ0eXAiOiJKV...";
+            using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             CdpDataSource cds = new CdpDataSource("default");
 
@@ -693,35 +607,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(b);
             Assert.Equal("s", billingCountryType._type.ToString());
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Accounts).'Account ID'";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal(
-                "FieldAccess(First:![AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, " +
-                "CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, " +
-                "Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, " +
-                "ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](InjectServiceProviderFunction:*[AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, " +
-                "BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, " +
-                "LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, " +
-                "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
@@ -767,35 +661,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Geocode Accuracy':s, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
                 "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", sfTable.Type.ToStringWithDisplayNames());
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
 
             // Expression with tabular connector
             string expr = @"First(Accounts).'Account ID'";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
-            Assert.True(check.IsSuccess);
+            Assert.True(check.IsSuccess);          
 
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal(
-                "FieldAccess(First:![AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, " +
-                "CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, " +
-                "Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, " +
-                "ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](InjectServiceProviderFunction:*[AccountSource:s, BillingCity:s, BillingCountry:s, BillingGeocodeAccuracy:s, BillingLatitude:w, BillingLongitude:w, " +
-                "BillingPostalCode:s, BillingState:s, BillingStreet:s, CreatedById:s, CreatedDate:d, Description:s, Id:s, Industry:s, IsDeleted:b, Jigsaw:s, JigsawCompanyId:s, LastActivityDate:D, LastModifiedById:s, LastModifiedDate:d, " +
-                "LastReferencedDate:d, LastViewedDate:d, MasterRecordId:s, Name:s, NumberOfEmployees:w, OwnerId:s, ParentId:s, Phone:s, PhotoUrl:s, ShippingCity:s, ShippingCountry:s, ShippingGeocodeAccuracy:s, ShippingLatitude:w, " +
-                "ShippingLongitude:w, ShippingPostalCode:s, ShippingState:s, ShippingStreet:s, SicDesc:s, SystemModstamp:d, Type:s, Website:s](ResolvedObject('Accounts:RuntimeValues_XXX'))), Id)", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
@@ -814,7 +688,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             string connectionId = "7a82a84f1b454132920a2654b00d45be";
             string uriPrefix = $"/apim/zendesk/{connectionId}";
-            string jwt = "eyJ0eXAiOiJ...";
+            string jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InE3UDFOdnh1R1F3RE4yVGFpTW92alo4YVp3cyIsImtpZCI6InE3UDFOdnh1R1F3RE4yVGFpTW92alo4YVp3cyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85MWJlZTNkOS0wYzE1LTRmMTctODYyNC1jOTJiYjhiMzZlYWQvIiwiaWF0IjoxNzE4Nzg2MTQzLCJuYmYiOjE3MTg3ODYxNDMsImV4cCI6MTcxODc5MTAyMCwiYWNyIjoiMSIsImFpbyI6IkFVUUJ1LzRYQUFBQVp5enZNYnFaUW9KcldaUTlwcUZTVFdaRk1KemZOb3UzSnE3OVVmUDdtTksrYVZ5V0t5YTFTOEwxZ1RXbk10OVljZlZpZ2U3b2JMYkpLM2t6bWRndXZCNncwZ3g2cEVPenJaQmdZakdyTk8zZGtFRzVzK0tXK0poV1pPNXVITTJ1cnBxUXVSekYzWnR1WnZyNi9nY281a1FLYTBXSDdaUGVRc29HQTJvN2dpNkx2ODRNT3NUWG9DbHZJRHpJTzYwc1FaWU1QZllYMjlKbTViSk8zQVFDVFIyR1Y1NitxbGkxRGZMYWF6TWpKajBwL0tPK24rUzJydTU0clN6UFJkU0R1KzJYZXRqdzNJS1pJR2pyQTFiQ093U1lXVjVqVHNqSDI2Q2pJS3V6VGtZOTZKV2JDV1Z0eDZ6RTlDKzZ6WnkrQ2k0SDhSVDM3Vk5GWFplNFBrcUIyUjNVMU11ODBJOUtYeEhXVDlWSm5yYWpLa1VTMEUzZ2JSbGVyUFZxa2JzYWdNdlN1Wm9NYmdEbkovaEtCUGt3Nm5lL1UzSWJGeHg4TC9KOUhYVXpxS3c9IiwiYW1yIjpbInJzYSIsIm1mYSJdLCJhcHBpZCI6ImE4ZjdhNjVjLWY1YmEtNDg1OS1iMmQ2LWRmNzcyYzI2NGU5ZCIsImFwcGlkYWNyIjoiMCIsImZhbWlseV9uYW1lIjoidXNlcjA5IiwiZ2l2ZW5fbmFtZSI6ImF1cm9yYSIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjkwLjEwNC43My4yMDMiLCJuYW1lIjoiYXVyb3JhdXNlcjA5Iiwib2lkIjoiMzJiYTExYmQtZmYxNS00NmY3LWJkMzMtNmI0ODFlNWY1YzdlIiwicHVpZCI6IjEwMDMyMDAxM0I5Qjg4QzQiLCJyaCI6IjAuQVc4QTJlTy1rUlVNRjAtR0pNa3J1TE51clY4OEJmNlNOaFJQcnZMdU5Qd0lISzV2QUxFLiIsInNjcCI6IlJ1bnRpbWUuQWxsIiwic3ViIjoiWnlpQUR2NGJPSV8xZXVjbDZKNnc3emR6d2xWQTJpLVpWLWduT0FLRkVUNCIsInRpZCI6IjkxYmVlM2Q5LTBjMTUtNGYxNy04NjI0LWM5MmJiOGIzNmVhZCIsInVuaXF1ZV9uYW1lIjoiYXVyb3JhdXNlcjA5QGNhcGludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXBuIjoiYXVyb3JhdXNlcjA5QGNhcGludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXRpIjoiREV3bFNuTi1sRUdTcEkybUdESWxBQSIsInZlciI6IjEuMCIsInhtc19pZHJlbCI6IjEgMTIifQ.O2_aoWB2Iu_6VtTygtrqInOi8dFDfcYdNHlPhuhZWmeN7uloLLif4tHp_XbSwSx1exROswUUaF64JR0F-LQf3D8EZUwTN3TL5PrAsfAGI5AMBUaF1zTm0828YIKO12i_1iH2KnWdC3wUnSQ5qB-zoY39MgfZt0YMSvDrVvrV96WJTF9B_ugP06X_xKuG9sq7VX7hYTxKEkZwvIF3rFuGkI-SuS7mpapPAbTTHEgjQaB-coJObwEYBnWNaTzgssC2M8ho8glj8bpREnLtp_MkAq0xT2rZkMsj-5BrU2vpzAVyLxnB7xzKzR-9KoI2DZm9-Ey0sMVkhJm2KCWfEHtyRA";
             using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             CdpDataSource cds = new CdpDataSource("default");
@@ -857,33 +731,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
 
-#pragma warning disable CS0618 // Type or member is obsolete
-
-            // Enable IR rewritter to auto-inject ServiceProvider where needed
-            engine.EnableTabularConnectors();
-
-#pragma warning restore CS0618 // Type or member is obsolete
-
             SymbolValues symbolValues = new SymbolValues().Add("Users", zdTable);
-            RuntimeConfig rc = new RuntimeConfig(symbolValues)
-                                    .AddService<ConnectorLogger>(logger)
-                                    .AddService<HttpClient>(client);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);                                    
 
             // Expression with tabular connector
             string expr = @"First(Users).name";
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
-
-            // Confirm that InjectServiceProviderFunction has properly been added
-            string ir = new Regex("RuntimeValues_[0-9]+").Replace(check.PrintIR(), "RuntimeValues_XXX");
-            Assert.Equal(
-                "FieldAccess(First:![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, " +
-                "organization_id:w, phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b](InjectServiceProviderFunction:*[a" +
-                "ctive:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
-                "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b](ResolvedObject('Users:RuntimeValues_XXX'))), " +
-                "name)", ir);
-
-            // Use tabular connector. Internally we'll call ConnectorTableValueWithServiceProvider.GetRowsInternal to get the data
+           
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             testConnector.SetResponseFromFile(@"Responses\ZD Users GetRows.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
 
