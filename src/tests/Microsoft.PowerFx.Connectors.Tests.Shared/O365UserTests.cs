@@ -239,7 +239,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public async Task Office365Users_Functions(string expr, string expectedResult, string xUrls, string xBodies, params string[] expectedFiles)
         {
-            await RunConnectorTestAsync(live: false, expr, expectedResult, xUrls, xBodies, expectedFiles, true).ConfigureAwait(false);
+            await RunConnectorTestAsync(live: false, expr, expectedResult, xUrls, xBodies, expectedFiles, true);
         }
     }
 }

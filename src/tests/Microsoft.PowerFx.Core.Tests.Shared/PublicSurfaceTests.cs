@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.SymbolEntry",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
-
+                
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.CommentToken",
@@ -190,6 +190,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // TBD ...
                 "Microsoft.PowerFx.BasicUserInfo",
+                "Microsoft.PowerFx.PowerFxFileInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.Entities.IRefreshable",                               
@@ -321,12 +322,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errors.Length == 0, $"TexlNode errors: {errors}");
         }
 
+#if !NET7_0_OR_GREATER
         [Fact]
         public static void TestImmutability()
         {
             var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
             ImmutabilityTests.CheckImmutability(asm);
         }
+#endif
 
         /// <summary>
         ///     Checks whether <see cref="t1" /> is public, and equal to or subclass of to <see cref="t2" />.

@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
             return recordType;
         }
 
-        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record, bool mutationCopy = false)
         {
             TryGetIndexNumberOfCalls++;
 
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
 
             foreach (DataColumn column in _table.Columns)
             {
-                var formulaValue = await record.GetFieldAsync(column.ColumnName, cancellationToken).ConfigureAwait(false);
+                var formulaValue = await record.GetFieldAsync(column.ColumnName, cancellationToken);
 
                 if (formulaValue is not BlankValue)
                 {
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Tests
 
                 foreach (DataColumn column in _row.Table.Columns)
                 {
-                    var formulaValue = await changeRecord.GetFieldAsync(column.ColumnName, cancellationToken).ConfigureAwait(false);
+                    var formulaValue = await changeRecord.GetFieldAsync(column.ColumnName, cancellationToken);
 
                     if (formulaValue is not BlankValue)
                     {

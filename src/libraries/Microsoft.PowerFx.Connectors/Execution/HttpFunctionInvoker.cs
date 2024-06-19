@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (ISwaggerSchema, FormulaValue)> bodyParts = new ();
             Dictionary<string, FormulaValue> incomingParameters = ConvertToNamedParameters(args);
             string contentType = null;
 
@@ -334,7 +334,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
+        private async Task<HttpContent> GetBodyAsync(string referenceId, bool schemaLessBody, Dictionary<string, (ISwaggerSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, string contentType, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValueSerializer serializer = null;
@@ -358,14 +358,14 @@ namespace Microsoft.PowerFx.Connectors
                 };
 
                 serializer.StartSerialization(referenceId);
-                foreach (KeyValuePair<string, (OpenApiSchema Schema, FormulaValue Value)> kv in map)
+                foreach (KeyValuePair<string, (ISwaggerSchema Schema, FormulaValue Value)> kv in map)
                 {
                     await serializer.SerializeValueAsync(kv.Key, kv.Value.Schema, kv.Value.Value).ConfigureAwait(false);
                 }
 
                 serializer.EndSerialization();
                 string body = serializer.GetResult();
-                return new StringContent(body, Encoding.Default, ct);
+                return new StringContent(body, Encoding.UTF8, ct);
             }
             finally
             {
@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnTypeOverride, bool throwOnError = false)
         {
             // https://github.com/microsoft/Power-Fx/issues/2119
             // https://github.com/microsoft/Power-Fx/issues/1172
@@ -429,11 +429,17 @@ namespace Microsoft.PowerFx.Connectors
                 // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
                 bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
 
+                var typeToUse = _function.ReturnType;
+                if (returnTypeOverride != null)
+                {
+                    typeToUse = returnTypeOverride;
+                }
+
                 return string.IsNullOrWhiteSpace(text)
-                    ? FormulaValue.NewBlank(_function.ReturnType)
+                    ? FormulaValue.NewBlank(typeToUse)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, _function.ReturnType);
+                    : FormulaValueJSON.FromJson(text, new FormulaValueJsonSerializerSettings() { ReturnUnknownRecordFieldsAsUntypedObjects = returnUnknownRecordFieldAsUO }, typeToUse);
             }
 
             string reasonPhrase = string.IsNullOrEmpty(response.ReasonPhrase) ? string.Empty : $" ({response.ReasonPhrase})";
@@ -453,7 +459,7 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -470,17 +476,17 @@ namespace Microsoft.PowerFx.Connectors
                 });
             }
 
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, expectedType, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = new HttpRequestMessage(_function.HttpMethod, new Uri(url).PathAndQuery);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, null, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, FormulaType returnTypeOverride, CancellationToken cancellationToken)
         {
             HttpMessageInvoker client = localInvoker ?? _httpClient;
             HttpResponseMessage response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -494,7 +500,7 @@ namespace Microsoft.PowerFx.Connectors
                 _logger?.LogInformation($"In {nameof(HttpFunctionInvoker)}.{nameof(ExecuteHttpRequest)}, response status code: {(int)response.StatusCode} {response.StatusCode}");
             }
 
-            return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
+            return await DecodeResponseAsync(response, returnTypeOverride, throwOnError).ConfigureAwait(false);
         }
     }
 
@@ -521,12 +527,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
-            return await _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError).ConfigureAwait(false);
+            return await _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, outputTypeOverride, _throwOnError).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)

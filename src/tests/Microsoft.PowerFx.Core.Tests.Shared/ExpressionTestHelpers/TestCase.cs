@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -26,6 +23,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // For diagnostics, save the orginal location
         public string OverrideFrom;
+
+        // Set of .Net versions where the test is not run
+        public string DisableDotNet;
 
         public bool IsOverride => OverrideFrom != null;
 

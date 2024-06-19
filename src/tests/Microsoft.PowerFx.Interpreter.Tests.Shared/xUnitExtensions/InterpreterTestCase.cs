@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
         public async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
         {
             var messageBusInterceptor = new SkippableTestMessageBus(messageBus, SkippingExceptionNames ?? (new string[1] { "Xunit.SkipException" }));
-            var result = await _testCase.RunAsync(diagnosticMessageSink, messageBusInterceptor, constructorArguments, aggregator, cancellationTokenSource).ConfigureAwait(false);
+            var result = await _testCase.RunAsync(diagnosticMessageSink, messageBusInterceptor, constructorArguments, aggregator, cancellationTokenSource);
             result.Failed -= messageBusInterceptor.SkippedCount;
             result.Skipped += messageBusInterceptor.SkippedCount;
             return result;

@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         protected void Check(Engine engine, string expression)
         {
-            var functionName = expression.Split("(")[0];
+            var functionName = expression.Split('(')[0];
             var errorMessage = $"The function '{functionName}' has some invalid arguments";
 
             var check = engine.Check(expression, options: _opts);
@@ -369,9 +369,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("x", fileObjectRecordValue.SomeProperty);
         }
 
+        [Fact]
+        public void SymbolTableEnableMutationFuntionsTest()
+        {
+            var expr = "Collect()";
+            var engine = new RecalcEngine();
+
+            var symbolTable = new SymbolTable();
+            var symbolTableEnabled = new SymbolTable();
+
+            symbolTableEnabled.EnableMutationFunctions();
+
+            // Mutation functions not listed.
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            Assert.DoesNotContain(check.Symbols.Functions.FunctionNames, f => f == "Collect");
+
+            // Mutation functions is listed.
+            var checkEnabled = engine.Check(expr, symbolTable: symbolTableEnabled);
+            Assert.Contains(checkEnabled.Symbols.Functions.FunctionNames, f => f == "Collect");
+        }
+
         [Theory]
         [InlineData("Patch(t, First(t), {Value:1})")]
-        public void MutationPFxV1Disabled(string expression)
+        public async Task MutationPFxV1Disabled(string expression)
         {
             var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var t = FormulaValue.NewTable(RecordType.Empty().Add(new NamedFormulaType("Value", FormulaType.Decimal)));
@@ -387,8 +407,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var evaluator = check.GetEvaluator();
 
-            // Runtime exception
-            Assert.ThrowsAsync<InvalidOperationException>(async () => await evaluator.EvalAsync(CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            // no runtime exception
+            _ = await evaluator.EvalAsync(CancellationToken.None);
         }
 
         [Theory]        
@@ -481,6 +501,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(string.Join("-", expectedSuggestions), string.Join("-", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
         }
 
+        [Fact]
+        public void AppendErrorTests()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            engine.UpdateVariable("t1", new ErrorTableValue());
+
+            var check = engine.Check("Collect(t1, {a:\"abc\"})", options: new ParserOptions() { AllowsSideEffects = true });
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<ErrorValue>(result);
+        }
+
         /// <summary>
         /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
         /// </summary>
@@ -512,7 +548,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && value2.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
                     {
-                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken).ConfigureAwait(false);
+                        return await row.Value.UpdateFieldsAsync(recordValue, cancellationToken);
                     }
                 }
 
@@ -537,7 +573,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     if (value1.TryGetPrimitiveValue(out object primaryKeyValue1) && keyValue.TryGetPrimitiveValue(out object primaryKeyValue2) && primaryKeyValue1.ToString() == primaryKeyValue2.ToString())
                     {
-                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
+                        return await row.Value.UpdateFieldsAsync(changeRecord, cancellationToken);
                     }
                 }
 
@@ -610,6 +646,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("t1", varTableValue);
 
                 return engine;
+            }
+        }
+
+        internal class ErrorTableValue : TableValue
+        {
+            public ErrorTableValue()
+                : base(TableType.Empty().Add("a", FormulaType.String))
+            {
+            }
+
+            public override IEnumerable<DValue<RecordValue>> Rows => throw new NotImplementedException();
+
+            public override bool CanShallowCopy => true;
+
+            // This simulates a possible scenario wher Dataverse turns an error when trying to append a record.
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound())));
             }
         }
     }

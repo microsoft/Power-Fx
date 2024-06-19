@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -27,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         private static DateTime SafeUtcNow(this IServiceProvider services)
         {
             var clock = services.GetService<IClockService>(_defaultClockService);
-            
+
             var now = clock.UtcNow;
             if (now.Kind != DateTimeKind.Utc)
             {
@@ -82,9 +81,11 @@ namespace Microsoft.PowerFx.Functions
                     case StringValue sv:
                         timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
                         break;
+
                     case OptionSetValue osv:
                         timeUnit = ((string)((OptionSetValue)args[2]).ExecutionValue).ToLowerInvariant();
                         break;
+
                     default:
                         return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
                 }
@@ -115,27 +116,35 @@ namespace Microsoft.PowerFx.Functions
                     case "milliseconds":
                         newDate = datetime.AddMilliseconds(deltaValue);
                         break;
+
                     case "seconds":
                         newDate = datetime.AddSeconds(deltaValue);
                         break;
+
                     case "minutes":
                         newDate = datetime.AddMinutes(deltaValue);
                         break;
+
                     case "hours":
                         newDate = datetime.AddHours(deltaValue);
                         break;
+
                     case "days":
                         newDate = datetime.AddDays(deltaValue);
                         break;
+
                     case "months":
                         newDate = datetime.AddMonths((int)deltaValue);
                         break;
+
                     case "quarters":
                         newDate = datetime.AddMonths(((int)deltaValue) * 3);
                         break;
+
                     case "years":
                         newDate = datetime.AddYears((int)deltaValue);
                         break;
+
                     default:
                         return GetInvalidUnitError(irContext, "DateAdd");
                 }
@@ -212,9 +221,9 @@ namespace Microsoft.PowerFx.Functions
             return datetime;
         }
 
-        // From https://referencesource.microsoft.com/#mscorlib/system/timezoneinfo.cs        
-        // TransitionTimeToDateTime        
-        // Helper function that converts a year and TransitionTime into a DateTime        
+        // From https://referencesource.microsoft.com/#mscorlib/system/timezoneinfo.cs
+        // TransitionTimeToDateTime
+        // Helper function that converts a year and TransitionTime into a DateTime
         private static DateTime TransitionTimeToDateTime(int year, TransitionTime transitionTime)
         {
             DateTime value;
@@ -233,7 +242,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (transitionTime.Week <= 4)
                 {
-                    // Get the (transitionTime.Week)th Sunday.                 
+                    // Get the (transitionTime.Week)th Sunday.
                     value = new DateTime(year, transitionTime.Month, 1, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, timeOfDay.Millisecond);
 
                     var dayOfWeek = (int)value.DayOfWeek;
@@ -252,7 +261,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    // If TransitionWeek is greater than 4, we will get the last week.                    
+                    // If TransitionWeek is greater than 4, we will get the last week.
                     var daysInMonth = DateTime.DaysInMonth(year, transitionTime.Month);
                     value = new DateTime(year, transitionTime.Month, daysInMonth, timeOfDay.Hour, timeOfDay.Minute, timeOfDay.Second, timeOfDay.Millisecond);
 
@@ -289,9 +298,11 @@ namespace Microsoft.PowerFx.Functions
                 case StringValue sv:
                     timeUnit = ((StringValue)args[2]).Value.ToLowerInvariant();
                     break;
+
                 case OptionSetValue osv:
                     timeUnit = ((string)((OptionSetValue)args[2]).ExecutionValue).ToLowerInvariant();
                     break;
+
                 default:
                     return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
             }
@@ -304,10 +315,13 @@ namespace Microsoft.PowerFx.Functions
                 case "months":
                     double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
                     return NumberOrDecimalValue_Double(irContext, months);
+
                 case "quarters":
+
                     // decrementing months by 1 so that we can have months 1-3 (Jan-Mar) on quarter 0, months 4-6 (Apr-Jun) on quarter 1, and so on
                     var quarters = ((end.Year - start.Year) * 4) + Math.Floor((end.Month - 1) / 3.0) - Math.Floor((start.Month - 1) / 3.0);
                     return NumberOrDecimalValue_Double(irContext, quarters);
+
                 case "years":
                     double years = end.Year - start.Year;
                     return NumberOrDecimalValue_Double(irContext, years);
@@ -329,26 +343,31 @@ namespace Microsoft.PowerFx.Functions
                 case "milliseconds":
                     var milliseconds = Math.Floor((end - start).TotalMilliseconds);
                     return NumberOrDecimalValue_Double(irContext, milliseconds);
+
                 case "seconds":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, start.Second);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, end.Second);
                     var seconds = Math.Floor((end - start).TotalSeconds);
                     return NumberOrDecimalValue_Double(irContext, seconds);
+
                 case "minutes":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, 0);
                     var minutes = Math.Floor((end - start).TotalMinutes);
                     return NumberOrDecimalValue_Double(irContext, minutes);
+
                 case "hours":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, 0, 0);
                     var hours = Math.Floor((end - start).TotalHours);
                     return NumberOrDecimalValue_Double(irContext, hours);
+
                 case "days":
                     start = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, 0, 0, 0);
                     var days = Math.Floor((end - start).TotalDays);
                     return NumberOrDecimalValue_Double(irContext, days);
+
                 default:
                     return GetInvalidUnitError(irContext, "DateDiff");
             }
@@ -591,6 +610,15 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
+            locale = GetAdjustedCultureInfo(locale);
+
+            // eu-ES
+            if (locale.LCID == 1069)
+            {
+                // Parsing fails if we keep this part
+                str = str.Replace("(e)ko", string.Empty);
+            }
+
             if (DateTime.TryParse(str, locale, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
             {
                 // Use epoch only for input that has time only.
@@ -615,13 +643,14 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryDateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue value, out DateTimeValue result)
         {
             result = null;
+            CultureInfo locale = GetAdjustedCultureInfo(formatInfo.CultureInfo);
 
-            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var dateTime))
+            if (DateTime.TryParse(value.Value, locale, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var dateTime))
             {
                 // Use epoch only for input that has time only.
                 // If value has time only, dateTime has date of 1/1/0001 and dateTimeNS has current date of this year.
-                if (dateTime.Date == DateTime.MinValue.Date && DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date) 
-                {                    
+                if (dateTime.Date == DateTime.MinValue.Date && DateTime.TryParse(value.Value, locale, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date)
+                {
                     dateTime = _epoch.Add(dateTime.TimeOfDay);
                 }
 
@@ -706,8 +735,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 case DateTimeValue dtv:
                     return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.GetConvertedValue(tzInfo)).TotalDays * -1440);
+
                 case DateValue dv:
                     return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.GetConvertedValue(tzInfo)).TotalDays * -1440);
+
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }
@@ -725,9 +756,11 @@ namespace Microsoft.PowerFx.Functions
                 case NumberValue nv:
                     startOfWeek = Math.Floor((args[1] as NumberValue).Value);
                     break;
+
                 case OptionSetValue osv:
                     startOfWeek = Math.Floor((double)(args[1] as OptionSetValue).ExecutionValue);
                     break;
+
                 default:
                     return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
             }
@@ -745,7 +778,7 @@ namespace Microsoft.PowerFx.Functions
                 startOfWeek = 2; // same as 2, with zero index
                 zeroIndex = true;
             }
-            
+
             if (startOfWeek >= 11 && startOfWeek <= 17)
             {
                 // For DAX code numbers 11 through 17, the values are 2 off from the appropriate modulo difference
@@ -897,13 +930,40 @@ namespace Microsoft.PowerFx.Functions
             {
                 case NumberValue nv:
                     return nv.Value;
+
                 case DecimalValue dv:
                     return (double)dv.Value;
+
                 case OptionSetValue osv:
                     return (double)osv.ExecutionValue;
+
                 default:
                     return defaultDouble;
             }
+        }
+
+        private static CultureInfo GetAdjustedCultureInfo(CultureInfo culture)
+        {
+            CultureInfo newCulture = (CultureInfo)culture.Clone();
+
+            // th-TH
+            if (newCulture.LCID == 1054)
+            {
+                // Don't use ThaiBuddistCalendar
+                newCulture.DateTimeFormat.Calendar = new GregorianCalendar();
+            }
+
+            // th-TH
+            else if (newCulture.LCID == 1069)
+            {
+                // .Net Core 3.1 and .Net 7 use "yyyy('e')'ko' MMMM'ren' d('a'), dddd" (with extra 'ren' and 'a')
+                newCulture.DateTimeFormat.LongDatePattern = "yyyy MMMM d, dddd";
+            }
+
+            // Default .Net 7.0 calendar formatInfo.CultureInfo is 2029
+            newCulture.DateTimeFormat.Calendar.TwoDigitYearMax = 2049;
+
+            return newCulture;
         }
     }
 }

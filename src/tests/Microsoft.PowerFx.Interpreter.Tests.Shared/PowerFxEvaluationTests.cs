@@ -7,13 +7,17 @@ using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -589,7 +593,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return null;
         }
 
-        private static void MutationFunctionsTestSetup(RecalcEngine engine, bool numberIsFloat)
+        internal static void MutationFunctionsTestSetup(RecalcEngine engine, bool numberIsFloat)
         {
             /*
              * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
@@ -653,6 +657,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     "DisplayNameField2_3")),
                 "DisplayNameField2"))
                 .Add(new NamedFormulaType("Field3", FormulaType.Boolean, "DisplayNameField3"));
+
+            var recordWithTableType = RecordType.Empty()
+                .Add(new NamedFormulaType("Field1", numberType, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field2", RecordType.Empty()
+                    .Add(new NamedFormulaType("Field2_1", numberType, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
+                    .Add(new NamedFormulaType("Field2_4", FormulaValue.NewTable(r1.Type).Type, "DisplayNameField2_4")),
+                "DisplayNameField2"));
 #pragma warning restore SA1117 // Parameters should be on same line or separate lines
 
             var recordWithRecordFields1 = new List<NamedValue>()
@@ -703,9 +715,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new NamedValue("Field3", FormulaValue.New(true))
             };
 
+            var recordWithTableFields1 = new List<NamedValue>()
+            {
+                new NamedValue("Field1", newNumber(3)),
+                new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
+                {
+                    new NamedValue("Field2_1", newNumber(321)),
+                    new NamedValue("Field2_2", FormulaValue.New("2_2")),
+                    new NamedValue("Field2_4", FormulaValue.NewTable(r1.Type, r1)),
+                }))
+            };
+
             var recordWithRecord1 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields1);
             var recordWithRecord2 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields2);
             var recordWithRecord3 = FormulaValue.NewRecordFromFields(recordWithRecordType, recordWithRecordFields3);
+            var recordWithTable1 = FormulaValue.NewRecordFromFields(recordWithTableType, recordWithTableFields1);
 
             var t2 = FormulaValue.NewTable(recordWithRecordType, new List<RecordValue>()
             {
@@ -727,6 +751,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("rwr2", recordWithRecord2);
             engine.UpdateVariable("rwr3", recordWithRecord3);
             engine.UpdateVariable("r_empty", rEmpty);
+
+            // Low code plugin testing
+            engine.UpdateVariable("NewRecord", r1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("OldRecord", r2, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("DataSource", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("NewRecord_SetEnabled_SetMutateEnabled", r1, new SymbolProperties { CanMutate = false, CanSet = true, CanSetMutate = true });
+
+            // Set and Patch/Collect/Remove/etc deep mutation testing
+            engine.UpdateVariable("t1_SetMutateEnabled", t1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("t1_MutateEnabled_SetMutateEnabled", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("t1_MutateEnabled", t1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("r1_SetMutateEnabled", r1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("r1_MutateEnabled_SetMutateEnabled", r1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("r1_MutateEnabled", r1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("rwr1_SetMutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwr1_MutateEnabled_SetMutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwr1_MutateEnabled", recordWithRecord1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
+            engine.UpdateVariable("rwt1_SetMutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = false, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwt1_MutateEnabled_SetMutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = true });
+            engine.UpdateVariable("rwt1_MutateEnabled", recordWithTable1, new SymbolProperties { CanMutate = true, CanSet = false, CanSetMutate = false });
 
             var valueTableType = TableType.Empty().Add("Value", numberType);
             var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());
@@ -820,7 +864,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, setup).ConfigureAwait(false);
+                var result = await verify.EvalAsync(engine, expr, setup);
                 return result;
             }
 
@@ -835,7 +879,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (iSetup.HandlerNames?.Any(hn => string.Equals(hn, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase)) == true)
                 {
-                    return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
+                    return new RunResult(await RunVerifyAsync(expr, config, iSetup));
                 }
 
                 List<Action<RuntimeConfig>> runtimeConfiguration = new List<Action<RuntimeConfig>>();                
@@ -895,6 +939,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
+                Log?.Invoke($"{RuntimeInformation.FrameworkDescription}");
                 Log?.Invoke($"IR: {check.PrintIR()}");
 
                 var symbolValuesFromParams = SymbolValues.NewFromRecord(symbolTableFromParams, parameters);
@@ -925,8 +970,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 foreach (Action<RuntimeConfig> rc in runtimeConfiguration)
                 {
                     rc(runtimeConfig);
-                }            
+                }
 
+#if !NET462
                 // Ensure tests can run with governor on. 
                 // Some tests that use large memory can disable via:
                 //    #SETUP: DisableMemChecks
@@ -936,8 +982,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var mem = new SingleThreadedGovernor(10 * 1000 * kbytes);
                     runtimeConfig.AddService<Governor>(mem);
                 }
+#endif
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -959,7 +1006,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     // Serialization test. Serialized expression must produce an identical result.
                     // Serialization can't use TextFirst if enabled for the test, strings for example would have the wrong syntax.
                     options.TextFirst = false;
-                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -969,7 +1016,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         // Serialization test. Serialized expression must produce an identical result.
                         options.NumberIsFloat = true;
-                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
                     }
                     else if (e.Message.Contains("Name isn't valid. 'CalculatedOptionSetValue' isn't recognized."))
                     {
@@ -1015,7 +1062,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
+                var replResult = await _repl.HandleCommandAsync(expr, default);
 
                 // .txt output format - if there are any Set(), compare those.
                 if (replResult.DeclaredVars.Count > 0)

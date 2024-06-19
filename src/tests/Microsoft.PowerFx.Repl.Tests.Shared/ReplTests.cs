@@ -76,7 +76,7 @@ x+y
 Set(z, x * 5 + y)
 Notify(z)
 ";
-            var lines = file.Split("\n");
+            var lines = file.Split('\n');
             
             foreach (var line in lines)
             {
@@ -103,17 +103,17 @@ Notify(z)
         // When AllowSetDefinitions is false, we can update existing vars,
         // but we can't create new ones. 
         [Fact]
-        public void AllowSetDefinitions()
+        public async Task AllowSetDefinitions()
         {
             _repl.AllowSetDefinitions = false;
             ((RecalcEngine)_repl.Engine).UpdateVariable("x", 10);
 
             // succeeds, pre-existing
-            var replResult = _repl.HandleCommandAsync("Set(x, 20); x").Result;
+            var replResult = await _repl.HandleCommandAsync("Set(x, 20); x");
             Assert.Equal("20", replResult.EvalResult.ToObject().ToString());
 
             // Fails, can't decalre new one
-            var replResult2 = _repl.HandleCommandAsync("Set(y, 20); y").Result;
+            var replResult2 = await _repl.HandleCommandAsync("Set(y, 20); y");
             Assert.False(replResult2.IsSuccess);
             Assert.Null(replResult2.EvalResult);
         }
@@ -207,7 +207,7 @@ Notify(z)
         }
 
         [Fact]
-        public void ExtraSymolsCantSet()
+        public async Task ExtraSymolsCantSet()
         {
             SymbolTable st = new SymbolTable() { DebugName = "ExtraValues" };
             var slot = st.AddVariable("Const1", FormulaType.Decimal, new SymbolProperties
@@ -227,7 +227,7 @@ Notify(z)
             Assert.Equal("12", log);
 
             // But can't set (doesn't declare a shadow copy).
-            var replResult = _repl.HandleCommandAsync("Set(Const1, 99)").Result;
+            var replResult = await _repl.HandleCommandAsync("Set(Const1, 99)");
             Assert.False(replResult.IsSuccess); 
         }
 
@@ -345,9 +345,9 @@ Notify(z)
 
         // test that newlines are properly placed, especailly with FormatTable
         [Fact]
-        public void NewLinesBasicPrompt()
+        public async Task NewLinesBasicPrompt()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
 
             var log1 = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1 == @"
@@ -359,26 +359,26 @@ Notify(z)
         }
 
         [Fact]
-        public void NewLinesContinuationPrompt()
+        public async Task NewLinesContinuationPrompt()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
-            _repl.HandleLineAsync("Sqrt(4").Wait();     // intentionally left unclosed
+            await _repl.HandleLineAsync("Sqrt(4");     // intentionally left unclosed
 
             Assert.True(_output.Get(OutputKind.Error, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Warning, trim: false) == string.Empty);
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @".. ");
 
-            _repl.HandleLineAsync(")").Wait();          // and now closed
+            await _repl.HandleLineAsync(")");          // and now closed
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log3p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log3p == @"
 >> ");
@@ -389,21 +389,21 @@ Notify(z)
         }
 
         [Fact]
-        public void NewlinesValueTable()
+        public async Task NewlinesValueTable()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
-            _repl.HandleCommandAsync(
-"[1,2,3]").Wait();
+            await _repl.HandleCommandAsync(
+"[1,2,3]");
             var log2 = _output.Get(OutputKind.Repl, trim: true);
             var expected2 = @"[1, 2, 3]";
             Assert.True(log2 == expected2);
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
 >> ");
@@ -414,29 +414,29 @@ Notify(z)
         }
 
         [Fact]
-        public void EmptyValueTable()
+        public async Task EmptyValueTable()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
-            _repl.HandleCommandAsync(
-"[1,2,3]").Wait();
+            await _repl.HandleCommandAsync(
+"[1,2,3]");
             var log2 = _output.Get(OutputKind.Repl, trim: true);
             var expected2 = @"[1, 2, 3]";
             Assert.True(log2 == expected2);
 
-            _repl.HandleCommandAsync(
-"Filter([1,2,3],Value>4)").Wait();
+            await _repl.HandleCommandAsync(
+"Filter([1,2,3],Value>4)");
             var log3 = _output.Get(OutputKind.Repl, trim: false);
             var expected3 = @"
 <empty table>
 ";
             Assert.True(Regex.Replace(log3, @"\r?\n", @"\n") == Regex.Replace(expected3, @"\r?\n", @"\n"));
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
 >> ");
@@ -447,17 +447,17 @@ Notify(z)
         }
 
         [Fact]
-        public void NewlinesFormatTable()
+        public async Task NewlinesFormatTable()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
 
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
             // compare but ignore trailing whitespace at the end of each line
-            _repl.HandleCommandAsync(
-"Table({a:1},{b:2})").Wait();
+            await _repl.HandleCommandAsync(
+"Table({a:1},{b:2})");
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"
   a   b  
@@ -467,7 +467,7 @@ Notify(z)
 ";
             Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
 >> ");
@@ -478,16 +478,16 @@ Notify(z)
         }
 
         [Fact]
-        public void NewlinesNamedFormulaFormatTable()
+        public async Task NewlinesNamedFormulaFormatTable()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
             // compare but ignore trailing whitespace at the end of each line
-            _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2})").Wait();
+            await _repl.HandleCommandAsync(
+"MyTable = Table({a:1},{b:2})");
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  
@@ -497,7 +497,7 @@ Notify(z)
 ";
             Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
 >> ");
@@ -508,15 +508,15 @@ Notify(z)
         }
 
         [Fact]
-        public void EmptyFormatTable()
+        public async Task EmptyFormatTable()
         {
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log1p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log1p == @"
 >> ");
 
-            _repl.HandleCommandAsync(
-"MyTable = Table({a:1},{b:2})").Wait();
+            await _repl.HandleCommandAsync(
+"MyTable = Table({a:1},{b:2})");
             var log2 = _output.Get(OutputKind.Repl, trim: false);
             var expected2 = @"MyTable:
   a   b  
@@ -526,15 +526,15 @@ Notify(z)
 ";
             Assert.True(Regex.Replace(log2, @"[ ]*\r?\n", @"\n") == Regex.Replace(expected2, @"[ ]*\r?\n", @"\n"));
 
-            _repl.HandleCommandAsync(
-"Filter( MyTable, a = b )").Wait();
+            await _repl.HandleCommandAsync(
+"Filter( MyTable, a = b )");
             var log3 = _output.Get(OutputKind.Repl, trim: false);
             var expected3 = @"
 <empty table>
 ";
             Assert.True(Regex.Replace(log3, @"\r?\n", @"\n") == Regex.Replace(expected3, @"\r?\n", @"\n"));
 
-            _repl.WritePromptAsync().Wait();
+            await _repl.WritePromptAsync();
             var log2p = _output.Get(OutputKind.Control, trim: false);
             Assert.True(log2p == @"
 >> ");
@@ -545,11 +545,11 @@ Notify(z)
         }
 
         [Fact]
-        public void EchoAndPrintResult()
+        public async Task EchoAndPrintResult()
         {
             _repl.Echo = false;
             _repl.PrintResult = false;
-            _repl.HandleCommandAsync(@"Notify( 1234 )").Wait();
+            await _repl.HandleCommandAsync(@"Notify( 1234 )");
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"1234
 ");
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == string.Empty);
@@ -557,7 +557,7 @@ Notify(z)
 
             _repl.Echo = true;
             _repl.PrintResult = false;
-            _repl.HandleCommandAsync(@"Notify( 2345 );true").Wait();
+            await _repl.HandleCommandAsync(@"Notify( 2345 );true");
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"2345
 ");
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 2345 );true
@@ -567,7 +567,7 @@ Notify(z)
 
             _repl.Echo = false;
             _repl.PrintResult = true;
-            _repl.HandleCommandAsync(@"Notify( 3456 );false").Wait();
+            await _repl.HandleCommandAsync(@"Notify( 3456 );false");
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"3456
 ");
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"false
@@ -576,7 +576,7 @@ Notify(z)
 
             _repl.Echo = true;
             _repl.PrintResult = true;
-            _repl.HandleCommandAsync(@"Notify( 4567 );true").Wait();
+            await _repl.HandleCommandAsync(@"Notify( 4567 );true");
             Assert.True(_output.Get(OutputKind.Notify, trim: false) == @"4567
 ");
             Assert.True(_output.Get(OutputKind.Repl, trim: false) == @"Notify( 4567 );true
@@ -590,9 +590,9 @@ true
         }
 
         [Fact]
-        public void LineNumbersInErrors()
+        public async Task LineNumbersInErrors()
         {
-            _repl.HandleCommandAsync(@"2 +-* s", lineNumber: 7891).Wait();
+            await _repl.HandleCommandAsync(@"2 +-* s", lineNumber: 7891);
 
             var errors = _output.Get(OutputKind.Error, trim: false);
 
@@ -602,7 +602,7 @@ true
             using (StringReader reader = new StringReader(errors))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
                     Assert.StartsWith("Line 7891: ", errors);
                 }

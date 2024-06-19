@@ -8,8 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.PowerFx.Core.Tests.Properties
-{
+namespace Microsoft.PowerFx.Core.Tests.Shared.Properties {
     using System;
     
     

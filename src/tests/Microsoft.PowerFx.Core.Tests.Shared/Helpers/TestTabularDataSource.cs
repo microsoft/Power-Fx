@@ -30,9 +30,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 entityMetadata = new DataEntityMetadata();
                 return true;
             }
-
-            // Getting Metadata isn't allowed for performance reasons only
-            throw new GettingMetadataNotAllowedException();
+            else 
+            { 
+                entityMetadata = null;
+                return false;
+            }
         }
     }
 
@@ -332,6 +334,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         internal TestExpandInfo()
         {
             DataSource = new TestDataSource("test", DType.EmptyTable);
+        }
+
+        internal TestExpandInfo(DType tableType)
+        {
+            DataSource = new TestDataSource("test", tableType);
         }
 
         public string Identity => "Some Identity";

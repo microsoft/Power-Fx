@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Position = GetPosition(17),
                     Context = GetCompletionContext()
                 };
-                await TestCompletionCore(params1, params2, params3, withAllowSideEffects).ConfigureAwait(false);
+                await TestCompletionCore(params1, params2, params3, withAllowSideEffects);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Position = GetPosition(17),
                 Context = GetCompletionContext()
             };
-            await TestCompletionCore(params1, params2, params3, withAllowSideEffects).ConfigureAwait(false);
+            await TestCompletionCore(params1, params2, params3, withAllowSideEffects);
         }
 
         private async Task TestCompletionCore(CompletionParams params1, CompletionParams params2, CompletionParams params3, bool withAllowSideEffects)
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // test good formula
             var payload = GetCompletionPayload(params1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<CompletionResult>(rawResponse, payload.id);
             var foundItems = response.Items.Where(item => item.Label == "AliceBlue");
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("000", foundItems.First().SortText);
 
             payload = GetCompletionPayload(params2);
-            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             response = AssertAndGetResponsePayload<CompletionResult>(rawResponse, payload.id);
             foundItems = response.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("000", foundItems.First().SortText);
 
             payload = GetCompletionPayload(params3);
-            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             response = AssertAndGetResponsePayload<CompletionResult>(rawResponse, payload.id);
             foundItems = response.Items.Where(item => item.Label == "a");
             Assert.True(Enumerable.Count(foundItems) == 1, "'a' should be found from suggestion result");
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Position = GetPosition(1),
                 Context = GetCompletionContext()
             });
-            var errorResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var errorResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             AssertErrorPayload(errorResponse, payload.id, JsonRpcHelper.ErrorCode.InvalidParams);
         }
 
@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 Context = GetCompletionContext()
             };
             var payload = GetCompletionPayload(params1);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<CompletionResult>(rawResponse, payload.id);
             var foundItems = response.Items.Where(item => item.Label == "'Account'");
             Assert.True(Enumerable.Count(foundItems) == 1, "'Account' should be found from suggestion result");

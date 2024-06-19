@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Percentuale o colonna di valori percentuale in base alla quale verrà sfumato il colore o la colonna di valori colore. Una percentuale negativa produce una sfumatura più scura. Una percentuale positiva produce una sfumatura più chiara.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Restituisce il valore assoluto di un numero, ovvero un numero privo di segno.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Aggiunge record a un'origine dati.</value>
+    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>origine_dati</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>raccolta</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elemento</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Raccolta nuova o esistente da aumentare.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Elimina tutti i record da una raccolta. Quindi aggiunge un set diverso di record alla stessa raccolta.</value>
+    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>origine_dati</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Raccolta nuova o esistente da aumentare.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>origine_dati</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Record o tabella da raccogliere. Alla raccolta verrà aggiunto l'intero record o le righe di una tabella.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applica gli aggiornamenti alla riga specificata e modifica la riga nell'origine dati specificata. Restituisce la riga aggiornata.</value>
@@ -3866,6 +3881,10 @@
     <value>La funzione {0} è già definita.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Il nome della funzione {0} è limitato.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Il parametro {0} è un duplicato.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Il tipo restituito della funzione dichiarato non corrisponde al tipo restituito del corpo della funzione.</value>
+    <value>Il tipo restituito della funzione dichiarato "{0}" non corrisponde al tipo restituito del corpo della funzione "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Il primo argomento di '{0}' deve essere un nome di variabile valido non in conflitto con i nomi di controlli, schermate, raccolte o origini dati esistenti. Tipo trovato: '{1}'</value>
+    <value>Impossibile modificare "{1}" con "{0}" o è in conflitto con il nome di una variabile dell'ambito, un'origine dati o un altro oggetto esistente.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operatore Partial sconosciuto.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>The datasource to add data to.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

@@ -12,8 +12,20 @@ Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value inst
 >> Clear(1/0)
 Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value instead.|Error 0-5: The function 'Clear' has some invalid arguments.
 
+>> Clear(If(false,[1,2,3]))
+Errors: Error 6-23: The value passed to the 'Clear' function cannot be changed.
+
+>> Clear(If(false,[1,2,3],Error("bad table")))
+Errors: Error 6-42: The value passed to the 'Clear' function cannot be changed.
+
 >> IsError(Clear(1))
 Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 8-13: The function 'Clear' has some invalid arguments.
 
 >> Clear(t1);Clear(t2)
 If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> Collect(t1, r2);
+  Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});
+  Clear(t1);
+  If(CountRows(t1) = 0, "Cleared", "Failed")
+"Cleared"

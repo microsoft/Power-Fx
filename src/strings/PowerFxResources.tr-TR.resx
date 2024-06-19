@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Renk (veya renk değerlerinin sütunu) soluklaştırma yüzdesi (veya yüzde değerleri sütunu). Negatif yüzde değeri daha koyu bir gölge oluşturur. Pozitif yüzde değeri ise daha açık bir gölge oluşturur.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Bir sayının mutlak değerini (işareti olmadan) döndürür.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Bir veri kaynağına kayıt ekler.</value>
+    <value>Belirtilen koleksiyona bir veya daha fazla öğe ekler. Öğeler, farklı bir tablo veya koleksiyondan (ör. Collect(collection, source_collection)) veya bir ya da daha fazla kayıttan alınabilir. Örneğin, Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>veri_kaynağı</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>kayıt</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksiyon</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>öğe</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Çoğaltılacak yeni veya mevcut bir koleksiyon.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Bir koleksiyondaki tüm kayıtları siler. Daha sonra aynı koleksiyona farklı bir kayıt kümesi ekler.</value>
+    <value>Önce koleksiyonu siler ve ardından belirtilen koleksiyona bir veya daha fazla öğe ekler. Öğeler, farklı bir tablo veya koleksiyondan (ör. ClearCollect(collection, source_collection)) veya bir ya da daha fazla kayıttan alınabilir. Örneğin, ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>veri_kaynağı</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Çoğaltılacak yeni veya mevcut bir koleksiyon.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>veri_kaynağı</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>kayıt</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Toplanacak bir kayıt veya tablo. Koleksiyona bir kayıt eklenir. Tablonun satırları da koleksiyona eklenir.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Güncelleştirmeleri belirtilen satırlara uygular ve belirtilen veri kaynağındaki satırı değiştirir. Güncelleştirilen satırı döndürür.</value>
@@ -3866,6 +3881,10 @@
     <value>{0} işlevi zaten tanımlandı.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>İşlev adı {0} kısıtlı.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>{0} parametresi yinelenen bir öğe.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Belirtilen işlev dönüş türü, işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    <value>Belirtilen '{0}' işlev dönüş türü, '{1}' işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>'{0}' için ilk bağımsız değişken, geçerli bir değişken adı olmalı ve mevcut denetim, ekran, koleksiyon veya veri kaynağı adlarıyla çakışmamalıdır. Bulunan tür: '{1}'</value>
+    <value>'{1}' öğesi '{0}' ile değiştirilemiyor ya da mevcut bir kapsam değişkeni, veri kaynağı veya farklı bir nesne ile aynı adı taşıdığı için çakışıyor.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Değişmez beyanname türü geçersiz. '{0}' ifadesi, bir tür tanımında kullanılamaz.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Bilinmeyen Partial işleci.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Verilerin ekleneceği veri kaynağı.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Eklenecek kayıt veya tablo. Veri kaynağına bir kayıt eklenir. Tablonun satırları da veritabanına eklenir.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>öğe</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Temsilci uyarısı. '{0}' bağımsız değişkeninin sonucu, '{1}' işlevine aktarılamadan önce büyük veri kümeleri için kısaltılabilir.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Silinecek koleksiyon.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Temizlenecek kaynak.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Belirtilen veri kaynağı bu işlevle kullanılamıyor.</value>

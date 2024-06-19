@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
-using Microsoft.PowerFx.Connectors.Tabular.Capabilities;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
 // as it defines CapabilitiesConstants which has invalid values.
 
-namespace Microsoft.PowerFx.Connectors.Tabular
+namespace Microsoft.PowerFx.Connectors
 {
     internal sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
     {
@@ -43,12 +42,12 @@ namespace Microsoft.PowerFx.Connectors.Tabular
             _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>();
         }
 
-        public static ColumnCapabilities ParseColumnCapabilities(OpenApiObject capabilitiesMetaData)
+        public static ColumnCapabilities ParseColumnCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             string[] filterFunctions = ServiceCapabilities.ParseFilterFunctions(capabilitiesMetaData);
 
             // Sharepoint specific capabilities
-            OpenApiObject sp = capabilitiesMetaData.GetObject(CapabilityConstants.SPDelegationSupport);
+            IDictionary<string, IOpenApiAny> sp = capabilitiesMetaData.GetObject(CapabilityConstants.SPDelegationSupport);
             string propertyAlias = sp?.GetStr(CapabilityConstants.SPQueryName);
             bool? isChoice = sp?.GetNullableBool(CapabilityConstants.SPIsChoice);
 

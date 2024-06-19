@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -19,6 +18,9 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
+        // We cannot use this code with .Net 5.0+ as it uses System.Runtime.CompilerServices.IsExternalInit hack defined in PFX.Core and which is only valid pre-Net 5.0
+        // The symbol would be defined twice
+#if !NET7_0_OR_GREATER
         // Return true if safe, false on error. 
         public static bool VerifyThreadSafeImmutable(Type t)
         {
@@ -96,6 +98,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             return true;
         }
+#endif
 
         // Verify there are no "unsafe" static fields that could be threading issues.
         // Bugs - list of field types types that don't work. This should be driven to 0. 
@@ -220,7 +223,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         continue;
                     }
-
+#if !NET7_0_OR_GREATER
                     bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
 
                     // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
@@ -228,6 +231,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Assert.True(ok);
                     }
+#endif
                 }
             }
         }

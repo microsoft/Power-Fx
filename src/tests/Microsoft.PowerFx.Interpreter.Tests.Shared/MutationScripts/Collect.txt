@@ -49,7 +49,7 @@ Blank()
 Table({Value:1},{Value:2},{Value:3})
 
 >> Collect(temp1,{Value:"200"}).Value
-Errors: Error 14-27: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-7: The function 'Collect' has some invalid arguments.|Error 28-34: Name isn't valid. 'Value' isn't recognized.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 14-27: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.
 
 >> Collect( temp1, { Value:"11"+0 } )
 {Value:11}
@@ -64,7 +64,7 @@ Errors: Error 16-29: The type of this argument 'Value' does not match the expect
 Table({Value:1},{Value:2},{Value:3})
 
 >> Collect(temp1,{Value:"run time error"}).Value
-Errors: Error 14-38: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-7: The function 'Collect' has some invalid arguments.|Error 39-45: Name isn't valid. 'Value' isn't recognized.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 14-38: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.
 
 >> Set(partialT1, Table({a:1,b:1},{a:2,b:2}))
 Table({a:1,b:1},{a:2,b:2})
@@ -86,3 +86,31 @@ Table({Value:1},{Value:2},{Value:3},{Value:4})
 
 >> With({r:{Value:5}}, Collect(t, r); Patch(t, Last(t), {Value:-1}); r)
 {Value:5}
+
+>> Set(t1, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> Collect(t1, 4)
+{Value:4}
+
+>> Collect(t1, [5,6,7],8,9,10)
+Table({Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10})
+
+>> 0;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10})
+
+>> Collect(t1, Table({Value:11},Blank()))
+Table({Value:11})
+
+>> Collect(t1, Table({Value:12},Error({Kind:ErrorKind.Custom})))
+Error({Kind:ErrorKind.Custom})
+
+>> Collect(t1, [13,Blank(),14])
+Table({Value:13},{Value:Blank()},{Value:14})
+
+// {Value:16} wont be collected because it appears after the error.
+>> Collect(t1, Table({Value:15}, Error({Kind:ErrorKind.Custom}), {Value:16}))
+Error({Kind:ErrorKind.Custom})
+
+>> 1;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6},{Value:7},{Value:8},{Value:9},{Value:10},{Value:11},{Value:12},{Value:13},{Value:Blank()},{Value:14},{Value:15})

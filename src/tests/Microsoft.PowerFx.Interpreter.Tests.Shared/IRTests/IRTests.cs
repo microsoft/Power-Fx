@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
     public class IRTests
     {
         [Fact]
-        public void ValidateNoRecordToRecordAggregateCoercionCurrency()
+        public async Task ValidateNoRecordToRecordAggregateCoercionCurrency()
         {
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
 
@@ -35,7 +36,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var runtimeConfig = new SymbolValues(symbols) { DebugName = "SV1" };
             runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
-            var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
+            var evalResult = await checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<InMemoryRecordValue>(evalResult);
 
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         }
 
         [Fact]
-        public void ValidateNoRecordToRecordAggregateCoercionDecimal()
+        public async Task ValidateNoRecordToRecordAggregateCoercionDecimal()
         {
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Decimal, new DName("Decimal"))));
 
@@ -59,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var runtimeConfig = new SymbolValues(symbols) { DebugName = "SV1" };
             runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
-            var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
+            var evalResult = await checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
             Assert.IsType<InMemoryRecordValue>(evalResult);
 
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();

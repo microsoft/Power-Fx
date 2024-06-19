@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("t", t);
             symbol.AddConstant("r1", r1);
 
-            var result = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
-            var resultCount = await engine.EvalAsync("t", CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
+            var result = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol);
+            var resultCount = await engine.EvalAsync("t", CancellationToken.None, options: _opts, symbolTable: symbol);
 
             Assert.Equal(expected, ((TableValue)resultCount).Count());
         }
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(lazyTable, lazyCoercibleRecord)", true)]
         [InlineData("Collect(lazyTable, lazyNotCoercibleRecord)", false)]
         [InlineData("Collect(lazyTable, {Value:1})", false)]
-        [InlineData("Collect(lazyTable, lazyTable)", false)]
+        [InlineData("Collect(lazyTable, lazyTable)", true)]
         [InlineData("Collect(lazyRecord, lazyRecord)", false)]
         [InlineData("Collect(lazyRecord, lazyTable)", false)]
 

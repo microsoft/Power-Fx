@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
             var firstArgument = (object[])factAttribute.GetConstructorArguments().FirstOrDefault();
             var skippingExceptions = firstArgument?.Cast<Type>().ToArray() ?? Type.EmptyTypes;
             Array.Resize(ref skippingExceptions, skippingExceptions.Length + 1);
-            skippingExceptions[skippingExceptions.Length - 1] = typeof(SkipException);
+            skippingExceptions[skippingExceptions.Length - 1] = typeof(Xunit.SkipException);
 
             var skippingExceptionNames = skippingExceptions.Select(ex => ex.FullName).ToArray();
 

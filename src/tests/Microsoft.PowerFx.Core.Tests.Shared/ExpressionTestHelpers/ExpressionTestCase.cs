@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -35,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
             SourceFile = test.SourceFile;
             SourceLine = test.SourceLine;
             SetupHandlerName = test.SetupHandlerName;
+            DisableDotNet = test.DisableDotNet;
         }
 
         public static ExpressionTestCase Fail(string message)
@@ -47,7 +47,41 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            var str = $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+            string netVersion = RuntimeInformation.FrameworkDescription;
+            string symbol = "?";
+
+            if (netVersion.StartsWith(".NET Framework 4.6.") || 
+                netVersion.StartsWith(".NET Framework 4.7.") || 
+                netVersion.StartsWith(".NET Framework 4.8."))
+            {
+                symbol = "4";
+            }
+            else if (netVersion.StartsWith(".NET Core 3.1."))
+            {
+                symbol = "3";
+            }
+            else if (netVersion.StartsWith(".NET 5."))
+            {
+                symbol = "5";
+            }
+            else if (netVersion.StartsWith(".NET 6."))
+            {
+                symbol = "6";
+            }
+            else if (netVersion.StartsWith(".NET 7."))
+            {
+                symbol = "7";
+            }
+            else if (netVersion.StartsWith(".NET 8."))
+            {
+                symbol = "8";
+            }
+            else if (netVersion.StartsWith(".NET 9."))
+            {
+                symbol = "9";
+            }
+
+            var str = $"{symbol} {Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
 
             if (!string.IsNullOrEmpty(SetupHandlerName))
             {
@@ -67,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 SourceLine = info.GetValue<int>("sourceLine");
                 SetupHandlerName = info.GetValue<string>("setupHandlerName");
                 FailMessage = info.GetValue<string>("failMessage");
+                DisableDotNet = info.GetValue<string>("disableDotNet");
             }
             catch (Exception e)
             {
@@ -82,6 +117,7 @@ namespace Microsoft.PowerFx.Core.Tests
             info.AddValue("sourceLine", SourceLine, typeof(int));
             info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
             info.AddValue("failMessage", FailMessage, typeof(string));
+            info.AddValue("disableDotNet", DisableDotNet, typeof(string));
         }
     }
 }

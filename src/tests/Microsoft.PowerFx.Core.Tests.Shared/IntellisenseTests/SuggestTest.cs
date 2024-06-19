@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
-        [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+        [InlineData("Test |", "![Test: s]", "&", "&&", "*", "+", "-", "/", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or", "^", "||")]
         [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
