@@ -86,24 +86,16 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (arg1.AggregateHasExpandedType())
             {
-                if (binding.Features.SkipExpandableSetSemantics)
+                if (arg1.IsTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Warning, args[1], WrnSetExpandableType);
+                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
                     return;
                 }
-                else
-                {
-                    if (arg1.IsTable)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
-                        return;
-                    }
 
-                    if (arg1.IsRecord)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
-                        return;
-                    }
+                if (arg1.IsRecord)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
+                    return;
                 }
             }
 

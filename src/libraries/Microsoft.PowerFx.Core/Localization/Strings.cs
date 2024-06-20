@@ -759,6 +759,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_DuplicateParameter = new ErrorResourceKey("ErrUDF_DuplicateParameter");
         public static ErrorResourceKey ErrUDF_UnknownType = new ErrorResourceKey("ErrUDF_UnknownType");
         public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
+        public static ErrorResourceKey ErrUDF_TooManyParameters = new ErrorResourceKey("ErrUDF_TooManyParameters");
         public static ErrorResourceKey ErrUDF_MissingReturnType = new ErrorResourceKey("ErrUDF_MissingReturnType");
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
         public static ErrorResourceKey ErrUDF_InvalidReturnType = new ErrorResourceKey("ErrUDF_InvalidReturnType");
