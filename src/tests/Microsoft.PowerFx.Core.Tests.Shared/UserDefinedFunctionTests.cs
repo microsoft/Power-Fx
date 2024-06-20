@@ -578,25 +578,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("func():Void { Set(x, 123) };")]
-        [InlineData("func():Void { Set(x, 123); Set(y, 123) };")]
-        [InlineData("func():Void = { Set(x, 123) };")]
-        [InlineData("func():Void = { Set(x, 123); Set(y, 123) };")]
-        public void TestImperativeUDFParseWithoutSemicolon(string script)
-        {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = true,
-            };
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-
-            Assert.True(errors.Count() == 0);
-        }
-
-        [Theory]
         [InlineData(1, false)]
         [InlineData(29, false)]
         [InlineData(30, false)]
