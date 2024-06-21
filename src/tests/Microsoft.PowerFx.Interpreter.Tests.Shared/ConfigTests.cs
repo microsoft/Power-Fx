@@ -118,6 +118,44 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(6.0, result.ToObject());
         }
 
+        [Fact]
+        public async Task ExpectRecordValueFunctionTest()
+        {
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("r", FormulaValue.NewRecordFromFields());
+            engine.UpdateVariable("b", FormulaValue.NewBlank());
+
+            engine.Config.SymbolTable.AddFunction(new ExpectRecordValueFunction());
+
+            // Per expression.
+
+            var result_record = await engine.EvalAsync("ExpectRecordValue(r)", CancellationToken.None);
+            var result_blank = await engine.EvalAsync("ExpectRecordValue(b)", CancellationToken.None);
+
+            Assert.IsType<StringValue>(result_record);
+            Assert.IsType<BlankValue>(result_blank);
+        }
+
+        private class ExpectRecordValueFunction : ReflectionFunction
+        {
+            public ExpectRecordValueFunction()
+                : base("ExpectRecordValue", FormulaType.String, RecordType.Empty())
+            {
+            }
+
+            // Must have "Execute" method. 
+            public FormulaValue Execute(FormulaValue fv)
+            {
+                if (fv is BlankValue)
+                {
+                    return fv;
+                }
+
+                return FormulaValue.New("Dummy string value.");
+            }
+        }
+
         // Trivial test function, just multiples by 2. 
         private class Func1Function : ReflectionFunction
         {
