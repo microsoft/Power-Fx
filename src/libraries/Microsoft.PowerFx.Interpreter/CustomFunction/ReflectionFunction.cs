@@ -269,6 +269,10 @@ namespace Microsoft.PowerFx
                 {
                     arg = FormulaValue.New(string.Empty);
                 }
+                else if (arg is BlankValue && expectedType is RecordType)
+                {
+                    // Add arg as is.
+                }
                 else if (arg is BlankValue)
                 {
                     if (errors == null)
