@@ -1,4 +1,4 @@
-#SETUP: disable:PowerFxV1CompatibilityRules
+#SETUP: disable:PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers,TableSyntaxDoesntWrapRecords
 
 >> IfError({a:1}, {b:2})
 {}
@@ -14,3 +14,51 @@
 
 >> IfError(0, {a:1,b:2}, {b:"3",c:"4"})
 {b:"3",c:"4"}
+
+// *********** Sealed *****************
+
+// FirstError
+
+>> IfError( 1/0, AddColumns( FirstError, Foo, 1 ).Foo )
+1
+
+>> IfError( 1/0, Value( DropColumns( FirstError, Message ).Kind ) )
+13
+
+>> IfError( 1/0, Value( AddColumns( DropColumns( FirstError, Message ), Foo, 1 ).Kind ) )
+13
+
+>> IfError( 1/0, Value( RenameColumns( FirstError, Message, Msg ).Kind ) )
+13
+
+>> IfError( 1/0, Value( ShowColumns( FirstError, Kind ).Kind ) )
+13
+
+>> IfError( 1/0, First( [FirstError, {Kind: 2}] ).Kind )
+13
+
+>> IfError( 1/0, First( [FirstError, FirstError] ).Kind )
+13
+
+// AllErrors
+
+>> IfError( 1/0, First( AddColumns( AllErrors, Foo, 1 ) ).Foo )
+1
+
+>> IfError( 1/0, Value( First( DropColumns( AllErrors, Message ) ).Kind ) )
+13
+
+>> IfError( 1/0, Value( First( AddColumns( DropColumns( AllErrors, Message ), Foo, 1 ) ).Kind ) )
+13
+
+>> IfError( 1/0, Value( First( RenameColumns( AllErrors, Message, Msg ) ).Kind ) )
+13
+
+>> IfError( 1/0, Value( First( ShowColumns( AllErrors, Kind ) ).Kind ) )
+13
+
+>> IfError( 1/0, First( [First( AllErrors ), {Kind: 2}] ).Kind )
+13
+
+>> IfError( 1/0, First( [First(AllErrors), Last(AllErrors)] ).Kind )
+13

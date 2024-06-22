@@ -1,0 +1,170 @@
+﻿#SETUP: RegEx,SupportColumnNamesAsIdentifiers,TableSyntaxDoesntWrapRecords,PowerFxV1CompatibilityRules
+
+// IsMatch does not return a record or table
+
+// Match single record
+
+>> Match("Hello", "(?<OneLetter>\w)")
+{FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})}
+
+>> AddColumns( Match("Hello", "(?<OneLetter>\w)"), Foo, 1 )
+Errors: Error 12-46: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( Match("Hello", "(?<OneLetter>\w)").SubMatches, Foo, 1 )
+Errors: Error 46-57: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> RenameColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches, Sub )
+Errors: Error 15-49: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
+
+>> DropColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches )
+{FullMatch:"H",OneLetter:"H",StartMatch:1}
+
+>> AddColumns( DropColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Errors: Error 12-73: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> ShowColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches )
+{SubMatches:Table({Value:"H"})}
+
+>> AddColumns( ShowColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+{Foo:1,SubMatches:Table({Value:"H"})}
+
+>> [Match("Hello", "(?<OneLetter>\w)"), Match("Goodbye", "(?<OneLetter>\w)")]
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> [Match("Hello", "\w"), Match("Goodbye", "(?<OneLetter>\w)")]
+Errors: Error 23-59: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> [{FullMatch: "hi"}, Match("Goodbye", "(?<OneLetter>\w)")]
+Errors: Error 20-56: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> If( false, Match("Hello", "\w"), Match("Goodbye", "\w") )
+{FullMatch:"G",StartMatch:1,SubMatches:Table()}
+
+>> If( false, Match("Hello", "(?<OneLetter>\w)"), Match("Goodbye", "(?<OneLetter>\w)") )
+{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})}
+
+>> If( false, Match("Hello", "\w"), Match("Goodbye", "(?<OneLetter>\w)") )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, {FullMatch:"Hi"}, Match("Goodbye", "(?<OneLetter>\w)") )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+// Match table
+
+>> [Match("Hello", "(?<OneLetter>\w)")]
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})})
+
+>> AddColumns( [Match("Hello", "(?<OneLetter>\w)")], Foo, 1 )
+Errors: Error 12-48: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> RenameColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches, Sub )
+Errors: Error 15-51: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
+
+>> DropColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1})
+
+>> AddColumns( DropColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches ), Foo, 1 )
+Errors: Error 12-75: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> ShowColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches )
+Table({SubMatches:Table({Value:"H"})})
+
+>> AddColumns( ShowColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})})
+
+>> AddColumns( First( [Match("Hello", "(?<OneLetter>\w)")] ).SubMatches ), Foo, 1 )
+Errors: Error 70-71: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 0-70: Invalid number of arguments: received 1, expected 3 or more.
+
+>> [[Match("Hello", "(?<OneLetter>\w)")], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})})
+
+>> [[Match("Hello", "\w")], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Errors: Error 25-63: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> [[{FullMatch: "hi"}], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Errors: Error 22-60: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> If( false, [Match("Hello", "\w")], [Match("Goodbye", "\w")] )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table()})
+
+>> If( false, [Match("Hello", "(?<OneLetter>\w)")], [Match("Goodbye", "(?<OneLetter>\w)")] )
+Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> If( false, [Match("Hello", "\w")], [Match("Goodbye", "(?<OneLetter>\w)")] )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, [{FullMatch:"Hi"}], [Match("Goodbye", "(?<OneLetter>\w)")] )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+// MatchAll single record
+
+>> MatchAll("He", "(?<OneLetter>\w)")
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})
+
+>> AddColumns( MatchAll("He", "(?<OneLetter>\w)"), Foo, 1 )
+Errors: Error 12-46: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> RenameColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches, Sub )
+Errors: Error 15-49: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
+
+>> DropColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1},{FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> AddColumns( DropColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Errors: Error 12-73: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> AddColumns( ShowColumns( MatchAll("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})},{Foo:1,SubMatches:Table({Value:"l"})},{Foo:1,SubMatches:Table({Value:"l"})},{Foo:1,SubMatches:Table({Value:"o"})})
+
+>> ShowColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches )
+Table({SubMatches:Table({Value:"H"})},{SubMatches:Table({Value:"e"})})
+
+>> AddColumns( ShowColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})})
+
+>> [MatchAll("He", "(?<OneLetter>\w)"), MatchAll("Go", "(?<OneLetter>\w)")]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",OneLetter:"o",StartMatch:2,SubMatches:Table({Value:"o"})})})
+
+>> [MatchAll("He", "\w"), MatchAll("Go", "(?<OneLetter>\w)")]
+Errors: Error 23-57: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> [{FullMatch: "hi"}, MatchAll("Go", "(?<OneLetter>\w)")]
+Errors: Error 20-54: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> If( false, MatchAll("He", "\w"), MatchAll("Go", "\w") )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table()},{FullMatch:"o",StartMatch:2,SubMatches:Table()})
+
+>> If( false, MatchAll("He", "(?<OneLetter>\w)"), MatchAll("Go", "(?<OneLetter>\w)") )
+Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",OneLetter:"o",StartMatch:2,SubMatches:Table({Value:"o"})})
+
+>> If( false, MatchAll("He", "\w"), MatchAll("Go", "(?<OneLetter>\w)") )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> If( false, {FullMatch:"Hi"}, MatchAll("Go", "(?<OneLetter>\w)") )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+// MatchAll table
+
+>> [MatchAll("He", "(?<OneLetter>\w)")]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})})
+
+>> AddColumns( [MatchAll("He", "(?<OneLetter>\w)")], Foo, 1 )
+Errors: Error 12-48: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> RenameColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches, Sub )
+Errors: Error 58-64: Can't rename columns of a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-13: The function 'RenameColumns' has some invalid arguments.
+
+>> First([MatchAll("He", "(?<OneLetter>\w)")]).Value
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})
+
+>> DropColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1},{FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> AddColumns( DropColumns( Last([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches ), Foo, 1 )
+Errors: Error 12-87: Can't add columns to a system record or table of system records. Use ShowColumns to extract the specific columns you need first.|Error 0-10: The function 'AddColumns' has some invalid arguments.
+
+>> ShowColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches )
+Table({SubMatches:Table({Value:"H"})},{SubMatches:Table({Value:"e"})})
+
+>> AddColumns( ShowColumns( Last([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})})
