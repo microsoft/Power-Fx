@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void SingleColumnTableFromJson()
+        public async Task SingleColumnTableFromJson()
         {
             var tableType = RecordType.Empty().Add("Value", FormulaType.String).ToTable();
             var res = FormulaValueJSON.FromJson("[ { \"Value\": \"Seattle\"}, { \"Value\": \"Redmond\"} ]", tableType);
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Json.Tests
             config.EnableJsonFunctions();
 
             var engine = new RecalcEngine(config);
-            var result = engine.EvalAsync("First(table).Value", CancellationToken.None, symValue).ConfigureAwait(false).GetAwaiter().GetResult();
+            var result = await engine.EvalAsync("First(table).Value", CancellationToken.None, symValue);
             Assert.Equal("Seattle", result.ToObject());
         }
 

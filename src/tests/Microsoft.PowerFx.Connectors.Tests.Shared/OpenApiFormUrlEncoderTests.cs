@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact]
         public async Task UrlEncoderSerializer_Empty()
         {
-            var str = await SerializeUrlEncoderAsync(null).ConfigureAwait(false);
+            var str = await SerializeUrlEncoderAsync(null);
             Assert.Equal(string.Empty, str);
         }
 
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=1", str);
         }
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New(1.17e-4))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=0.000117", str);
         }
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a\\b\"c"] = (SchemaInteger, FormulaValue.New(1))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a%5cb%22c=1", str);
         }
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, null)
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);
         }
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (null, null)
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Missing schema for property a", ex.Message);
         }
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaInteger, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (integer) and got StringValue value, for property a", ex.Message);
         }
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaNumber, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected NumberValue (number) and got StringValue value, for property a", ex.Message);
         }
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New(11))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected StringValue and got DecimalValue value, for property a", ex.Message);
         }
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New("abc"))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Expected BooleanValue and got StringValue value, for property a", ex.Message);
         }
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 ["a"] = (SchemaInteger, FormulaValue.New(1)),
                 ["b"] = (SchemaInteger, FormulaValue.New(-2))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=1&b=-2", str);
         }
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaString, FormulaValue.New("abc"))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=abc", str);
         }
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 ["a"] = (SchemaBoolean, FormulaValue.New(true)),
                 ["b"] = (SchemaBoolean, FormulaValue.New(false))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=true&b=false", str);
         }
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Not supported property type unknown for property a", ex.Message);
         }
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (new OpenApiSchema() { Type = "null" }, FormulaValue.New(1)),
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("null schema type not supported yet for property a", ex.Message);
         }
@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(1, 2))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=1&a=2", str);
         }
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(Array.Empty<int>()))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=", str);
         }
@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(GetRecord(("Value", FormulaValue.NewBlank()))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=", str);
         }
@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["z"] = (SchemaArrayInteger, GetArray("a", "b"))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("z=a&z=b", str);
         }
@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayString, GetArray(true, false))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a=true&a=false", str);
         }
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["A"] = (SchemaArrayDateTime, GetArray(dt1, dt2))
-            }).ConfigureAwait(false);
+            });
 
             var dates = new Regex(@"A=(?<dt>[^&]+)").Matches(str).Cast<Match>().Select(m => DateTime.Parse(HttpUtility.UrlDecode(m.Groups["dt"].Value))).ToArray();
 
@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName a", ex.Message);
         }
@@ -271,7 +271,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("Value", GetRecord(("z", FormulaValue.New(2)))))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Not supported type Microsoft.PowerFx.Types.InMemoryRecordValue for value", ex.Message);
         }
@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
         }
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, false), ("y", SchemaString, false)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a.x=1&a.y=foo", str);
         }
@@ -311,7 +311,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                              ("x", FormulaValue.New(1)), 
                              ("y", FormulaValue.New("foo")), 
                              ("z", GetRecord(("a", FormulaValue.New(-1))))))
-            }).ConfigureAwait(false);
+            });
 
             Assert.Equal("a.x=1&a.y=foo&z.a.a=-1", str);
         }
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ex = await Assert.ThrowsAsync<PowerFxConnectorException>(async () => await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, true)), GetRecord(("x", FormulaValue.New(1))))
-            }).ConfigureAwait(false)).ConfigureAwait(false);
+            }));
 
             Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
         }
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);            
-            string str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local)).ConfigureAwait(false);
+            string str = await SerializeUrlEncoderAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
             
             string dateStr = str.Substring(2);            
             date = date.AddTicks(-(date.Ticks % 10000));

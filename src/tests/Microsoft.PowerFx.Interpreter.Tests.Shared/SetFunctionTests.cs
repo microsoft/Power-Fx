@@ -4,6 +4,7 @@
 using System;
 using System.Data;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -129,6 +130,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void SetRecord_CanMutate()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10m, Y = 20m });
+
+            engine.UpdateVariable("obj", obj, new SymbolProperties { CanSet = true, CanSetMutate = true });
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: 11, Y: 21}); obj.X", null, _opts);
+            Assert.Equal(11m, r1.ToObject());
+
+            // Can deep mutate record
+            var r2 = engine.Eval("Set(obj.X, 31); obj.X", null, _opts);
+            Assert.Equal(31m, r2.ToObject());
+        }
+
+        [Fact]
         public void SetRecordFloat()
         {
             var config = new PowerFxConfig();
@@ -145,8 +167,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(11.0, r1.ToObject());
 
             // But SetField fails 
-            var r2 = engine.Check("Set(obj.X, Float(31)); obj.X", null, _opts);
+            var r2 = engine.Check("Set(obj.X, 31); obj.X", null, _opts);
             Assert.False(r2.IsSuccess);
+        }
+
+        [Fact]
+        public void SetRecordFloat_SetMutate()
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache();
+            var obj = cache.Marshal(new { X = 10f, Y = 20f });
+
+            engine.UpdateVariable("obj", obj, new SymbolProperties { CanSet = true, CanSetMutate = true });
+
+            // Can update record
+            var r1 = engine.Eval("Set(obj, {X: Float(11), Y: Float(21)}); obj.X", null, _opts);
+            Assert.Equal(11.0, r1.ToObject());
+
+            // Can deep mutate record
+            var r2 = engine.Eval("Set(obj.X, Float(31)); obj.X", null, _opts);
+            Assert.Equal(31.0, r2.ToObject());
         }
 
         // Test various failure cases 
@@ -190,7 +233,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateSimple()
+        public async Task UpdateSimple()
         {
             var symTable = new SymbolTable();
             var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
@@ -205,7 +248,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var expr = "Set(x, x+1);x";
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
             Assert.Equal(13.0, result.ToObject());
 
             result = sym.Get(slotX);
@@ -217,7 +260,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateSimple_Decimal()
+        public async Task UpdateSimple_Decimal()
         {
             var symTable = new SymbolTable();
             var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
@@ -232,7 +275,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var expr = "Set(x, x+1);x";
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
             Assert.Equal(13m, result.ToObject());
 
             result = sym.Get(slotX);
@@ -394,7 +437,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void UpdateRowScope()
+        public async Task UpdateRowScope()
         {
             var recordType = RecordType.Empty()
                 .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
@@ -414,7 +457,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
 
             Assert.Equal(12.0, result.ToObject());
 
@@ -427,7 +470,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Expression from 2 row scopes!
         [Fact]
-        public void UpdateRowScope2()
+        public async Task UpdateRowScope2()
         {
             var recordType1 = RecordType.Empty()
                 .Add(new NamedFormulaType("num", FormulaType.Number, "displayNum"))
@@ -469,7 +512,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Verify evaluation. 
             var runtimeConfig = new RuntimeConfig(sym);
-            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            var result = await engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig);
 
             Assert.Equal(25.0, result.ToObject());
 

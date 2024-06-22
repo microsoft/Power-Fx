@@ -18,14 +18,14 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal static class DebugDump
     {
-        public static string Dump(ReadOnlySymbolTable symbolTable)
+        public static string Dump(this ReadOnlySymbolTable symbolTable)
         {
             using var tw = new StringWriter();
             Dump(symbolTable, tw);
             return tw.ToString();
         }
 
-        public static void Dump(ReadOnlySymbolTable symbolTable, TextWriter tw, string indent = "")
+        public static void Dump(this ReadOnlySymbolTable symbolTable, TextWriter tw, string indent = "")
         {
             // These should also align with intellisense APIs. 
             tw.WriteLine($"{indent}SymbolTable '{symbolTable.DebugName()}', hash={symbolTable.VersionHash.GetHashCode()}");
@@ -67,17 +67,22 @@ namespace Microsoft.PowerFx
             tw.WriteLine();
         }
 
-        public static string Dump(ReadOnlySymbolValues symbolValues)
+        public static string Dump(this ReadOnlySymbolValues symbolValues)
         {
             using var tw = new StringWriter();
             Dump(symbolValues, tw);
             return tw.ToString();
         }
 
-        public static void Dump(ReadOnlySymbolValues symbolValues, TextWriter tw, string indent = "")
+        public static void Dump(this ReadOnlySymbolValues symbolValues, TextWriter tw, string indent = "")
         {
             tw.WriteLine($"{indent}SymbolValues '{symbolValues.DebugName}_{symbolValues.GetHashCode()}'");
             var symbolTable = symbolValues.SymbolTable;
+
+            if (symbolValues is ComposedReadOnlySymbolValues composed)
+            {
+                composed.DebugDumpChildren(tw, indent + "  ");
+            }
 
             var values = (IGlobalSymbolNameResolver)symbolTable;
             foreach (var kv in values.GlobalSymbols)
@@ -100,12 +105,12 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static string Dump(FormulaType type)
+        public static string Dump(this FormulaType type)
         {
             return type?.ToString();
         }
 
-        public static string Dump(FormulaValue value)
+        public static string Dump(this FormulaValue value)
         {
             var settings = new FormulaValueSerializerSettings
             {
@@ -116,25 +121,25 @@ namespace Microsoft.PowerFx
             return sb.ToString();
         }
 
-        public static string Dump(TexlNode parseNode)
+        public static string Dump(this TexlNode parseNode)
         {
             return TexlPretty.PrettyPrint(parseNode);
         }
 
-        internal static string Dump(IntermediateNode eval)
+        internal static string Dump(this IntermediateNode eval)
         {
             var str = eval?.ToString();
             return str;
         }
 
-        public static string Dump(CheckResult check)
+        public static string Dump(this CheckResult check)
         {
             using var tw = new StringWriter();
             Dump(check, tw);
             return tw.ToString();
         }
 
-        public static void Dump(CheckResult check, TextWriter tw, string indent = "")
+        public static void Dump(this CheckResult check, TextWriter tw, string indent = "")
         {
             tw.WriteLine($"{indent}CheckResult");
             tw.WriteLine();

@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -573,14 +572,23 @@ namespace Microsoft.PowerFx.Functions
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            CultureInfo internalCulture = (CultureInfo)culture.Clone();
+
+            // th-TH
+            if (internalCulture.LCID == 1054) 
+            {
+                // Don't use ThaiBuddistCelendar                
+                internalCulture.DateTimeFormat.Calendar = new GregorianCalendar() { TwoDigitYearMax = 2049 };                
+            }
+
             // Check if DateTimeFormatEnumValue is DateTime format enum type.
-            var info = DateTimeFormatInfo.GetInstance(culture);
+            var info = DateTimeFormatInfo.GetInstance(internalCulture);
             result = null;
             string formatStr;
             switch (textFormatArgs.FormatArg)
             {
                 case "UTC":
-                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", culture));
+                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", internalCulture));
                     return result != null;
                 case "ShortDateTime":
                     // TODO: This might be wrong for some cultures
@@ -607,6 +615,30 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 case "LongDate":
                     formatStr = info.LongDatePattern;
+
+                    // ja-JP, zh-CN
+                    if (internalCulture.LCID == 1041 || internalCulture.LCID == 2052) 
+                    {
+                        // .Net Core 3.1 uses "yyyy'年'M'月'd'日'" (missing dddd)
+                        // .Net 7.0 uses "yyyy年M月d日dddd" (missing space)
+                        formatStr = "yyyy年M月d日 dddd";
+                    }
+
+                    // th-TH
+                    else if (internalCulture.LCID == 1054)
+                    {
+                        // .Net Core 3.1 uses "d MMMM yyyy"
+                        // .Net 7.0 uses "ddddที่ d MMMM g yyyy"
+                        formatStr = "d MMMM yyyy";
+                    }
+
+                    // eu-ES
+                    else if (internalCulture.LCID == 1069) 
+                    {
+                        // .Net Core 3.1 and .Net 7 use "yyyy('e')'ko' MMMM'ren' d('a'), dddd" (with extra 'ren' and 'a')
+                        formatStr = "yyyy('e')'ko' MMMM d, dddd";
+                    }
+
                     break;
                 case "LongTime":
                     formatStr = info.LongTimePattern;
@@ -618,7 +650,7 @@ namespace Microsoft.PowerFx.Functions
                     return false;
             }
 
-            result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
+            result = new StringValue(irContext, dateTime.ToString(formatStr, info));
             return result != null;
         }
 

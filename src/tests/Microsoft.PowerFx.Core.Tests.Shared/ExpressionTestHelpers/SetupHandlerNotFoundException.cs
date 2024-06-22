@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+    [Serializable]
     public class SetupHandlerNotFoundException : Exception
     {
         public SetupHandlerNotFoundException()

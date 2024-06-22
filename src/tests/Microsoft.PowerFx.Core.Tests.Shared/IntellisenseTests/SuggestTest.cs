@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
-        [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+        [InlineData("Test |", "![Test: s]", "&", "&&", "*", "+", "-", "/", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or", "^", "||")]
         [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
@@ -379,6 +379,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
         [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Filter(TableLoop,|", true, "Loop", "Record", "SomeString", "TableLoop", "ThisRecord")]
         [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
@@ -537,6 +538,22 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var suggestion = engine.Suggest(check, cursorPosition).Suggestions.Select(suggestion => suggestion.DisplayText.Text);
 
             Assert.Equal(expected, suggestion);
+        }
+
+        [Theory]
+        [InlineData("Filter(TableLoop,|")]
+        [InlineData("Filter(Accounts,|")]
+        public void LazyTypesStackOverflowTest(string expression)
+        {
+            var lazyInstance = new LazyRecursiveRecordType();
+            var config = PowerFxConfig.BuildWithEnumStore(
+                new EnumStoreBuilder(),
+                new TexlFunctionSet(new[] { BuiltinFunctionsCore.Filter }));
+
+            var suggestions = SuggestStrings(expression, config, null, lazyInstance);
+
+            // Just check that the execution didn't stack overflow.
+            Assert.True(suggestions.Any());
         }
 
         private class LazyRecursiveRecordType : RecordType

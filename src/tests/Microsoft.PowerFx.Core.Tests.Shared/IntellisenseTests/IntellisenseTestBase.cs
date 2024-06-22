@@ -64,11 +64,17 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var cursorMatches = Regex.Matches(expression, @"\|");
             Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
-            var cursorPosition = cursorMatches.First().Index;
 
-            expression = expression.Replace("|", string.Empty);
+            foreach (Match m in cursorMatches)
+            {
+                var cursorPosition = m.Index;
 
-            return (expression, cursorPosition);
+                expression = expression.Replace("|", string.Empty);
+
+                return (expression, cursorPosition);
+            }
+
+            throw new System.Exception("No match.");
         }
 
         internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config, CultureInfo culture)

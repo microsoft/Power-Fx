@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -102,7 +103,7 @@ namespace Microsoft.PowerFx
         private readonly IList<IPostCheckErrorHandler> _postCheckErrorHandlers = new List<IPostCheckErrorHandler>();
 
         public IList<IPostCheckErrorHandler> PostCheckErrorHandlers => _postCheckErrorHandlers;
-        
+
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        
@@ -162,6 +163,8 @@ namespace Microsoft.PowerFx
             symbols = ReadOnlySymbolTable.Compose(localSymbols, GetCombinedEngineSymbols());
             return symbols;
         }
+               
+        private readonly ComposedSymbolTableCache _functionListCache = new ComposedSymbolTableCache();
 
         /// <summary>
         /// Get a combined engine symbol table, including builtins and config. 
@@ -169,7 +172,12 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public ReadOnlySymbolTable GetCombinedEngineSymbols()
         {
-            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, SupportedFunctions, Config.SymbolTable, PrimitiveTypes);
+            // Compose all the symbol tables most likely to have functions into a single 
+            // symbol table and then cache that. 
+            // That will cache unifying into a single TexlFunctionSet - which is the most expensive part. 
+            var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.SymbolTable);
+
+            var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, PrimitiveTypes);
 
             return symbols;
         }

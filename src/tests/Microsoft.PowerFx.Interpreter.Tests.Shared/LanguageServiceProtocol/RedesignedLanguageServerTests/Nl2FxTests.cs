@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
             if (Nl2FxDelayTime.HasValue)
             {
-                await Task.Delay(Nl2FxDelayTime.Value, CancellationToken.None).ConfigureAwait(false);
+                await Task.Delay(Nl2FxDelayTime.Value, CancellationToken.None);
             }
 
             if (this.Throw)
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = NL2FxMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             var response = AssertAndGetResponsePayload<CustomNL2FxResult>(rawResponse, payload.id);
 
             // Assert
@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = NL2FxMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.MethodNotFound);
         }
 
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // Act
             var payload = NL2FxMessageJson(documentUri);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             AssertErrorPayload(rawResponse, payload.id, JsonRpcHelper.ErrorCode.InternalError);

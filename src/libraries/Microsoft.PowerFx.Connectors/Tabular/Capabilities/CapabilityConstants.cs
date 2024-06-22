@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Connectors.Tabular.Capabilities
+namespace Microsoft.PowerFx.Connectors
 {
     // Those constants are also defined in Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata.CapabilitiesConstants
     // but some of them are invalid

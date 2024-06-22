@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Un porcentaje (o columna de valores de porcentaje) al que el color (o columna de valores de color) se atenuará. Un porcentaje negativo produce una sombra más oscura. Un porcentaje positivo produce una sombra más clara.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Devuelve el valor absoluto de un número, un número sin signo.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Agrega registros a un origen de datos.</value>
+    <value>Agrega uno o más elementos a la colección especificada. Los elementos pueden ser de una tabla o colección diferente (por ejemplo, Collect(collection, source_collection)), o de uno o más registros Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>origen_datos</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>registro</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>colección</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elemento</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Una colección nueva o existente que se va a aumentar.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Elimina todos los registros de una colección. Y agrega un conjunto de registros diferente a la misma colección.</value>
+    <value>Borra primero la colección y agrega uno o más elementos a la colección especificada. Los elementos pueden ser de una tabla o colección diferente (por ejemplo, ClearCollect(collection, source_collection)) o de uno o más registros ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>origen_datos</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Una colección nueva o existente que se va a aumentar.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>origen_datos</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>registro</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Un registro o tabla que se va a recopilar. Un registro se anexará a la colección. Las filas de una tabla se anexarán a la colección.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplica las actualizaciones a la fila especificada y cambia la fila en el origen de datos especificado. Devuelve la fila actualizada.</value>
@@ -3866,6 +3881,10 @@
     <value>La función {0} ya está definida.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>El nombre de función {0} está restringido.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>El parámetro {0} es un duplicado.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>El tipo de devolución de función indicada no coincide con el tipo de devolución del cuerpo de función.</value>
+    <value>El tipo de devolución de función indicada "{0}" no coincide con el tipo de devolución del cuerpo de función "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>El primer argumento de "{0}" debe ser un nombre de variable válido que no entre en conflicto con ningún nombre de origen de datos, colección, pantalla o control existente. Tipo encontrado "{1}".</value>
+    <value>No se puede modificar "{1}" con "{0}" o existe un conflicto con el nombre de una variable de ámbito, origen de datos u otro objeto existente.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>La declaración literal de tipo no es válida. No se puede usar la expresión "{0}" en una definición de tipo.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Operador Partial desconocido.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>El origen de datos al que se agregarán datos.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Un registro o una tabla que se recopilará. Se anexará un registro al origen de datos. Las filas de una tabla se anexarán al origen de datos.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>elemento</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Advertencia de delegación. El resultado de este argumento "{0}" puede truncarse para conjuntos de datos de gran tamaño antes de pasarse a la función "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Colección que se va a borrar.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>El origen que se borrará.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>El origen de datos especificado no se puede usar con esta función.</value>

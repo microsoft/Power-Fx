@@ -27,6 +27,11 @@ namespace Microsoft.PowerFx.Connector.Tests
             {
               "Microsoft.PowerFx.ConfigExtensions",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.CdpDataSource",
+              "Microsoft.PowerFx.Connectors.CdpService",
+              "Microsoft.PowerFx.Connectors.CdpServiceBase",
+              "Microsoft.PowerFx.Connectors.CdpTable",
+              "Microsoft.PowerFx.Connectors.CdpTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
@@ -39,10 +44,8 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorPermission",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
-              "Microsoft.PowerFx.Connectors.ConnectorTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorType",
-              "Microsoft.PowerFx.Connectors.Constants",
-              "Microsoft.PowerFx.Connectors.EngineExtensions",
+              "Microsoft.PowerFx.Connectors.Constants",              
               "Microsoft.PowerFx.Connectors.LogCategory",
               "Microsoft.PowerFx.Connectors.MediaKind",
               "Microsoft.PowerFx.Connectors.ODataParameters",
@@ -53,10 +56,6 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorDataSource",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorServiceBase",
-              "Microsoft.PowerFx.Connectors.Tabular.ConnectorTable",
-              "Microsoft.PowerFx.Connectors.Tabular.TabularService",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 

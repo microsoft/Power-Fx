@@ -609,13 +609,13 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsOptionSet => Kind == DKind.OptionSet || Kind == DKind.OptionSetValue;
 
-        public bool IsOptionSetBackedByNumber => IsOptionSet && OptionSetInfo.BackingKind == DKind.Number;
+        public bool IsOptionSetBackedByNumber => IsOptionSet && OptionSetInfo?.BackingKind == DKind.Number;
 
-        public bool IsOptionSetBackedByBoolean => IsOptionSet && OptionSetInfo.BackingKind == DKind.Boolean;
+        public bool IsOptionSetBackedByBoolean => IsOptionSet && OptionSetInfo?.BackingKind == DKind.Boolean;
 
-        public bool IsOptionSetBackedByColor => IsOptionSet && OptionSetInfo.BackingKind == DKind.Color;
+        public bool IsOptionSetBackedByColor => IsOptionSet && OptionSetInfo?.BackingKind == DKind.Color;
 
-        public bool IsOptionSetBackedByString => IsOptionSet && OptionSetInfo.BackingKind == DKind.String;
+        public bool IsOptionSetBackedByString => IsOptionSet && OptionSetInfo?.BackingKind == DKind.String;
 
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 

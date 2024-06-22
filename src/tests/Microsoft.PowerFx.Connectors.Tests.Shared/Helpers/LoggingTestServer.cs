@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseSet(string filename)
         {
-            Responses = (Helpers.ReadStream(filename) as string).Split("~|~").ToArray();
+            Responses = (Helpers.ReadStream(filename) as string).Split(new string[] { "~|~" }, StringSplitOptions.None).ToArray();
             Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
             CurrentResponse = 0;
             ResponseSetMode = true;
@@ -100,20 +100,20 @@ namespace Microsoft.PowerFx.Tests
             return !string.IsNullOrEmpty(filename) ? Helpers.ReadStream(filename) : string.Empty;
         }
 
-        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
+        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK, string contentType = null)
         {
             Assert.Null(_nextResponse);
-            _nextResponse = GetResponseMessage(data, status);
+            _nextResponse = GetResponseMessage(data, status, contentType);
         }
 
         // We only support string & byte[] types (images)
-        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status)
+        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status, string contentType = null)
         {
             if (data is string str)
             {
                 return new HttpResponseMessage(status)
                 {
-                    Content = new StringContent(str, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
+                    Content = new StringContent(str, Encoding.UTF8, contentType ?? OpenApiExtensions.ContentType_ApplicationJson)
                 };
             }
 
@@ -161,7 +161,8 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await httpContent.ReadAsStringAsync(cancellationToken);
+
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
@@ -174,10 +175,11 @@ namespace Microsoft.PowerFx.Tests
                 using HttpRequestMessage clone = new HttpRequestMessage(request.Method, request.RequestUri);
 
                 // Copy the request's content (via a MemoryStream) into the cloned object
-                var ms = new MemoryStream();
+                using var ms = new MemoryStream();
                 if (request.Content != null)
                 {
-                    await request.Content.CopyToAsync(ms).ConfigureAwait(false);
+                    await request.Content.CopyToAsync(ms, cancellationToken);
+
                     ms.Position = 0;
                     clone.Content = new StreamContent(ms);
 
@@ -190,17 +192,19 @@ namespace Microsoft.PowerFx.Tests
 
                 clone.Version = request.Version;
 
+#pragma warning disable CS0618 // Type or member is obsolete (HttpRequestMessage.Properties)
                 foreach (KeyValuePair<string, object> prop in request.Properties)
                 {
                     clone.Properties.Add(prop);
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
                 {
                     clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
 
-                return await LiveClient.SendAsync(clone, cancellationToken).ConfigureAwait(false);
+                return await LiveClient.SendAsync(clone, cancellationToken);
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse], Statuses[CurrentResponse++]) : _nextResponse;

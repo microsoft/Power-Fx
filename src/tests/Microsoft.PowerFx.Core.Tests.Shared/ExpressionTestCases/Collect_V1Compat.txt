@@ -1,4 +1,28 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
+#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
+
+>> Collect(t1, r2);CountRows(t1)
+2
+
+>> Collect(t1, r2);Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false});CountRows(t1)
+3
+
+>> Collect(t1, {Field1:3});Last(t1).Field2
+Blank()
+
+>> Collect(t1, If(1>0, r2));CountRows(t1)
+2
+    
+>> IsError(Collect(t1, If(1/0, r2)))
+true
+
+>> Collect(t_name, {name: "textInput1"})
+{name:"textInput1"}
+
+>> Collect(t1, {Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false})
+{Field1:3,Field2:"mars",Field3:DateTime(2022,3,1,0,0,0,0),Field4:false}
+
+>> Collect(t_empty,{Value:200}).Value
+200
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-7: The function 'Collect' has some invalid arguments.
@@ -19,4 +43,40 @@ Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 0-7: Th
 Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed.
 
 >> Collect("", "")
-Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 0-7: The function 'Collect' has some invalid arguments.
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 8-10: The function 'Collect' has some invalid arguments.|Error 12-14: Invalid argument type. Cannot use Text values in this context.
+
+>> IsBlank(Collect(t1, Blank()))
+true
+
+>> Collect(t1, r2, r2)
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, r2, 1; 2; r2)
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, Table(r2,r2))
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, Table(r2,r2), {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+
+>> Collect(t1, "x")
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-15: Invalid argument type. Cannot use Text values in this context.
+
+>> Collect(Foo,r2)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-14: The specified column 'Field1' does not exist.
+
+>> Collect(Foo,Bar)
+Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-7: The function 'Collect' has some invalid arguments.
+
+>> Collect(1/0,Foo)
+Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
+
+>> Collect(t1,{Price:200}).Price
+Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.
+
+>> Collect(t1, {Field1:Date(2023,2,27),Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:44984,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Collect(t1, {Field1:"1",Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Errors: Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-85: The type of this argument 'Field1' does not match the expected type 'Decimal'. Found type 'Text'.

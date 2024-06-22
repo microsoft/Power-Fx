@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework Condition="'$(BuildTarget)' == 'netcoreapp31'">netcoreapp3.1</TargetFramework>
-    <TargetFrameworks Condition="'$(BuildTarget)' == ''">netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;Debug462;Debug70;DebugAll;Release462;Release70;ReleaseAll</Configurations>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   

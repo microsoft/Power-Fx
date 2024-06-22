@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -19,8 +20,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("de-DE")]
         [InlineData("el-GR")]
         [InlineData("en-US")]
-        [InlineData("es-ES")]
+        [InlineData("es-ES")]        
         [InlineData("et-EE")]
+        [InlineData("eu-ES")]
         [InlineData("fi-FI")]
         [InlineData("fr-FR")]
         [InlineData("gl-ES")]
@@ -52,9 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("uk-UA")]
         [InlineData("vi-VN")]
         [InlineData("zh-CN")]
-        [InlineData("zh-TW")]
-
-        //[InlineData("eu-ES")] PFx and PA are unable to parse long date format back to date.
+        [InlineData("zh-TW")]       
         public void DateValueLocaleTest(string locale)
         {
             (string resultShort, string resultLong) = GetDateValueLocale(locale);
@@ -64,20 +64,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var reversedShort = (DateValue)engine.Eval($"DateValue(\"{resultShort}\", \"{locale}\")");
             Assert.Equal(_datetime, reversedShort.GetConvertedValue(null));
 
-            var reversedLong = (DateValue)engine.Eval($"DateValue(\"{resultLong}\", \"{locale}\")");
+            FormulaValue fv = engine.Eval($"DateValue(\"{resultLong}\", \"{locale}\")");
+            DateValue reversedLong = fv as DateValue
+                ?? (fv is ErrorValue ev
+                    ? throw new Exception($"Locale {locale}: '{resultLong}' - {string.Join(", ", ev.Errors.Select(er => er.Message))}")
+                    : throw new Exception($"DateValue returns unexpected {fv.GetType().Name} type"));
+
             Assert.Equal(_datetime, reversedLong.GetConvertedValue(null));
-        }
-
-        [Theory]
-        [InlineData("eu-ES")] // PFx and PA are unable to parse long date format back to date.
-        public void DateValueLocaleUnableToParseTest(string locale)
-        {
-            (_, string resultLong) = GetDateValueLocale(locale);
-
-            var engine = new RecalcEngine();
-
-            var reversedLong = engine.Eval($"DateValue(\"{resultLong}\", \"{locale}\")");
-            Assert.IsType<ErrorValue>(reversedLong);
         }
 
         private (string resultShort, string resultLong) GetDateValueLocale(string locale)

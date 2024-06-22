@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue)"/>.
+        /// Enable a Set() function which allows scripts to do <see cref="RecalcEngine.UpdateVariable(string, Types.FormulaValue, SymbolProperties)"/>.
         /// </summary>
         /// <param name="powerFxConfig"></param>
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
@@ -38,14 +38,22 @@ namespace Microsoft.PowerFx
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
-            symbolTable.AddFunction(new CollectFunction());
             symbolTable.AddFunction(new PatchImpl());
             symbolTable.AddFunction(new PatchSingleRecordImpl());
             symbolTable.AddFunction(new PatchAggregateImpl());
             symbolTable.AddFunction(new PatchAggregateSingleTableImpl());
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearImpl());
-            symbolTable.AddFunction(new ClearCollectFunction());
+            symbolTable.AddFunction(new ClearCollectImpl());
+            symbolTable.AddFunction(new ClearCollectScalarImpl());
+            symbolTable.AddFunction(new CollectImpl());
+            symbolTable.AddFunction(new CollectScalarImpl());
+        }
+
+        [Obsolete("FileFunctions are still in preview.")]
+        public static void EnableFileFunctions(this SymbolTable symbolTable)
+        {
+            symbolTable.AddFunction(new FileInfoFunctionImpl());
         }
 
         [Obsolete("RegEx is still in preview. Grammar may change.")]

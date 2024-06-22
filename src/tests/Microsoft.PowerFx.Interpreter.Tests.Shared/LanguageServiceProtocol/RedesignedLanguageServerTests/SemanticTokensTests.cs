@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             await TestCorrectFullSemanticTokensAreReturned(new SemanticTokensParams
             {
                 TextDocument = GetTextDocument(GetUri("expression=Max(1, 2, 3)"))
-            }).ConfigureAwait(false);
+            });
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             {
                 TextDocument = GetTextDocument(),
                 Text = "Max(1, 2, 3)"
-            }).ConfigureAwait(false);
+            });
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 TextDocument = GetTextDocument(GetUri("expression=Color.White")),
                 Text = expression
             };
-            await TestCorrectFullSemanticTokensAreReturned(semanticTokenParams).ConfigureAwait(false);
+            await TestCorrectFullSemanticTokensAreReturned(semanticTokenParams);
         }
 
         private async Task TestCorrectFullSemanticTokensAreReturned(SemanticTokensParams semanticTokensParams)
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokensParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var response = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var response = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             AssertErrorPayload(response, payload.id, JsonRpcHelper.ErrorCode.ParseError);
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             });
 
             // Act
-            var response = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var response = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var notificationParams = AssertAndGetNotificationParams<PublishControlTokensParams>(response, CustomProtocolNames.PublishControlTokens);
@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);
@@ -358,7 +358,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var response = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var response = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             AssertErrorPayload(response, payload.id, JsonRpcHelper.ErrorCode.ParseError);
@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
             // Act
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload).ConfigureAwait(false);
+            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(rawResponse, payload.id);

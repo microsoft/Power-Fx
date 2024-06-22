@@ -41,6 +41,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool SupportsParamCoercion => true;
 
+        private const int MaxParameterCount = 30;
+
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
@@ -142,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }
@@ -221,6 +223,12 @@ namespace Microsoft.PowerFx.Core.Functions
                     nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
+                    continue;
+                }
+
+                if (udf.Args.Count > MaxParameterCount)
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
                     continue;
                 }
 
@@ -310,7 +318,9 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(ft);
 
-            if (ft is AggregateType aggType)
+            // Datasource types may contain fields that may expand to other datasource types or refernce themselves.
+            // We can avoid calling this method on these types containing expand info.
+            if (!ft._type.HasExpandInfo && ft is AggregateType aggType)
             {
                 if (aggType.GetFieldTypes().Any(ct => IsRestrictedType(ct.Type)))
                 {
