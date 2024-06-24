@@ -759,7 +759,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // It is possible for function to be null here if it referred to
             // a service function from a service we are in the process of
             // deregistering.
-            return GetInfo(callNode).VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
+            return GetInfo(callNode)?.VerifyValue()?.Function?.TryGetEntityInfo(node, this, out info) ?? false;
         }
 
         internal IExternalRule Rule { get; }
