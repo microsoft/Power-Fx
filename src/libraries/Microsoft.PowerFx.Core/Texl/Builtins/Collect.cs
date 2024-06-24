@@ -113,11 +113,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public virtual DType GetCollectedType(Features features, DType argType)
         {
             Contracts.Assert(argType.IsValid);
-
             return argType;
         }
 
-        private bool TryGetUnifiedCollectedTypeAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, CheckTypesContext context, out DType collectedType)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -133,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 1; i < argc; i++)
             {
-                DType argType = GetCollectedType(features, argTypes[i]);
+                DType argType = GetCollectedType(context.Features, argTypes[i]);
 
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
@@ -156,7 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     bool fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, features);
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, context.Features);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -177,7 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Attempt to get the unified schema of the items being collected by an invocation.
-        private bool TryGetUnifiedCollectedTypeDontAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, Features features, out DType collectedType)
+        private bool TryGetUnifiedCollectedTypeDontAllowTypeExpansion(TexlNode[] args, DType[] argTypes, IErrorContainer errors, CheckTypesContext context, out DType collectedType, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -195,7 +194,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 1; i < argc; i++)
             {
-                DType argType = GetCollectedType(features, argTypes[i]);
+                DType argType = GetCollectedType(context.Features, argTypes[i]);
 
                 // The subsequent args should all be aggregates.
                 if (!argType.IsAggregate)
@@ -212,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(datasourceType, args[i], errors, features, SupportsParamCoercion);
+                bool checkAggregateNames = argType.CheckAggregateNames(datasourceType, args[i], errors, context.Features, !context.AnalysisMode);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -222,12 +221,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, features);
+
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, context.Features);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
                         fValid = false;
                     }
+                }
+
+                // CheckAggregateNames should have already checked if there is any coercion error.
+                if (argType.TryGetCoercionSubType(datasourceType, out DType coercionType, out var coercionNeeded, context.Features) && coercionNeeded)
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType.ToRecord());
                 }
 
                 // We only support accessing entities in collections if the collection has only 1 argument that contributes to it's type
@@ -268,17 +274,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // document errors for invalid arguments such as unsupported aggregate types.
             if (context.AnalysisMode)
             {
-                fValid &= TryGetUnifiedCollectedTypeAllowTypeExpansion(args, argTypes, errors, context.Features, out collectedType);
+                fValid &= TryGetUnifiedCollectedTypeAllowTypeExpansion(args, argTypes, errors, context, out collectedType);
             }
             else
             {
-                fValid &= TryGetUnifiedCollectedTypeDontAllowTypeExpansion(args, argTypes, errors, context.Features, out collectedType);
+                fValid &= TryGetUnifiedCollectedTypeDontAllowTypeExpansion(args, argTypes, errors, context, out collectedType, ref nodeToCoercedTypeMap);
             }
 
             Contracts.Assert(collectedType.IsTable);
 
             bool fError = false;
-            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: true, context.Features);
+
+            returnType = DType.Union(ref fError, collectionType, collectedType, useLegacyDateTimeAccepts: context.AnalysisMode, context.Features, allowCoerce: !context.AnalysisMode);
+
             if (fError)
             {
                 fValid = false;
@@ -331,7 +339,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
 
-            if (binding.Features.PowerFxV1CompatibilityRules)
+            if (!binding.CheckTypesContext.AnalysisMode)
             {
                 MutationUtils.CheckForReadOnlyFields(argTypes[0], args.Skip(1).ToArray(), argTypes.Skip(1).ToArray(), errors);
             }

@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Percentatge (o columna de valors de percentatge) amb què el color (o la columna de valors de color) s'esvairà. Un percentatge negatiu produeix una ombra més fosca. Un percentatge positiu produeix una ombra més clara.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Retorna el valor absolut d'un nombre (un nombre sense signe).</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Afegeix registres a una font de dades.</value>
+    <value>Afegeix un o més elements a la col·lecció especificada. Els elements poden ser d'una taula o d'una col·lecció diferent (p. ex., Collect(collection, source_collection)) o d'un o més registres Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>origen_dades</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>registre</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>col·lecció</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>element</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Col·lecció nova o existent que s'augmentarà.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Suprimeix tots els registres d'una col·lecció. A continuació, afegeix un conjunt de registres diferent a la mateixa col·lecció.</value>
+    <value>Esborra la col·lecció i, després, afegeix un o més elements a la col·lecció especificada. Els elements poden ser d'una taula o d'una col·lecció diferent (p. ex., ClearCollect(collection, source_collection)) o d'un o més registres ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>origen_dades</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Col·lecció nova o existent que s'augmentarà.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>origen_dades</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>registre</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Registre o taula que es recollirà. S'annexarà un registre a la col·lecció. S'annexaran les files de la taula a la col·lecció.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplica les actualitzacions a la fila especificada i canvia la fila de l'origen de dades especificat. Retorna la fila actualitzada.</value>
@@ -3866,6 +3881,10 @@
     <value>La funció {0} ja està definida.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>El nom de funció {0} està restringit.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>El paràmetre {0} està duplicat.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>El tipus de retorn de la funció indicada no coincideix amb el tipus de retorn del cos de la funció.</value>
+    <value>El tipus de retorn de la funció indicada "{0}" no coincideix amb el tipus de retorn del cos de la funció "{1}".</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>El primer argument de "{0}" ha de ser un nom de variable vàlid i no pot entrar en conflicte amb cap nom existent de control, pantalla, col·lecció o origen de dades. S'ha trobat el tipus "{1}".</value>
+    <value>"{1}" no es pot modificar amb "{0}" o entra en conflicte amb el nom d'una variable d'àmbit existent, una font de dades o un altre objecte.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operador Partial desconegut.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Font de dades on s'afegiren les dades.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Registre o taula que es recollirà. S'annexarà un registre a la font de dades. S'annexaran les files de la taula a la font de dades.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

@@ -1640,8 +1640,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
-            Assert.False(functions.First(f => f.Name == "ReceiptParser").IsSupported);
-            Assert.Equal("Body with multiple parameters is not supported when one of the parameters is of type 'blob'", functions.First(f => f.Name == "ReceiptParser").NotSupportedReason);
+            Assert.True(functions.First(f => f.Name == "ReceiptParser").IsSupported);            
         }
 
         [Fact]

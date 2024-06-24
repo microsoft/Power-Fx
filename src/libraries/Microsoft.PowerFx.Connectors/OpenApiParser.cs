@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors
         private static bool ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool failOnUnknownExtensions, ConnectorLogger logger = null)
         {
             // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
-            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md            
+            // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md
 
             if (openApiDocument.Paths == null)
             {
@@ -197,12 +197,12 @@ namespace Microsoft.PowerFx.Connectors
             if (failOnUnknownExtensions)
             {
                 // All these Info properties can be ignored
-                // openApiDocument.Info.Description 
+                // openApiDocument.Info.Description
                 // openApiDocument.Info.Version
                 // openApiDocument.Info.Title
                 // openApiDocument.Info.Contact
                 // openApiDocument.Info.License
-                // openApiDocument.Info.TermsOfService            
+                // openApiDocument.Info.TermsOfService
                 List<string> infoExtensions = openApiDocument.Info.Extensions.Keys.ToList();
 
                 // Undocumented but safe to ignore
@@ -271,7 +271,7 @@ namespace Microsoft.PowerFx.Connectors
                     logger?.LogWarning($"Unsupported document: {notSupportedReason}");
                 }
 
-                // openApiDocument.Components.Parameters is ok                
+                // openApiDocument.Components.Parameters is ok
                 // openApiDocument.Components.RequestBodies is ok
                 // openApiDocument.Components.Responses contains references from "path" definitions
                 // openApiDocument.Components.Schemas contains global "definitions"
@@ -305,7 +305,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // openApiDocument.ExternalDocs - can be ignored
-            // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part        
+            // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part
             // openApiDocument.Tags - can be ignored
 
             if (isSupported && openApiDocument.Workspace != null)
@@ -329,7 +329,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (pathExtensions.Count != 0)
                 {
-                    // x-swagger-router-controller not supported - https://github.com/swagger-api/swagger-inflector#development-lifecycle                                
+                    // x-swagger-router-controller not supported - https://github.com/swagger-api/swagger-inflector#development-lifecycle
                     // x-ms-notification - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-notification-content
                     isSupported = false;
                     notSupportedReason = $"OpenApiPathItem contains unsupported Extensions {string.Join(", ", ops.Extensions.Keys)}";
@@ -444,7 +444,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        // Parse an OpenApiDocument and return functions. 
+        // Parse an OpenApiDocument and return functions.
         internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
         {
             List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
@@ -472,7 +472,14 @@ namespace Microsoft.PowerFx.Connectors
                 if (hc.BaseAddress == null && openApiServers.Any())
                 {
                     // descending order to prefer https
-                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                    Uri uri = openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault();
+
+                    if (uri == null)
+                    {
+                        return null;
+                    }
+
+                    return $"https://{uri.Authority}";
                 }
             }
 

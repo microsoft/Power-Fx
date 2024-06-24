@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Un procent (sau o coloană de valori procentuale) după care va fi estompată culoarea (sau coloana de valori de culoare). Un procent negativ produce o nuanță mai întunecată. Un procent pozitiv produce o nuanță mai deschisă.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Returns a record with information about a file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>The file blob to get information about.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Returnează valoarea absolută a unui număr, adică un număr fără semn.</value>
     
@@ -3098,32 +3109,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adaugă înregistrări la o sursă de date.</value>
+    <value>Adaugă unul sau mai multe elemente la colecția specificată. Elementele pot proveni dintr-un tabel sau dintr-o colecție diferită (de ex. Collect(collection, source_collection)) sau dintr-una sau mai multe înregistrări Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>sursă_date</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>înregistrare</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>colecție</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>element</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>O colecție nouă sau existentă de augmentat.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Șterge toate înregistrările dintr-o colecție. Apoi adaugă un set diferit de înregistrări la respectiva colecție.</value>
+    <value>Șterge întâi colecția, apoi adaugă unul sau mai multe elemente la colecția specificată. Elementele pot proveni dintr-un tabel sau o colecție diferite (de ex. ClearCollect(collection, source_collection)) sau dintr-una sau mai multe înregistrări ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>sursă_date</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>O colecție nouă sau existentă de augmentat.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>sursă_date</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>înregistrare</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>O înregistrare sau un tabel de colectat. Se va adăuga o înregistrare la colecție. Un tabel va avea rândurile sale adăugate colecției.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Aplică actualizările la rândul specificat și modifică rândul în sursa de date specificată. Returnează rândul actualizat.</value>
@@ -3866,6 +3881,10 @@
     <value>Funcția {0} este definită deja.</value>
     
   </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Numele funcției {0} este restricționat.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametrul {0} este dublat.</value>
     
@@ -3875,7 +3894,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Tipul de returnare al funcției declarate nu se potrivește cu tipul de returnare al corpului funcției.</value>
+    <value>Tipul de returnare al funcției declarate „{0}” nu se potrivește cu tipul de returnare al corpului funcției „{1}”.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Primul argument pentru „{0}” trebuie să fie un nume valid de variabilă și nu poate intra în conflict cu nume existente de controale, ecrane, colecții sau surse de date. S-a găsit tipul „{1}”</value>
+    <value>„{1}” nu poate fi modificat cu „{0}” sau intră în conflict cu numele unei variabile de domeniu, al unei surse de date sau al unui alt obiect existent.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial necunoscut.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Sursa de date la care se adaugă datele.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>O înregistrare sau un tabel de colectat. Se va adăuga o înregistrare la sursa de date. Un tabel își va adăuga rândurile la sursa de date.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

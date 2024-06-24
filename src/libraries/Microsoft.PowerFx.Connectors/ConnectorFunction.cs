@@ -1313,7 +1313,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        runtimeContext.ExecutionLogger?.LogWarning($"Provided parameter is expected to be a record but is {parameterToUse.Type._type}");
+                        runtimeContext.ExecutionLogger?.LogWarning($"Provided parameter is expected to be a record but is {parameterToUse.Type._type.ToAnonymousString()}");
                         return null;
                     }
                 }
@@ -1546,11 +1546,6 @@ namespace Microsoft.PowerFx.Connectors
                 _warnings.Add(ConnectorStringResources.WarnDeprecatedFunction);
                 string msg = ErrorUtils.FormatMessage(StringResources.Get(ConnectorStringResources.WarnDeprecatedFunction), null, Name, Namespace);
                 _configurationLogger?.LogWarning($"{msg}");
-            }
-
-            if (openApiBodyParameters.Count > 1 && openApiBodyParameters.Any(p => p.Key.ConnectorType.Binary))
-            {
-                errorsAndWarnings.AddError("Body with multiple parameters is not supported when one of the parameters is of type 'blob'");
             }
 
             if (errorsAndWarnings.HasErrors)

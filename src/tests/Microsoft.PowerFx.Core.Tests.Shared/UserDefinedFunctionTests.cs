@@ -576,5 +576,60 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
         }
+
+        [Theory]
+        [InlineData(1, false)]
+        [InlineData(29, false)]
+        [InlineData(30, false)]
+        [InlineData(31, true)]
+        [InlineData(1000, true)]
+        [InlineData(10000, true)]
+        public void TestUDFsBlockTooManyParameters(int count, bool errorExpected)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            var parameters = new List<string>();
+            for (int i = 0; i < count; i++)
+            {
+                parameters.Add($"parameter{i}: Number");
+            }
+
+            string script = $"test({string.Join(", ", parameters)}):Number = 1;";
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            if (errorExpected)
+            {
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_TooManyParameters");
+            }
+            else
+            {
+                Assert.True(errors.Count == 0);
+            }
+        }
+
+        [Theory]
+        [InlineData("func():Void { Set(x, 123) };")]
+        [InlineData("func():Void { Set(x, 123); Set(y, 123) };")]
+        [InlineData("func():Void = { Set(x, 123) };")]
+        [InlineData("func():Void = { Set(x, 123); Set(y, 123) };")]
+        public void TestImperativeUDFParseWithoutSemicolon(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            Assert.True(errors.Count() == 0);
+        }
     }
 }

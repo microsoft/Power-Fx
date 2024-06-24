@@ -501,6 +501,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(string.Join("-", expectedSuggestions), string.Join("-", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
         }
 
+        [Fact]
+        public void AppendErrorTests()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            engine.UpdateVariable("t1", new ErrorTableValue());
+
+            var check = engine.Check("Collect(t1, {a:\"abc\"})", options: new ParserOptions() { AllowsSideEffects = true });
+            var result = check.GetEvaluator().Eval();
+
+            Assert.IsType<ErrorValue>(result);
+        }
+
         /// <summary>
         /// Meant to test PatchSingleRecordCoreAsync override. Only tables with primary key column are supported.
         /// </summary>
@@ -630,6 +646,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("t1", varTableValue);
 
                 return engine;
+            }
+        }
+
+        internal class ErrorTableValue : TableValue
+        {
+            public ErrorTableValue()
+                : base(TableType.Empty().Add("a", FormulaType.String))
+            {
+            }
+
+            public override IEnumerable<DValue<RecordValue>> Rows => throw new NotImplementedException();
+
+            public override bool CanShallowCopy => true;
+
+            // This simulates a possible scenario wher Dataverse turns an error when trying to append a record.
+            public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound())));
             }
         }
     }

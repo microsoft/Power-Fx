@@ -77,6 +77,14 @@ namespace Microsoft.PowerFx.Types
 
         public override async IAsyncEnumerable<NamedValue> GetOriginalFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
+            foreach (var field in OriginalFields)
+            {
+                yield return field;
+            }
+        }
+
+        protected override IEnumerable<NamedValue> GetOriginalFieldsCore()
+        {
             foreach (var field in _fields)
             {
                 yield return new NamedValue(field.Key, field.Value);

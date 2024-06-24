@@ -100,20 +100,20 @@ namespace Microsoft.PowerFx.Tests
             return !string.IsNullOrEmpty(filename) ? Helpers.ReadStream(filename) : string.Empty;
         }
 
-        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK)
+        public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK, string contentType = null)
         {
             Assert.Null(_nextResponse);
-            _nextResponse = GetResponseMessage(data, status);
+            _nextResponse = GetResponseMessage(data, status, contentType);
         }
 
         // We only support string & byte[] types (images)
-        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status)
+        public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status, string contentType = null)
         {
             if (data is string str)
             {
                 return new HttpResponseMessage(status)
                 {
-                    Content = new StringContent(str, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
+                    Content = new StringContent(str, Encoding.UTF8, contentType ?? OpenApiExtensions.ContentType_ApplicationJson)
                 };
             }
 
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Tests
                         _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");
                     }
                 }
-                
+
                 var content = await httpContent.ReadAsStringAsync(cancellationToken);
 
                 if (!string.IsNullOrEmpty(content))
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Tests
                 // Copy the request's content (via a MemoryStream) into the cloned object
                 using var ms = new MemoryStream();
                 if (request.Content != null)
-                {                    
+                {
                     await request.Content.CopyToAsync(ms, cancellationToken);
 
                     ms.Position = 0;
