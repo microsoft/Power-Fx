@@ -764,6 +764,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
         public static ErrorResourceKey ErrUDF_InvalidReturnType = new ErrorResourceKey("ErrUDF_InvalidReturnType");
         public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
+        public static ErrorResourceKey WrnUDF_ShadowingBuiltInFunction = new ErrorResourceKey("WrnUDF_ShadowingBuiltInFunction");
 
         public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
         public static ErrorResourceKey ErrNamedType_InvalidCycles = new ErrorResourceKey("ErrNamedType_InvalidCycles");

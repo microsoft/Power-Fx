@@ -4077,6 +4077,10 @@
     <value>Function {0} is already defined.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Warning: User defined function {0} will shadow the existing built-in function {0}.</value>
+    <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function.</comment>
+  </data>
     <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Function name {0} is restricted.</value>
     <comment>This error message shows up when user tries to define a function with a restricted name.</comment>
