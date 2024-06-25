@@ -646,7 +646,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            Assert.True(errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" && error.Severity == DocumentErrorSeverity.Warning));
+            // Only one error should exist.
+            Assert.True(errors.Count() == 1 &&
+                errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                error.Severity == DocumentErrorSeverity.Warning));
         }
     }
 }

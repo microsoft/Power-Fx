@@ -4079,7 +4079,7 @@
   </data>
   <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
     <value>Warning: User defined function {0} will shadow the existing built-in function {0}.</value>
-    <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function.</comment>
+    <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function. The argument {0} will be replaced with a function name: e.g.: User defined function Count will shadow the existing built-in function Count.</comment>
   </data>
     <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Function name {0} is restricted.</value>
