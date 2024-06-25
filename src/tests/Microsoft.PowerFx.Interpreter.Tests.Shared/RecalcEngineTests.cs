@@ -596,6 +596,21 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
+        [InlineData("Concat(x:Text):Text = \"xyz\";", "xyz")] // Shadowing built in
+        public void ShadowingFunctionPrecedenceTest(string script, string expected)
+        {
+            var engine = new RecalcEngine();
+            engine.AddUserDefinedFunction(script);
+
+            var check = engine.Check("Concat(\"abc\")");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.Equal(expected, ((StringValue)result).Value);
+        }
+
+        [Theory]
 
         // Return value with side effectful UDF
         [InlineData(
