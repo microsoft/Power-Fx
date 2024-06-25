@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// Set the locale that expect the output expression to be.
         /// For example: "vi-VN" or "fr-FR".
         /// </summary>
-        public CultureInfo ExpressionCultureInfo { get; set; }
+        public CultureInfo ExpressionLocale { get; set; }
     }
 
     /// <summary>
