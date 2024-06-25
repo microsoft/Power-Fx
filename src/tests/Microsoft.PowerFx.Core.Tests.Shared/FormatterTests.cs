@@ -147,6 +147,56 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(result, expected);
         }
 
+        [Theory]
+        [InlineData("//This is a singleline comment", "", true)]
+        [InlineData("//This is a singleline comment", "//This is a singleline comment", false)]
+        [InlineData("If(/*checks if 1 < 2*/1 < 2,/*computes\nthe sqrt of -1*/sqrt(-1), /* returns 0*/0) // if expression", "If(1<2,sqrt(-1),0)", true)]
+        [InlineData("If(/*checks if 1 < 2*/1 < 2,/*computes\nthe sqrt of -1*/sqrt(-1), /* returns 0*/0) // if expression", "If(/*checks if 1 < 2*/1<2,/*computes\nthe sqrt of -1*/sqrt(-1),/* returns 0*/0)// if expression", false)]
+        [InlineData("\n// single line comment\n2", "2", true)]
+        [InlineData("\n// single line comment\n2", "\n// single line comment\n2", false)]
+        [InlineData("1+/*sssss*/  /*ssss*/2", "1+2", true)]
+        [InlineData("1+/*sssss*/  /*ssss*/2", "1+/*sssss*/  /*ssss*/2", false)]
+        [InlineData("// line one\n// line two\n// line three\n", "", true)]
+        [InlineData("false /*this is false*/true", " false  true ", true)]
+        [InlineData("false /*this is false*/true", " false /*this is false*/ true ", false)]
+        public void TestMinificationWithCommentRemovalInNonTextFirst(string script, string expected, bool removeComments = false) 
+        {
+            // Arrange
+            var flags = TexlLexer.Flags.None;
+            var options = new MinificationOptions(flags, removeComments);
+
+            // Act
+            var result = TexlLexer.InvariantLexer.GetMinifiedScript(script, options);
+          
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("=//This is a singleline comment", "", true)]
+        [InlineData("=//This is a singleline comment", "//This is a singleline comment", false)]
+        [InlineData("${/*This is a singleline comment*/}", "${}", true)]
+        [InlineData("${/*This is a singleline comment*/}", "${/*This is a singleline comment*/}", false)]
+        [InlineData("${If(/*checks if 1 < 2*/1 < 2,/*computes\nthe sqrt of -1*/sqrt(-1), /* returns 0*/0) }", "${If(1<2,sqrt(-1),0)}", true)]
+        [InlineData("${If(/*checks if 1 < 2*/1 < 2,/*computes\nthe sqrt of -1*/sqrt(-1), /* returns 0*/0) }", "${If(/*checks if 1 < 2*/1<2,/*computes\nthe sqrt of -1*/sqrt(-1),/* returns 0*/0)}", false)]
+        [InlineData("${1+/*sssss*/  /*ssss*/2}", "${1+2}", true)]
+        [InlineData("${1+/*sssss*/  /*ssss*/2}", "${1+/*sssss*/  /*ssss*/2}", false)]
+        [InlineData("${false /*this is false*/true }", "${ false  true }", true)]
+        [InlineData("${false /*this is false*/true}", "${ false /*this is false*/ true }", false)]
+        [InlineData("${// this is single line comment\n1 + 1}", "${1+1}", true)]
+        public void TestMinificationWithCommentRemovalInTextFirst(string script, string expected, bool removeComments = false)
+        {
+            // Arrange
+            var flags = TexlLexer.Flags.TextFirst;
+            var options = new MinificationOptions(flags, removeComments);
+
+            // Act
+            var result = TexlLexer.InvariantLexer.GetMinifiedScript(script, options);
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
         // Note going forward.  Ok, so here's the issue with this test.  there is currently a changable variable
         // place designed to alter minimun characters needed for a break to be made.  This was designed for future user ability
         // to change the char min limit.  Currently it is set at 50 chars.  Originally it was set at 0.
