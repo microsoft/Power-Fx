@@ -1,0 +1,35 @@
+﻿#SETUP: RegEx
+
+// For conssitent regular expressions across hosts, these tests check that we are 
+// limiting .NET regular expresions to what we can also support in JavaScript with XRegExp
+// See https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+// We run without the RegexOptions.ECMASScript because we want Unicode letters for words
+
+// Unicode letters as word characters is allowed
+
+>> Match( "the whole world", "\b(\w+\s*)+" )
+{FullMatch:"the whole world",StartMatch:1,SubMatches:Table({Value:"world"})}
+
+>> Match( "целый мир", "\b(\w+\s*)+" )
+{FullMatch:"целый мир",StartMatch:1,SubMatches:Table({Value:"мир"})}
+
+>> Match( "el niño", "\b(\w+\s*)+" )
+{FullMatch:"el niño",StartMatch:1,SubMatches:Table({Value:"niño"})}
+
+// Self referncing groups are disallowed
+
+>> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
+Errors: Error 26-41: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Backreferences without a group are disallowed
+
+>> Match( "hello howdy", "([hi]).*\1" )
+{FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
+
+>> Match( "hello howdy", "([hi]).*\2" )
+Errors: Error 22-34: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Octal characters are allowed
+
+>> Match( "as$df", "\044" )
+{FullMatch:"$",StartMatch:3,SubMatches:Table()}

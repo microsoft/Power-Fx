@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -87,7 +88,88 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             string regularExpression = nodeValue;
-            return fValid && TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
+            fValid &= LimitRegularExpression(regExNode, regularExpression, errors);
+            fValid &= TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
+            return fValid;
+        }
+
+        // Disallow self referncing groups and consitently treat all "\[1-9][0-9]*" as a backreference.
+        // This avoids inconsistencies between .net and JavaScript regular expression behavior
+        // while maintaining Unicode definition of words, by avoiding the use of RegexOptions.ECMAScript.
+        // See https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+        private bool LimitRegularExpression(TexlNode regExNode, string regexPattern, IErrorContainer errors)
+        {
+            // scans the regular expression, counting capture groups and comparing with backreference numbers.
+            var groupPunctuationRE = new Regex(
+                @"(
+                    \\(\d+)|  # valid backreference or octal character is accepted, others are an error
+                    \\[^\d]|  # any other escaped character is ignored, but must be paired so that '\\(' is seen as '\\' followed by '('
+                    \(|\)|    # parens that aren't escaped that could start/end a group, provided they are outside a character class
+                    \[|\]     # character class start/end
+                )", RegexOptions.IgnorePatternWhitespace);
+            var groupStack = new Stack<int>(); // int is the group number, -1 is used for non capturing groups
+            var groupCounter = 0; // last group number defined
+            var openCharacterClass = false; // are we inside square brackets where parens do not need to be escaped?
+
+            foreach (Match groupMatch in groupPunctuationRE.Matches(regexPattern))
+            {
+                switch (groupMatch.Value[0])
+                {
+                    case '\\':
+                        // backslash with anything but digits is always accepted
+                        // octal characters are accepted that start with a '0'
+                        if (groupMatch.Groups[2].Value != string.Empty && groupMatch.Groups[2].Value[0] != '0')
+                        {
+                            int backslashNum = Convert.ToInt32(groupMatch.Groups[2].Value, CultureInfo.InvariantCulture);
+
+                            // group isn't defined, or not defined yet
+                            if (backslashNum > groupCounter)
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
+                                return false;
+                            }
+
+                            // group is not closed and thus self referencing
+                            if (groupStack.Contains(backslashNum))
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
+                                return false;
+                            }
+                        }
+
+                        break;
+
+                    case '(':
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
+                        {
+                            // non capturing group still needs to match closing paren, but does not define a new group
+                            groupStack.Push(groupMatch.Value.StartsWith("(?:", StringComparison.InvariantCulture) ? -1 : ++groupCounter);
+                        }
+
+                        break;
+
+                    case ')':
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
+                        {
+                            groupStack.Pop();
+                        }
+
+                        break;
+
+                    case '[':
+                        // note that square brackets do not nest, "[[]]" is "[[]" followed by the character "]"
+                        openCharacterClass = true;
+                        break;
+
+                    case ']':
+                        openCharacterClass = false;
+                        break;
+                }
+            }
+
+            return true;
         }
 
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
