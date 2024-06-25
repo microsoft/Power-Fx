@@ -53,7 +53,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             {
                 Sentence = _nl2FxRequestParams.Sentence,
                 SymbolSummary = summary,
-                Engine = check.Engine
+                Engine = check.Engine,
+                ExpressionCultureInfo = check.ParserCultureInfo
             };
          }
 
