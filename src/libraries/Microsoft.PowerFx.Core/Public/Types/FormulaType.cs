@@ -74,6 +74,7 @@ namespace Microsoft.PowerFx.Types
             _type = type;
         }
 
+        // Primitive types - Keeping it same as PrimitiveTypeSymbolTable
         internal static readonly IReadOnlyDictionary<DName, FormulaType> PrimitiveTypes = ImmutableDictionary.CreateRange(new Dictionary<DName, FormulaType>()
         {
             { new DName("Boolean"), Boolean },
@@ -86,6 +87,7 @@ namespace Microsoft.PowerFx.Types
             { new DName("Number"), Number },
             { new DName("Decimal"), Decimal },
             { new DName("Text"), String },
+            { new DName("Hyperlink"), Hyperlink },
             { new DName("None"), Blank },
             { new DName("UntypedObject"), UntypedObject },
             { new DName("Void"), Void },
