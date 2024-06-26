@@ -718,5 +718,25 @@ namespace Microsoft.PowerFx.Core.Tests
             ITokenTextSpan tokenTextSpan = token;
             Assert.True(tokenTextSpan.CanBeHidden);
         }
+
+        [Theory]
+
+        // script with inline comment
+        [InlineData("// Textify number 42\r\nText(42)", "Text(42)")]
+
+        // script with inline comment and white spaces
+        [InlineData("Text( 42)  // SomeComment", "Text( 42)  ")]
+
+        // script with block comment before expression
+        [InlineData("/* This is a block comment */ \r\n Text(42)", " Text(42)")]
+
+        // script with block comments and inline comments in chained expression
+        [InlineData("/* This is a block comment */Text(42);/* Another comment */Set(y, 5);\r\n//comment ", " Text(42);Set(y, 5)\r\n")]
+        public void StripCommentsTest(string script, string expectedScript)
+        {
+            var scriptWithoutComments = TexlLexer.InvariantLexer.StripCommentsFromScript(script);
+
+            Assert.Equal(expectedScript, scriptWithoutComments);
+        }
     }
 }

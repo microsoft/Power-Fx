@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Localization;
@@ -466,6 +467,32 @@ namespace Microsoft.PowerFx.Syntax
                     var newString = shouldNotTrim ? tokenString : tokenString.Trim();
 
                     stringBuilder.Append(newString);
+                }
+            }
+
+            var result = stringBuilder.ToString();
+            return result;
+        }
+
+        /// <summary>
+        /// Strips comments from the given script.
+        /// </summary>
+        /// <param name="script">The script from which comments should be removed.</param>
+        /// <param name="flags">Flags to tokenize the given script.</param>
+        /// <returns>A string containing the script without any comments.</returns>
+        public string StripCommentsFromScript(string script, Flags flags = Flags.None)
+        {
+            Contracts.AssertValue(script);
+
+            var tokens = GetTokens(script, flags);
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var token in tokens)
+            {
+                if (token.Kind != TokKind.Comment)
+                {
+                    stringBuilder.Append(token.Span.GetFragment(script));
                 }
             }
 
