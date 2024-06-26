@@ -151,11 +151,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // If a user-defined function exists as one of the possible overloads, always return that as it shadows existing built-in functions (provided it is not a restricted UDF name).
             if (overloads.Any(overload => overload is UserDefinedFunction))
             {
-                var udf = overloads.Where(overload => overload is UserDefinedFunction).First() as UserDefinedFunction;
-                var localWarnings = new LimitedSeverityErrorContainer(errors, DocumentErrorSeverity.Warning);
-                udf.CheckTypes(context, args, argTypes, localWarnings, out returnType, out nodeToCoercedTypeMap);
-                bestOverload = udf;
-                return true;
+                overloads = overloads.Where(overload => overload is UserDefinedFunction).ToArray();
             }
 
             foreach (var maybeFunc in overloads)
