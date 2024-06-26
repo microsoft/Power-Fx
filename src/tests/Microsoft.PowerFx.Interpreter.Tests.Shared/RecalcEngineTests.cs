@@ -595,19 +595,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result.AsDouble());
         }
 
-        [Theory]
-        [InlineData("Concat(x:Text):Text = \"xyz\";", "xyz")] // Shadowing built in
-        public void ShadowingFunctionPrecedenceTest(string script, string expected)
+        [Fact]
+        public void ShadowingFunctionPrecedenceTest()
         {
             var engine = new RecalcEngine();
-            engine.AddUserDefinedFunction(script);
+            engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
 
             var check = engine.Check("Concat(\"abc\")");
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.String, check.ReturnType);
 
             var result = check.GetEvaluator().Eval();
-            Assert.Equal(expected, ((StringValue)result).Value);
+            Assert.Equal("xyz", ((StringValue)result).Value);
+
+            check = engine.Check("Average(123)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(11111, result.AsDouble());
         }
 
         [Theory]
