@@ -28,17 +28,17 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName)
         {
+            tableName = null;
+
             if (!base.TryGetBackingDType(fieldName, out _))
-            {
-                tableName = null;
+            {                
                 return false;
             }
 
             ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
             if (connectorType.ExternalTables?.Any() != true)
-            {
-                tableName = null;
+            {             
                 return false;
             }
 
