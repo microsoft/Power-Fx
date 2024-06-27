@@ -730,6 +730,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _output.WriteLine(functionStat.ToString());
             }
 
+#if false
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
             string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
@@ -818,6 +819,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
             }
+#endif
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
