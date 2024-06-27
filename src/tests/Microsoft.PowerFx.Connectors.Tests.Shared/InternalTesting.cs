@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 #if GENERATE_CONNECTOR_STATS
         [Fact]
 #else
-        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact] //(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
         {
@@ -387,7 +387,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     ConnectorSettings connectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
                     ConnectorSettings swaggerConnectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true, Compatibility = ConnectorCompatibility.SwaggerCompatibility };
 
-                    title = $"{doc.Info.Title} [{swaggerFile}]";
+                    if (doc.Info?.Title != null)
+                    {
+                        title = $"{doc.Info?.Title} [{swaggerFile}]";
+                    }
 
                     // Check we can get the functions
                     IEnumerable<ConnectorFunction> functions1 = OpenApiParser.GetFunctions(connectorSettings, doc, logger);
@@ -399,7 +402,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     config.AddActionConnector(connectorSettings, doc, logger);
 
                     IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(swaggerConnectorSettings, doc);
-                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
+                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info?.Title ?? $"Unknown_{title.GetHashCode()}");
 
                     int ix = 2;
                     while (Directory.Exists(cFolder))
