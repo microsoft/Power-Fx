@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private (string outFolder, string srcFolder) GetFolders()
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
@@ -387,7 +387,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     ConnectorSettings connectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true };
                     ConnectorSettings swaggerConnectorSettings = new ConnectorSettings("Connector") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true, Compatibility = ConnectorCompatibility.SwaggerCompatibility };
 
-                    title = $"{doc.Info.Title} [{swaggerFile}]";
+                    if (doc.Info?.Title != null)
+                    {
+                        title = $"{doc.Info?.Title} [{swaggerFile}]";
+                    }
 
                     // Check we can get the functions
                     IEnumerable<ConnectorFunction> functions1 = OpenApiParser.GetFunctions(connectorSettings, doc, logger);
@@ -399,7 +402,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     config.AddActionConnector(connectorSettings, doc, logger);
 
                     IEnumerable<ConnectorFunction> functions2 = OpenApiParser.GetFunctions(swaggerConnectorSettings, doc);
-                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info.Title);
+                    string cFolder = Path.Combine(outFolder, reportFolder, doc.Info?.Title ?? $"Unknown_{title.GetHashCode()}");
 
                     int ix = 2;
                     while (Directory.Exists(cFolder))
@@ -552,7 +555,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         /// <param name="folders">List of folders to consider when identifying swagger files. 
         /// Wehn no folder is provided, use internal Library.
         /// When 2 swagger files will have the same display name and version, the one from first folder will be preferred.
-        /// </param>
+        /// </param>        
         // This test is only meant for internal testing
 #if GENERATE_CONNECTOR_STATS
         [Theory]        
@@ -730,6 +733,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _output.WriteLine(functionStat.ToString());
             }
 
+#if false
             // Upload to SQL 
             string connectionString = Environment.GetEnvironmentVariable("PFXDEV_CONNECTORANALYSIS");
             string buildId = Environment.GetEnvironmentVariable("BUILD_ID"); // int
@@ -818,6 +822,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 _output.WriteLine($"Copied {bulkCopy.RowsCopied} rows in Functions table");
             }
+#endif
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed outside")]
@@ -1262,7 +1267,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 };
             }
 
-            Schema = (connectorType.Schema as SwaggerSchema)._schema.GetString();
+            Schema = (connectorType.Schema as SwaggerSchema)?._schema.GetString();
         }
 
         public string Name;
@@ -1377,6 +1382,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (ctgs.Level > 32)
             {
                 sb.Append("<TooManyLevels>");
+                return;
+            }
+
+            if (schema == null)
+            {
                 return;
             }
 
