@@ -230,9 +230,18 @@ namespace Microsoft.PowerFx.Core.Localization
             // Error resources are a bit odd and need to be reassembled from separate keys.
             // Check to see if we've already retrieved one for this locale/key combo before 
             // rebuilding the full error resource.
+
+            if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
+            {
+                if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
+                {
+                    return true;
+                }
+            }
+
             lock (_errorResources)
             {
-                if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
+                if (_errorResources.TryGetValue(locale, out localizedErrorResources))
                 {
                     if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
                     {
