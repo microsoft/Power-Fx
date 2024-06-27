@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private (string outFolder, string srcFolder) GetFolders()
         {
-            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         /// <param name="folders">List of folders to consider when identifying swagger files. 
         /// Wehn no folder is provided, use internal Library.
         /// When 2 swagger files will have the same display name and version, the one from first folder will be preferred.
-        /// </param>
+        /// </param>        
         // This test is only meant for internal testing
 #if GENERATE_CONNECTOR_STATS
         [Theory]        
