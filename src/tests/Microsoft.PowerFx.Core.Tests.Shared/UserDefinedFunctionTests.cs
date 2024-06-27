@@ -650,5 +650,24 @@ namespace Microsoft.PowerFx.Core.Tests
                 errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
                 error.Severity == DocumentErrorSeverity.Warning));
         }
+
+        [Fact]
+        public void TestUDFRestrictedTypes()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+            };
+
+            foreach (var type in UserDefinitions.RestrictedTypes)
+            {
+                var script = $"func():{type.GetKindString()} = Blank();";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidReturnType");
+            }
+        }
     }
 }
