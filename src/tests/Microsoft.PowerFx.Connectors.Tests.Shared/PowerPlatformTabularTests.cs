@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -552,8 +551,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // SF doesn't use x-ms-releationships extension
             Assert.Null(sfTable._connectorType.Relationships);
 
+            // needs Microsoft.PowerFx.Connectors.CdpExtensions
+            // this call does not make any network call
+            bool b = sfTable.TabularRecordType.TryGetFieldExternalTableName("OwnerId", out string externalTableName);
+            Assert.True(b);
+            Assert.Equal("User", externalTableName);
+
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema Users.json");
-            bool b = sfTable.TabularRecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
+            b = sfTable.TabularRecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
 
             Assert.True(b);
             CdpRecordType userTable = Assert.IsType<CdpRecordType>(ownerIdType);
