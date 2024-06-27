@@ -1262,7 +1262,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 };
             }
 
-            Schema = (connectorType.Schema as SwaggerSchema)._schema.GetString();
+            Schema = (connectorType.Schema as SwaggerSchema)?._schema.GetString();
         }
 
         public string Name;
@@ -1377,6 +1377,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (ctgs.Level > 32)
             {
                 sb.Append("<TooManyLevels>");
+                return;
+            }
+
+            if (schema == null)
+            {
                 return;
             }
 
