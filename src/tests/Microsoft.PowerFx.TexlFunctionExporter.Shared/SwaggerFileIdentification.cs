@@ -143,7 +143,11 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                 errors.Add("No OpenApiDocument Info");
                 title = UNKNOWN_SWAGGER;
             }
-            else
+            else if (doc.Info.Title == "Default title")
+            {
+                title = swaggerFile.Substring(folder.Length).Split('\\', StringSplitOptions.RemoveEmptyEntries)[1];
+            }
+            else 
             {
                 title = doc.Info.Title;
             }
