@@ -239,6 +239,11 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
+                if (nameResolver.Functions.WithName(udfName).Any())
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
+                }
+
                 var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);
 
                 texlFunctionSet.Add(func);
