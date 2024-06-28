@@ -1774,8 +1774,17 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = CurrentPos;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
+                    var initialChar = CurrentChar;
+                    var unexpectedChar = Convert.ToUInt16(initialChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
+                    if (char.IsHighSurrogate(initialChar) && char.IsLowSurrogate(CurrentChar))
+                    {
+                        // combine the two surrogates
+                        var unicodePoint = char.ConvertToUtf32(initialChar, CurrentChar);
+                        unexpectedChar = unicodePoint.ToString("X8", CultureInfo.InvariantCulture);
+                        NextChar();
+                    }
+
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }
                 else
