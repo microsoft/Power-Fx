@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("\"Newline  \n characters   \r   galore  \u00085\"")]
         [InlineData("\"And \u2028    some   \u2029   more!\"")]
         [InlineData("\"Other supported ones:  \t\b\v\f\0\'     \"")]
-        [InlineData("\"Some unicode characters: 🍰 ❤️ 💩 🤞🏽\"")]
+        [InlineData("\"Some unicode characters: 🍰 ❤ 💩 🤞🏽\"")]
         public void TexlParseStringLiteralsWithEscapableCharacters(string script)
         {
             TestRoundtrip(script);
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("'A                                           A'")]
         [InlineData("'A                                           123'")]
         [InlineData("'🍰'")]
-        [InlineData("'🙋🏽‍ 😂 😞 🤞🏽'")]
+        [InlineData("'🙋🏽 😂 😞 🤞🏽'")]
 
         // Identifiers with bangs (e.g. qualified entity names)
         [InlineData("A!B")]
@@ -364,8 +364,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("=", 0, 1)]
-        [InlineData("💩", 0, 2)] // It's a surrogate character pair, spawns 2 characters
-        [InlineData("a💩", 1, 3)] // Second character is a surrogate pair, spawns 2 characters
+        [InlineData("💩", 0, 2)] // It's a surrogate character pair, spans 2 characters
+        [InlineData("a💩", 1, 3)] // Second character is a surrogate pair, spans 2 characters
         public void TestParseIdentifiersThatNeedEscaping(string identifier, int expectedErrorSpanMin, int expectedErrorSpanMax)
         {
             var expression = $"Set({identifier}, 1)";
