@@ -1365,7 +1365,8 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fullType = LazyTypeProvider.GetExpandedType(IsTable);
             }
-            
+
+            Contracts.Assert(!TypeTree.Contains(name));
             var tree = TypeTree.SetItem(name, type);
             var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
