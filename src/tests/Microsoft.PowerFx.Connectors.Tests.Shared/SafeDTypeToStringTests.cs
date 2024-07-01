@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Connector.Tests
             Assert.Equal("*[field1:n, field2:n, field3:n]", type2.ToAnonymousString());
 
             type2 = DType.CreateRecord(type1.GetNames(DPath.Root).ToArray());
-            
+
             // This will change the type of the existing B field
             type2 = type2.Add(new DName("B"), DType.String);
 
