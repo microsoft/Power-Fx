@@ -650,7 +650,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
         public static ErrorResourceKey ErrNeedRecord_Arg = new ErrorResourceKey("ErrNeedRecord_Arg");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
-        public static ErrorResourceKey ErrNeedEntity_EntityName = new ErrorResourceKey("ErrNeedEntity_EntityName");
         public static ErrorResourceKey ErrNeedValidVariableName_Arg = new ErrorResourceKey("ErrNeedValidVariableName_Arg");
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
@@ -664,7 +663,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOnlyOneViewExpected = new ErrorResourceKey("ErrOnlyOneViewExpected");
         public static ErrorResourceKey ErrViewFromCurrentTableExpected = new ErrorResourceKey("ErrViewFromCurrentTableExpected");
         public static ErrorResourceKey ErrColonExpected = new ErrorResourceKey("ErrColonExpected");
-        public static ErrorResourceKey ErrInvalidDataSource = new ErrorResourceKey("ErrInvalidDataSource");
         public static ErrorResourceKey ErrExpectedDataSourceRestriction = new ErrorResourceKey("ErrExpectedDataSourceRestriction");
         public static ErrorResourceKey ErrBehaviorPropertyExpected = new ErrorResourceKey("ErrBehaviorPropertyExpected");
         public static ErrorResourceKey ErrTestPropertyExpected = new ErrorResourceKey("ErrTestPropertyExpected");

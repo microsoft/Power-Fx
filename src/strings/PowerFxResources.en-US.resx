@@ -1993,10 +1993,6 @@
     <value>The first argument of '{0}' should be a record.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Using this option set as an enumeration value or in the Choices function requires that the '{0}' entity be added as a Data Source. To add, use the View menu and then select Data sources.</value>
-    <comment>Error Message. {Locked=Choices} Indicates a given entity must be imported as a first class entity. This is a result of usage of an option set that is exposed via a relationship in a CDS 2 entity.</comment>
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>The specified property is not accessible in this context.</value>
     <comment>Error Message.</comment>
@@ -2036,10 +2032,6 @@
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>The argument does not represent a valid date or time value.</value>
     <comment>Error Message returned by the Text function when the number to date format exceeds the max days to add.</comment>
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
-    <comment>Error Message.</comment>
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Expected a data source identifier to restrict the inline record.</value>
