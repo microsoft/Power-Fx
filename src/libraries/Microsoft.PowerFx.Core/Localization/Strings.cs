@@ -721,6 +721,17 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
+        public static ErrorResourceKey ErrInvalidRegExBadOptions = new ErrorResourceKey("ErrInvalidRegExBadOptions");
+        public static ErrorResourceKey ErrInvalidRegExBadOptionsNotAtFront = new ErrorResourceKey("ErrInvalidRegExBadOptionsNotAtFront");
+        public static ErrorResourceKey ErrInvalidRegExBadOctal = new ErrorResourceKey("ErrInvalidRegExBadOctal");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
+        public static ErrorResourceKey ErrInvalidRegExBadBalancing = new ErrorResourceKey("ErrInvalidRegExBadBalancing");
+        public static ErrorResourceKey ErrInvalidRegExBadSingleQuoteNamedCapture = new ErrorResourceKey("ErrInvalidRegExBadSingleQuoteNamedCapture");
+        public static ErrorResourceKey ErrInvalidRegExBadEscape = new ErrorResourceKey("ErrInvalidRegExBadEscape");
+        public static ErrorResourceKey ErrInvalidRegExBadCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadCharacterClassSubtraction");
+        public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadBadConditional"); 
+
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSubMatchesField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSubMatchesField");

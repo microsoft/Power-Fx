@@ -16,10 +16,15 @@
 >> Match( "el niño", "\b(\w+\s*)+" )
 {FullMatch:"el niño",StartMatch:1,SubMatches:Table({Value:"niño"})}
 
+>> Match( "Müller", "^\w+$" )
+{FullMatch:"Müller",StartMatch:1,SubMatches:Table()}
+
 // Self referncing groups are disallowed
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
-Errors: Error 26-41: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-41: Invalid regular expression: Self-referencing capture groups are not supported; found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// named self reference?
 
 // Backreferences without a group are disallowed
 
@@ -27,9 +32,56 @@ Errors: Error 26-41: Invalid regular expression.|Error 0-5: The function 'Match'
 {FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
 
 >> Match( "hello howdy", "([hi]).*\2" )
-Errors: Error 22-34: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-34: Invalid regular expression: Capture group "\2" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
 
-// Octal characters are allowed
+// Octal characters are not allowed
 
 >> Match( "as$df", "\044" )
-{FullMatch:"$",StartMatch:3,SubMatches:Table()}
+Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead; found "\044".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// options are allowed at the front of the regular expression only
+
+>> Match( "hello"&Char(10)&"howdy", "o$" )
+Blank()
+
+>> Match( "hello"&Char(10)&"howdy", "o$", MatchOptions.Multiline )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello"&Char(10)&"howdy", "(?im)o$" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello"&Char(10)&"howdy", "(?m)o$" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello"&Char(10)&"howdy", "(?-m)o$" )
+Errors: Error 33-42: Invalid regular expression: Inline options are limited to a combination of the letters [imns], cannot disable options, and cannot be used on a subexpression; found "(?-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "(?i-m)o$" )
+Errors: Error 33-43: Invalid regular expression: Inline options are limited to a combination of the letters [imns], cannot disable options, and cannot be used on a subexpression; found "(?i-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "^(?m)o$" )
+Errors: Error 33-42: Invalid regular expression: Inline options must appear at the beginning of the regular expression; found "(?m)" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "^(?i-m)o$" )
+Errors: Error 33-44: Invalid regular expression: Inline options must appear at the beginning of the regular expression; found "(?i-m)" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello"&Char(10)&"howdy", "^(?m:o$)" )
+Errors: Error 33-43: Invalid regular expression: Inline options must appear at the beginning of the regular expression; found "(?m:" later.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// inline options overriding explicit options, conflicts?
+
+// balancing groups
+
+>> Match( "(hello world)", "(?<s-e>)a")
+Errors: Error 24-35: Invalid regular expression: Balancing capture groups is not supported; found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// groups with single ticks
+
+>> Match( "(hello wrold)", "(?'name'l)")
+Errors: Error 24-36: Invalid regular expression: Using single quoted named captures is not supported, use (?<...>) syntax instead; found "(?'name'".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "(hello wrold)", "(?'s-e'l)")
+Errors: Error 24-35: Invalid regular expression: Balancing capture groups is not supported; found "(?'s-e'".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Fail
+Fail

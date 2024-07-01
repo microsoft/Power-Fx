@@ -4375,6 +4375,46 @@
     <value>Invalid regular expression.</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptionsNotAtFront_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression; found "{0}" later.</value>
+    <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOptions_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options are limited to a combination of the letters [imns], cannot disable options, and cannot be used on a subexpression; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has bad inline options.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has octal characters.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Invalid escape code; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an invalid alphanumeric escape code.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCharacterClassSubtraction_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Character class subtraction is not supported.</value>
+    <comment>Error message indicating that the regular expression does not support character class subtraction.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Capture group "{0}" not defined.</value>
+    <comment>Error message indicating that the regular expression capture group is not defined.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Self-referencing capture groups are not supported; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has self-referencing capture groups.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Balancing capture groups is not supported; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has balancing capture groups.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Using single quoted named captures is not supported, use (?&lt;...&gt;) syntax instead; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has single quoted named capture.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Conditionals are not supported; found "{0}".</value>
+    <comment>Error message indicating that the regular expression has conditionals.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
     <comment>Error Message.</comment>

@@ -1,0 +1,1534 @@
+#SETUP: RegEx
+
+# 1: yield return (@"^$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 2: yield return (@"^$^$^$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^$^$^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 3: yield return (@"^^^$$$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^^^$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 4: yield return (@"$^", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "$^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 5: yield return (@"(?:^$)*", "a\nb\nc", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) });
+>> ForAll( MatchAll( "a\nb\nc", "(?:^$)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5})
+
+# 6: yield return (@"(?:$^)*", "a\nb\nc", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) });
+>> ForAll( MatchAll( "a\nb\nc", "(?:$^)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5})
+
+# 7: yield return (@"", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 8: yield return (@"", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 9: yield return (@"()", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 10: yield return (@"()*", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 11: yield return (@"()+", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 12: yield return (@"()?", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()?" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 13: yield return (@"()()", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()()" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 14: yield return (@"()+|z", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()+|z" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 15: yield return (@"z|()+", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "z|()+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 16: yield return (@"()+|b", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "()+|b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 17: yield return (@"b|()+", "abc", new[] { (0, 0), (1, 2), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "b|()+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:2},{B:2,E:2},{B:3,E:3})
+
+# 18: yield return (@"|b", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "|b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 19: yield return (@"b|", "abc", new[] { (0, 0), (1, 2), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "b|" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:2},{B:2,E:2},{B:3,E:3})
+
+# 20: yield return (@"|z", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "|z" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 21: yield return (@"z|", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "z|" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 22: yield return (@"|", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "|" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 23: yield return (@"||", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "||" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 24: yield return (@"||z", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "||z" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 25: yield return (@"(?:)|b", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "(?:)|b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 26: yield return (@"b|(?:)", "abc", new[] { (0, 0), (1, 2), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "b|(?:)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:2},{B:2,E:2},{B:3,E:3})
+
+# 27: yield return (@"(?:|)", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "(?:|)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 28: yield return (@"(?:|)|z", "abc", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "abc", "(?:|)|z" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 29: yield return (@"a(?:)|b", "abc", new[] { (0, 1), (1, 2) });
+>> ForAll( MatchAll( "abc", "a(?:)|b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:2})
+
+# 30: yield return (@"a$", "a", new[] { (0, 1) });
+>> ForAll( MatchAll( "a", "a$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 31: yield return (@"(?m)^[a-z]+$", "abc\ndef\nxyz", new[] { (0, 3), (4, 7), (8, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)^[a-z]+$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:4,E:7},{B:8,E:11})
+
+# 32: yield return (@"(?m)^$", "abc\ndef\nxyz", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 33: yield return (@"(?m)^", "abc\ndef\nxyz", new[] { (0, 0), (4, 4), (8, 8) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:4,E:4},{B:8,E:8})
+
+# 34: yield return (@"(?m)$", "abc\ndef\nxyz", new[] { (3, 3), (7, 7), (11, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:3},{B:7,E:7},{B:11,E:11})
+
+# 35: yield return (@"(?m)^[a-z]", "abc\ndef\nxyz", new[] { (0, 1), (4, 5), (8, 9) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)^[a-z]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:4,E:5},{B:8,E:9})
+
+# 36: yield return (@"(?m)[a-z]^", "abc\ndef\nxyz", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)[a-z]^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 37: yield return (@"(?m)[a-z]$", "abc\ndef\nxyz", new[] { (2, 3), (6, 7), (10, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)[a-z]$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:3},{B:6,E:7},{B:10,E:11})
+
+# 38: yield return (@"(?m)$[a-z]", "abc\ndef\nxyz", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)$[a-z]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 39: yield return (@"(?m)^$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "(?m)^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 40: yield return (@"(?m)(?:^$)*", "a\nb\nc", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) });
+>> ForAll( MatchAll( "a\nb\nc", "(?m)(?:^$)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5})
+
+# 41: yield return (@"(?m)(?:^|a)+", "a\naaa\n", new[] { (0, 0), (2, 2), (3, 5), (6, 6) });
+>> ForAll( MatchAll( "a\naaa\n", "(?m)(?:^|a)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:2,E:2},{B:3,E:5},{B:6,E:6})
+
+# 42: yield return (@"(?m)(?:^|a)*", "a\naaa\n", new[] { (0, 0), (1, 1), (2, 2), (3, 5), (5, 5), (6, 6) });
+>> ForAll( MatchAll( "a\naaa\n", "(?m)(?:^|a)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:5},{B:5,E:5},{B:6,E:6})
+
+# 43: yield return (@"(?m)(?:^[a-z])+", "abc\ndef\nxyz", new[] { (0, 1), (4, 5), (8, 9) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)(?:^[a-z])+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:4,E:5},{B:8,E:9})
+
+# 44: yield return (@"(?m)(?:^[a-z]{3}\n?)+", "abc\ndef\nxyz", new[] { (0, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)(?:^[a-z]{3}\n?)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:11})
+
+# 45: yield return (@"(?m)(?:^[a-z]{3}\n?)*", "abc\ndef\nxyz", new[] { (0, 11), (11, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)(?:^[a-z]{3}\n?)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:11},{B:11,E:11})
+
+# 46: yield return (@"(?m)(?:\n?[a-z]{3}$)+", "abc\ndef\nxyz", new[] { (0, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)(?:\n?[a-z]{3}$)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:11})
+
+# 47: yield return (@"(?m)(?:\n?[a-z]{3}$)*", "abc\ndef\nxyz", new[] { (0, 11), (11, 11) });
+>> ForAll( MatchAll( "abc\ndef\nxyz", "(?m)(?:\n?[a-z]{3}$)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:11},{B:11,E:11})
+
+# 48: yield return (@"(?m)^*", "\naa\n", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4) });
+>> ForAll( MatchAll( "\naa\n", "(?m)^*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4})
+
+# 49: yield return (@"(?m)^+", "\naa\n", new[] { (0, 0), (1, 1), (4, 4) });
+>> ForAll( MatchAll( "\naa\n", "(?m)^+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:4,E:4})
+
+# 50: yield return (@"(?m)$*", "\naa\n", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4) });
+>> ForAll( MatchAll( "\naa\n", "(?m)$*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4})
+
+# 51: yield return (@"(?m)$+", "\naa\n", new[] { (0, 0), (3, 3), (4, 4) });
+>> ForAll( MatchAll( "\naa\n", "(?m)$+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:3,E:3},{B:4,E:4})
+
+# 52: yield return (@"(?m)(?:$\n)+", "\n\naaa\n\n", new[] { (0, 2), (5, 7) });
+>> ForAll( MatchAll( "\n\naaa\n\n", "(?m)(?:$\n)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:5,E:7})
+
+# 53: yield return (@"(?m)(?:$\n)*", "\n\naaa\n\n", new[] { (0, 2), (2, 2), (3, 3), (4, 4), (5, 7), (7, 7) });
+>> ForAll( MatchAll( "\n\naaa\n\n", "(?m)(?:$\n)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:7},{B:7,E:7})
+
+# 54: yield return (@"(?m)(?:$\n^)+", "\n\naaa\n\n", new[] { (0, 2), (5, 7) });
+>> ForAll( MatchAll( "\n\naaa\n\n", "(?m)(?:$\n^)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:5,E:7})
+
+# 55: yield return (@"(?m)(?:^|$)+", "\n\naaa\n\n", new[] { (0, 0), (1, 1), (2, 2), (5, 5), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "\n\naaa\n\n", "(?m)(?:^|$)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:5,E:5},{B:6,E:6},{B:7,E:7})
+
+# 56: yield return (@"\b", "a b c", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) });
+>> ForAll( MatchAll( "a b c", "\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5})
+
+# 57: yield return (@"^a|b", "ba", new[] { (0, 1) });
+>> ForAll( MatchAll( "ba", "^a|b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 58: yield return (@"[0-9][0-9][0-9]000", "153.230000\n", new[] { (4, 10) });
+>> ForAll( MatchAll( "153.230000\n", "[0-9][0-9][0-9]000" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:4,E:10})
+
+# 59: yield return (@"((?i)foo)|Bar", "foo Foo bar Bar", new[] { (0, 3), (4, 7), (12, 15) });
+>> ForAll( MatchAll( "foo Foo bar Bar", "((?i)foo)|Bar" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:4,E:7},{B:12,E:15})
+
+# 60: yield return (@"()?01", "z?01", new[] { (2, 4) });
+>> ForAll( MatchAll( "z?01", "()?01" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:4})
+
+# 61: yield return (@"\b", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 62: yield return (@"\b", "a", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "a", "\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 63: yield return (@"\b", "ab", new[] { (0, 0), (2, 2) });
+>> ForAll( MatchAll( "ab", "\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:2,E:2})
+
+# 64: yield return (@"^\b", "ab", new[] { (0, 0) });
+>> ForAll( MatchAll( "ab", "^\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 65: yield return (@"\b$", "ab", new[] { (2, 2) });
+>> ForAll( MatchAll( "ab", "\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:2})
+
+# 66: yield return (@"^\b$", "ab", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "ab", "^\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 67: yield return (@"\bbar\b", "nobar bar foo bar", new[] { (6, 9), (14, 17) });
+>> ForAll( MatchAll( "nobar bar foo bar", "\bbar\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:6,E:9},{B:14,E:17})
+
+# 68: yield return (@"a\b", "faoa x", new[] { (3, 4) });
+>> ForAll( MatchAll( "faoa x", "a\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:4})
+
+# 69: yield return (@"\bbar", "bar x", new[] { (0, 3) });
+>> ForAll( MatchAll( "bar x", "\bbar" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 70: yield return (@"\bbar", "foo\nbar x", new[] { (4, 7) });
+>> ForAll( MatchAll( "foo\nbar x", "\bbar" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:4,E:7})
+
+# 71: yield return (@"bar\b", "foobar", new[] { (3, 6) });
+>> ForAll( MatchAll( "foobar", "bar\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:6})
+
+# 72: yield return (@"bar\b", "foobar\nxxx", new[] { (3, 6) });
+>> ForAll( MatchAll( "foobar\nxxx", "bar\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:6})
+
+# 73: yield return (@"(foo|bar|[A-Z])\b", "foo", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo", "(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 74: yield return (@"(foo|bar|[A-Z])\b", "foo\n", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo\n", "(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 75: yield return (@"\b(foo|bar|[A-Z])", "foo", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo", "\b(foo|bar|[A-Z])" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 76: yield return (@"\b(foo|bar|[A-Z])\b", "X", new[] { (0, 1) });
+>> ForAll( MatchAll( "X", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 77: yield return (@"\b(foo|bar|[A-Z])\b", "XY", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "XY", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 78: yield return (@"\b(foo|bar|[A-Z])\b", "bar", new[] { (0, 3) });
+>> ForAll( MatchAll( "bar", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 79: yield return (@"\b(foo|bar|[A-Z])\b", "foo", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 80: yield return (@"\b(foo|bar|[A-Z])\b", "foo\n", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo\n", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 81: yield return (@"\b(foo|bar|[A-Z])\b", "ffoo bbar N x", new[] { (10, 11) });
+>> ForAll( MatchAll( "ffoo bbar N x", "\b(foo|bar|[A-Z])\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:10,E:11})
+
+# 82: yield return (@"\b(fo|foo)\b", "fo", new[] { (0, 2) });
+>> ForAll( MatchAll( "fo", "\b(fo|foo)\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 83: yield return (@"\b(fo|foo)\b", "foo", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo", "\b(fo|foo)\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 84: yield return (@"\b\b", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "\b\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 85: yield return (@"\b\b", "a", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "a", "\b\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 86: yield return (@"\b$", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 87: yield return (@"\b$", "x", new[] { (1, 1) });
+>> ForAll( MatchAll( "x", "\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:1})
+
+# 88: yield return (@"\b$", "y x", new[] { (3, 3) });
+>> ForAll( MatchAll( "y x", "\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:3})
+
+# 89: yield return (@"\b.$", "x", new[] { (0, 1) });
+>> ForAll( MatchAll( "x", "\b.$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 90: yield return (@"^\b(fo|foo)\b", "fo", new[] { (0, 2) });
+>> ForAll( MatchAll( "fo", "^\b(fo|foo)\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 91: yield return (@"^\b(fo|foo)\b", "foo", new[] { (0, 3) });
+>> ForAll( MatchAll( "foo", "^\b(fo|foo)\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 92: yield return (@"^\b$", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "^\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 93: yield return (@"^\b$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 94: yield return (@"^\b.$", "x", new[] { (0, 1) });
+>> ForAll( MatchAll( "x", "^\b.$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 95: yield return (@"^\b.\b$", "x", new[] { (0, 1) });
+>> ForAll( MatchAll( "x", "^\b.\b$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 96: yield return (@"^^^^^\b$$$$$", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "^^^^^\b$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 97: yield return (@"^^^^^\b.$$$$$", "x", new[] { (0, 1) });
+>> ForAll( MatchAll( "x", "^^^^^\b.$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 98: yield return (@"^^^^^\b$$$$$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^^^^^\b$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 99: yield return (@"^^^^^\b\b\b.\b\b\b$$$$$", "x", new[] { (0, 1) });
+>> ForAll( MatchAll( "x", "^^^^^\b\b\b.\b\b\b$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 100: yield return (@"\b.+\b", "$$abc$$", new[] { (2, 5) });
+>> ForAll( MatchAll( "$$abc$$", "\b.+\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:5})
+
+# 101: yield return (@"\b", "a b c", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) });
+>> ForAll( MatchAll( "a b c", "\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5})
+
+# 102: yield return (@"\Bfoo\B", "n foo xfoox that", new[] { (7, 10) });
+>> ForAll( MatchAll( "n foo xfoox that", "\Bfoo\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:7,E:10})
+
+# 103: yield return (@"a\B", "faoa x", new[] { (1, 2) });
+>> ForAll( MatchAll( "faoa x", "a\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 104: yield return (@"\Bbar", "bar x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "bar x", "\Bbar" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 105: yield return (@"\Bbar", "foo\nbar x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foo\nbar x", "\Bbar" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 106: yield return (@"bar\B", "foobar", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foobar", "bar\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 107: yield return (@"bar\B", "foobar\nxxx", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foobar\nxxx", "bar\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 108: yield return (@"(foo|bar|[A-Z])\B", "foox", new[] { (0, 3) });
+>> ForAll( MatchAll( "foox", "(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 109: yield return (@"(foo|bar|[A-Z])\B", "foo\n", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foo\n", "(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 110: yield return (@"\B", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 111: yield return (@"\B", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 112: yield return (@"\B(foo|bar|[A-Z])", "foo", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foo", "\B(foo|bar|[A-Z])" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 113: yield return (@"\B(foo|bar|[A-Z])\B", "xXy", new[] { (1, 2) });
+>> ForAll( MatchAll( "xXy", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 114: yield return (@"\B(foo|bar|[A-Z])\B", "XY", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "XY", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 115: yield return (@"\B(foo|bar|[A-Z])\B", "XYZ", new[] { (1, 2) });
+>> ForAll( MatchAll( "XYZ", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 116: yield return (@"\B(foo|bar|[A-Z])\B", "abara", new[] { (1, 4) });
+>> ForAll( MatchAll( "abara", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 117: yield return (@"\B(foo|bar|[A-Z])\B", "xfoo_", new[] { (1, 4) });
+>> ForAll( MatchAll( "xfoo_", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 118: yield return (@"\B(foo|bar|[A-Z])\B", "xfoo\n", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "xfoo\n", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 119: yield return (@"\B(foo|bar|[A-Z])\B", "foo bar vNX", new[] { (9, 10) });
+>> ForAll( MatchAll( "foo bar vNX", "\B(foo|bar|[A-Z])\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:9,E:10})
+
+# 120: yield return (@"\B(fo|foo)\B", "xfoo", new[] { (1, 3) });
+>> ForAll( MatchAll( "xfoo", "\B(fo|foo)\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 121: yield return (@"\B(foo|fo)\B", "xfooo", new[] { (1, 4) });
+>> ForAll( MatchAll( "xfooo", "\B(foo|fo)\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 122: yield return (@"\B\B", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "\B\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 123: yield return (@"\B\B", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "\B\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 124: yield return (@"\B$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 125: yield return (@"\B$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 126: yield return (@"\B$", "y x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "y x", "\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 127: yield return (@"\B.$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "\B.$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 128: yield return (@"^\B(fo|foo)\B", "fo", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "fo", "^\B(fo|foo)\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 129: yield return (@"^\B(fo|foo)\B", "foo", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foo", "^\B(fo|foo)\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 130: yield return (@"^\B", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 131: yield return (@"^\B", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 132: yield return (@"^\B\B", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^\B\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 133: yield return (@"^\B\B", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\B\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 134: yield return (@"^\B$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 135: yield return (@"^\B$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 136: yield return (@"^\B.$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\B.$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 137: yield return (@"^\B.\B$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^\B.\B$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 138: yield return (@"^^^^^\B$$$$$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^^^^^\B$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 139: yield return (@"^^^^^\B.$$$$$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^^^^^\B.$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 140: yield return (@"^^^^^\B$$$$$", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "^^^^^\B$$$$$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 141: yield return (@"\bx\b", "\u00ABx", new[] { (1, 2) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("00ABx")), "\bx\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 142: yield return (@"\bx\b", "x\u00BB", new[] { (0, 1) });
+>> ForAll( MatchAll( "x"&UniChar(Hex2Dec("00BB")), "\bx\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 143: yield return (@"\bx\b", "\u00E1x\u00DF", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( UniChar(Hex2Dec("00E1x"))&UniChar(Hex2Dec("00DF")), "\bx\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 144: yield return (@"\Bx\B", "\u00E1x\u00DF", new[] { (1, 2) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("00E1x"))&UniChar(Hex2Dec("00DF")), "\Bx\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 145: yield return (@" \b", " \u03B4", new[] { (0, 1) });
+>> ForAll( MatchAll( " "&UniChar(Hex2Dec("03B4")), " \b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 146: yield return (@" \B", " \u03B4", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( " "&UniChar(Hex2Dec("03B4")), " \B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 147: yield return (@"\w+", "a\u03B4", new[] { (0, 2) });
+>> ForAll( MatchAll( "a"&UniChar(Hex2Dec("03B4")), "\w+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 148: yield return (@"\d+", "1\u0968\u09699", new[] { (0, 4) });
+>> ForAll( MatchAll( "1"&UniChar(Hex2Dec("0968"))&UniChar(Hex2Dec("09699")), "\d+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 149: yield return (@"[^a]", "\u03B4", new[] { (0, 1) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("03B4")), "[^a]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 150: yield return (@"a", "\xFFa", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( Char(Hex2Dec("FFa")), "a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 151: yield return (@"a", "a", new[] { (0, 1) });
+>> ForAll( MatchAll( "a", "a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 152: yield return (@"[-+]?[0-9]*\.?[0-9]+", "0.1", new[] { (0, 3) });
+>> ForAll( MatchAll( "0.1", "[-+]?[0-9]*\.?[0-9]+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 153: yield return (@"[-+]?[0-9]*\.?[0-9]+", "0.1.2", new[] { (0, 3), (3, 5) });
+>> ForAll( MatchAll( "0.1.2", "[-+]?[0-9]*\.?[0-9]+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:3,E:5})
+
+# 154: yield return (@"[-+]?[0-9]*\.?[0-9]+", "a1.2", new[] { (1, 4) });
+>> ForAll( MatchAll( "a1.2", "[-+]?[0-9]*\.?[0-9]+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 155: yield return (@"^[-+]?[0-9]*\.?[0-9]+$", "1.a", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "1.a", "^[-+]?[0-9]*\.?[0-9]+$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 156: yield return (@"[^ac]", "acx", new[] { (2, 3) });
+>> ForAll( MatchAll( "acx", "[^ac]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:3})
+
+# 157: yield return (@"[^a,]", "a,x", new[] { (2, 3) });
+>> ForAll( MatchAll( "a,x", "[^a,]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:3})
+
+# 158: yield return (@"[^,]", ",,x", new[] { (2, 3) });
+>> ForAll( MatchAll( ",,x", "[^,]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:3})
+
+# 159: yield return (@"((?:.*)*?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*)*?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 160: yield return (@"((?:.?)*?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.?)*?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 161: yield return (@"((?:.*)+?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*)+?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 162: yield return (@"((?:.?)+?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.?)+?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 163: yield return (@"((?:.*){1,}?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*){1,}?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 164: yield return (@"((?:.*){1,2}?)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*){1,2}?)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 165: yield return (@"((?:.*)*)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*)*)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 166: yield return (@"((?:.?)*)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.?)*)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 167: yield return (@"((?:.*)+)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*)+)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 168: yield return (@"((?:.?)+)=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.?)+)=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 169: yield return (@"((?:.*){1,})=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*){1,})=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 170: yield return (@"((?:.*){1,2})=", "a=b", new[] { (0, 2) });
+>> ForAll( MatchAll( "a=b", "((?:.*){1,2})=" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 171: yield return (@"abracadabra$", "abracadabracadabra", new[] { (7, 18) });
+>> ForAll( MatchAll( "abracadabracadabra", "abracadabra$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:7,E:18})
+
+# 172: yield return (@"a...b", "abababbb", new[] { (2, 7) });
+>> ForAll( MatchAll( "abababbb", "a...b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:7})
+
+# 173: yield return (@"XXXXXX", "..XXXXXX", new[] { (2, 8) });
+>> ForAll( MatchAll( "..XXXXXX", "XXXXXX" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:8})
+
+# 174: yield return (@"\)", "()", new[] { (1, 2) });
+>> ForAll( MatchAll( "()", "\)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 175: yield return (@"a]", "a]a", new[] { (0, 2) });
+>> ForAll( MatchAll( "a]a", "a]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 176: yield return (@"\}", "}", new[] { (0, 1) });
+>> ForAll( MatchAll( "}", "\}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 177: yield return (@"\]", "]", new[] { (0, 1) });
+>> ForAll( MatchAll( "]", "\]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 178: yield return (@"]", "]", new[] { (0, 1) });
+>> ForAll( MatchAll( "]", "]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 179: yield return (@"^a", "ax", new[] { (0, 1) });
+>> ForAll( MatchAll( "ax", "^a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 180: yield return (@"\^a", "a^a", new[] { (1, 3) });
+>> ForAll( MatchAll( "a^a", "\^a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 181: yield return (@"a\^", "a^", new[] { (0, 2) });
+>> ForAll( MatchAll( "a^", "a\^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 182: yield return (@"a$", "aa", new[] { (1, 2) });
+>> ForAll( MatchAll( "aa", "a$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 183: yield return (@"a\$", "a$", new[] { (0, 2) });
+>> ForAll( MatchAll( "a$", "a\$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 184: yield return (@"^$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 185: yield return (@"$^", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "$^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 186: yield return (@"a($)", "aa", new[] { (1, 2) });
+>> ForAll( MatchAll( "aa", "a($)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 187: yield return (@"a*(^a)", "aa", new[] { (0, 1) });
+>> ForAll( MatchAll( "aa", "a*(^a)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 188: yield return (@"(..)*(...)*", "a", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "a", "(..)*(...)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 189: yield return (@"(..)*(...)*", "abcd", new[] { (0, 4), (4, 4) });
+>> ForAll( MatchAll( "abcd", "(..)*(...)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4},{B:4,E:4})
+
+# 190: yield return (@"(ab)c|abc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "(ab)c|abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 191: yield return (@"a{0}b", "ab", new[] { (1, 2) });
+>> ForAll( MatchAll( "ab", "a{0}b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 192: yield return (@"a*(a.|aa)", "aaaa", new[] { (0, 4) });
+>> ForAll( MatchAll( "aaaa", "a*(a.|aa)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 193: yield return (@"(a|b)?.*", "b", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "b", "(a|b)?.*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 194: yield return (@"(a|b)c|a(b|c)", "ac", new[] { (0, 2) });
+>> ForAll( MatchAll( "ac", "(a|b)c|a(b|c)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 195: yield return (@"(a|b)*c|(a|ab)*c", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "(a|b)*c|(a|ab)*c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 196: yield return (@"(a|b)*c|(a|ab)*c", "xc", new[] { (1, 2) });
+>> ForAll( MatchAll( "xc", "(a|b)*c|(a|ab)*c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2})
+
+# 197: yield return (@"a?(ab|ba)ab", "abab", new[] { (0, 4) });
+>> ForAll( MatchAll( "abab", "a?(ab|ba)ab" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 198: yield return (@"a?(ac{0}b|ba)ab", "abab", new[] { (0, 4) });
+>> ForAll( MatchAll( "abab", "a?(ac{0}b|ba)ab" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 199: yield return (@"ab|abab", "abbabab", new[] { (0, 2), (3, 5), (5, 7) });
+>> ForAll( MatchAll( "abbabab", "ab|abab" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:3,E:5},{B:5,E:7})
+
+# 200: yield return (@"aba|bab|bba", "baaabbbaba", new[] { (5, 8) });
+>> ForAll( MatchAll( "baaabbbaba", "aba|bab|bba" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:5,E:8})
+
+# 201: yield return (@"aba|bab", "baaabbbaba", new[] { (6, 9) });
+>> ForAll( MatchAll( "baaabbbaba", "aba|bab" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:6,E:9})
+
+# 202: yield return (@"ab|a", "xabc", new[] { (1, 3) });
+>> ForAll( MatchAll( "xabc", "ab|a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 203: yield return (@"ab|a", "xxabc", new[] { (2, 4) });
+>> ForAll( MatchAll( "xxabc", "ab|a" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:4})
+
+# 204: yield return (@"[^-]", "--a", new[] { (2, 3) });
+>> ForAll( MatchAll( "--a", "[^-]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:3})
+
+# 205: yield return (@"[a-]*", "--a", new[] { (0, 3), (3, 3) });
+>> ForAll( MatchAll( "--a", "[a-]*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:3,E:3})
+
+# 206: yield return (@"[a-m-]*", "--amoma--", new[] { (0, 4), (4, 4), (5, 9), (9, 9) });
+>> ForAll( MatchAll( "--amoma--", "[a-m-]*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4},{B:4,E:4},{B:5,E:9},{B:9,E:9})
+
+# 207: yield return (@"[\p{Lu}]", "A", new[] { (0, 1) });
+>> ForAll( MatchAll( "A", "[\p{Lu}]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 208: yield return (@"[\p{Ll}]+", "`az{", new[] { (1, 3) });
+>> ForAll( MatchAll( "`az{", "[\p{Ll}]+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 209: yield return (@"[\p{Lu}]+", "@AZ[", new[] { (1, 3) });
+>> ForAll( MatchAll( "@AZ[", "[\p{Lu}]+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 210: yield return (@"xxx", "xxx", new[] { (0, 3) });
+>> ForAll( MatchAll( "xxx", "xxx" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 211: yield return (@".*", "\u263A\u007F", new[] { (0, 2), (2, 2) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("263A"))&UniChar(Hex2Dec("007F")), ".*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:2,E:2})
+
+# 212: yield return (@"a*a*a*a*a*b", "aaaaaaaaab", new[] { (0, 10) });
+>> ForAll( MatchAll( "aaaaaaaaab", "a*a*a*a*a*b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:10})
+
+# 213: yield return (@"^", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 214: yield return (@"$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 215: yield return (@"^$", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "^$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 216: yield return (@"^a$", "a", new[] { (0, 1) });
+>> ForAll( MatchAll( "a", "^a$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 217: yield return (@"abc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 218: yield return (@"abc", "xabcy", new[] { (1, 4) });
+>> ForAll( MatchAll( "xabcy", "abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 219: yield return (@"abc", "ababc", new[] { (2, 5) });
+>> ForAll( MatchAll( "ababc", "abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:5})
+
+# 220: yield return (@"ab*c", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "ab*c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 221: yield return (@"ab*bc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "ab*bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 222: yield return (@"ab*bc", "abbc", new[] { (0, 4) });
+>> ForAll( MatchAll( "abbc", "ab*bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 223: yield return (@"ab*bc", "abbbbc", new[] { (0, 6) });
+>> ForAll( MatchAll( "abbbbc", "ab*bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 224: yield return (@"ab+bc", "abbc", new[] { (0, 4) });
+>> ForAll( MatchAll( "abbc", "ab+bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 225: yield return (@"ab+bc", "abbbbc", new[] { (0, 6) });
+>> ForAll( MatchAll( "abbbbc", "ab+bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 226: yield return (@"ab?bc", "abbc", new[] { (0, 4) });
+>> ForAll( MatchAll( "abbc", "ab?bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 227: yield return (@"ab?bc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "ab?bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 228: yield return (@"ab?c", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "ab?c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 229: yield return (@"^abc$", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "^abc$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 230: yield return (@"^abc", "abcc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abcc", "^abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 231: yield return (@"abc$", "aabc", new[] { (1, 4) });
+>> ForAll( MatchAll( "aabc", "abc$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 232: yield return (@"^", "abc", new[] { (0, 0) });
+>> ForAll( MatchAll( "abc", "^" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 233: yield return (@"$", "abc", new[] { (3, 3) });
+>> ForAll( MatchAll( "abc", "$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:3,E:3})
+
+# 234: yield return (@"a.c", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "a.c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 235: yield return (@"a.c", "axc", new[] { (0, 3) });
+>> ForAll( MatchAll( "axc", "a.c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 236: yield return (@"a.*c", "axyzc", new[] { (0, 5) });
+>> ForAll( MatchAll( "axyzc", "a.*c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:5})
+
+# 237: yield return (@"a[bc]d", "abd", new[] { (0, 3) });
+>> ForAll( MatchAll( "abd", "a[bc]d" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 238: yield return (@"a[b-d]e", "ace", new[] { (0, 3) });
+>> ForAll( MatchAll( "ace", "a[b-d]e" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 239: yield return (@"a[b-d]", "aac", new[] { (1, 3) });
+>> ForAll( MatchAll( "aac", "a[b-d]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 240: yield return (@"a[-b]", "a-", new[] { (0, 2) });
+>> ForAll( MatchAll( "a-", "a[-b]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 241: yield return (@"a[b-]", "a-", new[] { (0, 2) });
+>> ForAll( MatchAll( "a-", "a[b-]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 242: yield return (@"a]", "a]", new[] { (0, 2) });
+>> ForAll( MatchAll( "a]", "a]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 243: yield return (@"a[]]b", "a]b", new[] { (0, 3) });
+>> ForAll( MatchAll( "a]b", "a[]]b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 244: yield return (@"a[^bc]d", "aed", new[] { (0, 3) });
+>> ForAll( MatchAll( "aed", "a[^bc]d" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 245: yield return (@"a[^-b]c", "adc", new[] { (0, 3) });
+>> ForAll( MatchAll( "adc", "a[^-b]c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 246: yield return (@"a[^]b]c", "adc", new[] { (0, 3) });
+>> ForAll( MatchAll( "adc", "a[^]b]c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 247: yield return (@"ab|cd", "abc", new[] { (0, 2) });
+>> ForAll( MatchAll( "abc", "ab|cd" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 248: yield return (@"ab|cd", "abcd", new[] { (0, 2), (2, 4) });
+>> ForAll( MatchAll( "abcd", "ab|cd" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:2,E:4})
+
+# 249: yield return (@"a\(b", "a(b", new[] { (0, 3) });
+>> ForAll( MatchAll( "a(b", "a\(b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 250: yield return (@"a\(*b", "ab", new[] { (0, 2) });
+>> ForAll( MatchAll( "ab", "a\(*b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 251: yield return (@"a\(*b", "a((b", new[] { (0, 4) });
+>> ForAll( MatchAll( "a((b", "a\(*b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 252: yield return (@"a+b+c", "aabbabc", new[] { (4, 7) });
+>> ForAll( MatchAll( "aabbabc", "a+b+c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:4,E:7})
+
+# 253: yield return (@"a*", "aaa", new[] { (0, 3), (3, 3) });
+>> ForAll( MatchAll( "aaa", "a*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:3,E:3})
+
+# 254: yield return (@"(a*)*", "-", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "-", "(a*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 255: yield return (@"(a*)+", "-", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "-", "(a*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 256: yield return (@"(a*|b)*", "-", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "-", "(a*|b)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 257: yield return (@"(a+|b)*", "ab", new[] { (0, 2), (2, 2) });
+>> ForAll( MatchAll( "ab", "(a+|b)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2},{B:2,E:2})
+
+# 258: yield return (@"(a+|b)+", "ab", new[] { (0, 2) });
+>> ForAll( MatchAll( "ab", "(a+|b)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 259: yield return (@"(a+|b)?", "ab", new[] { (0, 1), (1, 2), (2, 2) });
+>> ForAll( MatchAll( "ab", "(a+|b)?" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:2},{B:2,E:2})
+
+# 260: yield return (@"[^ab]*", "cde", new[] { (0, 3), (3, 3) });
+>> ForAll( MatchAll( "cde", "[^ab]*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3},{B:3,E:3})
+
+# 261: yield return (@"(^)*", "-", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "-", "(^)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 262: yield return (@"a*", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "a*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 263: yield return (@"([abc])*d", "abbbcd", new[] { (0, 6) });
+>> ForAll( MatchAll( "abbbcd", "([abc])*d" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 264: yield return (@"([abc])*bcd", "abcd", new[] { (0, 4) });
+>> ForAll( MatchAll( "abcd", "([abc])*bcd" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 265: yield return (@"a|b|c|d|e", "e", new[] { (0, 1) });
+>> ForAll( MatchAll( "e", "a|b|c|d|e" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 266: yield return (@"(a|b|c|d|e)f", "ef", new[] { (0, 2) });
+>> ForAll( MatchAll( "ef", "(a|b|c|d|e)f" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:2})
+
+# 267: yield return (@"((a*|b))*", "-", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "-", "((a*|b))*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 268: yield return (@"abcd*efg", "abcdefg", new[] { (0, 7) });
+>> ForAll( MatchAll( "abcdefg", "abcd*efg" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:7})
+
+# 269: yield return (@"ab*", "xabyabbbz", new[] { (1, 3), (4, 8) });
+>> ForAll( MatchAll( "xabyabbbz", "ab*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3},{B:4,E:8})
+
+# 270: yield return (@"ab*", "xayabbbz", new[] { (1, 2), (3, 7) });
+>> ForAll( MatchAll( "xayabbbz", "ab*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:2},{B:3,E:7})
+
+# 271: yield return (@"(ab|cd)e", "abcde", new[] { (2, 5) });
+>> ForAll( MatchAll( "abcde", "(ab|cd)e" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:2,E:5})
+
+# 272: yield return (@"[abhgefdc]ij", "hij", new[] { (0, 3) });
+>> ForAll( MatchAll( "hij", "[abhgefdc]ij" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 273: yield return (@"(a|b)c*d", "abcd", new[] { (1, 4) });
+>> ForAll( MatchAll( "abcd", "(a|b)c*d" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:4})
+
+# 274: yield return (@"(ab|ab*)bc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "(ab|ab*)bc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 275: yield return (@"a([bc]*)c*", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "a([bc]*)c*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 276: yield return (@"a[bcd]*dcdcde", "adcdcde", new[] { (0, 7) });
+>> ForAll( MatchAll( "adcdcde", "a[bcd]*dcdcde" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:7})
+
+# 277: yield return (@"(ab|a)b*c", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "(ab|a)b*c" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 278: yield return (@"[A-Za-z_][A-Za-z0-9_]*", "alpha", new[] { (0, 5) });
+>> ForAll( MatchAll( "alpha", "[A-Za-z_][A-Za-z0-9_]*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:5})
+
+# 279: yield return (@"^a(bc+|b[eh])g|.h$", "abh", new[] { (1, 3) });
+>> ForAll( MatchAll( "abh", "^a(bc+|b[eh])g|.h$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:1,E:3})
+
+# 280: yield return (@"abcd", "abcd", new[] { (0, 4) });
+>> ForAll( MatchAll( "abcd", "abcd" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 281: yield return (@"a(bc)d", "abcd", new[] { (0, 4) });
+>> ForAll( MatchAll( "abcd", "a(bc)d" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 283: yield return (@"a+(b|c)*d+", "aabcdd", new[] { (0, 6) });
+>> ForAll( MatchAll( "aabcdd", "a+(b|c)*d+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 284: yield return (@"^.+$", "vivi", new[] { (0, 4) });
+>> ForAll( MatchAll( "vivi", "^.+$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 285: yield return (@"^(.+)$", "vivi", new[] { (0, 4) });
+>> ForAll( MatchAll( "vivi", "^(.+)$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 286: yield return (@".*(/XXX).*", "/XXX", new[] { (0, 4) });
+>> ForAll( MatchAll( "/XXX", ".*(/XXX).*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 287: yield return (@".*(/000).*", "/000", new[] { (0, 4) });
+>> ForAll( MatchAll( "/000", ".*(/000).*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 288: yield return (@".*(\\000).*", "\000", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "\000", ".*(\\000).*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 289: yield return (@"\\000", "\000", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "\000", "\\000" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 290: yield return (@"(a*)*", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "(a*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 291: yield return (@"(a*)*", "x", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "x", "(a*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 292: yield return (@"(a*)*", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "(a*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 293: yield return (@"(a*)*", "aaaaaax", new[] { (0, 6), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "aaaaaax", "(a*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6},{B:7,E:7})
+
+# 294: yield return (@"(a*)+", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "(a*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 295: yield return (@"(a*)+", "x", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "x", "(a*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 296: yield return (@"(a*)+", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "(a*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 297: yield return (@"(a*)+", "aaaaaax", new[] { (0, 6), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "aaaaaax", "(a*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6},{B:7,E:7})
+
+# 298: yield return (@"(a+)*", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "(a+)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 299: yield return (@"(a+)*", "x", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "x", "(a+)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 300: yield return (@"(a+)*", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "(a+)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 301: yield return (@"(a+)*", "aaaaaax", new[] { (0, 6), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "aaaaaax", "(a+)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6},{B:7,E:7})
+
+# 302: yield return (@"(a+)+", "a", new[] { (0, 1) });
+>> ForAll( MatchAll( "a", "(a+)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 303: yield return (@"(a+)+", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "(a+)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 304: yield return (@"(a+)+", "aaaaaa", new[] { (0, 6) });
+>> ForAll( MatchAll( "aaaaaa", "(a+)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 305: yield return (@"(a+)+", "aaaaaax", new[] { (0, 6) });
+>> ForAll( MatchAll( "aaaaaax", "(a+)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6})
+
+# 306: yield return (@"([a]*)*", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "([a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 307: yield return (@"([a]*)*", "x", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "x", "([a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 308: yield return (@"([a]*)*", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "([a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 309: yield return (@"([a]*)*", "aaaaaax", new[] { (0, 6), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "aaaaaax", "([a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6},{B:7,E:7})
+
+# 310: yield return (@"([a]*)+", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "([a]*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 311: yield return (@"([a]*)+", "x", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "x", "([a]*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 312: yield return (@"([a]*)+", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "([a]*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 313: yield return (@"([a]*)+", "aaaaaax", new[] { (0, 6), (6, 6), (7, 7) });
+>> ForAll( MatchAll( "aaaaaax", "([a]*)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6},{B:7,E:7})
+
+# 314: yield return (@"([^b]*)*", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "([^b]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 315: yield return (@"([^b]*)*", "b", new[] { (0, 0), (1, 1) });
+>> ForAll( MatchAll( "b", "([^b]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1})
+
+# 316: yield return (@"([^b]*)*", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "([^b]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 317: yield return (@"([ab]*)*", "a", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "a", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 318: yield return (@"([ab]*)*", "aaaaaa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 319: yield return (@"([ab]*)*", "ababab", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "ababab", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 320: yield return (@"([ab]*)*", "bababa", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "bababa", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 321: yield return (@"([ab]*)*", "b", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "b", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 322: yield return (@"([ab]*)*", "bbbbbb", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "bbbbbb", "([ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 323: yield return (@"([^a]*)*", "b", new[] { (0, 1), (1, 1) });
+>> ForAll( MatchAll( "b", "([^a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:1})
+
+# 324: yield return (@"([^a]*)*", "bbbbbb", new[] { (0, 6), (6, 6) });
+>> ForAll( MatchAll( "bbbbbb", "([^a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:6},{B:6,E:6})
+
+# 325: yield return (@"([^a]*)*", "aaaaaa", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6) });
+>> ForAll( MatchAll( "aaaaaa", "([^a]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5},{B:6,E:6})
+
+# 326: yield return (@"([^ab]*)*", "ababab", new[] { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6) });
+>> ForAll( MatchAll( "ababab", "([^ab]*)*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3},{B:4,E:4},{B:5,E:5},{B:6,E:6})
+
+# 327: yield return (@"((..)|(.))", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 328: yield return (@"((..)|(.))((..)|(.))", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.))((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 329: yield return (@"((..)|(.))((..)|(.))((..)|(.))", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.))((..)|(.))((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 330: yield return (@"((..)|(.)){1}", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.)){1}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 331: yield return (@"((..)|(.)){2}", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.)){2}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 332: yield return (@"((..)|(.)){3}", "", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "", "((..)|(.)){3}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 333: yield return (@"((..)|(.))*", "", new[] { (0, 0) });
+>> ForAll( MatchAll( "", "((..)|(.))*" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0})
+
+# 334: yield return (@"((..)|(.))((..)|(.))", "a", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "a", "((..)|(.))((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 335: yield return (@"((..)|(.))((..)|(.))((..)|(.))", "a", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "a", "((..)|(.))((..)|(.))((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 336: yield return (@"((..)|(.)){2}", "a", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "a", "((..)|(.)){2}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 337: yield return (@"((..)|(.)){3}", "a", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "a", "((..)|(.)){3}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 338: yield return (@"((..)|(.))((..)|(.))((..)|(.))", "aa", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "aa", "((..)|(.))((..)|(.))((..)|(.))" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 339: yield return (@"((..)|(.)){3}", "aa", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "aa", "((..)|(.)){3}" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 340: yield return (@"(a|ab|c|bcd){4,}(d*)", "ababcd", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "ababcd", "(a|ab|c|bcd){4,}(d*)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 341: yield return (@"(a|ab|c|bcd){4,10}(d*)", "ababcd", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "ababcd", "(a|ab|c|bcd){4,10}(d*)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 342: yield return (@"(ab|a|c|bcd){4,}(d*)", "ababcd", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "ababcd", "(ab|a|c|bcd){4,}(d*)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 343: yield return (@"(ab|a|c|bcd){4,10}(d*)", "ababcd", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "ababcd", "(ab|a|c|bcd){4,10}(d*)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 344: yield return (@"^abc", "abc", new[] { (0, 3) });
+>> ForAll( MatchAll( "abc", "^abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 345: yield return (@"^abc", "zabc", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "zabc", "^abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 346: yield return (@"abc", "xxxxxab", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "xxxxxab", "abc" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 347: yield return (@"(?i)[^x]", "x", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "x", "(?i)[^x]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 348: yield return (@"(?i)[^x]", "X", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "X", "(?i)[^x]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 349: yield return (@"[[:word:]]", "_", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "_", "[[:word:]]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 350: yield return (@"ab?|$", "az", new[] { (0, 1), (2, 2) });
+>> ForAll( MatchAll( "az", "ab?|$" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:2,E:2})
+
+# 351: yield return (@"^(.*?)(\n|\r\n?|$)", "ab\rcd", new[] { (0, 3) });
+>> ForAll( MatchAll( "ab\rcd", "^(.*?)(\n|\r\n?|$)" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 352: yield return (@"z*azb", "azb", new[] { (0, 3) });
+>> ForAll( MatchAll( "azb", "z*azb" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 353: yield return (@"(?i)\p{Ll}+", "\u039B\u0398\u0393\u0394\u03B1", new[] { (0, 5) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("039B"))&UniChar(Hex2Dec("0398"))&UniChar(Hex2Dec("0393"))&UniChar(Hex2Dec("0394"))&UniChar(Hex2Dec("03B1")), "(?i)\p{Ll}+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:5})
+
+# 354: yield return (@"1|2|3|4|5|6|7|8|9|10|int", "int", new[] { (0, 3) });
+>> ForAll( MatchAll( "int", "1|2|3|4|5|6|7|8|9|10|int" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 355: yield return (@"^a[[:^space:]]", "a ", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "a ", "^a[[:^space:]]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 356: yield return (@"^a[[:^space:]]", "foo boo a ", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "foo boo a ", "^a[[:^space:]]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 357: yield return (@"^-[a-z]", "r-f", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "r-f", "^-[a-z]" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 358: yield return (@"(ABC|CDA|BC)X", "CDAX", new[] { (0, 4) });
+>> ForAll( MatchAll( "CDAX", "(ABC|CDA|BC)X" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 359: yield return (@"(aa$)?", "aaz", new[] { (0, 0), (1, 1), (2, 2), (3, 3) });
+>> ForAll( MatchAll( "aaz", "(aa$)?" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:0},{B:1,E:1},{B:2,E:2},{B:3,E:3})
+
+# 360: yield return (@"ab??", "ab", new[] { (0, 1) });
+>> ForAll( MatchAll( "ab", "ab??" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 361: yield return (@".*abcd", "abcd", new[] { (0, 4) });
+>> ForAll( MatchAll( "abcd", ".*abcd" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 362: yield return (@".*(?:abcd)+", "abcd", new[] { (0, 4) });
+>> ForAll( MatchAll( "abcd", ".*(?:abcd)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 363: yield return (@".*(?:abcd)+", "abcdabcd", new[] { (0, 8) });
+>> ForAll( MatchAll( "abcdabcd", ".*(?:abcd)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:8})
+
+# 364: yield return (@".*(?:abcd)+", "abcdxabcd", new[] { (0, 9) });
+>> ForAll( MatchAll( "abcdxabcd", ".*(?:abcd)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:9})
+
+# 365: yield return (@".*x(?:abcd)+", "abcdxabcd", new[] { (0, 9) });
+>> ForAll( MatchAll( "abcdxabcd", ".*x(?:abcd)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:9})
+
+# 366: yield return (@"[^abcd]*x(?:abcd)+", "abcdxabcd", new[] { (4, 9) });
+>> ForAll( MatchAll( "abcdxabcd", "[^abcd]*x(?:abcd)+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:4,E:9})
+
+# 367: yield return (@".", "\xD4\xC2\x65\x2B\x0E\xFE", new[] { (0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6) });
+>> ForAll( MatchAll( Char(Hex2Dec("D4"))&Char(Hex2Dec("C2"))&Char(Hex2Dec("65"))&Char(Hex2Dec("2B"))&Char(Hex2Dec("0E"))&Char(Hex2Dec("FE")), "." ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1},{B:1,E:2},{B:2,E:3},{B:3,E:4},{B:4,E:5},{B:5,E:6})
+
+# 374: yield return (@"\p{Lu}+", "\u039B\u0398\u0393\u0394\u03B1", new[] { (0, 4) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("039B"))&UniChar(Hex2Dec("0398"))&UniChar(Hex2Dec("0393"))&UniChar(Hex2Dec("0394"))&UniChar(Hex2Dec("03B1")), "\p{Lu}+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 375: yield return (@"(?i)\p{Lu}+", "\u039B\u0398\u0393\u0394\u03B1", new[] { (0, 5) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("039B"))&UniChar(Hex2Dec("0398"))&UniChar(Hex2Dec("0393"))&UniChar(Hex2Dec("0394"))&UniChar(Hex2Dec("03B1")), "(?i)\p{Lu}+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:5})
+
+# 376: yield return (@"\p{L}+", "\u039B\u0398\u0393\u0394\u03B1", new[] { (0, 5) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("039B"))&UniChar(Hex2Dec("0398"))&UniChar(Hex2Dec("0393"))&UniChar(Hex2Dec("0394"))&UniChar(Hex2Dec("03B1")), "\p{L}+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:5})
+
+# 377: yield return (@"\p{Ll}+", "\u039B\u0398\u0393\u0394\u03B1", new[] { (4, 5) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("039B"))&UniChar(Hex2Dec("0398"))&UniChar(Hex2Dec("0393"))&UniChar(Hex2Dec("0394"))&UniChar(Hex2Dec("03B1")), "\p{Ll}+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:4,E:5})
+
+# 378: yield return (@"\w+", "d\u03B4d", new[] { (0, 3) });
+>> ForAll( MatchAll( "d"&UniChar(Hex2Dec("03B4d")), "\w+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:3})
+
+# 379: yield return (@"\w+", "\u2961", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2961")), "\w+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 380: yield return (@"\W+", "\u2961", new[] { (0, 1) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2961")), "\W+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 381: yield return (@"\d+", "1\u0968\u09699", new[] { (0, 4) });
+>> ForAll( MatchAll( "1"&UniChar(Hex2Dec("0968"))&UniChar(Hex2Dec("09699")), "\d+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:4})
+
+# 382: yield return (@"\d+", "\u2161", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2161")), "\d+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 383: yield return (@"\D+", "\u2161", new[] { (0, 1) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2161")), "\D+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 384: yield return (@"\s+", "\u1680", new[] { (0, 1) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("1680")), "\s+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 385: yield return (@"\s+", "\u2603", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2603")), "\s+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 386: yield return (@"\S+", "\u2603", new[] { (0, 1) });
+>> ForAll( MatchAll( UniChar(Hex2Dec("2603")), "\S+" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 387: yield return (@"\d\b", "6\u03B4", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "6"&UniChar(Hex2Dec("03B4")), "\d\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
+# 388: yield return (@"\d\b", "6\u1680", new[] { (0, 1) });
+>> ForAll( MatchAll( "6"&UniChar(Hex2Dec("1680")), "\d\b" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 389: yield return (@"\d\B", "6\u03B4", new[] { (0, 1) });
+>> ForAll( MatchAll( "6"&UniChar(Hex2Dec("03B4")), "\d\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table({B:0,E:1})
+
+# 390: yield return (@"\d\B", "6\u1680", new ValueTuple<int, int>[] { });
+>> ForAll( MatchAll( "6"&UniChar(Hex2Dec("1680")), "\d\B" ), {B:StartMatch-1, E:StartMatch+Len(FullMatch)-1} )
+Table()
+
