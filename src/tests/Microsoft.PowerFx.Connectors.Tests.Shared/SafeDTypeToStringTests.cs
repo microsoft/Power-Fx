@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Connector.Tests
 
         [Fact]
         public void RecordAndTableDTypeTests()
-        {            
+        {
             var type1 = DType.CreateTable(
                 new TypedName(DType.Number, new DName("A")),
                 new TypedName(DType.Number, new DName("B")),
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Connector.Tests
 
             Assert.Equal("*[field1:n, field2:n, field3:n]", type1.ToAnonymousString());
             Assert.Equal("![field1:n, field2:n, field3:n]", type1.ToRecord().ToAnonymousString());
-            Assert.Equal("![field1:n, field2:n, field3:n]", type1.ToRecord().ToRecord().ToAnonymousString());            
+            Assert.Equal("![field1:n, field2:n, field3:n]", type1.ToRecord().ToRecord().ToAnonymousString());
 
             var type2 = DType.CreateTable(
                 new List<TypedName>()
@@ -117,10 +117,13 @@ namespace Microsoft.PowerFx.Connector.Tests
             Assert.Equal("*[field1:n, field2:n, field3:n]", type2.ToAnonymousString());
 
             type2 = DType.CreateRecord(type1.GetNames(DPath.Root).ToArray());
+            
+            // This will change the type of the existing B field
             type2 = type2.Add(new DName("B"), DType.String);
+
             Assert.Equal("![field1:n, field2:s, field3:n]", type2.ToAnonymousString());
 
-            type2 = DType.EmptyTable                
+            type2 = DType.EmptyTable
                 .Add(new DName("B"), DType.Number)
                 .Add(new DName("C"), DType.Number)
                 .Add(new DName("D"), DType.Boolean)
@@ -245,22 +248,22 @@ namespace Microsoft.PowerFx.Connector.Tests
 
             // Output should be *[A:n,B:s,C:*[D:n]]
             var superType = DType.Supertype(type3, type4, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:*[field1:n]]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:*[field1:n]]", superType.ToAnonymousString());
             superType = DType.Supertype(type4, type3, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:*[field1:n]]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:*[field1:n]]", superType.ToAnonymousString());
 
             // Output should be *[A:n,B:s,D:n]
             superType = DType.Supertype(type1, type2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:n]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:n]", superType.ToAnonymousString());
             superType = DType.Supertype(type2, type1, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:n]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:n]", superType.ToAnonymousString());
 
             // Table with null value
             // Output should be *[A:n,B:s,C:b,D:n]
             superType = DType.Supertype(type1, type2s, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:b, field4:n]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:b, field4:n]", superType.ToAnonymousString());
             superType = DType.Supertype(type2s, type1, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
-            Assert.Equal("*[field1:n, field2:s, field3:b, field4:n]", superType.ToAnonymousString());            
+            Assert.Equal("*[field1:n, field2:s, field3:b, field4:n]", superType.ToAnonymousString());
 
             // Table with null value
             // Output should be *[A:n,B:s,C:*[D:n,F:d]]
