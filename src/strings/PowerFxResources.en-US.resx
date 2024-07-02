@@ -4412,7 +4412,7 @@
     <comment>Error message indicating that the regular expression has single quoted named capture.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Conditionals are not supported; found "{0}".</value>
+    <value>Invalid regular expression: Conditional alternation is not supported; found "{0}".</value>
     <comment>Error message indicating that the regular expression has conditionals.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">

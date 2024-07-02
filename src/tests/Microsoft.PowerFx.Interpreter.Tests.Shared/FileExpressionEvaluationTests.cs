@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RunOne()
         {
             //            var path = @"C:\odm\retests\rust_fx.txt";
-            var path = @"C:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
+            var path = @"d:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

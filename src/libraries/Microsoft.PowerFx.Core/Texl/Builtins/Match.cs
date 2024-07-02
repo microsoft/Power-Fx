@@ -88,82 +88,116 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             string regularExpression = nodeValue;
-            fValid &= LimitRegularExpression(regExNode, regularExpression, errors);
-            fValid &= TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
-            return fValid;
+            return fValid && 
+                    (!context.Features.PowerFxV1CompatibilityRules || LimitRegularExpression(regExNode, regularExpression, errors)) &&
+                    TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
         }
 
-        // Disallow self referncing groups and consitently treat all "\[1-9][0-9]*" as a backreference.
-        // This avoids inconsistencies between .net and JavaScript regular expression behavior
-        // while maintaining Unicode definition of words, by avoiding the use of RegexOptions.ECMAScript.
-        // See https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+        // Limit regular expressions to common features that are supported, with conssitent semantics, by both canonical .NET and XRegExp.
+        // It is better to disallow now and bring back with customer demand or as platforms add more support.
+        //
+        // Features that are disallowed:
+        //     Capture groups
+        //         Self-referncing groups, such as "(a\1)".
+        //         Treat all escaped number sequences as a backreference number.
+        //         Single quoted "(?'name'..." and "\k'name'".
+        //         Balancing capture groups.
+        //     Octal character codes (use Hex or Unicode instead).
+        //         "\o" could be added in the future, but we should avoid "\0" which causes backreference confusion.
+        //     Inline options
+        //         Anywhere in the expression except the beginning.
+        //         For subexpressions.
+        //     Character classes
+        //         Character class subtraction "[a-z-[m-n]]".
+        //     Conditional alternation
+        //
+        // Features that aren't supported by canonical .NET will be blocked automatically when the regular expression is instantiated in TryCreateReturnType.
+        //
+        // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
+        // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
         private bool LimitRegularExpression(TexlNode regExNode, string regexPattern, IErrorContainer errors)
         {
-            // todo:
-            //    group range
-            // scans the regular expression, counting capture groups and comparing with backreference numbers.
+            // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are leagl, such as letters and numbers.
+            // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
+            // Many subexpressions here take advantage of this, matching something that is valid, before falling through to check for something that is invalid.
+            // 
+            // For example, consider testing "\\(\a)".  This will match <goodEscape> <openCapture> <badEscapeAlpha> <closeCapture>.
+            // <badEscapeAlpha> will report an error and stop further processing.
+            // One might think that the "\a" could have matched <goodEscape>, but it will match <badEscapeAlpha> first because it is first in the RE.
+            // One might think that the "\(" could have matched <goodEscape>, but the double backslashes will be consumed first, which is why it is important
+            // to gather all the matches in a linear scan from the beginning to the end.
             var groupPunctuationRE = new Regex(
                 @"
-                    (?<backRef>\\(?:(?<backRefNum>[1-9]\d*)|k<(?<backRefName>\w+)>))  |  # valid backreference are accepted, others are an error
-                    (?<badOctal>\\0[0-7]{0,3})         |
-                    # any other escaped character is ignored, but must be paired so that '\\(' is seen as '\\' followed by '(' 
-                    (?<goodEscapeAlpha>\\(?:[bBtrvfnwWsSdD]|[pP]\{\w+\}|c[a-zA-Z]|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4})) | # missing are AaeGZz that are not supported with XRegExp, other common are u{} and o
-                    (?<badEscapeAlpha>\\[a-zA-Z_]) | 
-                    (?<goodEscape>\\.) | # any other escaped character is ignored, but must be paired so that '\\(' is seen as '\\' followed by '(' and not '\' folloed by '\(' 
+                    # leading backslash
+                    \\(?<goodBackRefNum>[1-9]\d*)               | # numeric backreference
+                    \\k<(?<goodBackRefName>\w+)>                | # named backreference
+                    (?<badOctal>\\0[0-7]{0,3})                  | # octal are not accepted (no XRegExp support, by design)
+                    (?<goodEscapeAlpha>\\
+                           ([bBdDfnrsStvwW]    |                  # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
+                            [pP]\{\w+\}        |                  # unicode character classes
+                            c[a-zA-Z]          |                  # Ctrl character classes
+                            x[0-9a-fA-F]{2}    |                  # hex character, must be exactly 2 hex digits
+                            u[0-9a-fA-F]{4}))                   | # Unicode characters, must be exactly 4 hex digits
+                    (?<badEscapeAlpha>\\[a-zA-Z_])              | # reserving all other letters and underscore for future use (consistent with .NET)
+                    (?<goodEscape>\\.)                          | # any other escaped character is allowed, but must be paired so that '\\(' is seen as '\\' followed by '(' and not '\' folloed by '\(' 
+                                                                    
+                    # leading (?
+                    \(\?<(?<goodNamedCapture>\w+)>              | # named capture group
+                    (?<goodNonCapture>\(\?:)                    | # non-capture group, still need to track to match with closing
+                    (?<goodOptions>^\(\?[im]+\))                | # inline front of expression options we do support
+                    (?<badOptions>\(\?(\w*-\w+|\w+)(:|\))?)     | # inline options that we don't support, including disable of options (last ? portion makes for a better error message)
+                    (?<badBalancing>\(\?(<|')\w*-\w+(>|')?)     | # .NET balancing captures are not supported (last ? portion makes for a better error message)
+                    (?<badSingleQuoteNamedCapture>\(\?'\w+'?)   | # single quoted capture names are not supported (last ? portion makes for a better error message)
+                    (?<badConditional>\(\?\()                   | # .NET conditional alternations are not supported
 
-                    (?<goodOptions>^\(\?[imns]+\)) |
-                    (?<goodNamedCapture>\(\?<(\w+)>) |
-                    (?<goodNonCapture>\(\?:) |
-                    (?<badOptions>\(\?(?:\w*-\w+|\w+)(?::|\))?) |
-                    (?<badBalancing>\(\?(?:<|')\w*-\w+(?:>|')?) |
-                    (?<badSingleQuoteNamedCapture>\(\?'\w+'?) |
-                    (?<badConditional>\(\?\(\?) |
+                    # basic open and close
+                    (?<openCapture>\()                          |
+                    (?<closeCapture>\))                         |
+                    (?<openCharacterClass>\[)                   |
+                    (?<closeCharacterClass>\])
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-                    (?<openCapture>\() |
-                    (?<closeCapture>\))         |  # parens that aren't escaped that could start/end a group, provided they are outside a character class
-                    (?<openCharacterClass>\[) |
-                    (?<closeCharacterClass>\])            # character class start/end
-                ", RegexOptions.IgnorePatternWhitespace);
-            var groupNumStack = new Stack<int>(); // int is the group number, -1 is used for non capturing groups
-            var groupNameDict = new Dictionary<string, int>();
-            var groupCounter = 0; // last group number defined
-            var openCharacterClass = false; // are we inside square brackets where parens do not need to be escaped?
+            var groupCounter = 0;                                 // last group number defined
+            var groupNumStack = new Stack<int>();                 // stack of group numbers, -1 is used for non capturing groups
+            var groupNameDict = new Dictionary<string, int>();    // mapping from group names to group numbers, membership means the name was defined
+
+            var openCharacterClass = false;                       // are we defining a character class?
 
             foreach (Match groupMatch in groupPunctuationRE.Matches(regexPattern))
             {
-                if (groupMatch.Groups["backRefNum"].Success)
+                if (groupMatch.Groups["goodBackRefNum"].Success)
                 {
-                    var backRefNum = int.Parse(groupMatch.Groups["backRefNum"].Value, CultureInfo.InvariantCulture);
+                    var backRefNum = int.Parse(groupMatch.Groups["goodBackRefNum"].Value, CultureInfo.InvariantCulture);
 
                     // group isn't defined, or not defined yet
                     if (backRefNum > groupCounter)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Groups["backRef"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
                         return false;
                     }
 
                     // group is not closed and thus self referencing
                     if (groupNumStack.Contains(backRefNum))
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Groups["backRef"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
                         return false;
                     }
                 }
-                else if (groupMatch.Groups["backRefName"].Success)
+                else if (groupMatch.Groups["goodBackRefName"].Success)
                 {
-                    var backRefName = groupMatch.Groups["backRefName"].Value;
+                    var backRefName = groupMatch.Groups["goodBackRefName"].Value;
 
                     // group isn't defined, or not defined yet
-                    if (!groupNameDict.TryGetValue(groupMatch.Groups["backRefName"].Value, out var groupNum))
+                    if (!groupNameDict.TryGetValue(backRefName, out var groupNum))
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Groups["backRef"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
                         return false;
                     }
 
                     // group is not closed and thus self referencing
                     if (groupNumStack.Contains(groupNum))
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Groups["backRef"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
                         return false;
                     }
                 }
@@ -220,6 +254,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (groupMatch.Groups["closeCapture"].Success)
                 {
+                    // parens do not need to be escaped within square brackets
                     if (!openCharacterClass)
                     {
                         groupNumStack.Pop();
@@ -229,23 +264,35 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     if (openCharacterClass)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
-                        return false;
-                    }
+                        // character class subtraction "[a-z-[m-n]]" is not supported
+                        if (regexPattern[groupMatch.Groups["openCharacterClass"].Index - 1] == '-')
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
+                            return false;
+                        }
 
-                    openCharacterClass = true;
+                        // else ok, "[a[b]" is supported
+                    }
+                    else
+                    {
+                        openCharacterClass = true;
+                    }
                 }
                 else if (groupMatch.Groups["closeCharacterClass"].Success)
                 {
-                    openCharacterClass = false;
+                    // supports "[]]" which is valid but the closing square bracket must immediately follow the open
+                    if (openCharacterClass && regexPattern[groupMatch.Groups["closeCharacterClass"].Index - 1] != '[')
+                    {
+                        openCharacterClass = false;
+                    }
                 }
-                else if (groupMatch.Groups["goodEescape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success || groupMatch.Groups["goodOptions"].Success)
+                else if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success || groupMatch.Groups["goodOptions"].Success)
                 {
                     // all is well, nothing to do
                 }
                 else
                 {
-                    throw new NotImplementedException("Internal error in LimitRegularExpression");
+                    throw new NotImplementedException("Unknown regular expression match");
                 }
             }
 

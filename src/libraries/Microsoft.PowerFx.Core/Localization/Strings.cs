@@ -730,7 +730,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadSingleQuoteNamedCapture = new ErrorResourceKey("ErrInvalidRegExBadSingleQuoteNamedCapture");
         public static ErrorResourceKey ErrInvalidRegExBadEscape = new ErrorResourceKey("ErrInvalidRegExBadEscape");
         public static ErrorResourceKey ErrInvalidRegExBadCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadCharacterClassSubtraction");
-        public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadBadConditional"); 
+        public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadConditional"); 
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
