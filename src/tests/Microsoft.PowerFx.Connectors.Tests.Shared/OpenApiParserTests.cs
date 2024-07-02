@@ -138,13 +138,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Null(function.RequiredParameters[1].DefaultValue);
             Assert.NotNull(function.RequiredParameters[1].ConnectorType);
             Assert.Equal("analysisInput", function.RequiredParameters[1].ConnectorType.Name);
-            Assert.Null(function.RequiredParameters[1].ConnectorType.DisplayName);
+
+            // By default, action connectors don't use display names and default to Name property
+            // If we'd use Compatibility = ConnectorCompatibility.SwaggerCompabilityWithDisplayName this property 
+            // could be different (and even null if both summary & title aren't defined)
+            Assert.Equal("analysisInput", function.RequiredParameters[1].ConnectorType.DisplayName);
             Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[1].ConnectorType.Description);
             Assert.Equal(analysisInputRecordType, function.RequiredParameters[1].ConnectorType.FormulaType);
             Assert.True(function.RequiredParameters[1].ConnectorType.IsRequired);
             Assert.Single(function.RequiredParameters[1].ConnectorType.Fields);
             Assert.Equal("conversationItem", function.RequiredParameters[1].ConnectorType.Fields[0].Name);
-            Assert.Null(function.RequiredParameters[1].ConnectorType.Fields[0].DisplayName);
+            Assert.Equal("conversationItem", function.RequiredParameters[1].ConnectorType.Fields[0].DisplayName);
             Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[1].ConnectorType.Fields[0].Description);
             Assert.True(function.RequiredParameters[1].ConnectorType.Fields[0].IsRequired);
 
@@ -240,13 +244,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Null(function.RequiredParameters[0].DefaultValue);
             Assert.NotNull(function.RequiredParameters[0].ConnectorType);
             Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
-            Assert.Null(function.RequiredParameters[0].ConnectorType.DisplayName);
+            Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.DisplayName);
             Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[0].ConnectorType.Description);
             Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].ConnectorType.FormulaType);
             Assert.True(function.RequiredParameters[0].ConnectorType.IsRequired);
             Assert.Single(function.RequiredParameters[0].ConnectorType.Fields);
             Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
-            Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
+            Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
             Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
             Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);
 
@@ -330,7 +334,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             ConnectorFunction function = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, apiDoc).OrderBy(cf => cf.Name).ToList()[0];
             Assert.Equal("AnalyzeConversationTextSubmitJob", function.Name);
-            Assert.Equal("![createdDateTime`'Created Date':d, displayName:s]", function.ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("![createdDateTime:d, displayName:s]", function.ReturnType.ToStringWithDisplayNames());
 
             using var testConnector2 = new LoggingTestServer(@"Swagger\TestConnectorDateTimeFormat.json", _output);
             using var httpClient2 = new HttpClient(testConnector2);
