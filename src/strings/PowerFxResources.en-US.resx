@@ -4501,7 +4501,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrExpectedRVFieldTypeMismatch" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Field name: {0} Expected {1}, found {2}.</value>
+    <value>Type mismatch between source and target record types. Field name: {0} Expected {1}; found {2}.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrExpectedRVCannotCoerceType" xml:space="preserve">
@@ -4509,7 +4509,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrExpectedRVTypeMismatch" xml:space="preserve">
-    <value>Type mismatch between source and target types. Expected {0}, found {1}.</value>
+    <value>Type mismatch between source and target types. Expected {0}; found {1}.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="AboutJSON" xml:space="preserve">

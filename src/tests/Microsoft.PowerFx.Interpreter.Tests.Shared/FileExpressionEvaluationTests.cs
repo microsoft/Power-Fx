@@ -153,13 +153,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if true
+#if false
         // Helper to run a single .txt 
         [Fact]
         public void RunOne()
         {
-            //            var path = @"C:\odm\retests\rust_fx.txt";
-            var path = @"c  :\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
+            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
