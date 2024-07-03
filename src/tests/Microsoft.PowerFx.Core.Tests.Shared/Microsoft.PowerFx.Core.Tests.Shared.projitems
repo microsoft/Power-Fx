@@ -47,7 +47,7 @@
       <Link>ExpressionTestCases\%(Filename)%(Extension)</Link>
       <PackagePath>contentFiles\any\$(TargetFrameworks)\ExpressionTestCases</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>    
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)ExpressionTestCases\NotYetReady\*">
       <Link>ExpressionTestCases\NotYetReady\%(Filename)%(Extension)</Link>
       <PackagePath>content\ExpressionTestCases\NotYetReady</PackagePath>
