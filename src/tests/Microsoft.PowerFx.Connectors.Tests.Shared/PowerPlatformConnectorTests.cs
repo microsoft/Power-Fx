@@ -1820,6 +1820,22 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task DVTest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            foreach (ConnectorCompatibility compatibility in new[] { ConnectorCompatibility.SwaggerCompatibilityWithDisplayNames, ConnectorCompatibility.SwaggerCompatibility })
+            {
+                ConnectorSettings connectorSettings = new ConnectorSettings("cds") { Compatibility = compatibility };
+                List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+                ConnectorFunction listRecords = functions.First(functions => functions.Name == "ListRecords");
+
+                Assert.Equal(8, listRecords.OptionalParameters.Length);
+            }
+        }
+
+        [Fact]
         public async Task DVDynamicReturnType()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
