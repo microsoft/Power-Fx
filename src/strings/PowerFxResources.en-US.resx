@@ -4399,6 +4399,14 @@
     <value>Invalid regular expression: Self-referencing capture groups are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has self-referencing capture groups.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefUseNameInsteadOfNum_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named capture groups need to be referenced with \k&lt;name&gt; and not by capture group number, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is using a number for a named capture.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNumberForName_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Numeric capture groups cannot be referenced with \k&lt;number&gt;, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is using a number for a named capture.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Balancing capture groups is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has balancing capture groups.</comment>

@@ -98,18 +98,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //
         // Features that are disallowed:
         //     Capture groups
-        //         Self-referncing groups, such as "(a\1)".
-        //         Treat all escaped number sequences as a backreference number.
-        //         Single quoted "(?'name'..." and "\k'name'".
-        //         Balancing capture groups.
-        //     Octal character codes (use Hex or Unicode instead).
+        //         Self-referncing groups, such as "(a\1)" (.NET different from XRegExp).
+        //         Treat all escaped number sequences as a backreference number (.NET different from XRegExp).
+        //         Single quoted "(?'name'..." and "\k'name'" (.NET only).
+        //         Balancing capture groups (.NET only).
+        //         Using named captures with back reference \number (.NET different from XRegExp).
+        //         Using \k<number> notation for numeric back references (.NET different from XRegExp).
+        //     Octal character codes (.NET different from XRegExp)
+        //         Uuse Hex or Unicode instead.
         //         "\o" could be added in the future, but we should avoid "\0" which causes backreference confusion.
         //     Inline options
-        //         Anywhere in the expression except the beginning.
-        //         For subexpressions.
+        //         Anywhere in the expression except the beginning (.NET only).
+        //         For subexpressions (.NET only).
         //     Character classes
-        //         Character class subtraction "[a-z-[m-n]]".
-        //     Conditional alternation
+        //         Character class subtraction "[a-z-[m-n]]" (.NET only).
+        //     Conditional alternation (.NET only).
         //
         // Features that aren't supported by canonical .NET will be blocked automatically when the regular expression is instantiated in TryCreateReturnType.
         //
@@ -158,7 +161,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             var groupCounter = 0;                                 // last group number defined
-            var groupNumStack = new Stack<int>();                 // stack of group numbers, -1 is used for non capturing groups
+            var groupNumStack = new Stack<int>();                 // stack of open group numbers, -1 is used for non capturing groups
+            var groupNumHasName = new List<int>();                // list of capture group numbers that are from a named capture group
             var groupNameDict = new Dictionary<string, int>();    // mapping from group names to group numbers, membership means the name was defined
 
             var openCharacterClass = false;                       // are we defining a character class?
@@ -206,6 +210,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (groupMatch.Groups["goodNamedCapture"].Success)
                         {
                             groupNameDict.Add(groupMatch.Groups["goodNamedCapture"].Value, groupCounter);
+                            groupNumHasName.Add(groupCounter);
                         }
                     }
                 }
@@ -228,6 +233,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return false;
                     }
 
+                    // group has a name, use that instead
+                    if (groupNumHasName.Contains(backRefNum))
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefUseNameInsteadOfNum, groupMatch.Value);
+                        return false;
+                    }
+
                     // group is not closed and thus self referencing
                     if (groupNumStack.Contains(backRefNum))
                     {
@@ -242,8 +254,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // group isn't defined, or not defined yet
                     if (!groupNameDict.TryGetValue(backRefName, out var groupNum))
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
-                        return false;
+                        if (int.TryParse(backRefName, out groupNum))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumberForName, groupMatch.Value);
+                            return false;
+                        }
+                        else
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                            return false;
+                        }
                     }
 
                     // group is not closed and thus self referencing
