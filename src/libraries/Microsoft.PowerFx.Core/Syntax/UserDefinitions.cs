@@ -18,7 +18,7 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
-    /// This encapsulates a named formula and user defined functions: its original script, the parsed result, and any parse errors.
+    /// This encapsulates a named formula and user-defined functions: its original script, the parsed result, and any parse errors.
     /// </summary>
     internal sealed class UserDefinitions
     {
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
 
         // Exposing it so hosts can filter out the intellisense suggestions
-        public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull,  DType.Decimal };
+        public static readonly ISet<DType> RestrictedTypes = new HashSet<DType> { DType.DateTimeNoTimeZone, DType.ObjNull, DType.Decimal, DType.Hyperlink };
 
         private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
@@ -40,9 +40,9 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
-        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// Parses a script with both named formulas, user-defined functions and user-defined types.
         /// </summary>
-        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="script">Script with named formulas, user-defined functions and user-defined types.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)

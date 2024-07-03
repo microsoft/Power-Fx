@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Utils;
@@ -65,6 +66,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         // Engine can provide ambient details for NL, such as config and feature flags.
         public Engine Engine { get; set; }
+
+        /// <summary>
+        /// Set the locale that expect the output expression to be.
+        /// For example: "vi-VN" or "fr-FR".
+        /// </summary>
+        public CultureInfo ExpressionLocale { get; set; }
     }
 
     /// <summary>

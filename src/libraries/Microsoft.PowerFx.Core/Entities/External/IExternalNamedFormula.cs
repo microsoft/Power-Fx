@@ -12,5 +12,7 @@ namespace Microsoft.PowerFx.Core.Entities
         bool TryGetExternalDataSource(out IExternalDataSource dataSource);
 
         bool IsConstant { get; }
+
+        bool ContainsReferenceToView { get; }
     }
 }

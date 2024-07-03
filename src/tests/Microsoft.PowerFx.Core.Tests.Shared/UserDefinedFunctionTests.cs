@@ -110,7 +110,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("dateTon(x:Date): Number = x;", "(DateToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("timeTon(x:Time): Number = x;", "(TimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTimeTon(x:DateTime): Number = x;", "(DateTimeToNumber:n(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
-        [InlineData("textToHyperlink(x:Text): Hyperlink = x;", "(TextToHyperlink:h(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("nTos(x:Number): Text = x;", "(NumberToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("bTos(x:Boolean): Text = x;", "(BooleanToText:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
         [InlineData("dateTos(x:Date): Text = x;", "(Text:s(ResolvedObject(Microsoft.PowerFx.Core.Binding.BindInfo.UDFParameterInfo)), Scope 0)")]
@@ -630,6 +629,45 @@ namespace Microsoft.PowerFx.Core.Tests
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.True(errors.Count() == 0);
+        }
+
+        [Theory]
+        [InlineData("Count():Number = 1;")]
+        public void TestUDFHasWarningWhenShadowing(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+            };
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
+            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+            // Only one error should exist.
+            Assert.True(errors.Count() == 1 &&
+                errors.Any(error => error.MessageKey == "WrnUDF_ShadowingBuiltInFunction" &&
+                error.Severity == DocumentErrorSeverity.Warning));
+        }
+
+        [Fact]
+        public void TestUDFRestrictedTypes()
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+            };
+
+            foreach (var type in UserDefinitions.RestrictedTypes)
+            {
+                var script = $"func():{type.GetKindString()} = Blank();";
+                var parseResult = UserDefinitions.Parse(script, parserOptions);
+                var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+                errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+
+                Assert.Contains(errors, x => x.MessageKey == "ErrUDF_UnknownType" || x.MessageKey == "ErrUDF_InvalidReturnType");
+            }
         }
     }
 }

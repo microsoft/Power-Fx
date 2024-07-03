@@ -396,43 +396,25 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
+        /// <summary>
+        /// Constructs a list of tokens from the given text.
+        /// </summary>
+        /// <param name="text">Text to tokenize.</param>
+        /// <param name="flags">Parser flags.</param>
+        /// <returns>List of tokens.</returns>
         public List<Token> GetTokens(string text, Flags flags = Flags.None)
         {
             Contracts.AssertValue(text);
 
-            Token tok;
-            var impl = new LexerImpl(this, text, new StringBuilder(), flags);
+            Token token;
+            var tokenizer = new LexerImpl(this, text, new StringBuilder(), flags);
             var tokens = new List<Token>();
-            while ((tok = impl.GetNextToken()) != null)
+            while ((token = tokenizer.GetNextToken()) != null)
             {
-                tokens.Add(tok);
+                tokens.Add(token);
             }
 
             return tokens;
-        }
-
-        public static bool RequiresWhiteSpace(Token tk)
-        {
-            bool result;
-            switch (tk.Kind)
-            {
-                case TokKind.True:
-                case TokKind.False:
-                case TokKind.In:
-                case TokKind.Exactin:
-                case TokKind.Parent:
-                case TokKind.KeyAnd:
-                case TokKind.KeyNot:
-                case TokKind.KeyOr:
-                case TokKind.As:
-                    result = true;
-                    break;
-                default:
-                    result = false;
-                    break;
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -443,81 +425,37 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns>Minified Expression.</returns>
         public string GetMinifiedScript(string text, List<Token> tokens)
         {
-            Contracts.AssertValue(text);
-            Contracts.AssertValue(tokens);
-
-            var stringBuilder = new StringBuilder();
-
-            for (var i = 0; i < tokens.Count; i++)
-            {
-                var currentToken = tokens[i];
-                if (currentToken.Kind == TokKind.Comment)
-                {
-                    stringBuilder.Append(currentToken.Span.GetFragment(text));
-                }
-                else if (RequiresWhiteSpace(currentToken))
-                {
-                    stringBuilder.Append(" " + currentToken.Span.GetFragment(text) + " ");
-                }
-                else
-                {
-                    var tokenString = currentToken.Span.GetFragment(text);
-                    var shouldNotTrim = IsStringPartOfALargerInterpolatedString(i - 1 >= 0 ? tokens[i - 1] : null, currentToken, i + 1 < tokens.Count ? tokens[i + 1] : null);
-                    var newString = shouldNotTrim ? tokenString : tokenString.Trim();
-
-                    stringBuilder.Append(newString);
-                }
-            }
-
-            var result = stringBuilder.ToString();
-            return result;
+            return ScriptMinification.GetMinifiedScript(text, tokens);
         }
 
         /// <summary>
-        /// Determines if current token is string literal inside a larger interpolated string.
+        /// Given the expression and list of tokens that make up the expression, generates the minified version of the given expression.
         /// </summary>
-        /// <param name="precedingToken">A token before the current token.</param>
-        /// <param name="currentToken">Current token that might be a string literal inside a larger interpolated string.</param>
-        /// <param name="followingToken">A token after the current token.</param>
-        /// <returns>True if current token represents a string literal inside a larger interpolated string or false otherwise.</returns>
-        private static bool IsStringPartOfALargerInterpolatedString(Token precedingToken, Token currentToken, Token followingToken)
+        /// <param name="text">Expression to minify.</param>
+        /// <param name="options">Minification options.</param>
+        /// <returns>Minified Expression.</returns>
+        public string GetMinifiedScript(string text, MinificationOptions options = null)
         {
-            if (currentToken == null || currentToken.Kind != TokKind.StrLit)
-            {
-                return false;
-            }
-
-            // See if current token is preceded by start of the interpolated string or an end of an island
-            // Example $"<current token>, }<current token>
-            if (precedingToken != null && (precedingToken.Kind == TokKind.StrInterpStart || precedingToken.Kind == TokKind.IslandEnd))
-            {
-                return true;
-            }
-
-            // See if current token is followed by end of the interpolated string or the start of an island
-            // Example <current token>", <current token>{
-            if (followingToken != null && (followingToken.Kind == TokKind.StrInterpEnd || followingToken.Kind == TokKind.IslandStart))
-            {
-                return true;
-            }
-
-            return false;
+            return ScriptMinification.GetMinifiedScript(text, GetTokens(text, options.flags), options);
         }
 
+        /// <summary>
+        /// Removes white spaces from the given text.
+        /// </summary>
+        /// <param name="text">Text to remove whitespaces from.</param>
+        /// <returns>Text after whitespaces removed.</returns>
         public string RemoveWhiteSpace(string text)
         {
             Contracts.AssertValue(text);
 
             var tokens = GetTokens(text);
+            
             if (tokens.Count == 1)
             {
                 return text;
             }
 
-            var textLength = text.Length;
-            var result = GetMinifiedScript(text, tokens);
-
-            return result;
+            return GetMinifiedScript(text, tokens);
         }
 
         // Enumerate all supported unary operator keywords.
@@ -1836,8 +1774,17 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = CurrentPos;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
+                    var initialChar = CurrentChar;
+                    var unexpectedChar = Convert.ToUInt16(initialChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
+                    if (char.IsHighSurrogate(initialChar) && char.IsLowSurrogate(CurrentChar))
+                    {
+                        // combine the two surrogates
+                        var unicodePoint = char.ConvertToUtf32(initialChar, CurrentChar);
+                        unexpectedChar = unicodePoint.ToString("X8", CultureInfo.InvariantCulture);
+                        NextChar();
+                    }
+
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }
                 else

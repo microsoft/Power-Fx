@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,6 +71,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             sb.Append(this.Expected);
             sb.Append(": ");
 
+            if (nl2FxParameters.ExpressionLocale != null)
+            {
+                sb.Append(nl2FxParameters.ExpressionLocale.Name);
+                sb.Append(": ");
+            }
+
             foreach (var sym in nl2FxParameters.SymbolSummary.SuggestedSymbols)
             {
                 sb.Append($"{sym.BestName},{sym.Type}");
@@ -103,14 +110,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         [Theory]
         [InlineData("Score < 50", true, "#$PowerFxResolvedObject$# < #$decimal$#")]
         [InlineData("missing < 50", false, "#$firstname$# < #$decimal$#")] // doesn't compile, should get filtered out by LSP 
-        public async Task TestNL2FX(string expectedExpr, bool success, string anonExpr = null)
+        [InlineData("Score > 50", true, null, "vi-VN")]
+        public async Task TestNL2FX(string expectedExpr, bool success, string anonExpr = null, string expressionCultureName = null)
         {
             // Arrange
             var documentUri = "powerfx://app?context=1";
             var engine = new Engine();
             var symbols = new SymbolTable();
             symbols.AddVariable("Score", FormulaType.Number);
-            var scope = engine.CreateEditorScope(symbols: symbols);
+
+            ParserOptions parserOptions = null;
+            if (expressionCultureName != null)
+            {
+                parserOptions = new ParserOptions() { Culture = CultureInfo.GetCultureInfo(expressionCultureName) };
+            }
+
+            var scope = engine.CreateEditorScope(parserOptions: parserOptions, symbols: symbols);
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
             var nl2FxHandler = CreateAndConfigureNl2FxHandler();
@@ -136,7 +151,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             if (success)
             {
-                Assert.Equal("my sentence: Score < 50: Score,Number", nl2FxHandler._log);
+                if (expressionCultureName != null)
+                {
+                    Assert.Equal($"my sentence: {expectedExpr}: {expressionCultureName}: Score,Number", nl2FxHandler._log);
+                }
+                else
+                {
+                    Assert.Equal($"my sentence: {expectedExpr}: Score,Number", nl2FxHandler._log);
+                }
 
                 Assert.Equal(expectedExpr, expression.Expression);
                 Assert.Null(expression.RawExpression);
