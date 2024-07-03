@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -35,6 +36,11 @@ namespace Microsoft.PowerFx.Core.Texl
 
         public override void Visit(FirstNameNode node)
         {
+            var info = _txb.GetInfo(node);
+            if (info != null && info.Data is IExternalNamedFormula namedRule && namedRule.ContainsReferenceToView)
+            {
+                ContainsView = true;
+            }
         }
 
         public override void PostVisit(CallNode node)
