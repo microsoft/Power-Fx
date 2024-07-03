@@ -418,24 +418,24 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case "uri":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, settings.Compatibility);
 
                         case "date": // full-date RFC3339
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Date);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Date, settings.Compatibility);
 
                         case "date-time": // date-time RFC3339
                         case "date-no-tz":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.DateTime, settings.Compatibility);
 
                         case "byte": // Base64 string
                         case "binary": // octet stream
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Blob, settings.Compatibility);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
                             {
                                 OptionSet optionSet = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
+                                return new ConnectorType(schema, openApiParameter, optionSet.FormulaType, settings.Compatibility);
                             }
                             else
                             {
@@ -443,7 +443,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                         default:
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, settings.Compatibility);
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -458,19 +458,19 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte":
                         case "number":
                         case "int32":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, settings.Compatibility);
 
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, settings.Compatibility);
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
                     }
 
                 // Always a boolean (Format not used)
-                case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
+                case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean, settings.Compatibility);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
                 case "integer":
@@ -479,11 +479,11 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "integer":
                         case "int32":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, settings.Compatibility);
 
                         case "int64":
                         case "unixtime":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal, settings.Compatibility);
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of integer: {schema.Format}");
@@ -493,7 +493,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (schema.Items == null)
                     {
                         // Type of items in unknown
-                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
+                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType, settings.Compatibility);
                     }
 
                     var itemIdentifier = GetUniqueIdentifier(schema.Items);
@@ -501,14 +501,14 @@ namespace Microsoft.PowerFx.Connectors
                     if (itemIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(itemIdentifier))
                     {
                         // Here, we have a circular reference and default to a table
-                        return new ConnectorType(schema, openApiParameter, TableType.Empty());
+                        return new ConnectorType(schema, openApiParameter, TableType.Empty(), settings.Compatibility);
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
                     // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
                     if (schema.Items.Discriminator != null)
                     {
-                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
+                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType, settings.Compatibility);
                     }
 
                     //ConnectorType arrayType = new OpenApiParameter() { Name = "Array", Required = true, Schema = schema.Items, Extensions = schema.Items.Extensions }.GetConnectorType(settings.Stack(itemIdentifier));
@@ -518,20 +518,20 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (arrayType.FormulaType is RecordType connectorRecordType)
                     {
-                        return new ConnectorType(schema, openApiParameter, connectorRecordType.ToTable(), arrayType);
+                        return new ConnectorType(schema, openApiParameter, connectorRecordType.ToTable(), arrayType, settings.Compatibility);
                     }
                     else if (arrayType.FormulaType is TableType tableType)
                     {
                         // Array of array
                         TableType newTableType = new TableType(TableType.Empty().Add(TableValue.ValueName, tableType)._type);
-                        return new ConnectorType(schema, openApiParameter, newTableType, arrayType);
+                        return new ConnectorType(schema, openApiParameter, newTableType, arrayType, settings.Compatibility);
                     }
                     else if (arrayType.FormulaType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker.
                         var recordType3 = RecordType.Empty().Add(TableValue.ValueName, arrayType.FormulaType);
-                        return new ConnectorType(schema, openApiParameter, recordType3.ToTable(), arrayType);
+                        return new ConnectorType(schema, openApiParameter, recordType3.ToTable(), arrayType, settings.Compatibility);
                     }
                     else
                     {
@@ -545,7 +545,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Key is always a string, Value is in AdditionalProperties
                     if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
-                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType);
+                        return new ConnectorType(schema, openApiParameter, ConnectorType.DefaultType, settings.Compatibility);
                     }
                     else
                     {
@@ -570,33 +570,38 @@ namespace Microsoft.PowerFx.Connectors
 
                                     hiddenRequired = true;
                                 }
-                                else if (settings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                else if (settings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility)
                                 {
                                     continue;
                                 }
                             }
 
                             string propLogicalName = kv.Key;
-                            string propDisplayName = kv.Value.Title;
+                            string propDisplayName = propLogicalName;
 
-                            if (string.IsNullOrEmpty(propDisplayName))
+                            if (settings.Compatibility == ConnectorCompatibility.SwaggerCompatibilityWithDisplayNames)
                             {
-                                propDisplayName = kv.Value.GetSummary();
+                                propDisplayName = kv.Value.Title;
+
+                                if (string.IsNullOrEmpty(propDisplayName))
+                                {
+                                    propDisplayName = kv.Value.GetSummary();
+                                }
+
+                                if (string.IsNullOrEmpty(propDisplayName))
+                                {
+                                    propDisplayName = kv.Key;
+                                }
                             }
 
-                            if (string.IsNullOrEmpty(propDisplayName))
-                            {
-                                propDisplayName = kv.Key;
-                            }
-
-                            propDisplayName = GetDisplayName(propDisplayName);
+                            propDisplayName = CleanDisplayName(propDisplayName);
 
                             string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
                             if (schemaIdentifier.StartsWith("R:", StringComparison.Ordinal) && settings.Chain.Contains(schemaIdentifier))
                             {
                                 // Here, we have a circular reference and default to a string
-                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
+                                return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType(), settings.Compatibility);
                             }
 
                             //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
@@ -624,11 +629,11 @@ namespace Microsoft.PowerFx.Connectors
                             }
                         }
 
-                        return new ConnectorType(schema, openApiParameter, fields.ToRecordType(), hiddenfields.ToRecordType(), connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
+                        return new ConnectorType(schema, openApiParameter, fields.ToRecordType(), hiddenfields.ToRecordType(), connectorTypes.ToArray(), hiddenConnectorTypes.ToArray(), settings.Compatibility);
                     }
 
                 case "file":
-                    return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
+                    return new ConnectorType(schema, openApiParameter, FormulaType.Blob, settings.Compatibility);
 
                 default:
                     return new ConnectorType(error: $"Unsupported schema type {schema.Type}");
@@ -676,7 +681,7 @@ namespace Microsoft.PowerFx.Connectors
             return rt;
         }
 
-        internal static string GetDisplayName(string name)
+        internal static string CleanDisplayName(string name)
         {
             string displayName = name.Replace("{", string.Empty).Replace("}", string.Empty);
             return displayName;
@@ -703,7 +708,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
-        {
+        {            
             ConnectorType connectorType = openApiOperation.GetConnectorReturnType(compatibility);
             FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();
             return ft;

@@ -687,9 +687,9 @@ namespace Microsoft.PowerFx.Connectors
             array.AddRange(optionSet.EnumType.ValueTree.GetPairs().Select(kvp => new OpenApiString(kvp.Key)));
 
             schema.Extensions.Add(new KeyValuePair<string, IOpenApiExtension>(Constants.XMsEnumDisplayName, array));
-
+            
             // For now, we keep the original formula type (number/string/bool...)
-            return new ConnectorType(schema, SwaggerParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */);
+            return new ConnectorType(schema, SwaggerParameter.New(openApiParameter), connectorType.FormulaType /* optionSet.FormulaType */, ConnectorCompatibility.SwaggerCompatibility);
         }
 
         /// <summary>
@@ -1374,8 +1374,8 @@ namespace Microsoft.PowerFx.Connectors
 
                         // Ex: Api-Version
                         hiddenRequired = true;
-                    }
-                    else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                    }                    
+                    else if (ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility)
                     {
                         continue;
                     }
@@ -1445,7 +1445,7 @@ namespace Microsoft.PowerFx.Connectors
 
                                             bodyPropertyHiddenRequired = ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility || !requestBody.Required;
                                         }
-                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        else if (ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility)
                                         {
                                             continue;
                                         }

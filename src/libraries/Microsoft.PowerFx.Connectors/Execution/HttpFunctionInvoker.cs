@@ -327,7 +327,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (NamedValue nv in lst)
             {
-                rt = rt.Add(nv.Name, nv.Value.Type, OpenApiExtensions.GetDisplayName(nv.Name));
+                rt = rt.Add(nv.Name, nv.Value.Type, OpenApiExtensions.CleanDisplayName(nv.Name));
             }
 
             return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
@@ -435,8 +435,8 @@ namespace Microsoft.PowerFx.Connectors
 
             if (statusCode < 300)
             {
-                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
-                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+                // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility(WithDisplayNames)
+                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
 
                 var typeToUse = _function.ReturnType;
                 if (returnTypeOverride != null)

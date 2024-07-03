@@ -64,6 +64,10 @@ namespace Microsoft.PowerFx.Connectors
         // Swagger File Conformity
         // - parameters appear in the order specified in the swagger file
         // - internal visible parameters are completely hidden (required/optional, with or without default value)
-        SwaggerCompatibility = 2
+        SwaggerCompatibility = 2,
+
+        // Same as SwaggerCompatibility but with display names
+        // Mainly used for CDP
+        SwaggerCompatibilityWithDisplayNames = 3,
     }
 }

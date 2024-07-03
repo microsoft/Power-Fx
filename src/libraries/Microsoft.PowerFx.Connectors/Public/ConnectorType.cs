@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string RelationshipName { get; }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ConnectorCompatibility compatibility, ErrorResourceKey warning = default)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -129,10 +129,18 @@ namespace Microsoft.PowerFx.Connectors
             {
                 Description = schema.Description;
 
-                string summary = schema.GetSummary();
-                string title = schema.Title;
+                if (compatibility == ConnectorCompatibility.SwaggerCompatibilityWithDisplayNames)
+                {
+                    string summary = schema.GetSummary();
+                    string title = schema.Title;
 
-                DisplayName = string.IsNullOrEmpty(title) ? summary : title;
+                    DisplayName = string.IsNullOrEmpty(title) ? summary : title;
+                }
+                else
+                {
+                    DisplayName = Name;
+                }
+
                 ExplicitInput = schema.GetExplicitInput();
                 Capabilities = schema.GetColumnCapabilities();
                 Relationships = schema.GetRelationships();
@@ -193,38 +201,38 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ConnectorType(ISwaggerSchema schema, ConnectorCompatibility compatibility)
-            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(compatibility))
+            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(compatibility), compatibility)
         {
         }
 
         internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility))
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility), compatibility)
         {
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)
-            : this(schema, openApiParameter, connectorType.FormulaType)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType, ConnectorCompatibility compatibility)
+            : this(schema, openApiParameter, connectorType.FormulaType, compatibility)
         {
             Fields = connectorType.Fields;
             AggregateErrorsAndWarnings(connectorType);
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
-            : this(schema, openApiParameter, formulaType)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType, ConnectorCompatibility compatibility)
+            : this(schema, openApiParameter, formulaType, compatibility)
         {
             HiddenRecordType = hiddenRecordType;
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
-            : this(schema, openApiParameter, tableType)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType, ConnectorCompatibility compatibility)
+            : this(schema, openApiParameter, tableType, compatibility)
         {
             Fields = new ConnectorType[] { tableConnectorType };
             HiddenRecordType = null;
             AggregateErrorsAndWarnings(tableConnectorType);
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
-            : this(schema, openApiParameter, recordType)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields, ConnectorCompatibility compatibility)
+            : this(schema, openApiParameter, recordType, compatibility)
         {
             Fields = fields;
             HiddenFields = hiddenFields;
