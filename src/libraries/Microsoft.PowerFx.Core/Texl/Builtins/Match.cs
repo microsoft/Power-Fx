@@ -165,7 +165,59 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (Match groupMatch in groupPunctuationRE.Matches(regexPattern))
             {
-                if (groupMatch.Groups["goodBackRefNum"].Success)
+                // ordered from most common/good to least common/bad, for fewer tests
+                if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success || groupMatch.Groups["goodOptions"].Success)
+                {
+                    // all is well, nothing to do
+                }
+                else if (groupMatch.Groups["openCharacterClass"].Success)
+                {
+                    if (openCharacterClass)
+                    {
+                        // character class subtraction "[a-z-[m-n]]" is not supported
+                        if (regexPattern[groupMatch.Groups["openCharacterClass"].Index - 1] == '-')
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
+                            return false;
+                        }
+
+                        // else ok, "[a[b]" is supported
+                    }
+                    else
+                    {
+                        openCharacterClass = true;
+                    }
+                }
+                else if (groupMatch.Groups["closeCharacterClass"].Success)
+                {
+                    // supports "[]]" which is valid but the closing square bracket must immediately follow the open
+                    if (openCharacterClass && regexPattern[groupMatch.Groups["closeCharacterClass"].Index - 1] != '[')
+                    {
+                        openCharacterClass = false;
+                    }
+                }
+                else if (groupMatch.Groups["openCapture"].Success || groupMatch.Groups["goodNonCapture"].Success || groupMatch.Groups["goodNamedCapture"].Success)
+                {
+                    // parens do not need to be escaped within square brackets
+                    if (!openCharacterClass)
+                    {
+                        // non capturing group still needs to match closing paren, but does not define a new group
+                        groupNumStack.Push(groupMatch.Groups["goodNonCapture"].Success ? -1 : ++groupCounter);
+                        if (groupMatch.Groups["goodNamedCapture"].Success)
+                        {
+                            groupNameDict.Add(groupMatch.Groups["goodNamedCapture"].Value, groupCounter);
+                        }
+                    }
+                }
+                else if (groupMatch.Groups["closeCapture"].Success)
+                {
+                    // parens do not need to be escaped within square brackets
+                    if (!openCharacterClass)
+                    {
+                        groupNumStack.Pop();
+                    }
+                }
+                else if (groupMatch.Groups["goodBackRefNum"].Success)
                 {
                     var backRefNum = int.Parse(groupMatch.Groups["goodBackRefNum"].Value, CultureInfo.InvariantCulture);
 
@@ -238,57 +290,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, groupMatch.Groups["badEscapeAlpha"].Value);
                     return false;
-                }
-                else if (groupMatch.Groups["openCapture"].Success || groupMatch.Groups["goodNonCapture"].Success || groupMatch.Groups["goodNamedCapture"].Success)
-                {
-                    // parens do not need to be escaped within square brackets
-                    if (!openCharacterClass)
-                    {
-                        // non capturing group still needs to match closing paren, but does not define a new group
-                        groupNumStack.Push(groupMatch.Groups["goodNonCapture"].Success ? -1 : ++groupCounter);
-                        if (groupMatch.Groups["goodNamedCapture"].Success)
-                        {
-                            groupNameDict.Add(groupMatch.Groups["goodNamedCapture"].Value, groupCounter);
-                        }
-                    }
-                }
-                else if (groupMatch.Groups["closeCapture"].Success)
-                {
-                    // parens do not need to be escaped within square brackets
-                    if (!openCharacterClass)
-                    {
-                        groupNumStack.Pop();
-                    }
-                }
-                else if (groupMatch.Groups["openCharacterClass"].Success)
-                {
-                    if (openCharacterClass)
-                    {
-                        // character class subtraction "[a-z-[m-n]]" is not supported
-                        if (regexPattern[groupMatch.Groups["openCharacterClass"].Index - 1] == '-')
-                        {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
-                            return false;
-                        }
-
-                        // else ok, "[a[b]" is supported
-                    }
-                    else
-                    {
-                        openCharacterClass = true;
-                    }
-                }
-                else if (groupMatch.Groups["closeCharacterClass"].Success)
-                {
-                    // supports "[]]" which is valid but the closing square bracket must immediately follow the open
-                    if (openCharacterClass && regexPattern[groupMatch.Groups["closeCharacterClass"].Index - 1] != '[')
-                    {
-                        openCharacterClass = false;
-                    }
-                }
-                else if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success || groupMatch.Groups["goodOptions"].Success)
-                {
-                    // all is well, nothing to do
                 }
                 else
                 {
