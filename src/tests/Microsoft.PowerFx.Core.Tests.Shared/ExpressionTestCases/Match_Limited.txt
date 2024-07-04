@@ -1,6 +1,6 @@
 ﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
 
-// Limit regular expressions to common features that are supported, with conssitent semantics, by both canonical .NET and XRegExp.
+// Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
 // It is better to disallow now and bring back with customer demand or as platforms add more support.
 //
 // Features that are disallowed:
@@ -39,7 +39,7 @@
 >> Match( "Müller", "^\w+$" )
 {FullMatch:"Müller",StartMatch:1,SubMatches:Table()}
 
-// Self referncing groups are disallowed
+// Self referencing groups are disallowed
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
 Errors: Error 26-41: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -251,6 +251,9 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\A"
 >> Match( "$test atest test", "\btest" )
 {FullMatch:"test",StartMatch:2,SubMatches:Table()}
 
+>> Match( "$test" & Char(8) & "test", "[\b]test" )  // \b acts differentely in a character class
+{FullMatch:"test",StartMatch:6,SubMatches:Table()}
+
 >> Match( "$test atest test", "\Btest" )
 {FullMatch:"test",StartMatch:8,SubMatches:Table()}
 
@@ -409,7 +412,7 @@ Errors: Error 15-20: Invalid regular expression: Invalid escape code, found "\c"
 >> Match( "test", "\xF" )
 Errors: Error 15-20: Invalid regular expression: Invalid escape code, found "\x".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "eF", "\x65F" )
+>> Match( "eF", "\x65F" ) // will only use the first two characters for the hex code and leave the F to match separately
 {FullMatch:"eF",StartMatch:1,SubMatches:Table()}
 
 >> Match( "test", "\uF" )
@@ -421,7 +424,7 @@ Errors: Error 15-21: Invalid regular expression: Invalid escape code, found "\u"
 >> Match( "test", "\uFFF" )
 Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\u".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "eF", "\u0065F" )
+>> Match( "eF", "\u0065F" ) // will only use the first four characters for the unicode and leave the F to match separately
 {FullMatch:"eF",StartMatch:1,SubMatches:Table()}
 
 >> Match( "test", "\p{@}" )
@@ -430,12 +433,32 @@ Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\p"
 >> Match( "test", "\P{@}" )
 Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\P".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// Escape is OK
+// Escape is OK for non alpha-numeric characters
 
 >> Match( "!@#$%^&*()[]{}+=-`~/><';:,.""", "\!\@\#\$\%\^\&\*\(\)\[\]\{\}\+\=\-\`\~\/\>\<\'\;\:\,\.\""" )
 {FullMatch:"!@#$%^&*()[]{}+=-`~/><';:,.""",StartMatch:1,SubMatches:Table()}
 
-// Comment is OK
+// Inline comment is OK
 
 >> Match( "test", "(?# this is a test)st" )
 {FullMatch:"st",StartMatch:3,SubMatches:Table()}
+
+// Can't define named capture group more than once
+
+>> Match( "test", "(?<one>t).*(?<two>t)" )
+{FullMatch:"test",StartMatch:1,SubMatches:Table({Value:"t"},{Value:"t"}),one:"t",two:"t"}
+
+>> Match( "test", "((?<one>t)|(?<two>t))" )
+{FullMatch:"t",StartMatch:1,SubMatches:Table({Value:"t"},{Value:"t"},{Value:""}),one:"t",two:""}
+
+>> Match( "test", "(?<one>t).*(?<one>t)" )
+Errors: Error 15-37: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "((?<one>t)|(?<one>t))" )
+Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<1>t).*(?<2>t)" )
+{FullMatch:"test",StartMatch:1,SubMatches:Table({Value:"t"},{Value:"t"})}
+
+>> Match( "test", "(?<1>t).*(?<1>t)" )
+Errors: Error 15-33: Invalid regular expression: Named capture group "(?<1>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.

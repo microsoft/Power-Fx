@@ -731,6 +731,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadConditional");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefUseNameInsteadOfNum = new ErrorResourceKey("ErrInvalidRegExBadBackRefUseNameInsteadOfNum");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefNumberForName = new ErrorResourceKey("ErrInvalidRegExBadBackRefNumberForName");
+        public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureAlreadyExists = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureAlreadyExists");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");

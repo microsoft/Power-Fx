@@ -4407,6 +4407,10 @@
     <value>Invalid regular expression: Numeric capture groups cannot be referenced with \k&lt;number&gt;, found "{0}".</value>
     <comment>Error message indicating that the regular expression is using a number for a named capture.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named capture group "{0}" defined more than once.</value>
+    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Balancing capture groups is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has balancing capture groups.</comment>

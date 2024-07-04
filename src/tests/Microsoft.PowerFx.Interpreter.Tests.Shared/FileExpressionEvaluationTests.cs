@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt 
         [Fact]
         public void RunOne()

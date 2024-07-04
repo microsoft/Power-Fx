@@ -89,11 +89,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             string regularExpression = nodeValue;
             return fValid && 
-                    (!context.Features.PowerFxV1CompatibilityRules || LimitRegularExpression(regExNode, regularExpression, errors)) &&
+                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, errors)) &&
                     TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
         }
 
-        // Limit regular expressions to common features that are supported, with conssitent semantics, by both canonical .NET and XRegExp.
+        // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
         // It is better to disallow now and bring back with customer demand or as platforms add more support.
         //
         // Features that are disallowed:
@@ -118,9 +118,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //
         // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
         // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
-        private bool LimitRegularExpression(TexlNode regExNode, string regexPattern, IErrorContainer errors)
+        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, IErrorContainer errors)
         {
-            // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are leagl, such as letters and numbers.
+            // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
             // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
             // Many subexpressions here take advantage of this, matching something that is valid, before falling through to check for something that is invalid.
             // 
@@ -162,8 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var groupCounter = 0;                                 // last group number defined
             var groupNumStack = new Stack<int>();                 // stack of open group numbers, -1 is used for non capturing groups
-            var groupNumHasName = new List<int>();                // list of capture group numbers that are from a named capture group
-            var groupNameDict = new Dictionary<string, int>();    // mapping from group names to group numbers, membership means the name was defined
+            var groupNameDict = new Dictionary<string, int>();    // mapping from group names to group numbers
 
             var openCharacterClass = false;                       // are we defining a character class?
 
@@ -209,8 +208,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         groupNumStack.Push(groupMatch.Groups["goodNonCapture"].Success ? -1 : ++groupCounter);
                         if (groupMatch.Groups["goodNamedCapture"].Success)
                         {
+                            if (groupNameDict.ContainsKey(groupMatch.Groups["goodNamedCapture"].Value))
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists, groupMatch.Value);
+                                return false;
+                            }
+
                             groupNameDict.Add(groupMatch.Groups["goodNamedCapture"].Value, groupCounter);
-                            groupNumHasName.Add(groupCounter);
                         }
                     }
                 }
@@ -234,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     // group has a name, use that instead
-                    if (groupNumHasName.Contains(backRefNum))
+                    if (groupNameDict.ContainsValue(backRefNum))
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefUseNameInsteadOfNum, groupMatch.Value);
                         return false;
@@ -313,6 +317,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
+                    // This should never be hit. Good to have here in case one of the group names checked doesn't match the RE, running tests would hit this.
                     throw new NotImplementedException("Unknown regular expression match");
                 }
             }
