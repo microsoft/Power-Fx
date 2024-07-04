@@ -131,32 +131,36 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // to gather all the matches in a linear scan from the beginning to the end.
             var groupPunctuationRE = new Regex(
                 @"
-                    # leading backslash
-                    \\(?<goodBackRefNum>[1-9]\d*)               | # numeric backreference
-                    \\k<(?<goodBackRefName>\w+)>                | # named backreference
-                    (?<badOctal>\\0[0-7]{0,3})                  | # octal are not accepted (no XRegExp support, by design)
+                    # leading backslash, escape sequences
+                    \\(?<goodBackRefNum>[1-9]\d*)                    | # numeric backreference
+                    \\k<(?<goodBackRefName>\w+)>                     | # named backreference
+                    (?<badOctal>\\0[0-7]{0,3})                       | # octal are not accepted (no XRegExp support, by design)
                     (?<goodEscapeAlpha>\\
-                           ([bBdDfnrsStvwW]    |                  # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
-                            [pP]\{\w+\}        |                  # unicode character classes
-                            c[a-zA-Z]          |                  # Ctrl character classes
-                            x[0-9a-fA-F]{2}    |                  # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                   | # Unicode characters, must be exactly 4 hex digits
-                    (?<badEscapeAlpha>\\[a-zA-Z_])              | # reserving all other letters and underscore for future use (consistent with .NET)
-                    (?<goodEscape>\\.)                          | # any other escaped character is allowed, but must be paired so that '\\(' is seen as '\\' followed by '(' and not '\' folloed by '\(' 
+                           ([bBdDfnrsStvwW]    |                       # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
+                            [pP]\{\w+\}        |                       # unicode character classes
+                            c[a-zA-Z]          |                       # Ctrl character classes
+                            x[0-9a-fA-F]{2}    |                       # hex character, must be exactly 2 hex digits
+                            u[0-9a-fA-F]{4}))                        | # Unicode characters, must be exactly 4 hex digits
+                    (?<badEscapeAlpha>\\[a-zA-Z_])                   | # reserving all other letters and underscore for future use (consistent with .NET)
+                    (?<goodEscape>\\.)                               | # any other escaped character is allowed, but must be paired so that '\\(' is seen as '\\' followed by '(' and not '\' folloed by '\(' 
                                                                     
+                    # leading (?<, named captures
+                    \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>   | # named capture group, can only be letters and numbers and must start with a letter
+                    (?<badBalancing>\(\?<\w*-\w*>)                   | # .NET balancing captures are not supported
+                    (?<badNamedCaptureName>\(\?<[^>]*>)              | # bad named capture name, didn't match goodNamedCapture
+                    (?<badSingleQuoteNamedCapture>\(\?'[^']*')       | # single quoted capture names are not supported
+
                     # leading (?
-                    \(\?<(?<goodNamedCapture>\w+)>              | # named capture group
-                    (?<goodNonCapture>\(\?:)                    | # non-capture group, still need to track to match with closing
-                    (?<goodOptions>^\(\?[im]+\))                | # inline front of expression options we do support
-                    (?<badOptions>\(\?(\w*-\w+|\w+)(:|\))?)     | # inline options that we don't support, including disable of options (last ? portion makes for a better error message)
-                    (?<badBalancing>\(\?(<|')\w*-\w+(>|')?)     | # .NET balancing captures are not supported (last ? portion makes for a better error message)
-                    (?<badSingleQuoteNamedCapture>\(\?'\w+'?)   | # single quoted capture names are not supported (last ? portion makes for a better error message)
-                    (?<badConditional>\(\?\()                   | # .NET conditional alternations are not supported
+                    (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing
+                    (?<goodOptions>^\(\?[im]+\))                     | # inline front of expression options we do support
+                    (?<badOptions>\(\?(\w*-\w*|\w+)(:|\))?)          | # inline options that we don't support, including disable of options (last ? portion makes for a better error message)
+                    (?<badConditional>\(\?\()                        | # .NET conditional alternations are not supported
 
                     # basic open and close
-                    (?<openCapture>\()                          |
-                    (?<closeCapture>\))                         |
-                    (?<openCharacterClass>\[)                   |
+                    (?<badCharacterClassEmpty>\[\])                  | # disallow empty chararcter class (supported by XRegExp) and literal ] at front of character class (supported by .NET)
+                    (?<openCapture>\()                               |
+                    (?<closeCapture>\))                              |
+                    (?<openCharacterClass>\[)                        |
                     (?<closeCharacterClass>\])
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
@@ -183,8 +187,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
                             return false;
                         }
-
-                        // else ok, "[a[b]" is supported
+                        else
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket);
+                            return false;
+                        }
                     }
                     else
                     {
@@ -193,11 +200,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (groupMatch.Groups["closeCharacterClass"].Success)
                 {
-                    // supports "[]]" which is valid but the closing square bracket must immediately follow the open
-                    if (openCharacterClass && regexPattern[groupMatch.Groups["closeCharacterClass"].Index - 1] != '[')
-                    {
-                        openCharacterClass = false;
-                    }
+                    openCharacterClass = false;
                 }
                 else if (groupMatch.Groups["openCapture"].Success || groupMatch.Groups["goodNonCapture"].Success || groupMatch.Groups["goodNamedCapture"].Success)
                 {
@@ -277,6 +280,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return false;
                     }
                 }
+                else if (groupMatch.Groups["badNamedCaptureName"].Success)
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureName, groupMatch.Groups["badNamedCaptureName"].Value);
+                    return false;
+                }
                 else if (groupMatch.Groups["badOctal"].Success)
                 {
                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOctal, groupMatch.Groups["badOctal"].Value);
@@ -308,6 +316,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (groupMatch.Groups["badConditional"].Success)
                 {
                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, groupMatch.Groups["badConditional"].Value);
+                    return false;
+                }
+                else if (groupMatch.Groups["badCharacterClassEmpty"].Success)
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, groupMatch.Groups["badCharacterClassEmpty"].Value);
                     return false;
                 }
                 else if (groupMatch.Groups["badEscapeAlpha"].Success)

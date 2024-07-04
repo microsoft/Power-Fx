@@ -206,7 +206,7 @@ Errors: Error 24-41: Invalid regular expression: Balancing capture groups is not
 Errors: Error 24-36: Invalid regular expression: Using single quoted named captures is not supported, use (?<...>) syntax instead, found "(?'name'".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "(hello world)", "(?'s-e'l)")
-Errors: Error 24-35: Invalid regular expression: Balancing capture groups is not supported, found "(?'s-e'".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-35: Invalid regular expression: Using single quoted named captures is not supported, use (?<...>) syntax instead, found "(?'s-e'".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // conditional alternation
 
@@ -218,16 +218,39 @@ Errors: Error 24-60: Invalid regular expression: Conditional alternation is not 
 >> Match( "hello world", "(e)(?(1)l|d)" )
 Errors: Error 22-36: Invalid regular expression: Conditional alternation is not supported, found "(?(".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// character class subtraction
+// character class and literal square brackets
+
+>> Match( "a", "[]" )
+Errors: Error 12-16: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "[", "[[]" )
-{FullMatch:"[",StartMatch:1,SubMatches:Table()}
+Errors: Error 12-17: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "]", "[]]" )
-{FullMatch:"]",StartMatch:1,SubMatches:Table()}
+Errors: Error 12-17: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "abcdef]ghijk", "[\w]\w]" ) // second closing square bracket is allowed unescaped as it is outside a character class
+{FullMatch:"ef]",StartMatch:5,SubMatches:Table()}
 
 >> Match( "a]", "[a]]" )
 {FullMatch:"a]",StartMatch:1,SubMatches:Table()}
+
+>> Match( "abcdef]ghijk", "[\w\]\w]" ) 
+{FullMatch:"a",StartMatch:1,SubMatches:Table()}
+
+>> Match( "[", "[\[]" )
+{FullMatch:"[",StartMatch:1,SubMatches:Table()}
+
+>> Match( "]", "[\]]" )
+{FullMatch:"]",StartMatch:1,SubMatches:Table()}
+
+>> Match( ">test[", "[\w\[\>]+" )
+{FullMatch:">test[",StartMatch:1,SubMatches:Table()}
+
+>> Match( ">test[", "[\w\]\>]+" )
+{FullMatch:">test",StartMatch:1,SubMatches:Table()}
+
+// character class subtraction
 
 >> Match( "k", "[a-z-[b-c]]" )
 Errors: Error 12-25: Invalid regular expression: Character class subtraction is not supported.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -305,8 +328,8 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\j"
 >> Match( "test", "\J" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\J".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "1234551234", "(?<1>\d)\k<1>" )
-{FullMatch:"55",StartMatch:5,SubMatches:Table({Value:"5"})}
+>> Match( "1234551234", "(?<first>\d)\k<first>" )
+{FullMatch:"55",StartMatch:5,SubMatches:Table({Value:"5"}),first:"5"}
 
 >> Match( "test", "\K" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\K".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -457,8 +480,23 @@ Errors: Error 15-37: Invalid regular expression: Named capture group "(?<one>" d
 >> Match( "test", "((?<one>t)|(?<one>t))" )
 Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "test", "(?<1>t).*(?<2>t)" )
-{FullMatch:"test",StartMatch:1,SubMatches:Table({Value:"t"},{Value:"t"})}
+// Bad named capture group names
 
->> Match( "test", "(?<1>t).*(?<1>t)" )
-Errors: Error 15-33: Invalid regular expression: Named capture group "(?<1>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "test", "(?<a>s).*" )
+{FullMatch:"st",StartMatch:3,SubMatches:Table({Value:"s"}),a:"s"}
+
+>> Match( "test", "(?<a1>s).*" )
+{FullMatch:"st",StartMatch:3,SubMatches:Table({Value:"s"}),a1:"s"}
+
+>> Match( "test", "(?<1>s).*" )
+Errors: Error 15-26: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<1a>s).*" )
+Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<a_>s).*" )
+Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a_>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?<a!>s).*" )
+Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
+

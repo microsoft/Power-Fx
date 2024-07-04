@@ -4411,6 +4411,14 @@
     <value>Invalid regular expression: Named capture group "{0}" defined more than once.</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCharacterClassLiteralSquareBracket_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".</value>
+    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Balancing capture groups is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has balancing capture groups.</comment>
