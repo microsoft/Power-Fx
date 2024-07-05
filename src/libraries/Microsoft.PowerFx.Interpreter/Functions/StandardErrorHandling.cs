@@ -200,6 +200,17 @@ namespace Microsoft.PowerFx.Functions
 
         // A wrapper for a function with no error handling behavior whatsoever.
         private static AsyncFunctionPtr NoErrorHandling(
+            Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], FormulaValue> targetFunction)
+        {
+            return (visitor, context, irContext, args) =>
+            {
+                var result = targetFunction(visitor, context, irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            };
+        }
+
+        // A wrapper for a function with no error handling behavior whatsoever.
+        private static AsyncFunctionPtr NoErrorHandling(
             Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> targetFunction)
         {
             return (visitor, context, irContext, args) =>
