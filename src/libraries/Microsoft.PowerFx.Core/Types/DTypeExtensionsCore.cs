@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Utils;
@@ -68,6 +69,17 @@ namespace Microsoft.PowerFx.Core.Types
 
             metaFieldType = control;
             return true;
+        }
+
+        public static bool ContainsDataEntityType(this DType self, DPath path, int currentDepth)
+        {
+            if (currentDepth < 1)
+            {
+                return false;
+            }
+
+            return self.GetNames(path).Any(n => n.Type.IsExpandEntity ||
+                (n.Type.IsAggregate && n.Type.ContainsDataEntityType(DPath.Root, currentDepth - 1)));
         }
     }
 }
