@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // We only support accessing entities in collections if the collection has only 1 argument that contributes to it's type
-                if (argc != 2 && itemType.ContainsDataEntityType(DPath.Root))
+                if (argc != 2 && itemType.ContainsDataEntityType(DPath.Root, itemType.MaxDepth))
                 {
                     fValid &= DropAllOfKindNested(ref itemType, errors, args[i], DKind.DataEntity);
                 }
@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // We only support accessing entities in collections if the collection has only 1 argument that contributes to it's type
-                if (argc != 2 && itemType.ContainsDataEntityType(DPath.Root))
+                if (argc != 2 && itemType.ContainsDataEntityType(DPath.Root, itemType.MaxDepth))
                 {
                     fValid &= DropAllOfKindNested(ref itemType, errors, args[i], DKind.DataEntity);
                 }
