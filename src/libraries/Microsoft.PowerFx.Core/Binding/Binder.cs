@@ -5534,6 +5534,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         ? DType.CreateTable(exprType.GetNames(DPath.Root))
                         : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
                     : DType.EmptyTable;
+                tableType.IsSealed = exprType.IsSealed;
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);

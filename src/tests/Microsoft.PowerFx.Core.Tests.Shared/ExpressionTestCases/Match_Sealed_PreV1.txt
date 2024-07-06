@@ -1,0 +1,171 @@
+﻿#SETUP: RegEx,SupportColumnNamesAsIdentifiers,TableSyntaxDoesntWrapRecords,disable:PowerFxV1CompatibilityRules
+
+// IsMatch does not return a record or table
+
+// Match single record
+
+>> Match("Hello", "(?<OneLetter>\w)")
+{FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})}
+
+>> AddColumns( Match("Hello", "(?<OneLetter>\w)"), Foo, 1 )
+{Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})}
+
+>> AddColumns( Match("Hello", "(?<OneLetter>\w)").SubMatches, Foo, 1 )
+Table({Foo:1,Value:"H"})
+
+>> RenameColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches, Sub )
+{FullMatch:"H",OneLetter:"H",StartMatch:1,Sub:Table({Value:"H"})}
+
+>> DropColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches )
+{FullMatch:"H",OneLetter:"H",StartMatch:1}
+
+>> AddColumns( DropColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+{Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1}
+
+>> ShowColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches )
+{SubMatches:Table({Value:"H"})}
+
+>> AddColumns( ShowColumns( Match("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+{Foo:1,SubMatches:Table({Value:"H"})}
+
+>> [Match("Hello", "(?<OneLetter>\w)"), Match("Goodbye", "(?<OneLetter>\w)")]
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> [Match("Hello", "\w"), Match("Goodbye", "(?<OneLetter>\w)")]
+Table({FullMatch:"H",OneLetter:Blank(),StartMatch:1,SubMatches:Table()},{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> [{FullMatch: "hi"}, Match("Goodbye", "(?<OneLetter>\w)")]
+Table({FullMatch:"hi",OneLetter:Blank(),StartMatch:Blank(),SubMatches:Blank()},{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> If( false, Match("Hello", "\w"), Match("Goodbye", "\w") )
+{FullMatch:"G",StartMatch:1,SubMatches:Table()}
+
+>> If( false, Match("Hello", "(?<OneLetter>\w)"), Match("Goodbye", "(?<OneLetter>\w)") )
+{FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})}
+
+// This may seem wrong, because OneLetter is missing, but remember that Pre-V1 we used intersect semantics
+>> If( false, Match("Hello", "\w"), Match("Goodbye", "(?<OneLetter>\w)") )
+{FullMatch:"G",StartMatch:1,SubMatches:Table({Value:"G"})}
+
+>> If( false, {FullMatch:"Hi"}, Match("Goodbye", "(?<OneLetter>\w)") )
+{FullMatch:"G"}
+
+// Match table
+
+>> [Match("Hello", "(?<OneLetter>\w)")]
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})})
+
+>> AddColumns( [Match("Hello", "(?<OneLetter>\w)")], Foo, 1 )
+Table({Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})})
+
+>> RenameColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches, Sub )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,Sub:Table({Value:"H"})})
+
+>> DropColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1})
+
+>> AddColumns( DropColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches ), Foo, 1 )
+Table({Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1})
+
+>> ShowColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches )
+Table({SubMatches:Table({Value:"H"})})
+
+>> AddColumns( ShowColumns( [Match("Hello", "(?<OneLetter>\w)")], SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})})
+
+>> AddColumns( First( [Match("Hello", "(?<OneLetter>\w)")] ).SubMatches ), Foo, 1 )
+Errors: Error 70-71: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 0-70: Invalid number of arguments: received 1, expected 3 or more.
+
+>> [[Match("Hello", "(?<OneLetter>\w)")], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})})
+
+>> [[Match("Hello", "\w")], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Table({Value:Table({FullMatch:"H",OneLetter:Blank(),StartMatch:1,SubMatches:Table()})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})})
+
+>> [[{FullMatch: "hi"}], [Match("Goodbye", "(?<OneLetter>\w)")]]
+Table({Value:Table({FullMatch:"hi",OneLetter:Blank(),StartMatch:Blank(),SubMatches:Blank()})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})})
+
+>> If( false, [Match("Hello", "\w")], [Match("Goodbye", "\w")] )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table()})
+
+>> If( false, [Match("Hello", "(?<OneLetter>\w)")], [Match("Goodbye", "(?<OneLetter>\w)")] )
+Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> If( false, [Match("Hello", "\w")], [Match("Goodbye", "(?<OneLetter>\w)")] )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table({Value:"G"})})
+
+>> If( false, [{FullMatch:"Hi"}], [Match("Goodbye", "(?<OneLetter>\w)")] )
+Table({FullMatch:"G"})
+
+// MatchAll single record
+
+>> MatchAll("He", "(?<OneLetter>\w)")
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})
+
+>> AddColumns( MatchAll("He", "(?<OneLetter>\w)"), Foo, 1 )
+Table({Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{Foo:1,FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})
+
+>> RenameColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches, Sub )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,Sub:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,Sub:Table({Value:"e"})})
+
+>> DropColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1},{FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> AddColumns( DropColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Table({Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1},{Foo:1,FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> AddColumns( ShowColumns( MatchAll("Hello", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})},{Foo:1,SubMatches:Table({Value:"l"})},{Foo:1,SubMatches:Table({Value:"l"})},{Foo:1,SubMatches:Table({Value:"o"})})
+
+>> ShowColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches )
+Table({SubMatches:Table({Value:"H"})},{SubMatches:Table({Value:"e"})})
+
+>> AddColumns( ShowColumns( MatchAll("He", "(?<OneLetter>\w)"), SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})})
+
+>> [MatchAll("He", "(?<OneLetter>\w)"), MatchAll("Go", "(?<OneLetter>\w)")]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",OneLetter:"o",StartMatch:2,SubMatches:Table({Value:"o"})})})
+
+>> [MatchAll("He", "\w"), MatchAll("Go", "(?<OneLetter>\w)")]
+Table({Value:Table({FullMatch:"H",OneLetter:Blank(),StartMatch:1,SubMatches:Table()},{FullMatch:"e",OneLetter:Blank(),StartMatch:2,SubMatches:Table()})},{Value:Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",OneLetter:"o",StartMatch:2,SubMatches:Table({Value:"o"})})})
+
+>> [{FullMatch: "hi"}, MatchAll("Go", "(?<OneLetter>\w)")]
+Errors: Error 20-54: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> If( false, MatchAll("He", "\w"), MatchAll("Go", "\w") )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table()},{FullMatch:"o",StartMatch:2,SubMatches:Table()})
+
+>> If( false, MatchAll("He", "(?<OneLetter>\w)"), MatchAll("Go", "(?<OneLetter>\w)") )
+Table({FullMatch:"G",OneLetter:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",OneLetter:"o",StartMatch:2,SubMatches:Table({Value:"o"})})
+
+>> If( false, MatchAll("He", "\w"), MatchAll("Go", "(?<OneLetter>\w)") )
+Table({FullMatch:"G",StartMatch:1,SubMatches:Table({Value:"G"})},{FullMatch:"o",StartMatch:2,SubMatches:Table({Value:"o"})})
+
+>> If( false, {FullMatch:"Hi"}, MatchAll("Go", "(?<OneLetter>\w)") )
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+// MatchAll table
+
+>> [MatchAll("He", "(?<OneLetter>\w)")]
+Table({Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})})
+
+>> AddColumns( [MatchAll("He", "(?<OneLetter>\w)")], Foo, 1 )
+Table({Foo:1,Value:Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})})
+
+>> RenameColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches, Sub )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,Sub:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,Sub:Table({Value:"e"})})
+
+>> First([MatchAll("He", "(?<OneLetter>\w)")]).Value
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1,SubMatches:Table({Value:"H"})},{FullMatch:"e",OneLetter:"e",StartMatch:2,SubMatches:Table({Value:"e"})})
+
+>> DropColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches )
+Table({FullMatch:"H",OneLetter:"H",StartMatch:1},{FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> AddColumns( DropColumns( Last([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches ), Foo, 1 )
+Table({Foo:1,FullMatch:"H",OneLetter:"H",StartMatch:1},{Foo:1,FullMatch:"e",OneLetter:"e",StartMatch:2})
+
+>> ShowColumns( First([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches )
+Table({SubMatches:Table({Value:"H"})},{SubMatches:Table({Value:"e"})})
+
+>> AddColumns( ShowColumns( Last([MatchAll("He", "(?<OneLetter>\w)")]).Value, SubMatches ), Foo, 1 )
+Table({Foo:1,SubMatches:Table({Value:"H"})},{Foo:1,SubMatches:Table({Value:"e"})})

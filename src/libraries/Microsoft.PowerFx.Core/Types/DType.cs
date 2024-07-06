@@ -130,6 +130,13 @@ namespace Microsoft.PowerFx.Core.Types
         // Special case for old enums. 
         public ValueTree ValueTree { get; }
 
+        // The columns of a table or record are sealed and cannot be added to, renamed, or unioned by the formula writer. This allows us to add columns to system records/tables without fear of breaking an existing formula.
+        // All records/tables that are sealed in V1 are also marked sealed in Pre-V1. For the IfError function, since ScopeInfo is defined independent of V1 status, it would be a problem to make sealed V1 dependent.
+        // Instead, a V1 specific check is made at the points that a formula could create a problem, such as AddColumns and record union.
+        // Sealed is NOT checked at internal .Add of fields to a record. This would be a good validation, however we don't have V1 information plumbed down to make that possible.
+        // Note that .Add does not pass through IsSealed. Be sure to set IsSealed after fully creating the type.
+        public bool IsSealed { get; set; }
+
         #endregion 
 
         #region New Generic versions of legacy features. 
@@ -231,8 +238,8 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
-            : this(kind, tree)
+        internal DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null, bool isSealed = false)
+            : this(kind, tree, isSealed: isSealed)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
 
@@ -264,11 +271,12 @@ namespace Microsoft.PowerFx.Core.Types
                 ViewInfo,
                 NamedValueKind,
                 DisplayNameProvider,
-                LazyTypeProvider);
+                LazyTypeProvider,
+                IsSealed);
         }
 
         // Constructor for aggregate types (record, table)
-        public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false)
+        public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false, bool isSealed = false)
         {
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
             tree.AssertValid();
@@ -287,6 +295,7 @@ namespace Microsoft.PowerFx.Core.Types
             NamedValueKind = null;
             _isFile = isFile;
             _isLargeImage = isLargeImage;
+            IsSealed = isSealed;
             AssertValid();
         }
 
@@ -329,7 +338,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Constructor for Entity types
-        private DType(DKind kind, IExpandInfo info, TypeTree outputTypeTree, HashSet<IExternalTabularDataSource> associatedDataSources = null)
+        private DType(DKind kind, IExpandInfo info, TypeTree outputTypeTree, HashSet<IExternalTabularDataSource> associatedDataSources = null, bool isSealed = false)
         {
             Contracts.AssertValue(info);
             outputTypeTree.AssertValid();
@@ -344,6 +353,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
+            IsSealed = isSealed;
             AssertValid();
         }
 
@@ -802,9 +812,9 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Record, typedNames);
         }
 
-        public static DType CreateRecord(IEnumerable<TypedName> typedNames)
+        public static DType CreateRecord(IEnumerable<TypedName> typedNames, bool isSealed = false)
         {
-            return CreateRecordOrTable(DKind.Record, typedNames);
+            return CreateRecordOrTable(DKind.Record, typedNames, isSealed: isSealed);
         }
 
         public static DType CreateTable(params TypedName[] typedNames)
@@ -812,9 +822,9 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Table, typedNames);
         }
 
-        public static DType CreateTable(IEnumerable<TypedName> typedNames)
+        public static DType CreateTable(IEnumerable<TypedName> typedNames, bool isSealed = false)
         {
-            return CreateRecordOrTable(DKind.Table, typedNames);
+            return CreateRecordOrTable(DKind.Table, typedNames, isSealed: isSealed);
         }
 
         public static DType CreateFile(params TypedName[] typedNames)
@@ -827,12 +837,12 @@ namespace Microsoft.PowerFx.Core.Types
             return CreateRecordOrTable(DKind.Record, typedNames, isLargeImage: true);
         }
 
-        private static DType CreateRecordOrTable(DKind kind, IEnumerable<TypedName> typedNames, bool isFile = false, bool isLargeImage = false)
+        private static DType CreateRecordOrTable(DKind kind, IEnumerable<TypedName> typedNames, bool isFile = false, bool isLargeImage = false, bool isSealed = false)
         {
             Contracts.Assert(kind == DKind.Record || kind == DKind.Table);
             Contracts.AssertValue(typedNames);
 
-            return new DType(kind, TypeTree.Create(typedNames.Select(TypedNameToKVP)), isFile, isLargeImage);
+            return new DType(kind, TypeTree.Create(typedNames.Select(TypedNameToKVP)), isFile, isLargeImage, isSealed);
         }
 
         public static DType CreateExpandType(IExpandInfo info)
@@ -1075,11 +1085,11 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Control:
                     if (ExpandInfo != null)
                     {
-                        return new DType(DKind.Record, ExpandInfo, TypeTree);
+                        return new DType(DKind.Record, ExpandInfo, TypeTree, isSealed: IsSealed);
                     }
                     else
                     {
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
+                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed);
                     }
 
                 case DKind.ObjNull:
@@ -1119,11 +1129,11 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Control:
                     if (ExpandInfo != null)
                     {
-                        return new DType(DKind.Table, ExpandInfo, TypeTree);
+                        return new DType(DKind.Table, ExpandInfo, TypeTree, isSealed: IsSealed);
                     }
                     else
                     {
-                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
+                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed);
                     }
 
                 case DKind.ObjNull:
@@ -1416,7 +1426,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return this;
             }
 
-            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed));
         }
 
         // Drop fields of specified kind.
@@ -1457,7 +1467,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return this;
             }
 
-            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed));
         }
 
         public DType DropAllOfTableRelationships(ref bool fError, DPath path)
@@ -1499,7 +1509,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed));
         }
 
         public DType DropAllOfKindNested(ref bool fError, DPath path, DKind kind)
@@ -1551,7 +1561,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return fullType.SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed));
         }
 
         // Drop the specified names/fields from path's type, and return the resulting type.
@@ -1580,7 +1590,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             var tree = typeOuter.TypeTree.RemoveItems(ref fError, rgname);
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider, isSealed: IsSealed));
         }
 
         public bool ContainsKindNested(DPath path, DKind kind)
@@ -2710,6 +2720,12 @@ namespace Microsoft.PowerFx.Core.Types
             leftType.AssertValid();
             rightType.AssertValid();
 
+            if (features.PowerFxV1CompatibilityRules && (leftType.IsSealed || rightType.IsSealed) && leftType != rightType)
+            {
+                fError = true;
+                return Error;
+            }
+
             // For Lazy Types, union operations must expand the current depth
             if (leftType.IsLazyType)
             {
@@ -3084,7 +3100,8 @@ namespace Microsoft.PowerFx.Core.Types
             IExternalViewInfo viewInfo,
             string namedValueKind,
             DisplayNameProvider displayNameProvider,
-            LazyTypeProvider lazyTypeProvider)
+            LazyTypeProvider lazyTypeProvider,
+            bool isSealed)
         {
             Kind = kind;
             TypeTree = typeTree;
@@ -3101,6 +3118,7 @@ namespace Microsoft.PowerFx.Core.Types
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
             LazyTypeProvider = lazyTypeProvider;
+            IsSealed = isSealed;
         }
 
         public void AppendTo(StringBuilder sb)
