@@ -34,6 +34,10 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        /// <summary>
+        /// Returns the list of (column name, ascending/descending) where ascending=true
+        /// </summary>
+        /// <returns></returns>
         public abstract IList<(string, bool)> GetOrderBy();
 
         public abstract string GetOdataFilter();
@@ -66,6 +70,9 @@ namespace Microsoft.PowerFx.Types
         // $orderBy
         Sort = 1 << 3,
 
+        /*
+          To be implemented later when needed
+         
         // $compute
         Compute = 1 << 4,
 
@@ -92,5 +99,6 @@ namespace Microsoft.PowerFx.Types
 
         // $skip
         Skip = 1 << 12
+        */
     }
 }
