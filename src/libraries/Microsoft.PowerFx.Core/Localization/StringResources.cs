@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         internal string ResourceLocation => _resourceManager.ResourceLocation;
 
-        [ThreadSafeProtectedByLockAttribute("_lock")]
+        [ThreadSafeProtectedByLock("_lock")]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new (StringComparer.OrdinalIgnoreCase);
 
         private static readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
@@ -270,15 +270,16 @@ namespace Microsoft.PowerFx.Core.Localization
                     localizedErrorResources.Add(resourceKey.Key, resourceValue);
                     return true;
                 }
-
-                if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
-                {
-                    return true;
-                }
             }
             finally
             {
                 _lock.ExitWriteLock();
+            }
+
+            // Beware - this is a recursive call to TryGetErrorResource, so we need to release the lock (it will reacquire if needed).
+            if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
+            {
+                return true;
             }
 
             return false;
