@@ -76,14 +76,17 @@ namespace Microsoft.PowerFx.Connectors
             DelegationParameterFeatures allowedFeatures = 
                 DelegationParameterFeatures.Filter | 
                 DelegationParameterFeatures.Top | 
-                DelegationParameterFeatures.Columns;
+                DelegationParameterFeatures.Columns | // $select
+                DelegationParameterFeatures.Sort;     // $orderby
+
             parameters.EnsureOnlyFeatures(allowedFeatures);
 
             ODataParameters op = new ODataParameters()
             {
                 Filter = parameters.GetOdataFilter(),
                 Top = parameters.Top.GetValueOrDefault(),
-                Select = parameters.GetColumns()
+                Select = parameters.GetColumns(),
+                OrderBy = parameters.GetOrderBy()
             };
 
             return op;
