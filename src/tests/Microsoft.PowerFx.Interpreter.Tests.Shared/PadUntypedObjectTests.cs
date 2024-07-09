@@ -45,6 +45,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(FormulaType.UntypedObject, fv3.Type);
             Assert.True(fv3 is BlankValue);
         }
+
+        [Fact]
+        public void PadUntypedObjectMutationTest()
+        {
+            DataTable dt = new DataTable("someTable");
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Column1", typeof(string));
+            dt.Columns.Add("Column2", typeof(string));
+            dt.Rows.Add(1, "data1", "data2");
+            dt.Rows.Add(2, "data3", "data4");
+
+            PadUntypedObject uo = new PadUntypedObject(dt);
+            PadUntypedObject uoCell = new PadUntypedObject(99);
+
+            UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
+            UntypedObjectValue uovCell = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoCell);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
+            engine.UpdateVariable("padCell", uovCell);
+
+            DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, padCell);Index(padTable, 1).Id+1", options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.Equal(100m, result.ToObject());
+        }
     }
 
     public class PadUntypedObject : IUntypedObject
@@ -169,6 +197,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             result = null;
             return false;
+        }
+
+        public bool TrySetProperty(string propertyName, IUntypedObject value)
+        {
+            if (DataTable != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (!DataRow.Table.Columns.Contains(propertyName))
+            {
+                value = default;
+                return false;
+            }
+
+            if (DataRow[propertyName].GetType() == typeof(string))
+            {
+                DataRow[propertyName] = value.GetString();
+            }
+            else if (DataRow[propertyName].GetType() == typeof(int))
+            {
+                DataRow[propertyName] = value.GetDouble();
+            }
+            else if (DataRow[propertyName].GetType() == typeof(bool))
+            {
+                DataRow[propertyName] = value.GetBoolean();
+            }
+            else if (DataRow[propertyName].GetType() == typeof(decimal))
+            {
+                DataRow[propertyName] = value.GetDecimal();
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

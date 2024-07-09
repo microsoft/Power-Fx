@@ -30,6 +30,8 @@ namespace Microsoft.PowerFx.Types
 
         bool TryGetProperty(string value, out IUntypedObject result);
 
+        bool TrySetProperty(string name, IUntypedObject value);
+
         string GetString();
 
         double GetDouble();

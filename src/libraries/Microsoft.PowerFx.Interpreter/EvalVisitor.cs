@@ -167,15 +167,37 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
-            if (arg0.IRContext.IsMutation && arg0 is RecordFieldAccessNode rfan)
+            if (arg0.IRContext.IsMutation)
             {
-                var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
-                
-                if (arg0value is RecordValue rv)
+                if (arg0 is RecordFieldAccessNode rfan)
                 {
-                    rv.ShallowCopyFieldInPlace(rfan.Field);
-                    rv.UpdateField(rfan.Field, newValue);
-                    return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is RecordValue rv)
+                    {
+                        rv.ShallowCopyFieldInPlace(rfan.Field);
+                        rv.UpdateField(rfan.Field, newValue);
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(node.IRContext);
+                    }
+                }
+                else if (arg0 is BinaryOpNode bon && bon.Op == BinaryOpKind.DynamicGetField)
+                {
+                    var arg0value = await bon.Left.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is UntypedObjectValue uov)
+                    {
+                        TextLiteralNode textLiteralNode = (TextLiteralNode)bon.Right;
+                        UntypedObjectValue untypedObjectValue = (UntypedObjectValue)newValue;
+
+                        // !!!TODO What if property name does not exist?
+                        uov.Impl.TrySetProperty(textLiteralNode.LiteralValue, untypedObjectValue.Impl);
+
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    }
                 }
                 else
                 {
@@ -540,6 +562,12 @@ namespace Microsoft.PowerFx
                 else if (cov.Impl.Type == FormulaType.Blank)
                 {
                     return new BlankValue(node.IRContext);
+                }
+                else if (cov.Impl.Type == FormulaType.Number ||
+                         cov.Impl.Type == FormulaType.String ||
+                         cov.Impl.Type == FormulaType.Boolean)
+                {
+                    return cov;
                 }
                 else
                 {

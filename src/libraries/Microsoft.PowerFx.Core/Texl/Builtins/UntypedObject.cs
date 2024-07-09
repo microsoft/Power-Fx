@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public const string IndexInvariantFunctionName = "Index";
 
+        public override bool PropagatesMutability => true;
+
         public override bool IsSelfContained => true;
 
         public IndexFunction_UO()

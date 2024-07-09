@@ -109,5 +109,10 @@ namespace Microsoft.PowerFx.Functions
             result = _element.EnumerateObject().Select(x => x.Name);
             return true;
         }
+
+        public bool TrySetProperty(string name, IUntypedObject value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -60,5 +60,10 @@ namespace Microsoft.PowerFx.Functions
             result = null;
             return false;
         }
+
+        public bool TrySetProperty(string name, IUntypedObject value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
