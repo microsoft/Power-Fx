@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Threading;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
@@ -108,8 +109,10 @@ namespace Microsoft.PowerFx.Core.Localization
 
         internal string ResourceLocation => _resourceManager.ResourceLocation;
 
-        [ThreadSafeProtectedByLockAttribute("_errorResources")]
+        [ThreadSafeProtectedByLockAttribute("_lock")]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new (StringComparer.OrdinalIgnoreCase);
+
+        private static readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         internal PowerFxStringResources(string resourceLocation, Assembly assembly, bool useResourceManagers = false)
             : this(new ThreadSafeResourceManager(resourceLocation, assembly))
@@ -230,18 +233,26 @@ namespace Microsoft.PowerFx.Core.Localization
             // Error resources are a bit odd and need to be reassembled from separate keys.
             // Check to see if we've already retrieved one for this locale/key combo before 
             // rebuilding the full error resource.
-
-            if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
+            try
             {
-                if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
+                _lock.EnterReadLock();
+                if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
                 {
-                    return true;
+                    if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
+                    {
+                        return true;
+                    }
                 }
             }
-
-            lock (_errorResources)
+            finally
             {
-                if (_errorResources.TryGetValue(locale, out localizedErrorResources))
+                _lock.ExitReadLock();
+            }
+
+            try
+            {
+                _lock.EnterWriteLock();
+                if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
                 {
                     if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
                     {
@@ -264,6 +275,10 @@ namespace Microsoft.PowerFx.Core.Localization
                 {
                     return true;
                 }
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
             }
 
             return false;
