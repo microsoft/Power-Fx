@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// Returns the list of (column name, ascending/descending) where ascending=true
+        /// Returns the list of (column name, ascending/descending) where ascending=true.
         /// </summary>
         /// <returns></returns>
         public abstract IList<(string, bool)> GetOrderBy();
