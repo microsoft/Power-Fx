@@ -3,18 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Connectors;
-using Microsoft.PowerFx.Connectors.Tests;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -130,24 +121,58 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("$filter=score+gt+5&$top=10", str);
         }
 
+        [Fact]
+        public void TestToOdataParametersFilterTopOrderByAsc()
+        {
+            var delegation = new TestDelegationParameters()
+            {
+                _columns = null,
+                _features = DelegationParameterFeatures.Columns | DelegationParameterFeatures.Filter | DelegationParameterFeatures.Top | DelegationParameterFeatures.Sort,
+                _filter = "score gt 5",
+                _orderBy = new List<(string, bool)>() { ("score",  true) },
+                Top = 10
+            };
+
+            var od = delegation.ToOdataParameters();
+
+            var str = od.ToQueryString();
+
+            Assert.Equal("$filter=score+gt+5&$orderby=score&$top=10", str);
+        }
+
+        [Fact]
+        public void TestToOdataParametersFilterTopOrderByDesc()
+        {
+            var delegation = new TestDelegationParameters()
+            {
+                _columns = null,
+                _features = DelegationParameterFeatures.Columns | DelegationParameterFeatures.Filter | DelegationParameterFeatures.Top | DelegationParameterFeatures.Sort,
+                _filter = "score gt 5",
+                _orderBy = new List<(string, bool)>() { ("score", false) },
+                Top = 10
+            };
+
+            var od = delegation.ToOdataParameters();
+
+            var str = od.ToQueryString();
+
+            Assert.Equal("$filter=score+gt+5&$orderby=score desc&$top=10", str);
+        }
+
         private class TestDelegationParameters : DelegationParameters
         {
             public string[] _columns;
             public string _filter;
             public DelegationParameterFeatures _features;
+            public List<(string, bool)> _orderBy;
 
-            public override DelegationParameterFeatures Features =>
-                _features;
+            public override DelegationParameterFeatures Features => _features;
 
-            public override IReadOnlyCollection<string> GetColumns()
-            {
-                return _columns;
-            }
+            public override IReadOnlyCollection<string> GetColumns() => _columns;            
 
-            public override string GetOdataFilter()
-            {
-                return _filter;
-            }
+            public override string GetOdataFilter() => _filter;
+
+            public override IList<(string, bool)> GetOrderBy() => _orderBy;
         }
     }
 }
