@@ -3,16 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -44,6 +34,12 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        /// <summary>
+        /// Returns the list of (column name, ascending/descending) where ascending=true.
+        /// </summary>
+        /// <returns></returns>
+        public abstract IList<(string, bool)> GetOrderBy();
+
         public abstract string GetOdataFilter();
 
         // 0 columns means return all columns.
@@ -53,8 +49,6 @@ namespace Microsoft.PowerFx.Types
         }
 
         public int? Top { get; set; }
-
-        // Other odata fetchers?         
     }
 
     /// <summary>
@@ -64,9 +58,47 @@ namespace Microsoft.PowerFx.Types
     [Flags]
     public enum DelegationParameterFeatures
     {
+        // $filter
         Filter = 1 << 0,
+
+        // $top
         Top = 1 << 1,
+
+        // $select
         Columns = 1 << 2,
+
+        // $orderBy
         Sort = 1 << 3,
+
+        /*
+          To be implemented later when needed
+         
+        // $compute
+        Compute = 1 << 4,
+
+        // $count
+        Count = 1 << 5,
+
+        // $expand
+        Expand = 1 << 6,
+
+        // $format
+        Format = 1 << 7,
+
+        // $index
+        Index = 1 << 8,
+
+        // $levels
+        Levels = 1 << 9,
+
+        // $schemaversion
+        SchemaVersion = 1 << 10,
+
+        // $search
+        Search = 1 << 11,
+
+        // $skip
+        Skip = 1 << 12
+        */
     }
 }
