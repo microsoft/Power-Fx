@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors
         public int Levels { get; init; } = 0;
 
         // $orderby
-        public IList<(string, bool)> OrderBy { get; init; } = null;
+        public IReadOnlyCollection<(string, bool)> OrderBy { get; init; } = null;
 
         // $schemaversion
         public string SchemaVersion { get; init; } = null;
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Connectors
                         d2 = ",";
                     }
                 }
-                else if (value is IList<(string col, bool asc)> orderByList && orderByList.Any())
+                else if (value is IReadOnlyCollection<(string col, bool asc)> orderByList && orderByList.Any())
                 {
                     sb.Append(string.Join(",", orderByList.Select(x => $"{x.col}{(x.asc ? string.Empty : " desc")}")));
                 }
