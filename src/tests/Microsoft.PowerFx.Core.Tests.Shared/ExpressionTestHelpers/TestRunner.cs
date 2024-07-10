@@ -102,6 +102,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("RegEx");
             possible.Add("TimeZoneInfo");
             possible.Add("TraceSetup");
+            possible.Add("CultureInfo");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

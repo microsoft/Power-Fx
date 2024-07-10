@@ -1,0 +1,207 @@
+﻿#SETUP: RegEx,CultureInfo("tr-TR"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult
+
+// Four types of letter I
+//        Dotted     Dotless
+// Upper  İ U+0130   I U+0049
+// Lower  i U+0069   ı U+0131
+
+>> Language()
+"tr-TR"
+
+>> "İ" = UniChar( Hex2Dec( "0130") )
+true
+
+>> "ı" = UniChar( Hex2Dec( "0131" ) )
+true
+
+// UPPER, LOWER, PROPER
+
+>> Upper( "i" )
+"İ"
+
+>> Lower( "I" )
+"ı"
+
+>> Upper( "ı" )
+"I"
+
+>> Lower( "İ" )
+"i"
+
+>> Upper( "i" ) = UniChar( Hex2Dec( "0130") )
+true
+
+>> Lower( "I" ) = UniChar( Hex2Dec( "0131") )
+true
+
+>> Upper( "i" ) = "I"
+false
+
+>> Lower( "I" ) = "i"
+false
+
+>> Lower( "quit" ) = Lower( "QUIT" )
+false
+
+>> Lower( "quit" ) = Lower( "QUİT" )
+true
+
+>> Lower( "quıt" ) = Lower( "QUIT" )
+true
+
+>> Upper( "quit" ) = Upper( "QUIT" )
+false
+
+>> Upper( "quit" ) = Upper( "QUİT" )
+true
+
+>> Upper( "quıt" ) = Upper( "QUIT" )
+true
+
+>> Proper( "Iabc" )
+"Iabc"
+
+>> Proper( "iabc" )
+"İabc"
+
+>> Proper( "İabc" )
+"İabc"
+
+>> Proper( "ıabc" )
+"Iabc"
+
+// VALUE, DECIMAL, FLOAT
+
+>> Value( "123,456" )
+123.456
+
+>> Value( "123,456", "en-US" )
+123456
+
+>> Decimal( "123,456" )
+123.456
+
+>> Decimal( "123,456", "en-US" )
+123456
+
+>> Float( "123,456" )
+123.456
+
+>> Float( "123,456", "en-US" )
+123456
+
+// TEXT
+
+>> Text( DateTime(2010,1,1,14,0,0,0), "mmm ddd yyyy AM/PM" )
+"Oca Cum 2010 ÖS"
+
+>> Text( DateTime(2020,1,1,2,0,0,0), "mmmm dddd yyyy AM/PM" )
+"Ocak Çarşamba 2020 ÖÖ"
+
+>> Text( 123456789, "#,###.00" )
+"123456789,00000"
+
+>> Text( 123456789, "#.###,00" )
+"123.456.789,00"
+
+// IN AND EXACTIN
+
+>> "ı" in "SIGH"
+true
+
+>> "İ" in "sigh"
+true
+
+>> "ı" in "SİGH"
+false
+
+>> "İ" in "sıgh"
+false
+
+>> "ı" exactin "SIGH"
+false
+
+>> "İ" exactin "sigh"
+false
+
+>> "ı" exactin "SİGH"
+false
+
+>> "İ" exactin "sıgh"
+false
+
+>> "sİGh" in ["sigh","bcde"]
+true
+
+>> "siGh" in ["SİGH","bcde"]
+true
+
+>> "sIGH" in ["sigh","bcde"]
+false
+
+>> "sıGH" in ["bcde","sIgh"]
+true
+
+>> "SIgh" in ["bcde","sıgh"]
+true
+
+// SORT
+
+>> Sort( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], Value )
+Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{Value:"i"},{Value:"İ"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+
+>> SortByColumns( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], "Value" )
+Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{Value:"i"},{Value:"İ"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+
+>> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+
+>> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+
+// REGULAR EXPRESSIONS
+// Always uses invariant even though tr-TR is set, subject of https://github.com/microsoft/Power-Fx/issues/2538
+
+// Results when using C#                                  // Invariant   tr-TR    en-US
+
+>> IsMatch( "İ", "i", MatchOptions.IgnoreCase )           // false       TRUE     TRUE
+false
+
+>> IsMatch( "i", "İ", MatchOptions.IgnoreCase )           // false       TRUE     TRUE
+false
+
+>> IsMatch( "ı", "I", MatchOptions.IgnoreCase )           // false       TRUE     false
+false
+
+>> IsMatch( "I", "ı", MatchOptions.IgnoreCase )           // false       TRUE     false
+false
+
+>> IsMatch( "İ", "I", MatchOptions.IgnoreCase )           // false       false    TRUE
+false
+
+>> IsMatch( "I", "İ", MatchOptions.IgnoreCase )           // false       false    TRUE
+false
+
+>> IsMatch( "ı", "i", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "i", "ı", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "i", "I", MatchOptions.IgnoreCase )           // TRUE        false    TRUE
+true
+
+>> IsMatch( "I", "i", MatchOptions.IgnoreCase )           // TRUE        false    TRUE
+true
+
+>> IsMatch( "ı", "İ", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "İ", "ı", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> Match( "hiIıİİıIhi", "\u0130+" )
+{FullMatch:"İİ",StartMatch:5,SubMatches:Table()}
+
+>> IsMatch( "Sıgh", "\u0131", MatchOptions.Contains )
+true
