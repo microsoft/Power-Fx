@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Types
         /// Returns the list of (column name, ascending/descending) where ascending=true.
         /// </summary>
         /// <returns></returns>
-        public abstract IList<(string, bool)> GetOrderBy();
+        public abstract IReadOnlyCollection<(string, bool)> GetOrderBy();
 
         public abstract string GetOdataFilter();
 
