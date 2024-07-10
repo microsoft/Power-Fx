@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Tests
 
             public override string GetOdataFilter() => _filter;
 
-            public override IList<(string, bool)> GetOrderBy() => _orderBy;
+            public override IReadOnlyCollection<(string, bool)> GetOrderBy() => _orderBy;
         }
     }
 }
