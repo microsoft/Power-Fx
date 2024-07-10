@@ -652,31 +652,31 @@ namespace Microsoft.PowerFx.Functions
 
             if (allNumbers)
             {
-                return SortValueType<NumberValue, double>(pairs, irContext, compareToResultModifier);
+                return SortValueType<NumberValue, double>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allDecimals)
             {
-                return SortValueType<DecimalValue, decimal>(pairs, irContext, compareToResultModifier);
+                return SortValueType<DecimalValue, decimal>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allStrings)
             {
-                return SortValueType<StringValue, string>(pairs, irContext, compareToResultModifier);
+                return SortValueType<StringValue, string>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allBooleans)
             {
-                return SortValueType<BooleanValue, bool>(pairs, irContext, compareToResultModifier);
+                return SortValueType<BooleanValue, bool>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allDatetimes)
             {
-                return SortValueType<DateTimeValue, DateTime>(pairs, irContext, compareToResultModifier);
+                return SortValueType<DateTimeValue, DateTime>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allDates)
             {
-                return SortValueType<DateValue, DateTime>(pairs, irContext, compareToResultModifier);
+                return SortValueType<DateValue, DateTime>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allTimes)
             {
-                return SortValueType<TimeValue, TimeSpan>(pairs, irContext, compareToResultModifier);
+                return SortValueType<TimeValue, TimeSpan>(pairs, runner, irContext, compareToResultModifier);
             }
             else if (allOptionSets)
             {
@@ -1103,7 +1103,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, result);
         }
 
-        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
+        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, EvalVisitor runner, IRContext irContext, int compareToResultModifier)
             where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
             where TDotNetPrimitive : IComparable<TDotNetPrimitive>
         {
@@ -1120,7 +1120,15 @@ namespace Microsoft.PowerFx.Functions
 
                 var n1 = a.sortValue as TPFxPrimitive;
                 var n2 = b.sortValue as TPFxPrimitive;
-                return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
+                CultureInfo culture;
+                if (n1.Value is string n1s && n2.Value is string n2s && (culture = runner.GetService<CultureInfo>()) != null)
+                {
+                    return culture.CompareInfo.Compare(n1s, n2s) * compareToResultModifier;
+                }
+                else
+                {
+                    return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
+                }
             });
 
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));

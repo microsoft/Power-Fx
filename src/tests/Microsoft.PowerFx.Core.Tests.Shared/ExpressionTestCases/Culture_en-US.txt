@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,CultureInfo("tr-TR"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult
+﻿#SETUP: RegEx,CultureInfo("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult
 
 // Four types of letter I
 //        Dotted     Dotless
@@ -6,7 +6,7 @@
 // Lower  i U+0069   ı U+0131
 
 >> Language()
-"tr-TR"
+"en-US"
 
 >> "İ" = UniChar( Hex2Dec( "0130") )
 true
@@ -17,147 +17,118 @@ true
 // UPPER, LOWER, PROPER
 
 >> Upper( "i" )
-"İ"
-
->> Lower( "I" )
-"ı"
-
->> Upper( "ı" )
 "I"
 
->> Lower( "İ" )
+>> Lower( "I" )
 "i"
 
->> Upper( "i" ) = UniChar( Hex2Dec( "0130") )
-true
-
->> Lower( "I" ) = UniChar( Hex2Dec( "0131") )
-true
-
 >> Upper( "i" ) = "I"
-false
+true
 
 >> Lower( "I" ) = "i"
-false
+true
 
 >> Lower( "quit" ) = Lower( "QUIT" )
-false
+true
 
 >> Lower( "quit" ) = Lower( "QUİT" )
 true
 
 >> Lower( "quıt" ) = Lower( "QUIT" )
-true
-
->> Upper( "quit" ) = Upper( "QUIT" )
 false
 
->> Upper( "quit" ) = Upper( "QUİT" )
-true
-
->> Upper( "quıt" ) = Upper( "QUIT" )
+>> Upper( "quit" ) = Upper( "QUIT" )
 true
 
 >> Proper( "Iabc" )
 "Iabc"
 
 >> Proper( "iabc" )
-"İabc"
-
->> Proper( "İabc" )
-"İabc"
-
->> Proper( "ıabc" )
 "Iabc"
 
 // VALUE, DECIMAL, FLOAT
 
 >> Value( "123,456" )
-123.456
-
->> Value( "123,456", "en-US" )
 123456
+
+>> Value( "123,456", "tr-TR" )
+123.456
 
 >> Decimal( "123,456" )
-123.456
-
->> Decimal( "123,456", "en-US" )
 123456
+
+>> Decimal( "123,456", "tr-TR" )
+123.456
 
 >> Float( "123,456" )
-123.456
-
->> Float( "123,456", "en-US" )
 123456
+
+>> Float( "123,456", "tr-TR" )
+123.456
 
 // TEXT
 
 >> Text( DateTime(2010,1,1,14,0,0,0), "mmm ddd yyyy AM/PM" )
-"Oca Cum 2010 ÖS"
+"Jan Fri 2010 PM"
 
 >> Text( DateTime(2020,1,1,2,0,0,0), "mmmm dddd yyyy AM/PM" )
-"Ocak Çarşamba 2020 ÖÖ"
+"January Wednesday 2020 AM"
 
 >> Text( 123456789, "#,###.00" )
-"123456789,00000"
+"123,456,789.00"
 
 >> Text( 123456789, "#.###,00" )
-"123.456.789,00"
+"123456789.00000"
 
 // IN AND EXACTIN
 
->> "ı" in "SIGH"
+>> "i" in "SIGH"
 true
 
->> "İ" in "sigh"
+>> "I" in "sigh"
 true
 
->> "ı" in "SİGH"
+>> "i" exactin "SIGH"
 false
 
->> "İ" in "sıgh"
+>> "I" exactin "sigh"
 false
 
->> "ı" exactin "SIGH"
-false
-
->> "İ" exactin "sigh"
-false
-
->> "ı" exactin "SİGH"
-false
-
->> "İ" exactin "sıgh"
-false
-
->> "sİGh" in ["sigh","bcde"]
+>> "I" exactin "SIGH"
 true
 
->> "siGh" in ["SİGH","bcde"]
+>> "i" exactin "sigh"
+true
+
+>> "sIGh" in ["sigh","bcde"]
+true
+
+>> "siGh" in ["SIGH","bcde"]
 true
 
 >> "sIGH" in ["sigh","bcde"]
-false
-
->> "sıGH" in ["bcde","sIgh"]
 true
 
->> "SIgh" in ["bcde","sıgh"]
+>> "siGH" in ["bcde","sIgh"]
+true
+
+>> "SIgh" in ["bcde","sigh"]
 true
 
 // SORT
+// Relative order of i, I, ı, İ are different between en-US and tr-TR
 
 >> Sort( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], Value )
-Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{Value:"i"},{Value:"İ"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{Value:"İ"},{Value:"ı"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
 
 >> SortByColumns( [ "Z", "İ", "z", "I", "J", "j", "ı", "a", "h", "i", "A", "H"], "Value" )
-Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"ı"},{Value:"I"},{Value:"i"},{Value:"İ"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
+Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{Value:"İ"},{Value:"ı"},{Value:"j"},{Value:"J"},{Value:"z"},{Value:"Z"})
 
 >> Concat( Sort( Split( "j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C d D e E f F g G h H i I", " " ), Value ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 >> Concat( SortByColumns( Split( "d D e E f F g G h H i I j J k K l L m M n N o O p P r R s S t T u U v V y Y z Z Ç ç Ş ş Ü ü Ö ö İ ı Ğ ğ a A b B c C", " " ), "Value" ), Value, " " )
-"a A b B c C ç Ç d D e E f F g G ğ Ğ h H ı I i İ j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
+"a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 // REGULAR EXPRESSIONS
 // Always uses invariant even though tr-TR is set, subject of 
