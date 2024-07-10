@@ -5,20 +5,18 @@
 //
 // Features that are disallowed:
 //     Capture groups
-//         Self-referncing groups, such as "(a\1)".
-//         Treat all escaped number sequences as a backreference number.
-//         Single quoted "(?'name'..." and "\k'name'".
-//         Balancing capture groups.
-//         Using named captures with back reference \number.
-//         Using \k<number> notation for numeric back references.
-//     Octal character codes (use Hex or Unicode instead).
+//         Numbered capture groups, use named capture groups instead (.NET different from XRegExp).
+//         Self-referncing groups, such as "(a\1)" (.NET different from XRegExp).
+//         Single quoted "(?'name'..." and "\k'name'" (.NET only).
+//         Balancing capture groups (.NET only).
+//     Octal character codes, use \x or \u instead (.NET different from XRegExp)
 //         "\o" could be added in the future, but we should avoid "\0" which causes backreference confusion.
 //     Inline options
-//         Anywhere in the expression except the beginning.
-//         For subexpressions.
+//         Anywhere in the expression except the beginning (.NET only).
+//         For subexpressions (.NET only).
 //     Character classes
-//         Character class subtraction "[a-z-[m-n]]".
-//     Conditional alternation
+//         Character class subtraction "[a-z-[m-n]]" (.NET only).
+//     Conditional alternation (.NET only).
 //
 // Features that aren't supported by canonical .NET will be blocked automatically when the regular expression is instantiated in TryCreateReturnType.
 //
@@ -533,6 +531,4 @@ Table({FullMatch:"1",StartMatch:1,SubMatches:Table()})
 >> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d", MatchOptions.Multiline )
 Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:5,SubMatches:Table()},{FullMatch:"3",StartMatch:9,SubMatches:Table()})
 
-// Same for anchors in multi-line mode
->> fail
-fail
+

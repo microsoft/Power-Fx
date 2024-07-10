@@ -5,8 +5,6 @@
 // Upper  İ U+0130   I U+0049
 // Lower  i U+0069   ı U+0131
 
-// Upper and Lower
-
 >> Language()
 "tr-TR"
 
@@ -15,6 +13,8 @@ true
 
 >> "ı" = UniChar( Hex2Dec( "0131" ) )
 true
+
+// UPPER, LOWER, PROPER
 
 >> Upper( "i" )
 "İ"
@@ -70,6 +70,8 @@ true
 >> Proper( "ıabc" )
 "Iabc"
 
+// VALUE, DECIMAL, FLOAT
+
 >> Value( "123,456" )
 123.456
 
@@ -88,10 +90,63 @@ true
 >> Float( "123,456", "en-US" )
 123456
 
->> Text( DateTime(2010,1,1,0,0,0,0), "mmm ddd yyyy" )
-"Oca Cum 2010"
+// TEXT
 
-// Regular expressions, always uses invariant even though tr-TR is set
+>> Text( DateTime(2010,1,1,14,0,0,0), "mmm ddd yyyy AM/PM" )
+"Oca Cum 2010 ÖS"
+
+>> Text( DateTime(2020,1,1,2,0,0,0), "mmmm dddd yyyy AM/PM" )
+"Ocak Çarşamba 2020 ÖÖ"
+
+>> Text( 123456789, "#,###.00" )
+"123456789,00000"
+
+>> Text( 123456789, "#.###,00" )
+"123.456.789,00"
+
+// IN AND EXACTIN
+
+>> "ı" in "SIGH"
+true
+
+>> "İ" in "sigh"
+true
+
+>> "ı" in "SİGH"
+false
+
+>> "İ" in "sıgh"
+false
+
+>> "ı" exactin "SIGH"
+false
+
+>> "İ" exactin "sigh"
+false
+
+>> "ı" exactin "SİGH"
+false
+
+>> "İ" exactin "sıgh"
+false
+
+>> "sİGh" in ["sigh","bcde"]
+true
+
+>> "siGh" in ["SİGH","bcde"]
+true
+
+>> "sIGH" in ["sigh","bcde"]
+false
+
+>> "sıGH" in ["bcde","sIgh"]
+true
+
+>> "SIgh" in ["bcde","sıgh"]
+true
+
+// REGULAR EXPRESSIONS
+// Always uses invariant even though tr-TR is set, subject of 
 
 // Results when using C#                                  // Invariant   tr-TR    en-US
 

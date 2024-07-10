@@ -98,14 +98,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //
         // Features that are disallowed:
         //     Capture groups
+        //         Numbered capture groups, use named capture groups instead (.NET different from XRegExp).
         //         Self-referncing groups, such as "(a\1)" (.NET different from XRegExp).
-        //         Treat all escaped number sequences as a backreference number (.NET different from XRegExp).
         //         Single quoted "(?'name'..." and "\k'name'" (.NET only).
         //         Balancing capture groups (.NET only).
-        //         Using named captures with back reference \number (.NET different from XRegExp).
-        //         Using \k<number> notation for numeric back references (.NET different from XRegExp).
-        //     Octal character codes (.NET different from XRegExp)
-        //         Uuse Hex or Unicode instead.
+        //     Octal character codes, use \x or \u instead (.NET different from XRegExp)
         //         "\o" could be added in the future, but we should avoid "\0" which causes backreference confusion.
         //     Inline options
         //         Anywhere in the expression except the beginning (.NET only).
@@ -133,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 @"
                     # leading backslash, escape sequences
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
-                    (?<badOctal>\\0[0-7]{0,3})                       | # octal are not accepted (no XRegExp support, by design)
+                    (?<badOctal>\\0\d+)                              | # octal are not accepted (no XRegExp support, by design)
                     (?<badBackRefNum>\\\d+)                          | # numeric backreference
                     (?<goodEscapeAlpha>\\
                            ([bBdDfnrsStvwW]    |                       # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
@@ -164,8 +161,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<closeCharacterClass>\])
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-            var groupStack = new Stack<string>();                 // stack of open group numbers, null is used for non capturing groups
-            var groupNames = new List<string>();                  // list of known group names
+            var groupStack = new Stack<string>();                 // stack of open group numbers, null is used for non capturing groups, for detecting if a named group is closed
+            var groupNames = new List<string>();                  // list of seen group names
 
             var openCharacterClass = false;                       // are we defining a character class?
 
