@@ -131,7 +131,7 @@ Table({Value:"a"},{Value:"A"},{Value:"h"},{Value:"H"},{Value:"i"},{Value:"I"},{V
 "a A b B c C ç Ç d D e E f F g G ğ Ğ h H i I İ ı j J k K l L m M n N o O ö Ö p P r R s S ş Ş t T u U ü Ü v V y Y z Z"
 
 // REGULAR EXPRESSIONS
-// Always uses invariant even though tr-TR is set, subject of 
+// Always uses invariant even though tr-TR is set, subject of https://github.com/microsoft/Power-Fx/issues/2538
 
 // Results when using C#                                  // Invariant   tr-TR    en-US
 
