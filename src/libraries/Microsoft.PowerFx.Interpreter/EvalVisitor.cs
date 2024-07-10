@@ -272,6 +272,7 @@ namespace Microsoft.PowerFx
 
             FormulaValue result;
             IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
+            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction5> extraFunctionsWithContext = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction5>>();
 
             try
             {
@@ -293,7 +294,7 @@ namespace Microsoft.PowerFx
                 {
                     result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
-                else if (func is IAsyncTexlFunction5 asyncFunc5)
+                else if (func is IAsyncTexlFunction5 asyncFunc5 || extraFunctionsWithContext?.TryGetValue(func, out asyncFunc5) == true)
                 {
                     result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }

@@ -44,6 +44,8 @@ namespace Microsoft.PowerFx
 
         private static StandardFormatter _standardFormatter;
 
+        private static CultureInfo _cultureInfo = new CultureInfo("en-US");
+
         private static bool _reset;
 
         private static RecalcEngine ReplRecalcEngine()
@@ -90,6 +92,7 @@ namespace Microsoft.PowerFx
             config.AddFunction(new Option2Function());
             config.AddFunction(new Run1Function());
             config.AddFunction(new Run2Function());
+            config.AddFunction(new Language1Function());
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
@@ -136,6 +139,11 @@ namespace Microsoft.PowerFx
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
+
+                this.CultureInfo = _cultureInfo;
+                var bsp = new BasicServiceProvider();
+                bsp.AddService(_cultureInfo);
+                this.InnerServices = bsp;
 
                 this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
             }
@@ -404,6 +412,28 @@ namespace Microsoft.PowerFx
                     Severity = ErrorSeverity.Critical,
                     Message = $"Invalid option name: {option.Value}.  Use \"Option()\" to see available Options enum names."
                 });
+            }
+        }
+
+        // displays a single setting
+        private class Language1Function : ReflectionFunction
+        {
+            public Language1Function()
+                : base("Language", FormulaType.Void, new[] { FormulaType.String })
+            {
+            }
+
+            public FormulaValue Execute(StringValue lang)
+            {
+                var cultureInfo = new CultureInfo(lang.Value);
+
+//                Thread.CurrentThread.CurrentCulture = cultureInfo;
+
+                _cultureInfo = cultureInfo;
+
+                _reset = true;
+
+                return FormulaValue.NewVoid();
             }
         }
 

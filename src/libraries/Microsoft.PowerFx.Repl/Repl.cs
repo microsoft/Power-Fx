@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,6 +73,8 @@ namespace Microsoft.PowerFx
         /// Optional - if set, additional symbol values that are fed into the repl . 
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
+
+        public CultureInfo CultureInfo { get; set; }
 
         /// <summary>
         /// Get sorted names of all functions. This includes functions from the <see cref="Engine"/> as well as <see cref="MetaFunctions"/>.
@@ -245,10 +248,10 @@ namespace Microsoft.PowerFx
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
-            
+
             var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
             {
-                 ServiceProvider = new BasicServiceProvider(this.InnerServices)
+                ServiceProvider = new BasicServiceProvider(this.InnerServices)
             };
 
             if (this.UserInfo != null)

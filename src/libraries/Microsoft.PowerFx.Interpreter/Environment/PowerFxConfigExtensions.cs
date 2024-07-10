@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction5> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
                 if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
                 {
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx
                 }
 
                 config.SymbolTable.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+                config.AdditionalFunctionsWithContext.Add(func.Key, func.Value);
             }
         }
 
