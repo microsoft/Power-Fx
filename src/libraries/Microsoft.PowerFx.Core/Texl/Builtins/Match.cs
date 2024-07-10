@@ -132,9 +132,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var groupPunctuationRE = new Regex(
                 @"
                     # leading backslash, escape sequences
-                    \\(?<goodBackRefNum>[1-9]\d*)                    | # numeric backreference
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
                     (?<badOctal>\\0[0-7]{0,3})                       | # octal are not accepted (no XRegExp support, by design)
+                    (?<badBackRefNum>\\\d+)                          | # numeric backreference
                     (?<goodEscapeAlpha>\\
                            ([bBdDfnrsStvwW]    |                       # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
                             [pP]\{\w+\}        |                       # unicode character classes
@@ -164,9 +164,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<closeCharacterClass>\])
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-            var groupCounter = 0;                                 // last group number defined
-            var groupNumStack = new Stack<int>();                 // stack of open group numbers, -1 is used for non capturing groups
-            var groupNameDict = new Dictionary<string, int>();    // mapping from group names to group numbers
+            var groupStack = new Stack<string>();                 // stack of open group numbers, null is used for non capturing groups
+            var groupNames = new List<string>();                  // list of known group names
 
             var openCharacterClass = false;                       // are we defining a character class?
 
@@ -208,16 +207,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (!openCharacterClass)
                     {
                         // non capturing group still needs to match closing paren, but does not define a new group
-                        groupNumStack.Push(groupMatch.Groups["goodNonCapture"].Success ? -1 : ++groupCounter);
                         if (groupMatch.Groups["goodNamedCapture"].Success)
                         {
-                            if (groupNameDict.ContainsKey(groupMatch.Groups["goodNamedCapture"].Value))
+                            groupStack.Push(groupMatch.Groups["goodNamedCapture"].Value);
+                            if (groupNames.Contains(groupMatch.Groups["goodNamedCapture"].Value))
                             {
                                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists, groupMatch.Value);
                                 return false;
                             }
 
-                            groupNameDict.Add(groupMatch.Groups["goodNamedCapture"].Value, groupCounter);
+                            groupNames.Add(groupMatch.Groups["goodNamedCapture"].Value);
+                        }
+                        else
+                        {
+                            groupStack.Push(null);
                         }
                     }
                 }
@@ -226,32 +229,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // parens do not need to be escaped within square brackets
                     if (!openCharacterClass)
                     {
-                        groupNumStack.Pop();
-                    }
-                }
-                else if (groupMatch.Groups["goodBackRefNum"].Success)
-                {
-                    var backRefNum = int.Parse(groupMatch.Groups["goodBackRefNum"].Value, CultureInfo.InvariantCulture);
-
-                    // group isn't defined, or not defined yet
-                    if (backRefNum > groupCounter)
-                    {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
-                        return false;
-                    }
-
-                    // group has a name, use that instead
-                    if (groupNameDict.ContainsValue(backRefNum))
-                    {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefUseNameInsteadOfNum, groupMatch.Value);
-                        return false;
-                    }
-
-                    // group is not closed and thus self referencing
-                    if (groupNumStack.Contains(backRefNum))
-                    {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
-                        return false;
+                        groupStack.Pop();
                     }
                 }
                 else if (groupMatch.Groups["goodBackRefName"].Success)
@@ -259,26 +237,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     var backRefName = groupMatch.Groups["goodBackRefName"].Value;
 
                     // group isn't defined, or not defined yet
-                    if (!groupNameDict.TryGetValue(backRefName, out var groupNum))
+                    if (!groupNames.Contains(backRefName))
                     {
-                        if (int.TryParse(backRefName, out groupNum))
-                        {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumberForName, groupMatch.Value);
-                            return false;
-                        }
-                        else
-                        {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
-                            return false;
-                        }
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                        return false;
                     }
 
                     // group is not closed and thus self referencing
-                    if (groupNumStack.Contains(groupNum))
+                    if (groupStack.Contains(backRefName))
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
                         return false;
                     }
+                }
+                else if (groupMatch.Groups["badBackRefNum"].Success)
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, groupMatch.Value);
+                    return false;
                 }
                 else if (groupMatch.Groups["badNamedCaptureName"].Success)
                 {
@@ -333,6 +308,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // This should never be hit. Good to have here in case one of the group names checked doesn't match the RE, running tests would hit this.
                     throw new NotImplementedException("Unknown regular expression match");
                 }
+            }
+
+            if (groupStack.Count > 0)
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
+                return false;
+            }
+
+            if (openCharacterClass)
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCharacterClass);
+                return false;
             }
 
             return true;

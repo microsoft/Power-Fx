@@ -4399,13 +4399,17 @@
     <value>Invalid regular expression: Self-referencing capture groups are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has self-referencing capture groups.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBadBackRefUseNameInsteadOfNum_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Named capture groups need to be referenced with \k&lt;name&gt; and not by capture group number, found "{0}".</value>
-    <comment>Error message indicating that the regular expression is using a number for a named capture.</comment>
+  <data name="ErrorResource_ErrInvalidRegExBadBackRefNumber_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Numbered back references are not supported, use named back references with "(?&lt;name&gt;)" and "\k&lt;name&gt;" instead, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is using numeric capture groups.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBadBackRefNumberForName_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Numeric capture groups cannot be referenced with \k&lt;number&gt;, found "{0}".</value>
-    <comment>Error message indicating that the regular expression is using a number for a named capture.</comment>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed character class, too few closing square brackets.</value>
+    <comment>Error message indicating that the regular expression has unclosed character classes.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unclosed groups, too few closing parenthesis.</value>
+    <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Named capture group "{0}" defined more than once.</value>

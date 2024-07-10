@@ -1,0 +1,138 @@
+﻿#SETUP: RegEx,CultureInfo("tr-TR"),PowerFxV1CompatibilityRules
+
+// Four types of letter I
+//        Dotted     Dotless
+// Upper  İ U+0130   I U+0049
+// Lower  i U+0069   ı U+0131
+
+// Upper and Lower
+
+>> Language()
+"tr-TR"
+
+>> "İ" = UniChar( Hex2Dec( "0130") )
+true
+
+>> "ı" = UniChar( Hex2Dec( "0131" ) )
+true
+
+>> Upper( "i" )
+"İ"
+
+>> Lower( "I" )
+"ı"
+
+>> Upper( "ı" )
+"I"
+
+>> Lower( "İ" )
+"i"
+
+>> Upper( "i" ) = UniChar( Hex2Dec( "0130") )
+true
+
+>> Lower( "I" ) = UniChar( Hex2Dec( "0131") )
+true
+
+>> Upper( "i" ) = "I"
+false
+
+>> Lower( "I" ) = "i"
+false
+
+>> Lower( "quit" ) = Lower( "QUIT" )
+false
+
+>> Lower( "quit" ) = Lower( "QUİT" )
+true
+
+>> Lower( "quıt" ) = Lower( "QUIT" )
+true
+
+>> Upper( "quit" ) = Upper( "QUIT" )
+false
+
+>> Upper( "quit" ) = Upper( "QUİT" )
+true
+
+>> Upper( "quıt" ) = Upper( "QUIT" )
+true
+
+>> Proper( "Iabc" )
+"Iabc"
+
+>> Proper( "iabc" )
+"İabc"
+
+>> Proper( "İabc" )
+"İabc"
+
+>> Proper( "ıabc" )
+"Iabc"
+
+>> Value( "123,456" )
+123.456
+
+>> Value( "123,456", "en-US" )
+123456
+
+>> Decimal( "123,456" )
+123.456
+
+>> Decimal( "123,456", "en-US" )
+123456
+
+>> Float( "123,456" )
+123.456
+
+>> Float( "123,456", "en-US" )
+123456
+
+>> Text( DateTime(2010,1,1,0,0,0,0), "mmm ddd yyyy" )
+"Oca Cum 2010"
+
+// Regular expressions, always uses invariant even though tr-TR is set
+
+// Results when using C#                                  // Invariant   tr-TR    en-US
+
+>> IsMatch( "İ", "i", MatchOptions.IgnoreCase )           // false       TRUE     TRUE
+false
+
+>> IsMatch( "i", "İ", MatchOptions.IgnoreCase )           // false       TRUE     TRUE
+false
+
+>> IsMatch( "ı", "I", MatchOptions.IgnoreCase )           // false       TRUE     false
+false
+
+>> IsMatch( "I", "ı", MatchOptions.IgnoreCase )           // false       TRUE     false
+false
+
+>> IsMatch( "İ", "I", MatchOptions.IgnoreCase )           // false       false    TRUE
+false
+
+>> IsMatch( "I", "İ", MatchOptions.IgnoreCase )           // false       false    TRUE
+false
+
+>> IsMatch( "ı", "i", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "i", "ı", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "i", "I", MatchOptions.IgnoreCase )           // TRUE        false    TRUE
+true
+
+>> IsMatch( "I", "i", MatchOptions.IgnoreCase )           // TRUE        false    TRUE
+true
+
+>> IsMatch( "ı", "İ", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> IsMatch( "İ", "ı", MatchOptions.IgnoreCase )           // false       false    false
+false
+
+>> Match( "hiIıİİıIhi", "\u0130+" )
+{FullMatch:"İİ",StartMatch:5,SubMatches:Table()}
+
+>> IsMatch( "Sıgh", "\u0131", MatchOptions.Contains )
+true

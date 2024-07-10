@@ -154,11 +154,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if true
-        // Helper to run a single .txt 
+        // Helper to run a single .txt A
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
+            var path = @"D:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\culture_tr-TR.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
