@@ -1648,6 +1648,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         Version = 1
                     },
                     Expression = "Score > 3",
+                    Range = range,
                     Context = context
                 }
             });
