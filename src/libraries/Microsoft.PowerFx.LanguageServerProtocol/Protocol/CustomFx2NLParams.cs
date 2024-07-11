@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public string Expression { get; set; }
 
         /// <summary>
-        /// Optional range of the expression in the document.
+        /// Optional range of the expression.
         /// </summary>
         public Range Range { get; set; } = null;
     }
