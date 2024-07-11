@@ -65,12 +65,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("padCell", uovCell);
 
             // Setting an untyped object (padCell)
-            DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, padCell);Index(padTable, 1).Id+1", options: new ParserOptions() { AllowsSideEffects = true });
+            DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, padCell);Index(padTable, 1).Id + 1", options: new ParserOptions() { AllowsSideEffects = true });
             Assert.Equal(100m, result.ToObject());
 
             // Setting a strongly typed object (99)
-            result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, 99);Index(padTable, 1).Id+1", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.Equal(100m, result.ToObject());
+            result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, 98);Index(padTable, 1).Id + 1", options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.Equal(99m, result.ToObject());
         }
     }
 
@@ -256,50 +256,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             result = null;
             return false;
-        }
-
-        public bool TrySetProperty(string propertyName, FormulaValue value)
-        {
-            if (DataTable != null)
-            {
-                throw new NotImplementedException();
-            }
-
-            if (!DataRow.Table.Columns.Contains(propertyName))
-            {
-                value = default;
-                return false;
-            }
-
-            if (value is DecimalValue dv)
-            {
-                DataRow[propertyName] = dv.Value;
-            }
-            else if (value is UntypedObjectValue uov)
-            {
-                if (DataRow[propertyName].GetType() == typeof(string))
-                {
-                    DataRow[propertyName] = uov.Impl.GetString();
-                }
-                else if (DataRow[propertyName].GetType() == typeof(int))
-                {
-                    DataRow[propertyName] = uov.Impl.GetDouble();
-                }
-                else if (DataRow[propertyName].GetType() == typeof(bool))
-                {
-                    DataRow[propertyName] = uov.Impl.GetBoolean();
-                }
-                else if (DataRow[propertyName].GetType() == typeof(decimal))
-                {
-                    DataRow[propertyName] = uov.Impl.GetDecimal();
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        }        
     }
 }
