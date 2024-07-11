@@ -26,8 +26,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// Optional range within <see cref="Expression"></see> to explain.
         /// If missing, then explain the whole expression.
+        /// Eg: [0,0,0,6] >> start line 0, start character 0, end line 0, end character 6.
         /// </summary>
-        public Range Range { get; set; }
+        public uint[] Range { get; set; }
     }
 
     /// <summary>
