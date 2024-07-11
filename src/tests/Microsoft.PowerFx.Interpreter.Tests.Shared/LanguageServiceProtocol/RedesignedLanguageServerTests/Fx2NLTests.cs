@@ -204,42 +204,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.NotEmpty(TestServer.UnhandledExceptions);
         }
 
-        [Fact]
-        public async Task TestFx2NLWithRequestParamRange()
-        {
-            // Arrange
-            var documentUri = "powerfx://app?context=1";
-            var expectedExpr = "sentence";
-
-            var engine = new Engine();
-            var symbols = new SymbolTable();
-            symbols.AddVariable("Score", FormulaType.Number);
-            var scope = engine.CreateEditorScope(symbols: symbols);
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
-            Init(new InitParams(scopeFactory: scopeFactory));
-            var handler = CreateAndConfigureFx2NlHandler();
-            handler.Delay = true;
-            handler.Expected = expectedExpr;
-            handler.SupportsParameterHints = false;
-
-            // Optional request param Range field is set
-            Range range = new Range()
-            {
-                Start = new Position() { Line = 0, Character = 0 },
-                End = new Position() { Line = 0, Character = 5 }
-            };
-
-            // Act
-            var payload = Fx2NlMessageJson(documentUri, null, range);
-            var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload);
-            var response = AssertAndGetResponsePayload<CustomFx2NLResult>(rawResponse, payload.id);
-
-            // Assert
-            // result has expected concat with symbols. 
-            Assert.Equal("Score > 3: True: sentence", response.Explanation);
-        }
-
-        private static (string payload, string id) Fx2NlMessageJson(string documentUri, string context = null, Range range = null)
+        private static (string payload, string id) Fx2NlMessageJson(string documentUri, string context = null)
         {
             var fx2NlParams = new CustomFx2NLParams()
             {
@@ -250,7 +215,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                     Version = 1
                 },
                 Expression = "Score > 3",
-                Range = range,
                 Context = context
             };
 
