@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
         {
         }
 
-        internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
+        public DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
             Contracts.AssertValue(symbols);
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        internal DefinitionsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
+        public DefinitionsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
         {
             Contracts.AssertValue(definitions);
 
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        internal ParseUserDefinitionResult ApplyParse()
+        public ParseUserDefinitionResult ApplyParse()
         {
             if (_definitions == null)
             {
@@ -96,6 +96,8 @@ namespace Microsoft.PowerFx
         }
 
         public IReadOnlyDictionary<DName, FormulaType> ResolvedTypes => _resolvedTypes;
+
+        public bool ContainsUDF => _parse.UDFs.Any();
 
         internal IReadOnlyDictionary<DName, FormulaType> ApplyResolveTypes()
         {
