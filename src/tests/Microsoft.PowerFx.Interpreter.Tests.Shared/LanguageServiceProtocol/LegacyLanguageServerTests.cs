@@ -1632,7 +1632,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         private static string FX2NlMessageJson(string documentUri, string context = null)
-        { 
+        {
             return JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
