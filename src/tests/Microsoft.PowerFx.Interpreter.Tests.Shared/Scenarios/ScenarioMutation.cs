@@ -191,14 +191,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 result = null;
                 return false;
             }
-
-            public bool TrySetProperty(string name, IUntypedObject value)
-            {
-                throw new NotImplementedException();
-            }
         }
 
-        private class MutableObject : IUntypedObject
+        private class MutableObject : UntypedObjectBase
         {
             private Dictionary<string, FormulaValue> _values = new Dictionary<string, FormulaValue>();
 
@@ -217,41 +212,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return FormulaValue.New(x);
             }
 
-            public IUntypedObject this[int index] => throw new NotImplementedException();
+            public override IUntypedObject this[int index] => throw new NotImplementedException();
 
-            public FormulaType Type => ExternalType.ObjectType;
+            public override FormulaType Type => ExternalType.ObjectType;
 
-            public int GetArrayLength()
+            public override int GetArrayLength()
             {
                 throw new NotImplementedException();
             }
 
-            public bool GetBoolean()
+            public override bool GetBoolean()
             {
                 throw new NotImplementedException();
             }
 
-            public double GetDouble()
+            public override double GetDouble()
             {
                 throw new NotImplementedException();
             }
             
-            public decimal GetDecimal()
+            public override decimal GetDecimal()
             {
                 throw new NotImplementedException();
             }
 
-            public string GetUntypedNumber()
+            public override string GetUntypedNumber()
             {
                 throw new NotImplementedException();
             }
 
-            public string GetString()
+            public override string GetString()
             {
                 throw new NotImplementedException();
             }
 
-            public bool TryGetProperty(string value, out IUntypedObject result)
+            public override bool TryGetProperty(string value, out IUntypedObject result)
             {
                 if (_values.TryGetValue(value, out var x))
                 {
@@ -263,15 +258,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return false;
             }
 
-            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            public override bool TryGetPropertyNames(out IEnumerable<string> result)
             {
                 result = null;
                 return false;
-            }
-
-            public bool TrySetProperty(string name, IUntypedObject value)
-            {
-                throw new NotImplementedException();
             }
         }
     }

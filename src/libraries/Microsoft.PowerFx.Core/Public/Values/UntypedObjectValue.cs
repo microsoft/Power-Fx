@@ -30,8 +30,6 @@ namespace Microsoft.PowerFx.Types
 
         bool TryGetProperty(string value, out IUntypedObject result);
 
-        bool TrySetProperty(string name, IUntypedObject value);
-
         string GetString();
 
         double GetDouble();
@@ -80,6 +78,34 @@ namespace Microsoft.PowerFx.Types
         {
             // Not supported for the time being.
             throw new NotImplementedException("UntypedObjectValue cannot be serialized.");
+        }
+    }
+
+    public abstract class UntypedObjectBase : IUntypedObject
+    {
+        public abstract IUntypedObject this[int index] { get; }
+
+        public abstract FormulaType Type { get; }
+
+        public abstract int GetArrayLength();
+
+        public abstract bool GetBoolean();
+
+        public abstract decimal GetDecimal();
+
+        public abstract double GetDouble();
+
+        public abstract string GetString();
+
+        public abstract string GetUntypedNumber();
+
+        public abstract bool TryGetProperty(string value, out IUntypedObject result);
+
+        public abstract bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
+
+        public virtual bool TrySetProperty(string name, FormulaValue value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

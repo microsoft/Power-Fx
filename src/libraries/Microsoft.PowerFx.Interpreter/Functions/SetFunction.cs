@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -55,6 +56,12 @@ namespace Microsoft.PowerFx.Interpreter
             nodeToCoercedTypeMap = null;
             returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : DType.Boolean;
 
+            if (argTypes[0].IsUntypedObject)
+            {
+                // if arg0 is untyped object, the host implementation will handle arg1.
+                return true;
+            }
+
             var isValid = CheckType(context, args[1], argTypes[1], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             return isValid;
@@ -77,6 +84,12 @@ namespace Microsoft.PowerFx.Interpreter
             var arg1 = argTypes[1];
 
             // Type check
+            if (arg0.IsUntypedObject)
+            {
+                // if arg0 is untyped object, the host implementation will handle arg1.
+                return;
+            }
+
             if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
                  (arg0.IsNumeric && arg1.IsNumeric)))
             {
