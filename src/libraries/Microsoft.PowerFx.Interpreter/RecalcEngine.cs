@@ -460,14 +460,17 @@ namespace Microsoft.PowerFx
 
             foreach (var udf in udfs)
             {
-                Config.SymbolTable.AddFunction(udf);
                 var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default, Config.Features);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref errors))
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
                     sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
+                }
+                else
+                {
+                    Config.SymbolTable.AddFunction(udf);
                 }
             }
 
