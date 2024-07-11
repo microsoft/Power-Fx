@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
     // Wrap a .net object as an UntypedObject.
     // This will lazily marshal through the object as it's accessed.
     [DebuggerDisplay("{_source}")]
-    public class PrimitiveWrapperAsUnknownObject : UntypedObjectBase
+    public class PrimitiveWrapperAsUnknownObject : IUntypedObject
     {
         public readonly object _source;
 
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Tests
             return FormulaValue.New(new PrimitiveWrapperAsUnknownObject(source));
         }
 
-        public override FormulaType Type
+        public FormulaType Type
         {
             get
             {
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        public override IUntypedObject this[int index]
+        public IUntypedObject this[int index]
         {
             get
             {
@@ -81,13 +81,13 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        public override int GetArrayLength()
+        public int GetArrayLength()
         {
             var a = (Array)_source;
             return a.Length;
         }
 
-        public override bool GetBoolean()
+        public bool GetBoolean()
         {
             Assert.True(Type == FormulaType.Boolean);
 
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Tests
             throw new InvalidOperationException($"Not a boolean type");
         }
 
-        public override double GetDouble()
+        public double GetDouble()
         {
             // Fx will only call this helper for numbers. 
             Assert.True(Type == FormulaType.Number);
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Tests
             throw new InvalidOperationException($"Not a number type");
         }
 
-        public override decimal GetDecimal()
+        public decimal GetDecimal()
         {
             // Fx will only call this helper for decimals. 
             Assert.True(Type == FormulaType.Decimal);
@@ -145,12 +145,12 @@ namespace Microsoft.PowerFx.Tests
             throw new InvalidOperationException($"Not a decimal type");
         }
 
-        public override string GetUntypedNumber()
+        public string GetUntypedNumber()
         {
             throw new NotImplementedException();
         }
 
-        public override string GetString()
+        public string GetString()
         {
             Assert.True(Type == FormulaType.String);
 
@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Tests
             throw new InvalidOperationException($"Not a string type");
         }
 
-        public override bool TryGetProperty(string value, out IUntypedObject result)
+        public bool TryGetProperty(string value, out IUntypedObject result)
         {
             Assert.True(Type == ExternalType.ObjectType);
 
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Tests
             return true;
         }
 
-        public override bool TryGetPropertyNames(out IEnumerable<string> result)
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
         {
             result = null;
             return false;

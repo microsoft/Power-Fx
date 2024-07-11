@@ -5,15 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -47,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                 }
 
-                return new UntypedObjectValue(irContext, result);
+                return arg0.CreateNew(irContext, result);
             }
             else
             {

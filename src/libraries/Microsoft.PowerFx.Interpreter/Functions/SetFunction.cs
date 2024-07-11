@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -81,39 +79,53 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var arg0 = argTypes[0];
-            var arg1 = argTypes[1];
+            var arg1 = argTypes[1];            
 
             // Type check
             if (arg0.IsUntypedObject)
             {
-                // if arg0 is untyped object, the host implementation will handle arg1.
-                return;
+                if (CheckMutability(binding, args, argTypes, errors))
+                {
+                    return;
+                }
             }
-
-            if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+            else
+            {
+                if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
                  (arg0.IsNumeric && arg1.IsNumeric)))
-            {
-                errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
-                return;
-            }
-
-            if (arg1.AggregateHasExpandedType())
-            {
-                if (arg1.IsTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
+                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
                     return;
                 }
 
-                if (arg1.IsRecord)
+                if (arg1.AggregateHasExpandedType())
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
+                    if (arg1.IsTable)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
+                        return;
+                    }
+
+                    if (arg1.IsRecord)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
+                        return;
+                    }
+                }
+
+                if (CheckMutability(binding, args, argTypes, errors))
+                {
                     return;
                 }
             }
 
+            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);
+            return;
+        }
+
+        private bool CheckMutability(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
             var firstName = args[0].AsFirstName();
-
             if (firstName != null)
             {
                 // Variable reference assignment, for example Set( x, 3 )
@@ -121,18 +133,17 @@ namespace Microsoft.PowerFx.Interpreter
                 if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
                 {
                     // We have a variable, success
-                    return;
+                    return true;
                 }
             }
             else if (binding.Features.PowerFxV1CompatibilityRules)
             {
                 // Deep mutation, for example Set( x.a, 4 )
                 base.ValidateArgumentIsSetMutable(binding, args[0], errors);
-                return;
+                return true;
             }
 
-            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name, args[0]);
-            return;
+            return false;
         }
     }
 }

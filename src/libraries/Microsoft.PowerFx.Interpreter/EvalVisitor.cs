@@ -188,12 +188,11 @@ namespace Microsoft.PowerFx
                 {
                     var arg0value = await bon.Left.Accept(this, context).ConfigureAwait(false);
 
-                    if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    if (arg0value is UntypedObjectValue uov)
                     {
                         TextLiteralNode textLiteralNode = (TextLiteralNode)bon.Right;
 
-                        // !!!TODO What if property name does not exist?
-                        impl.TrySetProperty(textLiteralNode.LiteralValue, newValue);
+                        uov.TrySetProperty(textLiteralNode.LiteralValue, newValue);
 
                         return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
                     }

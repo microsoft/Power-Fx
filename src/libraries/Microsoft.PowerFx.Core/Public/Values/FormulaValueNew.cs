@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
@@ -122,13 +121,6 @@ namespace Microsoft.PowerFx.Types
         public static ErrorValue NewError(IEnumerable<ExpressionError> error, FormulaType type)
         {
             return new ErrorValue(IRContext.NotInSource(type), error.ToList());
-        }
-
-        public static UntypedObjectValue New(UntypedObjectBase untypedObject)
-        {
-            return new UntypedObjectValue(
-                IRContext.NotInSource(new UntypedObjectType()),
-                untypedObject);
         }
 
         public static UntypedObjectValue New(IUntypedObject untypedObject)

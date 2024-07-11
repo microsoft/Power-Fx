@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class SimpleObject : UntypedObjectBase
+        private class SimpleObject : IUntypedObject
         {
             private readonly FormulaValue _value;
 
@@ -303,46 +303,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _value = value;
             }
 
-            public override IUntypedObject this[int index] => throw new NotImplementedException();
+            public IUntypedObject this[int index] => throw new NotImplementedException();
 
-            public override FormulaType Type => _value.Type;
+            public FormulaType Type => _value.Type;
 
-            public override int GetArrayLength()
+            public int GetArrayLength()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool GetBoolean()
+            public bool GetBoolean()
             {
                 return ((BooleanValue)_value).Value;
             }
 
-            public override double GetDouble()
+            public double GetDouble()
             {
                 return ((NumberValue)_value).Value;
             }
 
-            public override decimal GetDecimal()
+            public decimal GetDecimal()
             {
                 return ((DecimalValue)_value).Value;
             }
 
-            public override string GetUntypedNumber()
+            public string GetUntypedNumber()
             {
                 return ((StringValue)_value).Value;
             }
 
-            public override string GetString()
+            public string GetString()
             {
                 return ((StringValue)_value).Value;
             }
 
-            public override bool TryGetProperty(string value, out IUntypedObject result)
+            public bool TryGetProperty(string value, out IUntypedObject result)
             {
                 throw new NotImplementedException();
             }
 
-            public override bool TryGetPropertyNames(out IEnumerable<string> result)
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
             {
                 result = null;
                 return false;

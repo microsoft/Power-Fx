@@ -4,12 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -59,8 +54,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PadUntypedObject uo = new PadUntypedObject(dt);
             PadUntypedObject uoCell = new PadUntypedObject(99);
 
-            UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
-            UntypedObjectValue uovCell = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoCell);
+            PadUntypedObjectValue uov = new PadUntypedObjectValue(uo);
+            PadUntypedObjectValue uovCell = new PadUntypedObjectValue(uoCell);
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
@@ -79,7 +74,67 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    public class PadUntypedObject : UntypedObjectBase
+    public class PadUntypedObjectValue : UntypedObjectValue
+    {
+        private readonly PadUntypedObject _padImpl;
+
+        public PadUntypedObjectValue(PadUntypedObject impl)
+            : base(IRContext.NotInSource(FormulaType.UntypedObject), impl)
+        {
+            _padImpl = impl;
+        }
+
+        internal override UntypedObjectValue CreateNew(IRContext irContext, IUntypedObject impl)
+        {
+            return new PadUntypedObjectValue((PadUntypedObject)impl);
+        }
+
+        public override bool TrySetProperty(string propertyName, FormulaValue value)
+        {
+            if (_padImpl.DataTable != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (!_padImpl.DataRow.Table.Columns.Contains(propertyName))
+            {
+                value = default;
+                return false;
+            }
+
+            if (value is DecimalValue dv)
+            {
+                _padImpl.DataRow[propertyName] = dv.Value;
+            }
+            else if (value is UntypedObjectValue uov)
+            {
+                if (_padImpl.DataRow[propertyName].GetType() == typeof(string))
+                {
+                    _padImpl.DataRow[propertyName] = uov.Impl.GetString();
+                }
+                else if (_padImpl.DataRow[propertyName].GetType() == typeof(int))
+                {
+                    _padImpl.DataRow[propertyName] = uov.Impl.GetDouble();
+                }
+                else if (_padImpl.DataRow[propertyName].GetType() == typeof(bool))
+                {
+                    _padImpl.DataRow[propertyName] = uov.Impl.GetBoolean();
+                }
+                else if (_padImpl.DataRow[propertyName].GetType() == typeof(decimal))
+                {
+                    _padImpl.DataRow[propertyName] = uov.Impl.GetDecimal();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public class PadUntypedObject : IUntypedObject
     {
         public DataTable DataTable;
         public DataRow DataRow;
@@ -115,9 +170,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     : throw new NotImplementedException();
         }
 
-        public override FormulaType Type => GetFormulaType();
+        public FormulaType Type => GetFormulaType();
 
-        public override IUntypedObject this[int index] => Index(index);
+        public IUntypedObject this[int index] => Index(index);
 
         private FormulaType GetFormulaType()
         {
@@ -134,7 +189,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 : ExternalType.ArrayAndObject;
         }
 
-        public override int GetArrayLength()
+        public int GetArrayLength()
         {
             return (DataTable != null)
                  ? DataTable.Rows.Count
@@ -143,12 +198,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                  : throw new NotImplementedException();
         }
 
-        public override bool GetBoolean()
+        public bool GetBoolean()
         {
             throw new NotImplementedException();
         }
 
-        public override double GetDouble()
+        public double GetDouble()
         {
             return Cell switch
             {
@@ -159,12 +214,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             };
         }
 
-        public override decimal GetDecimal()
+        public decimal GetDecimal()
         {
             throw new NotImplementedException();
         }
 
-        public override string GetUntypedNumber()
+        public string GetUntypedNumber()
         {
             throw new NotImplementedException();
         }
@@ -174,12 +229,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             throw new NotImplementedException();
         }
 
-        public override string GetString()
+        public string GetString()
         {
             return Cell.ToString();
         }
 
-        public override bool TryGetProperty(string propertyName, out IUntypedObject result)
+        public bool TryGetProperty(string propertyName, out IUntypedObject result)
         {
             if (DataTable != null)
             {
@@ -197,13 +252,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return true;
         }
 
-        public override bool TryGetPropertyNames(out IEnumerable<string> result)
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
         {
             result = null;
             return false;
         }
 
-        public override bool TrySetProperty(string propertyName, FormulaValue value)
+        public bool TrySetProperty(string propertyName, FormulaValue value)
         {
             if (DataTable != null)
             {

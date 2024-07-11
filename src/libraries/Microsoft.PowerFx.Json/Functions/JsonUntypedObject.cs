@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class JsonUntypedObject : UntypedObjectBase
+    internal class JsonUntypedObject : IUntypedObject
     {
         internal readonly JsonElement _element;
 
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Functions
             _element = element;
         }
 
-        public override FormulaType Type
+        public FormulaType Type
         {
             get
             {
@@ -52,34 +52,34 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public override IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
+        public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
 
-        public override int GetArrayLength()
+        public int GetArrayLength()
         {
             return _element.GetArrayLength();
         }
 
-        public override double GetDouble()
+        public double GetDouble()
         {
             return _element.GetDouble();
         }
 
-        public override string GetString()
+        public string GetString()
         {
             return _element.GetString();
         }
 
-        public override bool GetBoolean()
+        public bool GetBoolean()
         {
             return _element.GetBoolean();
         }
 
-        public override decimal GetDecimal()
+        public decimal GetDecimal()
         {
             return _element.GetDecimal();
         }
 
-        public override string GetUntypedNumber()
+        public string GetUntypedNumber()
         {
             if (Type == ExternalType.UntypedNumber)
             {
@@ -91,14 +91,14 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public override bool TryGetProperty(string value, out IUntypedObject result)
+        public bool TryGetProperty(string value, out IUntypedObject result)
         {
             var res = _element.TryGetProperty(value, out var je);
             result = new JsonUntypedObject(je);
             return res;
         }
 
-        public override bool TryGetPropertyNames(out IEnumerable<string> result)
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
         {
             if (_element.ValueKind != JsonValueKind.Object)
             {

@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class MutableObject : UntypedObjectBase
+        private class MutableObject : IUntypedObject
         {
             private Dictionary<string, FormulaValue> _values = new Dictionary<string, FormulaValue>();
 
@@ -212,41 +212,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return FormulaValue.New(x);
             }
 
-            public override IUntypedObject this[int index] => throw new NotImplementedException();
+            public IUntypedObject this[int index] => throw new NotImplementedException();
 
-            public override FormulaType Type => ExternalType.ObjectType;
+            public FormulaType Type => ExternalType.ObjectType;
 
-            public override int GetArrayLength()
+            public int GetArrayLength()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool GetBoolean()
+            public bool GetBoolean()
             {
                 throw new NotImplementedException();
             }
 
-            public override double GetDouble()
+            public double GetDouble()
             {
                 throw new NotImplementedException();
             }
             
-            public override decimal GetDecimal()
+            public decimal GetDecimal()
             {
                 throw new NotImplementedException();
             }
 
-            public override string GetUntypedNumber()
+            public string GetUntypedNumber()
             {
                 throw new NotImplementedException();
             }
 
-            public override string GetString()
+            public string GetString()
             {
                 throw new NotImplementedException();
             }
 
-            public override bool TryGetProperty(string value, out IUntypedObject result)
+            public bool TryGetProperty(string value, out IUntypedObject result)
             {
                 if (_values.TryGetValue(value, out var x))
                 {
@@ -258,7 +258,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return false;
             }
 
-            public override bool TryGetPropertyNames(out IEnumerable<string> result)
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
             {
                 result = null;
                 return false;
