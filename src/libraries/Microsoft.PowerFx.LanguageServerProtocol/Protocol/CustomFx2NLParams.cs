@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Existing Power Fx Expression.
         /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// Optional range of the expression in the document.
+        /// </summary>
+        public Range Range { get; set; } = null;
     }
 
     /// <summary>

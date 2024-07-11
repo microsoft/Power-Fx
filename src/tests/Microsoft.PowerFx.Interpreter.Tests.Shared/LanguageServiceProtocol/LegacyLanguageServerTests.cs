@@ -33,6 +33,7 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
+using Range = Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
@@ -1631,8 +1632,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             });
         }
 
-        private static string FX2NlMessageJson(string documentUri, string context = null)
-        {
+        private static string FX2NlMessageJson(string documentUri, string context = null, Range range = null)
+        { 
             return JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -1865,6 +1866,45 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer.OnDataReceived(FX2NlMessageJson(documentUri));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcFx2NLResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("123", response.Id);
+
+            // result has expected concat with symbols. 
+            Assert.Equal("Score > 3: True: sentence", response.Result.Explanation);
+        }
+
+        [Fact]
+        public void TestFx2NLWithRangeRequestParam()
+        {
+            var documentUri = "powerfx://app?context=1";
+            var expectedExpr = "sentence";
+
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = engine.CreateEditorScope(symbols: symbols);
+
+            var dict = new Dictionary<string, EditorContextScope>
+            {
+                { documentUri, editor }
+            };
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
+
+            var testNLHandler = new TestNLHandler { Expected = expectedExpr };
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory, new TestNlHandlerFactory(testNLHandler));
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+
+            // Optional request param Range field is set
+            Range range = new Range()
+            {
+                Start = new Position() { Line = 0, Character = 0 },
+                End = new Position() { Line = 0, Character = 5 }
+            };
+
+            testServer.OnDataReceived(FX2NlMessageJson(documentUri, null, range));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcFx2NLResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("123", response.Id);
