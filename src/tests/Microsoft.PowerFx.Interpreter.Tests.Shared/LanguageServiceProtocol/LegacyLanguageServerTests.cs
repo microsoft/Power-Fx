@@ -33,7 +33,6 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
-using Range = Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {

@@ -10,7 +10,6 @@ using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Range = Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
