@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +24,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public string Expression { get; set; }
 
         /// <summary>
-        /// Optional range of the expression.
+        /// Optional range within <see cref="Expression"></see> to explain.
+        /// If missing, then explain the whole expression.
         /// </summary>
-        public Range Range { get; set; } = null;
+        public Range Range { get; set; }
     }
 
     /// <summary>
