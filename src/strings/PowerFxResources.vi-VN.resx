@@ -1309,14 +1309,14 @@
     <value>Phần trăm (hoặc cột giá trị phần trăm) màu sắc (hoặc cột giá trị màu) sẽ mờ dần. Phần trăm âm tạo ra bóng tối hơn. Phần trăm dương tạo ra bóng sáng hơn.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Trả về một bản ghi với thông tin về một tệp.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Các blob tệp để lấy thông tin.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>tệp</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Đối số đầu tiên của '{0}' phải là một bản ghi.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Việc sử dụng tùy chọn này để đặt làm giá trị liệt kê hoặc sử dụng trong hàm Choices yêu cầu thêm thực thể '{0}' dưới dạng Nguồn dữ liệu. Để thêm, hãy sử dụng menu Xem, rồi chọn Nguồn dữ liệu.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Không thể truy nhập thuộc tính được chỉ định trong ngữ cảnh này.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Đối số này không biểu thị một giá trị ngày hoặc giờ hợp lệ.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: Collect(collection, source_collection)) hoặc một hay nhiều bản ghi Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Xóa bộ sưu tập trước tiên rồi thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: ClearCollect(collection, source_collection)) hoặc một hay nhiều bản ghi ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Chức năng do người dùng xác định phải có nội dung.</value>
+    <value>Hàm do người dùng xác định phải có nội dung.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Chức năng {0} đã được xác định.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Cảnh báo: Hàm {0} do người dùng xác định sẽ được ưu tiên sử dụng thay vì hàm {0} tạo sẵn hiện có.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Loại trả về hàm đã nêu "{0}" không khớp với kiểu trả về của nội dung hàm "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Hàm {0} có quá nhiều tham số. Hàm do người dùng xác định hỗ trợ tối đa {1} tham số.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Nguồn dữ liệu để thêm dữ liệu vào.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào nguồn dữ liệu. Bảng sẽ có các hàng được nối vào nguồn dữ liệu.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>mục</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

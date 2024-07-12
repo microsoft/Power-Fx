@@ -1309,14 +1309,14 @@
     <value>Protsent (või protsendiväärtuste veerg), mille võrra värvi (või värviväärtuste veeru) varjundit muudetakse. Negatiivne protsent loob tumedama varjundi. Positiivne protsent loob heledama varjundi.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Tagastab kirje koos failiteabega.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Failibloob teabe saamiseks.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fail</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Funktsiooni {0} esimene argument peab olema kirje.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Kui see valik on määratud loetelu väärtuseks või on kasutusel funktsioonis Choices, on nõutav olemi '{0}' lisamine andmeallikana. Lisamiseks kasutage menüüd Vaade ja seejärel valige andmeallikad.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Määratud atribuudile ei pääse selles kontekstis juurde.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ei esinda kehtivat kuupäeva- ega kellaajaväärtust.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt Collect(collection, source_collection)) või ühest või mitmest kirjest Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Tühjendab esmalt kogumi ja seejärel lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funktsioon {0} on juba määratletud.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Hoiatus: kasutaja määratletud funktsioon {0} varjutab olemasoleva sisseehitatud funktsiooni {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Funktsiooni nimi {0} on piiratud.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Märgitud funktsiooni tagastustüüp {0} ei vasta funktsiooni sisu {1} tagastustüübile.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktsioonil {0} on liiga palju parameetreid. Kasutaja määratletud funktsioonid toetavad kuni {1} parameetrit.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Andmeallikas, millesse andmeid lisada.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Koondatav kirje või tabel. Kirje lisatakse andmeallikasse. Tabeliread lisatakse andmeallikasse.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>üksus</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

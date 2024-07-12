@@ -1309,14 +1309,14 @@
     <value>Egy százalék (vagy a százalékok egy oszlopa), amellyel el kell halványítani a színt (vagy a színértékek oszlopát). Negatív százalék megadása sötétebb árnyalatot eredményez. Pozitív százalék megadása világosabb százalékot eredményez.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Egy fájlra vonatkozó adatokat tartalmazó rekordot ad vissza.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>A fájlblob, amelyről információt kell lekérni.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fájl</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>A(z) {0} első argumentumának rekordnak kell lennie.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>E beállításhalmaz enumerálási értékként vagy a Choices függvényben való használatához a(z) {0} entitást hozzá kell adni adatforrásként. Ehhez válassza a Nézet menü Adatforrások parancsát.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>A megadott tulajdonság nem érhető el ebben a környezetben.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Az argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3765,8 +3757,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.
-</value>
+    <value>Ha az adathalmaz túllépi az 500 rekordot jelző korlátot, de kevesebb mint 2000 rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a korlátot.
+      </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>A(z) {0} funkció már meg van határozva.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Figyelem: A felhasználó által definiált {0} függvény el fogja takarni a meglévő beépített {0} függvényt.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>A(z) {0} függvénynév korlátozva van.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>A funkció visszaadott '{0}' típusa nem egyezik meg a(z) '{1}' függvénytest visszaküldési típusával.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>A(z) {0} függvény túl sok paraméterrel rendelkezik. A felhasználó által definiált függvények legfeljebb {1} paramétert támogatnak.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
