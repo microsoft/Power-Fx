@@ -5,12 +5,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     public class ScalarRange
     {
-        public ScalarRange(int start, int end)
-        {
-            Start = start;
-            End = end;
-        }
-
         public bool IsValid()
         {
             return Start <= End;
