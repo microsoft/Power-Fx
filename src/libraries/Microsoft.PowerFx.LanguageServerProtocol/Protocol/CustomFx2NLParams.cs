@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// Optional range within <see cref="Expression"></see> to explain.
         /// If missing, then explain the whole expression.
-        /// Eg: {1,6} >> 1d starting index is 1 and ending index is 6.
+        /// Eg: zero-based offsets {1,6} >> 1d starting index is 1 and ending index is 6.
         /// </summary>
         public ScalarRange Range { get; set; }
     }
