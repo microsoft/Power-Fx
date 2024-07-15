@@ -103,8 +103,14 @@ namespace Microsoft.PowerFx.Types
 
         public abstract bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
 
-        public virtual void SetProperty(string name, FormulaValue value)
+        /// <summary>
+        /// Set a property on the object.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
+        /// <param name="value">FormulaValue to be set.</param>
+        public virtual void SetProperty(string propertyName, FormulaValue value)
         {
+            // In case of unwanted behavior, throw an CustomFunctionErrorException exception.
             throw new NotImplementedException();
         }
     }
