@@ -1309,14 +1309,14 @@
     <value>Ett procentvärde (eller kolumn med procentvärden) som färgen (eller kolumnen med färgvärden) ska tonas med. Ett negativt procentvärde skapar en mörkare nyans. Ett positivt procentvärde skapar en ljusare nyans.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Returnerar en post med information om en fil.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Filblob att hämta information om.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fil</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Det första argumentet för {0} ska vara en post.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Med det här alternativet som ett uppräkningsvärde eller i funktionen Choices så måste entiteten {0} läggas till som en datakälla. Lägg till med Visa-menyn och välj sedan Datakällor.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Det angivna egenskapen är inte tillgänglig i den här kontexten.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentet representerar inte ett giltigt datum- eller tidsvärde.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Den här datakällan är ogiltig. Åtgärda felet i panelen "Datakällor" genom att klicka på "Innehåll -&gt; Datakällor" eller "Visa -&gt; Alternativ"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funktionen {0} är redan definierad.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Varning! En användardefinierad funktion {0} kommer att överskugga den befintliga inbyggda funktionen {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Funktionsnamnet {0} är begränsat.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Den angivna funktionens returtyp "{0}" överensstämmer inte med funktionstextens returtyp "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktionen {0} har för många parametrar. Användardefinierade funktioner stöder upp till {1} parametrar.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

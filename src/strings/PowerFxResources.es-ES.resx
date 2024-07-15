@@ -1309,14 +1309,14 @@
     <value>Un porcentaje (o columna de valores de porcentaje) al que el color (o columna de valores de color) se atenuará. Un porcentaje negativo produce una sombra más oscura. Un porcentaje positivo produce una sombra más clara.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Devuelve un registro con información acerca de un archivo.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>El blob de archivo sobre el que obtener información.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>archivo</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>El primer argumento de "{0}" debe ser un registro.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Para usar esta opción como un valor de enumeración o en la función Choices, es necesario que la entidad "{0}" se agregue como un origen de datos. Para agregarla, use el menú Ver y, a continuación, seleccione los orígenes de datos.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>La propiedad especificada no es accesible en este contexto.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>El argumento no representa un valor de fecha u hora válido.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Este origen de datos no es válido. Para corregir el error en el panel "Orígenes de datos", haga clic en "Contenido -&gt; Orígenes de datos" o en "Ver -&gt; Opciones"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>La función {0} ya está definida.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Advertencia: La función definida por el usuario {0} hará las instantáneas de la función integrada existente {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>El nombre de función {0} está restringido.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>El tipo de devolución de función indicada "{0}" no coincide con el tipo de devolución del cuerpo de función "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>La función {0} tiene demasiados parámetros. Las funciones definidas por el usuario admiten hasta {1} parámetros.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

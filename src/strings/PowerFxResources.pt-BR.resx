@@ -1309,14 +1309,14 @@
     <value>Porcentagem (ou coluna de valores de porcentagem) de esmaecimento da cor (ou coluna de valores de cor). Uma porcentagem negativa produz uma sombra mais escura. Uma porcentagem positiva produz uma sombra mais clara.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Retorna um registro com informações sobre um arquivo.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>O blob de arquivo para obter informações.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>arquivo</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>O primeiro argumento de '{0}' deve ser um registro.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>O uso dessa opção definida como um valor de enumeração ou na função Choices requer que a entidade '{0}' seja adicionada como uma Fonte de Dados. Para adicionar, use o menu Exibir e, em seguida, selecione as fontes de dados.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>A propriedade especificada não está acessível nesse contexto.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>O argumento não representa um valor de data ou hora válido.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Esta Fonte de dados é inválida. Corrija o erro no painel "Fontes de dados" clicando em "Conteúdo -&gt; Fontes de dados" ou "Exibir -&gt; Opções"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Adiciona um ou mais itens à coleção especificada. Os itens podem ser de uma tabela ou coleção diferente (por exemplo: Collect(collection, source_collection)) ou de um ou mais registros Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Limpa a coleção primeiro e adiciona um ou mais itens à coleção especificada. Os itens podem ser de uma tabela ou coleção diferente (por exemplo: ClearCollect(collection, source_collection)) ou de um ou mais registros ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>A função {0} já foi definida.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Aviso: o valor da função definida pelo usuário {0} sombreará a função interna {0} existente.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>O nome da função {0} é restrito.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>O tipo de retorno de função "{0}" declarado não corresponde ao tipo de retorno do corpo da função "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>A função {0} tem parâmetros demais. As funções definidas pelo usuário dão suporte a até {1} parâmetros.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,10 +4439,10 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>O recursos de dados para adicionar dados.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Registro ou tabela a coletar. Um registro será anexado à fonte de dados. Uma tabela terá as linhas acrescentadas à fonte de dados.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
     <value>item</value>

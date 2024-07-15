@@ -1309,14 +1309,14 @@
     <value>ऐसा प्रतिशत (या प्रतिशत मानों का स्तंभ) जिससे रंग (या रंग मानों का स्तंभ) फ़ेड हो जाएगा. एक नकारात्मक प्रतिशत से गहरी छाया उत्पन्न होती है. एक सकारात्मक प्रतिशत से हल्की छाया उत्पन्न होती है.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>किसी फ़ाइल के बारे में जानकारी सहित रिकॉर्ड लौटाता है.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>वह फ़ाइल ब्लॉब जिसके बारे में जानकारी प्राप्त करनी है.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>फ़ाइल</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>'{0}' का पहला तर्क एक रेकॉर्ड होना चाहिए.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>इस विकल्प का उपयोग करके सेट के रूप में एक प्रगणना मान या Choices फ़ंक्शन के लिए ऐसे '{0}' निकाय की आवश्यकता होती है, जिसे डेटा स्रोत के रूप में जोड़ा गया हो. इसे जोड़ने के लिए, दृश्य मेनू का उपयोग करें और फिर डेटा स्रोत का चयन करें.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>निर्दिष्ट गुण इस प्रसंग में पहुँच-योग्य नहीं है.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>तर्क मान्य दिनांक या समय मान का प्रतिनिधित्व नहीं करता है.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>यह डेटा स्रोत अमान्य है. कृपया "सामग्री -&gt; डेटा स्रोत" या "देखें -&gt; विकल्प" क्लिक करके "डेटा स्रोत" फलक की त्रुटि सुधारें</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>निर्दिष्ट 'संग्रह' में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे कि Collect(collection, source_collection)), या एक या अधिक रेकॉर्ड Collect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>पहले संग्रह को साफ़ करता है और 'निर्दिष्ट' संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे कि ClearCollect(collection, source_collection)), या एक या अधिक रेकॉर्ड ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
+    <value>यदि आपके डेटा सेट में 500 की रिकॉर्ड सीमा से अधिक लेकिन 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
       </value>
     
   </data>
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>उपयोगकर्ता परिभाषित फ़ंक्शन में एक निकाय होना चाहिए.</value>
+    <value>उपयोगकर्ता-परिभाषित फ़ंक्शन में एक बॉडी होनी चाहिए.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>फ़ंक्शन {0} पहले से ही परिभाषित है.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>चेतावनी: उपयोगकर्ता-परिभाषित फ़ंक्शन {0} मौजूदा बिल्ट-इन फ़ंक्शन {0} को शैडो करेगा.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>कथित फ़ंक्शन, रिटर्न प्रकार '{0}' फ़ंक्शन बॉडी '{1}' के रिटर्न प्रकार से मेल नहीं खाता है.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>फ़ंक्शन {0} में बहुत अधिक पैरामीटर हैं. उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन {1} पैरामीटर तक का समर्थन करते हैं.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>इसमें डेटा जोड़ने के लिए डेटा स्रोत.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>एकत्र करने के लिए रिकॉर्ड या तालिका. डेटा स्रोत में एक रिकॉर्ड जोड़ा जाएगा. किसी तालिका में उसकी पंक्तियाँ डेटास्रोत से जुड़ी होंगी.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>आइटम</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
