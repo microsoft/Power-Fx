@@ -58,15 +58,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             PadUntypedObject uo = new PadUntypedObject(dt);
             PadUntypedObject uoCell = new PadUntypedObject(99);
+            NotImplementedUntypedObject notImplementedUO = new NotImplementedUntypedObject(dt);
 
             UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
             UntypedObjectValue uovCell = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoCell);
+            UntypedObjectValue notImplementedValue = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), notImplementedUO);
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
             engine.Config.SymbolTable.EnableMutationFunctions();
             engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
+            engine.UpdateVariable("notImplementedUO", notImplementedValue, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
             engine.UpdateVariable("padCell", uovCell);
 
             // Setting an untyped object (padCell).
@@ -86,6 +89,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             errorValue = (ErrorValue)engine.Eval(@"Set(Index(padTable, 1).Column2, GUID())", options: new ParserOptions() { AllowsSideEffects = true });
             Assert.IsType<ErrorValue>(errorValue);
             Assert.Equal(ErrorKind.InvalidArgument, errorValue.Errors.First().Kind);
+
+            // 'SetProperty' not implemented.
+            errorValue = (ErrorValue)engine.Eval(@"Set(Index(notImplementedUO, 1).Id, 1)", options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.IsType<ErrorValue>(errorValue);
+            Assert.Equal(ErrorKind.NotSupported, errorValue.Errors.First().Kind);
         }
     }
 
@@ -257,6 +265,107 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     throw new CustomFunctionErrorException($"Type '{DataRow[propertyName].GetType()}' is not supported.", ErrorKind.InvalidArgument);
                 }
             }
+        }
+    }
+
+    public class NotImplementedUntypedObject : UntypedObjectBase
+    {
+        public DataTable DataTable;
+        public DataRow DataRow;
+        public object Cell;
+
+        public NotImplementedUntypedObject(DataTable dt)
+        {
+            DataTable = dt;
+            DataRow = null;
+            Cell = null;
+        }
+
+        public NotImplementedUntypedObject(DataRow dr)
+        {
+            DataTable = null;
+            DataRow = dr;
+            Cell = null;
+        }
+
+        public NotImplementedUntypedObject(object cell)
+        {
+            DataTable = null;
+            DataRow = null;
+            Cell = cell;
+        }
+
+        private IUntypedObject Index(int index)
+        {
+            return new NotImplementedUntypedObject(DataTable.Rows[index]);
+        }
+
+        public override FormulaType Type => GetFormulaType();
+
+        public override IUntypedObject this[int index] => Index(index);
+
+        private FormulaType GetFormulaType()
+        {
+            return ExternalType.ArrayAndObject;
+        }
+
+        public override int GetArrayLength()
+        {
+            return 1;
+        }
+
+        public override bool GetBoolean()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override double GetDouble()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override decimal GetDecimal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetUntypedNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string[] GetPropertyNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetString()
+        {
+            return Cell.ToString();
+        }
+
+        public override bool TryGetProperty(string propertyName, out IUntypedObject result)
+        {
+            if (DataTable != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (!DataRow.Table.Columns.Contains(propertyName))
+            {
+                result = default;
+                return false;
+            }
+
+            var cell = DataRow[propertyName];
+            result = new NotImplementedUntypedObject(cell);
+            return true;
+        }
+
+        public override bool TryGetPropertyNames(out IEnumerable<string> result)
+        {
+            result = null;
+            return false;
         }
     }
 }

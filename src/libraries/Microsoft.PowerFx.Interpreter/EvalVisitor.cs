@@ -202,6 +202,10 @@ namespace Microsoft.PowerFx
                         {
                             return new ErrorValue(node.IRContext, new ExpressionError() { Message = ex.Message, Span = node.IRContext.SourceContext, Kind = ex.ErrorKind });
                         }
+                        catch (NotImplementedException)
+                        {
+                            return CommonErrors.NotYetImplementedError(node.IRContext, $"Class {impl.GetType()} does not implement 'SetProperty'.");
+                        }
                     }
                 }
                 else
