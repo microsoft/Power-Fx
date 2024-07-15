@@ -7,16 +7,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     {
         public bool IsValid()
         {
-            return Start <= End;
+            return Start >= 0 && End >= 0 && Start <= End;
         }
 
         /// <summary>
-        /// The range's start position.
+        /// Zero-based offset, the range's start position.
         /// </summary>
         public int Start { get; set; }
 
         /// <summary>
-        /// The range's end position.
+        /// Zero-based offset, the range's end position.
         /// </summary>
         public int End { get; set; }
     }
