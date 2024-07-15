@@ -1309,14 +1309,14 @@
     <value>Percentatge (o columna de valors de percentatge) amb què el color (o la columna de valors de color) s'esvairà. Un percentatge negatiu produeix una ombra més fosca. Un percentatge positiu produeix una ombra més clara.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Retorna un registre amb informació sobre un fitxer.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>El fitxer BLOB sobre el qual s'obté informació.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fitxer</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>El primer argument de '{0}' ha de ser un registre.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Si utilitzeu aquesta opció com a valor d'enumeració o a la funció Choices, cal que afegiu l'entitat "{0}" com a font de dades. Per afegir-la, utilitzeu el menú Visualitza i, a continuació, seleccioneu Fonts de dades.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>No es pot accedir a la propietat especificada en aquest context.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>L'argument no representa un valor de data o hora vàlid.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>La font de dades no és vàlida. Podeu solucionar l'error a la subfinestra "Fonts de dades" si feu clic a "Contingut -&gt; Fonts de dades" o "Visualitza -&gt; Opcions"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>La funció {0} ja està definida.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Advertiment: la funció definida per l'usuari {0} cobrirà la funció integrada existent {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>El nom de funció {0} està restringit.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>El tipus de retorn de la funció indicada "{0}" no coincideix amb el tipus de retorn del cos de la funció "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>La funció {0} té massa paràmetres. Les funcions definides per l'usuari admeten un màxim de {1} paràmetres.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

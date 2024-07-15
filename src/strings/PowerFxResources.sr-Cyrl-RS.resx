@@ -1309,14 +1309,14 @@
     <value>Проценат (или колона са вредностима процената) по којем ће боја избледети. Негативни проценат ствара тамнију нијансу. Позитиван проценат ствара светлију нијансу.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Враћа запис са информацијама о датотеци.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Блоб објекат датотеке о којој треба прибавити информације.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>датотека</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Први аргумент за „{0}“ треба да буде запис.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Да бисте користили ову опцију подешену као вредност набрајања или да бисте је користили у функцији Choices, морате да додате ентитет „{0}“ као извор података. Да бисте га додали, у менију „Приказ“ изаберите ставку „Извори података“.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Наведеном својству се не може приступити у овом контексту.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент не представља важећу вредност датума или времена.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Овај извор података је неважећи. Поправите грешку у окну „Извори података“ тако што ћете изабрати ставке „Садржај –&gt; Извори података“ или „Приказ –&gt; Опције“</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Функција {0} је већ дефинисана.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Упозорење: Кориснички дефинисана функција {0} пратиће постојећу уграђену функцију {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Назив функције {0} је ограничен.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Наведени тип резултата функције „{0}“ не подудара се са типом резултата тела функције „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Функција {0} има превише параметара. Кориснички дефинисане функције подржавају до {1} параметара.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
