@@ -2,6 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -29,6 +34,23 @@ namespace Microsoft.PowerFx
         public static T GetService<T>(this IServiceProvider serviceProvider)
         {
             return (T)serviceProvider.GetService(typeof(T));
+        }
+
+        public static FormulaValue SetUntypedObject(IRContext context, UntypedObjectBase untypedObject, FormulaValue property, FormulaValue value)
+        {
+            try
+            {
+                untypedObject.SetProperty(property, value);
+                return context.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+            }
+            catch (CustomFunctionErrorException ex)
+            {
+                return new ErrorValue(context, new ExpressionError() { Message = ex.Message, Span = context.SourceContext, Kind = ex.ErrorKind });
+            }
+            catch (NotImplementedException)
+            {
+                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+            }
         }
     }
 }
