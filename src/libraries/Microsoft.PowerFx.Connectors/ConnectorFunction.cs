@@ -1002,7 +1002,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1012,7 +1012,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
 
             // Json version to be able to read SalesForce unique properties
-            ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je);
+            ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je, sqlRelationships);
             connectorType.Name = name;
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
 
@@ -1023,17 +1023,17 @@ namespace Microsoft.PowerFx.Connectors
 
             if (primaryKeyParts.Count == 0)
             {
-                // $$$ need to check what triggers RO for SQL 
+                // $$$ need to check what triggers RO for SQL
                 //isTableReadOnly = true;
             }
 
-            connectorType.AddTabularDataSource(tableResolver, referencedEntities, new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);           
+            connectorType.AddTabularDataSource(tableResolver, referencedEntities, sqlRelationships, new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);
 
             return connectorType;
         }
 
         private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)
-        {            
+        {
             if (connectorName == "salesforce")
             {
                 // OneToMany relationships that have this table in relation
@@ -1089,9 +1089,9 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorType(SwaggerSchema.New(schema), compatibility);
         }
 
-        private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
+        private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je, IList<SqlRelationship> sqlRelationships)
         {
-            return new ConnectorType(je, compatibility);
+            return new ConnectorType(je, compatibility, sqlRelationships);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
