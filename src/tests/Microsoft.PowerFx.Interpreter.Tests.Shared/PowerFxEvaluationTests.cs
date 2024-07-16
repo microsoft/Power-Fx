@@ -799,6 +799,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var t_bsType = TableType.Empty().Add("b", FormulaType.String);
             engine.UpdateVariable("t_bs1", FormulaValue.NewTable(t_bsType.ToRecord()));
             engine.UpdateVariable("t_bs2", FormulaValue.NewTable(t_bsType.ToRecord()));
+
+            engine.Config.EnableJsonFunctions();
         }        
 
         private static void TraceSetup(RecalcEngine engine, bool numberIsFloat)

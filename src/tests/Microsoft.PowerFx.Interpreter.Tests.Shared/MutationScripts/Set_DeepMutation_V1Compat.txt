@@ -339,4 +339,8 @@ Errors: Error 45-52: The value passed to the 'Set' function cannot be changed.
 >> rwt1_copy3
 {Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_4:Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})}}
 
+// Untyped object
+>> IsError(Set(ParseJSON("{""x"":5}").x, 99))
+Errors: Error 34-36: The value passed to the 'Set' function cannot be changed.
+
 
