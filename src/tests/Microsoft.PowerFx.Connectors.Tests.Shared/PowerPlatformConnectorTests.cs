@@ -1370,7 +1370,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public async Task SQL_CdpTabular_GetTables2_SQL_GetRelationships() // $$$ Change name
+        public async Task SQL_GetRelationships()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
