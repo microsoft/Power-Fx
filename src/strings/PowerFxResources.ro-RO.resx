@@ -1309,14 +1309,14 @@
     <value>Un procent (sau o coloană de valori procentuale) după care va fi estompată culoarea (sau coloana de valori de culoare). Un procent negativ produce o nuanță mai întunecată. Un procent pozitiv produce o nuanță mai deschisă.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Returnează o înregistrare cu informații despre un fișier.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Fișierul blob pentru a obține informațiile.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fișier</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Primul argument din „{0}” ar trebui să fie o înregistrare.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Utilizarea acestui set de opțiuni ca valoare de enumerare sau în funcția Choices necesită ca entitatea „{0}” să fie adăugată ca sursă de date. Pentru a-l adăuga, utilizați meniul Vizualizare, apoi selectați Surse de date.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Proprietatea specificată nu este accesibilă în acest context.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentul nu reprezintă o valoare de dată sau oră validă.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Această sursă de date este nevalidă. Remediați eroarea din panoul „Surse de date” făcând clic pe „Conținut -&gt; Surse de date” sau pe „Vizualizare -&gt; Opțiuni”</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Funcția definită de utilizator trebuie să aibă un corp.</value>
+    <value>Funcția definită de utilizator trebuie să includă un corp.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funcția {0} este definită deja.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Avertizare: Funcția definită de utilizator {0} va umbri funcția încorporată existentă {0}.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Tipul de returnare al funcției declarate „{0}” nu se potrivește cu tipul de returnare al corpului funcției „{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funcția {0} are prea mulți parametri. Funcțiile definite de utilizator acceptă până la {1} parametri.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

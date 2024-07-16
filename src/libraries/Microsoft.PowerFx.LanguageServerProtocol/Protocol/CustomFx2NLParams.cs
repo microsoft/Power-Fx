@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Existing Power Fx Expression.
         /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// Optional range within <see cref="Expression"></see> to explain.
+        /// If missing, then explain the whole expression.
+        /// Eg: zero-based offsets {1,6} >> 1d starting index is 1 and ending index is 6.
+        /// </summary>
+        public ScalarRange Range { get; set; }
     }
 
     /// <summary>

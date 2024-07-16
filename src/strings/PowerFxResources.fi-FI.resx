@@ -1993,10 +1993,6 @@
     <value>Kohteen {0} ensimmäisen argumentin tulee olla tietue.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Tämän asetusjoukon käyttäminen luettelointiarvona tai Choices-funktiossa edellyttää, että entiteetti {0} lisätään tietolähteeksi. Jos haluat lisätä, käytä Näytä-valikkoa ja valitse sitten Tietolähteet.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Määritettyä ominaisuutta ei voi käyttää tässä kontekstissa.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentti ei vastaa kelvollista päivämäärä- tai aika-arvoa.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tämä tietolähde on virheellinen. Korjaa virhe Tietolähteet-ruudussa valitsemalla Sisältö -&gt; Tietolähteet tai Näytä -&gt; Asetukset</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Toiminto {0} on jo määritetty.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Varoitus: Käyttäjän määrittämä funktio {0} peittää olemassa olevan sisäisen funktion {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Toiminnon nimi {0} rajoitettu.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Ilmoitettu funktion palautustyyppi {0} ei vastaa funktion rungon palautustyyppiä {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktiolla {0} on liian monta parametria. Käyttäjän määrittämät funktiot tukevat enintään {1} parametria.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

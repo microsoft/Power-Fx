@@ -1309,14 +1309,14 @@
     <value>Procentuální hodnota (nebo sloupec procentuálních hodnot), o kterou má barva (nebo sloupec hodnot barev) vyblednout. Záporná procentuální hodnota vytvoří tmavší odstín. Kladná procentuální hodnota vytvoří světlejší odstín.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Vrátí záznam s informacemi o souboru.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Objekt blob souboru, o kterém chcete získat informace.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>soubor</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Prvním argumentem „{0}“ by měl být záznam.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Abyste mohli tuto sadu možností použít jako hodnotu výčtu nebo ve funkci Choices, musí se jako zdroj dat přidat entita {0}. Pokud ji chcete přidat, použijte nabídku Zobrazit a pak vyberte Zdroje dat.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Zadaná vlastnost není v tomto kontextu přístupná.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument nepředstavuje platnou hodnotu data nebo času.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tento zdroj dat není platný. Opravte chybu v podokně „Zdroje dat“ kliknutím na „Obsah -&gt; Zdroje dat“ nebo na „Zobrazení -&gt; Možnosti“</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Přidá jednu nebo více položek k zadané kolekci. Položky mohou být z jiné tabulky nebo kolekce (např. Collect(collection, source_collection)), případně jeden nebo několik záznamů Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Nejprve vymaže kolekci a pak přidá jednu nebo více položek do zadané kolekce. Položky mohou být z jiné tabulky nebo kolekce (např. ClearCollect(collection, source_collection)), případně jeden nebo více záznamů ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Uživatelem definovaná funkce musí mít tělo.</value>
+    <value>Uživatelem definovaná funkce musí mít text.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funkce {0} je již definována.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozornění: Uživatelem definovaná funkce {0} zastíní existující intergovanou funkci {0}.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Uvedený návratový typ funkce „{0}“ neodpovídá návratovému typu těla funkce „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkce {0} má příliš mnoho parametrů. Uživatelem definované funkce podporují maximálně následující počet parametrů: {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Zdroj dat, do kterého chcete přidat data.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Záznam nebo tabulka ke shromažďování. Záznam bude připojen ke zdroji dat. Ke zdroji dat budou připojeny řádky tabulky.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>položka</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
