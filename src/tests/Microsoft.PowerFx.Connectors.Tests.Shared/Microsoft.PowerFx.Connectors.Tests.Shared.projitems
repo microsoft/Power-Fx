@@ -24,18 +24,21 @@
     <Compile Include="$(MSBuildThisFileDirectory)O365OutlookTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)O365UserTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ODataParametersTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenAITests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiExtensionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiFormUrlEncoderTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiHelperFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiJsonSerializerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiParserTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerAppsForMakersTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformBlobTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClientTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformTabularTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PriorityOrderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PriorityOrdererTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PublicSurfaceTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
@@ -44,6 +47,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Owl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Owl.NoAlpha.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language v2.1_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_GetFileContentV2.raw" />
@@ -81,6 +90,11 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office365_DirectsV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office365_SearchV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Office365_UserProfileV2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImage.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageEdit.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageEditWithMask.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_00.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_01.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_02.json" />
@@ -259,6 +273,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Office_365_Groups.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Office_365_Outlook.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Office_365_Users.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\OpenAI.yaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PetStore.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
@@ -267,10 +282,16 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SharePoint.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Teams.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector05.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnector12.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestConnectorDateTimeFormat.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\TestOpenAPI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ZenDesk.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\shared_sendmail.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Mask.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

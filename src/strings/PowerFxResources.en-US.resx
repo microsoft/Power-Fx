@@ -1993,10 +1993,6 @@
     <value>The first argument of '{0}' should be a record.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Using this option set as an enumeration value or in the Choices function requires that the '{0}' entity be added as a Data Source. To add, use the View menu and then select Data sources.</value>
-    <comment>Error Message. {Locked=Choices} Indicates a given entity must be imported as a first class entity. This is a result of usage of an option set that is exposed via a relationship in a CDS 2 entity.</comment>
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>The specified property is not accessible in this context.</value>
     <comment>Error Message.</comment>
@@ -2036,10 +2032,6 @@
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>The argument does not represent a valid date or time value.</value>
     <comment>Error Message returned by the Text function when the number to date format exceeds the max days to add.</comment>
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
-    <comment>Error Message.</comment>
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
     <value>Expected a data source identifier to restrict the inline record.</value>
@@ -4070,12 +4062,16 @@
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>User defined function must have a body.</value>
-    <comment>This error message shows up when user defined function does not have a body</comment>
+    <value>User-defined function must have a body.</value>
+    <comment>This error message shows up when user-defined function does not have a body</comment>
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Function {0} is already defined.</value>
     <comment>This error message shows up when user tries to define a function that already exists</comment>
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Warning: User-defined function {0} will shadow the existing built-in function {0}.</value>
+    <comment>This error message shows up when user tries to define a function that shares the same unrestricted name as a built-in function. The argument {0} will be replaced with a function name: e.g.: User-defined function Count will shadow the existing built-in function Count.</comment>
   </data>
     <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Function name {0} is restricted.</value>
@@ -4083,7 +4079,7 @@
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is a duplicate.</value>
-    <comment>This error message shows up when user defined function has a duplicate parameter</comment>
+    <comment>This error message shows up when user-defined function has a duplicate parameter</comment>
   </data>
   <data name="ErrUDF_UnknownType" xml:space="preserve">
     <value>Unknown type {0}.</value>
@@ -4093,13 +4089,17 @@
     <value>The stated function return type '{0}' does not match the return type of the function body '{1}'.</value>
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Function {0} has too many parameters. User-defined functions support up to {1} parameters.</value>
+    <comment>This error message shows up when a user tries to define a function with too many parameters. {0} - the name of the user-defined function, {1} - the max number of parameters allowed.</comment>
+  </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
     <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
-    <comment>This error message shows up when return type is not provided for user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+    <comment>This error message shows up when return type is not provided for user-defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
     <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
-    <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+    <comment>This error message shows up when argument type is not provided for the parameters in user-defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
   </data>
   <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
     <value>The stated function return type {0} is invalid.</value>

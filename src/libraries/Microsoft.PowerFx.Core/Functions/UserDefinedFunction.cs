@@ -41,6 +41,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool SupportsParamCoercion => true;
 
+        private const int MaxParameterCount = 30;
+
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
@@ -224,11 +226,22 @@ namespace Microsoft.PowerFx.Core.Functions
                     continue;
                 }
 
+                if (udf.Args.Count > MaxParameterCount)
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
+                    continue;
+                }
+
                 var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
                 var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
+                }
+
+                if (nameResolver.Functions.WithName(udfName).Any())
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
 
                 var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes);

@@ -798,8 +798,7 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(typeLhs.IsUntypedObject);
 
                     var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
-
-                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
+                    result = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
                 }
                 else
                 {

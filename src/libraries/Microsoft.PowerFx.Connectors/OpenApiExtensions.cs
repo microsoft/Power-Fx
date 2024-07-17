@@ -29,12 +29,14 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_TextCsv = "text/csv";
         public const string ContentType_TextPlain = "text/plain";
         public const string ContentType_Any = "*/*";
+        public const string ContentType_Multipart = "multipart/form-data";
 
         private static readonly IReadOnlyList<string> _knownContentTypes = new string[]
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
-            ContentType_TextJson
+            ContentType_TextJson,
+            ContentType_Multipart
         };
 
         public static string GetBasePath(this OpenApiDocument openApiDocument, SupportsConnectorErrors errors) => GetUriElement(openApiDocument, (uri) => uri.PathAndQuery, errors);
@@ -329,7 +331,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal static bool IsInternal(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.IsInternal() ?? false;
-        
+
         internal static string GetVisibility(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetVisibility();
 
         // Internal parameters are not showen to the user.
@@ -533,7 +535,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        return new ConnectorType(error: $"Unsupported type of array ({arrayType.FormulaType._type})");
+                        return new ConnectorType(error: $"Unsupported type of array ({arrayType.FormulaType._type.ToAnonymousString()})");
                     }
 
                 case "object":
@@ -586,8 +588,8 @@ namespace Microsoft.PowerFx.Connectors
                             {
                                 propDisplayName = kv.Key;
                             }
-                            
-                            propDisplayName = GetDisplayName(propDisplayName);                                    
+
+                            propDisplayName = GetDisplayName(propDisplayName);
 
                             string schemaIdentifier = GetUniqueIdentifier(kv.Value);
 
@@ -757,7 +759,7 @@ namespace Microsoft.PowerFx.Connectors
                         // Treat as void.                        
                         return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(compatibility);
                     }
-                    
+
                     return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(compatibility);
                 }
             }
@@ -887,7 +889,7 @@ namespace Microsoft.PowerFx.Connectors
         internal static ServiceCapabilities GetTableCapabilities(this ISwaggerExtensions schema)
         {
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsCapabilities, out IOpenApiExtension ext))
-            {                
+            {
                 return ServiceCapabilities.ParseTableCapabilities(ext as IDictionary<string, IOpenApiAny>);
             }
 
@@ -905,7 +907,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal static Dictionary<string, Relationship> GetRelationships(this ISwaggerExtensions schema)
-        {           
+        {
             if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsRelationships, out IOpenApiExtension ext))
             {
                 return Relationship.ParseRelationships(ext as IDictionary<string, IOpenApiAny>);
@@ -1106,7 +1108,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return null;
-        }        
+        }
 
         internal static ConnectorDynamicProperty GetDynamicProperty(this ISwaggerExtensions param)
         {

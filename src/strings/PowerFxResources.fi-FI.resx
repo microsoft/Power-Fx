@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Prosenttiosuus (tai prosenttiosuusarvojen sarake), jonka verran väriä (tai väriarvojen saraketta) häivytetään. Negatiivinen prosenttiosuus antaa tulokseksi tummemman sävyn. Positiivinen prosenttiosuus antaa tulokseksi vaaleamman sävyn.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Palauttaa tietueen, jossa on tietoja tiedostosta.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Hae tietoja blob-tiedostosta.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>tiedosto</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Palauttaa luvun itseisarvon eli luvun ilman sen etumerkkiä.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Kohteen {0} ensimmäisen argumentin tulee olla tietue.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Tämän asetusjoukon käyttäminen luettelointiarvona tai Choices-funktiossa edellyttää, että entiteetti {0} lisätään tietolähteeksi. Jos haluat lisätä, käytä Näytä-valikkoa ja valitse sitten Tietolähteet.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Määritettyä ominaisuutta ei voi käyttää tässä kontekstissa.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentti ei vastaa kelvollista päivämäärä- tai aika-arvoa.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tämä tietolähde on virheellinen. Korjaa virhe Tietolähteet-ruudussa valitsemalla Sisältö -&gt; Tietolähteet tai Näytä -&gt; Asetukset</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lisää tietueet tietolähteeseen.</value>
+    <value>Lisää vähintään yhden kohteen määritettyyn kokoelmaan. Kohteet voivat olla eri taulukosta tai kokoelmasta (kuten Collect(collection, source_collection)) tai vähintään yhdestä tietueesta Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>tietolähde</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kokoelma</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>kohde</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Uusi tai täydennettävä nykyinen kokoelma.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Poistaa kaikki tietueet kokoelmasta. Lisää sitten toisen tietuejoukon samaan kokoelmaan.</value>
+    <value>Tyhjentää kokoelman ensin ja lisää vähintään yhden kohteen määritettyyn kokoelmaan. Kohteet voivat olla eri taulukosta tai kokoelmasta (kuten ClearCollect(collection, source_collection)) tai vähintään yhdestä tietueesta ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>tietolähde</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Uusi tai täydennettävä nykyinen kokoelma.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>tietolähde</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Kerättävä tietue tai taulukko. Tietue lisätään kokoelmaan. Taulukon rivit lisätään kokoelmaan.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Ottaa päivitykset käyttöön määritetylle riville ja muuttaa rivin määritetyssä tietolähteessä. Palauttaa päivitetyn rivin.</value>
@@ -3866,6 +3873,14 @@
     <value>Toiminto {0} on jo määritetty.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Varoitus: Käyttäjän määrittämä funktio {0} peittää olemassa olevan sisäisen funktion {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Toiminnon nimi {0} rajoitettu.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametri {0} on kaksoiskappale.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Ilmoitettu toiminnon palautustyyppi ei vastaa toiminnon rungon palautustyyppiä.</value>
+    <value>Ilmoitettu funktion palautustyyppi {0} ei vastaa funktion rungon palautustyyppiä {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktiolla {0} on liian monta parametria. Käyttäjän määrittämät funktiot tukevat enintään {1} parametria.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Kohteen {0} ensimmäisen argumentin on oltava kelvollinen muuttujan nimi, eikä se voi olla ristiriidassa minkään olemassa olevan ohjausobjektin, näytön, kokoelman tai tietolähteen nimen kanssa. Löytyi tyyppi {1}</value>
+    <value>Kohdetta {1} ei voi muokata kohteen {0} avulla tai se on ristiriidassa olemassa olevan vaikutusaluemuuttujan, tietolähteen tai muun objektin nimen kanssa.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Tuntematon Partial-operaattori.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Tietolähde, joihin tiedot lisätään.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Kerättävä tietue tai taulukko. Tietue lisätään tietolähteeseen. Taulukon rivit liitetään tietolähteeseen.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>kohde</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Protsent (või protsendiväärtuste veerg), mille võrra värvi (või värviväärtuste veeru) varjundit muudetakse. Negatiivne protsent loob tumedama varjundi. Positiivne protsent loob heledama varjundi.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Tagastab kirje koos failiteabega.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Failibloob teabe saamiseks.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fail</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Tagastab arvu absoluutväärtuse, mis on sama arv ilma märgita.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Funktsiooni {0} esimene argument peab olema kirje.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Kui see valik on määratud loetelu väärtuseks või on kasutusel funktsioonis Choices, on nõutav olemi '{0}' lisamine andmeallikana. Lisamiseks kasutage menüüd Vaade ja seejärel valige andmeallikad.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Määratud atribuudile ei pääse selles kontekstis juurde.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ei esinda kehtivat kuupäeva- ega kellaajaväärtust.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lisab kirjed andmeallikasse.</value>
+    <value>Lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt Collect(collection, source_collection)) või ühest või mitmest kirjest Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>andmeallikas</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>kirje</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>kogum</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>üksus</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Uus või olemasolev täiendatav kogum.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Kustutab kõik kirjed kogumist. Seejärel lisab samasse kogumisse teise kirjete kogumi.</value>
+    <value>Tühjendab esmalt kogumi ja seejärel lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>andmeallikas</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Uus või olemasolev täiendatav kogum.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>andmeallikas</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>kirje</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeli read lisatakse kogumisse.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Rakendab värskendused määratud reale ja muudab rea määratud andmeallikas. Tagastab värskendatud rea.</value>
@@ -3866,6 +3873,14 @@
     <value>Funktsioon {0} on juba määratletud.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Hoiatus: kasutaja määratletud funktsioon {0} varjutab olemasoleva sisseehitatud funktsiooni {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Funktsiooni nimi {0} on piiratud.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameeter {0} on duplikaat.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Märgitud funktsiooni tagastustüüp ei vasta funktsiooni sisu tagastustüübile.</value>
+    <value>Märgitud funktsiooni tagastustüüp {0} ei vasta funktsiooni sisu {1} tagastustüübile.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktsioonil {0} on liiga palju parameetreid. Kasutaja määratletud funktsioonid toetavad kuni {1} parameetrit.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Üksuse '{0}' esimene argument peab olema kehtiv muutuja nimi ja see ei tohi olla vastuolus ühegi olemasoleva juhtelemendi, ekraani, kogumi või andmeallika nimega. Leitud tüüp '{1}'</value>
+    <value>Üksust {1} ei saa muuta üksusega {0} või see läheb vastuollu olemasoleva ulatusemuutuja, andmeallika või muu objekti nimega.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Tüübi sõnasõnaline deklaratsioon ei sobi. Avaldist {0} ei saa tüübimääratluses kasutada.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Tundmatu tehtemärk Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Andmeallikas, millesse andmeid lisada.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Koondatav kirje või tabel. Kirje lisatakse andmeallikasse. Tabeliread lisatakse andmeallikasse.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>üksus</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Delegeerimise hoiatus. Selle argumendi tulemit {0} võib enne funktsioonile {1} edastamist kärpida suurte andmekogumite puhul.</value>
     
@@ -4459,7 +4488,7 @@
     <value>Tühjendatav kogum.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Eemaldatav allikas.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>

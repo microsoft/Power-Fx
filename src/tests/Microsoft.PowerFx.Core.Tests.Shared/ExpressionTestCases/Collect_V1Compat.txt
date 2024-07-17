@@ -74,3 +74,9 @@ Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
 >> Collect(t1,{Price:200}).Price
 Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 11-22: The specified column 'Price' does not exist.
+
+>> Collect(t1, {Field1:Date(2023,2,27),Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+{Field1:44984,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}
+
+>> Collect(t1, {Field1:"1",Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Errors: Errors: Error 0-7: The function 'Collect' has some invalid arguments.|Error 12-85: The type of this argument 'Field1' does not match the expected type 'Decimal'. Found type 'Text'.

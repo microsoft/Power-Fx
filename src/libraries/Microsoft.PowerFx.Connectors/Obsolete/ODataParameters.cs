@@ -1,14 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Web; 
-using Microsoft.PowerFx.Types;
+using System.Web;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -38,7 +34,7 @@ namespace Microsoft.PowerFx.Connectors
         public int Levels { get; init; } = 0;
 
         // $orderby
-        public string OrderBy { get; init; } = null;
+        public IReadOnlyCollection<(string, bool)> OrderBy { get; init; } = null;
 
         // $schemaversion
         public string SchemaVersion { get; init; } = null;
@@ -113,7 +109,11 @@ namespace Microsoft.PowerFx.Connectors
 
                         d2 = ",";
                     }
-                } 
+                }
+                else if (value is IReadOnlyCollection<(string col, bool asc)> orderByList && orderByList.Any())
+                {
+                    sb.Append(string.Join(",", orderByList.Select(x => $"{x.col}{(x.asc ? string.Empty : " desc")}")));
+                }
                 else
                 {
                     encoded = HttpUtility.UrlEncode(value.ToString());
@@ -160,17 +160,17 @@ namespace Microsoft.PowerFx.Connectors
                 query["$format"] = Format;
             }
 
-            if (Index != 0)            
+            if (Index > 0)            
             {
                 query["$index"] = Index;
             }
 
-            if (Levels != 0)
+            if (Levels > 0)
             {
                 query["$levels"] = Levels;
             }
 
-            if (!string.IsNullOrEmpty(OrderBy))
+            if (OrderBy != null && OrderBy.Any())
             {
                 query["$orderby"] = OrderBy;
             }
@@ -190,12 +190,12 @@ namespace Microsoft.PowerFx.Connectors
                 query["$select"] = Select;
             }
 
-            if (Skip != 0)
+            if (Skip > 0)
             {
                 query["$skip"] = Skip;
             }
 
-            if (Top != 0)
+            if (Top > 0)
             {
                 query["$top"] = Top;
             }

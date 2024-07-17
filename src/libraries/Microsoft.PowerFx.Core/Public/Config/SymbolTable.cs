@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
-            if (errors.Any())
+            if (errors.Any(error => error.Severity > DocumentErrorSeverity.Warning))
             {
                 sb.AppendLine("Something went wrong when parsing user defined functions.");
 

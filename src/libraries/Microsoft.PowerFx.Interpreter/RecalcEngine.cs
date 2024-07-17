@@ -446,7 +446,7 @@ namespace Microsoft.PowerFx
             var sb = new StringBuilder();
             var udfs = UserDefinedFunction.CreateFunctions(parsedUdfs, nameResolver, out var errors);
 
-            if (errors.Any())
+            if (errors.Any(error => error.Severity > DocumentErrorSeverity.Warning))
             {
                 sb.AppendLine("Something went wrong when processing user defined functions.");
 

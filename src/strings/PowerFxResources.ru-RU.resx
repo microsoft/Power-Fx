@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Процентное значение (или столбец процентных значений), с помощью которого будет отображаться исчезание для цвета (или столбца значений цвета). При указании отрицательного процента будет получен более темный оттенок, при указании положительного — более светлый.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Возвращает запись с информацией о файле.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>BLOB-объект файла, о котором нужно получить сведения.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>файл</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Возвращает модуль числа, то есть число без знака.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Первый аргумент "{0}" должен быть записью.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Для использования этого параметра со значением перечисления или в функции Choices необходимо добавить сущность "{0}" в качестве источника данных. Чтобы сделать это, в меню "Вид" выберите пункт "Источники данных".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указанное свойство недоступно в этом контексте.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент представляет собой недопустимое значение даты или времени.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Этот источник данных недопустим. Исправьте ошибку в панели "Источники данных", выбрав пункты "Содержимое -&gt; Источники данных" или "Вид -&gt; Параметры"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Добавляет записи в источник данных.</value>
+    <value>Добавляет один или несколько элементов в указанную "коллекцию". Элементы могут происходить из другой таблицы или коллекции (например, Collect(collection, source_collection)) или из одной или нескольких записей: Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>источник_данных</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>запись</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>коллекция</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>элемент</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Новая или существующая коллекция для увеличения.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Удаляет все записи из коллекции. А затем добавляет другой набор записей в ту же коллекцию.</value>
+    <value>Очищает коллекцию и добавляет один или несколько элементов к указанной коллекции. Эти элементы могут браться из другой таблицы или коллекции (например, ClearCollect(collection, source_collection))) или из записей ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>источник_данных</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Новая или существующая коллекция для увеличения.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>источник_данных</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>запись</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Запись или таблица для получения. Запись будет добавлена к коллекции. Строки таблицы будут добавлены в коллекцию.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Применяет обновления к заданной строке и изменяет строку в указанном источнике данных. Возвращает обновленную строку.</value>
@@ -3866,6 +3873,14 @@
     <value>Функция "{0}" уже определена.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Предупреждение. Пользовательская функция {0} будет использовать существующую встроенную функцию {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Для имени функции ({0}) установлено ограничение.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Параметр "{0}" является дубликатом.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Указанный тип возврата функции не соответствует типу возврата основной части функции.</value>
+    <value>Указанный тип возврата функции "{0}" не соответствует типу возврата основной части функции "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Слишком много параметров в функции "{0}". Пользовательские функции поддерживают до {1} параметров.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Первый аргумент "{0}" должен быть допустимым именем переменной и не может конфликтовать с существующими именами элементов управления, экрана, коллекции или источника данных. Найден тип "{1}"</value>
+    <value>"{1}" нельзя изменить на "{0}" или есть конфликт с именем существующей переменной области, источника данных или другого объекта.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Недопустимая декларация типа литерала. Выражение "{0}" не может использоваться в определении типа.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Неизвестный оператор Partial.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Источник данных, в который нужно добавить данные.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Запись или таблица для получения. Запись будет добавлена к источнику данных. Строки таблицы будут добавлены в источник данных.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>элемент</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Предупреждение о делегировании. Результат этого аргумента "{0}" может быть усечен для больших наборов данных перед отправкой в функцию "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Коллекция для очистки.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Источник, который нужно очистить.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указанный источник данных невозможно использовать в этой функции.</value>

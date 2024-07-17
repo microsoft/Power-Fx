@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>เปอร์เซ็นต์ (หรือคอลัมน์ของค่าเปอร์เซ็นต์) ที่ต้องการเลือนสี (หรือคอลัมน์ของค่าสี) เปอร์เซ็นต์ค่าลบสร้างเฉดที่เข้มกว่า เปอร์เซ็นต์ค่าบวกสร้างเฉดที่อ่อนกว่า</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>ส่งกลับเรกคอร์ดที่มีข้อมูลเกี่ยวกับไฟล์</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Blob ไฟล์ที่จะรับข้อมูล</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>ไฟล์</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>คืนค่าสัมบูรณ์ของตัวเลข, ตัวเลขที่ไม่มีเครื่องหมาย</value>
     
@@ -1982,10 +1993,6 @@
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นเรกคอร์ด</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>การใช้ชุดตัวเลือกนี้เป็นค่าจาระไนหรือในฟังก์ชัน Choices จำเป็นต้องมีการเพิ่มเอนทิตี '{0}' เป็นแหล่งข้อมูล เมื่อต้องการเพิ่ม ให้ใช้เมนู มุมมอง แล้วเลือกแหล่งข้อมูล</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>คุณสมบัติที่ระบุไม่สามารถเข้าถึงได้ในบริบทนี้</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>อาร์กิวเมนต์ไม่ได้แสดงค่าวันที่หรือเวลาที่ถูกต้อง</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>แหล่งข้อมูลนี้ไม่ถูกต้อง: โปรดแก้ไขข้อผิดพลาดในบานหน้าต่าง "แหล่งข้อมูล" โดยคลิก "เนื้อหา -&gt; แหล่งเครื่องมือ" หรือ "แสดง -&gt; ตัวเลือก"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>เพิ่มเรกคอร์ดลงในแหล่งข้อมูล</value>
+    <value>เพิ่มหนึ่งรายการหรือมากกว่าไปยังคอลเลกชันที่ระบุ รายการสามารถมาจากตารางหรือคอลเลกชันที่ต่างกัน (เช่น Collect(collection, source_collection)) หรือจากหนึ่งเรกคอร์ดหรือมากกว่าของ Collect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>แหล่งข้อมูล</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>เรกคอร์ด</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>คอลเลกชัน</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>รายการ</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>คอลเลกชันที่จะแต่งเติม เป็นคอลเลกชันใหม่หรือที่มีอยู่แล้ว</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>ลบเรกคอร์ดทั้งหมดออกจากคอลเลกชัน จากนั้นเพิ่มชุดเรกคอร์ดอื่นลงในคอลเลกชันเดียวกัน</value>
+    <value>ล้างคอลเลกชันก่อน แล้วเพิ่มหนึ่งรายการหรือมากกว่าลงไปยังคอลเลกชัน ที่กำหนดไว้ รายการสามารถมาจากตารางหรือคอลเลกชันที่ต่างกัน (เช่น ClearCollect(collection, source_collection)) หรือจากหนึ่งเรกคอร์ดหรือมากกว่าของ ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>แหล่งข้อมูล</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>คอลเลกชันที่จะแต่งเติม เป็นคอลเลกชันใหม่หรือที่มีอยู่แล้ว</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>แหล่งข้อมูล</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>เรกคอร์ด</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกไปยังคอลเลกชัน แถวต่างๆ ในตารางจะถูกผนวกไปยังคอลเลกชัน</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>ใช้การอัปเดตกับแถวที่กำหนด และเปลี่ยนแปลงแถวในแหล่งข้อมูลที่กำหนด ส่งกลับแถวที่อัปเดตแล้ว</value>
@@ -3866,6 +3873,14 @@
     <value>มีการกำหนดฟังก์ชัน {0} ไว้แล้ว</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>คำเตือน: ฟังก์ชันที่ผู้ใช้กำหนด {0} จะติดตามฟังก์ชันในตัวที่มีอยู่ {0}</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>ชื่อฟังก์ชัน {0} ถูกจำกัด</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>พารามิเตอร์ {0} ซ้ำกัน</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน</value>
+    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุ '{0}' ไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน '{1}'</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>ฟังก์ชัน {0} มีพารามิเตอร์มากเกินไป ฟังก์ชันที่ผู้ใช้กำหนดรองรับสูงสุด {1} พารามิเตอร์</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นชื่อตัวแปรที่ถูกต้อง และไม่สามารถขัดแย้งกับการควบคุม หน้าจอ การรวบรวม หรือชื่อของแหล่งข้อมูลที่มีอยู่ พบประเภท '{1}'</value>
+    <value>ไม่สามารถแก้ไข '{1}' ด้วย '{0}' หรือขัดแย้งกับชื่อของตัวแปรขอบเขต แหล่งข้อมูล หรือออบเจ็กต์อื่นๆ ที่มีอยู่</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>พิมพ์การประกาศตามสัญพจน์ไม่ถูกต้อง ไม่สามารถใช้นิพจน์ '{0}' ในข้อกำหนดชนิดได้</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>ไม่รู้จักตัวดำเนินการ Partial</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>แหล่งข้อมูลที่จะเพิ่มข้อมูลไป</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกไปยังแหล่งข้อมูล แถวต่างๆ ในตารางจะถูกผนวกไปยังแหล่งข้อมูล</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>รายการ</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>คำเตือนการมอบสิทธิ์ ผลลัพธ์ของอาร์กิวเมนต์นี้ '{0}' อาจถูกตัดทอนสำหรับชุดข้อมูลขนาดใหญ่ก่อนที่จะส่งผ่านไปยังฟังก์ชัน '{1}'</value>
     
@@ -4459,7 +4488,7 @@
     <value>คอลเลกชันที่จะล้าง</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>แหล่งที่มาที่จะล้าง</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>แหล่งข้อมูลที่ระบุไม่สามารถใช้กับฟังก์ชันนี้ได้</value>

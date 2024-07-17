@@ -39,6 +39,10 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile"
           Condition="('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug462-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug70-True') Or ('$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'DebugAll-True')">
     <ItemGroup>

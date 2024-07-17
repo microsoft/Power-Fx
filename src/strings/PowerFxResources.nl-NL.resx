@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Een percentage (of kolom met percentagewaarden) waarmee de kleur (of de kolom met kleurwaarden) zal vervagen. Een negatief percentage produceert een donkerdere schaduw. Een positief percentage produceert een lichtere schaduw.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Retourneert een record met informatie over een bestand.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>De bestandsblob om informatie over op te halen.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>bestand</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Hiermee wordt de absolute waarde van een nummer, een nummer zonder het bijbehorende teken, geretourneerd.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Het eerste argument van {0} moet een record zijn.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Als deze optie is ingesteld als een opsommingswaarde of in de functie Choices, is het vereist dat de entiteit {0} wordt toegevoegd als een gegevensbron. Als u deze wilt toevoegen, opent u het menu Weergeven en selecteert u Gegevensbronnen.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>De opgegeven eigenschap is niet toegankelijk in deze context.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Het argument vertegenwoordigt geen geldige datum- of tijdwaarde.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Deze gegevensbron is ongeldig. Los de fout in het deelvenster Gegevensbronnen op door achtereenvolgens op Inhoud -&gt; Gegevensbronnen of Weergeven -&gt; Opties te klikken</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Hiermee worden records aan een gegevensbron toegevoegd.</value>
+    <value>Hiermee worden een of meer items aan de opgegeven verzameling toegevoegd. Het item kan afkomstig zijn uit een andere tabel of verzameling (bijv. Collect(collection, source_collection)), of een of meer records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>gegevens_bron</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>verzameling</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>item</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Een nieuwe of bestaande verzameling die moet worden uitgebreid.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Hiermee worden alle records uit een verzameling verwijderd. Vervolgens wordt een andere set records aan dezelfde verzameling toegevoegd.</value>
+    <value>Hiermee wordt eerst de verzameling gewist en worden vervolgens een of meer items aan de opgegeven verzameling toegevoegd. Het item kan afkomstig zijn uit een andere tabel of verzameling (bijv. ClearCollect(collection, source_collection)), of een of meer records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>gegevens_bron</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Een nieuwe of bestaande verzameling die moet worden uitgebreid.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>gegevens_bron</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Een record of tabel die moet worden verzameld. Een record wordt aan de verzameling toegevoegd. Van een tabel worden de rijen aan de verzameling toegevoegd.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Hiermee worden de updates toegepast op de opgegeven rijen en wordt de rij in de opgegeven gegevensbron gewijzigd. De bijgewerkte rij wordt geretourneerd.</value>
@@ -3750,8 +3757,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.
-      </value>
+    <value>Als uw gegevensset de limiet van 500 records overschrijdt, maar minder dan 2000 records bevat, kunt u proberen de limiet opnieuw in te stellen.
+        </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -3866,6 +3873,14 @@
     <value>Functie {0} is al gedefinieerd.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Waarschuwing: door de gebruiker gedefinieerde {0} schaduwt de bestaande, ingebouwde functie {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Functienaam {0} is beperkt.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} is een duplicaat.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
+    <value>Het vermelde retourtype van de functie {0} komt niet overeen met het retourtype van de functiehoofdtekst {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Functie {0} heeft te veel parameters. Door de gebruiker gedefinieerde functies ondersteunen maximaal {1} parameters.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Het eerste argument van {0} moet een geldige naam voor een variabele zijn en mag geen conflict hebben met een bestaande naam van een besturingselement, scherm, verzameling of gegevensbron. Type {1} gevonden</value>
+    <value>{1} kan niet worden gewijzigd met {0} of conflicteert met de naam van een bestaande bereikvariabele, gegevensbron of ander object.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Onbekende Partial-operator.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>De gegevensbron om gegevens aan toe te voegen.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Een record of tabel die moet worden verzameld. Een record wordt aan de gegevensbron toegevoegd. Van een tabel worden de rijen aan de gegevensbron toegevoegd.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>item</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

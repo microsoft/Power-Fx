@@ -21,13 +21,16 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
+        // Temporary hack to generate ADS
+        public bool GenerateADS { get; init; }
+
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
             _httpClient = httpClient;
             _uriPrefix = uriPrefix;
             _doubleEncoding = doubleEncoding;
-            
+
             Logger = logger;
         }
 

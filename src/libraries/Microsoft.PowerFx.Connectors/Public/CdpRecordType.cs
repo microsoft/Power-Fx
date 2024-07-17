@@ -26,19 +26,39 @@ namespace Microsoft.PowerFx.Connectors
             ReferencedEntities = referencedEntities;
         }
 
-        public override bool TryGetFieldType(string name, out FormulaType type)
+        public bool TryGetFieldExternalTableName(string fieldName, out string tableName)
         {
-            if (!base.TryGetBackingDType(name, out _))
+            tableName = null;
+
+            if (!base.TryGetBackingDType(fieldName, out _))
+            {                
+                return false;
+            }
+
+            ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);
+
+            if (connectorType.ExternalTables?.Any() != true)
+            {             
+                return false;
+            }
+
+            tableName = connectorType.ExternalTables.First();
+            return true;
+        }
+
+        public override bool TryGetFieldType(string fieldName, out FormulaType type)
+        {
+            if (!base.TryGetBackingDType(fieldName, out _))
             {
                 type = null;
                 return false;
             }
 
-            ConnectorType cr = ConnectorType.Fields.First(ct => ct.Name == name);
+            ConnectorType cr = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
             if (cr.ExternalTables?.Any() != true)
             {
-                return base.TryGetFieldType(name, out type);
+                return base.TryGetFieldType(fieldName, out type);
             }
 
             string tableName = cr.ExternalTables.First();
@@ -70,5 +90,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override string TableSymbolName => ConnectorType.Name;
+
+        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
     }
 }
