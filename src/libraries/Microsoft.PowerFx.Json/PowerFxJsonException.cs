@@ -19,8 +19,8 @@ namespace Microsoft.PowerFx
         {
         }
 
-        public PowerFxJsonException(string message, string name)
-            : base($"{message}{(string.IsNullOrEmpty(name) ? string.Empty : $", in {name}")}")
+        public PowerFxJsonException(string message, string path)
+            : base($"{message}{(string.IsNullOrEmpty(path) ? string.Empty : $", in {path}")}")
         {
         }
 

@@ -861,10 +861,10 @@ namespace Microsoft.PowerFx.Connectors
         {
             ExpressionError er = null;
 
-            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
+            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJson)) != null)
             {
                 runtimeContext.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
-                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
+                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Span = er.Span, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type); 
             }
 
             if (IsPageable && result is RecordValue rv)

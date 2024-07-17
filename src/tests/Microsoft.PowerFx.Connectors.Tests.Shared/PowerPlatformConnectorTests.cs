@@ -219,6 +219,8 @@ namespace Microsoft.PowerFx.Tests
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
+                Assert.Equal(statusCode, err.Span.Min);
+                Assert.Equal(statusCode, err.Span.Lim);
                 Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
             }
 
