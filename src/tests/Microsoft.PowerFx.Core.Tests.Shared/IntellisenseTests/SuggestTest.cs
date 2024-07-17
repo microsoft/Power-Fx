@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
         [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
-        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJson")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
         [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
