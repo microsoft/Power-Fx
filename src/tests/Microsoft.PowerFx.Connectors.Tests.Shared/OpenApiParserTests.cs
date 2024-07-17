@@ -610,7 +610,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
-            Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting Table but reveived a Number, in result/prediction/intents", ev.Errors.First().Message);
+            Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting Table but received a Number, in result/prediction/intents", ev.Errors.First().Message);
         }
 
         [Fact]
