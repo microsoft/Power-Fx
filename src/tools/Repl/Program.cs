@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
         private static bool _textFirst = false;
 
         private const string OptionUDF = "UserDefinedFunctions";
-        private static bool _enableUDFs = false;
+        private static bool _enableUDFs = true;
 
         private static readonly Features _features = Features.PowerFxV1;
 

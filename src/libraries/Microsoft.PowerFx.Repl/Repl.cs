@@ -416,14 +416,18 @@ namespace Microsoft.PowerFx
 
                 if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
                 {
-                    try
+                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
+
+                    if (!defCheckResult.IsSuccess)
                     {
-                        this.Engine.AddUserDefinitions(expression);
-                    }
-                    catch (Exception e)
-                    {
-                        await this.Output.WriteLineAsync(e.Message)
-                        .ConfigureAwait(false);
+                        foreach (var error in defCheckResult.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            var msg = error.ToString();
+
+                            await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                                .ConfigureAwait(false);
+                        }
                     }
 
                     return new ReplResult();

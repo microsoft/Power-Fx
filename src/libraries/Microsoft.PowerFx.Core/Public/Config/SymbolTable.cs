@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx
         /// <param name="symbolTable">Extra symbols to bind UDF. Commonly coming from Engine.</param>
         /// <param name="extraSymbolTable">Additional symbols to bind UDF.</param>
         /// <param name="allowSideEffects">Allow for curly brace parsing.</param>
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
+        internal DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, ReadOnlySymbolTable extraSymbolTable = null, bool allowSideEffects = false)
         {
             // Phase 1: Side affects are not allowed.
             // Phase 2: Introduces side effects and parsing of function bodies.
@@ -224,47 +224,25 @@ namespace Microsoft.PowerFx
                 AllowsSideEffects = allowSideEffects, 
                 Culture = parseCulture ?? CultureInfo.InvariantCulture 
             };
-            var sb = new StringBuilder();
 
-            var parseResult = UserDefinitions.Parse(script, options);
-
-            // Compose will handle null symbols
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
 
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
+            var checkResult = new DefinitionsCheckResult();
 
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
+            var udfs = checkResult.SetText(script, options)
+                .SetBindingInfo(composedSymbols)
+                .ApplyCreateUserDefinedFunctions();
 
-            if (errors.Any(error => error.Severity > DocumentErrorSeverity.Warning))
+            Contracts.AssertValue(udfs);
+            Contracts.Assert(udfs.Count() <= 1);
+            Contracts.Assert(!checkResult.ResolvedTypes.Any());
+
+            if (checkResult.IsSuccess)
             {
-                sb.AppendLine("Something went wrong when parsing user defined functions.");
-
-                foreach (var error in errors)
-                {
-                    error.FormatCore(sb);
-                }
-
-                throw new InvalidOperationException(sb.ToString());
+                AddFunctions(udfs);
             }
 
-            foreach (var udf in udfs)
-            {
-                AddFunction(udf);
-                var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
-                var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
-
-                List<TexlError> bindErrors = new List<TexlError>();
-
-                if (binding.ErrorContainer.GetErrors(ref bindErrors))
-                {
-                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
-                }
-            }
-
-            if (sb.Length > 0)
-            {
-                throw new InvalidOperationException(sb.ToString());
-            }
+            return checkResult;
         }
 
         /// <summary>
