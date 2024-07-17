@@ -242,10 +242,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-        public override void SetProperty(FormulaValue property, FormulaValue value)
+        public override void SetProperty(string propertyName, FormulaValue value)
         {
-            var propertyName = ((StringValue)property).Value;
-
             if (DataTable != null)
             {
                 throw new NotImplementedException();
@@ -518,9 +516,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-        public override void SetProperty(FormulaValue property, FormulaValue value)
+        public override void SetProperty(int index, FormulaValue value)
         {
-            var index = (int)((NumberValue)property).Value - 1; // 0-based index
+            index = index - 1; // 0-based index
 
             if (value is DecimalValue dv)
             {

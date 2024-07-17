@@ -40,7 +40,19 @@ namespace Microsoft.PowerFx
         {
             try
             {
-                untypedObject.SetProperty(property, value);
+                if (property is StringValue stringValue)
+                {
+                    untypedObject.SetProperty(stringValue.Value, value);
+                }
+                else if (property is NumberValue numberValue)
+                {
+                    untypedObject.SetProperty((int)numberValue.Value, value);
+                }
+                else
+                {                    
+                    return CommonErrors.GenericInvalidArgument(context, $"Set untyped object does not support '{property.Type}' type argument.");
+                }
+
                 return context.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
             }
             catch (CustomFunctionErrorException ex)
