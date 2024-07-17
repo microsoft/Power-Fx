@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // Demonstrate mutation example using IUntypedObject
     public class ScenarioMutation : PowerFxTest
-    {       
+    {
         [Fact]
         public void MutabilityTest()
         {
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 ["prop"] = FormulaValue.New(123)
             };
-                        
+
             var obj = MutableObject.New(d);
             engine.UpdateVariable("obj", obj);
 
@@ -45,15 +45,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)")]
-        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]       
+        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]
         public void MutabilityTest_Chain(string expr)
         {
-            var config = new PowerFxConfig();            
+            var config = new PowerFxConfig();
             config.AddFunction(new Assert2Function());
             config.AddFunction(new Set2Function());
             config.AddFunction(new Set3Function());
-            var engine = new RecalcEngine(config);            
-                      
+            var engine = new RecalcEngine(config);
+
             var d = new Dictionary<string, FormulaValue>
             {
                 ["prop"] = FormulaValue.New(123),
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.IsType<DecimalValue>(x);
             Assert.Equal(456, ((DecimalValue)x).Value);
-            Assert.Equal(456, ((DecimalValue)d["prop"]).Value);                      
+            Assert.Equal(456, ((DecimalValue)d["prop"]).Value);
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var impl = (MutableObject)obj.Impl;
                 impl.TryGetProperty(propName2.Value, out var propValue);
-                var val = propValue.GetDecimal();                
+                var val = propValue.GetDecimal();
                 impl.Set(propName.Value, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), val));
             }
         }
@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class MutableObject : IUntypedObject
+        private class MutableObject : UntypedObjectBase
         {
             private Dictionary<string, FormulaValue> _values = new Dictionary<string, FormulaValue>();
 
@@ -212,41 +212,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return FormulaValue.New(x);
             }
 
-            public IUntypedObject this[int index] => throw new NotImplementedException();
+            public override IUntypedObject this[int index] => throw new NotImplementedException();
 
-            public FormulaType Type => ExternalType.ObjectType;
+            public override FormulaType Type => ExternalType.ObjectType;
 
-            public int GetArrayLength()
+            public override int GetArrayLength()
             {
                 throw new NotImplementedException();
             }
 
-            public bool GetBoolean()
+            public override bool GetBoolean()
             {
                 throw new NotImplementedException();
             }
 
-            public double GetDouble()
-            {
-                throw new NotImplementedException();
-            }
-            
-            public decimal GetDecimal()
+            public override double GetDouble()
             {
                 throw new NotImplementedException();
             }
 
-            public string GetUntypedNumber()
+            public override decimal GetDecimal()
             {
                 throw new NotImplementedException();
             }
 
-            public string GetString()
+            public override string GetUntypedNumber()
             {
                 throw new NotImplementedException();
             }
 
-            public bool TryGetProperty(string value, out IUntypedObject result)
+            public override string GetString()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool TryGetProperty(string value, out IUntypedObject result)
             {
                 if (_values.TryGetValue(value, out var x))
                 {
@@ -258,7 +258,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return false;
             }
 
-            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            public override bool TryGetPropertyNames(out IEnumerable<string> result)
             {
                 result = null;
                 return false;

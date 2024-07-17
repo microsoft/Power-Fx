@@ -1309,14 +1309,14 @@
     <value>Een percentage (of kolom met percentagewaarden) waarmee de kleur (of de kolom met kleurwaarden) zal vervagen. Een negatief percentage produceert een donkerdere schaduw. Een positief percentage produceert een lichtere schaduw.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Retourneert een record met informatie over een bestand.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>De bestandsblob om informatie over op te halen.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>bestand</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Het eerste argument van {0} moet een record zijn.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Als deze optie is ingesteld als een opsommingswaarde of in de functie Choices, is het vereist dat de entiteit {0} wordt toegevoegd als een gegevensbron. Als u deze wilt toevoegen, opent u het menu Weergeven en selecteert u Gegevensbronnen.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>De opgegeven eigenschap is niet toegankelijk in deze context.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Het argument vertegenwoordigt geen geldige datum- of tijdwaarde.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Deze gegevensbron is ongeldig. Los de fout in het deelvenster Gegevensbronnen op door achtereenvolgens op Inhoud -&gt; Gegevensbronnen of Weergeven -&gt; Opties te klikken</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3765,8 +3757,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.
-      </value>
+    <value>Als uw gegevensset de limiet van 500 records overschrijdt, maar minder dan 2000 records bevat, kunt u proberen de limiet opnieuw in te stellen.
+        </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Functie {0} is al gedefinieerd.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Waarschuwing: door de gebruiker gedefinieerde {0} schaduwt de bestaande, ingebouwde functie {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Functienaam {0} is beperkt.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Het vermelde retourtype van de functie {0} komt niet overeen met het retourtype van de functiehoofdtekst {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Functie {0} heeft te veel parameters. Door de gebruiker gedefinieerde functies ondersteunen maximaal {1} parameters.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

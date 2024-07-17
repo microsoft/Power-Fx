@@ -1309,14 +1309,14 @@
     <value>Ποσοστό (ή στήλη ποσοστιαίων τιμών) με βάση το οποίο θα σβήνει σταδιακά το χρώμα (ή στήλη τιμών χρωμάτων). Ένα αρνητικό ποσοστό παράγει πιο σκούρα σκίαση. Ένα θετικό ποσοστό παράγει πιο ανοικτή σκίαση.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Επιστρέφει μια καρτέλα με πληροφορίες σχετικά με ένα αρχείο.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Το αντικείμενο blob αρχείου για τη λήψη πληροφοριών.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>αρχείο</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Το πρώτο όρισμα του '{0}' θα πρέπει να είναι εγγραφή.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Για να χρησιμοποιήσετε αυτήν την επιλογή ως τιμή απαρίθμησης ή στη συνάρτηση Choices, πρέπει να προσθέσετε την οντότητα "{0}" ως προέλευση δεδομένων. Για να την προσθέσετε, χρησιμοποιήστε το μενού "Προβολή" και έπειτα επιλέξτε "Προελεύσεις δεδομένων".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Δεν είναι δυνατή η πρόσβαση στην καθορισμένη ιδιότητα σε αυτό το περιβάλλον.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Η συνάρτηση {0} έχει ήδη οριστεί.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Προειδοποίηση: Η συνάρτηση που ορίζεται από {0} χρήστη θα επισκιάσει την υπάρχουσα ενσωματωμένη συνάρτηση {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Το όνομα συνάρτησης {0} είναι περιορισμένο.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί '{0}' δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Η συνάρτηση {0} έχει πάρα πολλές παραμέτρους. Οι συναρτήσεις που ορίζονται από τον χρήστη υποστηρίζουν έως {1} παραμέτρους.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

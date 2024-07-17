@@ -1309,14 +1309,14 @@
     <value>Процент (или колона с процентни стойности) на избледняване, който ще се приложи за цвета (или колоната със стойности на цвят). Даден отрицателен процент създава по-тъмен оттенък. Даден положителен процент създава по-светъл тъмен оттенък.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Връща запис с информация за файл.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>BLOB за файлове, за който да получите информация.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>файлове</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1874,7 +1874,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Операторът . не може да се използва за стойности от тип {0}.</value>
+    <value>Операторът „.“ не може да се използва за стойности от тип {0}.</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Първият аргумент на „{0}“ трябва да бъде запис.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Използването на този набор от опции като стойност за номериране или във функцията Choices изисква обектът „{0}“ да се добави като източник на данни. За да добавите, използвайте менюто „Изглед“ и след това изберете „Източници на данни“.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указаното свойство не е достъпно в този контекст.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргументът не представлява валидна стойност за дата или час.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Този източник на данни е невалиден. Коригирайте грешката в прозореца „Източници на данни“, като щракнете върху „Съдържание -&gt; Източници на данни“ или „Преглед -&gt; Опции“</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Добавя един или повече елемента към указаната колекция. Елементите може да са от различна таблица или колекция (например Collect(collection, source_collection)) или един или повече записа Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Първо изчиства колекцията и добавя един или повече елемента към указаната колекция. Елементите може да са от друга таблица или колекция (например ClearCollect(collection, source_collection)) или един или повече записа ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ако наборът от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.
+    <value>Ако вашият набор от данни надвишава ограничението от 500 записа, но съдържа по-малко от 2000 записа, опитайте да нулирате ограничението.
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>Функцията {0} вече е дефинирана.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Предупреждение: Дефинираната от потребителя функция {0} ще замени съществуващата вградена функция {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Името на функцията {0} е ограничено.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Посоченият тип на върната стойност на функцията „{0}“ не съответства на типа на върнатата стойност в основния ѝ текст „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Функцията {0} има твърде много параметри. Дефинираните от потребителите функции поддържат най-много {1} параметъра.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Източникът на данни за добавяне на данни.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Запис или таблица за събиране. Към базата данни ще се добави запис. Редовете на дадена таблица ще се добавят към базата данни.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>елемент</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

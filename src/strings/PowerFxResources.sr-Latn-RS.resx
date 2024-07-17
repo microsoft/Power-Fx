@@ -1309,14 +1309,14 @@
     <value>Procenat (ili kolona sa vrednostima procenata) po kojem će boja izbledeti. Negativni procenat stvara tamniju nijansu. Pozitivan procenat stvara svetliju nijansu.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Vraća zapis sa informacijama o datoteci.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Blob objekat datoteke o kojoj treba pribaviti informacije.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>datoteka</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Prvi argument za „{0}“ treba da bude zapis.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Da biste koristili ovu opciju podešenu kao vrednost nabrajanja ili da biste je koristili u funkciji Choices, morate da dodate entitet „{0}“ kao izvor podataka. Da biste ga dodali, u meniju „Prikaz“ izaberite stavku „Izvori podataka“.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Navedenom svojstvu se ne može pristupiti u ovom kontekstu.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ne predstavlja važeću vrednost datuma ili vremena.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Ovaj izvor podataka je nevažeći. Popravite grešku u oknu „Izvori podataka“ tako što ćete izabrati stavke „Sadržaj –&gt; Izvori podataka“ ili „Prikaz –&gt; Opcije“</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ako vaš skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, probajte da promenite ograničenje.
+    <value>Ako skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, pokušajte da promenite ograničenje.
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>Funkcija {0} je već definisana.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozorenje: Korisnički definisana funkcija {0} pratiće postojeću ugrađenu funkciju {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Naziv funkcije {0} je ograničen.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Navedeni tip rezultata funkcije „{0}“ ne podudara se sa tipom rezultata tela funkcije „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcija {0} ima previše parametara. Korisnički definisane funkcije podržavaju do {1} parametara.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
