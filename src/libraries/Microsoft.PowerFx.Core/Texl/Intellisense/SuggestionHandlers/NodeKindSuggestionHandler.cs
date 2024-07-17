@@ -24,9 +24,9 @@ namespace Microsoft.PowerFx.Intellisense
             public bool Run(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
-                Contracts.AssertValue(intellisenseData.CurNode);
+                Contracts.AssertValueOrNull(intellisenseData.CurNode);
 
-                if (intellisenseData.CurNode.Kind != _kind)
+                if (intellisenseData.CurNode?.Kind != _kind)
                 {
                     return false;
                 }
