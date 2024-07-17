@@ -22,14 +22,14 @@ namespace Microsoft.PowerFx.Types
     public class FormulaValueJSON
     {
         /// <summary>
-        /// Convenience method to create a value from a json representation. 
+        /// Convenience method to create a value from a json representation.
         /// </summary>
-        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
+        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false, string path = null)
         {
-            return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+            return FromJson(jsonString, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, path);
         }
-      
-        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+
+        public static FormulaValue FromJson(string jsonString, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null, string path = null)
         {
             try
             {
@@ -39,10 +39,19 @@ namespace Microsoft.PowerFx.Types
                 return FromJson(propBag, settings, formulaType);
             }
             catch (JsonException je)
-            {                
+            {
                 return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
                 {
                     Message = $"{je.GetType().Name} {je.Message}",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.Network
+                });
+            }
+            catch (PowerFxJsonException pfxje)
+            {
+                return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
+                {
+                    Message = $"{pfxje.GetType().Name} {pfxje.Message}",
                     Span = new Syntax.Span(0, 0),
                     Kind = ErrorKind.Network
                 });
@@ -54,13 +63,14 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>         
-        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>
+        /// <param name="path"></param>
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false, string path = null)
         {
-            return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType);
+            return FromJson(element, new FormulaValueJsonSerializerSettings() { NumberIsFloat = numberIsFloat }, formulaType, path);
         }
 
-        public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
+        public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null, string path = null)
         {
             if (formulaType is UntypedObjectType uot)
             {
@@ -85,7 +95,7 @@ namespace Microsoft.PowerFx.Types
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a NumberType or DecimalType but got {formulaType._type.Kind}");
+                        throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a Number", path);
                     }
 
                 case JsonValueKind.String:
@@ -125,7 +135,7 @@ namespace Microsoft.PowerFx.Types
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
+                        throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a String", path);
                     }
 
                 case JsonValueKind.False:
@@ -135,7 +145,7 @@ namespace Microsoft.PowerFx.Types
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a BooleanType but got {formulaType._type.Kind}");
+                        throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a Boolean (false)", path);
                     }
 
                 case JsonValueKind.True:
@@ -145,36 +155,54 @@ namespace Microsoft.PowerFx.Types
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a BooleanType but got {formulaType._type.Kind}");
+                        throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a Boolean (true)", path);
                     }
 
                 case JsonValueKind.Object:
                     if (skipTypeValidation || formulaType is RecordType)
                     {
-                        return RecordFromJsonObject(element, formulaType as RecordType, settings);
+                        return RecordFromJsonObject(element, formulaType as RecordType, settings, path);
+                    }
+                    else if (formulaType is TableType tt)
+                    {
+                        // We should have received an array but as a best effort we'll read the record and return a 1-element table
+                        RecordType rt = tt.ToRecord();
+                        RecordValue rv = RecordFromJsonObject(element, rt, settings, path);
+                        return TableValue.NewTable(rt, rv);
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a RecordType but got {formulaType._type.Kind}");
+                        throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a Record", path);
                     }
 
                 case JsonValueKind.Array:
                     if (skipTypeValidation || formulaType is TableType)
                     {
-                        return TableFromJsonArray(element, formulaType as TableType, settings);
+                        return TableFromJsonArray(element, formulaType as TableType, settings, path);
                     }
                     else
                     {
-                        throw new NotImplementedException($"Expecting a TableType Json Array but got {formulaType._type.Kind}");
+                        int n = element.EnumerateArray().Count();
+
+                        // If we receive a 1-element table, and that element is of the right type, let's accept it
+                        if (n == 1)
+                        {
+                            JsonElement first = element.EnumerateArray().First();
+                            return FromJson(first, settings, formulaType, path);
+                        }
+                        else
+                        {
+                            throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a Table with {n} elements", path);
+                        }
                     }
 
                 default:
-                    throw new NotImplementedException($"Unrecognized JsonElement {element.ValueKind}");
+                    throw new PowerFxJsonException($"Unrecognized JsonElement {element.ValueKind}", path);
             }
         }
 
-        // Json objects parse to records. 
-        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings)
+        // Json objects parse to records.
+        private static InMemoryRecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, FormulaValueJsonSerializerSettings settings, string path)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -199,7 +227,8 @@ namespace Microsoft.PowerFx.Types
                     fieldType = FormulaType.UntypedObject;
                 }
 
-                var paValue = FromJson(value, settings, fieldType);
+                string n = string.IsNullOrEmpty(path) ? name : $"{path}/{name}";
+                var paValue = FromJson(value, settings, fieldType, path: n);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -208,10 +237,10 @@ namespace Microsoft.PowerFx.Types
         }
 
         // More type safe than base class's ParseJson
-        // Parse json. 
-        // [1,2,3]  is a single column table, actually equivalent to: 
+        // Parse json.
+        // [1,2,3]  is a single column table, actually equivalent to:
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, FormulaValueJsonSerializerSettings settings)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, FormulaValueJsonSerializerSettings settings, string path)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
@@ -242,12 +271,12 @@ namespace Microsoft.PowerFx.Types
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, settings, ft));
+                var val = GuaranteeRecord(FromJson(element, settings, ft, path));
 
                 records.Add(val);
             }
 
-            // Constructor will handle both single-column table 
+            // Constructor will handle both single-column table
             TableType type;
             if (records.Count == 0)
             {
@@ -278,7 +307,7 @@ namespace Microsoft.PowerFx.Types
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));
         }
 
-        // Convert a FormulaValue into a Record for a single column table if needed. 
+        // Convert a FormulaValue into a Record for a single column table if needed.
         internal static RecordValue GuaranteeRecord(FormulaValue rawVal)
         {
             if (rawVal is RecordValue record)
@@ -286,7 +315,7 @@ namespace Microsoft.PowerFx.Types
                 return record;
             }
 
-            // Handle the single-column-table case. 
+            // Handle the single-column-table case.
             var defaultField = new NamedValue(TableValue.ValueName, rawVal);
 
             var val = FormulaValue.NewRecordFromFields(defaultField);
