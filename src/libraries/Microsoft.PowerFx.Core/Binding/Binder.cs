@@ -4379,7 +4379,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         var nodeInp = node.Args.Children[0];
                         nodeInp.Accept(this);
-                        if (_txb.GetType(nodeInp) == DType.UntypedObject 
+                        if (((node.Head.Name.Value == "AsType" && _txb.GetType(nodeInp) == DType.UntypedObject) || node.Head.Name.Value == "ParseJSON")
                             && node.Args.Count == 2 
                             && node.Args.Children[1] is FirstNameNode typeName
                             && _nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))

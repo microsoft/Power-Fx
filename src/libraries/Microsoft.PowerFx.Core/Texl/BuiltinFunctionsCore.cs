@@ -244,7 +244,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Add(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Add(new WithFunction());
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
-        public static readonly TexlFunction AsTypeUO = _library.Add(new AsTypeUOFunction());
 
         // Don't add new functions here, follow alpha order
 
@@ -261,6 +260,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
         public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
+        public static readonly TexlFunction AsTypeUO = _featureGateFunctions.Add(new AsTypeUOFunction());
+        public static readonly TexlFunction ParseJSONWithType = _featureGateFunctions.Add(new ParseJSONWithType());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
