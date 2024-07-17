@@ -82,8 +82,6 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
-
         public override bool Equals(object other)
         {
             if (other is not CdpRecordType crt)
@@ -93,8 +91,6 @@ namespace Microsoft.PowerFx.Connectors
 
             return ConnectorType.FormulaType.Equals(crt.ConnectorType.FormulaType);
         }
-
-#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         public override int GetHashCode()
         {
