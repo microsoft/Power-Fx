@@ -1309,14 +1309,14 @@
     <value>Процентное значение (или столбец процентных значений), с помощью которого будет отображаться исчезание для цвета (или столбца значений цвета). При указании отрицательного процента будет получен более темный оттенок, при указании положительного — более светлый.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Возвращает запись с информацией о файле.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>BLOB-объект файла, о котором нужно получить сведения.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>файл</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Первый аргумент "{0}" должен быть записью.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Для использования этого параметра со значением перечисления или в функции Choices необходимо добавить сущность "{0}" в качестве источника данных. Чтобы сделать это, в меню "Вид" выберите пункт "Источники данных".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указанное свойство недоступно в этом контексте.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент представляет собой недопустимое значение даты или времени.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Этот источник данных недопустим. Исправьте ошибку в панели "Источники данных", выбрав пункты "Содержимое -&gt; Источники данных" или "Вид -&gt; Параметры"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Добавляет один или несколько элементов в указанную "коллекцию". Элементы могут происходить из другой таблицы или коллекции (например, Collect(collection, source_collection)) или из одной или нескольких записей: Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Очищает коллекцию и добавляет один или несколько элементов к указанной коллекции. Эти элементы могут браться из другой таблицы или коллекции (например, ClearCollect(collection, source_collection))) или из записей ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Функция "{0}" уже определена.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Предупреждение. Пользовательская функция {0} будет использовать существующую встроенную функцию {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Для имени функции ({0}) установлено ограничение.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Указанный тип возврата функции "{0}" не соответствует типу возврата основной части функции "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Слишком много параметров в функции "{0}". Пользовательские функции поддерживают до {1} параметров.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Источник данных, в который нужно добавить данные.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Запись или таблица для получения. Запись будет добавлена к источнику данных. Строки таблицы будут добавлены в источник данных.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>элемент</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

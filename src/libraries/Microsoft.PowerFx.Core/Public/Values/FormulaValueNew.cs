@@ -124,6 +124,13 @@ namespace Microsoft.PowerFx.Types
             return new ErrorValue(IRContext.NotInSource(type), error.ToList());
         }
 
+        public static UntypedObjectValue New(UntypedObjectBase untypedObject)
+        {
+            return new UntypedObjectValue(
+                IRContext.NotInSource(new UntypedObjectType()),
+                untypedObject);
+        }
+
         public static UntypedObjectValue New(IUntypedObject untypedObject)
         {
             return new UntypedObjectValue(

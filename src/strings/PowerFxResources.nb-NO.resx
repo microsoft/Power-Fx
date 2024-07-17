@@ -1309,14 +1309,14 @@
     <value>En prosent (eller kolonne med prosentverdier) som fargen (eller kolonne med fargeverdier) tones med. En negativ prosent gir en mørkere nyanse. En positiv prosent gir en lysere nyanse.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Returnerer en oppføring med informasjon om en fil.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Fil-BLOB som du vil ha informasjon om.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fil</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Det første argumentet for {0} må være en post.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>For å kunne bruke dette alternativsettet som en opplistingsverdi eller i Choices funksjonen, må '{0}'-enheten legges til som datakilde. Bruk Vis-menyen for å legge til, og velg deretter datakilder.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Den angitte egenskapen er ikke tilgjengelig i denne konteksten.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentet representerer ikke en gyldig dato- eller klokkeslettverdi.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Denne datakilden er ugyldig. Rett opp feilen i ruten Datakilder ved å klikke Innhold -&gt; Datakilder eller Vis -&gt; Alternativer</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Legger til ett eller flere elementer i den angitte samlingen. Elementene kan være fra en annen tabell eller samling (for eksempel Collect(collection, source_collection)) eller en eller flere oppføringer Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Tømmer samlingen først og legger til ett eller flere elementer i den angitte samlingen. Elementene kan være fra en annen tabell eller samling (for eksempel ClearCollect(collection, source_collection)) eller en eller flere oppføringer ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2 000 poster, kan du prøve å tilbakestille grensen.
         </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>Funksjonen {0} er allerede definert.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Advarsel! Den brukerdefinerte funksjonen {0} vil skygge den eksisterende innebygde funksjonen {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Funksjonsnavnet {0} er begrenset.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Den angitte funksjonsreturtypen {0} samsvarer ikke med returtypen for funksjonsbrødteksten {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funksjonen {0} har for mange parametere. Brukerdefinerte funksjoner støtter opptil {1} parametere.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Datakilden som data skal legges til i.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>En oppføring eller tabell å samle inn. En oppføring legges til i datakilden. Radene i en tabell legges til i datakilden.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

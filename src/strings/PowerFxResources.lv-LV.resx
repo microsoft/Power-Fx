@@ -1309,14 +1309,14 @@
     <value>Procentuālā attiecība (vai procentuālo vērtību kolonna), cik ļoti krāsa (vai krāsu vērtību kolonna) tiks izgaismota. Negatīva procentuālā attiecība rada tumšāku ēnu. Pozitīva procentuālā attiecība rada gaišāku ēnu.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Atgriež ierakstu ar informāciju par failu.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Faila BLOB, par kuru iegūt informāciju.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fails</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>{0} pirmajam argumentam ir jābūt ierakstam.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Lai šo opciju kopu izmantotu kā uzskaitījuma vērtību vai funkcijā Choices, entītijai “{0}” ir jābūt pievienotai kā Datu avots. Lai pievienotu, izmantojiet izvēlni Skats un pēc tam atlasiet Datu avoti.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Norādītais rekvizīts šajā kontekstā nav pieejams.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Arguments nenorāda derīgu datuma vai laika vērtību.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Šis datu avots nav derīgs. Lūdzu, novērsiet kļūdu rūtī "Datu avoti", noklikšķinot uz "Saturs -&gt; Datu avoti" vai "Skatīt -&gt; Opcijas"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Pievieno vienu vairākus vienumus norādītajai kolekcijai. Vienumi var būt no citas tabulas vai kolekcijas (piemēram, Collect(collection, source_collection)) vai viena vai vairākiem ierakstiem Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Vispirms notīra kolekciju un pievieno vienu vai vairākus vienumus norādītajai kolekcijai. Vienumi var būt no citas tabulas vai kolekcijas (piemēram, ClearCollect(collection, source_collection)) vai viena vai vairākiem ierakstiem ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
       </value>
     
   </data>
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Lietotāja definētajai funkcijai ir jābūt pamattekstam.</value>
+    <value>Lietotāja definētai funkcijai ir jābūt pamattekstam.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funkcija {0} jau ir definēta.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Brīdinājums. Lietotāja definētā funkcija {0} aizstās esošo iebūvēto funkciju {0}.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Norādītais funkcijas atgriešanas tips “{0}” neatbilst funkcijas pamatteksta atgriešanas tipam “{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcijai {0} ir pārāk daudz parametru. Lietotāju definētas funkcijas atbalsta līdz {1} parametriem.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Datu avots, kuram pievienot datus.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Apkopojamais ieraksts vai tabula. Ieraksts tiks pievienots datu avotam. Tabulas rindas tiks pievienotas datu avotam.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>vienums</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

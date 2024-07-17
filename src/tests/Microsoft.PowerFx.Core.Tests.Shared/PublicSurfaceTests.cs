@@ -141,6 +141,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.IDelegatableTableValue",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
+                "Microsoft.PowerFx.Types.UntypedObjectBase",
                 "Microsoft.PowerFx.Types.IValueVisitor",              
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NamedValue",
