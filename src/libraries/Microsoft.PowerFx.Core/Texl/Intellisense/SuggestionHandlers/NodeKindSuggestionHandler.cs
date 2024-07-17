@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValue(intellisenseData);
                 Contracts.AssertValueOrNull(intellisenseData.CurNode);
 
-                if (intellisenseData.CurNode?.Kind != _kind)
+                if (intellisenseData.CurNode == null || intellisenseData.CurNode.Kind != _kind)
                 {
                     return false;
                 }
