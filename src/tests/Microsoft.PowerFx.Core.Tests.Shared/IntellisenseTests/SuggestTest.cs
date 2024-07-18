@@ -192,6 +192,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
         [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
+
+        // Suggests keywords and reserved words with indentifier escape.
+        [InlineData("With({'Children':1}, ThisRecord.|", "'Children'")]
+        [InlineData("With({'true':1}, ThisRecord.|", "'true'")]
+        [InlineData("With({'Children':1,'Child':1, Cuscuz:1}, ThisRecord.C|", "'Child'", "'Children'", "Cuscuz")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
