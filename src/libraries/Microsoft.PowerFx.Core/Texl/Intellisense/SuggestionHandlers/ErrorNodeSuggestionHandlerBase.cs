@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Intellisense
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
+                Contracts.AssertValue(intellisenseData.CurNode);
 
                 // For Error Kind, suggest top level values only in the context of a callNode and
                 // ThisItemProperties only in the context of thisItem.
