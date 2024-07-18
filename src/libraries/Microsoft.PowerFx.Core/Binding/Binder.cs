@@ -2648,6 +2648,12 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 AssertValid();
                 Contracts.AssertValue(node);
+                if (_nameResolver == null)
+                {
+                    _txb.SetType(node, DType.Unknown);
+                    return;
+                }
+
                 _txb.SetType(node, DTypeVisitor.Run(node.TypeRoot, _nameResolver));
             }
 
