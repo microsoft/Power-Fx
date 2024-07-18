@@ -459,11 +459,10 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return FormulaValue.NewError(
-                    new ExpressionError()
+                    new HttpExpressionError(statusCode)
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,
-                        Span = new Syntax.Span(statusCode, statusCode), // Return HTTP Status code in Span
                         Message = $"The server returned an HTTP error with code {statusCode}{reasonPhrase}. Response: {text}"
                     },
                     _function.ReturnType);
