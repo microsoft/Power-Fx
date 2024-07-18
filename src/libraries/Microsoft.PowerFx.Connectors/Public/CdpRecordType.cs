@@ -89,7 +89,15 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            return ConnectorType.FormulaType.Equals(crt.ConnectorType.FormulaType);
+            ConnectorType otherConnectorType = crt?.ConnectorType;
+
+            if (otherConnectorType == null)
+            {
+                return false;
+            }
+
+            return ConnectorType.Name == otherConnectorType.Name &&
+                   ConnectorType.FormulaType.Equals(otherConnectorType.FormulaType);
         }
 
         public override int GetHashCode()
