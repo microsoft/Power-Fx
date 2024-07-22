@@ -91,7 +91,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsType<ErrorValue>(errorValue);
             Assert.Equal(ErrorKind.NotSupported, errorValue.Errors.First().Kind);
         }
+      
+        [Fact]
+        public void PadUntypedObjectReadIndexTest()
+        {
+            DataTable dt = new DataTable("someTable");
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Column1", typeof(string));
+            dt.Columns.Add("Column2", typeof(string));
+            dt.Rows.Add(1, "data1", "data2");
+            dt.Rows.Add(2, "data3", "data4");
 
+            var uoTable = new PadUntypedObject(dt);
+            var uoRow = new PadUntypedObject(dt.Rows[0]); // First row
+
+            var uovTable = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoTable);
+            var uovRow = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoRow);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable", uovTable);
+            engine.UpdateVariable("padRow", uovRow);
+
+            // Index over row.
+            UntypedObjectValue result = (UntypedObjectValue)engine.Eval("Index(padRow, 1)");
+            Assert.Equal(1d, result.Impl.GetDouble());
+
+            result = (UntypedObjectValue)engine.Eval("Index(padRow, 2)");
+            Assert.Equal("data1", result.Impl.GetString());
+
+            var resultDecimal = (DecimalValue)engine.Eval("Index(padRow, 1) + 99");
+            Assert.Equal(100, resultDecimal.Value);
+
+            // Nested Index calls.
+            result = (UntypedObjectValue)engine.Eval("Index(Index(padTable, 1), 1)");
+            Assert.Equal(1d, result.Impl.GetDouble());
+
+            result = (UntypedObjectValue)engine.Eval("Index(Index(padTable, 2), 2)");
+            Assert.Equal("data3", result.Impl.GetString());
+        }
+      
         [Fact]
         public void PadUntypedObject2MutationTest()
         {
