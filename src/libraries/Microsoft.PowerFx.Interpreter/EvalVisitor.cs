@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
@@ -193,7 +192,11 @@ namespace Microsoft.PowerFx
 
                     if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, arg1value, newValue);
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
+                    }
+                    else if (arg0value is ErrorValue || arg0value is BlankValue)
+                    {
+                        return arg0value;
                     }
                 }
                 else if (arg0 is CallNode callNode && callNode.Function == BuiltinFunctionsCore.Index_UO)
@@ -203,7 +206,11 @@ namespace Microsoft.PowerFx
 
                     if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, child1Value, newValue);
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
+                    }
+                    else if (child0Value is ErrorValue || child0Value is BlankValue)
+                    {
+                        return child0Value;
                     }
                 }
                 else

@@ -117,9 +117,9 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// Set a property on the object.
         /// </summary>
-        /// <param name="index">Property identifier.</param>
+        /// <param name="index">Property identifier. 0-based.</param>
         /// <param name="value">FormulaValue to be set.</param>
-        public virtual void SetProperty(int index, FormulaValue value)
+        public virtual void SetIndex(int index, FormulaValue value)
         {
             // In case of unwanted behavior, throw an CustomFunctionErrorException exception.
             throw new NotImplementedException();

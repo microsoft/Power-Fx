@@ -36,23 +36,28 @@ namespace Microsoft.PowerFx
             return (T)serviceProvider.GetService(typeof(T));
         }
 
-        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, FormulaValue property, FormulaValue value)
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, StringValue property, FormulaValue value)
         {
             try
             {
-                if (property is StringValue stringValue)
-                {
-                    untypedObject.SetProperty(stringValue.Value, value);
-                }
-                else if (property is NumberValue numberValue)
-                {
-                    untypedObject.SetProperty((int)numberValue.Value, value);
-                }
-                else
-                {                    
-                    return CommonErrors.GenericInvalidArgument(context, $"Set untyped object does not support '{property.Type}' type argument.");
-                }
+                untypedObject.SetProperty(property.Value, value);
+                return context.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+            }
+            catch (CustomFunctionErrorException ex)
+            {
+                return new ErrorValue(context, new ExpressionError() { Message = ex.Message, Span = context.SourceContext, Kind = ex.ErrorKind });
+            }
+            catch (NotImplementedException)
+            {
+                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+            }
+        }
 
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, NumberValue property, FormulaValue value)
+        {
+            try
+            {
+                untypedObject.SetIndex((int)property.Value, value);
                 return context.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
             }
             catch (CustomFunctionErrorException ex)

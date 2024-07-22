@@ -16,14 +16,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void PadUntypedObjectTest()
         {
-            DataTable dt = new DataTable("someTable");
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Column1", typeof(string));
-            dt.Columns.Add("Column2", typeof(string));
-            dt.Rows.Add(1, "data1", "data2");
-            dt.Rows.Add(2, "data3", "data4");
-
-            PadUntypedObject uo = new PadUntypedObject(dt);
+            PadUntypedObject uo = new PadUntypedObject(GetDataTable());
             UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
@@ -42,19 +35,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(fv3 is BlankValue);
         }
 
-        [Fact]
-        public void PadUntypedObjectMutationTest()
-        {
-            DataTable dt = new DataTable("someTable");
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Column1", typeof(string));
-            dt.Columns.Add("Column2", typeof(string));
-            dt.Rows.Add(1, "data1", "data2");
-            dt.Rows.Add(2, "data3", "data4");
+        [Theory]
+        [InlineData("Set(Index(padTable, 1).Id, padCell);Index(padTable, 1).Id+1", 100)]
+        [InlineData("Set(Index(padTable, 1).Id, 99);Index(padTable, 1).Id+1", 100)]
+        [InlineData("If(IsError(Set(Index(padTable, 1/0).Id, 99)), -1)", -1)] // Catch error
 
-            PadUntypedObject uo = new PadUntypedObject(dt);
+        // Coercions
+        [InlineData("Set(Index(padTable, Float(1.1)).Id, 99);Index(padTable, 1).Id+1", 100)]
+        [InlineData("Set(Index(padTable, Value(1.1)).Id, 99);Index(padTable, 1).Id+1", 100)]
+        [InlineData("Set(Index(padTable, Decimal(1.1)).Id, 99);Index(padTable, 1).Id+1", 100)]
+
+        // Errors
+        [InlineData("Set(Index(padTable, 1).DoesNotExist, 99)", 0, true)] // Property does not exist.
+        [InlineData("Set(Index(padTable, 1).'1', 99)", 0, true)] // Property does not exist.
+        [InlineData("Set(Index(padTable, 1).Column2, GUID())", 0, true)] // Type not supported.
+        [InlineData("Set(Index(notImplementedUO, 1).Id, 1)", 0, true)] // 'SetProperty' not implemented.
+        [InlineData("Set(Index(padTable, If(false, 123)).Id, 99)", 0, true)] // Return error value.
+        public void PadUntypedObjectMutationTest(string expression, decimal expected, bool expectError = false)
+        {
+            PadUntypedObject uo = new PadUntypedObject(GetDataTable());
             PadUntypedObject uoCell = new PadUntypedObject(99);
-            NotImplementedUntypedObject notImplementedUO = new NotImplementedUntypedObject(dt);
+            NotImplementedUntypedObject notImplementedUO = new NotImplementedUntypedObject(GetDataTable());
 
             UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
             UntypedObjectValue uovCell = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoCell);
@@ -68,40 +69,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("notImplementedUO", notImplementedValue, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
             engine.UpdateVariable("padCell", uovCell);
 
-            // Setting an untyped object (padCell).
-            DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, padCell);Index(padTable, 1).Id+1", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.Equal(100m, result.ToObject());
+            var result = engine.Eval(expression, options: new ParserOptions() { AllowsSideEffects = true });
 
-            // Setting a strongly typed object (99).
-            result = (DecimalValue)engine.Eval(@"Set(Index(padTable, 1).Id, 99);Index(padTable, 1).Id+1", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.Equal(100m, result.ToObject());
+            if (expectError)
+            {
+                Assert.IsType<ErrorValue>(result);
 
-            // Property does not exist.
-            ErrorValue errorValue = (ErrorValue)engine.Eval(@"Set(Index(padTable, 1).DoesNotExist, 99)", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.IsType<ErrorValue>(errorValue);
-            Assert.Equal(ErrorKind.InvalidArgument, errorValue.Errors.First().Kind);
-
-            // Type not supported.
-            errorValue = (ErrorValue)engine.Eval(@"Set(Index(padTable, 1).Column2, GUID())", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.IsType<ErrorValue>(errorValue);
-            Assert.Equal(ErrorKind.InvalidArgument, errorValue.Errors.First().Kind);
-
-            // 'SetProperty' not implemented.
-            errorValue = (ErrorValue)engine.Eval(@"Set(Index(notImplementedUO, 1).Id, 1)", options: new ParserOptions() { AllowsSideEffects = true });
-            Assert.IsType<ErrorValue>(errorValue);
-            Assert.Equal(ErrorKind.NotSupported, errorValue.Errors.First().Kind);
+                var resultError = result as ErrorValue;
+                var expectedErrorKinds = new[] { ErrorKind.InvalidArgument, ErrorKind.NotSupported };
+                Assert.Contains(resultError.Errors.First().Kind, expectedErrorKinds);
+            }
+            else
+            {
+                Assert.IsType<DecimalValue>(result);
+                Assert.Equal(expected, ((DecimalValue)result).ToObject());
+            }
         }
-      
+
         [Fact]
         public void PadUntypedObjectReadIndexTest()
         {
-            DataTable dt = new DataTable("someTable");
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Column1", typeof(string));
-            dt.Columns.Add("Column2", typeof(string));
-            dt.Rows.Add(1, "data1", "data2");
-            dt.Rows.Add(2, "data3", "data4");
-
+            var dt = GetDataTable();
             var uoTable = new PadUntypedObject(dt);
             var uoRow = new PadUntypedObject(dt.Rows[0]); // First row
 
@@ -132,18 +120,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             result = (UntypedObjectValue)engine.Eval("Index(Index(padTable, 2), 2)");
             Assert.Equal("data3", result.Impl.GetString());
         }
-      
+
         [Fact]
         public void PadUntypedObject2MutationTest()
         {
-            DataTable dt = new DataTable("someTable");
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Column1", typeof(string));
-            dt.Columns.Add("Column2", typeof(string));
-            dt.Rows.Add(1, "data1", "data2");
-            dt.Rows.Add(2, "data3", "data4");
-
-            var uo = new PadUntypedObject2(dt);
+            var uo = new PadUntypedObject2(GetDataTable());
             var uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
 
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
@@ -155,6 +136,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Setting an untyped object (padCell)
             DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(Index(padTable, 1), 1), 97);Index(Index(padTable, 1), 1) + 0", options: new ParserOptions() { AllowsSideEffects = true });
             Assert.Equal(97m, result.ToObject());
+        }
+
+        private DataTable GetDataTable()
+        {
+            var dt = new DataTable("someTable");
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Column1", typeof(string));
+            dt.Columns.Add("Column2", typeof(string));
+            dt.Rows.Add(1, "data1", "data2");
+            dt.Rows.Add(2, "data3", "data4");
+
+            return dt;
         }
     }
 
@@ -557,7 +550,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-        public override void SetProperty(int index, FormulaValue value)
+        public override void SetIndex(int index, FormulaValue value)
         {
             index = index - 1; // 0-based index
 
