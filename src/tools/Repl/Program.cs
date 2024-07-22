@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
 
-                this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst };
+                this.ParserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat, TextFirst = _textFirst, AllowSingleUserDefinition = true };
             }
 
             public override async Task OnEvalExceptionAsync(Exception e, CancellationToken cancel)

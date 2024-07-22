@@ -52,6 +52,8 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool AllowParseAsTypeLiteral { get; set; }
 
+        public bool AllowSingleUserDefinition { get; set; }
+
         /// <summary>
         /// Allow parsing of attributes on user definitions
         /// This is an early prototype, and so is internal.

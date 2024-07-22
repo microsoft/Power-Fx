@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Adds an user defined function.
+        /// Adds user defined functions in the script.
         /// </summary>
         /// <param name="script">String representation of the user defined function.</param>
         /// <param name="parseCulture">CultureInfo to parse the script againts. Default is invariant.</param>
@@ -222,7 +222,8 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions() 
             { 
                 AllowsSideEffects = allowSideEffects, 
-                Culture = parseCulture ?? CultureInfo.InvariantCulture 
+                Culture = parseCulture ?? CultureInfo.InvariantCulture,
+                AllowSingleUserDefinition = true
             };
 
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);
@@ -234,7 +235,8 @@ namespace Microsoft.PowerFx
                 .ApplyCreateUserDefinedFunctions();
 
             Contracts.AssertValue(udfs);
-            Contracts.Assert(udfs.Count() <= 1);
+
+            // Contracts.Assert(udfs.Count() <= 1);
             Contracts.Assert(!checkResult.ResolvedTypes.Any());
 
             if (checkResult.IsSuccess)

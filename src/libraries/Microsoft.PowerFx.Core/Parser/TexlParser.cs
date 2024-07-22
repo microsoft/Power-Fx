@@ -421,7 +421,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
 
                         // Check if we're at EOF before a semicolon is found
-                        if (_curs.TidCur == TokKind.Eof)
+                        if (!parserOptions.AllowSingleUserDefinition && _curs.TidCur == TokKind.Eof)
                         {
                             // Add incomplete UDF as they are needed for intellisense 
                             udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
-                    if (TokEat(TokKind.Semicolon) == null)
+                    if (TokEat(TokKind.Semicolon, !parserOptions.AllowSingleUserDefinition) == null)
                     {
                         break;
                     }
