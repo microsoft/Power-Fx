@@ -411,8 +411,7 @@ namespace Microsoft.PowerFx
                 var definitionsCheckResult = new DefinitionsCheckResult();
 
                 definitionsCheckResult.SetText(expression, this.ParserOptions)
-                    .SetBindingInfo(currentSymbolTable)
-                    .ApplyParse();
+                    .ApplyParseErrors();
 
                 if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
                 {

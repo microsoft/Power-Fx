@@ -236,9 +236,6 @@ namespace Microsoft.PowerFx
 
             Contracts.AssertValue(udfs);
 
-            // Contracts.Assert(udfs.Count() <= 1);
-            Contracts.Assert(!checkResult.ResolvedTypes.Any());
-
             if (checkResult.IsSuccess)
             {
                 AddFunctions(udfs);

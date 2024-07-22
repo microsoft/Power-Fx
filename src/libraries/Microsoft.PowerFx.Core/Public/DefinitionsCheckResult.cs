@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx
             _localSymbolTable = new SymbolTable();
         }
 
-        public DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
+        internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
             Contracts.AssertValue(symbols);
 
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        public ParseUserDefinitionResult ApplyParse()
+        internal ParseUserDefinitionResult ApplyParse()
         {
             if (_definitions == null)
             {
@@ -191,10 +191,20 @@ namespace Microsoft.PowerFx
         {
             if (_resolvedTypes == null)
             {
-                ApplyResolveTypes();
+                this.ApplyCreateUserDefinedFunctions();
             }
 
             return this.Errors;
+        }
+
+        public IEnumerable<ExpressionError> ApplyParseErrors()
+        {
+            if (_parse == null)
+            {
+                this.ApplyParse();
+            }
+
+            return ExpressionError.New(_parse.Errors, _defaultErrorCulture);
         }
 
         /// <summary>

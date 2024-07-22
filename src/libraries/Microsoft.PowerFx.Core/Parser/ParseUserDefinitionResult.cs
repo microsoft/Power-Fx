@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    public sealed class ParseUserDefinitionResult
+    internal sealed class ParseUserDefinitionResult
     {
         internal IEnumerable<UDF> UDFs { get; }
 
@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool HasErrors { get; }
 
-        internal ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments)
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
