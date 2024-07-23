@@ -111,9 +111,11 @@ namespace Microsoft.PowerFx.Connectors
         internal ISwaggerSchema Schema { get; private set; } = null;
 
         // Relationships to external tables
-        internal List<string> ExternalTables { get; }
+        internal List<string> ExternalTables { get; set; }
 
-        internal string RelationshipName { get; }
+        internal string RelationshipName { get; set; }
+
+        internal string ForeignKey { get; set; }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -135,10 +137,10 @@ namespace Microsoft.PowerFx.Connectors
                 DisplayName = string.IsNullOrEmpty(title) ? summary : title;
                 ExplicitInput = schema.GetExplicitInput();
                 Capabilities = schema.GetColumnCapabilities();
-                Relationships = schema.GetRelationships();
+                Relationships = schema.GetRelationships(); // x-ms-relationships
                 KeyType = schema.GetKeyType();
                 KeyOrder = schema.GetKeyOrder();
-                Permission = schema.GetPermission();                
+                Permission = schema.GetPermission();
 
                 // We only support one reference for now
                 // SalesForce only
@@ -146,6 +148,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     ExternalTables = new List<string>(schema.ReferenceTo);
                     RelationshipName = schema.RelationshipName;
+                    ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
                 }
 
                 Fields = Array.Empty<ConnectorType>();
@@ -197,8 +200,8 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility))
+        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
         {
         }
 
@@ -260,7 +263,15 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
-        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void SetRelationship(SqlRelationship relationship)
+        {
+            ExternalTables ??= new List<string>();
+            ExternalTables.Add(relationship.ReferencedTable);
+            RelationshipName = relationship.RelationshipName;
+            ForeignKey = relationship.ReferencedColumnName;
+        }
+
+        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             if (FormulaType is not RecordType)
             {
@@ -277,7 +288,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities);
+            FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
         }
 
         private void AggregateErrors(ConnectorType[] types)
@@ -317,6 +328,6 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }        
+        }
     }
 }

@@ -239,9 +239,14 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SPO_Response5.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema ProductModel.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables SampleDB.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetRelationships SampleDB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server ExecuteStoredProcedureV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Get First Customers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server GetProceduresV2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetItems Products.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Error.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Response 1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Intellisense Response 2.json" />

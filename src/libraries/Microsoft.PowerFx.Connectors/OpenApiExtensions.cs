@@ -364,12 +364,14 @@ namespace Microsoft.PowerFx.Connectors
         internal class ConnectorTypeGetterSettings
         {
             internal readonly ConnectorCompatibility Compatibility;
+            internal readonly IList<SqlRelationship> SqlRelationships;
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility)
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, IList<SqlRelationship> sqlRelationships = null)
             {
                 Compatibility = connectorCompatibility;
+                SqlRelationships = sqlRelationships;
             }
 
             internal ConnectorTypeGetterSettings Stack(string identifier)
@@ -386,9 +388,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
         {
-            return openApiParameter.GetConnectorType(new ConnectorTypeGetterSettings(compatibility));
+            return openApiParameter.GetConnectorType(new ConnectorTypeGetterSettings(compatibility, sqlRelationships));
         }
 
         // See https://swagger.io/docs/specification/data-models/data-types/
@@ -602,6 +604,16 @@ namespace Microsoft.PowerFx.Connectors
                             //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
                             ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
+                            if (settings.SqlRelationships != null)
+                            {
+                                SqlRelationship relationship = settings.SqlRelationships.FirstOrDefault(sr => sr.ColumnName == propLogicalName);
+
+                                if (relationship != null)
+                                {
+                                    propertyType.SetRelationship(relationship);
+                                }
+                            }
+
                             settings.UnStack();
 
                             if (propertyType.HiddenRecordType != null)
@@ -756,7 +768,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (openApiMediaType.Schema == null)
                     {
-                        // Treat as void.                        
+                        // Treat as void.
                         return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(compatibility);
                     }
 
