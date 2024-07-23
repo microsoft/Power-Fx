@@ -107,10 +107,8 @@ namespace Microsoft.PowerFx.Connectors
         private bool IsSql() => _uriPrefix.Contains("/sql/");
 
         private List<SqlRelationship> GetSqlRelationships(string text)
-        {
-            JsonElement root = JsonDocument.Parse(text).RootElement;
-
-            Result r = root.Deserialize<Result>();
+        {            
+            Result r = JsonSerializer.Deserialize<Result>(text);
 
             SqlForeignKey[] fkt = r.ResultSets.Table1;
             SqlTable[] tt = r.ResultSets.Table2;
