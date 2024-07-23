@@ -52,6 +52,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool AllowParseAsTypeLiteral { get; set; }
 
+        /// <summary>
+        /// Flag to allow single user-definitons to be parsed without semicolon in the end.
+        /// </summary>
         public bool AllowSingleUserDefinition { get; set; }
 
         /// <summary>

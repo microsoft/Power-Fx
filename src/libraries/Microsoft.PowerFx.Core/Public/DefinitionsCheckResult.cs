@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx
 
         private ParseUserDefinitionResult _parse;
 
+        // Local symboltable to store new symbols in a given script and use in binding.
         private readonly SymbolTable _localSymbolTable;
 
         // Power Fx expression containing definitions
