@@ -40,5 +40,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // SalesForce specific
         string DataType { get; }
+
+        bool Equals(ISwaggerSchema other);
     }
 }

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
     // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
     // ConnectorType contains more details information coming from the swagger file and extensions
     [DebuggerDisplay("{FormulaType._type}")]
-    public class ConnectorType : SupportsConnectorErrors
+    public class ConnectorType : SupportsConnectorErrors, IEquatable<ConnectorType>
     {
         // "name"
         public string Name { get; internal set; }
@@ -328,6 +328,221 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public bool Equals(ConnectorType other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            if (this.Name != other.Name)
+            {
+                return false;
+            }
+
+            if (this.DisplayName != other.DisplayName)
+            {
+                return false;
+            }
+
+            if (this.Description != other.Description)
+            {
+                return false;
+            }
+
+            if (this.Binary != other.Binary)
+            {
+                return false;
+            }
+
+            if (this.ExplicitInput != other.ExplicitInput)
+            {
+                return false;
+            }
+
+            if (this.ForeignKey != other.ForeignKey)
+            {
+                return false;
+            }
+
+            if (this.IsEnum != other.IsEnum)
+            {
+                return false;
+            }
+
+            if (this.IsRequired != other.IsRequired)
+            {
+                return false;
+            }
+
+            if (this.KeyOrder != other.KeyOrder)
+            {
+                return false;
+            }
+
+            if (this.KeyType != other.KeyType)
+            {
+                return false;
+            }
+
+            if (this.MediaKind != other.MediaKind)
+            {
+                return false;
+            }
+
+            if (this.Permission != other.Permission)
+            {
+                return false;
+            }
+
+            if (this.RelationshipName != other.RelationshipName)
+            {
+                return false;
+            }
+
+            if (!this.Schema.Equals(other.Schema))
+            {
+                return false;
+            }
+            
+            if (this.Visibility != other.Visibility)
+            {
+                return false;
+            }
+
+            if (!SequenceEquals(this.HiddenFields, other.HiddenFields))
+            {
+                return false;
+            }
+
+            if (!SequenceEquals(this.Fields, other.Fields))
+            {
+                return false;
+            }
+
+            if (!SequenceEquals(this.ExternalTables, other.ExternalTables))
+            {
+                return false;
+            }            
+
+            if (!DictionaryEquals(this.Relationships, other.Relationships))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        internal static bool SequenceEquals<T>(IEnumerable<T> a, IEnumerable<T> b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return false;
+            }
+
+            return Enumerable.SequenceEqual(a, b);
+        }
+
+        internal static bool DictionaryEquals<TKey, TValue>(IDictionary<TKey, TValue> a, IDictionary<TKey, TValue> b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return false;
+            }
+
+            // Dictionary.Comparer is for TKey, so we need to get one for TValue
+            IEqualityComparer<TValue> valueComparer = EqualityComparer<TValue>.Default;
+
+            return a.Count == b.Count && a.Keys.All(key => b.ContainsKey(key) && valueComparer.Equals(a[key], b[key]));
+        }
+
+        public override bool Equals(object obj) => Equals(obj as ConnectorType);
+
+        public static bool operator ==(ConnectorType left, ConnectorType right)
+        {
+            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ConnectorType left, ConnectorType right) => !(left == right);
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1160472096;
+            hashCode = (hashCode * -1521134295) + Name?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + DisplayName?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + Description?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + Binary.GetHashCode();
+            hashCode = (hashCode * -1521134295) + ExplicitInput.GetHashCode();
+            hashCode = (hashCode * -1521134295) + ForeignKey?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + IsEnum.GetHashCode();
+            hashCode = (hashCode * -1521134295) + IsRequired.GetHashCode();
+            hashCode = (hashCode * -1521134295) + KeyOrder.GetHashCode();
+            hashCode = (hashCode * -1521134295) + KeyType.GetHashCode();
+            hashCode = (hashCode * -1521134295) + MediaKind.GetHashCode();
+            hashCode = (hashCode * -1521134295) + Permission.GetHashCode();
+            hashCode = (hashCode * -1521134295) + RelationshipName?.GetHashCode() ?? 0;
+            hashCode = (hashCode * -1521134295) + Schema?.GetHashCode() ?? 0;           
+            hashCode = (hashCode * -1521134295) + SequenceHash(this.HiddenFields);
+            hashCode = (hashCode * -1521134295) + SequenceHash(this.Fields);
+            hashCode = (hashCode * -1521134295) + SequenceHash(this.ExternalTables);
+            hashCode = (hashCode * -1521134295) + DictionaryHash(this.Schema?.Properties);
+            hashCode = (hashCode * -1521134295) + DictionaryHash(this.Relationships);
+            return hashCode;
+        }
+
+        internal static int DictionaryHash<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
+        {
+            if (dictionary == null)
+            {
+                return 0;
+            }
+
+            int hashCode = -1160472096;
+            foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
+            {
+                hashCode = (hashCode * -1521134295) + kvp.Key.GetHashCode();
+                hashCode = (hashCode * -1521134295) + kvp.Value.GetHashCode();
+            }
+
+            return hashCode;
+        }
+
+        internal static int SequenceHash<T>(IEnumerable<T> values)
+        {
+            if (values == null)
+            {
+                return 0;
+            }
+
+            int hashCode = -1160472096;
+            foreach (T value in values)
+            {
+                hashCode = (hashCode * -1521134295) + value?.GetHashCode() ?? 0;
+            }
+
+            return hashCode;
         }
     }
 }

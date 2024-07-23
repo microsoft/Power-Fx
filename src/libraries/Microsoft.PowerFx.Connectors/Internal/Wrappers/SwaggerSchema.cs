@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class SwaggerSchema : SwaggerExtensions, ISwaggerSchema
+    internal class SwaggerSchema : SwaggerExtensions, ISwaggerSchema, IEquatable<SwaggerSchema>, IEquatable<ISwaggerSchema>
     {
         internal readonly OpenApiSchema _schema;
 
@@ -104,8 +104,8 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // OpenAI special extension to indicate the type of the property
-            if (schema.Extensions.TryGetValue("x-oaiTypeLabel", out IOpenApiExtension ext) && 
-                ext is OpenApiString str && 
+            if (schema.Extensions.TryGetValue("x-oaiTypeLabel", out IOpenApiExtension ext) &&
+                ext is OpenApiString str &&
                 !string.IsNullOrEmpty(str.Value))
             {
                 return str.Value;
@@ -113,5 +113,126 @@ namespace Microsoft.PowerFx.Connectors
 
             return null;
         }
+
+        public static bool Equals(ISwaggerSchema schema1, ISwaggerSchema schema2)
+        {
+            if (ReferenceEquals(schema1, null) && ReferenceEquals(schema2, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(schema1, null) || ReferenceEquals(schema2, null))
+            {
+                return false;
+            }
+
+            if (schema1.Description != schema2.Description)
+            {
+                return false;
+            }
+
+            if (schema1.Title != schema2.Title)
+            {
+                return false;
+            }
+
+            if (schema1.Format != schema2.Format)
+            {
+                return false;
+            }
+
+            if (schema1.Type != schema2.Type)
+            {
+                return false;
+            }
+
+            if (!ConnectorType.SequenceEquals(schema1.Required, schema2.Required))
+            {
+                return false;
+            }
+
+            if (!ConnectorType.DictionaryEquals(schema1.Properties, schema2.Properties))
+            {
+                return false;
+            }
+
+            if (schema1.Reference?.Id != schema2.Reference?.Id)
+            {
+                return false;
+            }
+
+            if (schema1.Discriminator?.PropertyName != schema2.Discriminator?.PropertyName)
+            {
+                return false;
+            }
+
+            if (!ConnectorType.SequenceEquals(schema1.ReferenceTo, schema2.ReferenceTo))
+            {
+                return false;
+            }
+
+            if (schema1.RelationshipName != schema2.RelationshipName)
+            {
+                return false;
+            }
+
+            if (schema1.DataType != schema2.DataType)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool Equals(ISwaggerSchema other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            return Equals(this, other);
+        }
+
+        public bool Equals(SwaggerSchema obj) => Equals(obj as ISwaggerSchema);
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            if (obj is ISwaggerSchema sws)
+            {
+                return SwaggerSchema.Equals(this, sws);
+            }
+
+            return false;
+        }
+
+        public static bool operator ==(SwaggerSchema left, SwaggerSchema right)
+        {
+            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(SwaggerSchema left, SwaggerSchema right) => !(left == right);
+
+        public override int GetHashCode() => _schema.GetHashCode();
     }
 }

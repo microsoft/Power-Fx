@@ -202,6 +202,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
             Assert.Equal("*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:w, ProductID:w, ProductModelID:w, ProductNumber:s, SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type._type.ToString());
 
+            CdpRecordType sqlType = (CdpRecordType)sqlTable.TabularRecordType;
+            Assert.True(sqlType == sqlTable.TabularRecordType);
+            Assert.True(sqlTable.TabularRecordType == sqlType);
+
+            CdpTableValue sqlTable2 = connectorTable.GetTableValue();
+            CdpRecordType sqlType2 = (CdpRecordType)sqlTable2.TabularRecordType;
+
+            Assert.True(sqlType == sqlType2);
+            Assert.False(sqlType != sqlType2);
+            Assert.Equal(sqlType.GetHashCode(), sqlType2.GetHashCode());
+
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
 
@@ -655,7 +666,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False((CdpRecordType)sfTable.TabularRecordType == null);
             Assert.False(userTable == null);
             Assert.False(sfTable.TabularRecordType == userTable);
-
 
             // External relationship table name
             Assert.Equal("User", userTable.TableSymbolName);

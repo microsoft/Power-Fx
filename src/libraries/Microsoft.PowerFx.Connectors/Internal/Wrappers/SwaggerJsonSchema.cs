@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
-using SharpYaml.Tokens;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class SwaggerJsonSchema : SwaggerJsonExtensions, ISwaggerSchema
+    internal class SwaggerJsonSchema : SwaggerJsonExtensions, ISwaggerSchema, IEquatable<SwaggerJsonSchema>, IEquatable<ISwaggerSchema>
     {
         private readonly JsonElement _schema;
 
@@ -58,12 +57,16 @@ namespace Microsoft.PowerFx.Connectors
         // Not supported yet
         public ISwaggerSchema AdditionalProperties => null;
 
-        public IDictionary<string, ISwaggerSchema> Properties 
+        public IDictionary<string, ISwaggerSchema> Properties
         {
             get
             {
-                JsonElement jprops = _schema.GetProperty("properties");
-                Dictionary<string, ISwaggerSchema> props = new Dictionary<string, ISwaggerSchema>();                                
+                if (!_schema.TryGetProperty("properties", out JsonElement jprops))
+                {
+                    return new Dictionary<string, ISwaggerSchema>();
+                }
+
+                Dictionary<string, ISwaggerSchema> props = new Dictionary<string, ISwaggerSchema>();
 
                 if (jprops.ValueKind != JsonValueKind.Object)
                 {
@@ -107,5 +110,56 @@ namespace Microsoft.PowerFx.Connectors
         {
             return _schema.TryGetProperty(key, out JsonElement val) ? val.GetString() : null;
         }
+
+        public bool Equals(ISwaggerSchema other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            return SwaggerSchema.Equals(this, other);
+        }
+
+        public bool Equals(SwaggerJsonSchema obj) => Equals(obj as ISwaggerSchema);
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            if (obj is ISwaggerSchema sws)
+            {
+                return SwaggerSchema.Equals(this, sws);
+            }
+
+            return false;
+        }
+
+        public static bool operator ==(SwaggerJsonSchema left, SwaggerJsonSchema right)
+        {
+            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(SwaggerJsonSchema left, SwaggerJsonSchema right) => !(left == right);
+
+        public override int GetHashCode() => _schema.ToString().GetHashCode();
     }
 }
