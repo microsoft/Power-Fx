@@ -234,7 +234,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(b);
             CdpRecordType productModelRecordType = Assert.IsType<CdpRecordType>(productModelID);
 
-            Assert.False(productModelRecordType == null);
+            Assert.False(productModelRecordType is null);
 
             // External relationship table name
             Assert.Equal("[SalesLT].[ProductModel]", productModelRecordType.TableSymbolName);
@@ -652,10 +652,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(b);
             CdpRecordType userTable = Assert.IsType<CdpRecordType>(ownerIdType);
 
-            Assert.False((CdpRecordType)sfTable.TabularRecordType == null);
-            Assert.False(userTable == null);
-            Assert.False(sfTable.TabularRecordType == userTable);
-
+            Assert.False((CdpRecordType)sfTable.TabularRecordType is null);
+            Assert.False(userTable is null);
 
             // External relationship table name
             Assert.Equal("User", userTable.TableSymbolName);

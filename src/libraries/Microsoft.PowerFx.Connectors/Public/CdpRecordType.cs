@@ -84,20 +84,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool Equals(object other)
         {
-            if (other is not CdpRecordType crt)
-            {
-                return false;
-            }
-
-            ConnectorType otherConnectorType = crt?.ConnectorType;
-
-            if (otherConnectorType == null)
-            {
-                return false;
-            }
-
-            return ConnectorType.Name == otherConnectorType.Name &&
-                   ConnectorType.FormulaType.Equals(otherConnectorType.FormulaType);
+            throw new NotImplementedException();
         }
 
         public override int GetHashCode()
