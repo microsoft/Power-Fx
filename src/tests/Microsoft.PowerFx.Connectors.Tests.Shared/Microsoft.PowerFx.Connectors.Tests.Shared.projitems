@@ -53,6 +53,11 @@
     <None Include="$(MSBuildThisFileDirectory)Owl.NoAlpha.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service For Language v2.1_Invalid Response.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service For Language v2.1_Invalid Response 2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service For Language v2.1_Invalid Response 3.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service For Language v2.1_Invalid Response 4.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service For Language v2.1_Invalid Response 5.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language v2.1_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Azure Cognitive Service for Language_Response.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\AzureBlobStorage_GetFileContentV2.raw" />
