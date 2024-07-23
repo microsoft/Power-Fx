@@ -148,8 +148,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public const string AsTypeInvariantFunctionName = "AsType";
 
-        public override bool IsAsync => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;

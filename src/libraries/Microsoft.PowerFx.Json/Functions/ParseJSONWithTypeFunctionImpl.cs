@@ -17,41 +17,42 @@ using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class ParseJSONWithTypeImpl : ParseJSONWithType, IAsyncTexlFunction
+    internal class TypedParseJSONFunctionImpl : TypedParseJSONFunction, IAsyncTexlFunction
     {
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            var arg0 = (StringValue)args[0];
-            var arg1 = (StringValue)args[1];
+            var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+            var arg0 = args[0];
 
-            var json = arg0.Value;
-            JsonElement result;
-            try
+            if (arg0 is BlankValue || arg0 is ErrorValue)
             {
-                using (var document = JsonDocument.Parse(json))
-                {
-                    // Clone must be used here because the original element will be disposed
-                    result = document.RootElement.Clone();
-                }
-
-                // Map null to blank
-                if (result.ValueKind == JsonValueKind.Null)
-                {
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-                }
-
-                if (DType.TryParse(arg1.Value, out DType dtype))
-                {
-                    var fv = FormulaValueJSON.FromJson(result, FormulaType.Build(dtype));
-                    return fv;
-                }
-
-                return FormulaValue.NewError(new ExpressionError());
+                return arg0;
             }
-            catch (JsonException ex)
+            else if (arg0 is not StringValue)
             {
-                return FormulaValue.NewError(new ExpressionError());
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = "Runtime type mismatch",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidArgument
+                });
             }
+
+            var typeString = (StringValue)args[1];
+            var json = ((StringValue)arg0).Value;
+
+            if (!DType.TryParse(typeString.Value, out DType dtype))
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Internal error: Unable to parse type argument",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Internal
+                });
+            }
+
+            var fv = FormulaValueJSON.FromJson(json, FormulaType.Build(dtype));
+            return fv;
         }
     }
 }
