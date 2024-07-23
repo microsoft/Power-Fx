@@ -249,6 +249,12 @@ Error({Kind:ErrorKind.EditPermissions})
 >> IfError(Error({Kind:ErrorKind.Timeout}), $"{FirstError.Kind}: {FirstError.Message}")
 "28: Timeout error"
 
+>> IfError(Error({Kind:ErrorKind.ServiceUnavailable}), $"{FirstError.Kind}: {FirstError.Message}")
+"29: Online service connection not available"
+
+>> IfError(Error({Kind:ErrorKind.InvalidJson}), $"{FirstError.Kind}: {FirstError.Message}")
+"30: Invalid Json format"
+
 >> IfError(Error({Kind:ErrorKind.Custom}), $"{FirstError.Kind}: {FirstError.Message}")
 "1000: Custom error"
 

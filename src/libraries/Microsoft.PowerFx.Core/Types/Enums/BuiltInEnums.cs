@@ -154,6 +154,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "NotApplicable", 27 },
                 { "Timeout", 28 },
                 { "ServiceUnavailable", 29 },
+                { "InvalidJson", 30 },
                 { "Custom", 1000 },
             },
             canCompareNumeric: true,

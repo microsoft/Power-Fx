@@ -62,7 +62,11 @@ namespace Microsoft.PowerFx.Connectors
         {
             get
             {
-                JsonElement jprops = _schema.GetProperty("properties");
+                if (!_schema.TryGetProperty("properties", out JsonElement jprops))
+                {
+                    return new Dictionary<string, ISwaggerSchema>();
+                }
+
                 Dictionary<string, ISwaggerSchema> props = new Dictionary<string, ISwaggerSchema>();                                
 
                 if (jprops.ValueKind != JsonValueKind.Object)

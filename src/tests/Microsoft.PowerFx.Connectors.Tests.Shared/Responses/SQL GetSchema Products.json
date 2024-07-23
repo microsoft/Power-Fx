@@ -1,0 +1,167 @@
+{
+  "name": "[SalesLT].[Product]",
+  "title": "[SalesLT].[Product]",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": { "sortable": true },
+    "filterRestrictions": { "filterable": true },
+    "selectRestrictions": { "selectable": true },
+    "filterFunctionSupport": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "now", "not", "and", "or", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes", "totalseconds", "round", "floor", "ceiling", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat", "sum", "min", "max", "average", "countdistinct", "null" ]
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [ "Name", "ProductNumber", "StandardCost", "ListPrice", "SellStartDate", "rowguid", "ModifiedDate" ],
+      "properties": {
+        "ProductID": {
+          "title": "ProductID",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int32",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-ms-keyOrder": 1,
+          "x-ms-keyType": "primary",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "Name": {
+          "title": "Name",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 50,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ProductNumber": {
+          "title": "ProductNumber",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 25,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Color": {
+          "title": "Color",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 15,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "StandardCost": {
+          "title": "StandardCost",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "round", "floor", "ceiling", "negate", "sum", "average" ] },
+          "type": "number",
+          "format": "currency",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ListPrice": {
+          "title": "ListPrice",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "round", "floor", "ceiling", "negate", "sum", "average" ] },
+          "type": "number",
+          "format": "currency",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Size": {
+          "title": "Size",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 5,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "Weight": {
+          "title": "Weight",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "round", "floor", "ceiling", "negate", "sum", "average" ] },
+          "type": "number",
+          "format": "double",
+          "minimum": -79228162514264337593543950335.0,
+          "maximum": 79228162514264337593543950335.0,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ProductCategoryID": {
+          "title": "ProductCategoryID",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int32",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ProductModelID": {
+          "title": "ProductModelID",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int32",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "SellStartDate": {
+          "title": "SellStartDate",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time" ] },
+          "type": "string",
+          "format": "date-no-tz",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "SellEndDate": {
+          "title": "SellEndDate",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time" ] },
+          "type": "string",
+          "format": "date-no-tz",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "DiscontinuedDate": {
+          "title": "DiscontinuedDate",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time" ] },
+          "type": "string",
+          "format": "date-no-tz",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ThumbNailPhoto": {
+          "title": "ThumbNailPhoto",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct" ] },
+          "type": "string",
+          "format": "byte",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ThumbnailPhotoFileName": {
+          "title": "ThumbnailPhotoFileName",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "maxLength": 50,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "rowguid": {
+          "title": "rowguid",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "format": "guid",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "ModifiedDate": {
+          "title": "ModifiedDate",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time" ] },
+          "type": "string",
+          "format": "date-no-tz",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        }
+      }
+    },
+    "x-ms-permission": "read-write"
+  }
+}

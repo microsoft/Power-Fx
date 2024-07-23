@@ -25,4 +25,13 @@
 `Patch(DS, table_of_rows_with_updates)`\
 `Patch(Record, Updates1, Updates2,…)`
 
-## Other:
+## Other:  
+  - Untyped object
+    - Read a field from an untyped object by index (https://github.com/microsoft/Power-Fx/pull/2555):  
+      `Index(untypedObject, 1) // Read the first field from an untyped record`  
+      `Index(Index(untypedObject, 1), 1) // Read the record from an untyped array, then reads the first field.`
+      
+    - Setting an untyped object via deep mutation is now supported (https://github.com/microsoft/Power-Fx/pull/2548):  
+      `Set(untypedObject.Field, 99)`      
+      `Set(Index(untypedObject, 1).Field, 99)  // Reference field by name`  
+      `Set(Index(Index(untypedObject, 1), 1), 99) // Reference field by index`   
