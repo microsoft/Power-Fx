@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return FormulaValue.NewError(
-                    new ExpressionError()
+                    new HttpExpressionError(statusCode)
                     {
                         Kind = ErrorKind.Network,
                         Severity = ErrorSeverity.Critical,

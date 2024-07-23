@@ -4,6 +4,7 @@
 using System;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,16 +18,23 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        protected internal static async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal static async Task<T> GetObject<T>(HttpClient httpClient, string message, string uri, string content, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
             where T : class, new()
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            string result = await GetObject(httpClient, message, uri, cancellationToken, logger, $"{callingMethod}<{typeof(T).Name}>").ConfigureAwait(false);
-            return string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
+            string result = await GetObject(httpClient, message, uri, content, cancellationToken, logger, $"{callingMethod}<{typeof(T).Name}>").ConfigureAwait(false);
+            T res = string.IsNullOrWhiteSpace(result) ? null : JsonSerializer.Deserialize<T>(result);
+
+            if (res is ISupportsPostProcessing postProcessing)
+            {
+                postProcessing.PostProcess();
+            }
+
+            return res;
         }
 
-        protected internal static async Task<string> GetObject(HttpClient httpClient, string message, string uri, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
+        protected internal static async Task<string> GetObject(HttpClient httpClient, string message, string uri, string content, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
         {
             cancellationToken.ThrowIfCancellationRequested();
             string log = $"{callingMethod}.{nameof(GetObject)} for {message}, Uri {uri}";
@@ -35,7 +43,13 @@ namespace Microsoft.PowerFx.Connectors
             {
                 logger?.LogInformation($"Entering in {log}");
 
-                using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+                using HttpRequestMessage request = new HttpRequestMessage(string.IsNullOrEmpty(content) ? HttpMethod.Get : HttpMethod.Post, uri);
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    request.Content = new StringContent(content, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson);
+                }
+
                 using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 string text = response?.Content == null ? string.Empty : await response.Content.ReadAsStringAsync().ConfigureAwait(false);

@@ -1309,14 +1309,14 @@
     <value>เปอร์เซ็นต์ (หรือคอลัมน์ของค่าเปอร์เซ็นต์) ที่ต้องการเลือนสี (หรือคอลัมน์ของค่าสี) เปอร์เซ็นต์ค่าลบสร้างเฉดที่เข้มกว่า เปอร์เซ็นต์ค่าบวกสร้างเฉดที่อ่อนกว่า</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>ส่งกลับเรกคอร์ดที่มีข้อมูลเกี่ยวกับไฟล์</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Blob ไฟล์ที่จะรับข้อมูล</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>ไฟล์</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นเรกคอร์ด</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>การใช้ชุดตัวเลือกนี้เป็นค่าจาระไนหรือในฟังก์ชัน Choices จำเป็นต้องมีการเพิ่มเอนทิตี '{0}' เป็นแหล่งข้อมูล เมื่อต้องการเพิ่ม ให้ใช้เมนู มุมมอง แล้วเลือกแหล่งข้อมูล</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>คุณสมบัติที่ระบุไม่สามารถเข้าถึงได้ในบริบทนี้</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>อาร์กิวเมนต์ไม่ได้แสดงค่าวันที่หรือเวลาที่ถูกต้อง</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>แหล่งข้อมูลนี้ไม่ถูกต้อง: โปรดแก้ไขข้อผิดพลาดในบานหน้าต่าง "แหล่งข้อมูล" โดยคลิก "เนื้อหา -&gt; แหล่งเครื่องมือ" หรือ "แสดง -&gt; ตัวเลือก"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>เพิ่มหนึ่งรายการหรือมากกว่าไปยังคอลเลกชันที่ระบุ รายการสามารถมาจากตารางหรือคอลเลกชันที่ต่างกัน (เช่น Collect(collection, source_collection)) หรือจากหนึ่งเรกคอร์ดหรือมากกว่าของ Collect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>ล้างคอลเลกชันก่อน แล้วเพิ่มหนึ่งรายการหรือมากกว่าลงไปยังคอลเลกชัน ที่กำหนดไว้ รายการสามารถมาจากตารางหรือคอลเลกชันที่ต่างกัน (เช่น ClearCollect(collection, source_collection)) หรือจากหนึ่งเรกคอร์ดหรือมากกว่าของ ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>มีการกำหนดฟังก์ชัน {0} ไว้แล้ว</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>คำเตือน: ฟังก์ชันที่ผู้ใช้กำหนด {0} จะติดตามฟังก์ชันในตัวที่มีอยู่ {0}</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>ชื่อฟังก์ชัน {0} ถูกจำกัด</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>ประเภทการส่งคืนฟังก์ชันที่ระบุ '{0}' ไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน '{1}'</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>ฟังก์ชัน {0} มีพารามิเตอร์มากเกินไป ฟังก์ชันที่ผู้ใช้กำหนดรองรับสูงสุด {1} พารามิเตอร์</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>แหล่งข้อมูลที่จะเพิ่มข้อมูลไป</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกไปยังแหล่งข้อมูล แถวต่างๆ ในตารางจะถูกผนวกไปยังแหล่งข้อมูล</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>รายการ</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

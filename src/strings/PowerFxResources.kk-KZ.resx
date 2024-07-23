@@ -1309,14 +1309,14 @@
     <value>Түске (немесе түс мәндерінің бағанына) қолданылатын мөлдірлік пайызы (немесе пайыз мәндерінің бағаны). Пайыздың теріс мәні қарарақ реңкті жасайды. Пайыздың оң мәні ашығырақ реңкті жасайды.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Файл туралы ақпараты бар жазбаны қайтарады.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Сол туралы ақпарат алатын файл блобы.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>файл</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>"{0}" бірінші аргументі жазба болуы тиіс.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Осы параметрлер жиынтығын тізім мәні ретінде немесе Choices функциясында пайдалану "{0}" нысанын деректер көзі ретінде қосуды қажет етеді. Қосу үшін "Көрініс" мәзірін пайдаланып, "Деректер көздері" параметрін таңдаңыз.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Көрсетілген сипат бұл контекстте қолжетімді емес.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент жарамды күнді немесе уақыт мәнін білдірмейді.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Бұл деректер көзі жарамсыз. "Деректер көздері" аумағында қатені жойыңыз: "Контент -&gt; Деректер көздері" немесе "Көрініс -&gt; Параметрлер"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.
+    <value>Егер деректер жиынтығы 500 жазба шегінен асып, онда 2000 жазбадан аз болса, шекті қайта орнатып көріңіз.
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>{0} функциясы анықталып қойған.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Ескерту: пайдаланушы анықтаған {0} функциясы бұрыннан бар кірістірілген {0} функциясын жауып қалады.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>{0} функция атауы шектелген.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Мәлімделген "{0}" функциясын қайтару түрі "{1}" функциясының негізгі мәтінін қайтару түріне сәйкес келмейді.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} функциясындағы параметрлер тым көп. Пайдаланушы анықтаған функциялар {1} параметрлерін қолдайды.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

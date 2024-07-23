@@ -1309,14 +1309,14 @@
     <value>En procentdel (eller kolonne med procentværdier), hvormed farven (eller kolonne med farveværdier) skal udtones. En negativ procentdel frembringer en mørkere nuance. En positiv procentdel frembringer en lysere nuance.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Returnerer en post med oplysninger om en fil.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Den fil-blob, du vil have oplysninger om.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fil</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Det første argument for "{0}" skal være en post.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Anvendelse af denne indstillingsgruppe som en optællingsværdi eller i funktionen Choices kræver, at enheden '{0}' tilføjes som en datakilde. Brug menuen Vis for at tilføje, og vælg derefter Datakilder.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Den angivne egenskab er ikke tilgængelig i denne kontekst.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentet repræsenterer ikke en gyldig dato- eller klokkeslætsværdi.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Datakilden er ugyldig. Udbedr fejlen i datakildepanelet ved at klikke på "Indhold-&gt; Datakilder" eller "Se-&gt; Indstillinger"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Føjer et eller flere elementer til den angivne samling. Genstandene kan være fra en anden tabel eller samling (f.eks. Collect(collection, source_collection)), eller en eller flere poster Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Rydder først samlingen og føjer et eller flere elementer til den angivne samling. Elementerne kan være fra en anden tabel eller samling (f.eks. ClearCollect(collection, source_collection)), eller en eller flere poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Brugerdefineret funktion skal have et brødtekst.</value>
+    <value>Brugerdefineret funktion skal have en brødtekst.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Funktionen {0} er allerede defineret.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Advarsel! Den brugerdefinerede funktion {0} vil overskygge den eksisterende indbyggede funktion {0}.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Den angivne funktionsreturtype '{0}' matcher ikke returtypen af funktionens brødtekst '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funktionen {0} for mange parametre. Brugerdefinerede funktioner understøtter op til {1} parametre.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Den datakilde, som data skal føjes til.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>En post eller tabel, som skal samles. En post vil blive føjet til datakilden. En tabel får vedhæftet sine rækker til datakilden.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

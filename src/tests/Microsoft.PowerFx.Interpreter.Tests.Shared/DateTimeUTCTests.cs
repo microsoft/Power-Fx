@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class SimpleObject : IUntypedObject
+        private class SimpleObject : UntypedObjectBase
         {
             private readonly FormulaValue _value;
 
@@ -303,46 +303,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _value = value;
             }
 
-            public IUntypedObject this[int index] => throw new NotImplementedException();
+            public override IUntypedObject this[int index] => throw new NotImplementedException();
 
-            public FormulaType Type => _value.Type;
+            public override FormulaType Type => _value.Type;
 
-            public int GetArrayLength()
+            public override int GetArrayLength()
             {
                 throw new NotImplementedException();
             }
 
-            public bool GetBoolean()
+            public override bool GetBoolean()
             {
                 return ((BooleanValue)_value).Value;
             }
 
-            public double GetDouble()
+            public override double GetDouble()
             {
                 return ((NumberValue)_value).Value;
             }
 
-            public decimal GetDecimal()
+            public override decimal GetDecimal()
             {
                 return ((DecimalValue)_value).Value;
             }
 
-            public string GetUntypedNumber()
+            public override string GetUntypedNumber()
             {
                 return ((StringValue)_value).Value;
             }
 
-            public string GetString()
+            public override string GetString()
             {
                 return ((StringValue)_value).Value;
             }
 
-            public bool TryGetProperty(string value, out IUntypedObject result)
+            public override bool TryGetProperty(string value, out IUntypedObject result)
             {
                 throw new NotImplementedException();
             }
 
-            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            public override bool TryGetPropertyNames(out IEnumerable<string> result)
             {
                 result = null;
                 return false;

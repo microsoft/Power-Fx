@@ -80,4 +80,49 @@ namespace Microsoft.PowerFx.Types
             throw new NotImplementedException("UntypedObjectValue cannot be serialized.");
         }
     }
+
+    public abstract class UntypedObjectBase : IUntypedObject
+    {
+        public abstract IUntypedObject this[int index] { get; }
+
+        public abstract FormulaType Type { get; }
+
+        public abstract int GetArrayLength();
+
+        public abstract bool GetBoolean();
+
+        public abstract decimal GetDecimal();
+
+        public abstract double GetDouble();
+
+        public abstract string GetString();
+
+        public abstract string GetUntypedNumber();
+
+        public abstract bool TryGetProperty(string value, out IUntypedObject result);
+
+        public abstract bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
+
+        /// <summary>
+        /// Set a property on the object.
+        /// </summary>
+        /// <param name="propertyName">Property identifier.</param>
+        /// <param name="value">FormulaValue to be set.</param>
+        public virtual void SetProperty(string propertyName, FormulaValue value)
+        {
+            // In case of unwanted behavior, throw an CustomFunctionErrorException exception.
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set a property on the object.
+        /// </summary>
+        /// <param name="index">Property identifier. 0-based.</param>
+        /// <param name="value">FormulaValue to be set.</param>
+        public virtual void SetIndex(int index, FormulaValue value)
+        {
+            // In case of unwanted behavior, throw an CustomFunctionErrorException exception.
+            throw new NotImplementedException();
+        }
+    }
 }
