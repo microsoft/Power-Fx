@@ -13,13 +13,13 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -188,24 +188,29 @@ namespace Microsoft.PowerFx
                 else if (arg0 is BinaryOpNode bon && bon.Op == BinaryOpKind.DynamicGetField)
                 {
                     var arg0value = await bon.Left.Accept(this, context).ConfigureAwait(false);
+                    var arg1value = await bon.Right.Accept(this, context).ConfigureAwait(false);
 
                     if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        TextLiteralNode textLiteralNode = (TextLiteralNode)bon.Right;
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
+                    }
+                    else if (arg0value is ErrorValue || arg0value is BlankValue)
+                    {
+                        return arg0value;
+                    }
+                }
+                else if (arg0 is CallNode callNode && callNode.Function == BuiltinFunctionsCore.Index_UO)
+                {
+                    var child0Value = await callNode.Args[0].Accept(this, context).ConfigureAwait(false);
+                    var child1Value = await callNode.Args[1].Accept(this, context).ConfigureAwait(false);
 
-                        try
-                        {
-                            impl.SetProperty(textLiteralNode.LiteralValue, newValue);
-                            return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
-                        }
-                        catch (CustomFunctionErrorException ex)
-                        {
-                            return new ErrorValue(node.IRContext, new ExpressionError() { Message = ex.Message, Span = node.IRContext.SourceContext, Kind = ex.ErrorKind });
-                        }
-                        catch (NotImplementedException)
-                        {
-                            return CommonErrors.NotYetImplementedError(node.IRContext, $"Class {impl.GetType()} does not implement 'SetProperty'.");
-                        }
+                    if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    {
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
+                    }
+                    else if (child0Value is ErrorValue || child0Value is BlankValue)
+                    {
+                        return child0Value;
                     }
                 }
                 else

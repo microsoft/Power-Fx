@@ -215,11 +215,15 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(FormulaType.Decimal, ev.Type);
                 Assert.Single(ev.Errors);
 
-                var err = ev.Errors[0];
+                ExpressionError err = ev.Errors[0];
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
                 Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
+
+                HttpExpressionError her = Assert.IsType<HttpExpressionError>(err);
+
+                Assert.Equal(statusCode, her.StatusCode);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
