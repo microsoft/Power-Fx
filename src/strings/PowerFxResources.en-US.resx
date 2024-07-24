@@ -1807,6 +1807,12 @@
     <value>typeTable</value>
     <comment>function_parameter - Second argument of the IsType function - The Entity table representing the type that we wish to compare the value to. For example, if the author has a CDS data source named Account, that table could be passed here (eg IsType(myVal, Account)).</comment>
   </data>
+  <data name="AboutIsType_value" xml:space="preserve">
+    <value>The value to inspect.</value>
+  </data>
+  <data name="AboutIsType_typeTable" xml:space="preserve">
+    <value>The entity table representing the type we wish to check.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>
