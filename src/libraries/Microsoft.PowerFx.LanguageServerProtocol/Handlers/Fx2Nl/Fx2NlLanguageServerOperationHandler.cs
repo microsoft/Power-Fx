@@ -52,17 +52,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             (scope) =>
             {
                 _preHandleCheckResult = scope?.Check(_fx2NlRequestParams.Expression) ?? throw new NullReferenceException("Check result was not found for Fx2NL operation");
-                _fx2NlParameters = GetFx2NlHints(scope, operationContext);
+                _fx2NlParameters = GetFx2NlParameters(scope, operationContext);
             }, cancellationToken);
         }
 
         /// <summary>
-        /// Gets the Fx2Nl hints.
+        /// Gets the Fx2Nl hints and range.
         /// </summary>
         /// <param name="scope"> PowerFx Scope.</param>
         /// <param name="operationContext">Language Server Operation Context.</param>
-        /// <returns>Fx2Nl hints.</returns>
-        private Fx2NLParameters GetFx2NlHints(IPowerFxScope scope,  LanguageServerOperationContext operationContext)
+        /// <returns>Fx2Nl parameters including hints and range.</returns>
+        private Fx2NLParameters GetFx2NlParameters(IPowerFxScope scope,  LanguageServerOperationContext operationContext)
         {
             return scope is IPowerFxScopeFx2NL fx2NLScope ? fx2NLScope.GetFx2NLParameters() : new Fx2NLParameters();
         }
