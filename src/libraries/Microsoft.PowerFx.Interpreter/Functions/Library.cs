@@ -2560,6 +2560,9 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorKind.ServiceUnavailable:
                     // Default message that is shown to users when they execute an operation requires a online service connection that is not available
                     return "Online service connection not available";
+                case ErrorKind.InvalidJson:
+                    // Default message that is shown to users when they receive a Json result that is invalid 
+                    return "Invalid Json format";
                 case ErrorKind.Custom:
                     // Default message that is shown to users when they create an error with a custom kind
                     return "Custom error";

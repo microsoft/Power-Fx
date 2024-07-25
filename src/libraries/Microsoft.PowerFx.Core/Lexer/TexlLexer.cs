@@ -616,7 +616,7 @@ namespace Microsoft.PowerFx.Syntax
                     return sb.ToString();
                 }
 
-                if (!IsKeyword(name, out _))
+                if (!IsKeyword(name, out _) && !IsReservedKeyword(name))
                 {
                     return name;
                 }

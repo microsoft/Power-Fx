@@ -1,0 +1,73 @@
+{
+  "@odata.context": "https://sql-wcus.azconn-wcus-001.p.azurewebsites.net/v2/$metadata#datasets('pfxdev-sql.database.windows.net%2CSampleDB')/tables",
+  "value": [
+    {
+      "Name": "[dbo].[BuildVersion]",
+      "DisplayName": "BuildVersion"
+    },
+    {
+      "Name": "[dbo].[ErrorLog]",
+      "DisplayName": "ErrorLog"
+    },
+    {
+      "Name": "[dbo].[sysdiagrams]",
+      "DisplayName": "sysdiagrams"
+    },
+    {
+      "Name": "[SalesLT].[Address]",
+      "DisplayName": "SalesLT.Address"
+    },
+    {
+      "Name": "[SalesLT].[Customer]",
+      "DisplayName": "SalesLT.Customer"
+    },
+    {
+      "Name": "[SalesLT].[CustomerAddress]",
+      "DisplayName": "SalesLT.CustomerAddress"
+    },
+    {
+      "Name": "[SalesLT].[Product]",
+      "DisplayName": "SalesLT.Product"
+    },
+    {
+      "Name": "[SalesLT].[ProductCategory]",
+      "DisplayName": "SalesLT.ProductCategory"
+    },
+    {
+      "Name": "[SalesLT].[ProductDescription]",
+      "DisplayName": "SalesLT.ProductDescription"
+    },
+    {
+      "Name": "[SalesLT].[ProductModel]",
+      "DisplayName": "SalesLT.ProductModel"
+    },
+    {
+      "Name": "[SalesLT].[ProductModelProductDescription]",
+      "DisplayName": "SalesLT.ProductModelProductDescription"
+    },
+    {
+      "Name": "[SalesLT].[SalesOrderDetail]",
+      "DisplayName": "SalesLT.SalesOrderDetail"
+    },
+    {
+      "Name": "[SalesLT].[SalesOrderHeader]",
+      "DisplayName": "SalesLT.SalesOrderHeader"
+    },
+    {
+      "Name": "[SalesLT].[vGetAllCategories]",
+      "DisplayName": "SalesLT.vGetAllCategories"
+    },
+    {
+      "Name": "[SalesLT].[vProductAndDescription]",
+      "DisplayName": "SalesLT.vProductAndDescription"
+    },
+    {
+      "Name": "[SalesLT].[vProductModelCatalogDescription]",
+      "DisplayName": "SalesLT.vProductModelCatalogDescription"
+    },
+    {
+      "Name": "[sys].[database_firewall_rules]",
+      "DisplayName": "sys.database_firewall_rules"
+    }
+  ]
+}
