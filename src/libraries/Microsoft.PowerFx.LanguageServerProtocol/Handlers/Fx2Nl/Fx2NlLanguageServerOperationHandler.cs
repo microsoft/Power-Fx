@@ -64,20 +64,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <returns>Fx2Nl hints.</returns>
         private Fx2NLParameters GetFx2NlHints(IPowerFxScope scope,  LanguageServerOperationContext operationContext)
         {
-            if (scope is IPowerFxScopeFx2NL fx2NLScope)
-            {
-                var parameters = fx2NLScope.GetFx2NLParameters();
-                if (_fx2NlRequestParams.Range != null)
-                {
-                    parameters.Range = _fx2NlRequestParams.Range;
-                }
+            var parameters = scope is IPowerFxScopeFx2NL fx2NLScope ? fx2NLScope.GetFx2NLParameters() : new Fx2NLParameters();
+            parameters.Range ??= _fx2NlRequestParams.Range;
 
-                return parameters;
-            }
-            else
-            {
-                return new Fx2NLParameters();
-            }
+            return parameters;
         }
 
         /// <summary>
