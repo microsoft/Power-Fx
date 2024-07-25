@@ -85,6 +85,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public UsageHints UsageHints { get; set; }
 
+        /// <summary>
+        /// Optional. Range of the expression. 
+        /// </summary>
+        public ScalarRange Range { get; set; }
+
         // we may add additional app context...
     }
 
