@@ -2654,7 +2654,17 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                _txb.SetType(node, DTypeVisitor.Run(node.TypeRoot, _nameResolver));
+                var type = DTypeVisitor.Run(node.TypeRoot, _nameResolver);
+
+                if (type.IsValid) 
+                {
+                    _txb.SetType(node, type);
+                }
+                else
+                {
+                    _txb.SetType(node, DType.Error);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition);
+                }
             }
 
             public override void Visit(BoolLitNode node)
