@@ -61,10 +61,6 @@ namespace Microsoft.PowerFx
         // This can feed into Fx2NL and other help services. 
         public UsageHints UsageHints { get; init; }
 
-        // Host can set optional range of expression.
-        // This can feed into Fx2NL and other help services. 
-        public ScalarRange Range { get; init; }
-
         internal EditorContextScope(
             Engine engine,
             ParserOptions parserOptions,
@@ -229,8 +225,7 @@ namespace Microsoft.PowerFx
         {
             return new Fx2NLParameters
             {
-                 UsageHints = this.UsageHints,
-                 Range = this.Range
+                 UsageHints = this.UsageHints
             };
         }
     }
