@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -17,11 +15,11 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types.TypeCheckers;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.CheckResult;
 
 namespace Microsoft.PowerFx
 {
@@ -667,6 +665,18 @@ namespace Microsoft.PowerFx
                 var parse = ApplyParse();
 
                 _expressionAnonymous = StructuralPrint.Print(parse.Root, _binding);
+            }
+
+            return _expressionAnonymous;
+        }
+
+        public string ApplyGetLogging(TexlFunctionalVisitor<LazyList<string>, ISanitizedNameProvider> visitor, ISanitizedNameProvider nameProvider = null)
+        {
+            if (_expressionAnonymous == null)
+            {
+                var parse = ApplyParse();
+
+                _expressionAnonymous = string.Concat(parse.Root.Accept(visitor, nameProvider));
             }
 
             return _expressionAnonymous;

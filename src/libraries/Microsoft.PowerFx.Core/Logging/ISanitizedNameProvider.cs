@@ -5,7 +5,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Logging
 {
-    internal interface ISanitizedNameProvider
+    public interface ISanitizedNameProvider
     {
         /// <summary>
         /// Attempt to sanitize an identifier using a custom sanitization scheme.
