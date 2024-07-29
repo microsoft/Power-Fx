@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Intellisense;
@@ -54,7 +55,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 Sentence = _nl2FxRequestParams.Sentence,
                 SymbolSummary = summary,
                 Engine = check.Engine,
-                ExpressionLocale = check.ParserCultureInfo
+                ExpressionLocaleName = check.ParserCultureInfo?.Name
             };
          }
 

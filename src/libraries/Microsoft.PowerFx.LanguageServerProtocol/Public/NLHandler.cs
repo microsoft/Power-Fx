@@ -68,10 +68,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public Engine Engine { get; set; }
 
         /// <summary>
-        /// Set the locale that expect the output expression to be.
+        /// Set the locale name that expect the output expression to be.
         /// For example: "vi-VN" or "fr-FR".
         /// </summary>
-        public CultureInfo ExpressionLocale { get; set; }
+        public string ExpressionLocaleName { get; set; }
     }
 
     /// <summary>
