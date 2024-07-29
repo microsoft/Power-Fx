@@ -670,7 +670,7 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
-        public string ApplyGetLogging(TexlFunctionalVisitor<LazyList<string>, ISanitizedNameProvider> visitor, ISanitizedNameProvider nameProvider = null)
+        public string ApplyGetLogging(TexlFunctionalVisitor<IEnumerable<string>, ISanitizedNameProvider> visitor, ISanitizedNameProvider nameProvider = null)
         {
             if (_expressionAnonymous == null)
             {

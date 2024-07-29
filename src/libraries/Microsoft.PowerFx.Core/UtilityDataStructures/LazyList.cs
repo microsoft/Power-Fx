@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
     /// the operation without the creation of many intermediate large
     /// memory blocks.
     /// </summary>
-    public class LazyList<T> : IEnumerable<T>
+    internal class LazyList<T> : IEnumerable<T>
     {
         private readonly IEnumerable<T> _values;
 

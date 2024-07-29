@@ -204,7 +204,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
                 "Microsoft.PowerFx.Logging.TraceSeverity",
-                "Microsoft.PowerFx.Core.UtilityDataStructures.LazyList`1",
                 "Microsoft.PowerFx.Core.Logging.ISanitizedNameProvider"
             };
 
