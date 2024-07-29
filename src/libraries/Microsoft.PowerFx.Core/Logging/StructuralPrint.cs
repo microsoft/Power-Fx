@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Logging
 {
     // A visitor that provides PII-free unformatted prints of powerapps formulas.
-    internal sealed class StructuralPrint : TexlFunctionalVisitor<LazyList<string>, Precedence>
+    internal class StructuralPrint : TexlFunctionalVisitor<LazyList<string>, Precedence>
     {
         private readonly TexlBinding _binding;
         private readonly ISanitizedNameProvider _nameProvider;

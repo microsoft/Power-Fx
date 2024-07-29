@@ -672,6 +672,18 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
+        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider)
+        {
+            if (_expressionAnonymous == null)
+            {
+                var parse = ApplyParse();
+
+                _expressionAnonymous = StructuralPrint.Print(parse.Root, _binding, nameProvider);
+            }
+
+            return _expressionAnonymous;
+        }
+
         public CheckContextSummary ApplyGetContextSummary()
         {
             this.ApplyBinding();
