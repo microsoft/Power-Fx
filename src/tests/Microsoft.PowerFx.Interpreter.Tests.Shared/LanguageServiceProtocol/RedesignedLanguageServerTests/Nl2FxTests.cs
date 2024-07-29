@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             sb.Append(this.Expected);
             sb.Append(": ");
 
-            if (string.IsNullOrEmpty(nl2FxParameters.ExpressionLocaleName))
+            if (!string.IsNullOrEmpty(nl2FxParameters.ExpressionLocaleName))
             {
                 sb.Append(nl2FxParameters.ExpressionLocaleName);
                 sb.Append(": ");
