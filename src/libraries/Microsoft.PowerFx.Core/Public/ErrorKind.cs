@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx
         NotApplicable = 27,
         Timeout = 28,
         ServiceUnavailable = 29,
-        InvalidJson = 30,
+        InvalidJSON = 30,
         Custom = 1000,
     }
 }
