@@ -205,7 +205,7 @@ Error({Kind:ErrorKind.EditPermissions})
 "13: Division by zero"
 
 >> IfError(Error({Kind:ErrorKind.BadLanguageCode}), $"{FirstError.Kind}: {FirstError.Message}")
-"14: Bad langauge code or invalid value"
+"14: Bad language code or invalid value"
 
 >> IfError(Error({Kind:ErrorKind.BadRegex}), $"{FirstError.Kind}: {FirstError.Message}")
 "15: Syntax error in regular expression"
