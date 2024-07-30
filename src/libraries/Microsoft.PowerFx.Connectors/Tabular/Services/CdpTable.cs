@@ -34,18 +34,21 @@ namespace Microsoft.PowerFx.Connectors
 
         internal CdpTableDescriptor TabularTableDescriptor;
 
+        internal IReadOnlyCollection<RawTable> Tables;
+
         private string _uriPrefix;
 
         private HttpClient _httpClient;
 
-        public CdpTable(string dataset, string table)
+        internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
             TableName = table ?? throw new ArgumentNullException(nameof(table));
+            Tables = tables;
         }
 
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata)
-            : this(dataset, table)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables)
+            : this(dataset, table, tables)
         {
             DatasetMetadata = datasetMetadata;
         }
@@ -64,7 +67,7 @@ namespace Microsoft.PowerFx.Connectors
             _httpClient = httpClient;
 
             // $$$ This is a hack to generate ADS
-            bool adsHack = false;            
+            bool adsHack = false;
             if (uriPrefix.StartsWith("*", StringComparison.Ordinal))
             {
                 adsHack = true;
@@ -105,17 +108,19 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             ConnectorLogger executionLogger = serviceProvider?.GetService<ConnectorLogger>();
-            
+
             string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
 
             Uri uri = new Uri(
                    (_uriPrefix ?? string.Empty) +
-                   (_uriPrefix.Contains("/sql/") ? "/v2" : string.Empty) +
+                   (IsSql() ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{HttpUtility.UrlEncode(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
 
-            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), cancellationToken, executionLogger).ConfigureAwait(false);
+            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
         }
+
+        private bool IsSql() => _uriPrefix.Contains("/sql/");
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {

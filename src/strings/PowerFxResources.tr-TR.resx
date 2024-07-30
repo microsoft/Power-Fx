@@ -1309,14 +1309,14 @@
     <value>Renk (veya renk değerlerinin sütunu) soluklaştırma yüzdesi (veya yüzde değerleri sütunu). Negatif yüzde değeri daha koyu bir gölge oluşturur. Pozitif yüzde değeri ise daha açık bir gölge oluşturur.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Dosyayla ilgili bilgileri içeren bir kaydı döndürür.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Hakkında bilgi alınacak dosya blob'u.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>dosya</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>'{0}' öğesinin ilk bağımsız değişkeninin bir kayıt olması gerekir.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Bu seçenek kümesini bir numaralandırma değeri olarak veya Choices işlevi içinde kullanmak '{0}' varlığının bir Veri Kaynağı olarak eklenmesini gerektirir. Eklemek için, Görünüm menüsünü kullanın ve ardından Veri kaynaklarını seçin.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Belirtilen özellik bu bağlamda erişilebilir değil.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Bağımsız değişken, geçerli bir tarih veya saat değerini temsil etmiyor.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Kullanıcı tanımlı işlevin gövdesi olmalı.</value>
+    <value>Kullanıcı tanımlı işlevin gövdesi olmalıdır.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>{0} işlevi zaten tanımlandı.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Uyarı: {0} adlı kullanıcı tanımlı işlev, {0} adlı mevcut yerleşik işlevi gölgeler.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Belirtilen '{0}' işlev dönüş türü, '{1}' işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} işlevi çok fazla parametreye sahip. Kullanıcı tanımlı işlevler en fazla {1} parametreyi destekler.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

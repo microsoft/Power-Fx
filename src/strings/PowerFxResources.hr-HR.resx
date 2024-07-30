@@ -1309,14 +1309,14 @@
     <value>Postotak (ili stupac postotka vrijednosti) za koliko će boja (ili stupac vrijednosti boje) izblijedjeti. Negativan postotak daje tamniju nijansu. Pozitivan postotak daje svjetliju nijansu.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Vraća zapis s informacijama o datoteci.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Blob datoteke za koji treba dobiti informacije.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>datoteka</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Prvi argument stavke "{0}" treba biti zapis.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Da biste tu mogućnost koristili postavljenu kao numeracijsku vrijednost ili u funkciji Choices , entitet "{0}" mora biti dodan kao izvor podataka. Da biste ga dodali, na izborniku Prikaz odaberite Izvori podataka.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Navedeno svojstvo nije dostupno u ovom kontekstu.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ne predstavlja valjanu vrijednost datuma ili vremena.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Izvor podataka nije valjan. Ispravite pogrešku u oknu "Izvori podataka" tako da kliknete "Sadržaj -&gt; Izvori podataka" ili "Prikaz -&gt; Mogućnosti"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funkcija {0} je već definirana.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozorenje: korisnički definirana funkcija {0} zasjenit će postojeću ugrađenu funkciju {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Naziv funkcije {0} je ograničen.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Navedena vrsta povrata funkcije „{0}” ne odgovara vrsti povrata tijela funkcije „{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcija {0} ima previše parametara. Korisnički definirane funkcije podržavaju najviše ovoliko parametara: {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

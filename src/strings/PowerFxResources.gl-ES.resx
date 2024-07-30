@@ -1309,14 +1309,14 @@
     <value>Porcentaxe (ou columna de valores de porcentaxe) segundo a cal se atenuará a cor (ou a columna de valores de cor). Unha porcentaxe negativa xera un sombreado máis escuro. Unha porcentaxe positiva xera un sombreado máis claro.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Devolve un rexistro con información sobre un ficheiro.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>O blob de ficheiro sobre o que obter información.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>ficheiro</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>O primeiro argumento de '{0}' debe ser un rexistro.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Ao usar este conxunto de opcións como valor dunha enumeración ou na función Choices, é necesario engadir a entidade "{0}" como orixe de datos. Para engadila, use o menú Ver e, a seguir, seleccione Orixes de datos.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Non se pode acceder á propiedade especificada neste contexto.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>O argumento non representa un valor de data ou hora válido.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Esta orixe de datos non é válida. Corrixa o erro no panel "Orixes de datos" ao premer "Contido -&gt; Orixes de datos" ou "Visualización -&gt; Opcións"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Engade un ou máis elementos á colección especificada. Os elementos poden ser doutra táboa ou colección (por exemplo, Collect(collection, source_collection)) ou dun ou máis rexistros Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Primeiro borra a colección e engade un ou máis elementos á colección especificada. Os elementos poden ser doutra táboa ou colección (por exemplo, ClearCollect(collection, source_collection)) ou dun ou máis rexistros ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000. Tente restablecer o límite.
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>A función {0} xa está definida.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Advertencia: a función {0} definida polo usuario ocultará a función integrada {0} existente.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>O nome da función {0} está restrinxido.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>O tipo de devolución da función indicada "{0}" non coincide co tipo de devolución do corpo da función "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>A función {0} ten demasiados parámetros. As funcións definidas polo usuario admiten un máximo de {1} parámetros.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Orixe de datos á que engadir os datos.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Rexistro ou táboa que se vai recompilar. Anexarase un rexistro á orixe de datos. As filas dunha táboa anexaranse á orixe de datos.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>elemento</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

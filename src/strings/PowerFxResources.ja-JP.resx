@@ -1309,14 +1309,14 @@
     <value>色 (または色の値の列) をフェードするパーセンテージ (またはパーセンテージの値の列)。負のパーセンテージは暗い網掛けとなり、正のパーセンテージは明るい網掛けを生成します。</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>ファイルに関する情報が記録されたレコードを返します。</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>情報を取得するファイル BLOB です。</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>ファイル</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>最初の引数 '{0}' はレコードである必要があります。</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>このオプション セットを列挙値として使用するか、Choices 機能で使用する場合、'{0}' エンティティをデータ ソースとして追加する必要があります。追加するには、[表示] メニューを使用してデータ ソースを選択してください。</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>指定されたプロパティは、このコンテキストではアクセスできません。</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>引数が有効な日付または時刻の値を表していません。</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>このデータ ソースは無効です。[コンテンツ] -&gt; [データ ソース] または [表示] -&gt; [オプション] の順にクリックして、[データ ソース] ウィンドウでエラーを修正してください</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>指定のコレクションに 1 つまたは複数の項目を追加します。それらの項目を異なるテーブルまたはコレクションから追加したり (例: Collect(collection, source_collection))、1 つまたは複数のレコードから追加したり (例: Collect(collection, {key1: val1, key2: val2, ...}, ...)) できます。</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>最初にコレクションを消去し、指定されたコレクションに 1 つまたは複数の項目を追加します。項目を異なるテーブルまたはコレクションから追加したり (例: ClearCollect(collection, source_collection))、1 つまたは複数のレコードから追加したり (例: ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)) できます。</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,8 +3757,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。
-      </value>
+    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してください。
+</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>ユーザーが定義した関数には本文が必要です。</value>
+    <value>ユーザー定義関数には本文が必要です。</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>関数 {0} は既に定義されています。</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>警告: ユーザー定義関数 {0} により、既存の組み込み関数 {0} がシャドウイングされます。</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>宣言した関数の戻り値タイプ '{0}' が、関数本文の戻り値タイプ '{1}' と一致しません。</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>関数 {0} のパラメーターが多すぎます。ユーザー定義関数には {1} 個までパラメーターを作成できます。</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>データの追加先となるデータソースです。</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>収集するレコードまたはテーブル。レコードはデータソースに追加されます。テーブルには、データソースに追加された行が含まれます。</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>項目</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

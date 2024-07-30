@@ -1309,14 +1309,14 @@
     <value>Kolorea lausotzeko erabiliko den ehunekoa (edo ehuneko-balioen zutabea). Ehunekoa negatiboa bada, itzaldura ilunagoa izango da. Positiboa bada, ordea, itzaldura argiagoa izango da.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Fitxategiaren inguruko informazioa duen erregistro bat itzultzen du.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Informazioa lortuko duen fitxategiaren blob-a.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fitxategia</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>'{0}' elementuaren lehen argumentuak erregistro bat izan behar du.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Aukera hori enumerazio-balio gisa edo Choices funtzioan erabili ahal izateko, datu-iturburu gisa gehitu behar duzu "{0}" entitatea. Hura gehitzeko, erabili Ikusi menua eta hautatu Datu-iturburuak.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Ezin da atzitu zehaztutako propietatea testuinguru honetan.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumentuak ez du adierazten erabil daitekeen data- edo ordu-balioa.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Datu-iturburu honek ez du balio. Konpondu errorea "Datu-iturburuak" panelean. Horretarako, sakatu "Edukia -&gt; Datu-iturburuak" edo "Ikusi -&gt; Aukerak".</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>{0} funtzioa zehaztuta dago.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Abisua: Erabiltzaileak definitutako {0} funtzioak {0} funtzio integratua estaliko du.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Funtzioaren {0} izena mugatuta dago.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Adierazitako funtzioaren itzulketaren "{0}" mota ez dator bat funtzioaren "{1}" gorputzaren itzulketa motarekin.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} funtzioak parametro gehiegi ditu. Erabiltzaileak definitutako funtzioek {1} parametro onartzen dituzte gehienez.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

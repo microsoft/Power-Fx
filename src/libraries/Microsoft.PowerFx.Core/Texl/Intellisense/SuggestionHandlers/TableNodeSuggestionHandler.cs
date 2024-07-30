@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Intellisense
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
+                Contracts.AssertValue(intellisenseData.CurNode);
 
                 var curNode = intellisenseData.CurNode;
                 var cursorPos = intellisenseData.CursorPos;

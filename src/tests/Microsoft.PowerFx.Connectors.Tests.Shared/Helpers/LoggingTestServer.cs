@@ -60,15 +60,18 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseSet(string filename)
         {
-            Responses = (Helpers.ReadStream(filename) as string).Split(new string[] { "~|~" }, StringSplitOptions.None).ToArray();
-            Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
-            CurrentResponse = 0;
-            ResponseSetMode = true;
+            if (!Live)
+            {
+                Responses = (Helpers.ReadStream(filename) as string).Split(new string[] { "~|~" }, StringSplitOptions.None).ToArray();
+                Statuses = Enumerable.Repeat(HttpStatusCode.OK, Responses.Length).ToArray();
+                CurrentResponse = 0;
+                ResponseSetMode = true;
+            }
         }
 
         public void SetResponseFromFiles(params string[] files)
         {
-            if (files != null && files.Any())
+            if (files != null && files.Any() && !Live)
             {
                 Responses = files.Select(file => Helpers.ReadStream(file)).ToArray();
                 Statuses = Enumerable.Repeat(HttpStatusCode.OK, files.Length).ToArray();
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseFromFiles(params (string file, HttpStatusCode status)[] filesWithStatus)
         {
-            if (filesWithStatus != null && filesWithStatus.Any())
+            if (filesWithStatus != null && filesWithStatus.Any() && !Live)
             {
                 Responses = filesWithStatus.Select(fileWithStatus => GetFileText(fileWithStatus.file)).ToArray();
                 Statuses = filesWithStatus.Select(fileWithStatus => fileWithStatus.status).ToArray();
@@ -90,9 +93,12 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
-            var text = GetFileText(filename);
-            SetResponse(text, status);
-            ResponseSetMode = false;
+            if (!Live)
+            {
+                var text = GetFileText(filename);
+                SetResponse(text, status);
+                ResponseSetMode = false;
+            }
         }
 
         private static object GetFileText(string filename)
@@ -102,14 +108,17 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponse(object data, HttpStatusCode status = HttpStatusCode.OK, string contentType = null)
         {
-            Assert.Null(_nextResponse);
-            _nextResponse = GetResponseMessage(data, status, contentType);
+            if (!Live)
+            {
+                Assert.Null(_nextResponse);
+                _nextResponse = GetResponseMessage(data, status, contentType);
+            }
         }
 
         // We only support string & byte[] types (images)
         public HttpResponseMessage GetResponseMessage(object data, HttpStatusCode status, string contentType = null)
         {
-            if (data is string str)
+            if (!Live && data is string str)
             {
                 return new HttpResponseMessage(status)
                 {
@@ -117,7 +126,7 @@ namespace Microsoft.PowerFx.Tests
                 };
             }
 
-            if (data is byte[] byteArray)
+            if (!Live && data is byte[] byteArray)
             {
                 return new HttpResponseMessage(status)
                 {
@@ -125,7 +134,7 @@ namespace Microsoft.PowerFx.Tests
                 };
             }
 
-            throw new NotImplementedException("Unsupported data type");
+            throw new NotImplementedException($"Unsupported data type or Live is {Live}");
         }
 
         protected override void Dispose(bool disposing)

@@ -158,7 +158,11 @@ namespace Microsoft.PowerFx.Tests
             {
                 _sb.Append(s.Name);
             }
-            else
+            else if (node.Value is ScopeSymbol sy)
+            {
+                _sb.Append($"Scope_{sy.Id}");
+            }
+            else 
             {
                 throw new NotImplementedException();
             }

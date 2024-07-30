@@ -1309,14 +1309,14 @@
     <value>Pourcentage (ou colonne de valeurs de pourcentage) de fondu de la couleur (ou colonne de valeurs de couleur). Un pourcentage négatif produit une nuance plus foncée, et un pourcentage positif une nuance plus claire.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Retourne un enregistrement avec les informations sur un fichier.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Objet blob de fichier sur lequel obtenir des informations.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fichier</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Le premier argument de '{0}' doit être un enregistrement.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Pour pouvoir utiliser cette option définie comme valeur d’énumération ou dans la fonction Choices, l’entité « {0} » doit être ajoutée comme source de données. Pour cela, utilisez le menu Affichage, puis sélectionnez Sources de données.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>La propriété spécifiée n’est pas accessible dans ce contexte.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>L’argument ne représente pas une valeur de date ou d’heure valide.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Cette source de données n’est pas valide. Corrigez l’erreur dans le volet « Sources de données » en cliquant sur « Contenu -&gt; Sources de données » ou « Affichage -&gt; Options »</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements, mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>La fonction {0} est déjà définie.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Avertissement : la fonction définie par l’utilisateur {0} fera de l’ombre à la fonction intégrée {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Le nom de fonction {0} est restreint.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Le type indiqué de retour de la fonction « {0} » ne correspond pas au type de retour du corps de la fonction « {1} ».</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>La fonction {0} a trop de paramètres. Les fonctions définies par l’utilisateur prennent en charge jusqu’à {1} paramètres.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

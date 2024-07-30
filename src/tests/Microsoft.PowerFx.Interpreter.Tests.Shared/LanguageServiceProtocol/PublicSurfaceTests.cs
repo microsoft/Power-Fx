@@ -91,6 +91,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishExpressionTypeParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishTokensParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.Range",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.ScalarRange",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelp",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpContext",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.SignatureHelpParams",

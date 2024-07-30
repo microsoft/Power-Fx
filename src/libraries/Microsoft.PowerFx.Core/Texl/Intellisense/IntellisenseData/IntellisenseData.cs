@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
-            Contracts.AssertValue(binding);
-            Contracts.AssertValue(curNode);
+            Contracts.AssertValueOrNull(binding);
+            Contracts.AssertValueOrNull(curNode);
             Contracts.Assert(context.CursorPosition >= 0 && context.CursorPosition <= context.InputText.Length);
             Contracts.AssertValue(isValidSuggestionFunc);
             Contracts.AssertValueOrNull(missingTypes);

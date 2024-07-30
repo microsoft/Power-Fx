@@ -1309,14 +1309,14 @@
     <value>Odstotek (ali stolpec odstotkovnih vrednosti), uporabljen za pojemanje barve (ali stolpca vrednosti barv). Negativni odstotek ustvari temnejši odtenek. Pozitivni odstotek ustvari svetlejši odtenek.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Vrne zapis z informacijami o datoteki.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Datoteka z dvojiškimi podatki, o katerih želite pridobiti informacije.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>datoteka</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Prvi argument funkcije »{0}« mora biti zapis.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Če ta nabor možnosti uporabite kot vrednost oštevilčevanja ali v funkciji »Choices«, morate entiteto »{0}« dodati kot vir podatkov. Če jo želite dodati, odprite meni »Pogled« in nato izberite »Vir podatkov«.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Določena lastnost ni dosegljiva v tem kontekstu.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ne predstavlja veljavne vrednosti za datum ali uro.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Vir podatkov ni veljaven. Odpravite napako v podoknu »Viri podatkov«, tako da kliknete »Vsebina -&gt; Viri podatkov« ali »Pogled -&gt; Možnosti«.</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funkcija {0} je že določena.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Opozorilo: Uporabniško določena funkcija {0} bo zasenčila obstoječo vgrajeno funkcijo {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Ime funkcije {0} je omejeno.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Vrnjena vrsta navedene funkcije »{0}« se ne ujema z vrnjeno vrsto telesa funkcije »{1}«.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcija {0} ima preveč parametrov. Uporabniško določene funkcije podpirajo največ toliko parametrov: {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
