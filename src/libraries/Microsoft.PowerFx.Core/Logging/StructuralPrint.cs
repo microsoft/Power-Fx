@@ -32,11 +32,6 @@ namespace Microsoft.PowerFx.Core.Logging
             var pretty = new StructuralPrint(binding, nameProvider);
             return string.Concat(node.Accept(pretty, Precedence.None));
         }
-
-        public void SetBinding(TexlBinding binding)
-        {
-            _binding = binding;
-        }
         
         public override LazyList<string> Visit(ErrorNode node, Precedence parentPrecedence)
         {
