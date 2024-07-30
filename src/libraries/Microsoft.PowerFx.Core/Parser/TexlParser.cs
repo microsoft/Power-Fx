@@ -472,6 +472,11 @@ namespace Microsoft.PowerFx.Core.Parser
 
             lookAheadIdx = PeekSkipTrivia(lookAheadIdx);
 
+            if (_curs.TidPeek(lookAheadIdx) == TokKind.CurlyClose)
+            {
+                return true;
+            }
+
             if (_curs.TidPeek(lookAheadIdx++) != TokKind.Ident)
             {
                 return false;

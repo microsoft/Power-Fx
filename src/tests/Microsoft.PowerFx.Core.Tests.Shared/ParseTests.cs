@@ -989,6 +989,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SomeFunc(): SomeType = { /*comment1*/  x /*comment2*/ :  5};", false, false)]
         [InlineData("SomeFunc(): SomeType = { /*comment1  x :  5};", true, true)]
         [InlineData("SomeFunc(): SomeType = { //comment1  x :  5};", true, true)]
+        [InlineData("SomeFunc(): SomeType = {};", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ };", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ ", true, true)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomm }", true, true)]
         public void TestUDFReturnsRecord(string script, bool expectErrors, bool isImperative)
         {
             var parserOptions = new ParserOptions()
