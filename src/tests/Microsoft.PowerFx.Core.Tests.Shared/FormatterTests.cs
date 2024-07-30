@@ -349,175 +349,161 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, log);
         }
 
-        internal class CustomStructuralPrint : TexlFunctionalVisitor<IEnumerable<string>, ISanitizedNameProvider>
+        internal class CustomStructuralPrint : TexlFunctionalVisitor<LazyList<string>, ISanitizedNameProvider>
         {
-            public override IEnumerable<string> Visit(ErrorNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(ErrorNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(BlankNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(BlankNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(BoolLitNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(BoolLitNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(StrLitNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(StrLitNode node, ISanitizedNameProvider nameProvider)
             {
-                return new List<string>() { "STRING" };
+                return LazyList<string>.Of("STRING");
             }
 
-            public override IEnumerable<string> Visit(NumLitNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(NumLitNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(DecLitNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(DecLitNode node, ISanitizedNameProvider nameProvider)
             {
-                return new List<string>() { "DECIMAL" };
+                return LazyList<string>.Of("DECIMAL");
             }
 
-            public override IEnumerable<string> Visit(FirstNameNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(FirstNameNode node, ISanitizedNameProvider nameProvider)
             {
                 if (nameProvider != null && nameProvider.TrySanitizeIdentifier(node.Ident, out var sanitizedName))
                 {
-                    return new List<string>() { sanitizedName };
+                    return LazyList<string>.Of(sanitizedName);
                 }
 
-                return new List<string>() { "IDENTIFIER" };
+                return LazyList<string>.Of("IDENTIFIER");
             }
 
-            public override IEnumerable<string> Visit(ParentNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(ParentNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(SelfNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(SelfNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(StrInterpNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(StrInterpNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(DottedNameNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(DottedNameNode node, ISanitizedNameProvider nameProvider)
             {
                 Contracts.AssertValue(node);
-
-                var ret = new List<string>();
 
                 // If left has a sanitized name, it means it's a known control name. The right side is a property of the control and can be left as is.
                 if (nameProvider != null && nameProvider.TrySanitizeIdentifier(node.Left.AsFirstName().Ident, out var sanitizedName))
                 {
-                    ret.Add(sanitizedName);
-                    ret.Add(TexlLexer.PunctuatorDecimalSeparatorInvariant);
-                    ret.Add(node.Right.Name.Value);
-
-                    return ret;
+                    return LazyList<string>.Empty
+                            .With(sanitizedName)
+                            .With(TexlLexer.PunctuatorDecimalSeparatorInvariant)
+                            .With(node.Right.Name.Value);
                 }
 
-                ret.AddRange(node.Left.Accept(this, nameProvider));
-                ret.Add(TexlLexer.PunctuatorDecimalSeparatorInvariant);
-                ret.Add("IDENTIFIER");
-
-                return ret;
+                return node.Left.Accept(this, nameProvider)
+                    .With(TexlLexer.PunctuatorDecimalSeparatorInvariant)
+                    .With("IDENTIFIER");
             }
 
-            public override IEnumerable<string> Visit(UnaryOpNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(UnaryOpNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(BinaryOpNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(BinaryOpNode node, ISanitizedNameProvider nameProvider)
             {
-                var ret = new List<string>();
+                var values = node.Left.Accept(this, nameProvider);
 
-                ret.AddRange(node.Left.Accept(this, nameProvider));
-                ret.Add(" ");
-                ret.Add(node.Op.ToString());
-                ret.Add(" ");
-                ret.AddRange(node.Right.Accept(this, nameProvider));
-
-                return ret;
+                return values.With(" ")
+                    .With(LazyList<string>.Of(node.Op.ToString()))
+                    .With(" ")
+                    .With(node.Right.Accept(this, nameProvider));
             }
 
-            public override IEnumerable<string> Visit(VariadicOpNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(VariadicOpNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(CallNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(CallNode node, ISanitizedNameProvider nameProvider)
             {
-                var result = new List<string>();
+                var result = LazyList<string>.Empty;
                 var callNodeStr = BuiltinFunctionsCore.IsKnownPublicFunction(node.Head.Name.Value) ? node.Head.Name.Value : "CustomFunction";
 
-                result.Add(callNodeStr);
-                result.Add(TexlLexer.PunctuatorParenOpen);
-                result.AddRange(node.Args.Accept(this, nameProvider));
-                result.Add(TexlLexer.PunctuatorParenClose);
+                result = result
+                    .With(
+                        callNodeStr,
+                        TexlLexer.PunctuatorParenOpen)
+                    .With(node.Args.Accept(this, nameProvider))
+                    .With(TexlLexer.PunctuatorParenClose);
 
                 return result;
             }
 
-            public override IEnumerable<string> Visit(ListNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(ListNode node, ISanitizedNameProvider nameProvider)
             {
                 var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
-                var result = new List<string>();
-
+                var result = LazyList<string>.Empty;
                 for (var i = 0; i < node.Children.Count; ++i)
                 {
-                    result.AddRange(node.Children[i].Accept(this, nameProvider));
+                    result = result
+                        .With(node.Children[i].Accept(this, nameProvider));
                     if (i != node.Children.Count - 1)
                     {
-                        result.Add(listSep);
+                        result = result.With(listSep);
                     }
                 }
 
                 return result;
             }
 
-            public override IEnumerable<string> Visit(RecordNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(RecordNode node, ISanitizedNameProvider nameProvider)
             {
                 var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
-                var fieldList = new List<string>();
-
+                var result = LazyList<string>.Empty;
                 for (var i = 0; i < node.Children.Count; ++i)
                 {
-                    fieldList.Add("FIELD_NAME");
-                    fieldList.Add(TexlLexer.PunctuatorColon);
-                    fieldList.AddRange(node.Children[i].Accept(this, nameProvider));
-
+                    result = result
+                        .With(
+                            "FIELD_NAME",
+                            TexlLexer.PunctuatorColon)
+                        .With(node.Children[i].Accept(this, nameProvider));
                     if (i != node.Children.Count - 1)
                     {
-                        fieldList.Add(listSep);
+                        result = result.With(listSep);
                     }
                 }
 
-                var result = new List<string>
-                {
-                    TexlLexer.PunctuatorCurlyOpen,
-                    " "
-                };
-
-                result.AddRange(fieldList);
-                result.Add(" ");
-                result.Add(TexlLexer.PunctuatorCurlyClose);
-
-                return result;
+                return LazyList<string>.Of(TexlLexer.PunctuatorCurlyOpen, " ")
+                    .With(result)
+                    .With(" ", TexlLexer.PunctuatorCurlyClose);
             }
 
-            public override IEnumerable<string> Visit(TableNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(TableNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
 
-            public override IEnumerable<string> Visit(AsNode node, ISanitizedNameProvider nameProvider)
+            public override LazyList<string> Visit(AsNode node, ISanitizedNameProvider nameProvider)
             {
                 throw new System.NotImplementedException();
             }
