@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Types
                 {
                     Message = $"{je.GetType().Name} {je.Message}",
                     Span = new Syntax.Span(0, 0),
-                    Kind = ErrorKind.InvalidJson
+                    Kind = ErrorKind.InvalidJSON
                 });
             }
             catch (PowerFxJsonException pfxje)
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Types
                 {
                     Message = $"{pfxje.GetType().Name} {pfxje.Message}",
                     Span = new Syntax.Span(0, 0),
-                    Kind = ErrorKind.InvalidJson
+                    Kind = ErrorKind.InvalidJSON
                 });
             }
         }

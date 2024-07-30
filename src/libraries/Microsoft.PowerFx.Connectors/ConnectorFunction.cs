@@ -861,7 +861,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             ExpressionError er = null;
 
-            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJson)) != null)
+            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJSON)) != null)
             {
                 runtimeContext.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
                 ExpressionError newError = er is HttpExpressionError her
