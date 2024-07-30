@@ -203,8 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
-                "Microsoft.PowerFx.Logging.TraceSeverity",
-                "Microsoft.PowerFx.Core.Logging.ISanitizedNameProvider"
+                "Microsoft.PowerFx.Logging.TraceSeverity"
             };
 
             var sb = new StringBuilder();
