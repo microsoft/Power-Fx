@@ -1104,7 +1104,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(returnType);
             Assert.True(returnType.FormulaType is RecordType);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
@@ -1138,6 +1138,9 @@ POST https://tip1002-002.azure-apihub.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -1184,7 +1187,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
             Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
  authority: tip1-shared.azure-apim.net
@@ -1210,6 +1213,9 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -1258,9 +1264,9 @@ POST https://tip1-shared.azure-apim.net/invoke
                 runtimeContext,
                 CancellationToken.None);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
-            Assert.Equal(
+            var expected =
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...
@@ -1273,7 +1279,12 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""inputs"":{{""property1"":""test1"",""property2"":""test2""}}}}
-", input);
+";
+
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
+            Assert.Equal(expected, input);
         }
 
         [Fact]
