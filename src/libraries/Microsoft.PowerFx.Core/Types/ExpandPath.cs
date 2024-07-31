@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -33,6 +34,11 @@ namespace Microsoft.PowerFx.Core.Types
         public static bool operator ==(ExpandPath lhsPath, ExpandPath rhsPath) => lhsPath.ToString() == rhsPath.ToString();
 
         public static bool operator !=(ExpandPath lhsPath, ExpandPath rhsPath) => lhsPath.ToString() != rhsPath.ToString();
+
+        public bool IsReachedFromPath(string relatedEntityPath)
+        {
+            return relatedEntityPath?.TrimEnd(PathSeperator) == RelatedEntityPath;
+        }
 
         public bool Equals(ExpandPath path)
         {
