@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Repl.Tests
                 Engine = engine,
                 Output = _output,
                 AllowSetDefinitions = true,
+                AllowUserDefinedFunctions = true,
+                ParserOptions = new ParserOptions() { AllowsSideEffects = true, AllowSingleUserDefinition = true }
             };
         }
 
@@ -266,6 +268,25 @@ Notify(z)
 
             var log = _output.Get(OutputKind.Error);
             Assert.True(log.Length > 0);
+        }
+
+        [Fact]
+        public void UserDefinedFunctions()
+        {
+            _repl.HandleLine("F(x: Number): Number = x");
+            _repl.HandleLine("F(42)");
+            var log = _output.Get(OutputKind.Repl);
+            Assert.Equal("42", log);
+
+            _repl.HandleLine("F(x: Text): Text = x");
+            var error1 = _output.Get(OutputKind.Error);
+            Assert.Equal("Error 0-1: Function F is already defined.", error1);
+
+            _repl.HandleLine("G(x: Currency): Currency = x");
+            var error2 = _output.Get(OutputKind.Error);
+            Assert.Equal(
+                @"Error 5-13: Unknown type Currency.
+Error 16-24: Unknown type Currency.", error2);
         }
 
         // test that Exit() informs the host that an exit has been requested
