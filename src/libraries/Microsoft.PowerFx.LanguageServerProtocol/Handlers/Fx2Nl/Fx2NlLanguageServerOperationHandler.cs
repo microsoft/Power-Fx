@@ -57,14 +57,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         }
 
         /// <summary>
-        /// Gets the Fx2Nl hints.
+        /// Gets the Fx2Nl hints including Usage hints and optional range.
         /// </summary>
         /// <param name="scope"> PowerFx Scope.</param>
         /// <param name="operationContext">Language Server Operation Context.</param>
         /// <returns>Fx2Nl hints.</returns>
         private Fx2NLParameters GetFx2NlHints(IPowerFxScope scope,  LanguageServerOperationContext operationContext)
         {
-            return scope is IPowerFxScopeFx2NL fx2NLScope ? fx2NLScope.GetFx2NLParameters() : new Fx2NLParameters();
+            var parameters = scope is IPowerFxScopeFx2NL fx2NLScope ? fx2NLScope.GetFx2NLParameters() : new Fx2NLParameters();
+            parameters.Range ??= _fx2NlRequestParams.Range;
+
+            return parameters;
         }
 
         /// <summary>

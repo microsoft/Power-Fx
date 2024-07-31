@@ -413,7 +413,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         ParseTrivia();
 
-                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects && !PeekIsRecord();
 
                         var errorCount = _errors?.Count;
                         
@@ -458,6 +458,50 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
+        }
+
+        // Look ahead to check if the upcoming token sequence is a record
+        private bool PeekIsRecord()
+        {
+            if (_curs.TidCur != TokKind.CurlyOpen)
+            {
+                return false;
+            }
+
+            int lookAheadIdx = 1;
+
+            lookAheadIdx = PeekSkipTrivia(lookAheadIdx);
+
+            if (_curs.TidPeek(lookAheadIdx) == TokKind.CurlyClose)
+            {
+                return true;
+            }
+
+            if (_curs.TidPeek(lookAheadIdx++) != TokKind.Ident)
+            {
+                return false;
+            }
+
+            lookAheadIdx = PeekSkipTrivia(lookAheadIdx);
+
+            if (_curs.TidPeek(lookAheadIdx) != TokKind.Colon)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Return look-ahead index skipping any whitespace or comments
+        private int PeekSkipTrivia(int startIdx)
+        {
+            int endOfTrivia = startIdx;
+            while (_curs.TidPeek(endOfTrivia) == TokKind.Whitespace || _curs.TidPeek(endOfTrivia) == TokKind.Comment)
+            {
+                endOfTrivia++;
+            }
+
+            return endOfTrivia;
         }
 
         private TexlNode ParseUDFBody()

@@ -1735,6 +1735,50 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+        [InlineData(
+            "F():Point = {x: 5, y:5};",
+            "F().x",
+            true,
+            5.0)]
+        [InlineData(
+            "F():Number = { Sqrt(1); 42; };",
+            "F()",
+            true,
+            42.0)]
+        [InlineData(
+            "F():Point = { {x:0, y:1729}; };",
+            "F().y",
+            true,
+            1729.0)]
+        [InlineData(
+            "F():Point = {x: 5, 42};",
+            "F().x",
+            false)]
+        public void UDFImperativeVsRecordAmbiguityTest(string udf, string evalExpression, bool isValid, double expectedResult = 0)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                AllowParseAsTypeLiteral = true
+            };
+
+            var extraSymbols = new SymbolTable();
+            extraSymbols.AddType(new DName("Point"), FormulaType.Build(TestUtils.DT("![x:n, y:n]")));
+
+            if (isValid)
+            {
+                recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true));
+            }
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
