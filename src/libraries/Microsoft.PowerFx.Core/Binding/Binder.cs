@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -2648,6 +2649,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 AssertValid();
                 Contracts.AssertValue(node);
+
                 if (_nameResolver == null)
                 {
                     _txb.SetType(node, DType.Unknown);
@@ -2663,7 +2665,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else
                 {
                     _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
                 }
             }
 
@@ -4312,6 +4314,31 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, maybeFunc.ReturnType);
             }
 
+            private bool IsFunctionWithTypeArg(CallNode node, TexlFunction maybeFunc)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(maybeFunc);
+                Contracts.Assert(maybeFunc.HasTypeArgs);
+
+                if (maybeFunc.Name == AsTypeUOFunction.AsTypeInvariantFunctionName && 
+                    node.Args.Count == 2 &&
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject &&
+                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                {
+                    return true;
+                }
+
+                if (maybeFunc.Name == TypedParseJSONFunction.ParseJsonInvariantFunctionName &&
+                    node.Args.Count == 2 &&
+                    _txb.GetType(node.Args.Children[0]) == DType.String &&
+                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4348,7 +4375,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 var overloadsWithMetadataTypeSupportedArgs = overloads.Where(func => func.SupportsMetadataTypeArg && !func.HasLambdas);
-                if (overloadsWithMetadataTypeSupportedArgs.Any())
+                if (overloadsWithMetadataTypeSupportedArgs.Any()) 
                 {
                     // Overloads are not supported for such functions yet.
                     Contracts.Assert(overloadsWithMetadataTypeSupportedArgs.Count() == 1);
@@ -4361,6 +4388,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
                 var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasColumnIdentifiers);
+
+                var overloadsWithTypeArgs = overloads.Where(func => func.HasTypeArgs);
+
                 if (!overloadsWithLambdasOrIdentifiers.Any())
                 {
                     // We may still need a scope to determine inline-record types
@@ -4391,34 +4421,28 @@ namespace Microsoft.PowerFx.Core.Binding
                         startArg++;
                     }
 
-                    if (overloads.Where(func => func.HasTypeArgs).Any() && node.Args.Count > 0)
+                    if (overloadsWithTypeArgs.Any() && node.Args.Count > 1)
                     {
                         var nodeInp = node.Args.Children[0];
                         nodeInp.Accept(this);
-                        if (((node.Head.Name.Value == "AsType" && _txb.GetType(nodeInp) == DType.UntypedObject) || node.Head.Name.Value == "ParseJSON")
-                            && node.Args.Count == 2 
-                            && node.Args.Children[1] is FirstNameNode typeName
-                            && _nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
+
+                        Contracts.Assert(overloadsWithTypeArgs.Count() == 1);
+
+                        var functionWithTypeArg = overloadsWithTypeArgs.First();
+
+                        if (IsFunctionWithTypeArg(node, functionWithTypeArg))
                         {
-                            PreVisitHeadNode(node);
-                            _txb.SetType(typeName, typeArgType._type);
-                            _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedTypeName, typeArgType._type, DPath.Root, 0)));
-                            PreVisitBottomUp(node, 2, null);
+                            PreVisitTypeArg(node, functionWithTypeArg);
                             FinalizeCall(node);
+                            return false;
                         }
-                        else
-                        {
-                            PreVisitHeadNode(node);
-                            PreVisitBottomUp(node, 1, maybeScope);
-                            FinalizeCall(node);
-                        }
+
+                        startArg++;
                     }
-                    else
-                    {
-                        PreVisitHeadNode(node);
-                        PreVisitBottomUp(node, startArg, maybeScope);
-                        FinalizeCall(node);
-                    }
+
+                    PreVisitHeadNode(node);
+                    PreVisitBottomUp(node, startArg, maybeScope);
+                    FinalizeCall(node);
 
                     return false;
                 }
@@ -5076,6 +5100,75 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, returnType);
             }
 
+            // Method to previsit if callnode is determined as function with Type argument
+            private void PreVisitTypeArg(CallNode node, TexlFunction func)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(func);
+                Contracts.Assert(func.HasTypeArgs);
+                Contracts.Assert(node.Args.Count == 2);
+
+                var args = node.Args.Children.ToArray();
+
+                Contracts.AssertValue(_txb.GetType(args[0]));
+                Contracts.AssertValue(args[1]);
+
+                if (args[1] is FirstNameNode typeName)
+                {
+                    if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
+                    {
+                        _txb.SetType(typeName, typeArgType._type);
+                        _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, typeArgType._type, DPath.Root, 0)));
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, typeName.Token, TexlStrings.ErrNamedType_InvalidTypeName, func.Name);
+                    }
+                }
+                else if (args[1] is TypeLiteralNode typeLiteral)
+                {
+                    typeLiteral.Accept(this);
+                }
+
+                PostVisit(node.Args);
+
+                var info = _txb.GetInfo(node);
+
+                // If PreVisit resulted in errors for the node (and a non-null CallInfo),
+                // we're done -- we have a match and appropriate errors logged already.
+                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
+                {
+                    Contracts.Assert(info != null);
+
+                    return;
+                }
+
+                Contracts.AssertNull(info);
+
+                _txb.SetInfo(node, new CallInfo(func, node));
+
+                var returnType = func.ReturnType;
+                var argTypes = args.Select(_txb.GetType).ToArray();
+                bool fArgsValid;
+
+                // Temporary error container which can be discarded if deferred type arg is present.
+                var checkErrorContainer = new ErrorContainer();
+
+                // Typecheck the invocation and infer the return type.
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out var _);
+
+                // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
+                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
+
+                if (!fArgsValid)
+                {
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                }
+
+                _txb.SetType(node, returnType);
+            }
+
             private void PreVisitBottomUp(CallNode node, int argCountVisited, Scope scopeNew = null)
             {
                 AssertValid();
@@ -5322,12 +5415,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 var args = node.Args.Children.ToArray();
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
-
-                // temp
-                if (overloads.Where(f => f.HasTypeArgs).Any() && _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
-                {
-                    overloads = overloads.Where(f => f.HasTypeArgs).ToArray();
-                }
 
                 if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {

@@ -682,7 +682,7 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
-                    case BindKind.NamedTypeName:
+                    case BindKind.NamedType:
                         {
                             return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
                         }

@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // ParseJSON(JsonString:P, Type:*[]): ![]
+    // ParseJSON(JsonString:P, Type:T): ![]
     internal class TypedParseJSONFunction : BuiltinFunction
     {
         public const string ParseJsonInvariantFunctionName = "ParseJSON";
@@ -66,13 +66,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public TypedParseJSONFunction()
-            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJSON, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.String, DType.Error)
+            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutTypedParseJSON, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.String, DType.Error)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.ParseJSONArg1, TexlStrings.AsTypeArg2 };
+            yield return new[] { TexlStrings.TypedParseJSONArg1, TexlStrings.TypedParseJSONArg2 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

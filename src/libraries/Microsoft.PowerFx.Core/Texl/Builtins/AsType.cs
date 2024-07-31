@@ -162,13 +162,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public AsTypeUOFunction()
-            : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsType, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
+            : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.AsTypeArg1, TexlStrings.AsTypeArg2 };
+            yield return new[] { TexlStrings.AsTypeUOArg1, TexlStrings.AsTypeUOArg2 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
