@@ -354,16 +354,64 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, log);
         }
 
+        [Fact]
+        public void CustomStructuralPrintSanitizerTest()
+        {
+            var engine = new Engine();
+            var expression = "With({myfield:firstNameControl.Text}, myfield & \"something\")";
+
+            var result = engine.Check(expression);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("score", FormulaType.Decimal);
+
+            var check = new CheckResult(new Engine())
+                .SetText("1+Sum(score, missing)")
+                .SetBindingInfo(symbolTable);
+
+            var errors = check.ApplyErrors();
+            var parse = check.ApplyParse();
+
+            var mapping1 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping1" }
+            };
+
+            var logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping1));
+            Assert.Equal("With({ #$fieldname$#:Mapping1.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+
+            var mapping2 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping2" }
+            };
+
+            logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping2));
+            Assert.Equal("With({ #$fieldname$#:Mapping2.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+
+            var mapping3 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping3" }
+            };
+
+            logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping3));
+            Assert.Equal("With({ #$fieldname$#:Mapping3.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+        }
+
         /// <summary>
         /// This simulates a host that provides a map of control names and their sanitized names.
         /// </summary>
         internal class CustomStructuralPrintSanitizer : ISanitizedNameProvider
         {
-            private readonly IDictionary<string, string> _dict;
+            private readonly IReadOnlyDictionary<string, string> _mapping;
+
+            public CustomStructuralPrintSanitizer(IReadOnlyDictionary<string, string> mapping)
+            {
+                _mapping = mapping;
+            }
 
             public CustomStructuralPrintSanitizer()
             {
-                _dict = new Dictionary<string, string>()
+                _mapping = new Dictionary<string, string>()
                 {
                     { "firstNameControl", "TextInputControl" }
                 };
@@ -371,7 +419,7 @@ namespace Microsoft.PowerFx.Tests
 
             public bool TrySanitizeIdentifier(Identifier identifier, out string sanitizedName, DottedNameNode dottedNameNode = null)
             {
-                return _dict.TryGetValue(identifier.Name.Value, out sanitizedName);
+                return _mapping.TryGetValue(identifier.Name.Value, out sanitizedName);
             }
         }
     }
