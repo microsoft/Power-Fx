@@ -2,15 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
@@ -337,176 +333,25 @@ namespace Microsoft.PowerFx.Tests
 
         // Testing for hosts to provide a custom way to print the structural representation of an expression.
         [Theory]
-        [InlineData("With({myfield:{a:1}}, myfield.a + 1)", "With({ FIELD_NAME:{ FIELD_NAME:DECIMAL } }, IDENTIFIER.IDENTIFIER Add DECIMAL)")]
-        [InlineData("With({myfield:firstNameControl.Text}, myfield & \"something\")", "With({ FIELD_NAME:TextInputControl.Text }, IDENTIFIER Concat STRING)")]
+        [InlineData("With({myfield:firstNameControl.Text}, myfield & \"something\")", "With({ #$fieldname$#:TextInputControl.#$righthandid$# }, #$LambdaField$# & #$string$#)")]
         public void CustomStructuralPrintTest(string expression, string expected)
         {
             var engine = new Engine();
             var result = engine.Check(expression);
 
-            var log = result.ApplyGetLogging(new CustomStructuralPrint(), new CustomStructuralPrintSanitizer());
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("score", FormulaType.Decimal);
+
+            var check = new CheckResult(new Engine())
+                .SetText("1+Sum(score, missing)")
+                .SetBindingInfo(symbolTable);
+
+            var errors = check.ApplyErrors();
+            var parse = check.ApplyParse();
+
+            var log = result.ApplyGetLogging(new CustomStructuralPrintSanitizer());
 
             Assert.Equal(expected, log);
-        }
-
-        internal class CustomStructuralPrint : TexlFunctionalVisitor<LazyList<string>, ISanitizedNameProvider>
-        {
-            public override LazyList<string> Visit(ErrorNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(BlankNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(BoolLitNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(StrLitNode node, ISanitizedNameProvider nameProvider)
-            {
-                return LazyList<string>.Of("STRING");
-            }
-
-            public override LazyList<string> Visit(NumLitNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(DecLitNode node, ISanitizedNameProvider nameProvider)
-            {
-                return LazyList<string>.Of("DECIMAL");
-            }
-
-            public override LazyList<string> Visit(FirstNameNode node, ISanitizedNameProvider nameProvider)
-            {
-                if (nameProvider != null && nameProvider.TrySanitizeIdentifier(node.Ident, out var sanitizedName))
-                {
-                    return LazyList<string>.Of(sanitizedName);
-                }
-
-                return LazyList<string>.Of("IDENTIFIER");
-            }
-
-            public override LazyList<string> Visit(ParentNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(SelfNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(StrInterpNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(DottedNameNode node, ISanitizedNameProvider nameProvider)
-            {
-                Contracts.AssertValue(node);
-
-                // If left has a sanitized name, it means it's a known control name. The right side is a property of the control and can be left as is.
-                if (nameProvider != null && nameProvider.TrySanitizeIdentifier(node.Left.AsFirstName().Ident, out var sanitizedName))
-                {
-                    return LazyList<string>.Empty
-                            .With(sanitizedName)
-                            .With(TexlLexer.PunctuatorDecimalSeparatorInvariant)
-                            .With(node.Right.Name.Value);
-                }
-
-                return node.Left.Accept(this, nameProvider)
-                    .With(TexlLexer.PunctuatorDecimalSeparatorInvariant)
-                    .With("IDENTIFIER");
-            }
-
-            public override LazyList<string> Visit(UnaryOpNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(BinaryOpNode node, ISanitizedNameProvider nameProvider)
-            {
-                var values = node.Left.Accept(this, nameProvider);
-
-                return values.With(" ")
-                    .With(LazyList<string>.Of(node.Op.ToString()))
-                    .With(" ")
-                    .With(node.Right.Accept(this, nameProvider));
-            }
-
-            public override LazyList<string> Visit(VariadicOpNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(CallNode node, ISanitizedNameProvider nameProvider)
-            {
-                var result = LazyList<string>.Empty;
-                var callNodeStr = BuiltinFunctionsCore.IsKnownPublicFunction(node.Head.Name.Value) ? node.Head.Name.Value : "CustomFunction";
-
-                result = result
-                    .With(
-                        callNodeStr,
-                        TexlLexer.PunctuatorParenOpen)
-                    .With(node.Args.Accept(this, nameProvider))
-                    .With(TexlLexer.PunctuatorParenClose);
-
-                return result;
-            }
-
-            public override LazyList<string> Visit(ListNode node, ISanitizedNameProvider nameProvider)
-            {
-                var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
-                var result = LazyList<string>.Empty;
-                for (var i = 0; i < node.Children.Count; ++i)
-                {
-                    result = result
-                        .With(node.Children[i].Accept(this, nameProvider));
-                    if (i != node.Children.Count - 1)
-                    {
-                        result = result.With(listSep);
-                    }
-                }
-
-                return result;
-            }
-
-            public override LazyList<string> Visit(RecordNode node, ISanitizedNameProvider nameProvider)
-            {
-                var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
-                var result = LazyList<string>.Empty;
-                for (var i = 0; i < node.Children.Count; ++i)
-                {
-                    result = result
-                        .With(
-                            "FIELD_NAME",
-                            TexlLexer.PunctuatorColon)
-                        .With(node.Children[i].Accept(this, nameProvider));
-                    if (i != node.Children.Count - 1)
-                    {
-                        result = result.With(listSep);
-                    }
-                }
-
-                return LazyList<string>.Of(TexlLexer.PunctuatorCurlyOpen, " ")
-                    .With(result)
-                    .With(" ", TexlLexer.PunctuatorCurlyClose);
-            }
-
-            public override LazyList<string> Visit(TableNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public override LazyList<string> Visit(AsNode node, ISanitizedNameProvider nameProvider)
-            {
-                throw new System.NotImplementedException();
-            }
         }
 
         /// <summary>

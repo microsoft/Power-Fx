@@ -670,13 +670,13 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
-        internal string ApplyGetLogging(TexlFunctionalVisitor<LazyList<string>, ISanitizedNameProvider> visitor, ISanitizedNameProvider nameProvider = null)
+        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider = null)
         {
             if (_expressionAnonymous == null)
             {
                 var parse = ApplyParse();
 
-                _expressionAnonymous = string.Concat(parse.Root.Accept(visitor, nameProvider));
+                _expressionAnonymous = StructuralPrint.Print(parse.Root, _binding, nameProvider);
             }
 
             return _expressionAnonymous;
