@@ -670,7 +670,12 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
-        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider = null)
+        /// <summary>
+        /// Get anonymous form of expression with all PII removed. Suitable for logging to.
+        /// </summary>
+        /// <param name="nameProvider">Sanitizer class to replace string values in the logging result.</param>
+        /// <returns></returns>
+        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider)
         {
             var parse = ApplyParse();
             return StructuralPrint.Print(parse.Root, _binding, nameProvider);
