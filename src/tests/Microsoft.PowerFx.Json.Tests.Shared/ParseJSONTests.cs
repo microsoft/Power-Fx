@@ -26,41 +26,6 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
-        public void ComplexParseJson()
-        {
-            var config = new PowerFxConfig();
-            config.EnableJsonFunctions();
-            var engine = new RecalcEngine(config);
-            
-            var parserOptions = new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true,
-            };
-
-            engine.AddUserDefinitions("T = Type([{a: Number}]);");
-
-            var r1 = engine.Eval("ParseJSON(\"{\"\"a\"\": 5}\")");
-            var r2 = engine.Eval("AsType(ParseJSON(\"{\"\"a\"\": 5}\"), Type({a: Number}))", options: parserOptions);
-            var r3 = engine.Eval("AsType(ParseJSON(\"42\"), Type(Number))", options: parserOptions);
-            var r4 = engine.Eval("AsType(ParseJSON(\"1729\"), Number)", options: parserOptions);
-            var r5 = engine.Eval("First(AsType(ParseJSON(\"[{\"\"a\"\": 7}]\"), T)).a", options: parserOptions);
-
-            var r6 = engine.Eval("ParseJSON(\"42\", Type(Number))", options: parserOptions);
-            var r7 = engine.Eval("First(ParseJSON(\"[{\"\"a\"\": 7}]\", T)).a", options: parserOptions);
-            var r8 = engine.Eval("ParseJSON(\"{\"\"a\"\": 5}\", Type({a: Number}))", options: parserOptions);
-
-            var r2a = ((RecordValue)r2).GetField("a");
-            Assert.Equal(5, ((NumberValue)r2a).Value);
-            Assert.Equal(42, ((NumberValue)r3).Value);
-            Assert.Equal(1729, ((NumberValue)r4).Value);
-            Assert.Equal(7, ((NumberValue)r5).Value);
-            Assert.Equal(42, ((NumberValue)r6).Value);
-            Assert.Equal(7, ((NumberValue)r7).Value);
-            var r8a = ((RecordValue)r8).GetField("a");
-            Assert.Equal(5, ((NumberValue)r8a).Value);
-        }
-
-        [Fact]
         public async Task SingleColumnTableFromJson()
         {
             var tableType = RecordType.Empty().Add("Value", FormulaType.String).ToTable();

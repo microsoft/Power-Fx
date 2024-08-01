@@ -1807,6 +1807,18 @@
     <value>typeTable</value>
     <comment>function_parameter - Second argument of the IsType function - The Entity table representing the type that we wish to compare the value to. For example, if the author has a CDS data source named Account, that table could be passed here (eg IsType(myVal, Account)).</comment>
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Returns true if the provided untyped value is of the given type.</value>
+    <comment>Description of the 'IsType' function.</comment>
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    <comment>function_parameter - First argument of the IsTypeUO function - The untypedObject value to be inspected.</comment>
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - ether a typeliteral or global named type.</comment>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>

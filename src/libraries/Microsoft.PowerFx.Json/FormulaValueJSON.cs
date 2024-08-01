@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Types
         public bool NumberIsFloat { get; init; } = false;
 
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+
+        public bool AllowUnknownRecordFields { get; init; } = true;
     }
 
     internal class FormulaValueJsonSerializerWorkingData
@@ -76,7 +78,19 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);
+            try
+            {
+                return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);
+            }
+            catch (PowerFxJsonException pfxje)
+            {
+                return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
+                {
+                    Message = $"{pfxje.GetType().Name} {pfxje.Message}",
+                    Span = new Syntax.Span(0, 0),
+                    Kind = ErrorKind.InvalidJson
+                });
+            }
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
@@ -226,6 +240,11 @@ namespace Microsoft.PowerFx.Types
 
                 if (recordType?.TryGetFieldType(name, out fieldType) == false)
                 {
+                    if (!settings.AllowUnknownRecordFields)
+                    {
+                        throw new PowerFxJsonException($"Unexpected field '{name}' found in JSONObject", $"{data.Path}/{name}");
+                    }
+
                     // if we expect a record type and the field is unknown, let's ignore it like in Power Apps
                     if (!settings.ReturnUnknownRecordFieldsAsUntypedObjects)
                     {

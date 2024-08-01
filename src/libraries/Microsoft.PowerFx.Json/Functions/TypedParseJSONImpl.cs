@@ -51,7 +51,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 });
             }
 
-            var fv = FormulaValueJSON.FromJson(json, FormulaType.Build(dtype));
+            var serializerSettings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false };
+            var fv = FormulaValueJSON.FromJson(json, serializerSettings, FormulaType.Build(dtype));
             return fv;
         }
     }

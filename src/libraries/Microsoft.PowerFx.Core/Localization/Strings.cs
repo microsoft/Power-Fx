@@ -466,6 +466,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);
         public static StringGetter IsTypeArg2 = (b) => StringResources.Get("IsTypeArg2", b);
 
+        public static StringGetter AboutIsTypeUO = (b) => StringResources.Get("AboutIsTypeUO", b);
+        public static StringGetter IsTypeUOArg1 = (b) => StringResources.Get("IsTypeUOArg1", b);
+        public static StringGetter IsTypeUOArg2 = (b) => StringResources.Get("IsTypeUOArg2", b);
+
         public static StringGetter AboutAsType = (b) => StringResources.Get("AboutAsType", b);
         public static StringGetter AsTypeArg1 = (b) => StringResources.Get("AsTypeArg1", b);
         public static StringGetter AsTypeArg2 = (b) => StringResources.Get("AsTypeArg2", b);

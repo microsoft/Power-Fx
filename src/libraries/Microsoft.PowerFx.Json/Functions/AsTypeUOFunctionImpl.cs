@@ -54,20 +54,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var uo = untypedObjectValue.Impl;
             var jsElement = ((JsonUntypedObject)uo)._element;
 
-            try
-            {
-                var fv = FormulaValueJSON.FromJson(jsElement, FormulaType.Build(dtype));
-                return fv;
-            }
-            catch (JsonException je)
-            {
-                return new ErrorValue(IRContext.NotInSource(FormulaType.Build(dtype)), new ExpressionError()
-                {
-                    Message = $"{je.GetType().Name} {je.Message}",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
-                });
-            }
+            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false };
+            var fv = FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
+            return fv;
         }
     }
 }

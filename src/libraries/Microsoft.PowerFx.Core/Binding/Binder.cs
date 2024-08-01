@@ -4328,6 +4328,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     return true;
                 }
 
+                if (maybeFunc.Name == IsTypeUOFunction.IsTypeInvariantFunctionName &&
+                    node.Args.Count == 2 &&
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject &&
+                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                {
+                    return true;
+                }
+
                 if (maybeFunc.Name == TypedParseJSONFunction.ParseJsonInvariantFunctionName &&
                     node.Args.Count == 2 &&
                     _txb.GetType(node.Args.Children[0]) == DType.String &&
@@ -5123,7 +5131,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, typeName.Token, TexlStrings.ErrNamedType_InvalidTypeName, func.Name);
+                        _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidName, typeName.Ident.Name.Value);
+                        _txb.SetType(args[1], DType.Error);
+                        _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, DType.Error, DPath.Root, 0)));
                     }
                 }
                 else if (args[1] is TypeLiteralNode typeLiteral)
