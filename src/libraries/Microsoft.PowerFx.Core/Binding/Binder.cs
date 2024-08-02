@@ -2791,6 +2791,29 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetIsUnliftable(node, true);
                 }
 
+                // Look up a global variable with this name.
+                NameLookupInfo lookupInfo = default;
+                if (_txb.AffectsScopeVariableName)
+                {
+                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
+                    {
+                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
+
+                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
+                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
+                        }
+
+                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
+                    }
+
+                    // Set the variable name node as DType.String.
+                    _txb.SetType(node, DType.String);
+                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
+                    return;
+                }
+
                 // [@name]
                 if (node.Ident.AtToken != null)
                 {
@@ -2856,29 +2879,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(nodeType, nodeName);
-                    return;
-                }
-
-                // Look up a global variable with this name.
-                NameLookupInfo lookupInfo = default;
-                if (_txb.AffectsScopeVariableName)
-                {
-                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
-                    {
-                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
-
-                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
-                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
-                        {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
-                        }
-
-                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
-                    }
-
-                    // Set the variable name node as DType.String.
-                    _txb.SetType(node, DType.String);
-                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
                 }
 
