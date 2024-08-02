@@ -4320,26 +4320,20 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(maybeFunc);
                 Contracts.Assert(maybeFunc.HasTypeArgs);
 
-                if (maybeFunc.Name == AsTypeUOFunction.AsTypeInvariantFunctionName && 
-                    node.Args.Count == 2 &&
-                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject &&
-                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                if (maybeFunc.Name == AsTypeUOFunction.AsTypeInvariantFunctionName &&
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                 {
                     return true;
                 }
 
                 if (maybeFunc.Name == IsTypeUOFunction.IsTypeInvariantFunctionName &&
-                    node.Args.Count == 2 &&
-                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject &&
-                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                 {
                     return true;
                 }
 
                 if (maybeFunc.Name == TypedParseJSONFunction.ParseJsonInvariantFunctionName &&
-                    node.Args.Count == 2 &&
-                    _txb.GetType(node.Args.Children[0]) == DType.String &&
-                    (node.Args.Children[1].Kind == NodeKind.FirstName || node.Args.Children[1].Kind == NodeKind.TypeLiteral))
+                    node.Args.Count > 1)
                 {
                     return true;
                 }
@@ -5115,14 +5109,29 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(func);
                 Contracts.Assert(func.HasTypeArgs);
-                Contracts.Assert(node.Args.Count == 2);
 
                 var args = node.Args.Children.ToArray();
+                var argCount = args.Count();
 
                 Contracts.AssertValue(_txb.GetType(args[0]));
+
+                if (argCount < func.MinArity || argCount > func.MaxArity)
+                {
+                    ArityError(func.MinArity, func.MaxArity, node, argCount, _txb.ErrorContainer);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
+                Contracts.Assert(argCount > 1);
                 Contracts.AssertValue(args[1]);
 
-                if (args[1] is FirstNameNode typeName)
+                if (args[1] is not FirstNameNode && args[1] is not TypeLiteralNode)
+                {
+                    _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidArgumentExpectedType, args[1]);
+                    _txb.SetType(args[1], DType.Error);
+                }
+                else if (args[1] is FirstNameNode typeName)
                 {
                     if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
                     {
@@ -5134,6 +5143,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidName, typeName.Ident.Name.Value);
                         _txb.SetType(args[1], DType.Error);
                         _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, DType.Error, DPath.Root, 0)));
+
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgumentExpectedType, typeName.Ident.Name.Value);
+                        _txb.SetInfo(node, new CallInfo(func, node));
+                        _txb.SetType(node, DType.Error);
                     }
                 }
                 else if (args[1] is TypeLiteralNode typeLiteral)
@@ -5161,15 +5174,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 var returnType = func.ReturnType;
                 var argTypes = args.Select(_txb.GetType).ToArray();
                 bool fArgsValid;
-
-                // Temporary error container which can be discarded if deferred type arg is present.
                 var checkErrorContainer = new ErrorContainer();
 
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out var _);
-
-                // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
-                (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
 
                 if (!fArgsValid)
                 {

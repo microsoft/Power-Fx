@@ -4742,4 +4742,8 @@
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Invalid argument '{0}'. Expected valid type name or typeliteral.</value>
+    <comment>Error Message shown to user when a value other name or typeliteral is passed into AsType, IsType and ParseJSON functions.</comment>
+  </data>
 </root>
