@@ -884,7 +884,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             public override IntermediateNode Visit(SelfNode node, IRTranslatorContext context)
             {
-                Contracts.Assert(false, "Parent Keyword not supported in PowerFx");
+                Contracts.Assert(false, "Self Keyword not supported in PowerFx");
                 throw new NotSupportedException();
             }
 

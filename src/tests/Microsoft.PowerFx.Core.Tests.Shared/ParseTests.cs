@@ -982,5 +982,27 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(validUdfCount, parseResult.UDFs.Where(udf => udf.IsParseValid).Count());
             Assert.Equal(expectErrors, parseResult.HasErrors);
         }
+
+        [Theory]
+        [InlineData("SomeFunc(): SomeType = {x:5, y: 5};", false, false)]
+        [InlineData("F1(): Void = { F2({x:5, y: 5}); };", false, true)]
+        [InlineData("SomeFunc(): SomeType = { /*comment1*/  x /*comment2*/ :  5};", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*comment1  x :  5};", true, true)]
+        [InlineData("SomeFunc(): SomeType = { //comment1  x :  5};", true, true)]
+        [InlineData("SomeFunc(): SomeType = {};", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ };", false, false)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomment*/ ", true, true)]
+        [InlineData("SomeFunc(): SomeType = { /*somecomm }", true, true)]
+        public void TestUDFReturnsRecord(string script, bool expectErrors, bool isImperative)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.Equal(expectErrors, parseResult.HasErrors);
+            Assert.Equal(isImperative, parseResult.UDFs.First().IsImperative);
+        }
     }
 }
