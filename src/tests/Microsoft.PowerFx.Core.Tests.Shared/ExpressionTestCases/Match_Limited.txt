@@ -483,13 +483,13 @@ Blank()
 Blank()
 
 >> DropColumns( Match( "te" & Char(13) & "t", "te.t" ), FullMatch )
-{StartMatch:1,SubMatches:Table()}
+Blank()
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ), FullMatch )
-{StartMatch:1,SubMatches:Table()}
+Blank()
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
-{StartMatch:1,SubMatches:Table()}
+Blank()
 
 // $ end anchor, multiline, and newline characters
 
@@ -503,13 +503,13 @@ Table({FullMatch:"1",StartMatch:2,SubMatches:Table()},{FullMatch:"2",StartMatch:
 Table({FullMatch:"3",StartMatch:8,SubMatches:Table()})
 
 >> MatchAll( "a1" & Char(13) & "b2" & Char(13) & "c3", "\d$", MatchOptions.Multiline )
-Table({FullMatch:"3",StartMatch:8,SubMatches:Table()})
+Table({FullMatch:"1",StartMatch:2,SubMatches:Table()},{FullMatch:"2",StartMatch:5,SubMatches:Table()},{FullMatch:"3",StartMatch:8,SubMatches:Table()})
 
 >> MatchAll( "a1" & Char(13)&Char(10) & "b2" & Char(13)&Char(10) & "c3", "\d$" )
 Table({FullMatch:"3",StartMatch:10,SubMatches:Table()})
 
 >> MatchAll( "a1" & Char(13)&Char(10) & "b2" & Char(13)&Char(10) & "c3", "\d$", MatchOptions.Multiline )
-Table({FullMatch:"3",StartMatch:10,SubMatches:Table()})
+Table({FullMatch:"1",StartMatch:2,SubMatches:Table()},{FullMatch:"2",StartMatch:6,SubMatches:Table()},{FullMatch:"3",StartMatch:10,SubMatches:Table()})
 
 // ^ beginning anchor, multiline, and newline characters
 
@@ -523,12 +523,19 @@ Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:
 Table({FullMatch:"1",StartMatch:1,SubMatches:Table()})
 
 >> MatchAll( "1a" & Char(13) & "2b" & Char(13) & "3c", "^\d", MatchOptions.Multiline )
-Table({FullMatch:"1",StartMatch:1,SubMatches:Table()})
+Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:4,SubMatches:Table()},{FullMatch:"3",StartMatch:7,SubMatches:Table()})
 
 >> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d" )
 Table({FullMatch:"1",StartMatch:1,SubMatches:Table()})
 
 >> MatchAll( "1a" & Char(13)&Char(10) & "2b" & Char(13)&Char(10) & "3c", "^\d", MatchOptions.Multiline )
 Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:5,SubMatches:Table()},{FullMatch:"3",StartMatch:9,SubMatches:Table()})
+
+>> ForAll( MatchAll( "
+ a
+ b
+ c
+ ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch) } )
+Table({Len:2,Match:" a"},{Len:2,Match:" b"},{Len:2,Match:" c"},{Len:1,Match:" "})
 
 
