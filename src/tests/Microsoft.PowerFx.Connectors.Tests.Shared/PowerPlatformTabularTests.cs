@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -192,6 +193,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.False(connectorTable.IsInitialized);
             Assert.Equal(realTableName, connectorTable.DisplayName);
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
+            CdpTable table2 = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", realTableName, null /* logical or display name */, CancellationToken.None, logger);
+            Assert.False(table2.IsInitialized);
+            Assert.Equal(realTableName, table2.DisplayName);
+            Assert.Equal("[SalesLT].[Product]", table2.TableName); // Logical Name
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
+            table2 = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", realTableName, false /* display name only */, CancellationToken.None, logger);
+            Assert.False(table2.IsInitialized);
+            Assert.Equal(realTableName, table2.DisplayName);
+            Assert.Equal("[SalesLT].[Product]", table2.TableName); // Logical Name
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
+            table2 = await cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", true /* logical name only */, CancellationToken.None, logger);
+            Assert.False(table2.IsInitialized);
+            Assert.Equal(realTableName, table2.DisplayName);
+            Assert.Equal("[SalesLT].[Product]", table2.TableName); // Logical Name
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
+            InvalidOperationException ioe = await Assert.ThrowsAsync<InvalidOperationException>(() => cds.GetTableAsync(client, $"/apim/sql/{connectionId}", "[SalesLT].[Product]", false /* display name only */, CancellationToken.None, logger));
+            Assert.Equal("Cannot find any table with the specified name", ioe.Message);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products.json", @"Responses\SQL GetRelationships SampleDB.json");
             await connectorTable.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
@@ -603,6 +626,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':s, Website:s]", ((CdpRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.TabularRecordType.TableSymbolName);
+
+            RecordType rt = sfTable.TabularRecordType;
+            NamedFormulaType nft = rt.GetFieldTypes().First();
+
+            Assert.Equal("AccountSource", nft.Name);
+            Assert.Equal("Account Source", nft.DisplayName);
 
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
