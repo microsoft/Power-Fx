@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -231,8 +232,35 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         private TestNL2FxHandler CreateAndConfigureNl2FxHandler()
         {
             var nl2FxHandler = new TestNL2FxHandler();
-            HandlerFactory.SetHandler(CustomProtocolNames.NL2FX, new Nl2FxLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(nl2FxHandler)));
+            HandlerFactory.SetHandler(CustomProtocolNames.NL2FX, new Nl2FxLanguageServerOperationHandler(TestNlHandlerFactory.Create(nl2FxHandler)));
             return nl2FxHandler;
+        }
+
+        private sealed class TestNlHandlerFactory : BackwardsCompatibleNLHandlerFactory, IAsyncNLHandlerFactory
+        {
+            public int DelayTime { get; set; } = 50;
+
+            public TestNlHandlerFactory(NLHandler handler)
+                : base(handler)
+            {
+            }
+
+            public async Task<NLHandler> GetNLHandlerAsync(IPowerFxScope scope, BaseNLParams nlParams, CancellationToken cancellationToken = default)
+            {
+                if (DelayTime > 0)
+                {
+                    await Task.Delay(DelayTime, cancellationToken).ConfigureAwait(false);
+                }
+
+                return base.GetNLHandler(scope, nlParams);
+            }
+
+            public static INLHandlerFactory Create(NLHandler handler)
+            {
+                var random = new Random();
+                var useAsyncFactory = random.Next(0, 2) == 1;
+                return useAsyncFactory ? new TestNlHandlerFactory(handler) : new BackwardsCompatibleNLHandlerFactory(handler);
+            }
         }
     }
 }

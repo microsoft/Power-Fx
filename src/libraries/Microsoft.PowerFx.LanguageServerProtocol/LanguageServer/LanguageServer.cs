@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly IHostTaskExecutor _hostTaskExecutor;
 
-        [Obsolete("Use the constructor with ILanguageServerOperationHandlerFactory")]
+        [Obsolete("Use the constructor that takes aeguments in this order -> IPowerFxScopeFactory, IHostTaskExecutor, ILanguageServerLogger")]
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
             Contracts.AssertValue(sendToClient);

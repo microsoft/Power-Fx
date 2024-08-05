@@ -77,10 +77,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="uri">Uri to use for scope creation.</param>
         /// <param name="factory">Nl Handler Factory.</param>
         /// <param name="nLParams">Ml Params.</param>
+        /// <param name="cancellationToken"> Cancellation Token. </param>
         /// <returns>NlHandler Instance.</returns>
-        internal NLHandler GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null)
+        internal Task<NLHandler> GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null, CancellationToken cancellationToken = default)
         {
-            return factory.GetNLHandler(GetScope(uri), nLParams);
+            return factory is IAsyncNLHandlerFactory asyncNLHandlerFactory ?
+                   asyncNLHandlerFactory.GetNLHandlerAsync(GetScope(uri), nLParams, cancellationToken) :
+                   Task.FromResult(factory.GetNLHandler(GetScope(uri), nLParams));
         }
 
         /// <summary>

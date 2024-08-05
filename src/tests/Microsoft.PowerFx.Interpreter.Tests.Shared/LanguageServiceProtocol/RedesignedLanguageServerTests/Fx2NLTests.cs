@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         private TestFx2NlHandler CreateAndConfigureFx2NlHandler()
         {
             var fx2NlHandler = new TestFx2NlHandler();
-            HandlerFactory.SetHandler(CustomProtocolNames.FX2NL, new Fx2NlLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(fx2NlHandler)));
+            HandlerFactory.SetHandler(CustomProtocolNames.FX2NL, new Fx2NlLanguageServerOperationHandler(TestNlHandlerFactory.Create(fx2NlHandler)));
         
             return fx2NlHandler;
         }
