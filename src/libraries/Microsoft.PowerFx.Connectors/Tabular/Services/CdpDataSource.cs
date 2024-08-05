@@ -49,5 +49,55 @@ namespace Microsoft.PowerFx.Connectors
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
             return tables?.Value?.Select(rt => new CdpTable(DatasetName, rt.Name, DatasetMetadata, tables?.Value) { DisplayName = rt.DisplayName });
         }
+
+        /// <summary>
+        /// Retrieves a single CdpTable.
+        /// </summary>
+        /// <param name="httpClient">HttpClient.</param>
+        /// <param name="uriPrefix">Connector Uri prefix.</param>
+        /// <param name="tableName">Table name to search.</param>
+        /// <param name="logicalOrDisplay">bool? value: true = logical only, false = display name only, null = logical or display name. All comparisons are case sensitive.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <param name="logger">Logger.</param>
+        /// <returns>CdpTable class.</returns>
+        /// <exception cref="InvalidOperationException">When no or more than one tables are identified.</exception>
+        public async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string tableName, bool? logicalOrDisplay, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            IEnumerable<CdpTable> tables = await GetTablesAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
+
+            IEnumerable<CdpTable> filtered = tables.Where(ct => IsNameMatching(ct.TableName, ct.DisplayName, tableName, logicalOrDisplay));
+
+            if (!filtered.Any())
+            {
+                throw new InvalidOperationException("Cannot find any table with the specified name");
+            }
+
+            if (filtered.Count() > 1)
+            {
+                throw new InvalidOperationException($"Too many tables correspond to the specified name - Found {filtered.Count()} tables");
+            }
+
+            return filtered.First();
+        }
+
+        // logicalOrDisplay
+        // true  = logical only
+        // false = display name only
+        // null  = any
+        private bool IsNameMatching(string logicalName, string displayName, string expectedName, bool? logicalOrDisplay)
+        {
+            if (logicalOrDisplay != false && logicalName == expectedName)
+            {
+                return true;
+            }
+
+            if (logicalOrDisplay != true && displayName == expectedName)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
