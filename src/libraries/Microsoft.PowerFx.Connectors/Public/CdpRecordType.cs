@@ -59,14 +59,14 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            ConnectorType cr = ConnectorType.Fields.First(ct => ct.Name == fieldName);
+            ConnectorType ct = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
-            if (cr.ExternalTables?.Any() != true)
+            if (ct.ExternalTables?.Any() != true)
             {
                 return base.TryGetFieldType(fieldName, out type);
             }
 
-            string tableName = cr.ExternalTables.First();
+            string tableName = ct.ExternalTables.First();
 
             try
             {
