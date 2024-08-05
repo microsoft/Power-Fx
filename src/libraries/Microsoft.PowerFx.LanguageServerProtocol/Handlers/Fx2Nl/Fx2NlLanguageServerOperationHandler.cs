@@ -88,8 +88,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var nlHandler = await operationContext.GetNLHandler(fx2NlRequestParams.TextDocument.Uri, _nLHandlerFactory, fx2NlRequestParams, cancellationToken).ConfigureAwait(false);
-            _ = nlHandler ?? throw new ArgumentNullException(nameof(nlHandler));
+            var nlHandler = await operationContext.GetNLHandlerAsync(fx2NlRequestParams.TextDocument.Uri, _nLHandlerFactory, fx2NlRequestParams, cancellationToken).ConfigureAwait(false);
             if (!nlHandler.SupportsFx2NL)
             {
                 throw new NotSupportedException("Fx2Nl is not supported");

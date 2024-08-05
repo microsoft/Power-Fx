@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <param name="nLParams">Ml Params.</param>
         /// <param name="cancellationToken"> Cancellation Token. </param>
         /// <returns>NlHandler Instance.</returns>
-        internal Task<NLHandler> GetNLHandler(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null, CancellationToken cancellationToken = default)
+        internal Task<NLHandler> GetNLHandlerAsync(string uri, INLHandlerFactory factory, BaseNLParams nLParams = null, CancellationToken cancellationToken = default)
         {
             return factory is IAsyncNLHandlerFactory asyncNLHandlerFactory ?
                    asyncNLHandlerFactory.GetNLHandlerAsync(GetScope(uri), nLParams, cancellationToken) :

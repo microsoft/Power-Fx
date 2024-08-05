@@ -120,9 +120,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                 return;
             }
 
-            var nlHandler = await operationContext.GetNLHandler(nl2FxRequestParams.TextDocument.Uri, _nLHandlerFactory, nl2FxRequestParams, cancellationToken).ConfigureAwait(false);
-            _ = nlHandler ?? throw new ArgumentNullException(nameof(nlHandler));
-
+            var nlHandler = await operationContext.GetNLHandlerAsync(nl2FxRequestParams.TextDocument.Uri, _nLHandlerFactory, nl2FxRequestParams, cancellationToken).ConfigureAwait(false);
             if (!nlHandler.SupportsNL2Fx) 
             {
                 throw new NotSupportedException("Nl2fx is not supported");
