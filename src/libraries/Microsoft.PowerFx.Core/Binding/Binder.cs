@@ -4377,7 +4377,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 var overloadsWithMetadataTypeSupportedArgs = overloads.Where(func => func.SupportsMetadataTypeArg && !func.HasLambdas);
-                if (overloadsWithMetadataTypeSupportedArgs.Any()) 
+                if (overloadsWithMetadataTypeSupportedArgs.Any())
                 {
                     // Overloads are not supported for such functions yet.
                     Contracts.Assert(overloadsWithMetadataTypeSupportedArgs.Count() == 1);
@@ -4445,7 +4445,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     PreVisitHeadNode(node);
                     PreVisitBottomUp(node, startArg, maybeScope);
                     FinalizeCall(node);
-
                     return false;
                 }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -36,6 +37,7 @@ namespace Microsoft.PowerFx.Json.Tests
             // custom-type type alias
             engine.AddUserDefinitions("T = Type(Number);");
 
+            // Positive tests
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Number", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"17.29\"", "Number", 17.29D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"HelloWorld\"\"\"", "Text", "HelloWorld");
@@ -46,6 +48,98 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"1234.56789\"", "Decimal", 1234.56789m);
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "T", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx", options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", new DateTime(2000, 1, 1, 0, 0, 1, 100));
+            CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "None", 42m);
+
+            // Negative tests - Coercions not allowed
+            CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Text", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"42\"\"\"", "Number", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"42\"\"\"", "Decimal", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"0\"", "Boolean", false, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"true\"", "Number", false, false);
+
+            // Negative tests - types not supported in FromJSON converter
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "Time", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"RED\"\"\"", "Color", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", string.Empty, false);
+        }
+
+        [Fact]
+        public void RecordsTest()
+        {
+            var engine = SetupEngine();
+
+            engine.AddUserDefinitions("T = Type({a: Number});");
+
+            dynamic obj1 = new ExpandoObject();
+            obj1.a = 5D;
+
+            dynamic obj2 = new ExpandoObject();
+            obj2.a = new ExpandoObject();
+            obj2.a.b = new ExpandoObject();
+            obj2.a.b.c = false;
+
+            dynamic obj3 = new ExpandoObject();
+            obj3.a = new object[] { 1m, 2m, 3m, 4m };
+
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "T", obj1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Number})", obj1, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": { \"\"b\"\": {\"\"c\"\":  false}}}\"", "Type({a: {b: {c: Boolean }}})", obj2, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": [1, 2, 3, 4]}\"", "Type({a: [Decimal]})", obj3, options: ParseType);
+
+            // Negative Tests
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Hyperlink})", obj1, false, options: ParseType);
+        }
+
+        [Fact]
+        public void TablesTest()
+        {
+            var engine = SetupEngine();
+
+            engine.AddUserDefinitions("T = Type([{a: Number}]);");
+
+            var t1 = new object[] { 5D };
+            var t2 = new object[] { 1m, 2m, 3m, 4m };
+            var t3a = new object[] { true, true, false, true };
+            var t3 = new object[] { t3a };
+
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "T", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": [true, true, false, true]}]\"", "Type([{a: [Boolean]}])", t3, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Decimal])", t2, options: ParseType);
+
+            // Negative tests
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5, \"\"b\"\": 6}]\"", "Type([{a: Number}])", t1, false, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Text])", t2, false, options: ParseType);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[\"\"foo/bar/uri\"\"]\"", "Type([Hyperlink])", t1, false, options: ParseType);
+        }
+
+        [Theory]
+        [InlineData("\"42\"", "SomeType", true, "ErrInvalidName")]
+        [InlineData("\"42\"", "Type(5)", true, "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("\"42\"", "Text(42)", true, "ErrInvalidArgumentExpectedType")]
+        [InlineData("\"{}\"", "Type([{a: 42}])", true, "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("AsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
+        [InlineData("IsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
+        [InlineData("AsType(ParseJSON(\"42\"), Number , Text(5))", "", false, "ErrBadArity")]
+        [InlineData("IsType(ParseJSON(\"42\"), Number, 5)", "", false, "ErrBadArity")]
+        public void TestCompileErrors(string expression, string type, bool testAllFunctions, string expectedError)
+        {
+            var engine = SetupEngine();
+
+            if (testAllFunctions)
+            {
+                CheckIsTypeAsTypeParseJSONCompileErrors(engine, expression, type, expectedError, ParseType);
+            }
+            else
+            {
+                var result = engine.Check(expression, options: ParseType);
+                Assert.False(result.IsSuccess);
+                Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
+            }
         }
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)
@@ -72,33 +166,19 @@ namespace Microsoft.PowerFx.Json.Tests
             }
         }
 
-        [Fact]
-        public void RecordsTest()
+        private void CheckIsTypeAsTypeParseJSONCompileErrors(RecalcEngine engine, string json, string type, string expectedError, ParserOptions options = null)
         {
-            var engine = SetupEngine();
+            var result = engine.Check($"AsType(ParseJSON({json}), {type})", options: options);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
 
-            engine.AddUserDefinitions("T = Type({a: Number});");
+            result = engine.Check($"ParseJSON({json}, {type})", options: options);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
 
-            dynamic obj1 = new ExpandoObject();
-            obj1.a = 5D;
-
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "T", obj1);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Number})", obj1, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false, options: ParseType);
-        }
-
-        [Fact]
-        public void TablesTest()
-        {
-            var engine = SetupEngine();
-
-            engine.AddUserDefinitions("T = Type([{a: Number}]);");
-
-            var t1 = new object[] { 5D };
-
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "T", t1);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1, options: ParseType);
-            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5, \"\"b\"\": 6}]\"", "Type([{a: Number}])", t1, false, options: ParseType);
+            result = engine.Check($"IsType(ParseJSON({json}), {type})", options: options);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
         }
     }
 }
