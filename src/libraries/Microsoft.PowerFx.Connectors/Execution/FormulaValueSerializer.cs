@@ -112,19 +112,33 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             {
                                 DKind.Number => "number",
                                 DKind.Decimal => "number",
-                                DKind.String => "string",
+                                DKind.String or
+                                DKind.Date or
+                                DKind.DateTime or
+                                DKind.DateTimeNoTimeZone => "string",
                                 DKind.Boolean => "boolean",
                                 DKind.Record => "object",
                                 DKind.Table => "array",
                                 DKind.ObjNull => "null",
-                                _ => "unknown_dkind"
+                                _ => $"type: unknown_dkind {nv.Value.Type._type.Kind}"
                             },
-                            format: null),
+                            format: GetDateFormat(nv.Value.Type._type.Kind)),
                         nv.Value).ConfigureAwait(false);
                 }
             }
 
             EndObject(objectName);
+        }
+
+        private static string GetDateFormat(DKind kind)
+        {
+            return kind switch
+            {
+                DKind.Date => "date",
+                DKind.DateTime => "date-time",
+                DKind.DateTimeNoTimeZone => "date-no-tz",
+                _ => null
+            };
         }
 
         private async Task WritePropertyAsync(string propertyName, ISwaggerSchema propertySchema, FormulaValue fv)
