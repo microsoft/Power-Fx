@@ -3837,6 +3837,16 @@ namespace Microsoft.PowerFx.Core.Binding
                     type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                     entityTypes.Add(expandEntityInfo.ExpandPath, type);
                 }
+                else if (!type.ExpandInfo.ExpandPath.IsReachedFromPath(relatedEntityPath))
+                {
+                    // Expands reached via a different path should have a different relatedentitypath.
+                    // If we found an expand in the cache but it's not accessed via the same relationship
+                    // we need to create a different expand info but with the same type. 
+                    // DType.Clone doesn't clone expand info, so we force that with CopyExpandInfo,
+                    // because that sadly mutates expand info on what should otherwise be an immutable dtype. 
+                    type = DType.CopyExpandInfo(type.Clone(), type);
+                    type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
+                }
 
                 return type;
             }
