@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -1598,6 +1599,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
+            config.AddFunction(new DateTimeNoTZ());
 
             using var httpClient = new HttpClient(testConnector);
 
@@ -1614,10 +1616,12 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             var engine = new RecalcEngine(config);
+
+            // TestConnectorRuntimeContext defines TimeZone as PST
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50, p2: Date(2019, 11, 6), p3: DateTime(2022, 5, 30, 22, 17, 58, 111), p4: DateTimeNoTZ(2022, 5, 30, 22, 17, 58, 111) })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
             Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
@@ -1636,10 +1640,43 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: MyProduct/v1.2 PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""p1"":50}}
+ [body] {{""p1"":50,""p2"":""2019-11-06"",""p3"":""2022-05-31T05:17:58.111Z"",""p4"":""2022-05-30T22:17:58.111""}}
 ";
 
             Assert.Equal(expected, actual);
+        }
+
+        private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction5
+        {
+            public override ArgPreprocessor GetArgPreprocessor(int index, int argCount) => base.GetGenericArgPreprocessor(index);
+
+            public override bool IsSelfContained => true;
+
+            public override bool HasPreciseErrors => true;
+
+            public DateTimeNoTZ()
+                : base("DateTimeNoTZ", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTimeNoTimeZone, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3 };
+                yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
+            }
+
+            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                int year = args[0] is NumberValue nv0 ? (int)nv0.Value : args[0] is DecimalValue dv0 ? (int)dv0.Value : throw new InvalidOperationException($"Invalid Type for Arg0 {args[0].GetType().Name}");
+                int month = args[1] is NumberValue nv1 ? (int)nv1.Value : args[1] is DecimalValue dv1 ? (int)dv1.Value : throw new InvalidOperationException($"Invalid Type for Arg1 {args[1].GetType().Name}");
+                int day = args[2] is NumberValue nv2 ? (int)nv2.Value : args[2] is DecimalValue dv2 ? (int)dv2.Value : throw new InvalidOperationException($"Invalid Type for Arg2 {args[2].GetType().Name}");
+                int hour = args[3] is NumberValue nv3 ? (int)nv3.Value : args[3] is DecimalValue dv3 ? (int)dv3.Value : throw new InvalidOperationException($"Invalid Type for Arg3 {args[3].GetType().Name}");
+                int minute = args[4] is NumberValue nv4 ? (int)nv4.Value : args[4] is DecimalValue dv4 ? (int)dv4.Value : throw new InvalidOperationException($"Invalid Type for Arg4 {args[4].GetType().Name}");
+                int second = args[5] is NumberValue nv5 ? (int)nv5.Value : args[5] is DecimalValue dv5 ? (int)dv5.Value : throw new InvalidOperationException($"Invalid Type for Arg5 {args[5].GetType().Name}");
+                int milli = args.Length > 6 ? args[6] is NumberValue nv6 ? (int)nv6.Value : args[6] is DecimalValue dv6 ? (int)dv6.Value : throw new InvalidOperationException($"Invalid Type for Arg6 {args[6].GetType().Name}") : 0;
+
+                return Task.FromResult<FormulaValue>(new DateTimeValue(IRContext.NotInSource(FormulaType.DateTimeNoTimeZone), new DateTime(year, month, day, hour, minute, second, milli, DateTimeKind.Unspecified)));
+            }
         }
 
         [Fact]
