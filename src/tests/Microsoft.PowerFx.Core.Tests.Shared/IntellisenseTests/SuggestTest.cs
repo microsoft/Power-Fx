@@ -289,6 +289,22 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
+        
+        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]        
+        [InlineData("First(t|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
+        public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
+        {
+            CultureInfo culture = locale == null ? null : CultureInfo.CreateSpecificCulture(locale);
+
+            var context = "![tbl1:*[col1:n,col2:n]]";
+            var result = Suggest(expression, Default, culture, context);
+
+            var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+            Assert.Equal(expectedDefinition, currentOverload.Definition);
+            Assert.Equal(expectedParameterDescription, currentOverload.FunctionParameterDescription);
+        }
+
+        [Theory]
         [InlineData("çava,comment,chat", "çava,chat,comment", "fr-FR")]
         [InlineData("azul,árvore,áurea", "árvore,áurea,azul", "pt-BR")]
         [InlineData("Choice,car", "car,Choice", "en-US")] // Case insensitive comparison

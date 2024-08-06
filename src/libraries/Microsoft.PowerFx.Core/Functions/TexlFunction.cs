@@ -887,6 +887,15 @@ namespace Microsoft.PowerFx.Core.Functions
             return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription);
         }
 
+        public virtual bool TryGetParamDescription(string paramName, string locale, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            // Fetch it from the string resources by default. Subclasses can override this
+            // and use their own dictionaries, etc.
+            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription, locale);
+        }
+
         // Exhaustive list of parameter names, in no guaranteed order.
         // (Used by Tests only)
         public IEnumerable<string> GetParamNames()

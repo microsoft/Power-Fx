@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Intellisense
                             // otherwise we still want to collect parameter information
                             var unalteredParamName = signature[signatureIndex]();
                             var invariantParamName = FunctionInfoSignature.GetInvariantParameterName(signature[signatureIndex]);
-                            (var paramName, var parameterHighlightStart, var parameterHighlightEnd, var funcParamDescription) = GetParameterHighlightAndDescription(data, unalteredParamName, invariantParamName, funcDisplayString);
+                            (var paramName, var parameterHighlightStart, var parameterHighlightEnd, var funcParamDescription) = GetParameterHighlightAndDescription(data, unalteredParamName, invariantParamName, funcDisplayString, data.Locale?.Name);
                             parameters.Add(new ParameterInformation()
                             {
                                 Documentation = funcParamDescription,
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Intellisense
                             Parameters = parameters.ToArray(),
                         };
                         functionSignatures.Add(signatureInformation);
-                        functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, possibleOverload.ReturnType, signatureIndex, possibleOverload.Description, possibleOverload.Name, highlightedFuncParamDescription));
+                        functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, possibleOverload.ReturnType, signatureIndex, possibleOverload.GetDescription(data.Locale?.Name), possibleOverload.Name, highlightedFuncParamDescription));
 
                         if ((signatureIndex >= argCount || (possibleOverload.SignatureConstraint != null && argCount > possibleOverload.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
                         {
@@ -243,7 +243,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="invariantParamName"></param>
         /// <param name="funcDisplayString"></param>
         /// <returns></returns>
-        private static (string paramName, int highlightStart, int highlightEnd, string funcParamDescription) GetParameterHighlightAndDescription(IIntellisenseData data, string paramName, string invariantParamName, StringBuilder funcDisplayString)
+        private static (string paramName, int highlightStart, int highlightEnd, string funcParamDescription) GetParameterHighlightAndDescription(IIntellisenseData data, string paramName, string invariantParamName, StringBuilder funcDisplayString, string locale = null)
         {
             Contracts.AssertValue(data);
             Contracts.AssertValue(paramName);
@@ -266,8 +266,17 @@ namespace Microsoft.PowerFx.Intellisense
                 (highlightStart, highlightEnd, paramName, invariantParamName) = (newHighlightStart, newHighlightEnd, newParamName, newInvariantParamName);
             }
 
+            string funcParamDescription = null;
+
             // MUST use the invariant parameter name here
-            func.TryGetParamDescription(invariantParamName, out var funcParamDescription);
+            if (locale == null)
+            {
+                func.TryGetParamDescription(invariantParamName, out funcParamDescription);
+            }
+            else
+            {
+                func.TryGetParamDescription(invariantParamName, locale, out funcParamDescription);
+            }
 
             // Apply optional suffix provided via argument
             funcParamDescription += data.GenerateParameterDescriptionSuffix(func, paramName);
