@@ -2,13 +2,17 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -121,11 +125,13 @@ namespace Microsoft.PowerFx.Json.Tests
         [InlineData("\"42\"", "SomeType", true, "ErrInvalidName")]
         [InlineData("\"42\"", "Type(5)", true, "ErrTypeLiteral_InvalidTypeDefinition")]
         [InlineData("\"42\"", "Text(42)", true, "ErrInvalidArgumentExpectedType")]
+        [InlineData("\"\"\"Hello\"\"\"", "\"Hello\"", true, "ErrInvalidArgumentExpectedType")]
         [InlineData("\"{}\"", "Type([{a: 42}])", true, "ErrTypeLiteral_InvalidTypeDefinition")]
         [InlineData("AsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
         [InlineData("IsType(ParseJSON(\"42\"))", "", false, "ErrBadArity")]
         [InlineData("AsType(ParseJSON(\"42\"), Number , Text(5))", "", false, "ErrBadArity")]
         [InlineData("IsType(ParseJSON(\"42\"), Number, 5)", "", false, "ErrBadArity")]
+        [InlineData("AsType(ParseJSON(\"123\"), 1)", "", false, "ErrInvalidArgumentExpectedType")]
         public void TestCompileErrors(string expression, string type, bool testAllFunctions, string expectedError)
         {
             var engine = SetupEngine();
@@ -140,6 +146,16 @@ namespace Microsoft.PowerFx.Json.Tests
                 Assert.False(result.IsSuccess);
                 Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
             }
+        }
+
+        [Fact]
+        public void TestFunctionsWithTypeArgs()
+        {
+            var expectedFunctions = new HashSet<string> { "AsType", "IsType", "ParseJSON" };
+            var functionWithTypeArgs = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs);
+
+            Assert.All(functionWithTypeArgs, f => Assert.Contains(f.Name, expectedFunctions));
+            Assert.All(functionWithTypeArgs, f => Assert.True(Enumerable.Range(0, f.MaxArity).Any(i => f.ArgIsType(i))));
         }
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)

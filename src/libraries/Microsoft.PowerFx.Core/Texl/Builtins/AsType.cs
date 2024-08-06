@@ -143,11 +143,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // AsType(UntypedObject:P, Type:*[]): ![]
-    internal class AsTypeUOFunction : BuiltinFunction
+    // AsType(UntypedObject:O, Type:U): ?
+    internal class AsType_UOFunction : BuiltinFunction
     {
-        public const string AsTypeInvariantFunctionName = "AsType";
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
@@ -161,8 +159,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
-        public AsTypeUOFunction()
-            : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
+        public AsType_UOFunction()
+            : base(AsTypeFunction.AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
         {
         }
 

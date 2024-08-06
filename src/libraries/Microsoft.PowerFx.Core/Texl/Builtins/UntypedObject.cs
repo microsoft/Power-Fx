@@ -49,11 +49,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // ParseJSON(JsonString:P, Type:T): ![]
+    // ParseJSON(JsonString:s, Type:U): ?
     internal class TypedParseJSONFunction : BuiltinFunction
     {
-        public const string ParseJsonInvariantFunctionName = "ParseJSON";
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
@@ -66,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public TypedParseJSONFunction()
-            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutTypedParseJSON, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.String, DType.Error)
+            : base(ParseJSONFunction.ParseJSONInvariantFunctionName, TexlStrings.AboutTypedParseJSON, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.String, DType.Error)
         {
         }
 

@@ -4314,25 +4314,26 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, maybeFunc.ReturnType);
             }
 
-            private bool IsFunctionWithTypeArg(CallNode node, TexlFunction maybeFunc)
+            // checks if the call node best matches function overloads with UntypedObject/JSON
+            private bool MatchOverloadWithUntypedOrJSONConversionFunctions(CallNode node, TexlFunction maybeFunc)
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(maybeFunc);
                 Contracts.Assert(maybeFunc.HasTypeArgs);
 
-                if (maybeFunc.Name == AsTypeUOFunction.AsTypeInvariantFunctionName &&
+                if (maybeFunc.Name == AsTypeFunction.AsTypeInvariantFunctionName &&
                     _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                 {
                     return true;
                 }
 
-                if (maybeFunc.Name == IsTypeUOFunction.IsTypeInvariantFunctionName &&
+                if (maybeFunc.Name == IsType_UOFunction.IsTypeInvariantFunctionName &&
                     _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                 {
                     return true;
                 }
 
-                if (maybeFunc.Name == TypedParseJSONFunction.ParseJsonInvariantFunctionName &&
+                if (maybeFunc.Name == ParseJSONFunction.ParseJSONInvariantFunctionName &&
                     node.Args.Count > 1)
                 {
                     return true;
@@ -4432,9 +4433,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         var functionWithTypeArg = overloadsWithTypeArgs.First();
 
-                        if (IsFunctionWithTypeArg(node, functionWithTypeArg))
+                        if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg))
                         {
-                            PreVisitTypeArg(node, functionWithTypeArg);
+                            PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
                             FinalizeCall(node);
                             return false;
                         }
@@ -5101,8 +5102,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, returnType);
             }
 
-            // Method to previsit if callnode is determined as function with Type argument
-            private void PreVisitTypeArg(CallNode node, TexlFunction func)
+            // Method to previsit type arg of callnode if it is determined as untyped/json conversion function
+            private void PreVisitTypeArgAndProccesCallNode(CallNode node, TexlFunction func)
             {
                 AssertValid();
                 Contracts.AssertValue(node);
@@ -5125,12 +5126,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(argCount > 1);
                 Contracts.AssertValue(args[1]);
 
-                if (args[1] is not FirstNameNode && args[1] is not TypeLiteralNode)
-                {
-                    _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidArgumentExpectedType, args[1]);
-                    _txb.SetType(args[1], DType.Error);
-                }
-                else if (args[1] is FirstNameNode typeName)
+                if (args[1] is FirstNameNode typeName)
                 {
                     if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
                     {
@@ -5151,6 +5147,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (args[1] is TypeLiteralNode typeLiteral)
                 {
                     typeLiteral.Accept(this);
+                }
+                else
+                {
+                    _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidArgumentExpectedType, args[1]);
+                    _txb.SetType(args[1], DType.Error);
                 }
 
                 PostVisit(node.Args);

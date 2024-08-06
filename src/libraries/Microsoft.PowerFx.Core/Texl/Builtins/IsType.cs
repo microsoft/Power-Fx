@@ -2,14 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -20,8 +14,8 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // IsType(UntypedObject:P, Type:*[]): Boolean
-    internal class IsTypeUOFunction : BuiltinFunction
+    // IsType(UntypedObject:O, Type:U): Boolean
+    internal class IsType_UOFunction : BuiltinFunction
     {
         public const string IsTypeInvariantFunctionName = "IsType";
 
@@ -38,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
-        public IsTypeUOFunction()
+        public IsType_UOFunction()
             : base(IsTypeInvariantFunctionName, TexlStrings.AboutIsTypeUO, FunctionCategories.REST, DType.Boolean, 0, 2, 2, DType.UntypedObject, DType.Error)
         {
         }

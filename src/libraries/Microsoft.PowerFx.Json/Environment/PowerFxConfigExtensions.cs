@@ -17,8 +17,8 @@ namespace Microsoft.PowerFx
         {
             config.AddFunction(new ParseJSONFunctionImpl());
             config.AddFunction(new JsonFunctionImpl());
-            config.AddFunction(new AsTypeUOFunctionImpl());
-            config.AddFunction(new IsTypeUOFunctionImpl());
+            config.AddFunction(new AsType_UOFunctionImpl());
+            config.AddFunction(new IsType_UOFunctionImpl());
             config.AddFunction(new TypedParseJSONFunctionImpl());
         }
     }

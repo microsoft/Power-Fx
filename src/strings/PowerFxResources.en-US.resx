@@ -1813,11 +1813,11 @@
   </data>
   <data name="IsTypeUOArg1" xml:space="preserve">
     <value>untypedValue</value>
-    <comment>function_parameter - First argument of the IsTypeUO function - The untypedObject value to be inspected.</comment>
+    <comment>function_parameter - First argument of the IsTypeUO function - The untyped value to be inspected.</comment>
   </data>
   <data name="IsTypeUOArg2" xml:space="preserve">
     <value>type</value>
-    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - ether a typeliteral or global named type.</comment>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a typeliteral or global named type.</comment>
   </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
@@ -1838,22 +1838,22 @@
     <value>The entity table representing the type we wish the value to be used as.</value>
   </data>
   <data name="AboutAsTypeUO" xml:space="preserve">
-    <value>Checks and uses the provided Untyped as the given type.</value>
+    <value>Checks and uses the provided Untyped value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>
   </data>
   <data name="AsTypeUOArg1" xml:space="preserve">
     <value>value</value>
-    <comment>function_parameter - First argument of the AsType function - typed or untyped object value to be used as the new type.</comment>
+    <comment>function_parameter - First argument of the AsType function - untyped value to be used as the new type.</comment>
   </data>
   <data name="AsTypeUOArg2" xml:space="preserve">
     <value>type</value>
     <comment>function_parameter - Second argument of the AsType function - The type that we wish the value to be used as.</comment>
   </data>
   <data name="AboutAsTypeUO_value" xml:space="preserve">
-    <value>The polymorphic record to cast as a new type.</value>
+    <value>The untyped value to cast as a new type.</value>
   </data>
   <data name="AboutAsTypeUO_type" xml:space="preserve">
-    <value>The entity table representing the type we wish the value to be used as.</value>
+    <value>The type that we wish the value to be used as.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Executes the formula provided as second parameter using the scope provided by the first.</value>
@@ -2704,7 +2704,7 @@
     <value>A JSON string to process.</value>
   </data>
   <data name="AboutTypedParseJSON" xml:space="preserve">
-    <value>Converts a JSON string into an typed object.</value>
+    <value>Converts a JSON string into a typed object.</value>
     <comment>Description of 'ParseJSON' function overload that converts a string input to typed object.</comment>
   </data>
   <data name="TypedParseJSONArg1" xml:space="preserve">
@@ -4743,7 +4743,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Invalid argument '{0}'. Expected valid type name or typeliteral.</value>
-    <comment>Error Message shown to user when a value other name or typeliteral is passed into AsType, IsType and ParseJSON functions.</comment>
+    <value>Invalid argument '{0}'. Expected valid type name or type literal.</value>
+    <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
 </root>
