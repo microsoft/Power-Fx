@@ -1616,9 +1616,10 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             var engine = new RecalcEngine(config);
-
-            // TestConnectorRuntimeContext defines TimeZone as PST
-            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+            
+            RuntimeConfig rc = new RuntimeConfig();
+            rc.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            rc.AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50, p2: Date(2019, 11, 6), p3: DateTime(2022, 5, 30, 22, 17, 58, 111), p4: DateTimeNoTZ(2022, 5, 30, 22, 17, 58, 111) })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
@@ -1643,7 +1644,7 @@ namespace Microsoft.PowerFx.Tests
  [body] {{""p1"":50,""p2"":""2019-11-06"",""p3"":""2022-05-31T05:17:58.111Z"",""p4"":""2022-05-30T22:17:58.111""}}
 ";
 
-            Assert.Equal(expected, actual);
+            Assert.Equal<object>(expected, actual);
         }
 
         private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction5
