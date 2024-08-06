@@ -36,28 +36,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         /// <returns>Nl2Fx Parameters computed from the client request.</returns>
         private static Task<NL2FxParameters> PreHandleNl2Fx(NLHandler handler, CustomNL2FxParams requestNl2FxParams, LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
-            if (handler.SkipDefaultPreHandleForNl2Fx)
-            {
-                return Task.FromResult(new NL2FxParameters()
-                {
-                    Sentence = requestNl2FxParams.Sentence
-                });
-            }
-
             return operationContext.ExecuteHostTaskAsync(
             requestNl2FxParams.TextDocument.Uri, 
             (scope) =>
             {
-                var check = scope?.Check(LanguageServer.Nl2FxDummyFormula) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
-                var summary = check.ApplyGetContextSummary();
-
                 var nl2FxParameters = new NL2FxParameters
                 {
-                    Sentence = requestNl2FxParams.Sentence,
-                    SymbolSummary = summary,
-                    Engine = check.Engine,
-                    ExpressionLocale = check.ParserCultureInfo
+                    Sentence = requestNl2FxParams.Sentence
                 };
+
+                if (!handler.SkipDefaultPreHandleForNl2Fx)
+                {
+                    var check = scope?.Check(LanguageServer.Nl2FxDummyFormula) ?? throw new NullReferenceException("Check result was not found for NL2Fx operation");
+                    var summary = check.ApplyGetContextSummary();
+                    nl2FxParameters.SymbolSummary = summary;
+                    nl2FxParameters.ExpressionLocale = check.ParserCultureInfo;
+                    nl2FxParameters.Engine = check.Engine;
+                }
+
                 handler.PreHandleNl2Fx(requestNl2FxParams, nl2FxParameters, operationContext);
                 return Task.FromResult(nl2FxParameters);
             }, 
