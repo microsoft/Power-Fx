@@ -482,6 +482,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
         public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
 
+        public static StringGetter AboutFileInfo = (b) => StringResources.Get("AboutFileInfo", b);
+        public static StringGetter FileInfoArg1 = (b) => StringResources.Get("FileInfoArg1", b);
+
         public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
@@ -498,12 +501,14 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter PatchArg_Updates = (b) => StringResources.Get("PatchArg_Updates", b);
 
         public static StringGetter AboutCollect = (b) => StringResources.Get("AboutCollect", b);
-        public static StringGetter CollectDataSourceArg = (b) => StringResources.Get("CollectDataSourceArg", b);
-        public static StringGetter CollectRecordArg = (b) => StringResources.Get("CollectRecordArg", b);
+        public static StringGetter CollectArg1 = (b) => StringResources.Get("CollectArg1", b);
+        public static StringGetter CollectArg2 = (b) => StringResources.Get("CollectArg2", b);
+
+        public static StringGetter CollectItemArg = (b) => StringResources.Get("CollectItemArg", b);
+        public static StringGetter AboutCollect_data_source = (b) => StringResources.Get("AboutCollect_data_source", b);
+        public static StringGetter AboutCollect_item = (b) => StringResources.Get("AboutCollect_item", b);
 
         public static StringGetter AboutClearCollect = (b) => StringResources.Get("AboutClearCollect", b);
-        public static StringGetter ClearCollectDataSourceArg = (b) => StringResources.Get("ClearCollectDataSourceArg", b);
-        public static StringGetter ClearCollectRecordArg = (b) => StringResources.Get("ClearCollectRecordArg", b);
 
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
         public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
@@ -645,7 +650,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
         public static ErrorResourceKey ErrNeedRecord_Arg = new ErrorResourceKey("ErrNeedRecord_Arg");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
-        public static ErrorResourceKey ErrNeedEntity_EntityName = new ErrorResourceKey("ErrNeedEntity_EntityName");
         public static ErrorResourceKey ErrNeedValidVariableName_Arg = new ErrorResourceKey("ErrNeedValidVariableName_Arg");
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
@@ -659,7 +663,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrOnlyOneViewExpected = new ErrorResourceKey("ErrOnlyOneViewExpected");
         public static ErrorResourceKey ErrViewFromCurrentTableExpected = new ErrorResourceKey("ErrViewFromCurrentTableExpected");
         public static ErrorResourceKey ErrColonExpected = new ErrorResourceKey("ErrColonExpected");
-        public static ErrorResourceKey ErrInvalidDataSource = new ErrorResourceKey("ErrInvalidDataSource");
         public static ErrorResourceKey ErrExpectedDataSourceRestriction = new ErrorResourceKey("ErrExpectedDataSourceRestriction");
         public static ErrorResourceKey ErrBehaviorPropertyExpected = new ErrorResourceKey("ErrBehaviorPropertyExpected");
         public static ErrorResourceKey ErrTestPropertyExpected = new ErrorResourceKey("ErrTestPropertyExpected");
@@ -754,10 +757,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_DuplicateParameter = new ErrorResourceKey("ErrUDF_DuplicateParameter");
         public static ErrorResourceKey ErrUDF_UnknownType = new ErrorResourceKey("ErrUDF_UnknownType");
         public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
+        public static ErrorResourceKey ErrUDF_TooManyParameters = new ErrorResourceKey("ErrUDF_TooManyParameters");
         public static ErrorResourceKey ErrUDF_MissingReturnType = new ErrorResourceKey("ErrUDF_MissingReturnType");
         public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
         public static ErrorResourceKey ErrUDF_InvalidReturnType = new ErrorResourceKey("ErrUDF_InvalidReturnType");
         public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
+        public static ErrorResourceKey WrnUDF_ShadowingBuiltInFunction = new ErrorResourceKey("WrnUDF_ShadowingBuiltInFunction");
 
         public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
         public static ErrorResourceKey ErrNamedType_InvalidCycles = new ErrorResourceKey("ErrNamedType_InvalidCycles");

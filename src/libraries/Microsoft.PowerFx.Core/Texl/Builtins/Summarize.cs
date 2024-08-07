@@ -177,7 +177,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                       existingType == DType.Time ||
                       existingType == DType.OptionSetValue ||
                       existingType == DType.DateTime ||
-                      existingType == DType.Date))
+                      existingType == DType.Date ||
+                      existingType == DType.Guid))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrNeedPrimitive);
                     isValid = false;

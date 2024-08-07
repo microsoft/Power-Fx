@@ -521,6 +521,196 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("{\"resolutionKind\":\"DateTimeResolution\",\"value\":\"2023-02-25\"}", visitor2.Result);
         }
 
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21_WithInvalidResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+
+            // 'intents' is a record instead of being a table
+            // Expecting Table but received a Record, in result/prediction/intents
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response.json");
+
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
+            Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
+
+            Assert.NotNull(httpResult);
+            Assert.True(httpResult is RecordValue);
+
+            RecordValue httpResultValue = (RecordValue)httpResult;
+            RecordValue resultValue = (RecordValue)httpResultValue.GetField("result");
+            RecordValue predictionValue = (RecordValue)resultValue.GetField("prediction");
+            TableValue entitiesValue = (TableValue)predictionValue.GetField("entities");
+            IEnumerable<DValue<RecordValue>> rows = entitiesValue.Rows;
+
+            // Get second entity
+            RecordValue entityValue2 = rows.Skip(1).First().Value;
+            FormulaValue resolutionsValue = entityValue2.GetField("resolutions");
+
+            Assert.True(resolutionsValue is UntypedObjectValue);
+            UOValueVisitor visitor1 = new UOValueVisitor();
+            resolutionsValue.Visit(visitor1);
+
+            Assert.Equal("[\"{\\\"resolutionKind\\\":\\\"DateTimeResolution\\\",\\\"value\\\":\\\"2023-02-25\\\"}\"]", visitor1.Result);
+
+            FormulaValue topResolutionValue1 = entityValue2.GetField("topResolution");
+            Assert.True(topResolutionValue1 is UntypedObjectValue);
+
+            UOValueVisitor visitor2 = new UOValueVisitor();
+            topResolutionValue1.Visit(visitor2);
+
+            Assert.Equal("{\"resolutionKind\":\"DateTimeResolution\",\"value\":\"2023-02-25\"}", visitor2.Result);
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21_WithInvalidResponse2()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+
+            // "intents": 99
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response 2.json");
+
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];            
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
+            Assert.Equal(ErrorKind.InvalidJSON, ev.Errors.First().Kind);
+            Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting Table but received a Number, in result/prediction/intents", ev.Errors.First().Message);
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21_WithInvalidResponse3()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+
+            // "category" is an 1-element array instead of a string
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response 3.json");
+
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
+
+            // valid result
+            Assert.IsAssignableFrom<RecordValue>(httpResult); 
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21_WithInvalidResponse4()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+
+            // "category" is an 2-element array instead of a string
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response 4.json");
+
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
+
+            ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
+            Assert.Equal(ErrorKind.InvalidJSON, ev.Errors.First().Kind);
+            Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting String but received a Table with 2 elements, in result/prediction/entities/category", ev.Errors.First().Message);
+        }
+
+        [Fact]
+        public async Task ACSL_InvokeFunction_v21_WithInvalidResponse5()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            ConsoleLogger logger = new ConsoleLogger(_output);
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector);
+
+            // "intent" is an array of arrays of records
+            testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response 5.json");
+
+            var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
+            RecalcEngine engine = new RecalcEngine(pfxConfig);
+
+            string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
+            string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
+            FormulaValue analysisInputParam = engine.Eval(analysisInput);
+            FormulaValue parametersParam = engine.Eval(parameters);
+            FormulaValue kind = FormulaValue.New("Conversation");
+
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client, console: _output);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
+
+            // valid result
+            Assert.IsAssignableFrom<RecordValue>(httpResult);
+        }
+
         internal class UOValueVisitor : IValueVisitor
         {
             public string Result { get; private set; }
@@ -914,7 +1104,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(returnType);
             Assert.True(returnType.FormulaType is RecordType);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
@@ -948,6 +1138,9 @@ POST https://tip1002-002.azure-apihub.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -994,7 +1187,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
             Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
  authority: tip1-shared.azure-apim.net
@@ -1020,6 +1213,9 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -1068,9 +1264,9 @@ POST https://tip1-shared.azure-apim.net/invoke
                 runtimeContext,
                 CancellationToken.None);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
-            Assert.Equal(
+            var expected =
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...
@@ -1083,7 +1279,12 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""inputs"":{{""property1"":""test1"",""property2"":""test2""}}}}
-", input);
+";
+
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
+            Assert.Equal(expected, input);
         }
 
         [Fact]

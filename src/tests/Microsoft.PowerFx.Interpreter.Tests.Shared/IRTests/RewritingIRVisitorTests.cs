@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("true And false", "And(True, (False))", false)] // LazyEvalNode
         [InlineData("{ x : true}.x", "({x:True}).x", true)]
         [InlineData("true;false", "(True;False;)", false)]
+        [InlineData("First(ForAll([5], ThisRecord)).Value", "(First(ForAll(Table({Value:500}), (Scope_1)))).Value", 500.0)]
         public void Rewrite100x(string expr, string expectedIR, object expected)
         {
             var engine = new RecalcEngine();

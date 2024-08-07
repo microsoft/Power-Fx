@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Percentuale o colonna di valori percentuale in base alla quale verrà sfumato il colore o la colonna di valori colore. Una percentuale negativa produce una sfumatura più scura. Una percentuale positiva produce una sfumatura più chiara.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Restituisce un record con le informazioni su un file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>BLOB di file su cui ottenere informazioni.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Restituisce il valore assoluto di un numero, ovvero un numero privo di segno.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Il primo argomento di '{0}' deve essere un record.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>L'uso di questo set di opzioni come valore di enumerazione o nella funzione Choices richiede che l'entità '{0}' sia aggiunta come origine dati. Per aggiungerla, usare il menu Visualizza e quindi selezionare Origini dati.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>La proprietà specificata non è accessibile in questo contesto.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>L'argomento non rappresenta un valore di data o ora valido.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Questa origine dati non è valida. Risolvere l'errore nel riquadro "Origini dati" facendo clic su "Contenuto -&gt; Origini dati" oppure "Visualizza -&gt; Opzioni"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Aggiunge record a un'origine dati.</value>
+    <value>Aggiunge uno o più elementi all'oggetto raccolta specificato. Gli elementi possono provenire da una tabella o una raccolta diversa (ad esempio, Collect(collection, source_collection)), o da uno o più record Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>origine_dati</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>raccolta</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>elemento</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Raccolta nuova o esistente da aumentare.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Elimina tutti i record da una raccolta. Quindi aggiunge un set diverso di record alla stessa raccolta.</value>
+    <value>Cancella prima di tutto la raccolta e aggiunge uno o più elementi all'oggetto raccolta specificato. Gli elementi possono provenire da una tabella o una raccolta diversa (ad esempio, ClearCollect(collection, source_collection)), o da uno o più record ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>origine_dati</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Raccolta nuova o esistente da aumentare.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>origine_dati</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Record o tabella da raccogliere. Alla raccolta verrà aggiunto l'intero record o le righe di una tabella.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applica gli aggiornamenti alla riga specificata e modifica la riga nell'origine dati specificata. Restituisce la riga aggiornata.</value>
@@ -3866,6 +3873,14 @@
     <value>La funzione {0} è già definita.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Avviso: la funzione definita dall'utente {0} funzionerà come funzionalità {0} integrata esistente.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Il nome della funzione {0} è limitato.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Il parametro {0} è un duplicato.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Il tipo restituito della funzione dichiarato non corrisponde al tipo restituito del corpo della funzione.</value>
+    <value>Il tipo restituito della funzione dichiarato "{0}" non corrisponde al tipo restituito del corpo della funzione "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>La funzione {0} contiene troppi parametri. Le funzioni definite dall'utente supportano fino {1} parametri.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Il primo argomento di '{0}' deve essere un nome di variabile valido non in conflitto con i nomi di controlli, schermate, raccolte o origini dati esistenti. Tipo trovato: '{1}'</value>
+    <value>Impossibile modificare "{1}" con "{0}" o è in conflitto con il nome di una variabile dell'ambito, un'origine dati o un altro oggetto esistente.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operatore Partial sconosciuto.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Origine dati a cui aggiungere dati.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Record o tabella per la raccolta. All'origine dati verrà aggiunto un record. Le righe della tabella verranno aggiunte all'origine dati.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>elemento</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

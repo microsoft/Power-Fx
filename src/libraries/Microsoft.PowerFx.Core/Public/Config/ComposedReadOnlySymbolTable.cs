@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx
 
                     if (_nameResolverFunctions == null)
                     {
-                        _nameResolverFunctions = new TexlFunctionSet(_symbolTables.Select(t => t.Functions).ToList());
+                        _nameResolverFunctions = TexlFunctionSet.Compose(_symbolTables.Select(t => t.Functions).ToList());
                         _cachedVersionHash = current;
                     }
 

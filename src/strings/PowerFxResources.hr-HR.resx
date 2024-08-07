@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Postotak (ili stupac postotka vrijednosti) za koliko će boja (ili stupac vrijednosti boje) izblijedjeti. Negativan postotak daje tamniju nijansu. Pozitivan postotak daje svjetliju nijansu.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Vraća zapis s informacijama o datoteci.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Blob datoteke za koji treba dobiti informacije.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>datoteka</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Vraća apsolutnu vrijednost broja, broj bez predznaka.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Prvi argument stavke "{0}" treba biti zapis.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Da biste tu mogućnost koristili postavljenu kao numeracijsku vrijednost ili u funkciji Choices , entitet "{0}" mora biti dodan kao izvor podataka. Da biste ga dodali, na izborniku Prikaz odaberite Izvori podataka.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Navedeno svojstvo nije dostupno u ovom kontekstu.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument ne predstavlja valjanu vrijednost datuma ili vremena.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Izvor podataka nije valjan. Ispravite pogrešku u oknu "Izvori podataka" tako da kliknete "Sadržaj -&gt; Izvori podataka" ili "Prikaz -&gt; Mogućnosti"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Dodaje zapise u izvor podataka.</value>
+    <value>Dodaje jednu ili više stavki u navedenu zbirku. Stavke mogu potjecati iz različitih tablica ili zbirki (npr. Collect(collection, source_collection)) ili pak jednog ili više zapisa Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>izvor_podataka</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>zapis</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>zbirka</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>stavka</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Nova ili postojeća zbirka koja se proširuje.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Briše sve zapise iz zbirke. Zatim dodaje drugačiji skup zapisa istoj zbirci.</value>
+    <value>Najprije briše zbirku i dodaje jednu ili više stavki u navedenu zbirku. Stavke mogu potjecati iz različitih tablica ili zbirki (npr. ClearCollect(collection, source_collection)) ili pak jednog ili više zapisa ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>izvor_podataka</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Nova ili postojeća zbirka koja se proširuje.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>izvor_podataka</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>zapis</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Zapis ili tablica za prikupljanje. Zapis će se dodati u zbirku. Reci tablice dodat će se u zbirku.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Primjenjuje ažuriranje na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
@@ -3866,6 +3873,14 @@
     <value>Funkcija {0} je već definirana.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozorenje: korisnički definirana funkcija {0} zasjenit će postojeću ugrađenu funkciju {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Naziv funkcije {0} je ograničen.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parametar {0} je duplikat.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Navedena vrsta povrata funkcije ne odgovara vrsti povrata tijela funkcije.</value>
+    <value>Navedena vrsta povrata funkcije „{0}” ne odgovara vrsti povrata tijela funkcije „{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcija {0} ima previše parametara. Korisnički definirane funkcije podržavaju najviše ovoliko parametara: {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Prvi argument za "{0}" mora biti valjani naziv varijable i ne smije biti u sukobu s postojećim nazivima za kontrole, zaslone, zbirke ili izvore podataka. Pronađena je vrsta "{1}"</value>
+    <value>„{1}” se ne može izmijeniti koristeći „{0}” ili je u sukobu s nazivom postojeće varijable dosega, izvora podataka ili drugog objekta.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Nepoznati operator Partial.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Izvor podataka u koji se dodaju podaci.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Zapis ili tablica za prikupljanje. Zapis će se dodati u izvor podataka. Reci tablice dodat će se u izvor podataka.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>stavka</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

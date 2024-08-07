@@ -2,24 +2,38 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Used by ConnectorDataSource.GetTablesAsync
-    internal class GetTables
+    internal class GetTables : ISupportsPostProcessing
     {
         [JsonPropertyName("value")]
         public List<RawTable> Value { get; set; }
+
+        public void PostProcess()
+        {
+            Value = Value.Select(rt => new RawTable() { Name = rt.Name, DisplayName = rt.DisplayName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty) }).ToList();
+        }
+    }
+
+    internal interface ISupportsPostProcessing
+    {
+        void PostProcess();
     }
 
     internal class RawTable
     {
+        // Logical Name
         [JsonPropertyName("Name")]
         public string Name { get; set; }
 
         [JsonPropertyName("DisplayName")]
         public string DisplayName { get; set; }
+
+        public override string ToString() => $"{DisplayName}: {Name}";
     }
 
     // Used by ConnectorDataSource.GetDatasetsMetadataAsync

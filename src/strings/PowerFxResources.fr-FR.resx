@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Pourcentage (ou colonne de valeurs de pourcentage) de fondu de la couleur (ou colonne de valeurs de couleur). Un pourcentage négatif produit une nuance plus foncée, et un pourcentage positif une nuance plus claire.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Retourne un enregistrement avec les informations sur un fichier.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Objet blob de fichier sur lequel obtenir des informations.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>fichier</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Retourne la valeur absolue d’un nombre (nombre sans son signe).</value>
     
@@ -1982,10 +1993,6 @@
     <value>Le premier argument de '{0}' doit être un enregistrement.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Pour pouvoir utiliser cette option définie comme valeur d’énumération ou dans la fonction Choices, l’entité « {0} » doit être ajoutée comme source de données. Pour cela, utilisez le menu Affichage, puis sélectionnez Sources de données.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>La propriété spécifiée n’est pas accessible dans ce contexte.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>L’argument ne représente pas une valeur de date ou d’heure valide.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Cette source de données n’est pas valide. Corrigez l’erreur dans le volet « Sources de données » en cliquant sur « Contenu -&gt; Sources de données » ou « Affichage -&gt; Options »</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Ajoute des enregistrements à une source de données.</value>
+    <value>Ajoute un ou plusieurs éléments à la collection spécifiée. Ces éléments peuvent être extraits d’une autre table ou collection (par exemple, Collect(collection, source_collection)), ou d’un ou plusieurs enregistrements Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>source_données</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>enregistrement</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>collection</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>élément</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Collection nouvelle ou existante à augmenter.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Supprime tous les enregistrements d’une collection. Ajoute ensuite un ensemble d’enregistrements différent à la même collection.</value>
+    <value>Efface d’abord le contenu de la collection, puis ajoute un ou plusieurs éléments à collection spécifiée. Les éléments peuvent provenir d’une autre table ou collection (par exemple, ClearCollect(collection, source_collection)), ou d’un ou plusieurs enregistrements ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>source_données</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Collection nouvelle ou existante à augmenter.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>source_données</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>enregistrement</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Enregistrement ou table à collecter. Un enregistrement sera ajouté à la collection. Les lignes d’une table seront ajoutées à la collection.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Applique les mises à jour à la ligne spécifiée, et modifie celle-ci dans la source de données spécifiée. Retourne la ligne mise à jour.</value>
@@ -3750,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Si votre jeu de données dépasse la limite de 500 enregistrements mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
+    <value>Si votre jeu de données dépasse la limite de 500 enregistrements, mais contient moins de 2 000 enregistrements, essayez de réinitialiser la limite.
       </value>
     
   </data>
@@ -3866,6 +3873,14 @@
     <value>La fonction {0} est déjà définie.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Avertissement : la fonction définie par l’utilisateur {0} fera de l’ombre à la fonction intégrée {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Le nom de fonction {0} est restreint.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Le paramètre {0} est un doublon.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Le type indiqué de retour de la fonction ne correspond pas au type de retour du corps de la fonction.</value>
+    <value>Le type indiqué de retour de la fonction « {0} » ne correspond pas au type de retour du corps de la fonction « {1} ».</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>La fonction {0} a trop de paramètres. Les fonctions définies par l’utilisateur prennent en charge jusqu’à {1} paramètres.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Le premier argument de « {0} » doit être un nom de variable valide et ne peut pas entrer en conflit avec les noms existants de contrôle, écran, collection ou source de données. Type trouvé « {1} »</value>
+    <value>Impossible de modifier « {1} » avec « {0} » ou en conflit avec le nom d’une variable d’étendue, d’une source de données ou d’un autre objet existant.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Opérateur Partial inconnu.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Source de données à laquelle ajouter des données.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Enregistrement ou table à collecter. Un enregistrement sera ajouté à la source de données. Les lignes d’une table seront ajoutées à la source de données.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>élément</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

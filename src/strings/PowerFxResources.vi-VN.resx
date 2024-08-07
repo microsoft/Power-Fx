@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Phần trăm (hoặc cột giá trị phần trăm) màu sắc (hoặc cột giá trị màu) sẽ mờ dần. Phần trăm âm tạo ra bóng tối hơn. Phần trăm dương tạo ra bóng sáng hơn.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Trả về một bản ghi với thông tin về một tệp.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Các blob tệp để lấy thông tin.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>tệp</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Trả về giá trị tuyệt đối của một số, một số không có dấu.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Đối số đầu tiên của '{0}' phải là một bản ghi.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Việc sử dụng tùy chọn này để đặt làm giá trị liệt kê hoặc sử dụng trong hàm Choices yêu cầu thêm thực thể '{0}' dưới dạng Nguồn dữ liệu. Để thêm, hãy sử dụng menu Xem, rồi chọn Nguồn dữ liệu.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Không thể truy nhập thuộc tính được chỉ định trong ngữ cảnh này.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Đối số này không biểu thị một giá trị ngày hoặc giờ hợp lệ.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Thêm bản ghi vào nguồn dữ liệu.</value>
+    <value>Thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: Collect(collection, source_collection)) hoặc một hay nhiều bản ghi Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>nguồn_dữ_liệu</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>record</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>bộ_sưu_tập</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>mục</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có cần bổ sung.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Xóa tất cả các bản ghi khỏi bộ sưu tập. Sau đó, thêm một bộ bản ghi khác nhau vào cùng một bộ sưu tập.</value>
+    <value>Xóa bộ sưu tập trước tiên rồi thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: ClearCollect(collection, source_collection)) hoặc một hay nhiều bản ghi ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Bộ sưu tập mới hoặc hiện có cần bổ sung.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>nguồn_dữ_liệu</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>record</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào bộ sưu tập. Bảng sẽ có các hàng được nối vào bộ sưu tập.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
@@ -3859,11 +3866,19 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Chức năng do người dùng xác định phải có nội dung.</value>
+    <value>Hàm do người dùng xác định phải có nội dung.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Chức năng {0} đã được xác định.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Cảnh báo: Hàm {0} do người dùng xác định sẽ được ưu tiên sử dụng thay vì hàm {0} tạo sẵn hiện có.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Tên hàm {0} bị hạn chế.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
+    <value>Loại trả về hàm đã nêu "{0}" không khớp với kiểu trả về của nội dung hàm "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Hàm {0} có quá nhiều tham số. Hàm do người dùng xác định hỗ trợ tối đa {1} tham số.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>
+    <value>"{1}" không thể được sửa đổi bằng "{0}" hoặc xung đột với tên của biến phạm vi, nguồn dữ liệu hoặc đối tượng khác hiện có.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4210,7 +4229,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
+    <value>Nội dung khai báo ký tự kiểu dữ liệu không hợp lệ. Không thể sử dụng biểu thức "{0}" trong định nghĩa kiểu dữ liệu.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
@@ -4419,6 +4438,16 @@
     <value>Toán tử Partial không xác định.</value>
     
   </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Nguồn dữ liệu để thêm dữ liệu vào.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào nguồn dữ liệu. Bảng sẽ có các hàng được nối vào nguồn dữ liệu.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>mục</value>
+    
+  </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
     <value>Cảnh báo về ủy quyền. Kết quả của đối số "{0}" này có thể bị cắt ngắn đối với các tập hợp dữ liệu lớn trước khi được chuyển đến hàm "{1}".</value>
     
@@ -4459,7 +4488,7 @@
     <value>Bộ sưu tập cần xóa.</value>
   </data>
   <data name="AboutClear_source" xml:space="preserve">
-    <value>The source to clear.</value>
+    <value>Nguồn cần xóa.</value>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Không thể sử dụng nguồn dữ liệu được chỉ định với hàm này.</value>

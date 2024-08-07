@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -278,7 +279,10 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(Nullable<>),
             typeof(IEnumerable<>),
             typeof(KeyValuePair<,>),
-            typeof(ISet<>)
+            typeof(ISet<>),
+
+            // Concurrent types are thread safe.
+            typeof(ReaderWriterLockSlim)
         };
 
         // If the instance is readonly, is the type itself immutable ?

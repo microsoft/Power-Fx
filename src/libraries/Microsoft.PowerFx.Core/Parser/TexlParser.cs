@@ -384,6 +384,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     ParseTrivia();
                     if (_curs.TidCur == TokKind.CurlyOpen)
                     {
+                        // Functions defined with a curly body will always be considered imperative, so mark this UDF if parser flag has been passed.
+                        var isImperative = parserOptions.AllowsSideEffects;
+
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
@@ -397,20 +400,20 @@ namespace Microsoft.PowerFx.Core.Parser
                         if (TokEat(TokKind.CurlyClose) == null)
                         {
                             // Add incomplete UDF as they are needed for intellisense
-                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: false));
+                            udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken, returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: false));
                             break;
                         }
 
                         var bodyParseValid = _errors?.Count == errorCount;
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat, isValid: bodyParseValid));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), colonToken,  returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, isImperative: isImperative, parserOptions.NumberIsFloat, isValid: bodyParseValid));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
                         _curs.TokMove();
                         ParseTrivia();
 
-                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects;
+                        var isImperative = _curs.TidCur == TokKind.CurlyOpen && parserOptions.AllowsSideEffects && !PeekIsRecord();
 
                         var errorCount = _errors?.Count;
                         
@@ -455,6 +458,50 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
+        }
+
+        // Look ahead to check if the upcoming token sequence is a record
+        private bool PeekIsRecord()
+        {
+            if (_curs.TidCur != TokKind.CurlyOpen)
+            {
+                return false;
+            }
+
+            int lookAheadIdx = 1;
+
+            lookAheadIdx = PeekSkipTrivia(lookAheadIdx);
+
+            if (_curs.TidPeek(lookAheadIdx) == TokKind.CurlyClose)
+            {
+                return true;
+            }
+
+            if (_curs.TidPeek(lookAheadIdx++) != TokKind.Ident)
+            {
+                return false;
+            }
+
+            lookAheadIdx = PeekSkipTrivia(lookAheadIdx);
+
+            if (_curs.TidPeek(lookAheadIdx) != TokKind.Colon)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Return look-ahead index skipping any whitespace or comments
+        private int PeekSkipTrivia(int startIdx)
+        {
+            int endOfTrivia = startIdx;
+            while (_curs.TidPeek(endOfTrivia) == TokKind.Whitespace || _curs.TidPeek(endOfTrivia) == TokKind.Comment)
+            {
+                endOfTrivia++;
+            }
+
+            return endOfTrivia;
         }
 
         private TexlNode ParseUDFBody()

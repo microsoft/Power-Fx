@@ -46,5 +46,13 @@ namespace Microsoft.PowerFx.Types
             token.ThrowIfCancellationRequested();
             return await Content.GetAsBase64Async(token).ConfigureAwait(false);
         }
+
+        // Derived classes can implement to provide FileInfo semantics.
+        // This could be fetched lazily.
+        public virtual Task<PowerFxFileInfo> GetFileInfoAsync()
+        {
+            // This will translate to an ErrorValue() at runtime. 
+            throw new NotImplementedException();
+        }
     }
 }

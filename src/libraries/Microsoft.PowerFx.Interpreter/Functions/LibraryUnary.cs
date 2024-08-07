@@ -1107,6 +1107,6 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0];
         }
-#endregion
+        #endregion
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -167,15 +168,50 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
-            if (arg0.IRContext.IsMutation && arg0 is RecordFieldAccessNode rfan)
+            if (arg0.IRContext.IsMutation)
             {
-                var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
-                
-                if (arg0value is RecordValue rv)
+                if (arg0 is RecordFieldAccessNode rfan)
                 {
-                    rv.ShallowCopyFieldInPlace(rfan.Field);
-                    rv.UpdateField(rfan.Field, newValue);
-                    return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    var arg0value = await rfan.From.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is RecordValue rv)
+                    {
+                        rv.ShallowCopyFieldInPlace(rfan.Field);
+                        rv.UpdateField(rfan.Field, newValue);
+                        return node.IRContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(node.IRContext);
+                    }
+                }
+                else if (arg0 is BinaryOpNode bon && bon.Op == BinaryOpKind.DynamicGetField)
+                {
+                    var arg0value = await bon.Left.Accept(this, context).ConfigureAwait(false);
+                    var arg1value = await bon.Right.Accept(this, context).ConfigureAwait(false);
+
+                    if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    {
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
+                    }
+                    else if (arg0value is ErrorValue || arg0value is BlankValue)
+                    {
+                        return arg0value;
+                    }
+                }
+                else if (arg0 is CallNode callNode && callNode.Function == BuiltinFunctionsCore.Index_UO)
+                {
+                    var child0Value = await callNode.Args[0].Accept(this, context).ConfigureAwait(false);
+                    var child1Value = await callNode.Args[1].Accept(this, context).ConfigureAwait(false);
+
+                    if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
+                    {
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
+                    }
+                    else if (child0Value is ErrorValue || child0Value is BlankValue)
+                    {
+                        return child0Value;
+                    }
                 }
                 else
                 {
@@ -273,85 +309,85 @@ namespace Microsoft.PowerFx
             FormulaValue result;
             IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
 
-            if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+            try
             {
-                result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
-            }
+                if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+                {
+                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+                }
 #pragma warning disable CS0618 // Type or member is obsolete
-            else if (func is IAsyncTexlFunction2 asyncFunc2)
+                else if (func is IAsyncTexlFunction2 asyncFunc2)
 #pragma warning restore CS0618 // Type or member is obsolete
-            {
-                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction3 asyncFunc3)
-            {
-                result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction4 asyncFunc4)
-            {                
-                result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncTexlFunction5 asyncFunc5)
-            {                
-                result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
-            {                
-                return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is CustomTexlFunction customTexlFunc)
-            {
-                // If custom function throws an exception, don't catch it - let it propagate up to the host.
-                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-            }
-            else if (func is UserDefinedFunction userDefinedFunc)
-            {
-                UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
-                UDFStackFrame framePop = null;
-
-                try
                 {
-                    _udfStack.Push(frame);
-
-                    (var irnode, _) = userDefinedFunc.GetIRTranslator();
-
-                    this.CheckCancel();
-
-                    result = await irnode.Accept(this, context).ConfigureAwait(false);
+                    result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
                 }
-                finally
+                else if (func is IAsyncTexlFunction3 asyncFunc3)
                 {
-                    framePop = _udfStack.Pop();
+                    result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
+                else if (func is IAsyncTexlFunction4 asyncFunc4)
+                {
+                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncTexlFunction5 asyncFunc5)
+                {
+                    result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
+                {
+                    return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is CustomTexlFunction customTexlFunc)
+                {
+                    // If custom function throws an exception, don't catch it - let it propagate up to the host.
+                    result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is UserDefinedFunction userDefinedFunc)
+                {
+                    UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
+                    UDFStackFrame framePop = null;
 
-                if (frame != framePop)
-                {
-                    throw new Exception("Something went wrong. UDF stack values didn't match.");
-                }
-            }
-            else
-            {
-                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
-                {
                     try
                     {
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
+                        _udfStack.Push(frame);
+
+                        (var irnode, _) = userDefinedFunc.GetIRTranslator();
+
+                        this.CheckCancel();
+
+                        result = await irnode.Accept(this, context).ConfigureAwait(false);
                     }
-                    catch (CustomFunctionErrorException ex)
+                    finally
                     {
-                        var irContext = node.IRContext;
-                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
+                        framePop = _udfStack.Pop();
                     }
 
-                    if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
+                    if (frame != framePop)
                     {
-                        throw CommonExceptions.RuntimeMisMatch;
+                        throw new Exception("Something went wrong. UDF stack values didn't match.");
                     }
                 }
                 else
                 {
-                    result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                    if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
+                    {
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
+
+                        if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
+                        {
+                            throw CommonExceptions.RuntimeMisMatch;
+                        }
+                    }
+                    else
+                    {
+                        result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                    }
                 }
+            }
+            catch (CustomFunctionErrorException ex)
+            {
+                var irContext = node.IRContext;
+                result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
             }
 
             CheckCancel();

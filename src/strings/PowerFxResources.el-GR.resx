@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Ποσοστό (ή στήλη ποσοστιαίων τιμών) με βάση το οποίο θα σβήνει σταδιακά το χρώμα (ή στήλη τιμών χρωμάτων). Ένα αρνητικό ποσοστό παράγει πιο σκούρα σκίαση. Ένα θετικό ποσοστό παράγει πιο ανοικτή σκίαση.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Επιστρέφει μια καρτέλα με πληροφορίες σχετικά με ένα αρχείο.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>Το αντικείμενο blob αρχείου για τη λήψη πληροφοριών.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>αρχείο</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Επιστρέφει την απόλυτη τιμή ενός αριθμού. Ένας αριθμός χωρίς το πρόσημό του.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Το πρώτο όρισμα του '{0}' θα πρέπει να είναι εγγραφή.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Για να χρησιμοποιήσετε αυτήν την επιλογή ως τιμή απαρίθμησης ή στη συνάρτηση Choices, πρέπει να προσθέσετε την οντότητα "{0}" ως προέλευση δεδομένων. Για να την προσθέσετε, χρησιμοποιήστε το μενού "Προβολή" και έπειτα επιλέξτε "Προελεύσεις δεδομένων".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Δεν είναι δυνατή η πρόσβαση στην καθορισμένη ιδιότητα σε αυτό το περιβάλλον.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Προσθέτει καρτέλες σε μια προέλευση δεδομένων.</value>
+    <value>Προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή διαφορετική συλλογή (π.χ. Collect(collection, source_collection)) ή μία ή περισσότερες εγγραφές Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>δεδομένα_προέλευση</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>καρτέλα</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>συλλογή</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>στοιχείο</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Νέα ή υπάρχουσα συλλογή για το όρισμα.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Διαγράφει όλες τις καρτέλες από μια συλλογή. Στη συνέχεια, προσθέτει ένα διαφορετικό σύνολο καρτελών στην ίδια συλλογή.</value>
+    <value>Απαλείφει πρώτα τη συλλογή και προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή συλλογή (π.χ. ClearCollect(collection, source_collection)) ή μία ή περισσότερες εγγραφές ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>δεδομένα_προέλευση</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Νέα ή υπάρχουσα συλλογή για το όρισμα.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>δεδομένα_προέλευση</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>καρτέλα</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Εγγραφή ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια εγγραφή. Στη συλλογή θα προσαρτηθούν οι σειρές ενός πίνακα.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
@@ -3866,6 +3873,14 @@
     <value>Η συνάρτηση {0} έχει ήδη οριστεί.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Προειδοποίηση: Η συνάρτηση που ορίζεται από {0} χρήστη θα επισκιάσει την υπάρχουσα ενσωματωμένη συνάρτηση {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Το όνομα συνάρτησης {0} είναι περιορισμένο.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Η παράμετρος {0} είναι διπλότυπη.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης.</value>
+    <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί '{0}' δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Η συνάρτηση {0} έχει πάρα πολλές παραμέτρους. Οι συναρτήσεις που ορίζονται από τον χρήστη υποστηρίζουν έως {1} παραμέτρους.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Το πρώτο όρισμα του "{0}" πρέπει να είναι ένα έγκυρο όνομα μεταβλητής και δεν πρέπει να έρχεται σε διένεξη με τυχόν υπάρχοντα ονόματα στοιχείου ελέγχου, οθόνης, συλλογής ή προέλευσης δεδομένων. Εντοπίστηκε τύπος "{1}"</value>
+    <value>Το '{1}' δεν μπορεί να τροποποιηθεί με '{0}' ή βρίσκεται σε διένεξη με το όνομα μιας υπάρχουσας μεταβλητής πεδίου, προέλευσης δεδομένων ή άλλου αντικειμένου.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Άγνωστος τελεστής Partial.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Η προέλευση δεδομένων στην οποία θα προστεθούν δεδομένα.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Καρτέλα ή πίνακας για συλλογή. Στην προέλευση δεδομένων θα προσαρτηθεί μια καρτέλα. Στην προέλευση δεδομένων θα προσαρτηθούν οι σειρές ενός πίνακα.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>στοιχείο</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

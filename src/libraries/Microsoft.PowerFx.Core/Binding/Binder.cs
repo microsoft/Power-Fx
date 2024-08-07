@@ -348,7 +348,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 entityName: EntityName,
                 propertyName: Property?.InvariantName ?? string.Empty,
                 allowsSideEffects: bindingConfig.AllowsSideEffects,
-                numberIsFloat: bindingConfig.NumberIsFloat);
+                numberIsFloat: bindingConfig.NumberIsFloat,
+                analysisMode: bindingConfig.AnalysisMode);
         }
 
         /// <summary>
@@ -758,7 +759,8 @@ namespace Microsoft.PowerFx.Core.Binding
             // It is possible for function to be null here if it referred to
             // a service function from a service we are in the process of
             // deregistering.
-            return GetInfo(callNode).VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
+            // GetInfo on a callNode may return null hence need null conditional operator and it short circuits if null.
+            return GetInfo(callNode)?.VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
         }
 
         internal IExternalRule Rule { get; }
@@ -2789,6 +2791,29 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetIsUnliftable(node, true);
                 }
 
+                // Look up a global variable with this name.
+                NameLookupInfo lookupInfo = default;
+                if (_txb.AffectsScopeVariableName)
+                {
+                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
+                    {
+                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
+
+                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
+                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
+                        }
+
+                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
+                    }
+
+                    // Set the variable name node as DType.String.
+                    _txb.SetType(node, DType.String);
+                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
+                    return;
+                }
+
                 // [@name]
                 if (node.Ident.AtToken != null)
                 {
@@ -2857,29 +2882,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                // Look up a global variable with this name.
-                NameLookupInfo lookupInfo = default;
-                if (_txb.AffectsScopeVariableName)
-                {
-                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
-                    {
-                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
-
-                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
-                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
-                        {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
-                        }
-
-                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
-                    }
-
-                    // Set the variable name node as DType.String.
-                    _txb.SetType(node, DType.String);
-                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
-                    return;
-                }
-
                 if (node.Parent is DottedNameNode)
                 {
                     lookupPrefs |= NameLookupPreferences.HasDottedNameParent;
@@ -2921,6 +2923,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.SetMutable(node, true);
                     }
+                    else if (lookupInfo.Data is IExternalDataSource ds)
+                    {
+                        _txb.SetMutable(node, ds.IsWritable);
+                    }
+                }
+                else if (lookupInfo.Kind == BindKind.ScopeCollection)
+                {
+                    _txb.SetMutable(node, true);
                 }
                 else if (lookupInfo.Kind == BindKind.ScopeCollection)
                 {
@@ -3826,6 +3836,16 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Update the datasource and relatedEntity path.
                     type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                     entityTypes.Add(expandEntityInfo.ExpandPath, type);
+                }
+                else if (!type.ExpandInfo.ExpandPath.IsReachedFromPath(relatedEntityPath))
+                {
+                    // Expands reached via a different path should have a different relatedentitypath.
+                    // If we found an expand in the cache but it's not accessed via the same relationship
+                    // we need to create a different expand info but with the same type. 
+                    // DType.Clone doesn't clone expand info, so we force that with CopyExpandInfo,
+                    // because that sadly mutates expand info on what should otherwise be an immutable dtype. 
+                    type = DType.CopyExpandInfo(type.Clone(), type);
+                    type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                 }
 
                 return type;

@@ -65,8 +65,6 @@ namespace Microsoft.PowerFx
 
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
-        internal bool SkipExpandableSetSemantics { get; set; }
-
         /// <summary>
         /// This is required by AsType() in PA delegation analysis.
         /// </summary>
@@ -92,23 +90,6 @@ namespace Microsoft.PowerFx
         /// Enables more robust lookup reduction delegation.
         /// </summary>
         internal bool IsLookUpReductionDelegationEnabled { get; set; }
-
-        /// <summary>
-        /// This is specific for Cards team and it is a temporary feature.
-        /// It will be soon deleted.
-        /// </summary>
-        [Obsolete]
-        internal static Features PowerFxV1AllowSetExpandedTypes
-        {
-            get 
-            {
-                var ret = PowerFxV1;
-
-                ret.SkipExpandableSetSemantics = true;
-
-                return ret;
-            }
-        }
 
         internal static Features None => new Features();
 

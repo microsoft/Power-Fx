@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -180,7 +181,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
         [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
-        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJSON")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
         [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
@@ -191,6 +192,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
         [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
+
+        // Suggests keywords and reserved words with indentifier escape.
+        [InlineData("With({'Children':1}, ThisRecord.|", "'Children'")]
+        [InlineData("With({'true':1}, ThisRecord.|", "'true'")]
+        [InlineData("With({'Children':1,'Child':1, Cuscuz:1}, ThisRecord.C|", "'Child'", "'Children'", "Cuscuz")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
@@ -379,6 +385,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Record.|", false, "Foo")]
         [InlineData("Loop.Loop.Record.|", false, "Foo")]
         [InlineData("Filter(TableLoop, EndsWith(|", true, "SomeString")]
+        [InlineData("Filter(TableLoop,|", true, "Loop", "Record", "SomeString", "TableLoop", "ThisRecord")]
         [InlineData("Loop.L|o", true, "Loop", "TableLoop")]
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
@@ -539,58 +546,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, suggestion);
         }
 
-        private class LazyRecursiveRecordType : RecordType
+        [Theory]
+        [InlineData("Filter(TableLoop,|")]
+        [InlineData("Filter(Accounts,|")]
+        public void LazyTypesStackOverflowTest(string expression)
         {
-            public override IEnumerable<string> FieldNames => GetFieldNames();
+            var lazyInstance = new LazyRecursiveRecordType();
+            var config = PowerFxConfig.BuildWithEnumStore(
+                new EnumStoreBuilder(),
+                new TexlFunctionSet(new[] { BuiltinFunctionsCore.Filter }));
 
-            public bool EnumerableIterated = false;
+            var suggestions = SuggestStrings(expression, config, null, lazyInstance);
 
-            public LazyRecursiveRecordType()
-                : base()
-            {
-            }
-
-            public override bool TryGetFieldType(string name, out FormulaType type)
-            {
-                switch (name)
-                {
-                    case "SomeString":
-                        type = FormulaType.String;
-                        return true;
-                    case "TableLoop":
-                        type = ToTable();
-                        return true;
-                    case "Loop":
-                        type = this;
-                        return true;
-                    case "Record":
-                        type = RecordType.Empty().Add("Foo", FormulaType.Number);
-                        return true;
-                    default:
-                        type = FormulaType.Blank;
-                        return false;
-                }
-            }
-
-            private IEnumerable<string> GetFieldNames()
-            {
-                EnumerableIterated = true;
-
-                yield return "SomeString";
-                yield return "Loop";
-                yield return "Record";
-                yield return "TableLoop";
-            }
-
-            public override bool Equals(object other)
-            {
-                return other is LazyRecursiveRecordType; // All the same 
-            }
-
-            public override int GetHashCode()
-            {
-                return 1;
-            }
+            // Just check that the execution didn't stack overflow.
+            Assert.True(suggestions.Any());
         }
     }
 }

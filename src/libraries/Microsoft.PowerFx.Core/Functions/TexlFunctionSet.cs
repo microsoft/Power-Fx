@@ -52,8 +52,13 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal IEnumerable<string> Enums => _enums;
 
-        // Return an empty TexlFucntion set that can never be added to. 
-        internal static TexlFunctionSet Empty()
+        // Return an singleton for an empty TexlFunction set that can never be added to. 
+        internal static readonly TexlFunctionSet _empty = MakeEmpty();
+
+        internal static TexlFunctionSet Empty() => _empty;
+
+        // Create an empty function set that can never be added to.
+        private static TexlFunctionSet MakeEmpty()
         {
             var set = new TexlFunctionSet();
             set._guard.ForbidWriters();
@@ -97,6 +102,35 @@ namespace Microsoft.PowerFx.Core.Functions
                 Add(func);
             }
         }
+
+        // This will compose multiple function sets into a single one. 
+        // The assumption is that all incoming function sets are unchanged for the lifetime of the returned set.
+        // Hence it doesn't matter where this shares references or copies the values. 
+        internal static TexlFunctionSet Compose(IEnumerable<TexlFunctionSet> functionSets)
+        {
+            TexlFunctionSet nonEmpty = null;
+            int countNonEmpty = 0;
+
+            foreach (var set in functionSets)
+            {
+                if (set.Count() > 0)
+                {
+                    nonEmpty = set;
+                    countNonEmpty++;
+                }
+            }
+
+            if (countNonEmpty == 0)
+            {
+                return Empty();
+            }
+            else if (countNonEmpty == 1)
+            {
+                return nonEmpty;
+            }
+
+            return new TexlFunctionSet(functionSets);
+        }            
 
         internal TexlFunctionSet(IEnumerable<TexlFunctionSet> functionSets)
             : this()

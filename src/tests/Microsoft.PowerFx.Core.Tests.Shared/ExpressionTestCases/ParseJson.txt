@@ -503,3 +503,16 @@ true
 
 >> Text(ParseJSON("null"))
 Blank()
+
+// Coercion
+>> ParseJSON("{""a"":9}").a + 1
+10
+
+>> Day(ParseJSON("{""x"":""2022-05-15""}").x)
+15
+
+>> ParseJSON("{""x"":""ABC""}").x & "DEF"
+"ABCDEF"
+
+>> If(ParseJSON("{""x"":false}").x, 1,0)
+0

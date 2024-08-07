@@ -785,8 +785,7 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(typeLhs.IsUntypedObject);
 
                     var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
-
-                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
+                    result = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
                 }
                 else
                 {
@@ -872,7 +871,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             public override IntermediateNode Visit(SelfNode node, IRTranslatorContext context)
             {
-                Contracts.Assert(false, "Parent Keyword not supported in PowerFx");
+                Contracts.Assert(false, "Self Keyword not supported in PowerFx");
                 throw new NotSupportedException();
             }
 

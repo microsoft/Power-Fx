@@ -1,3 +1,4 @@
+#SETUP: PowerFxV1CompatibilityRules
 // Cases to test how shortcut verification work along with behavior functions
 
 >> Set( t1, [0,1] )

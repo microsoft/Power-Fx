@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.FormulaWithParameters",
                 "Microsoft.PowerFx.FunctionInfo",
                 "Microsoft.PowerFx.FunctionInfoSignature",
+                "Microsoft.PowerFx.HttpExpressionError",
                 "Microsoft.PowerFx.ParameterInfoSignature",
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
@@ -58,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.SymbolEntry",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
-
+                
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.CommentToken",
@@ -141,6 +142,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.IDelegatableTableValue",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
+                "Microsoft.PowerFx.Types.UntypedObjectBase",
                 "Microsoft.PowerFx.Types.IValueVisitor",              
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NamedValue",
@@ -190,6 +192,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // TBD ...
                 "Microsoft.PowerFx.BasicUserInfo",
+                "Microsoft.PowerFx.PowerFxFileInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.Entities.IRefreshable",                               

@@ -1308,6 +1308,17 @@
   <data name="AboutColorFade_fade_or_column" xml:space="preserve">
     <value>Persentase (atau kolom nilai persentase) warna (atau kolom nilai warna) yang akan memudar. Persentase negatif menghasilkan bayangan yang lebih gelap. Persentase positif menghasilkan bayangan yang lebih terang.</value>
   </data>
+  <data name="AboutFileInfo" xml:space="preserve">
+    <value>Mengembalikan rekaman dengan informasi tentang file.</value>
+    
+  </data>
+  <data name="AboutFileInfo_file" xml:space="preserve">
+    <value>File blob untuk mendapatkan informasi.</value>
+  </data>
+  <data name="FileInfoArg1" xml:space="preserve">
+    <value>file</value>
+    
+  </data>
   <data name="AboutAbs" xml:space="preserve">
     <value>Menampilkan nilai absolut angka, angka tanpa tanda.</value>
     
@@ -1982,10 +1993,6 @@
     <value>Argumen pertama dari '{0}' harus berupa catatan.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Menggunakan set opsi ini sebagai nilai pencacahan atau dalam fungsi Choices mengharuskan entitas '{0}' ditambahkan sebagai Sumber Data. Untuk menambahkan, gunakan menu Tampilan, lalu pilih Sumber data.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Properti yang ditentukna tidak dapat diakses dalam konteks ini.</value>
     
@@ -2024,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumen tidak menunjukkan nilai tanggal atau waktu yang valid.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Sumber Data ini tidak valid. Perbaiki kesalahan di panel "Sumber data" dengan mengeklik "Konten -&gt; Sumber data" atau "View -&gt; Opsi"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3098,32 +3101,36 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Menambahkan rekaman ke sumber data.</value>
+    <value>Menambahkan satu atau beberapa item ke koleksi yang ditentukan. Item dapat berasal dari tabel atau koleksi berbeda (misalnya, Collect(collection, source_collection)), atau satu atau beberapa catatan Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
     <value>sumber_data</value>
     
   </data>
-  <data name="CollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
+  <data name="CollectArg1" xml:space="preserve">
+    <value>koleksi</value>
     
+  </data>
+  <data name="CollectArg2" xml:space="preserve">
+    <value>butir</value>
+    
+  </data>
+  <data name="AboutCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Menghapus semua rekaman dari suatu kumpulan, kemudian menambahkan rangkaian rekaman lain ke kumpulan yang sama.</value>
+    <value>Menghapus koleksi terlebih dahulu dan menambah satu atau beberapa item ke koleksi yang ditentukan. Item dapat berasal dari tabel atau koleksi berbeda (misalnya, ClearCollect(collection, source_collection)), atau satu atau beberapa catatan ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
-  <data name="ClearCollectionArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
+  <data name="AboutClearCollect_collection" xml:space="preserve">
+    <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
   </data>
-  <data name="ClearCollectDataSourceArg" xml:space="preserve">
-    <value>sumber_data</value>
-    
-  </data>
-  <data name="ClearCollectRecordArg" xml:space="preserve">
-    <value>rekaman</value>
-    
+  <data name="AboutClearCollect_item" xml:space="preserve">
+    <value>Catatan atau tabel untuk dikumpulkan. Catatan akan ditambahkan ke koleksi. Kolom tabel akan ditambahkan ke koleksi.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Menerapkan pembaruan ke baris yang ditentukan dan mengubah baris di sumber data tertentu. Mengembalikan baris yang diperbarui.</value>
@@ -3866,6 +3873,14 @@
     <value>Fungsi {0} telah ditentukan.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Peringatan: Fungsi yang ditentukan pengguna {0} akan membayangi fungsi bawaan {0} yang ada.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
+    <value>Nama fungsi {0} dibatasi.</value>
+    
+  </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
     <value>Parameter {0} adalah duplikat.</value>
     
@@ -3875,7 +3890,11 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
+    <value>Jenis pengembalian fungsi '{0}' yang dinyatakan tidak cocok dengan jenis pengembalian isi fungsi '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Fungsi {0} memiliki terlalu banyak parameter. Fungsi yang ditentukan pengguna mendukung hingga {1} parameter.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -3902,7 +3921,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>Argumen pertama dari '{0}' harus berisi nama variabel yang valid, dan tidak boleh bertentangan dengan kontrol, layar, koleksi, atau nama sumber data yang ada. Jenis '{1}' ditemukan</value>
+    <value>'{1}' tidak dapat dimodifikasi dengan '{0}' atau bertentangan dengan nama variabel cakupan, sumber data, atau objek lain yang ada.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4417,6 +4436,16 @@
   </data>
   <data name="ErrUnknownPartialOp" xml:space="preserve">
     <value>Operator Partial tidak diketahui.</value>
+    
+  </data>
+  <data name="AboutCollect_data_source" xml:space="preserve">
+    <value>Sumber data yang akan ditambahkan data.</value>
+  </data>
+  <data name="AboutCollect_item" xml:space="preserve">
+    <value>Rekaman atau tabel yang akan dikumpulkan. Rekaman akan ditambahkan ke sumber data. Baris tabel akan ditambahkan ke koleksi.</value>
+  </data>
+  <data name="CollectItemArg" xml:space="preserve">
+    <value>butir</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

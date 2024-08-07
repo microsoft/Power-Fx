@@ -595,6 +595,44 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected, result.AsDouble());
         }
 
+        [Fact]
+        public void ShadowingFunctionPrecedenceTest()
+        {
+            var engine = new RecalcEngine();
+            engine.AddUserDefinedFunction("Concat(x:Text):Text = \"xyz\"; Average(x:Number):Number = 11111;");
+
+            var check = engine.Check("Concat(\"abc\")");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.String, check.ReturnType);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.Equal("xyz", ((StringValue)result).Value);
+
+            check = engine.Check("Average(123)");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(11111, result.AsDouble());
+
+            engine.AddUserDefinitions("Test = Type({A: Number}); TestTable = Type([{A: Number}]);" +
+                "Filter(X: TestTable):Test = First(X); ShowColumns(X: TestTable):TestTable = FirstN(X, 3);");
+
+            check = engine.Check("Filter([{A: 123}]).A");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Number, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(123, result.AsDouble());
+
+            check = engine.Check("CountRows(ShowColumns([{A: 123}, {A: 124}, {A:125}, {A:126}, {A: 127}]))");
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
+
+            result = check.GetEvaluator().Eval();
+            Assert.Equal(3, result.AsDouble());
+        }
+
         [Theory]
 
         // Return value with side effectful UDF
@@ -1693,6 +1731,50 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+            }
+        }
+
+        [Theory]
+        [InlineData(
+            "F():Point = {x: 5, y:5};",
+            "F().x",
+            true,
+            5.0)]
+        [InlineData(
+            "F():Number = { Sqrt(1); 42; };",
+            "F()",
+            true,
+            42.0)]
+        [InlineData(
+            "F():Point = { {x:0, y:1729}; };",
+            "F().y",
+            true,
+            1729.0)]
+        [InlineData(
+            "F():Point = {x: 5, 42};",
+            "F().x",
+            false)]
+        public void UDFImperativeVsRecordAmbiguityTest(string udf, string evalExpression, bool isValid, double expectedResult = 0)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true,
+                AllowParseAsTypeLiteral = true
+            };
+
+            var extraSymbols = new SymbolTable();
+            extraSymbols.AddType(new DName("Point"), FormulaType.Build(TestUtils.DT("![x:n, y:n]")));
+
+            if (isValid)
+            {
+                recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true));
             }
         }
 

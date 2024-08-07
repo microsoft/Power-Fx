@@ -2517,7 +2517,7 @@ namespace Microsoft.PowerFx.Functions
                     return "Division by zero";
                 case ErrorKind.BadLanguageCode:
                     // Default message that is shown to users when they try to pass a language code to a function that is invalid
-                    return "Bad langauge code or invalid value";
+                    return "Bad language code or invalid value";
                 case ErrorKind.BadRegex:
                     // Default message that is shown to users when they use an invalid regular expression in one of their formulas
                     return "Syntax error in regular expression";
@@ -2560,6 +2560,9 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorKind.ServiceUnavailable:
                     // Default message that is shown to users when they execute an operation requires a online service connection that is not available
                     return "Online service connection not available";
+                case ErrorKind.InvalidJSON:
+                    // Default message that is shown to users when they receive a JSON result that is invalid 
+                    return "Invalid JSON format";
                 case ErrorKind.Custom:
                     // Default message that is shown to users when they create an error with a custom kind
                     return "Custom error";

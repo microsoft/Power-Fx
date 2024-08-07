@@ -49,6 +49,8 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        public IEnumerable<NamedValue> OriginalFields => GetOriginalFieldsCore();
+
         public virtual bool TryGetSpecialFieldName(SpecialFieldKind kind, out string fieldName)
         {
             fieldName = null;
@@ -98,6 +100,11 @@ namespace Microsoft.PowerFx.Types
                 Type.TryGetBackingDType(fieldName, out var backingDType);
                 yield return new NamedValue(fieldName, async () => GetField(fieldName), backingDType);
             }
+        }
+
+        protected virtual IEnumerable<NamedValue> GetOriginalFieldsCore()
+        {
+            yield return null;
         }
 
         public async IAsyncEnumerable<NamedValue> GetFieldsAsync([EnumeratorCancellation] CancellationToken cancellationToken)
