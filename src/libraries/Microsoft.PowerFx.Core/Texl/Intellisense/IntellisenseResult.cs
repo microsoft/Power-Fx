@@ -242,6 +242,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="paramName"></param>
         /// <param name="invariantParamName"></param>
         /// <param name="funcDisplayString"></param>
+        /// <param name="locale"></param>
         /// <returns></returns>
         private static (string paramName, int highlightStart, int highlightEnd, string funcParamDescription) GetParameterHighlightAndDescription(IIntellisenseData data, string paramName, string invariantParamName, StringBuilder funcDisplayString, string locale = null)
         {
