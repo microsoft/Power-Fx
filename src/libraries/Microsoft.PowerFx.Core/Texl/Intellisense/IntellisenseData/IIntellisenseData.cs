@@ -45,6 +45,9 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         public string Script { get; }
 
+        /// <summary>
+        /// The locale information used to get localized intellisense messages. Based on parse options locale.
+        /// </summary>
         public CultureInfo Locale { get; }
 
         /// <summary>
