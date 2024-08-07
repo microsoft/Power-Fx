@@ -266,17 +266,8 @@ namespace Microsoft.PowerFx.Intellisense
                 (highlightStart, highlightEnd, paramName, invariantParamName) = (newHighlightStart, newHighlightEnd, newParamName, newInvariantParamName);
             }
 
-            string funcParamDescription = null;
-
             // MUST use the invariant parameter name here
-            if (locale == null)
-            {
-                func.TryGetParamDescription(invariantParamName, out funcParamDescription);
-            }
-            else
-            {
-                func.TryGetParamDescription(invariantParamName, locale, out funcParamDescription);
-            }
+            func.TryGetParamDescription(invariantParamName, out var funcParamDescription, locale);
 
             // Apply optional suffix provided via argument
             funcParamDescription += data.GenerateParameterDescriptionSuffix(func, paramName);
