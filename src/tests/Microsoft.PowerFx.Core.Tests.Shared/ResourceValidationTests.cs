@@ -154,5 +154,18 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(usContent, invContent);
         }
+
+        [Fact]
+        public void TestStringResourcesTryGetLocaleParam()
+        {
+            StringResources.TryGet("AboutBooleanT_input",  out var paramDescription, "fr-FR");
+            Assert.NotEmpty(paramDescription);
+
+            StringResources.TryGet("AboutBooleanT_input", out paramDescription, string.Empty);
+            Assert.NotEmpty(paramDescription);
+
+            var test = StringResources.Get("AboutBooleanT_input", "fr-FR");
+            Assert.NotEmpty(test);
+        }
     }
 }

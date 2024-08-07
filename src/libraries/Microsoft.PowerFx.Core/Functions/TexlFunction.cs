@@ -10,6 +10,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -882,21 +883,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertNonEmpty(paramName);
 
-            string resourceKey = "About" + LocaleInvariantName + "_" + paramName;
-
-            return TryGetLocalizedResource(resourceKey, locale, out paramDescription);
-        }
-
-        protected bool TryGetLocalizedResource(string resourceKey, string locale, out string resourceDescription)
-        {
-            Contracts.AssertNonEmpty(resourceKey);
-
-            if (string.IsNullOrEmpty(locale))
-            {
-                return StringResources.TryGet(resourceKey, out resourceDescription);
-            }
-
-            return StringResources.TryGet(resourceKey, out resourceDescription, locale);
+            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription, locale);
         }
 
         // Exhaustive list of parameter names, in no guaranteed order.

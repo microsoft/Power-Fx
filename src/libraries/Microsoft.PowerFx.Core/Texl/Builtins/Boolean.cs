@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanT_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanN_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanNT_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanW_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanW_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertNonEmpty(paramName);
 
             // Reusing BooleanN strings as they are generic for numbers
-            return TryGetLocalizedResource("AboutBooleanWT_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanWT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -243,7 +243,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanB_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanB_" + paramName, out paramDescription, locale);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanBT_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanBT_" + paramName, out paramDescription, locale);
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanL_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanL_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return TryGetLocalizedResource("AboutBooleanLT_" + paramName, locale, out paramDescription);
+            return StringResources.TryGet("AboutBooleanLT_" + paramName, out paramDescription, locale);
         }
     }
 
