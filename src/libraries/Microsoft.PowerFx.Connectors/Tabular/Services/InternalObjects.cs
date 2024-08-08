@@ -39,19 +39,6 @@ namespace Microsoft.PowerFx.Connectors
     // Used by ConnectorDataSource.GetDatasetsMetadataAsync
     public class DatasetMetadata
     {
-        [JsonConstructor]
-        public DatasetMetadata(MetadataTabular tabular, MetadataBlob blob, string datasetFormat, IReadOnlyCollection<MetadataParameter> parameters)
-        {
-            Tabular = tabular;
-            Blob = blob;
-            DatasetFormat = datasetFormat;
-            Parameters = parameters;
-        }
-
-        public DatasetMetadata()
-        {
-        }
-
         [JsonPropertyName("tabular")]
         public MetadataTabular Tabular { get; set; }
 
