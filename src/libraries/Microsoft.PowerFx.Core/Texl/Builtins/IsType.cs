@@ -15,11 +15,11 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // IsType(UntypedObject:O, Type:U): Boolean
-    internal class IsType_UOFunction : UntypedOrJSONConversionFunction
+    internal class IsTypeFunction_UO : UntypedOrJSONConversionFunction
     {
         public const string IsTypeInvariantFunctionName = "IsType";
 
-        public IsType_UOFunction()
+        public IsTypeFunction_UO()
             : base(IsTypeInvariantFunctionName, TexlStrings.AboutIsTypeUO, DType.Boolean, 2, DType.UntypedObject, DType.Error)
         {
         }

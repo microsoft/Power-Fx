@@ -144,9 +144,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // AsType(UntypedObject:O, Type:U): ?
-    internal class AsType_UOFunction : UntypedOrJSONConversionFunction
+    internal class AsTypeFunction_UO : UntypedOrJSONConversionFunction
     {
-        public AsType_UOFunction()
+        public AsTypeFunction_UO()
             : base(AsTypeFunction.AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, DType.Error, 2, DType.UntypedObject, DType.Error)
         {
         }

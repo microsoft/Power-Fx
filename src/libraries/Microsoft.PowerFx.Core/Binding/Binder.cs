@@ -4327,7 +4327,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return true;
                 }
 
-                if (maybeFunc.Name == IsType_UOFunction.IsTypeInvariantFunctionName &&
+                if (maybeFunc.Name == IsTypeFunction_UO.IsTypeInvariantFunctionName &&
                     _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                 {
                     return true;

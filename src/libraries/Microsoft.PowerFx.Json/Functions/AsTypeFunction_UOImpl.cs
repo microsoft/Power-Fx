@@ -12,7 +12,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class IsType_UOFunctionImpl : IsType_UOFunction, IAsyncTexlFunction
+    internal class AsTypeFunction_UOImpl : AsTypeFunction_UO, IAsyncTexlFunction
     {
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
@@ -42,14 +42,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false };
 
-            try 
+            try
             {
                 var fv = FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
-                return BooleanValue.New(true);
+                return fv;
             }
             catch (Exception e)
             {
-                return BooleanValue.New(false);
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"{e.GetType().Name} {e.Message}",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidJSON
+                });
             }
         }
     }
