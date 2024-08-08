@@ -16,14 +16,14 @@ namespace Microsoft.PowerFx.Connectors
 
         private string _uriPrefix;
 
-        internal DatasetMetadata DatasetMetadata { get; private set; }
+        public DatasetMetadata DatasetMetadata { get; private set; }
 
         public CdpDataSource(string dataset)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
         }
 
-        internal async Task GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             _uriPrefix = uriPrefix;
 
@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Connectors
                 + $"/$metadata.json/datasets";
 
             DatasetMetadata = await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);
+            return DatasetMetadata;
         }
 
         public async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
