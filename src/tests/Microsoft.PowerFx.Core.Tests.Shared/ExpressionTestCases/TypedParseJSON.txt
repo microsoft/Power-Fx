@@ -77,3 +77,9 @@ Error({Kind:ErrorKind.InvalidJSON})
 
 >> ParseJSON("{""a"": 5}", Type({a: Number}), "Hello")
 Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.
+
+>> ParseJSON("true", None)
+Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+
+>> ParseJSON("{}", Type({a: Text, b: [Color]}))
+Errors: Error 20-21: Unsupported untyped/JSON conversion type 'Color' in argument.

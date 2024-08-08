@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -49,8 +50,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var jsElement = ((JsonUntypedObject)uo)._element;
 
             var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false };
-            var fv = FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
-            return fv;
+
+            try
+            {
+                var fv = FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
+                return fv;
+            }
+            catch (Exception e)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"{e.GetType().Name} {e.Message}",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.InvalidJSON
+                });
+            }
         }
     }
 }

@@ -81,19 +81,7 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            try
-            {
-                return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);
-            }
-            catch (PowerFxJsonException pfxje)
-            {
-                return new ErrorValue(IRContext.NotInSource(formulaType), new ExpressionError()
-                {
-                    Message = $"{pfxje.GetType().Name} {pfxje.Message}",
-                    Span = new Syntax.Span(0, 0),
-                    Kind = ErrorKind.InvalidJSON
-                });
-            }
+            return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
