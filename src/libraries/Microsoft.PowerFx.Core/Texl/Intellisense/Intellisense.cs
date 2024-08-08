@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Intellisense
             var currentNode = TexlNode.FindNode(formula.ParseTree, context.CursorPosition);
 
             GetFunctionAndTypeInformation(context, currentNode, binding, out var curFunc, out var argIndex, out var argCount, out var expectedType, out var isValidSuggestionFunc);
-            data = CreateData(context, expectedType, binding, curFunc, currentNode, argIndex, argCount, isValidSuggestionFunc, binding.GetExpandEntitiesMissingMetadata(), formula.Comments, formula.Loc);
+            data = CreateData(context, expectedType, binding, curFunc, currentNode, argIndex, argCount, isValidSuggestionFunc, binding.GetExpandEntitiesMissingMetadata(), formula.Comments, formula.IntellisenseLocale);
             return true;
         }
 

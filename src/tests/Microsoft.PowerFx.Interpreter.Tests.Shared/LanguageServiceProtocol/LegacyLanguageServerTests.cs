@@ -1966,7 +1966,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     (expr) => new CheckResult(engine)
                         .SetText(expr, new ParserOptions { Culture = parseLocale })
                         .SetBindingInfo()
-                        .SetDefaultErrorCulture(errorLocale)));
+                        .SetDefaultErrorCulture(errorLocale))); // Used to localize both error messages and intellisense suggestions.
 
             _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
             List<Exception> exList = new List<Exception>();
@@ -2001,8 +2001,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var suggestions = _scopeFactory.GetOrCreateInstance("powerfx://app").Suggest("Value(", "Value(".Length);
             var overload = suggestions.FunctionOverloads.First();
 
-            Assert.Equal("Convertit un « texte » représentant un nombre en valeur numérique.", overload.Definition);
-            Assert.Equal("Valeur de texte à convertir en valeur numérique.", overload.FunctionParameterDescription);
+            // Checking if intellisense will suggest in the correct locale.
+            Assert.Equal("Convierte un \"texto\" que representa un número en un valor numérico.", overload.Definition);
+            Assert.Equal("Valor de texto que se va a convertir en un valor numérico.", overload.FunctionParameterDescription);
         }
 
         // Test showing how LSP can fully customize check result. 

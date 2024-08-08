@@ -291,12 +291,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         
         [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]        
-        [InlineData("First(t|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
-        [InlineData("First(t|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
+        [InlineData("First(|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
+        [InlineData("First(|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
         public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
         {
-            var context = "![tbl1:*[col1:n,col2:n]]";
-            var result = Suggest(expression, Default, CultureInfo.CreateSpecificCulture(locale), context);
+            var result = Suggest(expression, Default, CultureInfo.InvariantCulture, CultureInfo.CreateSpecificCulture(locale));
 
             var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
             Assert.Equal(expectedDefinition, currentOverload.Definition);
