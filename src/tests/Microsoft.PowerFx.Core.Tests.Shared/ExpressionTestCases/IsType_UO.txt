@@ -1,0 +1,89 @@
+#SETUP: AllowTypeLiteral
+
+// Primitives
+>> IsType(ParseJSON("987654321"), Number)
+true
+
+>> IsType(ParseJSON("987654321"), Text)
+false
+
+>> IsType(ParseJSON("987654321"), Date)
+false
+
+>> If(IsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime), "ValidDate")
+"ValidDate"
+
+>> If(IsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), Text), "ValidText")
+"ValidText"
+
+>> IsType(ParseJSON("""IstypeFunction"""), Type(Text))
+true
+
+>> IsType(ParseJSON("""1984-01-01"""), Date)
+true
+
+>> IsType(ParseJSON("""true"""), Boolean)
+false
+
+>> IsType(ParseJSON("true"), Boolean)
+true
+
+// record
+>> IsType(ParseJSON("{""foo"": true, ""bar"": 1.1}"), Type({foo: Boolean, bar: Number}))
+true
+
+// record missing field
+>> IsType(ParseJSON("{""Name"": ""SpongeBob"", ""Age"": 1}"), Type({Name: Text, Age: Number, Aquatic: Boolean}))
+true
+
+// record with additional field
+>> IsType(ParseJSON("{""a"": 5, ""b"":true}"), Type({a: Number}))
+false
+
+// record with incorrect field type
+>> IsType(ParseJSON("{""a"": 5}"), Type({a: Text}))
+false
+
+// Deeply nested record with table
+>> IsType(ParseJSON("{""a"": {""b"" : { ""c"" : [1, 2, 3, 4]}}}"), Type({a: {b: {c: [Number]}}}))
+true
+
+// Table
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}, {""a"": ""Hi"", ""b"": ""2012-01-03""}]"), Type([{a: Text, b: Date}]))
+true
+
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}]"), Type([{a: Text, b: Text}]))
+true
+
+>> IsType(ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}]"), Type([{a: Text, b: Number}]))
+false
+
+>> IsType(ParseJSON("[{""a"": [{""z"": true}, {""z"": false}]}, {""a"": [{""z"": false}, {""z"": true}]}]"), Type([{a: [{z: Boolean}]}]))
+true
+
+>> IsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
+false
+
+>> IsType(ParseJSON("1"), 1)
+Errors: Error 23-24: Invalid argument '1'. Expected valid type name or type literal.
+
+>> IsType(ParseJSON("5"), Type(5))
+Errors: Error 28-29: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 27-28: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
+
+>> IsType(ParseJSON("true"), UnKnown)
+Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or type literal.
+
+>> IsType(ParseJSON("fasle"), Boolean)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsType(ParseJSON("true"), Void)
+Errors: Error 26-30: Invalid argument type (Void). Expecting a Error value instead.|Error 0-6: The function 'IsType' has some invalid arguments.
+
+>> IsType(ParseJSON("{""a"": 5}"), Type({a: Number}), "Hello")
+Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
+
+>> IsType(ParseJSON("true"), None)
+Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+
+>> IsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
+Errors: Error 28-29: Unsupported untyped/JSON conversion type 'Color' in argument.

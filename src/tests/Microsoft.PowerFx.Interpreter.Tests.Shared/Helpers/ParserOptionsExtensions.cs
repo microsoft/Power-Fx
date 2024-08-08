@@ -32,6 +32,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Helpers
                 parserOptions.TextFirst = true;
             }
 
+            if (flags.HasFlag(TexlParser.Flags.AllowTypeLiteral))
+            {
+                parserOptions.AllowParseAsTypeLiteral = true;
+            }
+
             return parserOptions;
         }
     }

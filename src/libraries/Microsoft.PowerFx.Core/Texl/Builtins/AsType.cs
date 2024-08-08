@@ -142,6 +142,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
     }
+
+    // AsType(UntypedObject:O, Type:U): ?
+    internal class AsTypeFunction_UO : UntypedOrJSONConversionFunction
+    {
+        public AsTypeFunction_UO()
+            : base(AsTypeFunction.AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, DType.Error, 2, DType.UntypedObject, DType.Error)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.AsTypeUOArg1, TexlStrings.AsTypeUOArg2 };
+        }
+    }
 }
 
 #pragma warning restore SA1402 // File may only contain a single type

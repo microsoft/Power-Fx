@@ -78,6 +78,11 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         TypeName,
 
-        Lim
+        /// <summary>
+        /// This BindKind applies to globally defined NamedTypes is not used for any data.
+        /// </summary>
+        NamedType,
+
+        Lim,
     }
 }
