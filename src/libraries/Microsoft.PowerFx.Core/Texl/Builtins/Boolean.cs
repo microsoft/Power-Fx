@@ -74,11 +74,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -100,11 +100,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.BooleanNArg1 };
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -141,11 +141,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -169,11 +169,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.BooleanWArg1 };
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanW_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanW_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -212,12 +212,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
             // Reusing BooleanN strings as they are generic for numbers
-            return StringResources.TryGet("AboutBooleanWT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanWT_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -239,12 +239,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.BooleanBArg1 };
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            // Reusing BooleanN strings as they are generic for numbers
-            return StringResources.TryGet("AboutBooleanB_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanB_" + paramName, out paramDescription, locale);
         }
 
         /// <summary>
@@ -296,11 +295,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanBT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanBT_" + paramName, out paramDescription, locale);
         }
 
         /// <summary>
@@ -353,11 +352,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanL_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanL_" + paramName, out paramDescription, locale);
         }
     }
 
@@ -401,11 +400,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return false;
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            return StringResources.TryGet("AboutBooleanLT_" + paramName, out paramDescription);
+            return StringResources.TryGet("AboutBooleanLT_" + paramName, out paramDescription, locale);
         }
     }
 

@@ -207,13 +207,13 @@ namespace Microsoft.PowerFx.Intellisense
             var currentNode = TexlNode.FindNode(formula.ParseTree, context.CursorPosition);
 
             GetFunctionAndTypeInformation(context, currentNode, binding, out var curFunc, out var argIndex, out var argCount, out var expectedType, out var isValidSuggestionFunc);
-            data = CreateData(context, expectedType, binding, curFunc, currentNode, argIndex, argCount, isValidSuggestionFunc, binding.GetExpandEntitiesMissingMetadata(), formula.Comments);
+            data = CreateData(context, expectedType, binding, curFunc, currentNode, argIndex, argCount, isValidSuggestionFunc, binding.GetExpandEntitiesMissingMetadata(), formula.Comments, formula.IntellisenseLocale);
             return true;
         }
 
-        protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments, CultureInfo locale)
         {
-            return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments, locale);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)

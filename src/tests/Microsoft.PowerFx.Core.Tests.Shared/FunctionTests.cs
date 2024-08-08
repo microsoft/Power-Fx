@@ -17,8 +17,51 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class FunctionTests
     {
-        [Fact]
-        public void TestAllBuiltinFunctionsHaveParameterDescriptions()
+        [Theory]
+        [InlineData("")]
+        [InlineData("bg-BG")]
+        [InlineData("ca-ES")]
+        [InlineData("cs-CZ")]
+        [InlineData("da-DK")]
+        [InlineData("de-DE")]
+        [InlineData("el-GR")]
+        [InlineData("en-US")]
+        [InlineData("es-ES")]
+        [InlineData("et-EE")]
+        [InlineData("eu-ES")]
+        [InlineData("fi-FI")]
+        [InlineData("fr-FR")]
+        [InlineData("gl-ES")]
+        [InlineData("hi-IN")]
+        [InlineData("hr-HR")]
+        [InlineData("hu-HU")]
+        [InlineData("id-ID")]
+        [InlineData("it-IT")]
+        [InlineData("ja-JP")]
+        [InlineData("kk-KZ")]
+        [InlineData("ko-KR")]
+        [InlineData("lt-LT")]
+        [InlineData("lv-LV")]
+        [InlineData("ms-MY")]
+        [InlineData("nb-NO")]
+        [InlineData("nl-NL")]
+        [InlineData("pl-PL")]
+        [InlineData("pt-BR")]
+        [InlineData("pt-PT")]
+        [InlineData("ro-RO")]
+        [InlineData("ru-RU")]
+        [InlineData("sk-SK")]
+        [InlineData("sl-SI")]
+        [InlineData("sr-Cyrl-RS")]
+        [InlineData("sr-Latn-RS")]
+        [InlineData("sv-SE")]
+        [InlineData("th-TH")]
+        [InlineData("tr-TR")]
+        [InlineData("uk-UA")]
+        [InlineData("vi-VN")]
+        [InlineData("zh-CN")]
+        [InlineData("zh-TW")]
+        public void TestAllBuiltinFunctionsHaveParameterDescriptions(string locale)
         {
             var texlFunctionsLibrary = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions;
             var functions = texlFunctionsLibrary.Where(x => !x.FunctionCategoriesMask.HasFlag(FunctionCategories.REST));
@@ -32,7 +75,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 foreach (var paramName in function.GetParamNames())
                 {
-                    Assert.True(function.TryGetParamDescription(paramName, out var descr), "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
+                    Assert.True(function.TryGetParamDescription(paramName, out var descr, locale), "Missing parameter description. Please add the following to Resources.pares: " + "About" + function.LocaleInvariantName + "_" + paramName);
+                    Assert.NotEmpty(descr);
                 }
             }
         }
