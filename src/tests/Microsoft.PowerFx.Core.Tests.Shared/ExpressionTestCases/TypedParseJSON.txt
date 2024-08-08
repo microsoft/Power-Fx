@@ -1,0 +1,79 @@
+#SETUP: AllowTypeLiteral
+
+// Primitives
+>> ParseJSON("5", Number)
+5
+
+>> ParseJSON("98765.4321", Number)
+98765.4321
+
+>> ParseJSON("""HelloWorld""", Type(Text))
+"HelloWorld"
+
+>> ParseJSON("""1984-01-01""", Date)
+Date(1984,01,01)
+
+>> ParseJSON("""2008-01-01T12:12:12.100Z""", DateTime)
+DateTime(2008,01,01,12,12,12,100)
+
+>> ParseJSON("true", Boolean)
+true
+
+>> If(ParseJSON("false", Boolean), "No", "Yes")
+"Yes"
+
+>> ParseJSON("555", Number) = 555
+true
+
+>> 2 < ParseJSON("1", Number)
+false
+
+>> UniChar(ParseJSON("65", Number))
+"A"
+
+// record
+>> ParseJSON("{""foo"": true}", Type({foo: Boolean}))
+{foo:true}
+
+// record missing field
+>> ParseJSON("{""Name"": ""SpongeBob"", ""Age"": 1}", Type({Name: Text, Age: Number, Aquatic: Boolean})).Name
+"SpongeBob"
+
+// Deeply nested record with table
+>> ParseJSON("{""a"": {""b"" : { ""c"" : [1, 2, 3, 4]}}}", Type({a: {b: {c: [Number]}}}))
+{a:{b:{c:Table({Value:1},{Value:2},{Value:3},{Value:4})}}}
+
+// Table
+>> ParseJSON("[{""a"": ""Hello"", ""b"": ""2012-01-02""}, {""a"": ""Hi"", ""b"": ""2012-01-03""}]", Type([{a: Text, b: Date}]))
+Table({a:"Hello",b:Date(2012,1,2)},{a:"Hi",b:Date(2012,1,3)})
+
+>> ParseJSON("[{""a"": [{""z"": true}, {""z"": false}]}, {""a"": [{""z"": false}, {""z"": true}]}]", Type([{a: [{z: Boolean}]}]))
+Table({a:Table({z:true},{z:false})},{a:Table({z:false},{z:true})})
+
+// Negative tests
+>> ParseJSON("5", Text)
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> ParseJSON("""42""", Number)
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> ParseJSON("1", 1)
+Errors: Error 15-16: Invalid argument '1'. Expected valid type name or type literal.
+
+>> ParseJSON("5", Type(5))
+Errors: Error 20-21: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 19-20: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
+
+>> ParseJSON("true", UnKnown)
+Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or type literal.
+
+>> ParseJSON("fasle", Boolean)
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> ParseJSON("true", Void)
+Errors: Error 0-9: The function 'ParseJSON' has some invalid arguments.
+
+>> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
+Error({Kind:ErrorKind.InvalidJSON})
+
+>> ParseJSON("{""a"": 5}", Type({a: Number}), "Hello")
+Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.

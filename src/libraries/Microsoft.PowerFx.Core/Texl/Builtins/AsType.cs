@@ -144,47 +144,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // AsType(UntypedObject:O, Type:U): ?
-    internal class AsType_UOFunction : BuiltinFunction
+    internal class AsType_UOFunction : UntypedOrJSONConversionFunction
     {
-        public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public override bool IsRestrictedUDFName => true;
-
-        public override bool HasTypeArgs => true;
-
-        public override bool ArgIsType(int argIndex)
-        {
-            return argIndex == 1;
-        }
-
         public AsType_UOFunction()
-            : base(AsTypeFunction.AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, FunctionCategories.REST, DType.Error, 0, 2, 2, DType.UntypedObject, DType.Error)
+            : base(AsTypeFunction.AsTypeInvariantFunctionName, TexlStrings.AboutAsTypeUO, DType.Error, 2, DType.UntypedObject, DType.Error)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.AsTypeUOArg1, TexlStrings.AsTypeUOArg2 };
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == 2);
-            Contracts.Assert(argTypes.Length == 2);
-            Contracts.AssertValue(errors);
-
-            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
-            {
-                return false;
-            }
-
-            returnType = argTypes[1];
-            return true;
         }
     }
 }

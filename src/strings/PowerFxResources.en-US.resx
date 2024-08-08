@@ -4746,4 +4746,8 @@
     <value>Invalid argument '{0}'. Expected valid type name or type literal.</value>
     <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
+    <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
+  </data>
 </root>

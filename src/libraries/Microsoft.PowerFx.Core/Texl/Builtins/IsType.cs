@@ -15,25 +15,12 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // IsType(UntypedObject:O, Type:U): Boolean
-    internal class IsType_UOFunction : BuiltinFunction
+    internal class IsType_UOFunction : UntypedOrJSONConversionFunction
     {
         public const string IsTypeInvariantFunctionName = "IsType";
 
-        public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public override bool IsRestrictedUDFName => true;
-
-        public override bool HasTypeArgs => true;
-
-        public override bool ArgIsType(int argIndex)
-        {
-            return argIndex == 1;
-        }
-
         public IsType_UOFunction()
-            : base(IsTypeInvariantFunctionName, TexlStrings.AboutIsTypeUO, FunctionCategories.REST, DType.Boolean, 0, 2, 2, DType.UntypedObject, DType.Error)
+            : base(IsTypeInvariantFunctionName, TexlStrings.AboutIsTypeUO, DType.Boolean, 2, DType.UntypedObject, DType.Error)
         {
         }
 
@@ -55,6 +42,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return false;
             }
+
+            returnType = DType.Boolean;
 
             return true;
         }

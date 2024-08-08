@@ -5179,6 +5179,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out var _);
 
+                if (checkErrorContainer?.HasErrors() == true)
+                {
+                    _txb.ErrorContainer.MergeErrors(checkErrorContainer.GetErrors());
+                }
+
                 if (!fArgsValid)
                 {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, func.Name);
