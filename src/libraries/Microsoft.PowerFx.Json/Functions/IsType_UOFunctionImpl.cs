@@ -23,15 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 return arg0;
             }
-            else if (arg0 is not UntypedObjectValue)
-            {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = "Runtime type mismatch",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
-                });
-            }
 
             var untypedObjectValue = (UntypedObjectValue)arg0;
             var typeString = (StringValue)args[1];
