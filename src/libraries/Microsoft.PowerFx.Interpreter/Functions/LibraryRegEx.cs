@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -199,6 +200,58 @@ namespace Microsoft.PowerFx.Functions
 
             protected abstract string RegexOptions { get; }
 
+            private string AlterNewlineMatching(string regex, RegexOptions options)
+            {
+                var openCharacterClass = false;                       // are we defining a character class?
+                var sb = new StringBuilder();
+
+                for (int i = 0; i < regex.Length; i++)
+                {
+                    switch (regex[i])
+                    {
+                        case '[':
+                            openCharacterClass = true;
+                            break;
+                        case ']':
+                            openCharacterClass = false;
+                            break;
+                        case '\\':
+                            sb.Append("\\");
+                            i++;
+                            break;
+                        case '.':
+                            if (!openCharacterClass)
+                            {
+                                sb.Append(@"[^\n\r\u2028\u2029]");
+                                continue;
+                            }
+
+                            break;
+                        case '^':
+                            if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
+                            {
+                                sb.Append(@"(?<=\A|[\n\r\u2028\u2029])");
+                                continue;
+                            }
+
+                            break;
+
+                        case '$':
+                            if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
+                            {
+                                sb.Append(@"(?=\z|[\n\r\u2028\u2029])");
+                                continue;
+                            }
+
+                            break;
+                    }
+
+                    sb.Append(regex[i]);
+                }
+
+                return sb.ToString();
+            }
+
             public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -264,6 +317,8 @@ namespace Microsoft.PowerFx.Functions
                 {
                     regularExpression += "$";
                 }
+
+                regularExpression = AlterNewlineMatching(regularExpression, regOptions);
 
                 try
                 {

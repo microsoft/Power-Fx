@@ -154,11 +154,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if false
-        // Helper to run a single .txt 
+        // Helper to run a single .txt A
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var path = @"D:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\culture_en-US.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

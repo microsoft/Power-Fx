@@ -719,6 +719,23 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDecimalRequiresPowerFxV1 = new ErrorResourceKey("ErrDecimalNeedsPowerFxV1");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
+        public static ErrorResourceKey ErrInvalidRegExBadOptions = new ErrorResourceKey("ErrInvalidRegExBadOptions");
+        public static ErrorResourceKey ErrInvalidRegExBadOptionsNotAtFront = new ErrorResourceKey("ErrInvalidRegExBadOptionsNotAtFront");
+        public static ErrorResourceKey ErrInvalidRegExBadOctal = new ErrorResourceKey("ErrInvalidRegExBadOctal");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
+        public static ErrorResourceKey ErrInvalidRegExBadBackRefNumber = new ErrorResourceKey("ErrInvalidRegExBadBackRefNumber");
+        public static ErrorResourceKey ErrInvalidRegExBadBalancing = new ErrorResourceKey("ErrInvalidRegExBadBalancing");
+        public static ErrorResourceKey ErrInvalidRegExBadSingleQuoteNamedCapture = new ErrorResourceKey("ErrInvalidRegExBadSingleQuoteNamedCapture");
+        public static ErrorResourceKey ErrInvalidRegExBadEscape = new ErrorResourceKey("ErrInvalidRegExBadEscape");
+        public static ErrorResourceKey ErrInvalidRegExBadCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadCharacterClassSubtraction");
+        public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadConditional");
+        public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureAlreadyExists = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureAlreadyExists");
+        public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureName = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureName");
+        public static ErrorResourceKey ErrInvalidRegExBadCharacterClassLiteralSquareBracket = new ErrorResourceKey("ErrInvalidRegExBadCharacterClassLiteralSquareBracket");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
+        public static ErrorResourceKey ErrInvalidRegExUnclosedCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnclosedCharacterClass");
+
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSubMatchesField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSubMatchesField");
