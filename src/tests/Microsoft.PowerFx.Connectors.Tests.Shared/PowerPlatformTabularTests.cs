@@ -42,7 +42,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            DatasetMetadata dm = await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Same(dm, cds.DatasetMetadata);
 
             Assert.NotNull(cds.DatasetMetadata);
             Assert.Null(cds.DatasetMetadata.Blob);
@@ -57,25 +60,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(cds.DatasetMetadata.Parameters);
             Assert.Equal(2, cds.DatasetMetadata.Parameters.Count);
 
-            Assert.Equal("Server name.", cds.DatasetMetadata.Parameters[0].Description);
-            Assert.Equal("server", cds.DatasetMetadata.Parameters[0].Name);
-            Assert.True(cds.DatasetMetadata.Parameters[0].Required);
-            Assert.Equal("string", cds.DatasetMetadata.Parameters[0].Type);
-            Assert.Equal("double", cds.DatasetMetadata.Parameters[0].UrlEncoding);
-            Assert.Null(cds.DatasetMetadata.Parameters[0].XMsDynamicValues);
-            Assert.Equal("Server name", cds.DatasetMetadata.Parameters[0].XMsSummary);
+            Assert.Equal("Server name.", cds.DatasetMetadata.Parameters.First().Description);
+            Assert.Equal("server", cds.DatasetMetadata.Parameters.First().Name);
+            Assert.True(cds.DatasetMetadata.Parameters.First().Required);
+            Assert.Equal("string", cds.DatasetMetadata.Parameters.First().Type);
+            Assert.Equal("double", cds.DatasetMetadata.Parameters.First().UrlEncoding);
+            Assert.Null(cds.DatasetMetadata.Parameters.First().XMsDynamicValues);
+            Assert.Equal("Server name", cds.DatasetMetadata.Parameters.First().XMsSummary);
 
-            Assert.Equal("Database name.", cds.DatasetMetadata.Parameters[1].Description);
-            Assert.Equal("database", cds.DatasetMetadata.Parameters[1].Name);
-            Assert.True(cds.DatasetMetadata.Parameters[1].Required);
-            Assert.Equal("string", cds.DatasetMetadata.Parameters[1].Type);
-            Assert.Equal("double", cds.DatasetMetadata.Parameters[1].UrlEncoding);
-            Assert.NotNull(cds.DatasetMetadata.Parameters[1].XMsDynamicValues);
-            Assert.Equal("/v2/databases?server={server}", cds.DatasetMetadata.Parameters[1].XMsDynamicValues.Path);
-            Assert.Equal("value", cds.DatasetMetadata.Parameters[1].XMsDynamicValues.ValueCollection);
-            Assert.Equal("Name", cds.DatasetMetadata.Parameters[1].XMsDynamicValues.ValuePath);
-            Assert.Equal("DisplayName", cds.DatasetMetadata.Parameters[1].XMsDynamicValues.ValueTitle);
-            Assert.Equal("Database name", cds.DatasetMetadata.Parameters[1].XMsSummary);
+            Assert.Equal("Database name.", cds.DatasetMetadata.Parameters.Skip(1).First().Description);
+            Assert.Equal("database", cds.DatasetMetadata.Parameters.Skip(1).First().Name);
+            Assert.True(cds.DatasetMetadata.Parameters.Skip(1).First().Required);
+            Assert.Equal("string", cds.DatasetMetadata.Parameters.Skip(1).First().Type);
+            Assert.Equal("double", cds.DatasetMetadata.Parameters.Skip(1).First().UrlEncoding);
+            Assert.NotNull(cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues);
+            Assert.Equal("/v2/databases?server={server}", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.Path);
+            Assert.Equal("value", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValueCollection);
+            Assert.Equal("Name", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValuePath);
+            Assert.Equal("DisplayName", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
+            Assert.Equal("Database name", cds.DatasetMetadata.Parameters.Skip(1).First().XMsSummary);
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
@@ -163,18 +166,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(testConnector);
-            string connectionId = "29941b77eb0a40fe925cd7a03cb85b40";
-            string jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1HTHFqOThWTkxvWGFGZnBKQ0JwZ0I0SmFLcyIsImtpZCI6Ik1HTHFqOThWTkxvWGFGZnBKQ0JwZ0I0SmFLcyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDcvIiwiaWF0IjoxNzIxMTMzODE4LCJuYmYiOjE3MjExMzM4MTgsImV4cCI6MTcyMTEzODEyNiwiYWNyIjoiMSIsImFpbyI6IkFiUUFTLzhYQUFBQStYK25pazZVY2htQTdSOEFNMUkvbUhGN2NaU2pCWXJ5aUxKU0Ivc2ZOZXN4cHk0MEVpN1hXSFFSUTUxZER0eU9QVnViWVdlYXUzUjNKRlhrTFdycGsrT0V6QmQweGt4ZmJTVEtwTFhMMkpxeXp3RGFOT2hNUmdzMktTQnpRZG9IK3lVMnN4R2JvcXhReFBXRUpWdHhPU0cxelQ4WDhMTmJhTHk3ZWZRQ2lESEJxckY2MkpFZUU1bkNLQ29Pa2NLblp6dEpQWi9QQXd4YUNDbHl3bG9jQWw3dEg1NW5yOXFKM0c5a0xtUSt6RVE9IiwiYW1yIjpbImZpZG8iLCJyc2EiLCJtZmEiXSwiYXBwaWQiOiJhOGY3YTY1Yy1mNWJhLTQ4NTktYjJkNi1kZjc3MmMyNjRlOWQiLCJhcHBpZGFjciI6IjAiLCJkZXZpY2VpZCI6IjhiZjM4YWYyLWM1OTktNGIwZi05YTg4LWVkMmUwYzRmYjFkMCIsImZhbWlseV9uYW1lIjoiR2VuZXRpZXIiLCJnaXZlbl9uYW1lIjoiTHVjIiwiaWR0eXAiOiJ1c2VyIiwiaXBhZGRyIjoiMTA4LjE0Mi4yMzAuNTkiLCJuYW1lIjoiTHVjIEdlbmV0aWVyIiwib2lkIjoiMTUwODcxM2ItOGZjYi00OTUxLTlhZGQtZTExYmJiZDYwMmMzIiwib25wcmVtX3NpZCI6IlMtMS01LTIxLTE3MjEyNTQ3NjMtNDYyNjk1ODA2LTE1Mzg4ODIyODEtMzcyNDkiLCJwdWlkIjoiMTAwMzNGRkY4MDFCREZCOCIsInJoIjoiMC5BUm9BdjRqNWN2R0dyMEdScXkxODBCSGJSMTg4QmY2U05oUlBydkx1TlB3SUhLNGFBTDQuIiwic2NwIjoiUnVudGltZS5BbGwiLCJzdWIiOiJ1MlRoZTc0VG9TUkItRmFPbm5sNGh5ZFNNMWhtdVp1bVVra0tWc19xMlkwIiwidGlkIjoiNzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3IiwidW5pcXVlX25hbWUiOiJsdWNnZW5AbWljcm9zb2Z0LmNvbSIsInVwbiI6Imx1Y2dlbkBtaWNyb3NvZnQuY29tIiwidXRpIjoiNGxTNXc3NURCMDZWZW1tSTFQMHNBQSIsInZlciI6IjEuMCIsInhtc19pZHJlbCI6IjEgOCJ9.jvhznuCBV5iCD187PfNT20NqQIjbdHa-uC7GBREMo8bRUlT30lE3BhPY2eE9s2LazRnVjLX4bXyUCN66S9hYZMZWMUOY0gOsWJXcY99PpBlML1IT0w91gUlyw_i3LDmYFwBFIHgblNRCI6Bl2tpmqY61ZPkXlq7EDQLjmtSVtaFTSi_6mFXE9FDEFoUEtXgVwrJbThj4MureN1u7leQ2_snpgp_RKbQkoZu1pei5bHoQ4Q43E0dIQ5hcYDmewrNqwDTrHanCVWh3Dx0gmMqf_2zqYErgUoXzU3t5sDBYTLc3ULgmS3MvvxmS1kf4UMqzqcyV7ETVQFcGKrUSbbqwFw";
-            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            string connectionId = "2cc03a388d38465fba53f05cd2c76181";
+            string jwt = "eyJ0eXAiOiJKSuA...";
+            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             string realTableName = "Product";
             string fxTableName = "Products";
             CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB");
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            DatasetMetadata dm = await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(cds.DatasetMetadata);
+            Assert.Same(dm, cds.DatasetMetadata);
             Assert.Null(cds.DatasetMetadata.Blob);
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
