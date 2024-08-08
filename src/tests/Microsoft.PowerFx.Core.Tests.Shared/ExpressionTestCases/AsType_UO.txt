@@ -11,7 +11,7 @@ true
 "AstypeFunction"
 
 >> AsType(ParseJSON("""1984-01-01"""), Date)
-Date(1984,01,01)
+Date(1984,1,1)
 
 >> AsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime)
 DateTime(1900,12,31,23,59,59,999)
