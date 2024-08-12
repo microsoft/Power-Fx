@@ -4375,21 +4375,25 @@
     <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "{0}" later.</value>
     <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBadOptions_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
+  <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
     <comment>Error message indicating that the regular expression has bad inline options.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Octal \0 character codes are not supported, use hexadecimal \x or Unicode \u instead, found "{0}".</value>
     <comment>Error message indicating that the regular expression has octal characters.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has literla curly braces.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression does not support possessive quantifiers.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Invalid escape code, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an invalid alphanumeric escape code.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExBadCharacterClassSubtraction_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character class subtraction is not supported.</value>
-    <comment>Error message indicating that the regular expression does not support character class subtraction.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Capture group "{0}" not defined.</value>
@@ -4411,6 +4415,10 @@
     <value>Invalid regular expression: Unclosed groups, too few closing parenthesis.</value>
     <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExUnopenedCaptureGroups_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unopened groups, too few opening parenthesis.</value>
+    <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Named capture group "{0}" defined more than once.</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
@@ -4418,6 +4426,14 @@
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "{0}".</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "{0}" later.</value>
+    <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Character appears more than once in character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadCharacterClassLiteralSquareBracket_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".</value>
@@ -4437,6 +4453,10 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
+    <value>Regular expression options must be constant values.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">

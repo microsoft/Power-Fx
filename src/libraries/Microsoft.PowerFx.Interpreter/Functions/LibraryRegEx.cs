@@ -203,6 +203,7 @@ namespace Microsoft.PowerFx.Functions
             private string AlterNewlineMatching(string regex, RegexOptions options)
             {
                 var openCharacterClass = false;                       // are we defining a character class?
+                var freeFormMode = (options & System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace) != 0 || Regex.IsMatch(regex, @"\(\?[A-Za-wyz]*x");
                 var sb = new StringBuilder();
 
                 for (int i = 0; i < regex.Length; i++)
@@ -215,6 +216,16 @@ namespace Microsoft.PowerFx.Functions
                         case ']':
                             openCharacterClass = false;
                             break;
+                        case '#':
+                            if (freeFormMode)
+                            {
+                                for (i++; i < regex.Length && regex[i] != '\r' && regex[i] != '\n'; i++)
+                                {
+                                    // skip the comment characters until the next newline, in case it includes [ ] 
+                                }
+                            }
+
+                            break;
                         case '\\':
                             sb.Append("\\");
                             i++;
@@ -222,7 +233,7 @@ namespace Microsoft.PowerFx.Functions
                         case '.':
                             if (!openCharacterClass)
                             {
-                                sb.Append(@"[^\n\r\u2028\u2029]");
+                                sb.Append(@"[^\n\r]");
                                 continue;
                             }
 
@@ -230,7 +241,7 @@ namespace Microsoft.PowerFx.Functions
                         case '^':
                             if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
                             {
-                                sb.Append(@"(?<=\A|[\n\r\u2028\u2029])");
+                                sb.Append(@"(?<=\A|\r\n|\n|\r)");
                                 continue;
                             }
 
@@ -239,7 +250,7 @@ namespace Microsoft.PowerFx.Functions
                         case '$':
                             if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
                             {
-                                sb.Append(@"(?=\z|[\n\r\u2028\u2029])");
+                                sb.Append(@"(?=\z|\r\n|\n|\r)");
                                 continue;
                             }
 

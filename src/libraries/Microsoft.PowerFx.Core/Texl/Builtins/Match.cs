@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -80,16 +81,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsRecord || returnType.IsTable);
             TexlNode regExNode = args[1];
+            string regularExpressionOptions = string.Empty;
 
-            if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var nodeValue))
+            if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
                 return false;
             }
 
-            string regularExpression = nodeValue;
+            if (context.Features.PowerFxV1CompatibilityRules && args.Length == 3 && 
+                ((argTypes[2].Kind != DKind.String && argTypes[2].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out regularExpressionOptions)))
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrVariableRegExOptions);
+                return false;
+            }
+
             return fValid && 
-                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, errors)) &&
+                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, errors)) &&
                     TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
         }
 
@@ -115,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //
         // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
         // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
-        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, IErrorContainer errors)
+        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, IErrorContainer errors)
         {
             // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
             // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
@@ -130,10 +138,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 @"
                     # leading backslash, escape sequences
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
-                    (?<badOctal>\\0\d+)                              | # octal are not accepted (no XRegExp support, by design)
-                    (?<badBackRefNum>\\\d+)                          | # numeric backreference
+                    (?<badOctal>\\0\d*)                              | # octal are not accepted (no XRegExp support, by design)
+                    \\(?<goodBackRefNum>\d+)                         | # numeric backreference
                     (?<goodEscapeAlpha>\\
-                           ([bBdDfnrsStvwW]    |                       # standard regex character classes, missing from .NET are aAeGzZ (no XRegExp support), other common are u{} and o
+                           ([bBdDfnrsStwW]     |                       # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [pP]\{\w+\}        |                       # unicode character classes
                             c[a-zA-Z]          |                       # Ctrl character classes
                             x[0-9a-fA-F]{2}    |                       # hex character, must be exactly 2 hex digits
@@ -147,163 +155,272 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badNamedCaptureName>\(\?<[^>]*>)              | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')       | # single quoted capture names are not supported
 
-                    # leading (?
-                    (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing
-                    (?<goodOptions>^\(\?[im]+\))                     | # inline front of expression options we do support
-                    (?<badOptions>\(\?(\w*-\w*|\w+)(:|\))?)          | # inline options that we don't support, including disable of options (last ? portion makes for a better error message)
+                    # leading (?, misc
+                    (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing paren
+                    \A\(\?(?<goodInlineOptions>[imsx]+)\)            |
+                    (?<goodInlineComment>\(\?\#[^\)]*\))             | # inline comment
+                    (?<goodLookaround>\(\?(=|!|<=|<!))               | # lookahead and lookbehind
+                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)]?)      | # inline options, including disable of options
                     (?<badConditional>\(\?\()                        | # .NET conditional alternations are not supported
+                    (?<badParen>\([\?\+\*\|])                        | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
-                    # basic open and close
+                    # leading ?\*\+, quantifiers
+                    (?<goodQuantifiers>[\?\*\+]\??)                  | # greedy and lazy quantifiers
+                    (?<badQuantifiers>[\?\*\+][\+\*])                | # possessive and useless quantifiers
+
+                    # leading {, limited quantifiers
+                    (?<badLimited>{\d+(,\d*)?}(\?|\+|\*))            | # possessive and useless quantifiers
+                    (?<goodLimited>{\d+(,\d*)?})                     | # standard limited quantifiers
+                    (?<badCurly>[{}])                                | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
+
+                    # open and close regions
                     (?<badCharacterClassEmpty>\[\])                  | # disallow empty chararcter class (supported by XRegExp) and literal ] at front of character class (supported by .NET)
                     (?<openCapture>\()                               |
                     (?<closeCapture>\))                              |
                     (?<openCharacterClass>\[)                        |
-                    (?<closeCharacterClass>\])
+                    (?<closeCharacterClass>\])                       |
+                    (?<poundComment>\#)                              |
+                    (?<newline>[\r\n])                               |
+                    (?<remainingChars>.)
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-            var groupStack = new Stack<string>();                 // stack of open group numbers, null is used for non capturing groups, for detecting if a named group is closed
+            int groupNumber = 0;
+            var groupStack = new Stack<string>();                 // stack of open groups, null is used for non capturing groups, for detecting if a named group is closed
             var groupNames = new List<string>();                  // list of seen group names
+            var openComment = false;                              // there is an open end-of-line pound comment, only in freeFormMode
+            var freeSpacing = regexOptions.Contains("x");         // can also be set with inline mode modifier
+            var numberedCpature = regexOptions.Contains("N");     
 
             var openCharacterClass = false;                       // are we defining a character class?
+            List<char> characterClassRepeat = new List<char>();
 
             foreach (Match groupMatch in groupPunctuationRE.Matches(regexPattern))
             {
-                // ordered from most common/good to least common/bad, for fewer tests
-                if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success || groupMatch.Groups["goodOptions"].Success)
+                if (groupMatch.Groups["newline"].Success)
                 {
-                    // all is well, nothing to do
+                    openComment = false;
                 }
-                else if (groupMatch.Groups["openCharacterClass"].Success)
+                else if (groupMatch.Groups["poundComment"].Success)
                 {
-                    if (openCharacterClass)
+                    openComment = freeSpacing;
+                }
+                else if (!openComment)
+                {
+                    // ordered from most common/good to least common/bad, for fewer tests
+                    if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success ||
+                        groupMatch.Groups["goodLookaround"].Success || groupMatch.Groups["goodInlineComment"].Success ||
+                        groupMatch.Groups["goodLimited"].Success)
                     {
-                        // character class subtraction "[a-z-[m-n]]" is not supported
-                        if (regexPattern[groupMatch.Groups["openCharacterClass"].Index - 1] == '-')
-                        {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassSubtraction);
-                            return false;
-                        }
-                        else
+                        // all is well, nothing to do
+                    }
+                    else if (groupMatch.Groups["openCharacterClass"].Success)
+                    {
+                        if (openCharacterClass)
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket);
                             return false;
                         }
-                    }
-                    else
-                    {
-                        openCharacterClass = true;
-                    }
-                }
-                else if (groupMatch.Groups["closeCharacterClass"].Success)
-                {
-                    openCharacterClass = false;
-                }
-                else if (groupMatch.Groups["openCapture"].Success || groupMatch.Groups["goodNonCapture"].Success || groupMatch.Groups["goodNamedCapture"].Success)
-                {
-                    // parens do not need to be escaped within square brackets
-                    if (!openCharacterClass)
-                    {
-                        // non capturing group still needs to match closing paren, but does not define a new group
-                        if (groupMatch.Groups["goodNamedCapture"].Success)
+                        else
                         {
-                            groupStack.Push(groupMatch.Groups["goodNamedCapture"].Value);
+                            openCharacterClass = true;
+                            characterClassRepeat = new List<char>();
+                        }
+                    }
+                    else if (groupMatch.Groups["closeCharacterClass"].Success)
+                    {
+                        openCharacterClass = false;
+                    }
+                    else if (groupMatch.Groups["goodNamedCapture"].Success)
+                    {
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
+                        {
+                            if (numberedCpature)
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, groupMatch.Value);
+                                return false;
+                            }
+
                             if (groupNames.Contains(groupMatch.Groups["goodNamedCapture"].Value))
                             {
                                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists, groupMatch.Value);
                                 return false;
                             }
 
+                            groupStack.Push(groupMatch.Groups["goodNamedCapture"].Value);
                             groupNames.Add(groupMatch.Groups["goodNamedCapture"].Value);
                         }
-                        else
+                    }
+                    else if (groupMatch.Groups["goodNonCapture"].Success)
+                    {
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
                         {
                             groupStack.Push(null);
                         }
                     }
-                }
-                else if (groupMatch.Groups["closeCapture"].Success)
-                {
-                    // parens do not need to be escaped within square brackets
-                    if (!openCharacterClass)
+                    else if (groupMatch.Groups["openCapture"].Success)
                     {
-                        groupStack.Pop();
-                    }
-                }
-                else if (groupMatch.Groups["goodBackRefName"].Success)
-                {
-                    var backRefName = groupMatch.Groups["goodBackRefName"].Value;
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
+                        {
+                            if (!numberedCpature)
+                            {
+                                var groupName = (++groupNumber).ToString(CultureInfo.InvariantCulture);
 
-                    // group isn't defined, or not defined yet
-                    if (!groupNames.Contains(backRefName))
+                                groupStack.Push(groupName);
+                                groupNames.Add(groupName);
+                            }
+                        }
+                    }
+                    else if (groupMatch.Groups["closeCapture"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                        // parens do not need to be escaped within square brackets
+                        if (!openCharacterClass)
+                        {
+                            if (groupStack.Count == 0)
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnopenedCaptureGroups);
+                                return false;
+                            }
+                            else
+                            {
+                                groupStack.Pop();
+                            }
+                        }
+                    }
+                    else if (groupMatch.Groups["goodBackRefName"].Success)
+                    {
+                        var backRefName = groupMatch.Groups["goodBackRefName"].Value;
+
+                        if (numberedCpature)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, groupMatch.Value);
+                            return false;
+                        }
+
+                        // group isn't defined, or not defined yet
+                        if (!groupNames.Contains(backRefName))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                            return false;
+                        }
+
+                        // group is not closed and thus self referencing
+                        if (groupStack.Contains(backRefName))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
+                            return false;
+                        }
+                    }
+                    else if (groupMatch.Groups["goodBackRefNumber"].Success)
+                    {
+                        var backRefNumber = groupMatch.Groups["goodBackRefNumber"].Value;
+
+                        if (!numberedCpature)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedCaptureDisabled, groupMatch.Value);
+                            return false;
+                        }
+
+                        // group isn't defined, or not defined yet
+                        if (!groupNames.Contains(backRefNumber))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                            return false;
+                        }
+
+                        // group is not closed and thus self referencing
+                        if (groupStack.Contains(backRefNumber))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
+                            return false;
+                        }
+                    }
+                    else if (groupMatch.Groups["goodInlineOptions"].Success)
+                    {
+                        if (groupMatch.Groups["goodInlineOptions"].Value.Contains("x"))
+                        {
+                            freeSpacing = true;
+                        }
+                    }
+                    else if (groupMatch.Groups["goodQuantifiers"].Success || groupMatch.Groups["remainingChars"].Success)
+                    {
+                        if (openCharacterClass)
+                        {
+                            foreach (char singleChar in groupMatch.Value)
+                            {
+                                if (characterClassRepeat.Contains(singleChar))
+                                {
+                                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, singleChar);
+                                }
+                                else
+                                {
+                                    characterClassRepeat.Add(singleChar);
+                                }
+                            }
+                        }
+                    }
+                    else if (groupMatch.Groups["badBackRefNum"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, groupMatch.Value);
                         return false;
                     }
-
-                    // group is not closed and thus self referencing
-                    if (groupStack.Contains(backRefName))
+                    else if (groupMatch.Groups["badNamedCaptureName"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureName, groupMatch.Groups["badNamedCaptureName"].Value);
                         return false;
                     }
-                }
-                else if (groupMatch.Groups["badBackRefNum"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, groupMatch.Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badNamedCaptureName"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureName, groupMatch.Groups["badNamedCaptureName"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badOctal"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOctal, groupMatch.Groups["badOctal"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badBalancing"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBalancing, groupMatch.Groups["badBalancing"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badOptions"].Success)
-                {
-                    if (groupMatch.Groups["badOptions"].Index > 0)
+                    else if (groupMatch.Groups["badOctal"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOptionsNotAtFront, groupMatch.Groups["badOptions"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOctal, groupMatch.Groups["badOctal"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badBalancing"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBalancing, groupMatch.Groups["badBalancing"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badInlineOptions"].Success)
+                    {
+                        errors.EnsureError(regExNode, groupMatch.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions, groupMatch.Groups["badInlineOptions"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badSingleQuoteNamedCapture"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture, groupMatch.Groups["badSingleQuoteNamedCapture"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badConditional"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, groupMatch.Groups["badConditional"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badCharacterClassEmpty"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, groupMatch.Groups["badCharacterClassEmpty"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badEscapeAlpha"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, groupMatch.Groups["badEscapeAlpha"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badQuantifier"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, groupMatch.Groups["badQuantifier"].Value);
+                        return false;
+                    }
+                    else if (groupMatch.Groups["badCurly"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCurly, groupMatch.Groups["badCurly"].Value);
+                        return false;
                     }
                     else
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOptions, groupMatch.Groups["badOptions"].Value);
+                        // This should never be hit. Good to have here in case one of the group names checked doesn't match the RE, in which case running tests would hit this.
+                        throw new NotImplementedException("Unknown regular expression match");
                     }
-
-                    return false;
-                }
-                else if (groupMatch.Groups["badSingleQuoteNamedCapture"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture, groupMatch.Groups["badSingleQuoteNamedCapture"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badConditional"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, groupMatch.Groups["badConditional"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badCharacterClassEmpty"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, groupMatch.Groups["badCharacterClassEmpty"].Value);
-                    return false;
-                }
-                else if (groupMatch.Groups["badEscapeAlpha"].Success)
-                {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, groupMatch.Groups["badEscapeAlpha"].Value);
-                    return false;
-                }
-                else
-                {
-                    // This should never be hit. Good to have here in case one of the group names checked doesn't match the RE, running tests would hit this.
-                    throw new NotImplementedException("Unknown regular expression match");
                 }
             }
 

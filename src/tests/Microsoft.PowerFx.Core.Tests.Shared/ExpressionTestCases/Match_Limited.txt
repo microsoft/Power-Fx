@@ -108,11 +108,25 @@ Blank()
 >> Match( "hello"&Char(10)&"howdy", "(?m)o$" )
 {FullMatch:"o",StartMatch:5,SubMatches:Table()}
 
+>> Match( "hello"&Char(10)&"howdy", "(?s)hello.howdy" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello"&Char(13)&"howdy", "(?s)hello.howdy" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello"&Char(13)&Char(10)&"howdy", "(?s)hello.howdy" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+>> Match( "hello howdy", "(?x) hello \s howdy # comment" )
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+
+// unsupported inline options
+
 >> Match( "hello"&Char(10)&"howdy", "(?-m)o$" )
-Errors: Error 33-42: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 33-42: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?-m)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello"&Char(10)&"howdy", "(?i-m)o$" )
-Errors: Error 33-43: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?i-m)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 33-43: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?i-m)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello"&Char(10)&"howdy", "^(?m)o$" )
 Errors: Error 33-42: Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "(?m)" later.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -123,19 +137,29 @@ Errors: Error 33-44: Invalid regular expression: Inline options must appear at t
 >> Match( "hello"&Char(10)&"howdy", "^(?m:o$)" )
 Errors: Error 33-43: Invalid regular expression: Inline options must appear at the beginning of the regular expression, found "(?m:" later.|Error 0-5: The function 'Match' has some invalid arguments.
 
-// unsupported inline options
-
 >> Match( "hello world", "(?n)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?n)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?n)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?s)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?s)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?s)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?x)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?x)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?x)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?A)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [im], cannot disable options, and cannot be used on a subexpression, found "(?A)".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?A)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ("hello world", "(?^)o")  // PCRE2
+Errors
+
+>> Match ("hello world", "(?xx)o")  // PCRE2
+Errors
+
+>> Match ("hello world", "(?J)o")  // PCRE2
+Errors
+
+>> Match ("hello world", "(?U)o")  // PCRE2
+Errors
 
 // inline options overriding explicit options, conflicts?
 
@@ -200,7 +224,7 @@ Errors: Error 12-17: Invalid regular expression: Square bracket character classe
 // character class subtraction
 
 >> Match( "k", "[a-z-[b-c]]" )
-Errors: Error 12-25: Invalid regular expression: Character class subtraction is not supported.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 12-25: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".
 
 // regular expression parsing
 
@@ -342,7 +366,7 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\T"
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\U".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test" & Char(11) & "bed", "\v" )
-{FullMatch:"",StartMatch:5,SubMatches:Table()}
+Error 34-38: Invalid regular expression: Invalid escape code, found "\v".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "\V" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\V".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -486,10 +510,10 @@ Blank()
 Blank()
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t" ), FullMatch )
-Blank()
+{StartMatch:1,SubMatches:Table()}
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
-Blank()
+{StartMatch:1,SubMatches:Table()}
 
 // $ end anchor, multiline, and newline characters
 
@@ -537,5 +561,6 @@ Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:
  c
  ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch) } )
 Table({Len:2,Match:" a"},{Len:2,Match:" b"},{Len:2,Match:" c"},{Len:1,Match:" "})
+
 
 

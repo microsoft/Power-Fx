@@ -86,7 +86,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Complete", "^c$" },
                 { "Contains", "c" },
                 { "IgnoreCase", "i" },
-                { "Multiline", "m" }
+                { "Multiline", "m" },
+                { "FreeSpacing", "x" },
+                { "DotAll", "s" },
+                { "NumberedCapture", "N" }
             },
             canConcatenateStronglyTyped: true);
 
