@@ -64,9 +64,9 @@ namespace Microsoft.PowerFx.Json.Tests
             // Negative tests - types not supported in FromJSON converter
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "Time", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"RED\"\"\"", "Color", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", string.Empty, false);
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", string.Empty, false);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Json.Tests
             // Negative Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false, options: ParseType);
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false, options: ParseType);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Hyperlink})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Void})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Json.Tests
             // Negative tests
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5, \"\"b\"\": 6}]\"", "Type([{a: Number}])", t1, false, options: ParseType);
             CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Text])", t2, false, options: ParseType);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"[\"\"foo/bar/uri\"\"]\"", "Type([Hyperlink])", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"[\"\"foo/bar/uri\"\"]\"", "Type([Color])", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key, options: ParseType);
         }
 
         [Theory]

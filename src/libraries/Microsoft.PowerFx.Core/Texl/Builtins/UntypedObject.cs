@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
-        private static readonly ISet<DType> UnsupportedJSONTypes = new HashSet<DType> { DType.Color, DType.Void, DType.Guid, DType.Time, DType.Hyperlink, DType.ObjNull };
+        private static readonly ISet<DType> UnsupportedJSONTypes = new HashSet<DType> { DType.Color, DType.Void, DType.Time, DType.ObjNull };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)
             : base(name, description, FunctionCategories.REST, returnType, 0, 2, arityMax, paramTypes)
