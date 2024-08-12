@@ -39,48 +39,45 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eXAiOiJKV1QiL...";
             using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
-
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            DatasetMetadata dm = await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(dm);
-            Assert.Same(dm, cds.DatasetMetadata);
+            Assert.Null(dm.Blob);
 
-            Assert.NotNull(cds.DatasetMetadata);
-            Assert.Null(cds.DatasetMetadata.Blob);
+            Assert.Equal("{server},{database}", dm.DatasetFormat);
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("mru", dm.Tabular.Source);
+            Assert.Equal("Table", dm.Tabular.TableDisplayName);
+            Assert.Equal("Tables", dm.Tabular.TablePluralName);
+            Assert.Equal("single", dm.Tabular.UrlEncoding);
+            Assert.NotNull(dm.Parameters);
+            Assert.Equal(2, dm.Parameters.Count);
 
-            Assert.Equal("{server},{database}", cds.DatasetMetadata.DatasetFormat);
-            Assert.NotNull(cds.DatasetMetadata.Tabular);
-            Assert.Equal("dataset", cds.DatasetMetadata.Tabular.DisplayName);
-            Assert.Equal("mru", cds.DatasetMetadata.Tabular.Source);
-            Assert.Equal("Table", cds.DatasetMetadata.Tabular.TableDisplayName);
-            Assert.Equal("Tables", cds.DatasetMetadata.Tabular.TablePluralName);
-            Assert.Equal("single", cds.DatasetMetadata.Tabular.UrlEncoding);
-            Assert.NotNull(cds.DatasetMetadata.Parameters);
-            Assert.Equal(2, cds.DatasetMetadata.Parameters.Count);
+            Assert.Equal("Server name.", dm.Parameters.First().Description);
+            Assert.Equal("server", dm.Parameters.First().Name);
+            Assert.True(dm.Parameters.First().Required);
+            Assert.Equal("string", dm.Parameters.First().Type);
+            Assert.Equal("double", dm.Parameters.First().UrlEncoding);
+            Assert.Null(dm.Parameters.First().XMsDynamicValues);
+            Assert.Equal("Server name", dm.Parameters.First().XMsSummary);
 
-            Assert.Equal("Server name.", cds.DatasetMetadata.Parameters.First().Description);
-            Assert.Equal("server", cds.DatasetMetadata.Parameters.First().Name);
-            Assert.True(cds.DatasetMetadata.Parameters.First().Required);
-            Assert.Equal("string", cds.DatasetMetadata.Parameters.First().Type);
-            Assert.Equal("double", cds.DatasetMetadata.Parameters.First().UrlEncoding);
-            Assert.Null(cds.DatasetMetadata.Parameters.First().XMsDynamicValues);
-            Assert.Equal("Server name", cds.DatasetMetadata.Parameters.First().XMsSummary);
+            Assert.Equal("Database name.", dm.Parameters.Skip(1).First().Description);
+            Assert.Equal("database", dm.Parameters.Skip(1).First().Name);
+            Assert.True(dm.Parameters.Skip(1).First().Required);
+            Assert.Equal("string", dm.Parameters.Skip(1).First().Type);
+            Assert.Equal("double", dm.Parameters.Skip(1).First().UrlEncoding);
+            Assert.NotNull(dm.Parameters.Skip(1).First().XMsDynamicValues);
+            Assert.Equal("/v2/databases?server={server}", dm.Parameters.Skip(1).First().XMsDynamicValues.Path);
+            Assert.Equal("value", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueCollection);
+            Assert.Equal("Name", dm.Parameters.Skip(1).First().XMsDynamicValues.ValuePath);
+            Assert.Equal("DisplayName", dm.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
+            Assert.Equal("Database name", dm.Parameters.Skip(1).First().XMsSummary);
 
-            Assert.Equal("Database name.", cds.DatasetMetadata.Parameters.Skip(1).First().Description);
-            Assert.Equal("database", cds.DatasetMetadata.Parameters.Skip(1).First().Name);
-            Assert.True(cds.DatasetMetadata.Parameters.Skip(1).First().Required);
-            Assert.Equal("string", cds.DatasetMetadata.Parameters.Skip(1).First().Type);
-            Assert.Equal("double", cds.DatasetMetadata.Parameters.Skip(1).First().UrlEncoding);
-            Assert.NotNull(cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues);
-            Assert.Equal("/v2/databases?server={server}", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.Path);
-            Assert.Equal("value", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValueCollection);
-            Assert.Equal("Name", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValuePath);
-            Assert.Equal("DisplayName", cds.DatasetMetadata.Parameters.Skip(1).First().XMsDynamicValues.ValueTitle);
-            Assert.Equal("Database name", cds.DatasetMetadata.Parameters.Skip(1).First().XMsSummary);
+            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,connectortest");
 
-            testConnector.SetResponseFromFile(@"Responses\SQL GetTables.json");
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
@@ -172,16 +169,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             string realTableName = "Product";
             string fxTableName = "Products";
-            CdpDataSource cds = new CdpDataSource("pfxdev-sql.database.windows.net,SampleDB");
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetDatasetsMetadata.json");
-            DatasetMetadata dm = await cds.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
-            Assert.NotNull(cds.DatasetMetadata);
-            Assert.Same(dm, cds.DatasetMetadata);
-            Assert.Null(cds.DatasetMetadata.Blob);
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
 
-            testConnector.SetResponseFromFile(@"Responses\SQL GetTables SampleDB.json");
+            CdpDataSource cds = new CdpDataSource("default,default");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
@@ -577,25 +574,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string jwt = "eyJ0eXAiOiJKV...";
             using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
+            testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+            Assert.Null(dm.DatasetFormat);
+            Assert.Null(dm.Parameters);
+
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("singleton", dm.Tabular.Source);
+            Assert.Equal("Table", dm.Tabular.TableDisplayName);
+            Assert.Equal("Tables", dm.Tabular.TablePluralName);
+            Assert.Equal("double", dm.Tabular.UrlEncoding);
+
             CdpDataSource cds = new CdpDataSource("default");
 
-            testConnector.SetResponseFromFile(@"Responses\SF GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
-
-            Assert.NotNull(cds.DatasetMetadata);
-            Assert.Null(cds.DatasetMetadata.Blob);
-            Assert.Null(cds.DatasetMetadata.DatasetFormat);
-            Assert.Null(cds.DatasetMetadata.Parameters);
-
-            Assert.NotNull(cds.DatasetMetadata.Tabular);
-            Assert.Equal("dataset", cds.DatasetMetadata.Tabular.DisplayName);
-            Assert.Equal("singleton", cds.DatasetMetadata.Tabular.Source);
-            Assert.Equal("Table", cds.DatasetMetadata.Tabular.TableDisplayName);
-            Assert.Equal("Tables", cds.DatasetMetadata.Tabular.TablePluralName);
-            Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
-
             // only one network call as we already read metadata
-            testConnector.SetResponseFromFile(@"Responses\SF GetTables.json");
+            testConnector.SetResponseFromFiles(@"Responses\SF GetDatasetsMetadata.json", @"Responses\SF GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/salesforce/{connectionId}", CancellationToken.None, logger);
 
             Assert.NotNull(tables);
@@ -818,28 +815,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             string connectionId = "7a82a84f1b454132920a2654b00d45be";
             string uriPrefix = $"/apim/zendesk/{connectionId}";
-            string jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InE3UDFOdnh1R1F3RE4yVGFpTW92alo4YVp3cyIsImtpZCI6InE3UDFOdnh1R1F3RE4yVGFpTW92alo4YVp3cyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85MWJlZTNkOS0wYzE1LTRmMTctODYyNC1jOTJiYjhiMzZlYWQvIiwiaWF0IjoxNzE4Nzg2MTQzLCJuYmYiOjE3MTg3ODYxNDMsImV4cCI6MTcxODc5MTAyMCwiYWNyIjoiMSIsImFpbyI6IkFVUUJ1LzRYQUFBQVp5enZNYnFaUW9KcldaUTlwcUZTVFdaRk1KemZOb3UzSnE3OVVmUDdtTksrYVZ5V0t5YTFTOEwxZ1RXbk10OVljZlZpZ2U3b2JMYkpLM2t6bWRndXZCNncwZ3g2cEVPenJaQmdZakdyTk8zZGtFRzVzK0tXK0poV1pPNXVITTJ1cnBxUXVSekYzWnR1WnZyNi9nY281a1FLYTBXSDdaUGVRc29HQTJvN2dpNkx2ODRNT3NUWG9DbHZJRHpJTzYwc1FaWU1QZllYMjlKbTViSk8zQVFDVFIyR1Y1NitxbGkxRGZMYWF6TWpKajBwL0tPK24rUzJydTU0clN6UFJkU0R1KzJYZXRqdzNJS1pJR2pyQTFiQ093U1lXVjVqVHNqSDI2Q2pJS3V6VGtZOTZKV2JDV1Z0eDZ6RTlDKzZ6WnkrQ2k0SDhSVDM3Vk5GWFplNFBrcUIyUjNVMU11ODBJOUtYeEhXVDlWSm5yYWpLa1VTMEUzZ2JSbGVyUFZxa2JzYWdNdlN1Wm9NYmdEbkovaEtCUGt3Nm5lL1UzSWJGeHg4TC9KOUhYVXpxS3c9IiwiYW1yIjpbInJzYSIsIm1mYSJdLCJhcHBpZCI6ImE4ZjdhNjVjLWY1YmEtNDg1OS1iMmQ2LWRmNzcyYzI2NGU5ZCIsImFwcGlkYWNyIjoiMCIsImZhbWlseV9uYW1lIjoidXNlcjA5IiwiZ2l2ZW5fbmFtZSI6ImF1cm9yYSIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjkwLjEwNC43My4yMDMiLCJuYW1lIjoiYXVyb3JhdXNlcjA5Iiwib2lkIjoiMzJiYTExYmQtZmYxNS00NmY3LWJkMzMtNmI0ODFlNWY1YzdlIiwicHVpZCI6IjEwMDMyMDAxM0I5Qjg4QzQiLCJyaCI6IjAuQVc4QTJlTy1rUlVNRjAtR0pNa3J1TE51clY4OEJmNlNOaFJQcnZMdU5Qd0lISzV2QUxFLiIsInNjcCI6IlJ1bnRpbWUuQWxsIiwic3ViIjoiWnlpQUR2NGJPSV8xZXVjbDZKNnc3emR6d2xWQTJpLVpWLWduT0FLRkVUNCIsInRpZCI6IjkxYmVlM2Q5LTBjMTUtNGYxNy04NjI0LWM5MmJiOGIzNmVhZCIsInVuaXF1ZV9uYW1lIjoiYXVyb3JhdXNlcjA5QGNhcGludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXBuIjoiYXVyb3JhdXNlcjA5QGNhcGludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwidXRpIjoiREV3bFNuTi1sRUdTcEkybUdESWxBQSIsInZlciI6IjEuMCIsInhtc19pZHJlbCI6IjEgMTIifQ.O2_aoWB2Iu_6VtTygtrqInOi8dFDfcYdNHlPhuhZWmeN7uloLLif4tHp_XbSwSx1exROswUUaF64JR0F-LQf3D8EZUwTN3TL5PrAsfAGI5AMBUaF1zTm0828YIKO12i_1iH2KnWdC3wUnSQ5qB-zoY39MgfZt0YMSvDrVvrV96WJTF9B_ugP06X_xKuG9sq7VX7hYTxKEkZwvIF3rFuGkI-SuS7mpapPAbTTHEgjQaB-coJObwEYBnWNaTzgssC2M8ho8glj8bpREnLtp_MkAq0xT2rZkMsj-5BrU2vpzAVyLxnB7xzKzR-9KoI2DZm9-Ey0sMVkhJm2KCWfEHtyRA";
+            string jwt = "eyJ0eXAiOiJK...";
             using var client = new PowerPlatformConnectorClient("tip1-shared.azure-apim.net", "e48a52f5-3dfe-e2f6-bc0b-155d32baa44c", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFile(@"Responses\ZD GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+            Assert.Null(dm.DatasetFormat);
+            Assert.Null(dm.Parameters);
+
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("singleton", dm.Tabular.Source);
+            Assert.Equal("table", dm.Tabular.TableDisplayName);
+            Assert.Equal("tables", dm.Tabular.TablePluralName);
+            Assert.Equal("double", dm.Tabular.UrlEncoding);
 
             CdpDataSource cds = new CdpDataSource("default");
 
-            testConnector.SetResponseFromFile(@"Responses\ZD GetDatasetsMetadata.json");
-            await cds.GetDatasetsMetadataAsync(client, uriPrefix, CancellationToken.None, logger);
-
-            Assert.NotNull(cds.DatasetMetadata);
-            Assert.Null(cds.DatasetMetadata.Blob);
-            Assert.Null(cds.DatasetMetadata.DatasetFormat);
-            Assert.Null(cds.DatasetMetadata.Parameters);
-
-            Assert.NotNull(cds.DatasetMetadata.Tabular);
-            Assert.Equal("dataset", cds.DatasetMetadata.Tabular.DisplayName);
-            Assert.Equal("singleton", cds.DatasetMetadata.Tabular.Source);
-            Assert.Equal("table", cds.DatasetMetadata.Tabular.TableDisplayName);
-            Assert.Equal("tables", cds.DatasetMetadata.Tabular.TablePluralName);
-            Assert.Equal("double", cds.DatasetMetadata.Tabular.UrlEncoding);
-
             // only one network call as we already read metadata
-            testConnector.SetResponseFromFile(@"Responses\ZD GetTables.json");
+            testConnector.SetResponseFromFiles(@"Responses\ZD GetDatasetsMetadata.json", @"Responses\ZD GetTables.json");
             IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, uriPrefix, CancellationToken.None, logger);
 
             Assert.NotNull(tables);
