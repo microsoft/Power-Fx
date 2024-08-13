@@ -743,6 +743,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedCaptures = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedCaptures");
         public static ErrorResourceKey ErrInvalidRegExNumberedCapturesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedCapturesDisabled");
         public static ErrorResourceKey ErrInvalidRegExBadUnsupportedCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadUnsupportedCharacterClassSubtraction");
+        public static ErrorResourceKey ErrInvalidRegExOpenParenInComment = new ErrorResourceKey("ErrInvalidRegExOpenParenInComment");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");

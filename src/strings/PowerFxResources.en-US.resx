@@ -4471,6 +4471,10 @@
     <value>Invalid regular expression: Character class subtraction is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression is using character class subtraction and it is not supported.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExOpenParenInComment_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline comments cannot include open parenthesis, found in "{0}".</value>
+    <comment>Error message indicating that the regular expression has an open paren in an inline comment.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
     <comment>Error Message.</comment>

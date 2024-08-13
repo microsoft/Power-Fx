@@ -93,10 +93,10 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!m.Success)
                 {
-                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
+                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex, options))));
                 }
 
-                return GetRecordFromMatch(rex, m);
+                return GetRecordFromMatch(rex, m, options);
             }
         }
 
@@ -119,14 +119,14 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (Match m in mc)
                 {
-                    records.Add(GetRecordFromMatch(rex, m));
+                    records.Add(GetRecordFromMatch(rex, m, options));
                 }
 
-                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
+                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex, options)), records.ToArray());
             }
         }
 
-        private static RecordValue GetRecordFromMatch(Regex rex, Match m)
+        private static RecordValue GetRecordFromMatch(Regex rex, Match m, RegexOptions options)
         {
             Dictionary<string, NamedValue> fields = new ()
             {
@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            if (!fields.ContainsKey(SUBMATCHES))
+            if (!fields.ContainsKey(SUBMATCHES) && (options & RegexOptions.ExplicitCapture) == 0)
             {
                 fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
             }
@@ -169,14 +169,17 @@ namespace Microsoft.PowerFx.Functions
             return RecordValue.NewRecordFromFields(fields.Values);
         }
 
-        private static DType GetRecordTypeFromRegularExpression(string regularExpression)
+        private static DType GetRecordTypeFromRegularExpression(string regularExpression, RegexOptions regularExpressionOptions)
         {
             Dictionary<string, TypedName> propertyNames = new ();
             Regex rex = new Regex(regularExpression);
 
             propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
             propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
-            propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
+            if ((regularExpressionOptions & RegexOptions.ExplicitCapture) == 0)
+            {
+                propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
+            }
 
             foreach (string groupName in rex.GetGroupNames())
             {
@@ -311,7 +314,7 @@ namespace Microsoft.PowerFx.Functions
                     matchOptions = RegexOptions;
                 }
 
-                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
+                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;
 
                 if (matchOptions.Contains("i"))
                 {
@@ -331,6 +334,11 @@ namespace Microsoft.PowerFx.Functions
                 if (matchOptions.Contains("$") && !regularExpression.EndsWith("$", StringComparison.Ordinal))
                 {
                     regularExpression += "$";
+                }
+
+                if (!matchOptions.Contains("N"))
+                {
+                    regOptions |= System.Text.RegularExpressions.RegexOptions.ExplicitCapture;
                 }
 
                 regularExpression = AlterNewlineMatching(regularExpression, regOptions);

@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
-        // abcdefge
+        // abcdefged
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
         // 3. Default Canvas features with NumberIsFloat - the current default for Canvas apps.  Canvas
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
+            var path = @"c:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = testRunner.RunTests();
             if (result.Fail > 0)
             {
-                Assert.True(false, result.Output);
+                Assert.Fail(result.Output);
             }
             else
             {

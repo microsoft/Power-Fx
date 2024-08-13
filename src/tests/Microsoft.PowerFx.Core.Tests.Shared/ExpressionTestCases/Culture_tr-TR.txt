@@ -200,8 +200,8 @@ false
 >> IsMatch( "İ", "ı", MatchOptions.IgnoreCase )           // false       false    false
 false
 
->> Match( "hiIıİİıIhi", "\u0130+" )
-{FullMatch:"İİ",StartMatch:5,SubMatches:Table()}
+>> ShowColumns( Match( "hiIıİİıIhi", "\u0130+" ), FullMatch, StartMatch )
+{FullMatch:"İİ",StartMatch:5}
 
 >> IsMatch( "Sıgh", "\u0131", MatchOptions.Contains )
 true

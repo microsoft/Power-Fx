@@ -81,8 +81,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsRecord || returnType.IsTable);
-            TexlNode regExNode = args[1];
+
             string regularExpressionOptions = string.Empty;
+            var regExNode = args[1];
 
             if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var regularExpression))
             {
@@ -91,15 +92,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (context.Features.PowerFxV1CompatibilityRules && args.Length == 3 && 
-                ((argTypes[2].Kind != DKind.String && argTypes[2].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out regularExpressionOptions)))
+                ((argTypes[2].Kind != DKind.String && argTypes[2].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, args[2], out regularExpressionOptions)))
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrVariableRegExOptions);
+                errors.EnsureError(args[2], TexlStrings.ErrVariableRegExOptions);
                 return false;
+            }
+
+            if (!context.Features.PowerFxV1CompatibilityRules)
+            {
+                regularExpressionOptions += "N";
             }
 
             return fValid && 
                     (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, errors)) &&
-                    TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
+                    TryCreateReturnType(regExNode, regularExpression, regularExpressionOptions, errors, ref returnType);
         }
 
         // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
@@ -158,7 +164,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     # leading (?, misc
                     (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imsx]+)\)            |
+                    \A\(\?(?<goodInlineOptions>[imsx]+)\)            | # inline options
                     (?<goodInlineComment>\(\?\#[^\)]*\))             | # inline comment
                     (?<goodLookaround>\(\?(=|!|<=|<!))               | # lookahead and lookbehind
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])     | # inline options, including disable of options
@@ -208,8 +214,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
                     if (token.Groups["goodEscape"].Success || token.Groups["goodEscapeAlpha"].Success ||
-                        token.Groups["goodLookaround"].Success || token.Groups["goodInlineComment"].Success ||
-                        token.Groups["goodLimited"].Success)
+                        token.Groups["goodLookaround"].Success || token.Groups["goodLimited"].Success)
                     {
                         // all is well, nothing to do
                     }
@@ -272,10 +277,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
                         {
-                            if (!numberedCpature)
+                            if (numberedCpature)
                             {
                                 captureNumber++;
                                 captureStack.Push(captureNumber.ToString(CultureInfo.InvariantCulture));
+                            }
+                            else
+                            {
+                                captureStack.Push(null);
                             }
                         }
                     }
@@ -374,6 +383,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
                     }
+                    else if (token.Groups["goodInlineComment"].Success)
+                    {
+                        if (token.Groups["goodInlineComment"].Value.Substring(1).Contains("("))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExOpenParenInComment, token.Groups["goodInlineComment"].Value);
+                            return false;
+                        }
+                    }
                     else if (token.Groups["badBackRefNum"].Success)
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, token.Value);
@@ -458,7 +475,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
-        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, IErrorContainer errors, ref DType returnType)
+        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string regexOptions, IErrorContainer errors, ref DType returnType)
         {
             Contracts.AssertValue(regexPattern);
             string prefixedRegexPattern = this._cachePrefix + regexPattern;
@@ -489,7 +506,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             try
             {
-                var regex = new Regex(regexPattern);
+                var regexDotNetOptions = RegexOptions.None;
+                if (regexOptions.Contains("x"))
+                {
+                    regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
+                }
+
+                var regex = new Regex(regexPattern, regexDotNetOptions);
 
                 List<TypedName> propertyNames = new List<TypedName>();
                 bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
@@ -523,7 +546,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
                 }
 
-                if (!subMatchesHidden)
+                if (!subMatchesHidden && regexOptions.Contains("N"))
                 {
                     propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
                 }
