@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Json.Tests
             var functionWithTypeArgs = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs);
 
             Assert.All(functionWithTypeArgs, f => Assert.Contains(f.Name, expectedFunctions));
-            Assert.All(functionWithTypeArgs, f => Assert.True(Enumerable.Range(0, f.MaxArity).Any(i => f.ArgIsType(i))));
+            Assert.All(functionWithTypeArgs, f => Assert.Contains(Enumerable.Range(0, f.MaxArity), i => f.ArgIsType(i)));
         }
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)
