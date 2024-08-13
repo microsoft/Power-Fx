@@ -2817,6 +2817,29 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetIsUnliftable(node, true);
                 }
 
+                // Look up a global variable with this name.
+                NameLookupInfo lookupInfo = default;
+                if (_txb.AffectsScopeVariableName)
+                {
+                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
+                    {
+                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
+
+                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
+                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
+                        }
+
+                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
+                    }
+
+                    // Set the variable name node as DType.String.
+                    _txb.SetType(node, DType.String);
+                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
+                    return;
+                }
+
                 // [@name]
                 if (node.Ident.AtToken != null)
                 {
@@ -2882,29 +2905,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(nodeType, nodeName);
-                    return;
-                }
-
-                // Look up a global variable with this name.
-                NameLookupInfo lookupInfo = default;
-                if (_txb.AffectsScopeVariableName)
-                {
-                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
-                    {
-                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
-
-                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
-                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
-                        {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
-                        }
-
-                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
-                    }
-
-                    // Set the variable name node as DType.String.
-                    _txb.SetType(node, DType.String);
-                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
                 }
 
@@ -3862,6 +3862,16 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Update the datasource and relatedEntity path.
                     type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                     entityTypes.Add(expandEntityInfo.ExpandPath, type);
+                }
+                else if (!type.ExpandInfo.ExpandPath.IsReachedFromPath(relatedEntityPath))
+                {
+                    // Expands reached via a different path should have a different relatedentitypath.
+                    // If we found an expand in the cache but it's not accessed via the same relationship
+                    // we need to create a different expand info but with the same type. 
+                    // DType.Clone doesn't clone expand info, so we force that with CopyExpandInfo,
+                    // because that sadly mutates expand info on what should otherwise be an immutable dtype. 
+                    type = DType.CopyExpandInfo(type.Clone(), type);
+                    type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                 }
 
                 return type;

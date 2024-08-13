@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
@@ -43,6 +44,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// The input script for which the Intellisense was called.
         /// </summary>
         public string Script { get; }
+
+        /// <summary>
+        /// The locale information used to get localized intellisense messages. Based on parse options locale.
+        /// </summary>
+        public CultureInfo Locale { get; }
 
         /// <summary>
         /// Called when the signature results of <see cref="IIntellisenseResult"/> are being created.

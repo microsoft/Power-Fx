@@ -887,13 +887,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Fetch the description associated with the specified parameter name (which must be the INVARIANT name)
         // If the param has no description, this will return false.
-        public virtual bool TryGetParamDescription(string paramName, out string paramDescription)
+        public virtual bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             Contracts.AssertNonEmpty(paramName);
 
-            // Fetch it from the string resources by default. Subclasses can override this
-            // and use their own dictionaries, etc.
-            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription);
+            return StringResources.TryGet("About" + LocaleInvariantName + "_" + paramName, out paramDescription, locale);
         }
 
         // Exhaustive list of parameter names, in no guaranteed order.

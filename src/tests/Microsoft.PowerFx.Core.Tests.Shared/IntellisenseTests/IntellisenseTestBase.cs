@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -56,6 +55,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return Suggest(expression2, symTable, cursorPosition, config, culture);
         }
 
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, CultureInfo culture, CultureInfo errorCultureInfo)
+        {
+            (var expression2, var cursorPosition) = Decode(expression);
+            return Suggest(expression2, null, cursorPosition, config, culture, errorCultureInfo);
+        }
+
         // Tests use | to indicate cursor position within an expression string. 
         // Return the cursos position and string (without the |). 
         internal static (string, int) Decode(string expression)
@@ -77,14 +82,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             throw new System.Exception("No match.");
         }
 
-        internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config, CultureInfo culture)
+        internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config, CultureInfo culture, CultureInfo errorCultureInfo = null)
         {
             var engine = new Engine(config)
             {
                 SupportedFunctions = new SymbolTable()
             };
 
-            var checkResult = engine.Check(expression, new ParserOptions(culture), symTable);
+            errorCultureInfo ??= CultureInfo.InvariantCulture;
+
+            var checkResult = new CheckResult(engine)
+                        .SetText(expression, new ParserOptions { Culture = culture })
+                        .SetBindingInfo(symTable)
+                        .SetDefaultErrorCulture(errorCultureInfo);
+
             var suggestions = engine.Suggest(checkResult, cursorPosition);
                        
             return suggestions;

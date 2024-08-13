@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        public override bool TryGetParamDescription(string paramName, out string paramDescription, string locale = null)
         {
             paramDescription = ConnectorFunction.RequiredParameters.FirstOrDefault(p => p.Name == paramName)?.Description ?? ConnectorFunction.OptionalParameters.FirstOrDefault(p => p.Name == paramName)?.Description;
             return !string.IsNullOrEmpty(paramDescription);

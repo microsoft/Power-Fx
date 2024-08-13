@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         public virtual bool SupportsFx2NL { get; } = false;
 
+        public virtual bool SkipDefaultPreHandleForNl2Fx { get; } = false;
+
         public virtual Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
         {
             throw new NotImplementedException();
