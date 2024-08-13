@@ -723,7 +723,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExInlineOptionNotAtStart = new ErrorResourceKey("ErrInvalidRegExInlineOptionNotAtStart");
         public static ErrorResourceKey ErrInvalidRegExBadOctal = new ErrorResourceKey("ErrInvalidRegExBadOctal");
         public static ErrorResourceKey ErrInvalidRegExBadCurly = new ErrorResourceKey("ErrInvalidRegExBadCurly");
+        public static ErrorResourceKey ErrInvalidRegExBadParen = new ErrorResourceKey("ErrInvalidRegExBadParen");
         public static ErrorResourceKey ErrInvalidRegExRepeatInCharClass = new ErrorResourceKey("ErrInvalidRegExRepeatInCharClass");
+        public static ErrorResourceKey ErrInvalidRegExRepeatedInlineOption = new ErrorResourceKey("ErrInvalidRegExRepeatedInlineOption");
         public static ErrorResourceKey ErrInvalidRegExBadQuantifier = new ErrorResourceKey("ErrInvalidRegExBadQuantifier");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
@@ -738,6 +740,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnopenedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnopenedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnclosedCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnclosedCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedCaptures = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedCaptures");
+        public static ErrorResourceKey ErrInvalidRegExNumberedCapturesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedCapturesDisabled");
+        public static ErrorResourceKey ErrInvalidRegExBadUnsupportedCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadUnsupportedCharacterClassSubtraction");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");

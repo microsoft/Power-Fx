@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Multiline", "m" },
                 { "FreeSpacing", "x" },
                 { "DotAll", "s" },
-                { "NumberedCapture", "N" }
+                { "NumberedCaptures", "N" }
             },
             canConcatenateStronglyTyped: true);
 

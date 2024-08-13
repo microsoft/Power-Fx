@@ -203,8 +203,10 @@ namespace Microsoft.PowerFx.Functions
             private string AlterNewlineMatching(string regex, RegexOptions options)
             {
                 var openCharacterClass = false;                       // are we defining a character class?
-                var freeFormMode = (options & System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace) != 0 || Regex.IsMatch(regex, @"\(\?[A-Za-wyz]*x");
-                var sb = new StringBuilder();
+                var freeSpacing = (options & System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-z-[x]]*x");
+                var multiline = (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-a-[m]]*m");
+                var dotAll = (options & System.Text.RegularExpressions.RegexOptions.Singleline) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-z-[s]]*s");
+                var alteredRegex = new StringBuilder();
 
                 for (int i = 0; i < regex.Length; i++)
                 {
@@ -212,55 +214,57 @@ namespace Microsoft.PowerFx.Functions
                     {
                         case '[':
                             openCharacterClass = true;
+                            alteredRegex.Append('[');
                             break;
+
                         case ']':
                             openCharacterClass = false;
+                            alteredRegex.Append(']');
                             break;
+
                         case '#':
-                            if (freeFormMode)
+                            if (freeSpacing)
                             {
                                 for (i++; i < regex.Length && regex[i] != '\r' && regex[i] != '\n'; i++)
                                 {
                                     // skip the comment characters until the next newline, in case it includes [ ] 
                                 }
                             }
+                            else
+                            {
+                                alteredRegex.Append('#');
+                            }
 
                             break;
+
                         case '\\':
-                            sb.Append("\\");
-                            i++;
+                            alteredRegex.Append("\\");
+                            if (++i < regex.Length)
+                            {
+                                alteredRegex.Append(regex[i]);
+                            }
+
                             break;
+
                         case '.':
-                            if (!openCharacterClass)
-                            {
-                                sb.Append(@"[^\n\r]");
-                                continue;
-                            }
-
+                            alteredRegex.Append(!openCharacterClass && !dotAll ? @"[^\n\r]" : ".");
                             break;
-                        case '^':
-                            if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
-                            {
-                                sb.Append(@"(?<=\A|\r\n|\n|\r)");
-                                continue;
-                            }
 
+                        case '^':
+                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\n|\r)" : "^");
                             break;
 
                         case '$':
-                            if (!openCharacterClass && (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0)
-                            {
-                                sb.Append(@"(?=\z|\r\n|\n|\r)");
-                                continue;
-                            }
+                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?=\z|\r\n|\n|\r)" : "$");
+                            break;
 
+                        default:
+                            alteredRegex.Append(regex[i]);
                             break;
                     }
-
-                    sb.Append(regex[i]);
                 }
 
-                return sb.ToString();
+                return alteredRegex.ToString();
             }
 
             public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)

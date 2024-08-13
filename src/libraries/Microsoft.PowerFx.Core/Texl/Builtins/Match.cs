@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -134,12 +135,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // One might think that the "\a" could have matched <goodEscape>, but it will match <badEscapeAlpha> first because it is first in the RE.
             // One might think that the "\(" could have matched <goodEscape>, but the double backslashes will be consumed first, which is why it is important
             // to gather all the matches in a linear scan from the beginning to the end.
-            var groupPunctuationRE = new Regex(
+            var tokenRE = new Regex(
                 @"
                     # leading backslash, escape sequences
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
                     (?<badOctal>\\0\d*)                              | # octal are not accepted (no XRegExp support, by design)
-                    \\(?<goodBackRefNum>\d+)                         | # numeric backreference
+                    \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedCaptures
                     (?<goodEscapeAlpha>\\
                            ([bBdDfnrsStwW]     |                       # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [pP]\{\w+\}        |                       # unicode character classes
@@ -160,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     \A\(\?(?<goodInlineOptions>[imsx]+)\)            |
                     (?<goodInlineComment>\(\?\#[^\)]*\))             | # inline comment
                     (?<goodLookaround>\(\?(=|!|<=|<!))               | # lookahead and lookbehind
-                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)]?)      | # inline options, including disable of options
+                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])     | # inline options, including disable of options
                     (?<badConditional>\(\?\()                        | # .NET conditional alternations are not supported
                     (?<badParen>\([\?\+\*\|])                        | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
@@ -179,46 +180,53 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<closeCapture>\))                              |
                     (?<openCharacterClass>\[)                        |
                     (?<closeCharacterClass>\])                       |
-                    (?<poundComment>\#)                              |
-                    (?<newline>[\r\n])                               |
-                    (?<remainingChars>.)
+                    (?<poundComment>\#)                              | # used in free spacing mode (to detect start of comment), ignored otherwise
+                    (?<newline>[\r\n])                               | # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<remainingChars>.)                               # used in free spacing mode (to detect repeats), ignored otherwise
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
-            int groupNumber = 0;
-            var groupStack = new Stack<string>();                 // stack of open groups, null is used for non capturing groups, for detecting if a named group is closed
-            var groupNames = new List<string>();                  // list of seen group names
-            var openComment = false;                              // there is an open end-of-line pound comment, only in freeFormMode
-            var freeSpacing = regexOptions.Contains("x");         // can also be set with inline mode modifier
-            var numberedCpature = regexOptions.Contains("N");     
+            int captureNumber = 0;                                  // last numbered capture encountered
+            var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
+            var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
+            var openComment = false;                                // there is an open end-of-line pound comment, only in freeFormMode
+            var freeSpacing = regexOptions.Contains("x");           // can also be set with inline mode modifier
+            var numberedCpature = regexOptions.Contains("N");       // can only be set here, no inline mode modifier
+            var openCharacterClass = false;                         // are we defining a character class?
+            List<char> characterClassRepeat = new List<char>();     // encountered character class characters, to detect repeats
 
-            var openCharacterClass = false;                       // are we defining a character class?
-            List<char> characterClassRepeat = new List<char>();
-
-            foreach (Match groupMatch in groupPunctuationRE.Matches(regexPattern))
+            foreach (Match token in tokenRE.Matches(regexPattern))
             {
-                if (groupMatch.Groups["newline"].Success)
+                if (token.Groups["newline"].Success)
                 {
                     openComment = false;
                 }
-                else if (groupMatch.Groups["poundComment"].Success)
+                else if (token.Groups["poundComment"].Success)
                 {
                     openComment = freeSpacing;
                 }
                 else if (!openComment)
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
-                    if (groupMatch.Groups["goodEscape"].Success || groupMatch.Groups["goodEscapeAlpha"].Success ||
-                        groupMatch.Groups["goodLookaround"].Success || groupMatch.Groups["goodInlineComment"].Success ||
-                        groupMatch.Groups["goodLimited"].Success)
+                    if (token.Groups["goodEscape"].Success || token.Groups["goodEscapeAlpha"].Success ||
+                        token.Groups["goodLookaround"].Success || token.Groups["goodInlineComment"].Success ||
+                        token.Groups["goodLimited"].Success)
                     {
                         // all is well, nothing to do
                     }
-                    else if (groupMatch.Groups["openCharacterClass"].Success)
+                    else if (token.Groups["openCharacterClass"].Success)
                     {
                         if (openCharacterClass)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket);
-                            return false;
+                            if (token.Index > 0 && regexPattern[token.Index - 1] == '-')
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadUnsupportedCharacterClassSubtraction, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 6) + "...");
+                                return false;
+                            }
+                            else
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket);
+                                return false;
+                            }
                         }
                         else
                         {
@@ -226,205 +234,215 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             characterClassRepeat = new List<char>();
                         }
                     }
-                    else if (groupMatch.Groups["closeCharacterClass"].Success)
+                    else if (token.Groups["closeCharacterClass"].Success)
                     {
                         openCharacterClass = false;
                     }
-                    else if (groupMatch.Groups["goodNamedCapture"].Success)
+                    else if (token.Groups["goodNamedCapture"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
                         {
                             if (numberedCpature)
                             {
-                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, groupMatch.Value);
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, token.Value);
                                 return false;
                             }
 
-                            if (groupNames.Contains(groupMatch.Groups["goodNamedCapture"].Value))
+                            if (captureNames.Contains(token.Groups["goodNamedCapture"].Value))
                             {
-                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists, groupMatch.Value);
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists, token.Value);
                                 return false;
                             }
 
-                            groupStack.Push(groupMatch.Groups["goodNamedCapture"].Value);
-                            groupNames.Add(groupMatch.Groups["goodNamedCapture"].Value);
+                            captureStack.Push(token.Groups["goodNamedCapture"].Value);
+                            captureNames.Add(token.Groups["goodNamedCapture"].Value);
                         }
                     }
-                    else if (groupMatch.Groups["goodNonCapture"].Success)
+                    else if (token.Groups["goodNonCapture"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
                         {
-                            groupStack.Push(null);
+                            captureStack.Push(null);
                         }
                     }
-                    else if (groupMatch.Groups["openCapture"].Success)
+                    else if (token.Groups["openCapture"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
                         {
                             if (!numberedCpature)
                             {
-                                var groupName = (++groupNumber).ToString(CultureInfo.InvariantCulture);
-
-                                groupStack.Push(groupName);
-                                groupNames.Add(groupName);
+                                captureNumber++;
+                                captureStack.Push(captureNumber.ToString(CultureInfo.InvariantCulture));
                             }
                         }
                     }
-                    else if (groupMatch.Groups["closeCapture"].Success)
+                    else if (token.Groups["closeCapture"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
                         {
-                            if (groupStack.Count == 0)
+                            if (captureStack.Count == 0)
                             {
                                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnopenedCaptureGroups);
                                 return false;
                             }
                             else
                             {
-                                groupStack.Pop();
+                                captureStack.Pop();
                             }
                         }
                     }
-                    else if (groupMatch.Groups["goodBackRefName"].Success)
+                    else if (token.Groups["goodBackRefName"].Success)
                     {
-                        var backRefName = groupMatch.Groups["goodBackRefName"].Value;
+                        var backRefName = token.Groups["goodBackRefName"].Value;
 
                         if (numberedCpature)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, token.Value);
                             return false;
                         }
 
                         // group isn't defined, or not defined yet
-                        if (!groupNames.Contains(backRefName))
+                        if (!captureNames.Contains(backRefName))
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, token.Value);
                             return false;
                         }
 
                         // group is not closed and thus self referencing
-                        if (groupStack.Contains(backRefName))
+                        if (captureStack.Contains(backRefName))
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, token.Value);
                             return false;
                         }
                     }
-                    else if (groupMatch.Groups["goodBackRefNumber"].Success)
+                    else if (token.Groups["goodBackRefNumber"].Success)
                     {
-                        var backRefNumber = groupMatch.Groups["goodBackRefNumber"].Value;
+                        var backRefNumber = Convert.ToInt32(token.Groups["goodBackRefNumber"].Value, CultureInfo.InvariantCulture);
 
                         if (!numberedCpature)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedCaptureDisabled, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedCapturesDisabled, token.Value);
                             return false;
                         }
 
-                        // group isn't defined, or not defined yet
-                        if (!groupNames.Contains(backRefNumber))
+                        // back ref number has not yet been defined
+                        if (backRefNumber < 1 || backRefNumber > captureNumber)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNotDefined, token.Value);
                             return false;
                         }
 
                         // group is not closed and thus self referencing
-                        if (groupStack.Contains(backRefNumber))
+                        if (captureStack.Contains(token.Groups["goodBackRefNumber"].Value))
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, groupMatch.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing, token.Value);
                             return false;
                         }
                     }
-                    else if (groupMatch.Groups["goodInlineOptions"].Success)
+                    else if (token.Groups["goodInlineOptions"].Success)
                     {
-                        if (groupMatch.Groups["goodInlineOptions"].Value.Contains("x"))
+                        if (Regex.IsMatch(token.Groups["goodInlineOptions"].Value, @"(?<char>.).*\k<char>"))
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatedInlineOption, token.Value);
+                            return false;
+                        }
+
+                        if (token.Groups["goodInlineOptions"].Value.Contains("x"))
                         {
                             freeSpacing = true;
                         }
                     }
-                    else if (groupMatch.Groups["goodQuantifiers"].Success || groupMatch.Groups["remainingChars"].Success)
+                    else if (token.Groups["goodQuantifiers"].Success || token.Groups["remainingChars"].Success)
                     {
                         if (openCharacterClass)
                         {
-                            foreach (char singleChar in groupMatch.Value)
+                            foreach (char singleChar in token.Value)
                             {
                                 if (characterClassRepeat.Contains(singleChar))
                                 {
                                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, singleChar);
+                                    return false;
                                 }
-                                else
+                                else if (singleChar != '-')
                                 {
                                     characterClassRepeat.Add(singleChar);
                                 }
                             }
                         }
                     }
-                    else if (groupMatch.Groups["badBackRefNum"].Success)
+                    else if (token.Groups["badBackRefNum"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, groupMatch.Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBackRefNumber, token.Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badNamedCaptureName"].Success)
+                    else if (token.Groups["badNamedCaptureName"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureName, groupMatch.Groups["badNamedCaptureName"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadNamedCaptureName, token.Groups["badNamedCaptureName"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badOctal"].Success)
+                    else if (token.Groups["badOctal"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOctal, groupMatch.Groups["badOctal"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadOctal, token.Groups["badOctal"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badBalancing"].Success)
+                    else if (token.Groups["badBalancing"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBalancing, groupMatch.Groups["badBalancing"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadBalancing, token.Groups["badBalancing"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badInlineOptions"].Success)
+                    else if (token.Groups["badInlineOptions"].Success)
                     {
-                        errors.EnsureError(regExNode, groupMatch.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions, groupMatch.Groups["badInlineOptions"].Value);
+                        errors.EnsureError(regExNode, token.Groups["badInlineOptions"].Index > 0 ? TexlStrings.ErrInvalidRegExInlineOptionNotAtStart : TexlStrings.ErrInvalidRegExBadInlineOptions, token.Groups["badInlineOptions"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badSingleQuoteNamedCapture"].Success)
+                    else if (token.Groups["badSingleQuoteNamedCapture"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture, groupMatch.Groups["badSingleQuoteNamedCapture"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadSingleQuoteNamedCapture, token.Groups["badSingleQuoteNamedCapture"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badConditional"].Success)
+                    else if (token.Groups["badConditional"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, groupMatch.Groups["badConditional"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, token.Groups["badConditional"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badCharacterClassEmpty"].Success)
+                    else if (token.Groups["badCharacterClassEmpty"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, groupMatch.Groups["badCharacterClassEmpty"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, token.Groups["badCharacterClassEmpty"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badEscapeAlpha"].Success)
+                    else if (token.Groups["badEscapeAlpha"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, groupMatch.Groups["badEscapeAlpha"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, token.Groups["badEscapeAlpha"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badQuantifier"].Success)
+                    else if (token.Groups["badQuantifier"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, groupMatch.Groups["badQuantifier"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, token.Groups["badQuantifier"].Value);
                         return false;
                     }
-                    else if (groupMatch.Groups["badCurly"].Success)
+                    else if (token.Groups["badCurly"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCurly, groupMatch.Groups["badCurly"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCurly, token.Groups["badCurly"].Value);
+                        return false;
+                    }
+                    else if (token.Groups["badParen"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadParen, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
                         return false;
                     }
                     else
                     {
-                        // This should never be hit. Good to have here in case one of the group names checked doesn't match the RE, in which case running tests would hit this.
+                        // This should never be hit. Here in case one of the names checked doesn't match the RE, in which case running tests would hit this.
                         throw new NotImplementedException("Unknown regular expression match");
                     }
                 }
             }
 
-            if (groupStack.Count > 0)
+            if (captureStack.Count > 0)
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
                 return false;

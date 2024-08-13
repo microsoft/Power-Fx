@@ -4385,7 +4385,15 @@
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".</value>
-    <comment>Error message indicating that the regular expression has literla curly braces.</comment>
+    <comment>Error message indicating that the regular expression has literal curly braces.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unsupported special group, found "{0}".</value>
+    <comment>Error message indicating that the regular expression that starts with a paren.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
+    <comment>Error message indicating that the regular expression includes more than one of the same option.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
@@ -4432,7 +4440,7 @@
     <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExRepeatInCharClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character appears more than once in character class, found "{0}".</value>
+    <value>Invalid regular expression: Character appears more than once in character class, found repeated "{0}".</value>
     <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadCharacterClassLiteralSquareBracket_ShortMessage" xml:space="preserve">
@@ -4450,6 +4458,18 @@
   <data name="ErrorResource_ErrInvalidRegExBadConditional_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Conditional alternation is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has conditionals.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedCaptures_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedCaptures enabled, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is mixing named and numbered captures.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNumberedCapturesDisabled_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;" and "\k&lt;name&gt;" or enable MatchOptions.NumberedCaptures, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is not enabled for numbered captures.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnsupportedCharacterClassSubtraction_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Character class subtraction is not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression is using character class subtraction and it is not supported.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>

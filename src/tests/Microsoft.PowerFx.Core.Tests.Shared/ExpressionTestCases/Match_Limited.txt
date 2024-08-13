@@ -40,7 +40,7 @@
 // Self referencing groups are disallowed
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
-Errors: Error 26-41: Invalid regular expression: Numbered back references are not supported, use named back references with "(?<name>)" and "\k<name>" instead, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
 Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -48,7 +48,7 @@ Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups
 // Backreferences without a group are disallowed
 
 >> Match( "hello howdy", "([hi]).*\1" )
-Errors: Error 22-34: Invalid regular expression: Numbered back references are not supported, use named back references with "(?<name>)" and "\k<name>" instead, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "([hi]).*\k<1>" )
 Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -57,7 +57,7 @@ Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defin
 {FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"}),first:"h"}
 
 >> Match( "hello howdy", "(?<first>[hi]).*\1" )
-Errors: Error 22-42: Invalid regular expression: Numbered back references are not supported, use named back references with "(?<name>)" and "\k<name>" instead, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<second>" )
 Errors: Error 22-50: Invalid regular expression: Capture group "\k<second>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -108,17 +108,17 @@ Blank()
 >> Match( "hello"&Char(10)&"howdy", "(?m)o$" )
 {FullMatch:"o",StartMatch:5,SubMatches:Table()}
 
->> Match( "hello"&Char(10)&"howdy", "(?s)hello.howdy" )
-{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+>> With( Match( "hello"&Char(10)&"howdy", "(?s)hello.howdy" ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
 
->> Match( "hello"&Char(13)&"howdy", "(?s)hello.howdy" )
-{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+>> With( Match( "hello"&Char(13)&"howdy", "(?s)hello.howdy" ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
 
 >> Match( "hello"&Char(13)&Char(10)&"howdy", "(?s)hello.howdy" )
-{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+Blank()
 
->> Match( "hello howdy", "(?x) hello \s howdy # comment" )
-{FullMatch:"o",StartMatch:5,SubMatches:Table()}
+>> Match( "hello, howdy", "(?x) llo , \s how # comment" )
+{FullMatch:"llo, how",StartMatch:3,SubMatches:Table()}
 
 // unsupported inline options
 
@@ -141,25 +141,25 @@ Errors: Error 33-43: Invalid regular expression: Inline options must appear at t
 Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?n)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?s)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?s)".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
 
 >> Match( "hello world", "(?x)o")
-Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?x)".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"o",StartMatch:5,SubMatches:Table()}
 
 >> Match( "hello world", "(?A)o")
 Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?A)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match ("hello world", "(?^)o")  // PCRE2
-Errors
+Errors: Error 22-29: Invalid regular expression: Unsupported special group, found "(?^)o".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match ("hello world", "(?xx)o")  // PCRE2
-Errors
+Errors: Error 22-30: Invalid regular expression: Repeated inline option, found "(?xx)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match ("hello world", "(?J)o")  // PCRE2
-Errors
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?J)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match ("hello world", "(?U)o")  // PCRE2
-Errors
+Errors: Error 22-29: Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "(?U)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // inline options overriding explicit options, conflicts?
 
@@ -224,7 +224,7 @@ Errors: Error 12-17: Invalid regular expression: Square bracket character classe
 // character class subtraction
 
 >> Match( "k", "[a-z-[b-c]]" )
-Errors: Error 12-25: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".
+Errors: Error 12-25: Invalid regular expression: Character class subtraction is not supported, found "-[b-c]...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // regular expression parsing
 
@@ -366,7 +366,7 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\T"
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\U".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test" & Char(11) & "bed", "\v" )
-Error 34-38: Invalid regular expression: Invalid escape code, found "\v".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 34-38: Invalid regular expression: Invalid escape code, found "\v".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "\V" )
 Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\V".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -561,6 +561,26 @@ Table({FullMatch:"1",StartMatch:1,SubMatches:Table()},{FullMatch:"2",StartMatch:
  c
  ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch) } )
 Table({Len:2,Match:" a"},{Len:2,Match:" b"},{Len:2,Match:" c"},{Len:1,Match:" "})
+
+// repeated characters in character class, used by intersection and future character class features, also would catch POSIX cases if wasn't already blocked by nested square brackets
+
+>> Match( "hello", "[a-z&&[k-m]]" )
+Errors: Error 16-30: Invalid regular expression: Character appears more than once in character class, found repeated "&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[a-z&&k-m]" )
+Errors: Error 16-28: Invalid regular expression: Character appears more than once in character class, found repeated "&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[a-hh-z]" )
+Errors: Error 16-26: Invalid regular expression: Character appears more than once in character class, found repeated "h".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "HellO", "[[:lower:]]" )
+Errors: Error 16-29: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[[:s:]]" )
+Errors: Error 16-25: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "hello", "[[=x=]]" )
+Errors: Error 16-25: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 
 
