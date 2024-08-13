@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -136,6 +137,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Setting an untyped object (padCell)
             DecimalValue result = (DecimalValue)engine.Eval(@"Set(Index(Index(padTable, 1), 1), 97);Index(Index(padTable, 1), 1) + 0", options: new ParserOptions() { AllowsSideEffects = true });
             Assert.Equal(97m, result.ToObject());
+        }
+
+        [Fact]
+        public void PadUntypedObjectMissingProperty()
+        {
+            var uo1 = new PadUntypedObject(GetDataTable());
+            var uo2 = new PadUntypedObject2(GetDataTable());
+
+            var uov1 = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo1);
+            var uov2 = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo2);
+
+            RecalcEngine engine = new RecalcEngine();
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable1", uov1);
+            engine.UpdateVariable("padTable2", uov2);
+
+            // PadUntypedObject does not override GetProperty. Returns blank if property is missing.
+            var result1 = engine.Eval(@"Index(padTable1, 1).Missing");
+            Assert.IsType<BlankValue>(result1);
+
+            // PadUntypedObject2 overrides GetProperty. Returns error if property is missing.
+            var result2 = engine.Eval(@"Index(padTable2, 1).Missing");
+            Assert.IsType<ErrorValue>(result2);
         }
 
         private DataTable GetDataTable()
@@ -561,6 +586,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             throw new CustomFunctionErrorException("Something went wrong.", ErrorKind.InvalidArgument);
+        }
+
+        public override FormulaValue GetProperty(string value, FormulaType returnType, Span span)
+        {
+            return new ErrorValue(IRContext.NotInSource(returnType), new ExpressionError() { Kind = ErrorKind.InvalidArgument });
         }
     }
     #endregion

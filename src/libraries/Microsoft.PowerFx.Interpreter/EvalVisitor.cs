@@ -557,21 +557,10 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
+                if (cov.Impl is UntypedObjectBase untypedObjectBase && cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
-                    if (cov.Impl.TryGetProperty(sv.Value, out var res))
-                    {
-                        if (res.Type == FormulaType.Blank)
-                        {
-                            return new BlankValue(node.IRContext);
-                        }
-
-                        return new UntypedObjectValue(node.IRContext, res);
-                    }
-                    else
-                    {
-                        return new BlankValue(node.IRContext);
-                    }
+                    // Passing Span in case host wants to return an error.
+                    return untypedObjectBase.GetProperty(sv.Value, node.IRContext.ResultType, node.IRContext.SourceContext);
                 }
                 else if (cov.Impl.Type == FormulaType.Blank)
                 {

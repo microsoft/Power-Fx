@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -100,6 +101,31 @@ namespace Microsoft.PowerFx.Types
         public abstract string GetUntypedNumber();
 
         public abstract bool TryGetProperty(string value, out IUntypedObject result);
+
+        /// <summary>
+        /// Get the property value of the untyped object.
+        /// Hosts should override this method in case a different return value is needed. For example, a host may want to return a ErrorValue in case of a missing property.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="returnType"></param>
+        /// <param name="span"></param>
+        /// <returns></returns>
+        public virtual FormulaValue GetProperty(string value, FormulaType returnType, Span span)
+        {
+            if (TryGetProperty(value, out var res))
+            {
+                if (res.Type == FormulaType.Blank)
+                {
+                    return new BlankValue(IRContext.NotInSource(returnType));
+                }
+
+                return new UntypedObjectValue(IRContext.NotInSource(returnType), res);
+            }
+            else
+            {
+                return new BlankValue(IRContext.NotInSource(returnType));
+            }
+        }
 
         public abstract bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
 
