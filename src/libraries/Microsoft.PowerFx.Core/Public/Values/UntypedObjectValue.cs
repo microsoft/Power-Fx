@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="returnType"></param>
         /// <param name="span"></param>
         /// <returns></returns>
-        public virtual FormulaValue GetProperty(string value, FormulaType returnType, Span span)
+        public virtual FormulaValue GetProperty(string value, FormulaType returnType)
         {
             if (TryGetProperty(value, out var res))
             {

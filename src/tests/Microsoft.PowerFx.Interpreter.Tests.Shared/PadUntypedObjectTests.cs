@@ -588,7 +588,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             throw new CustomFunctionErrorException("Something went wrong.", ErrorKind.InvalidArgument);
         }
 
-        public override FormulaValue GetProperty(string value, FormulaType returnType, Span span)
+        public override FormulaValue GetProperty(string value, FormulaType returnType)
         {
             return new ErrorValue(IRContext.NotInSource(returnType), new ExpressionError() { Kind = ErrorKind.InvalidArgument });
         }
