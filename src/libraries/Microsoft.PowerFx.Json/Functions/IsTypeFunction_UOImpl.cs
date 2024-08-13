@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var fv = FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
                 return BooleanValue.New(true);
             }
-            catch (Exception e)
+            catch
             {
                 return BooleanValue.New(false);
             }

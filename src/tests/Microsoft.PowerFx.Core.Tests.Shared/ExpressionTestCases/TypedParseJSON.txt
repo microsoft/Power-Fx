@@ -83,3 +83,15 @@ Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argum
 
 >> ParseJSON("{}", Type({a: Text, b: [Color]}))
 Errors: Error 20-21: Unsupported untyped/JSON conversion type 'Color' in argument.
+
+>> ParseJSON(If(1/0 > 1, "42"), Number)
+Error({Kind:ErrorKind.Div0})
+
+>> ParseJSON(Blank(), Number)
+Blank()
+
+>> ParseJSON("42", Blank())
+Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or type literal.
+
+>> ParseJSON("42", 1/0)
+Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or type literal.
