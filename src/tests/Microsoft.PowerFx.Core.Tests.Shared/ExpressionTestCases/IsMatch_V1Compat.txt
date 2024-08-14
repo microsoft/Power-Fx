@@ -1,0 +1,12 @@
+#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+// Dangerous Regex, will timeout (should take >2h on a fast CPU)
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$", MatchOptions.NumberedCaptures)
+Error({Kind:ErrorKind.Timeout})
+
+// but will finish quickly without catches
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^(<one>(<two>ab)*)+$")
+false
+
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
+false

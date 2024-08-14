@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx,CultureInfo("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult
+﻿#SETUP: RegEx,CultureInfo("en-US"),PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,SupportColumnNamesAsIdentifiers
 
 // Four types of letter I
 //        Dotted     Dotless

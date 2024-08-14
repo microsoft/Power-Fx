@@ -1,0 +1,5 @@
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// Dangerous Regex, will timeout (should take >2h on a fast CPU)
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
+Error({Kind:ErrorKind.Timeout})

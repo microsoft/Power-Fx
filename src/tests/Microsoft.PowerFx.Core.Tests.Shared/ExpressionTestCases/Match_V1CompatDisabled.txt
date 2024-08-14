@@ -1,4 +1,4 @@
-﻿#SETUP: RegEx
+﻿#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
 >> Match("Hello", "\w")
 {FullMatch:"H",StartMatch:1,SubMatches:Table()}

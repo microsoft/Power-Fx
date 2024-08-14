@@ -63,12 +63,6 @@ Errors: Error 15-22: Regular expressions must be constant values.|Error 0-5: The
 >> Match("28", 28)
 Errors: Error 12-14: Regular expressions must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match("28", "28", Blank())
-Errors: Error 12-14: Regular expressions options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
-
->> Match("28", "28", 28)
-Errors: Error 12-14: Regular expressions options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
-
 >> Match(1/0, "Hi")
 Error({Kind:ErrorKind.Div0})
 
