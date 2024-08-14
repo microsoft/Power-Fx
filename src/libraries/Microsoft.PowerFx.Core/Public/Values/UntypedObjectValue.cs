@@ -106,8 +106,7 @@ namespace Microsoft.PowerFx.Types
         /// Hosts should override this method in case a different return value is needed. For example, a host may want to return a ErrorValue in case of a missing property.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="returnType"></param>
-        /// <param name="span"></param>
+        /// <param name="returnType"></param>        
         /// <returns></returns>
         public virtual FormulaValue GetProperty(string value, FormulaType returnType)
         {
