@@ -100,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!context.Features.PowerFxV1CompatibilityRules)
             {
+                // only used for the following analysis and type creation, not modified in the IR
                 regularExpressionOptions += "N";
             }
 

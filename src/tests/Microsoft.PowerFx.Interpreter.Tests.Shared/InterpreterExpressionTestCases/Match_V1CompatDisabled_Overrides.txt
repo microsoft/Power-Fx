@@ -1,0 +1,39 @@
+#override: Match_V1CompatDisabled.txt
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+// The C# interpeter doesn't have a non-V1 implementation of the Match functions, so SubMatches will not appear in these results
+
+>> Match("Hello", "\w")
+{FullMatch:"H",StartMatch:1}
+
+// The following tests return Blank() because SubMatches is correctly handled by the front end (because V1 is disabled), but the interpreter doesn't handle it propery (because V1 is enabled)
+
+>> Concat(ForAll(Match( "Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").SubMatches, With({x:Value}, x)), Value, ", ")
+Blank()
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 1).Value
+Blank()
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 2).Value
+Blank()
+
+>> Concat(ForAll(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, With({x:Value}, x)), Value, ", ")
+Blank()
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches
+Blank()
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+{FullMatch:"Joe 164",StartMatch:1}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1}
+
+>> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+{FullMatch:"(555) 123-4567",StartMatch:1}
+
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1}

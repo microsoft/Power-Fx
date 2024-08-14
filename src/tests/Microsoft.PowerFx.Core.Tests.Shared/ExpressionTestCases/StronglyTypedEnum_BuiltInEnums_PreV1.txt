@@ -50,8 +50,8 @@
 >> Sort( [1,2,3], SortOrder.Descending )
 Table({Value:1},{Value:2},{Value:3})
 
->> Match( "info@contoso.com", Match.Email )
-{FullMatch:"info@contoso.com",StartMatch:1,SubMatches:Table()}
+>> Match( "info@contoso.com", Match.Email ).FullMatch
+"info@contoso.com"
 
 >> JSON( [1,2,3], JSONFormat.FlattenValueTables )
 "[1,2,3]"
@@ -88,8 +88,8 @@ Blank()
 >> Match( "hi", JSONFormat.IndentFour )
 Blank()
 
->> Match( "hi", "h.*", JSONFormat.IndentFour )
-{FullMatch:"hi",StartMatch:1,SubMatches:Table()}
+>> Match( "hi", "h.*", JSONFormat.IndentFour ).FullMatch
+"hi"
 
 >> Match( "hi", Match.Email, JSONFormat.IndentFour )
 Blank()
@@ -106,8 +106,8 @@ false
 >> MatchAll( "hi", JSONFormat.IndentFour )
 Table()
 
->> MatchAll( "hi", "h.*", JSONFormat.IndentFour )
-Table({FullMatch:"hi",StartMatch:1,SubMatches:Table()})
+>> MatchAll( "hi", "h.*", JSONFormat.IndentFour ).FullMatch
+"hi"
 
 >> MatchAll( "hi", Match.Email, JSONFormat.IndentFour )
 Table()
@@ -169,8 +169,8 @@ Table({Value:3},{Value:2},{Value:1})
 >> JSON( [1,2,3], "_" )
 "[1,2,3]"
 
->> Match( "howdy", "h", "c" )
-{FullMatch:"h",StartMatch:1,SubMatches:Table()}
+>> Match( "howdy", "h", "c" ).FullMatch
+"h"
 
 >> IsMatch("Foo", 17)
 Errors: Error 15-17: Regular expressions must be constant values.
@@ -374,11 +374,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Match (and friends) allows coercion from the backing kind for the regular expression
 
->> Match( "a3d4", Match.Digit )
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+>> Match( "a3d4", Match.Digit ).FullMatch
+"3"
 
->> Match( "a3d4", "\d")
-{FullMatch:"3",StartMatch:2,SubMatches:Table()}
+>> Match( "a3d4", "\d").FullMatch
+"3"
 
 >> IsMatch( "a3d4", Match.Digit )
 false
@@ -386,11 +386,11 @@ false
 >> IsMatch( "a3d4", "\d")
 false
 
->> MatchAll( "a3d4", Match.Digit )
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+>> ForAll( MatchAll( "a3d4", Match.Digit ), {fm:FullMatch} )
+Tale({fm:"3"},{fm:"4"})
 
->> MatchAll( "a3d4", "\d")
-Table({FullMatch:"3",StartMatch:2,SubMatches:Table()},{FullMatch:"4",StartMatch:4,SubMatches:Table()})
+>> ForAll( MatchAll( "a3d4", "\d"), {fm:FullMatch} )
+Table({fm:"3"},{fm:"4"})
 
 >> Match.Digit = "\d"
 true
@@ -484,8 +484,8 @@ Table({Value:1},{Value:2},{Value:3})
 "[{""Value"":1},{""Value"":2},{""Value"":3}]"
 
 // Since the Match supports CanCoerceBackingKind, any concatenation combination is supported
->> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour )
-{FullMatch:"334",StartMatch:1,SubMatches:Table()}
+>> Match( "334", Match.Digit & Match.Digit & JSONFormat.IndentFour ).FullMatch
+"334"
 
 // Concatenation can be allowed between members of hte option set and still retain strong typing with IExternalOptionSet.CanConcatenateStronglyTyped
 
@@ -506,17 +506,17 @@ Table({Value:1},{Value:2},{Value:3})
 
 // Concatenation can be allowed with text strings and still retain strong typing with IExternalOptionSet.CanCoerceBackingKind
 
->> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", Concatenate( Match.Digit, Match.Digit, "this is ok" ) ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", Match.Digit & Match.Digit & "this is ok" ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", "\d\dthis is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", "\d\dthis is ok" ).FullMatch
+"33this is ok"
 
->> Match( "33this is ok", "\d" & "\d" & "this is ok" )
-{FullMatch:"33this is ok",StartMatch:1,SubMatches:Table()}
+>> Match( "33this is ok", "\d" & "\d" & "this is ok" ).FullMatch
+"33this is ok"
 
 // Strongly typed concatenated results can be compared
 
@@ -572,17 +572,17 @@ true
 // 14. CanConcatenateStronglyTyped & CanCoerceFromBackingKind - An important combination, used by Match, allows strings and enums to be mixed
 //
 
->> Match( "a34d", Match.Digit & "\d" )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Match.Digit & "\d" ).FullMatch
+"34"
 
->> Match( "a34d", "\d" & Match.Digit )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", "\d" & Match.Digit ).FullMatch
+"34"
 
->> Match( "a34d", Concatenate( Match.Digit, "\d" ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Concatenate( Match.Digit, "\d" ) ).FullMatch
+"34"
 
->> Match( "a34d", Concatenate( "\d", Match.Digit ) )
-{FullMatch:"34",StartMatch:2,SubMatches:Table()}
+>> Match( "a34d", Concatenate( "\d", Match.Digit ) ).FullMatch
+"34"
 
 >> Text(Match.Digit) & Text(SortOrder.Ascending)
 "\dascending"
