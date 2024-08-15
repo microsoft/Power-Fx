@@ -1819,6 +1819,12 @@
     <value>type</value>
     <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a typeliteral or global named type.</comment>
   </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>The untyped value to check if it can be casted as specified type.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>The type that we wish to check the untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>
@@ -1842,17 +1848,17 @@
     <comment>Description of the 'AsType' function.</comment>
   </data>
   <data name="AsTypeUOArg1" xml:space="preserve">
-    <value>value</value>
+    <value>untypedValue</value>
     <comment>function_parameter - First argument of the AsType function - untyped value to be used as the new type.</comment>
   </data>
   <data name="AsTypeUOArg2" xml:space="preserve">
     <value>type</value>
     <comment>function_parameter - Second argument of the AsType function - The type that we wish the value to be used as.</comment>
   </data>
-  <data name="AboutAsTypeUO_value" xml:space="preserve">
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
     <value>The untyped value to cast as a new type.</value>
   </data>
-  <data name="AboutAsTypeUO_type" xml:space="preserve">
+  <data name="AboutAsType_type" xml:space="preserve">
     <value>The type that we wish the value to be used as.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
@@ -2711,14 +2717,14 @@
     <value>string</value>
     <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
   </data>
-  <data name="AboutTypedParseJSON_string" xml:space="preserve">
+  <data name="AboutParseJSON_string" xml:space="preserve">
     <value>A JSON string to convert into typed object.</value>
   </data>
   <data name="TypedParseJSONArg2" xml:space="preserve">
     <value>type</value>
     <comment>function_parameter - Second argument of the typed ParseJSON function overload - Inlined type definition or NamedType.</comment>
   </data>
-  <data name="AboutTypedParseJSON_type" xml:space="preserve">
+  <data name="AboutParseJSON_type" xml:space="preserve">
     <value>An inlined type definiton or a globally defined named type.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">

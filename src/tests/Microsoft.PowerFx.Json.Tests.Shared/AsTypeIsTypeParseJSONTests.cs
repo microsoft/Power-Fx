@@ -46,13 +46,14 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"17.29\"", "Number", 17.29D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"HelloWorld\"\"\"", "Text", "HelloWorld");
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01\"\"\"", "Date", new DateTime(2000, 1, 1));
-            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTime", new DateTime(2000, 1, 1, 0, 0, 1, 100));
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100\"\"\"", "DateTime", new DateTime(2000, 1, 1, 0, 0, 1, 100));
             CheckIsTypeAsTypeParseJSON(engine, "\"true\"", "Boolean", true);
             CheckIsTypeAsTypeParseJSON(engine, "\"false\"", "Boolean", false);
             CheckIsTypeAsTypeParseJSON(engine, "\"1234.56789\"", "Decimal", 1234.56789m);
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "T", 42D);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"Power Fx\"\"\"", "Type(Text)", "Power Fx", options: ParseType);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "DateTimeTZInd", new DateTime(2000, 1, 1, 0, 0, 1, 100));
+            CheckIsTypeAsTypeParseJSON(engine, "\"\"\"11:59:59\"\"\"", "Time", new TimeSpan(11, 59, 59));
 
             // Negative tests - Coercions not allowed
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Text", string.Empty, false);
@@ -63,7 +64,6 @@ namespace Microsoft.PowerFx.Json.Tests
 
             // Negative tests - types not supported in FromJSON converter
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"42\"", "None", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
-            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"2000-01-01T00:00:01.100Z\"\"\"", "Time", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"\"\"RED\"\"\"", "Color", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"abcd-efgh-1234-ijkl\"\"\"", "GUID", string.Empty, false);
             CheckIsTypeAsTypeParseJSON(engine, "\"\"\"foo/bar/uri\"\"\"", "Hyperlink", string.Empty, false);
@@ -156,6 +156,9 @@ namespace Microsoft.PowerFx.Json.Tests
 
             Assert.All(functionWithTypeArgs, f => Assert.Contains(f.Name, expectedFunctions));
             Assert.All(functionWithTypeArgs, f => Assert.Contains(Enumerable.Range(0, f.MaxArity), i => f.ArgIsType(i)));
+
+            var functionsWithoutTypeArgs = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => !f.HasTypeArgs);
+            Assert.All(functionsWithoutTypeArgs, f => Assert.DoesNotContain(Enumerable.Range(0, Math.Min(f.MaxArity, 5)), i => f.ArgIsType(i)));
         }
 
         private void CheckIsTypeAsTypeParseJSON(RecalcEngine engine, string json, string type, object expectedValue, bool isValid = true, ParserOptions options = null)

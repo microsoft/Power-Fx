@@ -4,6 +4,15 @@
 >> IsType(ParseJSON("987654321"), Number)
 true
 
+>> IsType(ParseJSON("98765.4321"), Decimal)
+true
+
+>> IsType(ParseJSON("-1.3"), Decimal)
+true
+
+>> IsType(ParseJSON("2e3"), Decimal)
+true
+
 >> IsType(ParseJSON("987654321"), Text)
 false
 
@@ -20,6 +29,21 @@ false
 true
 
 >> IsType(ParseJSON("""1984-01-01"""), Date)
+true
+
+>> IsType(ParseJSON("""1900-12-31"""), DateTime)
+true
+
+>> IsType(ParseJSON("""1900-12-31T23:59:59.999"""), Date)
+true
+
+>> IsType(ParseJSON("""11:59:59.999"""), Time)
+true
+
+>> IsType(ParseJSON("""00:00:00"""), Time)
+true
+
+>> IsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), DateTimeTZInd)
 true
 
 >> IsType(ParseJSON("""true"""), Boolean)
@@ -74,10 +98,10 @@ Errors: Error 28-29: Type literal declaration is invalid. The expression '5' can
 Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or type literal.
 
 >> IsType(ParseJSON("fasle"), Boolean)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 >> IsType(ParseJSON("true"), Void)
-Errors: Error 26-30: Invalid argument type (Void). Expecting a Error value instead.|Error 0-6: The function 'IsType' has some invalid arguments.
+Errors: Error 26-30: Unsupported untyped/JSON conversion type 'Void' in argument.
 
 >> IsType(ParseJSON("{""a"": 5}"), Type({a: Number}), "Hello")
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.

@@ -540,8 +540,8 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                // Identifiers don't have a type and type arguments need not be type checked
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }
@@ -576,7 +576,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }

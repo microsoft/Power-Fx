@@ -4,6 +4,15 @@
 >> AsType(ParseJSON("987654321"), Number)
 987654321
 
+>> AsType(ParseJSON("98765.4321"), Decimal)
+98765.4321
+
+>> AsType(ParseJSON("-1.3"), Decimal)
+-1.3
+
+>> AsType(ParseJSON("2e3"), Decimal)
+2000
+
 >> AsType(ParseJSON("98765.4321"), Number) > AsType(ParseJSON("98765.4320"), Number)
 true
 
@@ -14,7 +23,52 @@ true
 Date(1984,1,1)
 
 >> AsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime)
+DateTime(1900,12,31,15,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), DateTime)
 DateTime(1900,12,31,23,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999+00:00"""), DateTime)
+DateTime(1900,12,31,15,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999-08:00"""), DateTime)
+DateTime(1900,12,31,23,59,59,999)
+
+>> AsType(ParseJSON("""1900-12-31"""), DateTime)
+DateTime(1900,12,31,0,0,0,0)
+
+>> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), Date)
+Date(1900,12,31)
+
+>> AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), Date)
+Date(1900,12,31)
+
+>> AsType(ParseJSON("""11:59:59.999"""), Time)
+Time(11,59,59,999)
+
+>> AsType(ParseJSON("""00:00:00"""), Time)
+Time(0,0,0,0)
+
+>> AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), DateTimeTZInd)
+DateTime(1900,12,31,0,0,0,0)
+
+>> AsType(ParseJSON("""1900-12-31T00:00:00.000"""), DateTimeTZInd)
+DateTime(1900,12,31,8,0,0,0)
+
+>> AsType(ParseJSON("""1900-12-31T00:00:00.000-08:00"""), DateTimeTZInd)
+DateTime(1900,12,31,8,0,0,0)
+
+>> DateTimeValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), UntypedObject))
+DateTime(1900,12,30,16,0,0,0)
+
+>> DateValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), UntypedObject))
+Date(1900,12,30)
+
+>> Value(AsType(ParseJSON("42"), UntypedObject))
+42
+
+>> Value(AsType(ParseJSON("true"), UntypedObject))
+1
 
 >> If(AsType(ParseJSON("false"), Boolean), "MyFalse", "MyTrue")
 "MyTrue"
@@ -46,13 +100,13 @@ Table({a:Table({z:true},{z:false})},{a:Table({z:false},{z:true})})
 
 // Negative tests
 >> AsType(ParseJSON("5"), Text)
-Error({Kind:ErrorKind.InvalidJSON})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("""42"""), Number)
-Error({Kind:ErrorKind.InvalidJSON})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
-Error({Kind:ErrorKind.InvalidJSON})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("1"), 1)
 Errors: Error 23-24: Invalid argument '1'. Expected valid type name or type literal.
@@ -64,18 +118,21 @@ Errors: Error 28-29: Type literal declaration is invalid. The expression '5' can
 Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: Invalid argument 'UnKnown'. Expected valid type name or type literal.
 
 >> AsType(ParseJSON("fasle"), Boolean)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 >> AsType(ParseJSON("true"), Void)
-Errors: Error 26-30: Invalid argument type (Void). Expecting a Error value instead.|Error 0-6: The function 'AsType' has some invalid arguments.
+Errors: Error 26-30: Unsupported untyped/JSON conversion type 'Void' in argument.
 
 >> AsType(ParseJSON("{""a"": 5, ""b"":true}"), Type({a: Number}))
-Error({Kind:ErrorKind.InvalidJSON})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("{""a"": 5}"), Type({a: Number}), "Hello")
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> AsType(ParseJSON("true"), None)
+Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+
+>> AsType(ParseJSON("null"), None)
 Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
 
 >> AsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
