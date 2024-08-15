@@ -18,10 +18,10 @@ Table({FullMatch:"ell",StartMatch:2,p1:"e",p2:"l"})
 >> MatchAll("Hello", "(\w)l(\w)")
 Table({FullMatch:"ell",StartMatch:2})
 
->> MatchAll("Hello", "(\w)l(\w)", MatchOptions.NumberedCaptures)
+>> MatchAll("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches)
 Table({FullMatch:"ell",StartMatch:2,SubMatches:Table({Value:"e"},{Value:"l"})})
 
->> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedCaptures)
+>> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
 Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})},{FullMatch:"Sam 208",StartMatch:9,SubMatches:Table({Value:"Sam"},{Value:"208"})})
 
 >> MatchAll(Blank(), ".")

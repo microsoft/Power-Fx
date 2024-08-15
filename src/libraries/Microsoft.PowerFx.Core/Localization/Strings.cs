@@ -740,8 +740,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnopenedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnopenedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnclosedCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnclosedCharacterClass");
-        public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedCaptures = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedCaptures");
-        public static ErrorResourceKey ErrInvalidRegExNumberedCapturesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedCapturesDisabled");
+        public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedSubMatches");
+        public static ErrorResourceKey ErrInvalidRegExNumberedSubMatchesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedSubMatchesDisabled");
         public static ErrorResourceKey ErrInvalidRegExBadUnsupportedCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadUnsupportedCharacterClassSubtraction");
         public static ErrorResourceKey ErrInvalidRegExOpenParenInComment = new ErrorResourceKey("ErrInvalidRegExOpenParenInComment");
 

@@ -4459,12 +4459,12 @@
     <value>Invalid regular expression: Conditional alternation is not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has conditionals.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedCaptures_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedCaptures enabled, found "{0}".</value>
+  <data name="ErrorResource_ErrInvalidRegExMixingNamedAndNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "{0}".</value>
     <comment>Error message indicating that the regular expression is mixing named and numbered captures.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExNumberedCapturesDisabled_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;" and "\k&lt;name&gt;" or enable MatchOptions.NumberedCaptures, found "{0}".</value>
+  <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;" and "\k&lt;name&gt;" or enable MatchOptions.NumberedSubMatches, found "{0}".</value>
     <comment>Error message indicating that the regular expression is not enabled for numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadUnsupportedCharacterClassSubtraction_ShortMessage" xml:space="preserve">

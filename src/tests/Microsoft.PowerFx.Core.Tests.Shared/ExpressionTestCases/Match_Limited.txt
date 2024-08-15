@@ -40,7 +40,7 @@
 // Self referencing groups are disallowed
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
-Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
 Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -48,7 +48,7 @@ Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups
 // Backreferences without a group are disallowed
 
 >> Match( "hello howdy", "([hi]).*\1" )
-Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "([hi]).*\k<1>" )
 Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -56,13 +56,13 @@ Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defin
 >> Match( "hello howdy", "(?<first>[hi]).*\k<first>" )
 {FullMatch:"hello h",StartMatch:1,first:"h"}
 
->> Match( "hello howdy", "(?<first>[hi]).*\k<first>", MatchOptions.NumberedCaptures )
-Errors: Error 22-49: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedCaptures enabled, found "(?<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "hello howdy", "(?<first>[hi]).*\k<first>", MatchOptions.NumberedSubMatches )
+Errors: Error 22-49: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "(?<first>[hi]).*\1" )
-Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "hello howdy", "([hi]).*\1", MatchOptions.NumberedCaptures )
+>> Match( "hello howdy", "([hi]).*\1", MatchOptions.NumberedSubMatches )
 {FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<second>" )
@@ -72,9 +72,9 @@ Errors: Error 22-50: Invalid regular expression: Capture group "\k<second>" not 
 {FullMatch:"llo worl",StartMatch:3,eleven:"l"}
 
 >> Match( "hello world", "(((((((((((l))))))))))).*\11")  // 11 parens
-Errors: Error 22-52: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\11".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-52: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\11".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "hello world", "(((((((((((l))))))))))).*\11", MatchOptions.NumberedCaptures)  // 11 parens
+>> Match( "hello world", "(((((((((((l))))))))))).*\11", MatchOptions.NumberedSubMatches)  // 11 parens
 {FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
 
 >> Match( "hello world", "(((((((((((?<eleven>l)))))))))).*\k<eleven>")   // unclosed 11th paren
@@ -90,15 +90,15 @@ Errors: Error 22-74: Invalid regular expression: Self-referencing capture groups
 {FullMatch:"llo worl",StartMatch:3,a:"l",b:"l",c:"l",d:"l",e:"l",f:"l",g:"l",h:"l",i:"l",j:"l"}
 
 >> Match( "hello world", "(((((((((((l))))))))))).*\1")   // 11 parens
-Errors: Error 22-51: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedCaptures, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-51: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "hello world", "(((((((((((l))))))))))).*\1", MatchOptions.NumberedCaptures)   // 11 parens
+>> Match( "hello world", "(((((((((((l))))))))))).*\1", MatchOptions.NumberedSubMatches)   // 11 parens
 {FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
 
 >> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(?<hundredone>l)" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<hundredone>" )
 {FullMatch:"llo worl",StartMatch:3,hundredone:"l"}
 
->> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(l)" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\101", MatchOptions.NumberedCaptures )
+>> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(l)" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\101", MatchOptions.NumberedSubMatches )
 {FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"},{Value:"l"})}
 
 >> Match( "hello world", "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "((((((((((" & "(?<hundredone>l"  & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & "))))))))))" & ".*\k<hundredone>" ) // missing paren
@@ -110,16 +110,16 @@ Errors: Error 341-342: Invalid regular expression: Unclosed groups, too few clos
 >> Match( "hello world", "(((())(())(())(((((((())))))))))()(?<letter>l)()\k<letter>")
 {FullMatch:"ll",StartMatch:3,letter:"l"}
 
->> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(?<hundredone>l)" & ".*\k<hundredone>", MatchOptions.NumberedCaptures )
-Errors: Error 491-492: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedCaptures enabled, found "(?<hundredone>".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(?<hundredone>l)" & ".*\k<hundredone>", MatchOptions.NumberedSubMatches )
+Errors: Error 491-492: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<hundredone>".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "hello world", "(((())(())(())(((((((())))))))))()(?<letter>l)()\k<letter>", MatchOptions.NumberedCaptures)
-Errors: Error 22-82: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedCaptures enabled, found "(?<letter>".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "hello world", "(((())(())(())(((((((())))))))))()(?<letter>l)()\k<letter>", MatchOptions.NumberedSubMatches)
+Errors: Error 22-82: Invalid regular expression: Named captures cannot be used with MatchOptions.NumberedSubMatches enabled, found "(?<letter>".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(l)" & ".*\101", MatchOptions.NumberedCaptures )
+>> Match( "hello world", "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)(z*)" & "(l)" & ".*\101", MatchOptions.NumberedSubMatches )
 {FullMatch:"llo worl",StartMatch:3,SubMatches:Table({Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:"l"})} 
 
->> Match( "hello world", "(((())(())(())(((((((())))))))))()(l)()\18", MatchOptions.NumberedCaptures)
+>> Match( "hello world", "(((())(())(())(((((((())))))))))()(l)()\18", MatchOptions.NumberedSubMatches)
 {FullMatch:"ll",StartMatch:3,SubMatches:Table({Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:""},{Value:"l"},{Value:""})}
 
 // Octal characters are not allowed

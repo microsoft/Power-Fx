@@ -3,6 +3,6 @@
 
 // The C# interpeter doesn't have a non-V1 implementation of the Match functions, so SubMatches will not appear in these results
 
-// Dangerous Regex, will timeout (should take >2h on a fast CPU) - but only with Pre-V1 or MatchOptions.NumberedCaptures
+// Dangerous Regex, will timeout (should take >2h on a fast CPU) - but only with Pre-V1 or MatchOptions.NumberedSubMatches
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 false
