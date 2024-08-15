@@ -40,11 +40,11 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
-        public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
+        public override bool IsAsync => _binding.IsAsync(UdfBody);
 
-        public bool IsPageable => _binding?.IsPageable(_binding.Top) ?? false;
+        public bool IsPageable => _binding.IsPageable(_binding.Top);
 
-        public bool IsDelegatable => _binding?.IsDelegatable(_binding.Top) ?? false;
+        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
