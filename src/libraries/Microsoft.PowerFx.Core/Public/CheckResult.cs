@@ -15,7 +15,6 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types.TypeCheckers;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -139,7 +138,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        // Set the default culture for localizing error messages. 
+        // Set the default culture for localizing error messages and intellisense suggestions. 
         public CheckResult SetDefaultErrorCulture(CultureInfo culture)
         {
             VerifyEngine();
@@ -409,7 +408,7 @@ namespace Microsoft.PowerFx
 
             var expression = parseResult.Text;
             var culture = parseResult.Options.Culture;
-            var formula = new Formula(expression, culture);
+            var formula = new Formula(expression, culture, intellisenseLocale: _defaultErrorCulture);
             formula.ApplyParse(parseResult);
 
             return formula;

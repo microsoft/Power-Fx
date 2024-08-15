@@ -16,30 +16,30 @@ namespace Microsoft.PowerFx.Connectors
 
         private string _uriPrefix;
 
-        internal DatasetMetadata DatasetMetadata { get; private set; }
+        public DatasetMetadata DatasetMetadata { get; private set; }
 
         public CdpDataSource(string dataset)
         {
             DatasetName = dataset ?? throw new ArgumentNullException(nameof(dataset));
         }
 
-        internal async Task GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public static async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
-            _uriPrefix = uriPrefix;
-
-            string uri = (_uriPrefix ?? string.Empty)
+            string uri = (uriPrefix ?? string.Empty)
                 + (uriPrefix.Contains("/sql/") ? "/v2" : string.Empty)
                 + $"/$metadata.json/datasets";
 
-            DatasetMetadata = await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);
+            return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
         }
 
         public async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             if (DatasetMetadata == null)
             {
-                await GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
+                DatasetMetadata = await GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
             }
+
+            _uriPrefix = uriPrefix;
 
             string uri = (_uriPrefix ?? string.Empty)
                 + (uriPrefix.Contains("/sql/") ? "/v2" : string.Empty)

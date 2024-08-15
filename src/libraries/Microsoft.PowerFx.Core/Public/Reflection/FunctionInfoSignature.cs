@@ -58,9 +58,7 @@ namespace Microsoft.PowerFx
 
                 string invariantParamName = GetInvariantParameterName(p);
 
-                // We should allow passing in culture to get the help text. 
-                // https://github.com/microsoft/Power-Fx/issues/2216
-                _parent._fnc.TryGetParamDescription(invariantParamName, out var description);
+                _parent._fnc.TryGetParamDescription(invariantParamName, out var description, localeName);
 
                 result.Add(new ParameterInfoSignature
                 {
