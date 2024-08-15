@@ -48,6 +48,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+            Contracts.Assert(binding.GetInfo(callNode).Function is not UserDefinedFunction udf || udf.Binding != null);
+
             return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
         }
 

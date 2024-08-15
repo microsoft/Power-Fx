@@ -906,6 +906,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
+            Contracts.Assert(binding.GetInfo(callNode).Function is not UserDefinedFunction udf || udf.Binding != null);
 
             return IsAsync || IsServerDelegatable(callNode, binding);
         }
@@ -929,6 +930,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
+            Contracts.Assert(binding.GetInfo(callNode).Function is not UserDefinedFunction udf || udf.Binding != null);
 
             return binding.IsDelegatable(callNode) || IsServerDelegatable(callNode, binding);
         }
