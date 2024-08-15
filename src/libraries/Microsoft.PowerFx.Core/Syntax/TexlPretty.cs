@@ -508,6 +508,43 @@ namespace Microsoft.PowerFx.Syntax
             return new Regex(@"\n +(\n +)").Replace(preRegex, (Match match) => match.Groups[1].Value);
         }
 
+        public static string UserDefinitionsFormat(ParseUserDefinitionResult result)
+        {
+            Contracts.AssertValue(result);
+
+            string pretty = string.Empty;
+
+            foreach ((var index, var userDefinitionType, var ident, var script) in result.Indices)
+            {
+                PrettyPrintVisitor visitor2;
+                switch (userDefinitionType)
+                {
+                    case UserDefinitionType.NamedFormula:
+                        var nf = result.NamedFormulas.First(nf => nf.Ident == ident);
+                        visitor2 = new PrettyPrintVisitor(script);
+
+                        pretty += string.Concat(nf.Formula.ParseTree.Accept(visitor2, new Context(0)));
+                        break;
+                    case UserDefinitionType.UDF:
+                        var udf = result.UDFs.First(udf => udf.Ident == ident);
+                        visitor2 = new PrettyPrintVisitor(script);
+
+                        pretty += string.Concat(udf.Body.Accept(visitor2, new Context(0)));
+                        break;
+                    case UserDefinitionType.DefinedType:
+                        var type = result.DefinedTypes.First(type => type.Ident == ident);
+                        visitor2 = new PrettyPrintVisitor(script);
+
+                        pretty += string.Concat(type.Type.Accept(visitor2, new Context(0)));
+                        break;
+                    default:
+                        continue;
+                }
+            }
+
+            return pretty;
+        }
+
         private LazyList<string> CommentsOf(SourceList list)
         {
             if (list == null)

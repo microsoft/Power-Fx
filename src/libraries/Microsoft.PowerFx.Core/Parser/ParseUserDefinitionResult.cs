@@ -20,14 +20,20 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal IEnumerable<CommentToken> Comments { get; }
 
+        internal IEnumerable<(int, UserDefinitionType, IdentToken, string)> Indices { get; }
+
         internal bool HasErrors { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments)
+        public TexlNode Root { get; }
+
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, TexlNode root = null, IEnumerable<(int, UserDefinitionType, IdentToken, string)> indices = null)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
             DefinedTypes = definedTypes;
             Comments = comments;
+            Root = root;
+            Indices = indices;
 
             if (errors?.Any() ?? false)
             {
