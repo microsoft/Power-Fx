@@ -23,6 +23,21 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
+    // IsMatch(text:s, regular_expression:s, [options:s])
+    internal class IsMatchFunction : BaseMatchFunction
+    {
+        public IsMatchFunction()
+            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2 };
+            yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2, TexlStrings.IsMatchArg3 };
+        }
+    }
+
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
@@ -51,12 +66,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexCache)
+        public override bool UseParentScopeForArgumentSuggestions => true;
+
+        // public override bool HasPreciseErrors => true;
+
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexCache = null)
             : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
         {
-            _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
-            _regexTypeCache = regexCache.Cache;
-            _regexCacheSize = regexCache.CacheSize;
+            if (regexCache != null)
+            {
+                _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
+                _regexTypeCache = regexCache.Cache;
+                _regexCacheSize = regexCache.CacheSize;
+            }
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -68,7 +90,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<string> GetRequiredEnumNames()
         {
             return new List<string>() { LanguageConstants.MatchEnumString, LanguageConstants.MatchOptionsEnumString };
-        }       
+        }
+
+        public override bool HasSuggestionsForParam(int index)
+        {
+            Contracts.Assert(index >= 0);
+
+            return index <= 2;
+        }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
@@ -80,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsRecord || returnType.IsTable);
+            Contracts.Assert(returnType.IsRecord || returnType.IsTable || returnType == DType.Boolean);
 
             string regularExpressionOptions = string.Empty;
             var regExNode = args[1];
@@ -106,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return fValid && 
                     (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, errors)) &&
-                    TryCreateReturnType(regExNode, regularExpression, regularExpressionOptions, errors, ref returnType);
+                    (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, regularExpressionOptions, errors, ref returnType));
         }
 
         // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.

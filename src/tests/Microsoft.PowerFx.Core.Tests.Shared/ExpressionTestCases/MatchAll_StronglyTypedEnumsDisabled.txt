@@ -1,4 +1,4 @@
 ﻿#SETUP: RegEx,disable:StronglyTypedBuiltinEnums
 
->> First( MatchAll("Hello", "Hello", "") ).FullMatch
-"Hello"
+>> ForAll( MatchAll("Helloofammasdfooerf", "(?<r>\w)\k<r>", ""), {fm:FullMatch} )
+Table({fm:"ll"},{fm:"oo"},{fm:"mm"},{fm:"oo"})

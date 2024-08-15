@@ -106,8 +106,8 @@ false
 >> MatchAll( "hi", JSONFormat.IndentFour )
 Table()
 
->> MatchAll( "hi", "h.*", JSONFormat.IndentFour ).FullMatch
-"hi"
+>> ForAll( MatchAll( "hiha", "h", JSONFormat.IndentFour ), {fm:FullMatch, sm:StartMatch} )
+Table({fm:"h",sm:1},{fm:"h",sm:3})
 
 >> MatchAll( "hi", Match.Email, JSONFormat.IndentFour )
 Table()
@@ -387,7 +387,7 @@ false
 false
 
 >> ForAll( MatchAll( "a3d4", Match.Digit ), {fm:FullMatch} )
-Tale({fm:"3"},{fm:"4"})
+Table({fm:"3"},{fm:"4"})
 
 >> ForAll( MatchAll( "a3d4", "\d"), {fm:FullMatch} )
 Table({fm:"3"},{fm:"4"})

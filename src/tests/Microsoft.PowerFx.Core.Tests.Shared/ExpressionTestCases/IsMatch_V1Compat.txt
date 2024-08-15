@@ -10,3 +10,6 @@ false
 
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
 false
+
+>> IsMatch("Foo", "J(")
+Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.

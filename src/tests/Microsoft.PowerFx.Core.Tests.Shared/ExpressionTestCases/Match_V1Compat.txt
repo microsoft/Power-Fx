@@ -3,22 +3,22 @@
 >> Match("Hello", "\w")
 {FullMatch:"H",StartMatch:1}
 
->> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedCaptures).SubMatches, 1).Value
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 1).Value
 "e"
 
->> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedCaptures).SubMatches, 2).Value
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 2).Value
 "l"
 
->> Concat(ForAll(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedCaptures).SubMatches, With({x:Value}, x)), Value, ", ")
+>> Concat(ForAll(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, With({x:Value}, x)), Value, ", ")
 "e, l"
 
->> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedCaptures).SubMatches
+>> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches
 Table({Value:"e"},{Value:"l"})
 
 >> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete)
 Blank()
 
->> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedCaptures)
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
 {FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
 
 >> Match("JohnDoe@microsoft.com", Match.Email)
