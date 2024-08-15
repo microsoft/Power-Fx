@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
-            Contracts.Assert(binding.GetInfo(callNode).Function is not UserDefinedFunction udf || udf.Binding != null);
+            Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
 
             return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
         }
