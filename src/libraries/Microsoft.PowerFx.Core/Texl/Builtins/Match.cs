@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     # leading backslash, escape sequences
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
                     (?<badOctal>\\0\d*)                              | # octal are not accepted (no XRegExp support, by design)
-                    \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedCaptures
+                    \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
                     (?<goodEscapeAlpha>\\
                            ([bBdDfnrsStwW]     |                       # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [pP]\{\w+\}        |                       # unicode character classes
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             if (numberedCpature)
                             {
-                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, token.Value);
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches, token.Value);
                                 return false;
                             }
 
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (numberedCpature)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedCaptures, token.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches, token.Value);
                             return false;
                         }
 
@@ -364,7 +364,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (!numberedCpature)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedCapturesDisabled, token.Value);
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled, token.Value);
                             return false;
                         }
 
