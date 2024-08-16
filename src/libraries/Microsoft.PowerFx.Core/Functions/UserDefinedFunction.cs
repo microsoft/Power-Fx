@@ -70,13 +70,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
         }
 
-        public TexlBinding Binding => _binding;
-
-        public bool TryGetExternalDataSource(out IExternalDataSource dataSource)
-        {
-            return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>
