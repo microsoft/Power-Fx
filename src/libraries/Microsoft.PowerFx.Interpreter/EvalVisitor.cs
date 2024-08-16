@@ -559,6 +559,11 @@ namespace Microsoft.PowerFx
             {
                 if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
+                    if (cov.Impl is UntypedObjectBase untypedObjectBase)
+                    {
+                        return untypedObjectBase.GetProperty(sv.Value, node.IRContext.ResultType);
+                    }
+
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {
                         if (res.Type == FormulaType.Blank)
