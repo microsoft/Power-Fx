@@ -13,9 +13,7 @@ namespace Microsoft.PowerFx.Core.Utils
 {
     internal class JSONFunctionUtils
     {
-        private static readonly FormulaValueJsonSerializerSettings DefaultFormulaValueSerializerSettings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false, ResultTimeZone = TimeZoneInfo.Local };
-
-        public static FormulaValue ConvertUnTypedObjectToFormulaValue(IRContext irContext, FormulaValue input, StringValue typeString)
+        public static FormulaValue ConvertUntypedObjectToFormulaValue(IRContext irContext, FormulaValue input, StringValue typeString, TimeZoneInfo timeZoneInfo)
         {
             if (input is BlankValue || input is ErrorValue)
             {
@@ -37,10 +35,12 @@ namespace Microsoft.PowerFx.Core.Utils
             var uo = untypedObjectValue.Impl;
             var jsElement = ((JsonUntypedObject)uo)._element;
 
-            return FormulaValueJSON.FromJson(jsElement, DefaultFormulaValueSerializerSettings, FormulaType.Build(dtype));
+            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false, ResultTimeZone = timeZoneInfo };
+
+            return FormulaValueJSON.FromJson(jsElement, settings, FormulaType.Build(dtype));
         }
 
-        public static FormulaValue ConvertJSONStringToFormulaValue(IRContext irContext, FormulaValue input, StringValue typeString)
+        public static FormulaValue ConvertJSONStringToFormulaValue(IRContext irContext, FormulaValue input, StringValue typeString, TimeZoneInfo timeZoneInfo)
         {
             if (input is BlankValue || input is ErrorValue)
             {
@@ -69,8 +69,9 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             var json = ((StringValue)input).Value;
+            var settings = new FormulaValueJsonSerializerSettings { AllowUnknownRecordFields = false, ResultTimeZone = timeZoneInfo };
 
-            return FormulaValueJSON.FromJson(json, DefaultFormulaValueSerializerSettings, FormulaType.Build(dtype));
+            return FormulaValueJSON.FromJson(json, settings, FormulaType.Build(dtype));
         }
     }
 }

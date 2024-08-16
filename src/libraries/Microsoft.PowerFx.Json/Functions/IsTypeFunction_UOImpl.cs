@@ -13,9 +13,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class IsTypeFunction_UOImpl : IsTypeFunction_UO, IAsyncTexlFunction
+    internal class IsTypeFunction_UOImpl : IsTypeFunction_UO, IAsyncTexlFunction4
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType ft, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Contracts.Assert(args.Length == 2);
 
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             try 
             {
-                var fv = JSONFunctionUtils.ConvertUnTypedObjectToFormulaValue(irContext, args[0], typeString);
+                var fv = JSONFunctionUtils.ConvertUntypedObjectToFormulaValue(irContext, args[0], typeString, timezoneInfo);
                 if (fv is BlankValue || fv is ErrorValue)
                 {
                     return fv;

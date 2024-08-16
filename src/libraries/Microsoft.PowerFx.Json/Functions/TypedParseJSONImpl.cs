@@ -13,16 +13,16 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class TypedParseJSONFunctionImpl : TypedParseJSONFunction, IAsyncTexlFunction
+    internal class TypedParseJSONFunctionImpl : TypedParseJSONFunction, IAsyncTexlFunction4
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType ft, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Contracts.Assert(args.Length == 2);
 
-            var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+            var irContext = IRContext.NotInSource(ft);
             var typeString = (StringValue)args[1];
 
-            return JSONFunctionUtils.ConvertJSONStringToFormulaValue(irContext, args[0], typeString);
+            return JSONFunctionUtils.ConvertJSONStringToFormulaValue(irContext, args[0], typeString, timezoneInfo);
         }
     }
 }
