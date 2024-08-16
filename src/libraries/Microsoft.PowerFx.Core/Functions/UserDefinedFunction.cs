@@ -40,14 +40,18 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
-        public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
+        public override bool IsAsync => _binding.IsAsync(UdfBody);
 
-        public bool IsPageable => _binding?.IsPageable(_binding.Top) ?? false;
+        public bool IsPageable => _binding.IsPageable(_binding.Top);
 
-        public bool IsDelegatable => _binding?.IsDelegatable(_binding.Top) ?? false;
+        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+            Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
+
             return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
         }
 
@@ -58,6 +62,13 @@ namespace Microsoft.PowerFx.Core.Functions
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
+
+        public TexlBinding Binding => _binding;
+
+        public bool TryGetExternalDataSource(out IExternalDataSource dataSource)
+        {
+            return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
+        }
 
         public TexlBinding Binding => _binding;
 
