@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var openCharacterClass = false;                       // are we defining a character class?
                 var freeSpacing = (options & System.Text.RegularExpressions.RegexOptions.IgnorePatternWhitespace) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-z-[x]]*x");
-                var multiline = (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-a-[m]]*m");
+                var multiline = (options & System.Text.RegularExpressions.RegexOptions.Multiline) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-z-[m]]*m");
                 var dotAll = (options & System.Text.RegularExpressions.RegexOptions.Singleline) != 0 || Regex.IsMatch(regex, @"^\(\?[A-Za-z-[s]]*s");
                 var alteredRegex = new StringBuilder();
 
@@ -250,15 +250,15 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         case '.':
-                            alteredRegex.Append(!openCharacterClass && !dotAll ? @"[^\n\r]" : ".");
+                            alteredRegex.Append(!openCharacterClass && !dotAll ? @"[^\r\n]" : ".");
                             break;
 
                         case '^':
-                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\n|\r)" : "^");
+                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
                             break;
 
                         case '$':
-                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?=\z|\r\n|\n|\r)" : "$");
+                            alteredRegex.Append(openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)"));
                             break;
 
                         default:
@@ -336,7 +336,12 @@ namespace Microsoft.PowerFx.Functions
                     regularExpression += "$";
                 }
 
-                if (!matchOptions.Contains("N"))
+                if (matchOptions.Contains("s"))
+                {
+                    regOptions |= System.Text.RegularExpressions.RegexOptions.Singleline;
+                }
+
+                if (!matchOptions.Contains("N")) // lack of NumberedSubMatches turns on ExplicitCapture for higher performance
                 {
                     regOptions |= System.Text.RegularExpressions.RegexOptions.ExplicitCapture;
                 }

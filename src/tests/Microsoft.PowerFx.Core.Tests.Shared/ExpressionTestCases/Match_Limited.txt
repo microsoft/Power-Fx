@@ -529,10 +529,10 @@ Errors: Error 15-31: Invalid regular expression: Capture group "\k<a>" not defin
 Blank()
 
 >> AddColumns( Match( "test" & Char(13), "^test$" ), len, Len(FullMatch) )
-Blank()
+{FullMatch:"test",StartMatch:1,len:4}
 
 >> AddColumns( Match( "test" & Char(13) & Char(10), "^test$" ), len, Len(FullMatch) )
-Blank()
+{FullMatch:"test",StartMatch:1,len:4}
 
 // .NET treats dot as [^\n], XRegExp and JavaScript use [^\n\r\u2028\u2029]
 
@@ -549,6 +549,40 @@ Blank()
 {StartMatch:1}
 
 >> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t" ), FullMatch )
+{StartMatch:1}
+
+// Inline DotAll
+
+>> DropColumns( Match( "te" & " " & "t", "(?s)te.t" ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(10) & "t", "(?s)te.t" ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(13) & "t", "(?s)te.t" ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "(?s)te.t" ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "(?s)te.t" ), FullMatch )
+{StartMatch:1}
+
+// Option DotAll
+
+>> DropColumns( Match( "te" & " " & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(10) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & Char(13) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2028")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
+{StartMatch:1}
+
+>> DropColumns( Match( "te" & UniChar(Hex2Dec("2029")) & "t", "te.t", MatchOptions.DotAll ), FullMatch )
 {StartMatch:1}
 
 // $ end anchor, multiline, and newline characters
@@ -617,3 +651,207 @@ Errors: Error 16-25: Invalid regular expression: Square bracket character classe
 
 >> Match( "hello", "[[=x=]]" )
 Errors: Error 16-25: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// spaces
+
+>> IsMatch( "h" & "a" & "d", "h\sd") // control
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0020")) & "d", "h\sd")  // " "
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000d")) & "d", "h\sd")  // \r
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000c")) & "d", "h\sd")  // \f
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000a")) & "d", "h\sd")  // \n
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0009")) & "d", "h\sd")  // \t
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000b")) & "d", "h\sd")  // \v
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0085")) & "d", "h\sd")  // \x85, not in ECMAScript
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("1680")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2000")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2001")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2002")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2003")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2004")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2005")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2006")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2007")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2008")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2009")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("200a")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("202f")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("205f")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("3000")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2028")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2029")) & "d", "h\sd")
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("feff")) & "d", "h\sd") // ECMAScript
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("00a0")) & "d", "h\sd")
+true
+
+// non-space
+
+>> IsMatch( "h" & "a" & "d", "h\Sd") // control
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0020")) & "d", "h\Sd")  // " "
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000d")) & "d", "h\Sd")  // \r
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000c")) & "d", "h\Sd")  // \f
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000a")) & "d", "h\Sd")  // \n
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0009")) & "d", "h\Sd")  // \t
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("000b")) & "d", "h\Sd")  // \v
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("0085")) & "d", "h\Sd")  // \x85, not in ECMAScript
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("1680")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2000")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2001")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2002")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2003")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2004")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2005")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2006")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2007")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2008")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2009")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("200a")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("202f")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("205f")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("3000")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2028")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("2029")) & "d", "h\Sd")
+false
+
+>> IsMatch( "h" & UniChar(Hex2Dec("feff")) & "d", "h\Sd") // ECMAScript
+true
+
+>> IsMatch( "h" & UniChar(Hex2Dec("00a0")) & "d", "h\Sd") 
+false
+
+// greedy and lazy quantifiers
+
+>> Match( "#abcdef#", "\w+" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w+?" ).FullMatch
+"a"
+
+>> Match( "abcdef", "\w*" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w*?" ).FullMatch
+""
+
+>> Match( "abcdef", "\w?" ).FullMatch
+"a"
+
+>> Match( "abcdef", "\w??" ).FullMatch
+""
+
+>> Match( "abcdef", "\w{2}" ).FullMatch
+"ab"
+
+>> Match( "abcdef", "\w{2}?" ).FullMatch
+"ab"
+
+>> Match( "abcdef", "\w{2,}" ).FullMatch
+"abcdef"
+
+>> Match( "abcdef", "\w{2,}?" ).FullMatch
+"ab"
+
+>> Match( "abcdef", "\w{2,4}" ).FullMatch
+"abcd"
+
+>> Match( "abcdef", "\w{2,4}?" ).FullMatch
+"ab"

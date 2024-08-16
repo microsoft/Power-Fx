@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal class IsMatchFunction : BaseMatchFunction
     {
         public IsMatchFunction()
-            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean)
+            : base("IsMatch", TexlStrings.AboutIsMatch, DType.Boolean, null)
         {
         }
 
@@ -41,8 +41,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
-        public MatchFunction(RegexTypeCache regexCache)
-            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexCache)
+        public MatchFunction(RegexTypeCache regexTypeCache)
+            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexTypeCache)
         {
         }
     }
@@ -50,8 +50,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // MatchAll(text:s, regular_expression:s, [options:s])
     internal class MatchAllFunction : BaseMatchFunction
     {
-        public MatchAllFunction(RegexTypeCache regexCache)
-            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexCache)
+        public MatchAllFunction(RegexTypeCache regexTypeCache)
+            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexTypeCache)
         {
         }
     }
@@ -68,16 +68,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool UseParentScopeForArgumentSuggestions => true;
 
-        // public override bool HasPreciseErrors => true;
-
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexCache = null)
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexTypeCache)
             : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, BuiltInEnums.MatchEnum.FormulaType._type, BuiltInEnums.MatchOptionsEnum.FormulaType._type)
         {
-            if (regexCache != null)
+            if (regexTypeCache != null)
             {
                 _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
-                _regexTypeCache = regexCache.Cache;
-                _regexCacheSize = regexCache.CacheSize;
+                _regexTypeCache = regexTypeCache.Cache;
+                _regexCacheSize = regexTypeCache.CacheSize;
             }
         }
 
@@ -206,8 +204,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badQuantifiers>[\?\*\+][\+\*])                | # possessive and useless quantifiers
 
                     # leading {, limited quantifiers
-                    (?<badLimited>{\d+(,\d*)?}(\?|\+|\*))            | # possessive and useless quantifiers
-                    (?<goodLimited>{\d+(,\d*)?})                     | # standard limited quantifiers
+                    (?<goodLimited>{\d+(,\d*)?}\??)                  | # standard limited quantifiers
+                    (?<badLimited>{\d+(,\d*)?}[\+|\*])               | # possessive and useless quantifiers
                     (?<badCurly>[{}])                                | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # open and close regions
@@ -466,7 +464,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, token.Groups["badEscapeAlpha"].Value);
                         return false;
                     }
-                    else if (token.Groups["badQuantifier"].Success)
+                    else if (token.Groups["badQuantifier"].Success || token.Groups["badLimited"].Success)
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, token.Groups["badQuantifier"].Value);
                         return false;
@@ -484,7 +482,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else
                     {
                         // This should never be hit. Here in case one of the names checked doesn't match the RE, in which case running tests would hit this.
-                        throw new NotImplementedException("Unknown regular expression match");
+                        throw new NotImplementedException("Unknown regular expression match: " + token.Value);
                     }
                 }
             }
