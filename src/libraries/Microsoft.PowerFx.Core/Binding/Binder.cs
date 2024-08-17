@@ -2261,7 +2261,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (function != null)
             {
                 // If the invocation is async then the whole call path is async.
-                if (markIfAsync && (function is UserDefinedFunction udf && udf.Binding != null) && function.IsAsyncInvocation(node, this))
+                if (markIfAsync && (function is not UserDefinedFunction udf || udf.Binding != null) && function.IsAsyncInvocation(node, this))
                 {
                     FlagPathAsAsync(node);
                 }
