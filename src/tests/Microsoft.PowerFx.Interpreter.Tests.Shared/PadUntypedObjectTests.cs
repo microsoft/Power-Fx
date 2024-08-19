@@ -163,6 +163,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsType<ErrorValue>(result2);
         }
 
+        [Fact]
+        public void PadUntypedObject2ColumnNamesTest()
+        {
+            var uo = new PadUntypedObject2(GetDataTable());
+            var uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
+
+            var result = engine.Eval(@"ColumnNames(Index(padTable, 1))");
+
+            // would expect not to be an error value
+            Assert.IsType<ErrorValue>(result);
+        }
+
         private DataTable GetDataTable()
         {
             var dt = new DataTable("someTable");
