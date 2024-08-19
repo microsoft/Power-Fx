@@ -437,7 +437,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 if (impl.TryGetPropertyNames(out var propertyNames))
                 {

@@ -177,8 +177,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.Eval(@"ColumnNames(Index(padTable, 1))");
 
-            // would expect not to be an error value
-            Assert.IsType<ErrorValue>(result);
+            Assert.IsAssignableFrom<TableValue>(result);
         }
 
         private DataTable GetDataTable()
@@ -589,6 +588,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public override bool TryGetPropertyNames(out IEnumerable<string> result)
         {
+            if (DataTable != null)
+            {
+                result = DataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                return true;
+            }
+
+            if (DataRow != null)
+            {
+                result = DataRow.Table.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                return true;
+            }
+
             result = null;
             return false;
         }
