@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo() + Abs(1) + Foo()", "$#CustomFunction1#$,Abs", true)]
         [InlineData("true And true", "")]
         [InlineData("If(true, Blank(),Error())", "If,Blank,Error")]
-        public void ListFunctionNamesTest(string expression, string expectedNames, bool annonymizeUnknownPublicFunctions = false)
+        public void ListFunctionNamesTest(string expression, string expectedNames, bool anonymizeUnknownPublicFunctions = false)
         {
             foreach (var textFirst in new bool[] { false, true })
             {
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     expression = $"={expression}";
                 }
 
-                CheckFunctionNames(textFirst, expression, expectedNames, annonymizeUnknownPublicFunctions);
+                CheckFunctionNames(textFirst, expression, expectedNames, anonymizeUnknownPublicFunctions);
             }
         }
 
@@ -46,15 +46,15 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => checkResult.GetFunctionNames());
         }
 
-        private static void CheckFunctionNames(bool textFirst, string expression, string expectedNames, bool annonymizeUnknownPublicFunctions)
+        private static void CheckFunctionNames(bool textFirst, string expression, string expectedNames, bool anonymizeUnknownPublicFunctions)
         {
             var options = new ParserOptions() { TextFirst = textFirst };
             var engine = new Engine();
             var check = engine.Check(expression, options);
             var checkResult = new CheckResult(engine).SetText(expression, options);
 
-            var functionsNames1 = check.GetFunctionNames(annonymizeUnknownPublicFunctions);
-            var functionsNames2 = checkResult.GetFunctionNames(annonymizeUnknownPublicFunctions);
+            var functionsNames1 = check.GetFunctionNames(anonymizeUnknownPublicFunctions);
+            var functionsNames2 = checkResult.GetFunctionNames(anonymizeUnknownPublicFunctions);
 
             var actualNames1 = string.Join(",", functionsNames1);
             var actualNames2 = string.Join(",", functionsNames2);
