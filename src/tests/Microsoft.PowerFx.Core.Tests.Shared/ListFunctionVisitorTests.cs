@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "SomeNameSpace.Foo,SomeNameSpace.Bar")]
         [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar()", "$#CustomFunction1#$,$#CustomFunction2#$", true)]
         [InlineData("SomeNameSpace.Foo() + SomeNameSpace.Bar() + SomeNameSpace.Foo()", "$#CustomFunction1#$,$#CustomFunction2#$", true)]
+        [InlineData("Foo() + Abs(1) + Foo()", "$#CustomFunction1#$,Abs", true)]
         [InlineData("true And true", "")]
         [InlineData("If(true, Blank(),Error())", "If,Blank,Error")]
         public void ListFunctionNamesTest(string expression, string expectedNames, bool annonymizeUnknownPublicFunctions = false)
