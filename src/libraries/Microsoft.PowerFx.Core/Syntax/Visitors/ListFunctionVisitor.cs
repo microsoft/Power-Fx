@@ -14,16 +14,16 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Dictionary<string, string> _unknownFunctionNames = new Dictionary<string, string>();
         private readonly bool _anonymizedUnknownPublicFunctions;
 
-        public static IEnumerable<string> Run(ParseResult parse, bool annonymizeUnknownPublicFunctions = false)
+        public static IEnumerable<string> Run(ParseResult parse, bool anonymizeUnknownPublicFunctions = false)
         {
-            var visitor = new ListFunctionVisitor(annonymizeUnknownPublicFunctions);
+            var visitor = new ListFunctionVisitor(anonymizeUnknownPublicFunctions);
             parse.Root.Accept(visitor);
             return visitor._functionNames;
         }
 
-        private ListFunctionVisitor(bool annonymizeUnknownPublicFunctions)
+        private ListFunctionVisitor(bool anonymizeUnknownPublicFunctions)
         {
-            _anonymizedUnknownPublicFunctions = annonymizeUnknownPublicFunctions;
+            _anonymizedUnknownPublicFunctions = anonymizeUnknownPublicFunctions;
         }
 
         public override bool PreVisit(CallNode node)
