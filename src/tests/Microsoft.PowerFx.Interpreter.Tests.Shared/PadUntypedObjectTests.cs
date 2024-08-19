@@ -590,7 +590,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public override FormulaValue GetProperty(string value, FormulaType returnType)
         {
-            return new ErrorValue(IRContext.NotInSource(returnType), new ExpressionError() { Kind = ErrorKind.InvalidArgument });
+            return FormulaValue.NewError(new ExpressionError() { Kind = ErrorKind.InvalidArgument }, returnType);
         }
     }
     #endregion
