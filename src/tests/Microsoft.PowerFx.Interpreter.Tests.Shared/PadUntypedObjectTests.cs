@@ -163,6 +163,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsType<ErrorValue>(result2);
         }
 
+        [Fact]
+        public void PadUntypedObject2ColumnNamesTest()
+        {
+            var uo = new PadUntypedObject2(GetDataTable());
+            var uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable", uov, new SymbolProperties() { CanMutate = true, CanSetMutate = true });
+
+            var result = engine.Eval(@"ColumnNames(Index(padTable, 1))");
+
+            Assert.IsAssignableFrom<TableValue>(result);
+        }
+
         private DataTable GetDataTable()
         {
             var dt = new DataTable("someTable");
@@ -571,6 +588,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public override bool TryGetPropertyNames(out IEnumerable<string> result)
         {
+            if (DataTable != null)
+            {
+                result = DataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                return true;
+            }
+
+            if (DataRow != null)
+            {
+                result = DataRow.Table.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                return true;
+            }
+
             result = null;
             return false;
         }
