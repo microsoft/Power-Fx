@@ -717,7 +717,12 @@ namespace Microsoft.PowerFx
 
         public IEnumerable<string> GetFunctionNames()
         {
-            return ListFunctionVisitor.Run(ApplyParse());
+            return GetFunctionNames(false);
+        }
+
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions)
+        {
+            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions);
         }
     }
 

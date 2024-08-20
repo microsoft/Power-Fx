@@ -656,7 +656,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return false;
             }
 
-            var isServerDelegatable = function.IsServerDelegatable(node, this);
+            var isServerDelegatable = (function is not UserDefinedFunction udf || udf.Binding != null) && function.IsServerDelegatable(node, this);
             LogTelemetryForFunction(function, node, this, isServerDelegatable);
             return isServerDelegatable;
         }
@@ -1196,7 +1196,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(func);
 
             // Server delegatable call always returns a pageable object.
-            if (func.SupportsPaging(node, this))
+            if ((func is not UserDefinedFunction udf || udf.Binding != null) && func.SupportsPaging(node, this))
             {
                 _isPageable.Set(node.Id, true);
             }
@@ -2263,7 +2263,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (function != null)
             {
                 // If the invocation is async then the whole call path is async.
-                if (markIfAsync && function.IsAsyncInvocation(node, this))
+                if (markIfAsync && (function is not UserDefinedFunction udf || udf.Binding != null) && function.IsAsyncInvocation(node, this))
                 {
                     FlagPathAsAsync(node);
                 }
