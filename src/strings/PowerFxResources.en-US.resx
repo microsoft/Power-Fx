@@ -4694,4 +4694,24 @@
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Invalid operation: division by zero.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Runtime type mismatch.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Argument out of range.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Invalid Char value, must be in 1...255 range.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Language code '{0}' not supported.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

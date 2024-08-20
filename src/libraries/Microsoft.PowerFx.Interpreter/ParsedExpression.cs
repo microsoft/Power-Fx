@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo, result.DefaultErrorCulture)
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
@@ -121,6 +121,7 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
+        private readonly CultureInfo _errorCultureInfo;
         private readonly StackDepthCounter _stackMarker;        
 
         internal ReadOnlySymbolValues _globals;
@@ -128,7 +129,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolTable _parameterSymbolTable;
         internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null, CultureInfo errorCultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
@@ -136,6 +137,7 @@ namespace Microsoft.PowerFx
 
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _errorCultureInfo = errorCultureInfo ?? CultureInfo.InvariantCulture;
         }
 
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
@@ -167,6 +169,12 @@ namespace Microsoft.PowerFx
             try
             {
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
+
+                if (newValue is ErrorValue errorValue)
+                {
+                    return FormulaValue.NewError(errorValue.Errors.Select(expr => expr.GetInLocale(_errorCultureInfo)), errorValue.Type);
+                }
+
                 return newValue;
             }
             catch (CustomFunctionErrorException customError)

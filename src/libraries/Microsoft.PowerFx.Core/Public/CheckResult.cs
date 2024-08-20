@@ -43,8 +43,6 @@ namespace Microsoft.PowerFx
 
         private ParserOptions _parserOptions;
 
-        private CultureInfo _defaultErrorCulture;
-
         // We must call all Set() operations before calling Apply(). 
         // This is because Apply() methods can be called in lazy ways, and so we need a gaurantee
         // that the Set() conditions are fixed. 
@@ -143,7 +141,7 @@ namespace Microsoft.PowerFx
         {
             VerifyEngine();
 
-            this._defaultErrorCulture = culture;
+            this.DefaultErrorCulture = culture;
             return this;
         }
 
@@ -300,7 +298,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
         {
-            culture ??= _defaultErrorCulture ?? ParserCultureInfo;
+            culture ??= DefaultErrorCulture ?? ParserCultureInfo;
 
             foreach (var error in this._errors.Distinct(new ExpressionErrorComparer()))
             {
@@ -371,6 +369,8 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal CultureInfo ParserCultureInfo { get; private set; }
 
+        internal CultureInfo DefaultErrorCulture { get; private set; }
+
         internal void ThrowIfSymbolsChanged()
         {
             if (_symbols != null)
@@ -408,7 +408,7 @@ namespace Microsoft.PowerFx
 
             var expression = parseResult.Text;
             var culture = parseResult.Options.Culture;
-            var formula = new Formula(expression, culture, intellisenseLocale: _defaultErrorCulture);
+            var formula = new Formula(expression, culture, intellisenseLocale: DefaultErrorCulture);
             formula.ApplyParse(parseResult);
 
             return formula;

@@ -2,47 +2,52 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static class CommonErrors
     {
+        // Runtime type mismatch.
         public static ErrorValue RuntimeTypeMismatch(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Runtime type mismatch",
+                ResourceKey = TexlStrings.ErrRuntimeTypeMismatch,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
         }
 
+        // Argument out of range.
         public static ErrorValue ArgumentOutOfRange(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Argument out of range",
+                ResourceKey = TexlStrings.ErrArgumentOutOfRange,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
         }
 
+        // Invalid Char value, must be in 1...255 range.
         public static ErrorValue InvalidCharValue(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Invalid Char value, must be in 1...255 range",
+                ResourceKey = TexlStrings.ErrInvalidCharValue,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
         }
 
+        // Invalid operation: division by zero
         public static ErrorValue DivByZeroError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "Invalid operation: division by zero.",
+                ResourceKey = TexlStrings.ErrDivByZero,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Div0
             });
@@ -53,13 +58,15 @@ namespace Microsoft.PowerFx.Functions
             return PrimitiveValueConversions.OverflowError(irContext);
         }
 
+        // Language code '{0}' not supported.
         public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = $"Language code {languageCode} not supported",
+                ResourceKey = TexlStrings.ErrBadLanguageCode,
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.BadLanguageCode
+                Kind = ErrorKind.BadLanguageCode,
+                MessageArgs = new object[] { languageCode }
             });
         }
 

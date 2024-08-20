@@ -4494,4 +4494,8 @@
     <value>A fonte de dados especificada não pode ser usada com essa função.</value>
     
   </data>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>Operação inválida: divisão por zero.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

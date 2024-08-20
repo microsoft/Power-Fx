@@ -829,5 +829,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrSummarizeDataSourceScopeNotSupported = new ErrorResourceKey("ErrSummarizeDataSourceScopeNotSupported");
 
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
+
+        public static ErrorResourceKey ErrDivByZero = new ErrorResourceKey("ErrDivByZero");
+        public static ErrorResourceKey ErrRuntimeTypeMismatch = new ErrorResourceKey("ErrRuntimeTypeMismatch");
+        public static ErrorResourceKey ErrArgumentOutOfRange = new ErrorResourceKey("ErrArgumentOutOfRange");
+        public static ErrorResourceKey ErrInvalidCharValue = new ErrorResourceKey("ErrInvalidCharValue");
+        public static ErrorResourceKey ErrBadLanguageCode = new ErrorResourceKey("ErrBadLanguageCode");
     }
 }
