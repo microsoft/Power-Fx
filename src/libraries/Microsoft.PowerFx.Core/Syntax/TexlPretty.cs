@@ -508,41 +508,46 @@ namespace Microsoft.PowerFx.Syntax
             return new Regex(@"\n +(\n +)").Replace(preRegex, (Match match) => match.Groups[1].Value);
         }
 
-        public static string UserDefinitionsFormat(ParseUserDefinitionResult result)
+        public static string UserDefinitionsFormat(ParseUserDefinitionResult result, string formulasScript)
         {
             Contracts.AssertValue(result);
 
-            string pretty = string.Empty;
+            var definitions = new List<string>();
+            var visitor = new PrettyPrintVisitor(formulasScript);
 
-            foreach ((var index, var userDefinitionType, var ident, var script) in result.Indices)
+            foreach (var info in result.UserDefinitionInfos)
             {
-                PrettyPrintVisitor visitor2;
-                switch (userDefinitionType)
+                var declaration = info.Declaration.Trim();
+                var name = info.Name;
+                var before = info.Before;
+                var after = info.After;
+                switch (info.Type)
                 {
                     case UserDefinitionType.NamedFormula:
-                        var nf = result.NamedFormulas.First(nf => nf.Ident == ident);
-                        visitor2 = new PrettyPrintVisitor(script);
+                        var nf = result.NamedFormulas.First(nf => nf.Ident == name);
 
-                        pretty += string.Concat(nf.Formula.ParseTree.Accept(visitor2, new Context(0)));
+                        definitions.Add(declaration + " = " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
                         break;
                     case UserDefinitionType.UDF:
-                        var udf = result.UDFs.First(udf => udf.Ident == ident);
-                        visitor2 = new PrettyPrintVisitor(script);
+                        var udf = result.UDFs.First(udf => udf.Ident == name);
 
-                        pretty += string.Concat(udf.Body.Accept(visitor2, new Context(0)));
+                        var udfBody = udf.IsImperative ?
+                            $"\n{{\n\t{string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(1)).With(visitor.CommentsOf(after)))).Trim()}\n}}" :
+                            string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after))));
+
+                        definitions.Add(declaration + " = " + udfBody);
                         break;
                     case UserDefinitionType.DefinedType:
-                        var type = result.DefinedTypes.First(type => type.Ident == ident);
-                        visitor2 = new PrettyPrintVisitor(script);
+                        var type = result.DefinedTypes.First(type => type.Ident == name);
 
-                        pretty += string.Concat(type.Type.Accept(visitor2, new Context(0)));
+                        definitions.Add(declaration + " = Type(" + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))) + ")");
                         break;
                     default:
                         continue;
                 }
             }
 
-            return pretty;
+            return string.Join($";\n", definitions) + ";";
         }
 
         private LazyList<string> CommentsOf(SourceList list)
@@ -728,22 +733,25 @@ namespace Microsoft.PowerFx.Syntax
             if (node.Op == VariadicOp.Chain)
             {
                 var result = LazyList<string>.Empty;
+                var previousWasNewLine = false;
                 foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
                 {
                     if (source is NodeSource nodeSource)
                     {
                         result = result
                             .With(nodeSource.Node.Accept(this, context));
+                        previousWasNewLine = false;
                     }
                     else if (source is TokenSource tokenSource && tokenSource.Token.Kind == TokKind.Semicolon)
                     {
                         result = result
                             .With(GetScriptForToken(tokenSource.Token))
                             .With(GetNewLine(context.IndentDepth + 1));
+                        previousWasNewLine = true;
                     }
                     else
                     {
-                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                        result = previousWasNewLine ? result.With(string.Concat(source.Tokens.Select(GetScriptForToken)).TrimStart()) : result.With(source.Tokens.Select(GetScriptForToken));
                     }
                 }
 

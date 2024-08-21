@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
@@ -20,20 +21,19 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal IEnumerable<CommentToken> Comments { get; }
 
-        internal IEnumerable<(int, UserDefinitionType, IdentToken, string)> Indices { get; }
+        internal IEnumerable<UserDefinitionInfo> UserDefinitionInfos { get; }
 
         internal bool HasErrors { get; }
 
         public TexlNode Root { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, TexlNode root = null, IEnumerable<(int, UserDefinitionType, IdentToken, string)> indices = null)
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionInfo> userDefinitionInfos = null)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
             DefinedTypes = definedTypes;
             Comments = comments;
-            Root = root;
-            Indices = indices;
+            UserDefinitionInfos = userDefinitionInfos;
 
             if (errors?.Any() ?? false)
             {
