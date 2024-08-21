@@ -6,23 +6,34 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
-internal class UserDefinitionInfo
+namespace Microsoft.PowerFx.Syntax
 {
-    internal int Index;
-    internal UserDefinitionType Type;
-    internal IdentToken Name;
-    internal string Declaration;
-    internal string Script;
-    internal SourceList Before;
-    internal SourceList After;
-
-    internal UserDefinitionInfo(int index, UserDefinitionType type, IdentToken name, string declaration, SourceList before, SourceList after = null)
+    internal class UserDefinitionInfo
     {
-        Index = index;
-        Type = type;
-        Name = name;
-        Declaration = declaration;
-        Before = before;
-        After = after;
+        internal int Index;
+        internal UserDefinitionType Type;
+        internal IdentToken Name;
+        internal string Declaration;
+        internal string Script;
+        internal SourceList Before;
+        internal SourceList After;
+
+        internal UserDefinitionInfo(int index, UserDefinitionType type, IdentToken name, string declaration, SourceList before, SourceList after = null)
+        {
+            Index = index;
+            Type = type;
+            Name = name;
+            Declaration = declaration;
+            Before = before;
+            After = after;
+        }
+    }
+    
+    internal enum UserDefinitionType
+    {
+        NamedFormula,
+        UDF,
+        DefinedType,
+        Error,
     }
 }
