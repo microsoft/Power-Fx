@@ -258,10 +258,10 @@ Errors: Error 0-4: The function 'Text' has some invalid arguments.|Warning 45-85
 // badly formed numbers
 
 >> Text( ParseJSON("123456789d12") )
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 >> Text( ParseJSON("--123456789") )
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 
 

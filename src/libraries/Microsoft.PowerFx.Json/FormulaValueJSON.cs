@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
@@ -17,6 +18,13 @@ namespace Microsoft.PowerFx.Types
         public bool NumberIsFloat { get; init; } = false;
 
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+
+        // JSON value input of type object may contain fields with values that not present in the target schema.
+        // This attribute controls if the result such conversion should be valid or an error.
+        // This is false (i.e we dont allow additional field in input) when used for functions like AsType_UO, IsType_UO and TypedParseJSON
+        public bool AllowUnknownRecordFields { get; init; } = true;
+
+        public TimeZoneInfo ResultTimeZone { get; init; } = TimeZoneInfo.Utc;
     }
 
     internal class FormulaValueJsonSerializerWorkingData
@@ -58,7 +66,7 @@ namespace Microsoft.PowerFx.Types
                 {
                     Message = $"{pfxje.GetType().Name} {pfxje.Message}",
                     Span = new Syntax.Span(0, 0),
-                    Kind = ErrorKind.InvalidJSON
+                    Kind = ErrorKind.InvalidArgument
                 });
             }
         }
@@ -76,7 +84,7 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaType formulaType = null)
         {
-            return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);
+            return FromJson(element, settings, new FormulaValueJsonSerializerWorkingData(), formulaType);  
         }
 
         internal static FormulaValue FromJson(JsonElement element, FormulaValueJsonSerializerSettings settings, FormulaValueJsonSerializerWorkingData data, FormulaType formulaType = null)
@@ -126,17 +134,28 @@ namespace Microsoft.PowerFx.Types
                             dt2 = dt2.ToUniversalTime();
                         }
 
-                        if (dt2.Kind == DateTimeKind.Unspecified)
+                        if (settings.ResultTimeZone == TimeZoneInfo.Utc && dt2.Kind == DateTimeKind.Unspecified)
                         {
                             dt2 = new DateTime(dt2.Ticks, DateTimeKind.Utc);
                         }
 
-                        return DateTimeValue.New(dt2);
+                        return DateTimeValue.New(DateTimeValue.GetConvertedDateTimeValue(dt2, settings.ResultTimeZone));
                     }
                     else if (formulaType is DateTimeNoTimeZoneType)
                     {
                         DateTime dt3 = element.GetDateTime();
                         return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
+                    }
+                    else if (formulaType is TimeType)
+                    {
+                        var timeString = element.GetString();
+                        if (TimeSpan.TryParseExact(timeString, @"hh\:mm\:ss\.FFFFFFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var res) ||
+                            TimeSpan.TryParseExact(timeString, @"hh\:mm\:ss", CultureInfo.InvariantCulture, TimeSpanStyles.None, out res))
+                        {
+                            return TimeValue.New(res);
+                        }
+
+                        throw new PowerFxJsonException($"Time '{timeString}' could not be parsed", data.Path);
                     }
                     else if (formulaType is BlobType)
                     {
@@ -226,6 +245,11 @@ namespace Microsoft.PowerFx.Types
 
                 if (recordType?.TryGetFieldType(name, out fieldType) == false)
                 {
+                    if (!settings.AllowUnknownRecordFields)
+                    {
+                        throw new PowerFxJsonException($"Unexpected field '{name}' found in JSONObject", $"{data.Path}/{name}");
+                    }
+
                     // if we expect a record type and the field is unknown, let's ignore it like in Power Apps
                     if (!settings.ReturnUnknownRecordFieldsAsUntypedObjects)
                     {

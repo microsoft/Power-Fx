@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     Message = $"The Json could not be parsed: {ex.Message}",
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
+                    Kind = ErrorKind.InvalidJSON
                 });
             }
         }
