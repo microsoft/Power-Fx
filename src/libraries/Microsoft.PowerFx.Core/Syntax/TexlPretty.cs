@@ -547,7 +547,8 @@ namespace Microsoft.PowerFx.Syntax
                 }
             }
 
-            return string.Join($";\n", definitions) + ";";
+            return string.Join($"{TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator}\n", definitions) +
+                TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator;
         }
 
         private LazyList<string> CommentsOf(SourceList list)
