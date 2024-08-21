@@ -140,4 +140,12 @@ namespace Microsoft.PowerFx.Core.Parser
             ColonToken = colonToken;
         } 
     }
+
+    internal enum UserDefinitionType
+    {
+        NamedFormula = 0,
+        UDF = 1 << 0,
+        DefinedType = 1 << 1,
+        Error = 1 << 2,
+    }
 }
