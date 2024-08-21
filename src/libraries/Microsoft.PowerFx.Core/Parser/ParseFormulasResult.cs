@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Parser
         internal Token ReturnTypeColonToken { get; }
 
         internal IdentToken ReturnType { get; }
-        
+
         internal TexlNode Body { get; }
 
         internal ISet<UDFArg> Args { get; }
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Parser
             TypeIdent = typeIdent;
             ArgIndex = argIndex;
             ColonToken = colonToken;
-        } 
+        }
     }
 
     internal enum UserDefinitionType

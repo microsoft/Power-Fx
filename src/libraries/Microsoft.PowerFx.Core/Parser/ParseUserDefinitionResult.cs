@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool HasErrors { get; }
 
-        public TexlNode Root { get; }
-
         public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionInfo> userDefinitionInfos = null)
         {
             NamedFormulas = namedFormulas;

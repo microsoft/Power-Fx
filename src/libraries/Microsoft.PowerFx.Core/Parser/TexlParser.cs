@@ -481,8 +481,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
-                    var delimiter = TokEat(TokKind.Semicolon);
-                    if (delimiter == null)
+                    if (TokEat(TokKind.Semicolon) == null)
                     {
                         break;
                     }

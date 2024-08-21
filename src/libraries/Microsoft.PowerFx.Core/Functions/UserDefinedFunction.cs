@@ -329,16 +329,16 @@ namespace Microsoft.PowerFx.Core.Functions
                 returnType = DType.Invalid;
                 return false;
             }
-            
+
             if (IsRestrictedType(returnTypeFormulaType))
             {
                 errors.Add(new TexlError(returnTypeToken, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_InvalidReturnType, returnTypeToken.Name));
                 returnType = DType.Invalid;
                 return false;
             }
-            
+
             returnType = returnTypeFormulaType._type;
-            return true; 
+            return true;
         }
 
         // To prevent aggregate types from containing restricted types
@@ -428,7 +428,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
             {
-               return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+                return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
