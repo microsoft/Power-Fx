@@ -508,14 +508,14 @@ namespace Microsoft.PowerFx.Syntax
             return new Regex(@"\n +(\n +)").Replace(preRegex, (Match match) => match.Groups[1].Value);
         }
 
-        public static string UserDefinitionsFormat(ParseUserDefinitionResult result, string formulasScript)
+        public static string FormatUserDefinitions(ParseUserDefinitionResult result, string formulasScript)
         {
             Contracts.AssertValue(result);
 
             var definitions = new List<string>();
             var visitor = new PrettyPrintVisitor(formulasScript);
 
-            foreach (var info in result.UserDefinitionInfos)
+            foreach (var info in result.UserDefinitionSourceInfos)
             {
                 var declaration = info.Declaration.Trim();
                 var name = info.Name;

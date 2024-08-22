@@ -8,17 +8,22 @@ using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
 {
-    internal class UserDefinitionInfo
+    internal class UserDefinitionSourceInfo
     {
         internal int Index;
         internal UserDefinitionType Type;
         internal IdentToken Name;
+
+        // Substring of Formulas script from definition identifier up to the assignment operator
         internal string Declaration;
-        internal string Script;
+
+        // Trivia before the definition body (after assignment operator)
         internal readonly SourceList Before;
+
+        // Extra trivia after the definition body (before closing semicolon)
         internal readonly SourceList After;
 
-        internal UserDefinitionInfo(int index, UserDefinitionType type, IdentToken name, string declaration, SourceList before, SourceList after = null)
+        internal UserDefinitionSourceInfo(int index, UserDefinitionType type, IdentToken name, string declaration, SourceList before, SourceList after = null)
         {
             Index = index;
             Type = type;

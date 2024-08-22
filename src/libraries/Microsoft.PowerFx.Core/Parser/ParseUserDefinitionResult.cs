@@ -20,17 +20,18 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal IEnumerable<CommentToken> Comments { get; }
 
-        internal IEnumerable<UserDefinitionInfo> UserDefinitionInfos { get; }
+        // This is used to preserve the order of user definitions and all their source trivia (like comments), to be used by Pretty Print and other similar operations.
+        internal IEnumerable<UserDefinitionSourceInfo> UserDefinitionSourceInfos { get; }
 
         internal bool HasErrors { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionInfo> userDefinitionInfos = null)
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<DefinedType> definedTypes, IEnumerable<TexlError> errors, IEnumerable<CommentToken> comments, IEnumerable<UserDefinitionSourceInfo> userDefinitionSourceInfos)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
             DefinedTypes = definedTypes;
             Comments = comments;
-            UserDefinitionInfos = userDefinitionInfos;
+            UserDefinitionSourceInfos = userDefinitionSourceInfos;
 
             if (errors?.Any() ?? false)
             {
