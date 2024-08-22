@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Serialization;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests

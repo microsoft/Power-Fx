@@ -145,7 +145,13 @@ namespace Microsoft.PowerFx.Functions
 
                 foreach (Match token in outputRE.Matches(output))
                 {
-                    if (token.Groups["end"].Success)
+                    if (token.Groups["start"].Success)
+                    {
+                        fields = new ();
+                        subMatches = new ();
+                        fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
+                    }
+                    else if (token.Groups["end"].Success)
                     {
                         if ((options & RegexOptions.ExplicitCapture) == 0)
                         {
@@ -154,7 +160,7 @@ namespace Microsoft.PowerFx.Functions
 
                         allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
                     }
-                    if (token.Groups["done"].Success)
+                    else if (token.Groups["done"].Success)
                     {
                         if (allMatches.Count == 0)
                         {
@@ -166,12 +172,6 @@ namespace Microsoft.PowerFx.Functions
                             return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches)
                                             : allMatches.First();
                         }
-                    }
-                    else if (token.Groups["start"].Success)
-                    {
-                        fields = new ();
-                        subMatches = new ();
-                        fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
                     }
                     else if (token.Groups["name"].Success)
                     {
