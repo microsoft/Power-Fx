@@ -1231,7 +1231,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                         {
-                            return ParseTypeLiteral();
+                            var typeLiteralNode = ParseTypeLiteral();
+
+                            if (!typeLiteralNode.IsValid(out var err))
+                            {
+                                CollectionUtils.Add(ref _errors, err);
+                            }
+
+                            return typeLiteralNode;
                         }
 
                         trivia = ParseTrivia();

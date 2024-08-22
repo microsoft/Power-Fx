@@ -15,8 +15,8 @@ namespace Microsoft.PowerFx.Syntax
         internal IdentToken Name;
         internal string Declaration;
         internal string Script;
-        internal SourceList Before;
-        internal SourceList After;
+        internal readonly SourceList Before;
+        internal readonly SourceList After;
 
         internal UserDefinitionInfo(int index, UserDefinitionType type, IdentToken name, string declaration, SourceList before, SourceList after = null)
         {
