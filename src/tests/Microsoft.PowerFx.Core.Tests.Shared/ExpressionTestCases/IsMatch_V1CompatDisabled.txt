@@ -1,8 +1,4 @@
 #SETUP: RegEx,disable:PowerFxV1CompatibilityRules
 
-// Dangerous Regex, will timeout (should take >2h on a fast CPU) - but only with Pre-V1 or MatchOptions.NumberedSubMatches
->> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
-Error({Kind:ErrorKind.Timeout})
-
 >> IsMatch("Foo", "J(")
 Error({Kind:ErrorKind.BadRegex})

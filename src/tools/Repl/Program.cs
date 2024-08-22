@@ -40,6 +40,9 @@ namespace Microsoft.PowerFx
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
 
+        private const string OptionRegExCompare = "RegExCompare";
+        private static bool _regExCompare = false;
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static StandardFormatter _standardFormatter;
@@ -66,7 +69,8 @@ namespace Microsoft.PowerFx
                 { OptionPowerFxV1, OptionPowerFxV1 },
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
-                { OptionTextFirst, OptionTextFirst }
+                { OptionTextFirst, OptionTextFirst },
+                { OptionRegExCompare, OptionRegExCompare },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -96,9 +100,18 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
+            if (_regExCompare)
+            {
+                // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
+                // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
+            }
+            else
+            {
 #pragma warning disable CS0618 // Type or member is obsolete
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+                config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
 #pragma warning restore CS0618 // Type or member is obsolete
+            }
 
             config.AddOptionSet(optionsSet);
 
@@ -366,6 +379,13 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
                 {
                     _stackTrace = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionRegExCompare, StringComparison.OrdinalIgnoreCase))
+                {
+                    _regExCompare = value.Value;
+                    _reset = true;
                     return value;
                 }
 

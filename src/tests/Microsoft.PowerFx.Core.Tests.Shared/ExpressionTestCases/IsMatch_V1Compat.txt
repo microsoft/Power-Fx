@@ -1,15 +1,4 @@
 #SETUP: RegEx,PowerFxV1CompatibilityRules
 
-// Dangerous Regex, will timeout (should take >2h on a fast CPU) - but only with Pre-V1 or MatchOptions.NumberedSubMatches
->> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$", MatchOptions.NumberedSubMatches)
-Error({Kind:ErrorKind.Timeout})
-
-// but will finish quickly without captures
->> IsMatch("ababababababababababababababababababababababababababababababababababa", "^(<one>(<two>ab)*)+$")
-false
-
->> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
-false
-
 >> IsMatch("Foo", "J(")
 Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.

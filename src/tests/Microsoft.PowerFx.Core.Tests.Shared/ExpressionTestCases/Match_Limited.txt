@@ -23,7 +23,7 @@
 // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
 // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
 
-// Unicode letters as word characters are allowed
+// Unicode letters as word characters are matched
 
 >> Match( "the whole world", "\b(\w+\s*)+" )
 {FullMatch:"the whole world",StartMatch:1}
@@ -36,6 +36,26 @@
 
 >> Match( "Müller", "^\w+$" )
 {FullMatch:"Müller",StartMatch:1}
+
+// Unicode numbers as digits are matched
+
+>> Match( "12345", "^\d+$" )
+{FullMatch:"12345",StartMatch:1}
+
+>> Match( "12٤45", "^\d+$" )
+{FullMatch:"12٤45",StartMatch:1}
+
+>> Match( "123४5", "^\d+$" )
+{FullMatch:"123४5",StartMatch:1}
+
+>> Match( "abc3d", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc٤45", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc४5", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
 
 // Self referencing groups are disallowed
 
@@ -150,6 +170,15 @@ Blank()
 >> Match( "hello"&Char(13)&Char(10)&"howdy", "(?s)hello.howdy" )
 Blank()
 
+>> With( Match( "hello"&Char(10)&"howdy", "hello.howdy", MatchOptions.DotAll ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> With( Match( "hello"&Char(13)&"howdy", "hello.howdy", MatchOptions.DotAll ), {StartMatch: StartMatch, LengthMatch: Len(FullMatch)} )
+{LengthMatch:11,StartMatch:1}
+
+>> Match( "hello"&Char(13)&Char(10)&"howdy", "hello.howdy", MatchOptions.DotAll )
+Blank()
+
 >> Match( "hello, howdy", "(?x) llo , \s how # comment" )
 {FullMatch:"llo, how",StartMatch:3}
 
@@ -233,11 +262,11 @@ Errors: Error 12-17: Invalid regular expression: Square bracket character classe
 >> Match( "]", "[]]" )
 Errors: Error 12-17: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "abcdef]ghijk", "[\w]\w]" ) // second closing square bracket is allowed unescaped as it is outside a character class
-{FullMatch:"ef]",StartMatch:5}
+>> Match( "abcdef]ghijk", "[\w]\w]" )
+Errors: Error 23-32: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found "w]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "a]", "[a]]" )
-{FullMatch:"a]",StartMatch:1}
+Errors: Error 13-19: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found "]]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "abcdef]ghijk", "[\w\]\w]" ) // escaped closing square bracket
 {FullMatch:"a",StartMatch:1}
@@ -248,10 +277,10 @@ Errors: Error 12-17: Invalid regular expression: Square bracket character classe
 >> Match( "]", "[\]]" )
 {FullMatch:"]",StartMatch:1}
 
->> Match( ">test[", "[\w\[\>]+" )
+>> Match( ">test[", "[\w\[>]+" )
 {FullMatch:">test[",StartMatch:1}
 
->> Match( ">test[", "[\w\]\>]+" )
+>> Match( ">test[", "[\w\]>]+" )
 {FullMatch:">test",StartMatch:1}
 
 // character class subtraction
@@ -278,11 +307,26 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\A"
 >> Match( "$test atest test", "\btest" )
 {FullMatch:"test",StartMatch:2}
 
->> Match( "$test" & Char(8) & "test", "[\b]test" )  // \b acts differentely in a character class
-{FullMatch:"test",StartMatch:6}
-
 >> Match( "$test atest test", "\Btest" )
 {FullMatch:"test",StartMatch:8}
+
+>> Match( "$test" & Char(8) & "test", "[\b]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\b]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\B]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\B]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\W]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\W]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\S]test" )  
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\S]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "$test" & Char(8) & "test", "[\w]test" )  // \w is OK
+Blank()
+
+>> Match( "$test" & Char(8) & "atest", "[\w]test" )  // \w is OK
+{FullMatch:"atest",StartMatch:7}
 
 >> DropColumns( Match( "test" & Char(10) & "bed", "\cj" ), FullMatch )
 {StartMatch:5}
@@ -460,18 +504,74 @@ Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\p"
 >> Match( "test", "\P{@}" )
 Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\P".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// Escape is OK for non alpha-numeric characters
+// Escape characters acceptable to ECMAScript
 
->> Match( "!@#$%^&*()[]{}+=-`~/><';:,.""", "\!\@\#\$\%\^\&\*\(\)\[\]\{\}\+\=\-\`\~\/\>\<\'\;\:\,\.\""" )
-{FullMatch:"!@#$%^&*()[]{}+=-`~/><';:,.""",StartMatch:1}
+>> Match("^$\.*+?()[]{}|/", "\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/" ) 
+{FullMatch:"^$\.*+?()[]{}|/",StartMatch:1}
+
+>> Match("^$\.*+?()[]{}|/", "[\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]+" )
+{FullMatch:"^$\.*+?()[]{}|/",StartMatch:1}
+
+// Escape characters that are blocked
+
+>> Match( "!@#%&=-`~><';:,""", "\!" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\!".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\@" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\@".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\#" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\#".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\%" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\%".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\&" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\&".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\=" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\=".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\-" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\-".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\`" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\`".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\~" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\~".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\>" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\<" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\<".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\'" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\'".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\;" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\;".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\:" )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\:".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\," )
+Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\,".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "!@#%&=-`~><';:,""", "\""" )
+Errors: Error 28-33: Invalid regular expression: Invalid escape code, found "\"".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Inline comments
 
 >> Match( "test", "(?# this is a test)st" )
 {FullMatch:"st",StartMatch:3}
 
->> Match( "test", "(?# this is a test ( with an open paren)st" )
-Errors: Error 15-59: Invalid regular expression: Inline comments cannot include open parenthesis, found in "(?# this is a test ( with an open paren)".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "test", "(?# this is a test ( with an open paren )st" )
+Errors: Error 15-60: Invalid regular expression: Inline comments cannot include open parenthesis, found in "(?# this is a test ( with an open paren )".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?# this is a test \) with an escaped close paren )st" )  // can't escape a paren in an inline comment
+Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Can't define named capture group more than once
 

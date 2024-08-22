@@ -173,16 +173,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 @"
                     # leading backslash, escape sequences
                     \\k<(?<goodBackRefName>\w+)>                     | # named backreference
-                    (?<badOctal>\\0\d*)                              | # octal are not accepted (no XRegExp support, by design)
+                    (?<badOctal>\\0\d*)                              | # \0 and octal are not accepted, amiguous and not needed (use \x instead)
                     \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
-                    (?<goodEscapeAlpha>\\
-                           ([bBdDfnrsStwW]     |                       # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
-                            [pP]\{\w+\}        |                       # unicode character classes
-                            c[a-zA-Z]          |                       # Ctrl character classes
-                            x[0-9a-fA-F]{2}    |                       # hex character, must be exactly 2 hex digits
+                    (?<goodEscape>\\
+                           ([dfnrstw]                        |         # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
+                            [pP]\{\w+\}                      |         # unicode character classes
+                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/] |         # acceptable escaped characters with Unicode aware ECMAScript
+                            c[a-zA-Z]                        |         # Ctrl character classes
+                            x[0-9a-fA-F]{2}                  |         # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                        | # Unicode characters, must be exactly 4 hex digits
-                    (?<badEscapeAlpha>\\[a-zA-Z_])                   | # reserving all other letters and underscore for future use (consistent with .NET)
-                    (?<goodEscape>\\.)                               | # any other escaped character is allowed, but must be paired so that '\\(' is seen as '\\' followed by '(' and not '\' folloed by '\(' 
+                    (?<goodEscapeOutside>\\[bBWDS])                  | # acceptable outside a character class, but not within
+                    (?<badEscape>\\.)                                | # all other escaped characters are invalid and reserved for future use
                                                                     
                     # leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>   | # named capture group, can only be letters and numbers and must start with a letter
@@ -241,10 +242,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!openComment)
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
-                    if (token.Groups["goodEscape"].Success || token.Groups["goodEscapeAlpha"].Success ||
+                    if (token.Groups["goodEscape"].Success || 
                         token.Groups["goodLookaround"].Success || token.Groups["goodLimited"].Success)
                     {
                         // all is well, nothing to do
+                    }
+                    else if (token.Groups["goodEscapeOutside"].Success)
+                    {
+                        if (openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeWithinCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 6) + "...");
+                            return false;
+                        }
                     }
                     else if (token.Groups["openCharacterClass"].Success)
                     {
@@ -269,7 +278,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["closeCharacterClass"].Success)
                     {
-                        openCharacterClass = false;
+                        if (openCharacterClass)
+                        {
+                            openCharacterClass = false;
+                        }
+                        else
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadSquare, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 6) + "...");
+                            return false;
+                        }
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
@@ -459,9 +476,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, token.Groups["badCharacterClassEmpty"].Value);
                         return false;
                     }
-                    else if (token.Groups["badEscapeAlpha"].Success)
+                    else if (token.Groups["badEscape"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, token.Groups["badEscapeAlpha"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscape, token.Groups["badEscape"].Value);
                         return false;
                     }
                     else if (token.Groups["badQuantifier"].Success || token.Groups["badLimited"].Success)

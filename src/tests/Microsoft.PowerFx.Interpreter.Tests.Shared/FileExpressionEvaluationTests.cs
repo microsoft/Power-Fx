@@ -91,6 +91,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
+        // used by the following test run, but needs to be outside the #if for standard usage
+        public static bool RegExCompareEnabled = false;
+
+#if false
+        // This test run will compare the results between .NET, NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel)
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport,RegEx")]
+        [InterpreterTheory]
+        public void RegExCompare(ExpressionTestCase t)
+        {
+            RegExCompareEnabled = true;
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
+        }
+#endif
+
         private static string _currentNetVersion = null;
         private static readonly object _cnvLock = new object();
 

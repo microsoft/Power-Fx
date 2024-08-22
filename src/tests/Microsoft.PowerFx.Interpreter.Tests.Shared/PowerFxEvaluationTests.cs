@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -66,9 +67,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static object RegExSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
+            if (FileExpressionEvaluationTests.RegExCompareEnabled)
+            {
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
+            }
+            else
+            {
 #pragma warning disable CS0618 // Type or member is obsolete
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+                config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
 #pragma warning restore CS0618 // Type or member is obsolete
+            }
 
             return null;
         }       

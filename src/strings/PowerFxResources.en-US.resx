@@ -4387,9 +4387,17 @@
     <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".</value>
     <comment>Error message indicating that the regular expression has literal curly braces.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found "{0}".</value>
+    <comment>Error message indicating that the regular expression has literal square braces.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Unsupported special group, found "{0}".</value>
     <comment>Error message indicating that the regular expression that starts with a paren.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeWithinCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Escape character not permitted within character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character within a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
