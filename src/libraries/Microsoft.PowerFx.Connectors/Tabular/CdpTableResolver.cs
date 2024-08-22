@@ -111,6 +111,12 @@ namespace Microsoft.PowerFx.Connectors
             Result r = JsonSerializer.Deserialize<Result>(text);
 
             SqlForeignKey[] fkt = r.ResultSets.Table1;
+
+            if (fkt == null || fkt.Length == 0)
+            {
+                return new List<SqlRelationship>();
+            }
+
             SqlTable[] tt = r.ResultSets.Table2;
             SqlForeignKeyColumn[] fkct = r.ResultSets.Table3;
             SqlColumn[] ct = r.ResultSets.Table4;

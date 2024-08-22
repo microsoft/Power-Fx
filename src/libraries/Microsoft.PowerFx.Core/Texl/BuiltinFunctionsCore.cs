@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // instead of the classic "unknown or unsupported function".
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
-            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
+            "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
@@ -260,6 +260,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
         public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
+        public static readonly TexlFunction AsType_UO = _featureGateFunctions.Add(new AsTypeFunction_UO());
+        public static readonly TexlFunction IsType_UO = _featureGateFunctions.Add(new IsTypeFunction_UO());
+        public static readonly TexlFunction TypedParseJSON = _featureGateFunctions.Add(new TypedParseJSONFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

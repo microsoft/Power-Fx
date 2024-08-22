@@ -466,9 +466,17 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);
         public static StringGetter IsTypeArg2 = (b) => StringResources.Get("IsTypeArg2", b);
 
+        public static StringGetter AboutIsTypeUO = (b) => StringResources.Get("AboutIsTypeUO", b);
+        public static StringGetter IsTypeUOArg1 = (b) => StringResources.Get("IsTypeUOArg1", b);
+        public static StringGetter IsTypeUOArg2 = (b) => StringResources.Get("IsTypeUOArg2", b);
+
         public static StringGetter AboutAsType = (b) => StringResources.Get("AboutAsType", b);
         public static StringGetter AsTypeArg1 = (b) => StringResources.Get("AsTypeArg1", b);
         public static StringGetter AsTypeArg2 = (b) => StringResources.Get("AsTypeArg2", b);
+
+        public static StringGetter AboutAsTypeUO = (b) => StringResources.Get("AboutAsTypeUO", b);
+        public static StringGetter AsTypeUOArg1 = (b) => StringResources.Get("AsTypeUOArg1", b);
+        public static StringGetter AsTypeUOArg2 = (b) => StringResources.Get("AsTypeUOArg2", b);
 
         public static StringGetter AboutWith = (b) => StringResources.Get("AboutWith", b);
         public static StringGetter WithArg1 = (b) => StringResources.Get("WithArg1", b);
@@ -481,6 +489,10 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
         public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
+
+        public static StringGetter AboutTypedParseJSON = (b) => StringResources.Get("AboutTypedParseJSON", b);
+        public static StringGetter TypedParseJSONArg1 = (b) => StringResources.Get("TypedParseJSONArg1", b);
+        public static StringGetter TypedParseJSONArg2 = (b) => StringResources.Get("TypedParseJSONArg2", b);
 
         public static StringGetter AboutFileInfo = (b) => StringResources.Get("AboutFileInfo", b);
         public static StringGetter FileInfoArg1 = (b) => StringResources.Get("FileInfoArg1", b);
@@ -858,5 +870,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrSummarizeDataSourceScopeNotSupported = new ErrorResourceKey("ErrSummarizeDataSourceScopeNotSupported");
 
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
+        public static ErrorResourceKey ErrInvalidArgumentExpectedType = new ErrorResourceKey("ErrInvalidArgumentExpectedType");
+        public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
     }
 }

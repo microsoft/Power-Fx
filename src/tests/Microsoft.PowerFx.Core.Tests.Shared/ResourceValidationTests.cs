@@ -154,5 +154,11 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(usContent, invContent);
         }
+
+        [Fact]
+        public void TestStringResourcesTryGetLocaleParam()
+        {
+            Assert.Throws<CultureNotFoundException>(() => StringResources.TryGet("AboutBooleanT_input", out _, "invalid-"));
+        }
     }
 }

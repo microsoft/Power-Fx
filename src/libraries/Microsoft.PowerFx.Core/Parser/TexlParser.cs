@@ -320,14 +320,13 @@ namespace Microsoft.PowerFx.Core.Parser
                         var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            if (typeLiteralNode.IsValid(out var errors))
+                            if (typeLiteralNode.IsValid(out _))
                             {
                                 definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, true));
                             }
                             else
                             {
                                 definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, false));
-                                CollectionUtils.Add(ref _errors, errors);
                             }
 
                             continue;
@@ -1189,7 +1188,14 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                         {
-                            return ParseTypeLiteral();
+                            var typeLiteralNode = ParseTypeLiteral();
+                            
+                            if (!typeLiteralNode.IsValid(out var err))
+                            {
+                                CollectionUtils.Add(ref _errors, err);
+                            }
+
+                            return typeLiteralNode;
                         }
 
                         trivia = ParseTrivia();

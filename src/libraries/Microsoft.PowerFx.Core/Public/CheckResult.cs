@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -21,7 +19,6 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.CheckResult;
 
 namespace Microsoft.PowerFx
 {
@@ -141,7 +138,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        // Set the default culture for localizing error messages. 
+        // Set the default culture for localizing error messages and intellisense suggestions. 
         public CheckResult SetDefaultErrorCulture(CultureInfo culture)
         {
             VerifyEngine();
@@ -411,7 +408,7 @@ namespace Microsoft.PowerFx
 
             var expression = parseResult.Text;
             var culture = parseResult.Options.Culture;
-            var formula = new Formula(expression, culture);
+            var formula = new Formula(expression, culture, intellisenseLocale: _defaultErrorCulture);
             formula.ApplyParse(parseResult);
 
             return formula;
@@ -672,6 +669,17 @@ namespace Microsoft.PowerFx
             return _expressionAnonymous;
         }
 
+        /// <summary>
+        /// Get anonymous form of expression with all PII removed. Suitable for logging to.
+        /// </summary>
+        /// <param name="nameProvider">Sanitizer class to replace string values in the logging result.</param>
+        /// <returns></returns>
+        internal string ApplyGetLogging(ISanitizedNameProvider nameProvider)
+        {
+            var parse = ApplyParse();
+            return StructuralPrint.Print(parse.Root, _binding, nameProvider);
+        }
+
         public CheckContextSummary ApplyGetContextSummary()
         {
             this.ApplyBinding();
@@ -709,7 +717,12 @@ namespace Microsoft.PowerFx
 
         public IEnumerable<string> GetFunctionNames()
         {
-            return ListFunctionVisitor.Run(ApplyParse());
+            return GetFunctionNames(false);
+        }
+
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions)
+        {
+            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions);
         }
     }
 
