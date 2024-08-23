@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!ignoreUnsupportedTypes)
             {
-                if (HasUnsupportedType(dataArgType, supportsLazyTypes, _settings.MaxDepth, out DType unsupportedNestedType, out var unsupportedColumnName))
+                if (HasUnsupportedType(dataArgType, supportsLazyTypes, (_settings ?? JsonSettings.Default).MaxDepth, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
                 }
