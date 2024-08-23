@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // JSON(data:any, [format:s])    
     internal class JsonFunction : BuiltinFunction
-    {        
+    {
         private const char _includeBinaryDataEnumValue = 'B';
         private const char _ignoreBinaryDataEnumValue = 'G';
         private const char _ignoreUnsupportedTypesEnumValue = 'I';
@@ -31,18 +31,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DKind.DataEntity,
             DKind.LazyRecord,
             DKind.LazyTable,
-            DKind.View, 
+            DKind.View,
             DKind.ViewValue
         };
 
         private static readonly DKind[] _unsupportedTypes = new[]
         {
-            DKind.Control, 
+            DKind.Control,
             DKind.LazyRecord,
             DKind.LazyTable,
             DKind.Metadata,
-            DKind.OptionSet, 
-            DKind.PenImage, 
+            DKind.OptionSet,
+            DKind.PenImage,
             DKind.Polymorphic,
             DKind.UntypedObject,
             DKind.Void
@@ -50,9 +50,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool IsAsync => true;       
+        public override bool IsAsync => true;
 
         public override bool SupportsParamCoercion => false;
+
+        protected JsonSettings _settings;
 
         public JsonFunction()
             : base("JSON", TexlStrings.AboutJSON, FunctionCategories.Text, DType.String, 0, 1, 2, DType.EmptyTable, BuiltInEnums.JSONFormatEnum.FormulaType._type)
@@ -78,13 +80,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Do not call base.CheckTypes for arg0
             if (args.Length > 1)
             {
-                if (context.Features.StronglyTypedBuiltinEnums && 
+                if (context.Features.StronglyTypedBuiltinEnums &&
                     !base.CheckType(context, args[1], argTypes[1], BuiltInEnums.JSONFormatEnum.FormulaType._type, errors, ref nodeToCoercedTypeMap))
                 {
                     return false;
                 }
 
-                TexlNode optionsNode = args[1];                
+                TexlNode optionsNode = args[1];
                 if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
                 {
                     errors.EnsureError(optionsNode, TexlStrings.ErrFunctionArg2ParamMustBeConstant, "JSON", TexlStrings.JSONArg2.Invoke());
@@ -106,10 +108,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             DType dataArgType = argTypes[0];
             TexlNode dataNode = args[0];
+            TexlNode optionsNode = null;
 
             supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;
 
-            if (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind))
+            string nodeValue = null;
+            if (args.Length > 1)
+            {
+                optionsNode = args[1];
+                if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, out nodeValue))
+                {
+                    return;
+                }
+            }
+
+            if ((nodeValue == null || !nodeValue.Contains(_ignoreUnsupportedTypesEnumValue)) && (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind)))
             {
                 errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
                 return;
@@ -117,16 +130,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             bool includeBinaryData = false;
             bool ignoreUnsupportedTypes = false;
-            bool ignoreBinaryData = false;            
+            bool ignoreBinaryData = false;
 
-            if (args.Length > 1)
-            {
-                TexlNode optionsNode = args[1];                
-                if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, out string nodeValue))
-                {
-                    return;
-                }
-
+            if (nodeValue != null)
+            {                
                 if (nodeValue != null)
                 {
                     foreach (var option in nodeValue)
@@ -181,11 +188,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (!ignoreUnsupportedTypes)
             {
-                if (HasUnsupportedType(dataArgType, supportsLazyTypes, out DType unsupportedNestedType, out var unsupportedColumnName))
+                if (HasUnsupportedType(dataArgType, supportsLazyTypes, _settings.MaxDepth, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
                 }
-            }            
+            }
         }
 
         private static bool IsConstant(CheckTypesContext context, DType[] argTypes, TexlNode optionsNode, out string nodeValue)
@@ -207,33 +214,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// </summary>
         /// <param name="argType">Type DType to check.</param>
         /// <param name="supportsLazyTypes">Supports LazyRecord and LazyTable types.</param>
+        /// <param name="maxDepth">Max depth.</param>
         /// <param name="unsupportedType">If the function returns. <code>true</code>, the unsupported type.</param>
         /// <param name="unsupportedColumnName">If the function returns <code>true</code>, the column name with the unsupported type.</param>
         /// <returns><code>true</code> if the given type contains a nested property of an unsupported type; <code>false</code> otherwise.</returns>
-        internal static bool HasUnsupportedType(DType argType, bool supportsLazyTypes, out DType unsupportedType, out string unsupportedColumnName)
+        internal static bool HasUnsupportedType(DType argType, bool supportsLazyTypes, int maxDepth, out DType unsupportedType, out string unsupportedColumnName)
         {
-            return HasUnsupportedTypeInternal(argType, supportsLazyTypes, 0, out unsupportedType, out unsupportedColumnName);
+            return HasUnsupportedTypeInternal(argType, supportsLazyTypes, 0, maxDepth, out unsupportedType, out unsupportedColumnName);
         }
 
-        private static bool HasUnsupportedTypeInternal(DType argType, bool supportsLazyTypes, int depth, out DType unsupportedType, out string unsupportedColumnName)
+        private static bool HasUnsupportedTypeInternal(DType argType, bool supportsLazyTypes, int depth, int maxDepth, out DType unsupportedType, out string unsupportedColumnName)
         {
             bool isLazyRecordOrTable = supportsLazyTypes && (argType.Kind == DKind.LazyRecord || argType.Kind == DKind.LazyTable);
 
-            if (depth > 40 || (!isLazyRecordOrTable && _unsupportedTypes.Contains(argType.Kind)))
+            if (depth < maxDepth)
             {
-                unsupportedType = argType;
-                unsupportedColumnName = null; // root
-                return true;
-            }
-
-            if (isLazyRecordOrTable || argType.Kind == DKind.Record || argType.Kind == DKind.Table)
-            {
-                foreach (TypedName child in argType.GetAllNames(DPath.Root))
+                if (!isLazyRecordOrTable && _unsupportedTypes.Contains(argType.Kind))
                 {
-                    if (HasUnsupportedTypeInternal(child.Type, supportsLazyTypes, depth + 1, out unsupportedType, out unsupportedColumnName))
+                    unsupportedType = argType;
+                    unsupportedColumnName = null; // root
+                    return true;
+                }
+
+                if (isLazyRecordOrTable || argType.Kind == DKind.Record || argType.Kind == DKind.Table)
+                {
+                    foreach (TypedName child in argType.GetAllNames(DPath.Root))
                     {
-                        unsupportedColumnName = child.Name.Value;
-                        return true;
+                        if (HasUnsupportedTypeInternal(child.Type, supportsLazyTypes, depth + 1, maxDepth, out unsupportedType, out unsupportedColumnName))
+                        {
+                            unsupportedColumnName = child.Name.Value;
+                            return true;
+                        }
                     }
                 }
             }

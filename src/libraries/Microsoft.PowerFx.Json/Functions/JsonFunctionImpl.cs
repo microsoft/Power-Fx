@@ -23,11 +23,21 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction4
-    {
+    {        
+        public JsonFunctionImpl()
+        {
+            _settings = JsonSettings.Default;
+        }
+
+        public JsonFunctionImpl(JsonSettings settings)
+        {
+            _settings = settings;
+        }            
+
         public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args, supportsLazyTypes).Process());
+            return Task.FromResult(new JsonProcessing(_settings, timezoneInfo, type, args, supportsLazyTypes).Process());
         }
 
         internal class JsonProcessing
@@ -36,27 +46,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             private readonly FormulaType _type;
             private readonly TimeZoneInfo _timeZoneInfo;
             private readonly bool _supportsLazyTypes;
+            private readonly JsonSettings _jsonSettings;
 
-            internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, bool supportsLazyTypes)
+            internal JsonProcessing(JsonSettings settings, TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, bool supportsLazyTypes)
             {
                 _arguments = args;
                 _timeZoneInfo = timezoneInfo;
                 _type = type;
                 _supportsLazyTypes = supportsLazyTypes;
+                _jsonSettings = settings;
             }
 
             internal FormulaValue Process()
             {
                 JsonFlags flags = GetFlags();
 
-                if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, out _, out _))
+                if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, _jsonSettings.MaxDepth, out _, out _))
                 {
                     return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(_type));
                 }
 
                 using MemoryStream memoryStream = new MemoryStream();
                 using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables);
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables, maxDepth: _jsonSettings.MaxDepth);
 
                 _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
@@ -114,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if ((flags.IncludeBinaryData && flags.IgnoreBinaryData) ||
                     (flags.HasMedia && !flags.IncludeBinaryData && !flags.IgnoreBinaryData) ||
-                    (!flags.IgnoreUnsupportedTypes && JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, out var _, out var _)))
+                    (!flags.IgnoreUnsupportedTypes && JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, _jsonSettings.MaxDepth, out var _, out var _)))
                 {
                     return null;
                 }
@@ -127,14 +139,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
                 private readonly bool _flattenValueTables;
+                private int _currentRecordDepth;
+                private readonly int _maxDepth;
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
 
-                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables)
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables, int maxDepth)
                 {
                     _writer = writer;
                     _timeZoneInfo = timeZoneInfo;
                     _flattenValueTables = flattenValueTables;
+                    _currentRecordDepth = 0;
+                    _maxDepth = maxDepth;
                 }
 
                 public void Visit(BlankValue blankValue)
@@ -249,14 +265,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 public void Visit(RecordValue recordValue)
                 {
-                    _writer.WriteStartObject();
+                    _writer.WriteStartObject();                    
 
-                    foreach (NamedValue namedValue in recordValue.Fields)
+                    if (_currentRecordDepth < _maxDepth)
                     {
-                        _writer.WritePropertyName(namedValue.Name);
-                        namedValue.Value.Visit(this);
-                    }
+                        _currentRecordDepth++;
 
+                        foreach (NamedValue namedValue in recordValue.Fields)
+                        {
+                            _writer.WritePropertyName(namedValue.Name);
+                            namedValue.Value.Visit(this);
+                        }
+
+                        _currentRecordDepth--;
+                    }
+                    
                     _writer.WriteEndObject();
                 }
 
@@ -279,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             isSingleColumnValueTable = true;
                         }
                     }
-
+                    
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
                         if (row.IsBlank)
