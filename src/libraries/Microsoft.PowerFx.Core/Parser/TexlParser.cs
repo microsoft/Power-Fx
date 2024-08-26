@@ -327,16 +327,8 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            if (typeLiteralNode.IsValid(out var _))
-                            {
-                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, true));
-                                userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.DefinedType, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
-                            }
-                            else
-                            {
-                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, false));
-                                userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.DefinedType, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
-                            }
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, typeLiteralNode.IsValid(out var _)));
+                            userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.DefinedType, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
 
                             declarationStart = _curs.TokCur.Span.Lim;
                             definitionBeforeTrivia = new List<ITexlSource>();
