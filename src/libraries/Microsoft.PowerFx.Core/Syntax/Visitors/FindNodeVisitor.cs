@@ -326,5 +326,10 @@ namespace Microsoft.PowerFx.Syntax
         {
             SetCurrentNodeAsResult(node);
         }
+
+        public override void Visit(TypeLiteralNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
     }
 }

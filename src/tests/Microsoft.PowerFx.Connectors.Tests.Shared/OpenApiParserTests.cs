@@ -610,7 +610,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
-            Assert.Equal(ErrorKind.InvalidJSON, ev.Errors.First().Kind);
+            Assert.Equal(ErrorKind.InvalidArgument, ev.Errors.First().Kind);
             Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting Table but received a Number, in result/prediction/intents", ev.Errors.First().Message);
         }
 
@@ -675,7 +675,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
-            Assert.Equal(ErrorKind.InvalidJSON, ev.Errors.First().Kind);
+            Assert.Equal(ErrorKind.InvalidArgument, ev.Errors.First().Kind);
             Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting String but received a Table with 2 elements, in result/prediction/entities/category", ev.Errors.First().Message);
         }
 
@@ -1358,6 +1358,19 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal(2, connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions.Count);
             Assert.Equal("channelName", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[0].DisplayName);
             Assert.Equal("channelName2", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[1].DisplayName);
+        }
+
+        [Fact]
+        public void ABS_GetTriggers()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json", _output);
+            List<ConnectorFunction> triggers = OpenApiParser.GetTriggers("AzureBlobStorage", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            Assert.NotNull(triggers);
+            Assert.Equal(2, triggers.Count);
+            var onUpdatedFilesTrigger = triggers.FirstOrDefault(t => t.Name.Equals("OnUpdatedFiles"));
+            Assert.NotNull(onUpdatedFilesTrigger);
+            Assert.Equal(HttpMethod.Get, onUpdatedFilesTrigger.HttpMethod);
+            Assert.Equal("/apim/azureblob/{connectionId}/datasets/default/triggers/batch/onupdatedfile", onUpdatedFilesTrigger.OperationPath);
         }
     }
 

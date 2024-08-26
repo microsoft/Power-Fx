@@ -388,6 +388,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool IsDeprecatedOrInternalFunction => this is IHasUnsupportedFunctions sdf && (sdf.IsDeprecated || sdf.IsInternal);
 
+        // This property is true for a function if and only if there is an argIndex such that func.ArgIsType(argIndex) == true
+        // Eg: for example TypedParseJSON.ArgIsType(1) == true and hence TypedParseJSON.HasTypeArg is true
+        public virtual bool HasTypeArgs => false;
+
         public TexlFunction(
             DPath theNamespace,
             string name,
@@ -514,6 +518,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return SupportsParamCoercion && (argIndex <= MinArity || argIndex <= MaxArity);
         }
 
+        public virtual bool ArgIsType(int argIndex)
+        {
+            return false;
+        }
+
         private bool CheckTypesCore(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -531,8 +540,8 @@ namespace Microsoft.PowerFx.Core.Functions
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                // Identifiers don't have a type and type arguments need not be type checked
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }
@@ -567,7 +576,7 @@ namespace Microsoft.PowerFx.Core.Functions
             for (var i = count; i < args.Length; i++)
             {
                 // Identifiers don't have a type
-                if (ParameterCanBeIdentifier(args[i], i, context.Features))
+                if (ParameterCanBeIdentifier(args[i], i, context.Features) || ArgIsType(i))
                 {
                     continue;
                 }
