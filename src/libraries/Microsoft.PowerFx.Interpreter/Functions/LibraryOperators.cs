@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -529,16 +530,17 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        private static FormulaValue NumericDiv(IRContext irContext, NumberValue[] args)
+        private static FormulaValue NumericDiv(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var dividend = args[0].Value;
-            var divisor = args[1].Value;
-            if (divisor == 0)
+            var dividend = (NumberValue)args[0];
+            var divisor = (NumberValue)args[1];
+
+            if (divisor.Value == 0)
             {
-                return CommonErrors.DivByZeroError(irContext);
+                return CommonErrors.DivByZeroError(irContext, runner.GetService<CultureInfo>());
             }
 
-            return new NumberValue(irContext, dividend / divisor);
+            return new NumberValue(irContext, dividend.Value / divisor.Value);
         }
 
         private static BooleanValue NumericGt(IRContext irContext, NumberValue[] args)
@@ -597,20 +599,20 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, result);
         }
 
-        private static FormulaValue DecimalDiv(IRContext irContext, DecimalValue[] args)
+        private static FormulaValue DecimalDiv(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var dividend = args[0].Value;
-            var divisor = args[1].Value;
+            var dividend = (DecimalValue)args[0];
+            var divisor = (DecimalValue)args[1];
             decimal result;
 
-            if (divisor == 0m)
+            if (divisor.Value == 0m)
             {
-                return CommonErrors.DivByZeroError(irContext);
+                return CommonErrors.DivByZeroError(irContext, runner.GetService<CultureInfo>());
             }
 
             try
             {
-                result = dividend / divisor;
+                result = dividend.Value / divisor.Value;
             }
             catch (OverflowException)
             {

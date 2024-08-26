@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("TestCustom(1/0,true,\"test\")", null, true, "Invalid operation: division by zero.")]
 
         // With Blanks() as arg where expected arg is not a number or a string, Blank() will generate type mismatch error.
-        [InlineData("TestCustom(0, If(false,true), \"test\")", null, true, "Runtime type mismatch")]
+        [InlineData("TestCustom(0, If(false,true), \"test\")", null, true, "Runtime type mismatch.")]
 
         // With Blanks() as arg where expected arg is number, Blank() will be coerced to 0.
         [InlineData("TestCustom(If(false,12),true,\"test\")", "0,True,test", false, null)]

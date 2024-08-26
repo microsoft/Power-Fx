@@ -22,6 +22,11 @@ namespace Microsoft.PowerFx
         {
         }
 
+        internal ExpressionError(CultureInfo locale)
+        {
+            _messageLocale = locale;
+        }
+
         /// <summary>
         /// A description of the error message. 
         /// </summary>

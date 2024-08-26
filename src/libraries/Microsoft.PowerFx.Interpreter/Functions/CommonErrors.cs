@@ -1,23 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Interpreter.Localization;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static class CommonErrors
     {
         // Runtime type mismatch.
-        public static ErrorValue RuntimeTypeMismatch(IRContext irContext)
+        public static ErrorValue RuntimeTypeMismatch(IRContext irContext, CultureInfo locale)
         {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                ResourceKey = TexlStrings.ErrRuntimeTypeMismatch,
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            return new ErrorValue(
+                irContext,
+                NewExpressionError(RuntimeStringResources.ErrRuntimeTypeMismatch, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
         }
 
         // Argument out of range.
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                ResourceKey = TexlStrings.ErrArgumentOutOfRange,
+                ResourceKey = RuntimeStringResources.ErrArgumentOutOfRange,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
@@ -36,21 +37,18 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                ResourceKey = TexlStrings.ErrInvalidCharValue,
+                ResourceKey = RuntimeStringResources.ErrInvalidCharValue,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
         }
 
         // Invalid operation: division by zero
-        public static ErrorValue DivByZeroError(IRContext irContext)
+        public static ErrorValue DivByZeroError(IRContext irContext, CultureInfo locale)
         {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                ResourceKey = TexlStrings.ErrDivByZero,
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Div0
-            });
+            return new ErrorValue(
+                irContext, 
+                NewExpressionError(RuntimeStringResources.ErrDivByZero, ErrorKind.Div0, irContext.SourceContext, locale));
         }
 
         public static ErrorValue OverflowError(IRContext irContext)
@@ -63,7 +61,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                ResourceKey = TexlStrings.ErrBadLanguageCode,
+                ResourceKey = RuntimeStringResources.ErrBadLanguageCode,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.BadLanguageCode,
                 MessageArgs = new object[] { languageCode }
@@ -232,6 +230,17 @@ namespace Microsoft.PowerFx.Functions
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument
             });
+        }
+
+        private static ExpressionError NewExpressionError(ErrorResourceKey errorKey, ErrorKind kind, Span span, CultureInfo locale, params string[] args)
+        {
+            return new ExpressionError(locale)
+            {
+                ResourceKey = errorKey,
+                Span = span,
+                Kind = kind,
+                MessageArgs = args
+            };
         }
     }
 }

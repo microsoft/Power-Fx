@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -220,7 +219,8 @@ namespace Microsoft.PowerFx.Types
 
                 if (!found)
                 {
-                    errors.Add(CommonErrors.RecordNotFound());
+                    // !!!TODO This validation should be moved to the interpreter.
+                    errors.Add(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound });
                 }
             }
 
@@ -250,7 +250,8 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
+                // !!!TODO This validation should be moved to the interpreter.
+                return DValue<RecordValue>.Of(FormulaValue.NewError(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound }));
             }
         }
 

@@ -4694,10 +4694,6 @@
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrDivByZero" xml:space="preserve">
-    <value>Invalid operation: division by zero.</value>
-    <comment>Error Message.</comment>
-  </data>
   <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
     <value>Runtime type mismatch.</value>
     <comment>Error Message.</comment>
