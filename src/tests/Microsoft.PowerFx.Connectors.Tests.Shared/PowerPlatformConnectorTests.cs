@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -448,7 +449,9 @@ namespace Microsoft.PowerFx.Tests
                     args[0] is BlankValue || args[0] is BlobValue
                     ? args[0]
                     : args[0] is not StringValue sv
-                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext)
+
+                    // !!!TODO Test this
+                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>())
                     : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));
             }
         }

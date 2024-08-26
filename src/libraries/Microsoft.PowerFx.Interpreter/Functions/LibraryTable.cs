@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Functions
             return args[0].Last(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
-        public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue FirstN(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is BlankValue)
             {
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
 
             var arg0 = (TableValue)args[0];
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-        public static FormulaValue LastN(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue LastN(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is BlankValue)
             {
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
 
             var arg0 = (TableValue)args[0];
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // CountRows
-        public static FormulaValue CountRows(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue CountRows(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -343,11 +343,11 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
         }
 
         // Count
-        public static FormulaValue Count(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Count(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             var count = 0;
@@ -386,11 +386,11 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
         }
 
         // CountA
-        public static FormulaValue CountA(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue CountA(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             if (arg0 is BlankValue)
@@ -429,7 +429,7 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
         }
 
         public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -586,7 +586,7 @@ namespace Microsoft.PowerFx.Functions
                     isDescending = ((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
                     break;
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -641,7 +641,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allTimes || allOptionSets))
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
 
             var compareToResultModifier = 1;
@@ -684,7 +684,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
         }
 
@@ -737,7 +737,7 @@ namespace Microsoft.PowerFx.Functions
                             isAscending = !((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
                             break;
                         default:
-                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext);
+                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext, runner.CultureInfo);
                     }
                 }
 
@@ -820,7 +820,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!fieldValue.TryGetPrimitiveValue(out var primitiveValue))
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
                 }
 
                 if (orderTableValues.Contains(primitiveValue))
@@ -983,7 +983,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (InvalidOperationException)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
         }
 
@@ -1185,7 +1185,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue tableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
 
             var keyRecords = new Dictionary<string, RecordValue>();

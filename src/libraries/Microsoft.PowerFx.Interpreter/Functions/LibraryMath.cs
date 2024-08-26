@@ -609,35 +609,35 @@ namespace Microsoft.PowerFx.Functions
         // Sum(1,2,3)     
         internal static FormulaValue Sum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args, runner.GetService<CultureInfo>());
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args, runner.CultureInfo);
         }
 
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
         }
 
         // VarP(1,2,3)
         internal static FormulaValue Var(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new VarianceAgg(), irContext, args, runner.GetService<CultureInfo>());
+            return RunAggregator(new VarianceAgg(), irContext, args, runner.CultureInfo);
         }
 
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
         }
 
         internal static FormulaValue Stdev(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new StdDeviationAgg(), irContext, args, runner.GetService<CultureInfo>());
+            return RunAggregator(new StdDeviationAgg(), irContext, args, runner.CultureInfo);
         }
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
         }
 
         // Max(1,2,3)     
@@ -647,7 +647,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, irContext, args, runner.GetService<CultureInfo>());
+                return RunAggregator(agg, irContext, args, runner.CultureInfo);
             }
             else
             {
@@ -662,7 +662,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
             }
             else
             {
@@ -677,7 +677,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, irContext, args, runner.GetService<CultureInfo>());
+                return RunAggregator(agg, irContext, args, runner.CultureInfo);
             }
             else
             {
@@ -692,7 +692,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
             }
             else
             {
@@ -731,7 +731,7 @@ namespace Microsoft.PowerFx.Functions
         // Average(1,2,3)
         public static FormulaValue Average(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args, runner.GetService<CultureInfo>());
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args, runner.CultureInfo);
         }
 
         // Average([1,2,3], Value * Value)     
@@ -741,10 +741,10 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0.Rows.Count() == 0)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.GetService<CultureInfo>());
+                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
             }
 
-            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args, runner.GetService<CultureInfo>()).ConfigureAwait(false);
+            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -752,11 +752,11 @@ namespace Microsoft.PowerFx.Functions
         {
             if (irContext.ResultType == FormulaType.Number)
             {
-                return ModFloat(irContext, (NumberValue)args[0], (NumberValue)args[1], runner.GetService<CultureInfo>());
+                return ModFloat(irContext, (NumberValue)args[0], (NumberValue)args[1], runner.CultureInfo);
             }
             else if (irContext.ResultType == FormulaType.Decimal)
             {
-                return ModDecimal(irContext, (DecimalValue)args[0], (DecimalValue)args[1], runner.GetService<CultureInfo>());
+                return ModDecimal(irContext, (DecimalValue)args[0], (DecimalValue)args[1], runner.CultureInfo);
             }
             else
             {

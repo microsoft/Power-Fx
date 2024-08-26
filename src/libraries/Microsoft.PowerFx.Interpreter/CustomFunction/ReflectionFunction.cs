@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx
                         errors = new List<ErrorValue>();
                     }
 
-                    errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank)));
+                    errors.Add(CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Blank), serviceProvider.GetService<CultureInfo>()));
                 }
                 else if (arg is LambdaFormulaValue lambda)
                 {

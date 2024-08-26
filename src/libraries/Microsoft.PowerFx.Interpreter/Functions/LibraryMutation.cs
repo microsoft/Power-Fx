@@ -278,7 +278,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (arg0 is not TableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type));
+                // We should never hit this.
+                return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type), null);
             }
 
             var tableValue = arg0 as TableValue;

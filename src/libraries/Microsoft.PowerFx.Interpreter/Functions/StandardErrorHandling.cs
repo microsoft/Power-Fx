@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Functions
                 var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
-                    return nonFiniteArgError;
+                    return new ErrorValue(irContext, nonFiniteArgError.Errors.Select(expr => expr.GetInLocale(runner.CultureInfo)).ToList());
                 }
 
                 IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
@@ -252,7 +252,7 @@ namespace Microsoft.PowerFx.Functions
                             T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t }).ConfigureAwait(false)),
                             BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv }).ConfigureAwait(false)),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
-                            _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
+                            _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType), runner.CultureInfo))
                         };
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
@@ -574,7 +574,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, null);
             }
         }
 
@@ -704,7 +704,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue TimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
@@ -714,7 +714,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue DateOrTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
@@ -724,7 +724,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
@@ -734,7 +734,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue NumberOrDecimal(IRContext irContext, int index, FormulaValue arg)
@@ -744,7 +744,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue NumberOrDecimalOrOptionSetBackedByNumber(IRContext irContext, int index, FormulaValue arg)
@@ -754,7 +754,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue StringOrOptionSetBackedByString(IRContext irContext, int index, FormulaValue arg)
@@ -764,7 +764,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue StringOrOptionSet(IRContext irContext, int index, FormulaValue arg)
@@ -774,7 +774,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue StringOrBlankOrOptionSetBackedByString(IRContext irContext, int index, FormulaValue arg)
@@ -794,7 +794,7 @@ namespace Microsoft.PowerFx.Functions
                 return arg;
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext);
+            return CommonErrors.RuntimeTypeMismatch(irContext, null);
         }
 
         private static FormulaValue NumberOrBlankOrOptionSetBackedByNumber(IRContext irContext, int index, FormulaValue arg)
@@ -832,6 +832,7 @@ namespace Microsoft.PowerFx.Functions
                         errors = new List<ErrorValue>();
                     }
 
+                    // !!!TODO Localized this
                     errors.Add(new ErrorValue(irContext, new ExpressionError()
                     {
                         Message = $"Arguments to the {functionName} function must be finite.",

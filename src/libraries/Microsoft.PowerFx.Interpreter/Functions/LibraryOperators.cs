@@ -537,7 +537,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (divisor.Value == 0)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.GetService<CultureInfo>());
+                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
             }
 
             return new NumberValue(irContext, dividend.Value / divisor.Value);
@@ -607,7 +607,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (divisor.Value == 0m)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.GetService<CultureInfo>());
+                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
             }
 
             try

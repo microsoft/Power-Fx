@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx
                 T t => DValue<T>.Of(t),
                 BlankValue b => DValue<T>.Of(b),
                 ErrorValue e => DValue<T>.Of(e),
-                _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext))
+                _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext, null))
             };
         }
 
@@ -810,7 +810,7 @@ namespace Microsoft.PowerFx
                         hostObj = await getHostObject(_services).ConfigureAwait(false);
                         if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                         {
-                            hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
+                            hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext, CultureInfo);
                         }
                     }
                     catch (CustomFunctionErrorException ex)

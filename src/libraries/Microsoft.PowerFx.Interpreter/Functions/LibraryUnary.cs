@@ -888,7 +888,7 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     return new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
         }
 
@@ -928,7 +928,7 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     return dv;
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
         }
 
@@ -974,7 +974,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!date.IsValid(runner))
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext);
+                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
             }
 
             return new DateValue(irContext, date.Date);

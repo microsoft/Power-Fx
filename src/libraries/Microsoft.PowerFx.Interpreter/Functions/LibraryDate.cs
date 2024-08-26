@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
 
                     default:
-                        return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+                        return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
                 }
             }
             else if (args[1] is TimeValue time)
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
             }
 
             // When converting to months, quarters or years, we don't use the time difference
@@ -762,7 +762,7 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
+                    return CommonErrors.RuntimeTypeMismatch(args[1].IRContext, runner.CultureInfo);
             }
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))

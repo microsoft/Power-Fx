@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
         public int StatusCode { get; }
 
         public HttpExpressionError(int statusCode)
-            : base()
+            : base(null)
         {
             StatusCode = statusCode;
         }

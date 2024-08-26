@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -181,7 +182,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     args[0] is BlankValue || args[0] is BlobValue
                     ? args[0]
                     : args[0] is not TableValue tv
-                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext)
+
+                    // !!!TODO Test this
+                    ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>())
                     : BlobValue.NewBlob(tv.Rows.Select((DValue<RecordValue> drv) => (byte)(decimal)drv.Value.GetField("Value").ToObject()).ToArray()));
             }
         }

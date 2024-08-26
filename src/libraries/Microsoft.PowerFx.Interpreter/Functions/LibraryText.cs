@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Scalar
         // Operator & maps to this function call.
-        public static FormulaValue Concatenate(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Concatenate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var sb = new StringBuilder();
 
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
                         sb.Append(osv.ExecutionValue is string s ? s : osv.DisplayName);
                         break;
                     default:
-                        return CommonErrors.RuntimeTypeMismatch(arg.IRContext);
+                        return CommonErrors.RuntimeTypeMismatch(arg.IRContext, runner.CultureInfo);
                 }
             }
 
@@ -855,7 +855,7 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
+                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext, runner.CultureInfo);
                     }
                 }
 
