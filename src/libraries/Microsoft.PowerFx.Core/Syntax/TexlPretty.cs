@@ -468,6 +468,8 @@ namespace Microsoft.PowerFx.Syntax
     {
         private readonly string _script;
 
+        public const string TypeInvariantFunctionName = "Type";
+
         private static readonly Dictionary<BinaryOp, Precedence> BinaryPrecedence =
             new Dictionary<BinaryOp, Precedence>()
             {
@@ -540,7 +542,7 @@ namespace Microsoft.PowerFx.Syntax
                     case UserDefinitionType.DefinedType:
                         var type = result.DefinedTypes.First(type => type.Ident == name);
 
-                        definitions.Add(declaration + " = Type(" + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))) + ")");
+                        definitions.Add(declaration + $" = {TypeInvariantFunctionName}(" + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))) + ")");
                         break;
                     default:
                         continue;
