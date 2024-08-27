@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        result = CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"{func.Name} function");
+                        result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, CultureInfo, func.Name);
                     }
                 }
             }
@@ -616,7 +616,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"Unary op {node.Op}");
+            return CommonErrors.NotYetImplementedUnaryOperatorError(node.IRContext, CultureInfo, node.Op.ToString());
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
@@ -753,7 +753,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, "Single column table access");
+            throw new NotImplementedException();
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)

@@ -105,12 +105,20 @@ namespace Microsoft.PowerFx.Functions
                 NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Validation, irContext.SourceContext, locale));
         }
 
-        // Not implemented: {0}.
-        public static ErrorValue NotYetImplementedError(IRContext irContext, CultureInfo locale, string message)
+        // Not yet implemented function: {0}.
+        public static ErrorValue NotYetImplementedFunctionError(IRContext irContext, CultureInfo locale, string functionName)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedError, ErrorKind.NotSupported, irContext.SourceContext, locale, message));
+                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedFunctionError, ErrorKind.NotSupported, irContext.SourceContext, locale, functionName));
+        }
+
+        // Not yet implemented unary operator: {0}.
+        public static ErrorValue NotYetImplementedUnaryOperatorError(IRContext irContext, CultureInfo locale, string unaryOperatorName)
+        {
+            return new ErrorValue(
+                irContext,
+                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedUnaryOperatorError, ErrorKind.NotSupported, irContext.SourceContext, locale, unaryOperatorName));
         }
 
         // Invalid Chain: {0}.

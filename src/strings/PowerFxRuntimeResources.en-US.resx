@@ -165,8 +165,12 @@
     <value>Unknown error.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrNotYetImplementedError" xml:space="preserve">
-    <value>Not implemented: {0}.</value>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Not yet implemented function: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNotYetImplementedUnaryOpratorError" xml:space="preserve">
+    <value>Not yet implemented unary operator: {0}.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidChain" xml:space="preserve">

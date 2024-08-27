@@ -23,7 +23,8 @@ namespace Microsoft.PowerFx.Interpreter.Localization
         public static readonly ErrorResourceKey ErrInvalidBooleanFormatError = New("ErrInvalidBooleanFormatError");
         public static readonly ErrorResourceKey ErrInvalidColorFormatError = New("ErrInvalidColorFormatError");
         public static readonly ErrorResourceKey ErrUnreachableCodeError = New("ErrUnreachableCodeError");
-        public static readonly ErrorResourceKey ErrNotYetImplementedError = New("ErrNotYetImplementedError");
+        public static readonly ErrorResourceKey ErrNotYetImplementedFunctionError = New("ErrNotYetImplementedFunctionError");
+        public static readonly ErrorResourceKey ErrNotYetImplementedUnaryOperatorError = New("ErrNotYetImplementedUnaryOperatorError");
         public static readonly ErrorResourceKey ErrInvalidChain = New("ErrInvalidChain");
         public static readonly ErrorResourceKey ErrMaxCallDepth = New("ErrMaxCallDepth");
         public static readonly ErrorResourceKey ErrRecordNotFound = New("ErrRecordNotFound");
