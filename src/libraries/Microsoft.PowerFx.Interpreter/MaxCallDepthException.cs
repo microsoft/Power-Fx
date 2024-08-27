@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
@@ -38,9 +39,9 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
-        public FormulaValue ToErrorValue(IRContext irContext)
+        public FormulaValue ToErrorValue(IRContext irContext, CultureInfo locale)
         {
-            return CommonErrors.MaxCallDepth(irContext);
+            return CommonErrors.MaxCallDepth(irContext, locale);
         }
     }
 }

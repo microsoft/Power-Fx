@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx
             return (T)serviceProvider.GetService(typeof(T));
         }
 
-        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, StringValue property, FormulaValue value)
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, StringValue property, FormulaValue value, CultureInfo locale)
         {
             try
             {
@@ -49,11 +50,12 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                // !!!TODO Localize $"Class {untypedObject.GetType()} does not implement 'SetProperty'."
+                return CommonErrors.NotYetImplementedError(context, locale, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
             }
         }
 
-        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, NumberValue property, FormulaValue value)
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, NumberValue property, FormulaValue value, CultureInfo locale)
         {
             try
             {
@@ -66,7 +68,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                return CommonErrors.NotYetImplementedError(context, locale, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
             }
         }
     }

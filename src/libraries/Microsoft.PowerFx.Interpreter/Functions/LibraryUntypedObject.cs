@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Functions
             return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{0,7})?Z?)?$");
         }
 
-        public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Index_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
         }
 
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
 
                 return Value(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch (FormatException)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
             }
             else if (impl.Type == FormulaType.Boolean)
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
 
                 return Decimal(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
 
                 return new NumberValue(irContext, number);
@@ -397,14 +397,14 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        public static FormulaValue Boolean_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Boolean_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return TextToBoolean(irContext, new StringValue[] { str });
+                return TextToBoolean(runner, context, irContext, new StringValue[] { str });
             }
             else if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.UntypedNumber)
             {
@@ -486,13 +486,13 @@ namespace Microsoft.PowerFx.Functions
                     return new DateValue(irContext, datetime.Date);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue TimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -506,7 +506,7 @@ namespace Microsoft.PowerFx.Functions
                     return new TimeValue(irContext, res);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
@@ -529,7 +529,7 @@ namespace Microsoft.PowerFx.Functions
                     return new DateTimeValue(irContext, datetime);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
@@ -602,7 +602,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
-        public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue ColorValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -612,11 +612,11 @@ namespace Microsoft.PowerFx.Functions
 
                 if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
                 {
-                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
+                    return ColorValue(runner, context, irContext, new StringValue[] { FormulaValue.New(str) });
                 }
                 else
                 {
-                    return CommonErrors.InvalidColorFormatError(irContext);
+                    return CommonErrors.InvalidColorFormatError(irContext, runner.CultureInfo);
                 }
             }
 

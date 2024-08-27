@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -53,10 +55,10 @@ namespace Microsoft.PowerFx.Functions
         {
             return async (runner, context, irContext, args) =>
             {
-                var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
+                var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args, runner.CultureInfo);
                 if (nonFiniteArgError != null)
                 {
-                    return new ErrorValue(irContext, nonFiniteArgError.Errors.Select(expr => expr.GetInLocale(runner.CultureInfo)).ToList());
+                    return nonFiniteArgError;
                 }
 
                 IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
@@ -69,7 +71,8 @@ namespace Microsoft.PowerFx.Functions
                 IEnumerable<ErrorValue> errors = runtimeValuesChecked.OfType<ErrorValue>();
                 if (errors.Any())
                 {
-                    return ErrorValue.Combine(irContext, errors);
+                    var errorsCombined = ErrorValue.Combine(irContext, errors);
+                    return new ErrorValue(irContext, errorsCombined.Errors.Select(expr => expr.GetInLocale(runner.CultureInfo)).ToList());
                 }
 
                 bool anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
@@ -102,7 +105,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray()).ConfigureAwait(false);
-                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result);
+                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result, runner.CultureInfo);
 
                 return finiteError ?? result;
             };
@@ -810,7 +813,7 @@ namespace Microsoft.PowerFx.Functions
         #endregion
 
         #region Common Runtime Value Checking Pipeline Stages
-        private static ErrorValue FiniteArgumentCheck(string functionName, IRContext irContext, FormulaValue[] args)
+        private static ErrorValue FiniteArgumentCheck(string functionName, IRContext irContext, FormulaValue[] args, CultureInfo locale)
         {
             List<ErrorValue> errors = null;
             foreach (var arg in args)
@@ -832,12 +835,12 @@ namespace Microsoft.PowerFx.Functions
                         errors = new List<ErrorValue>();
                     }
 
-                    // !!!TODO Localized this
-                    errors.Add(new ErrorValue(irContext, new ExpressionError()
+                    errors.Add(new ErrorValue(irContext, new ExpressionError(locale)
                     {
-                        Message = $"Arguments to the {functionName} function must be finite.",
+                        ResourceKey = RuntimeStringResources.ErrNonFiniteArgument,
                         Span = irContext.SourceContext,
-                        Kind = ErrorKind.Numeric
+                        Kind = ErrorKind.Numeric,
+                        MessageArgs = new object[] { functionName }
                     }));
                 }
             }
@@ -845,7 +848,7 @@ namespace Microsoft.PowerFx.Functions
             return errors != null ? ErrorValue.Combine(irContext, errors) : null;
         }
 
-        private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value)
+        private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value, CultureInfo locale)
         {
             if (value is ErrorValue ev)
             {
@@ -854,11 +857,12 @@ namespace Microsoft.PowerFx.Functions
 
             if (value is NumberValue nv && IsInvalidDouble(nv.Value))
             {
-                return new ErrorValue(irContext, new ExpressionError()
+                return new ErrorValue(irContext, new ExpressionError(locale)
                 {
-                    Message = $"The function {functionName} returned a non-finite number.",
+                    ResourceKey = RuntimeStringResources.ErrNonFiniteResult,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
+                    Kind = ErrorKind.Numeric,
+                    MessageArgs = new object[] { functionName }
                 });
             }
 
@@ -874,7 +878,8 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number < 0)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    // The caller will localize this error message.
+                    return CommonErrors.ArgumentOutOfRange(irContext, null);
                 }
             }
 
@@ -888,7 +893,8 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number <= 0)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    // The caller will localize this error message.
+                    return CommonErrors.ArgumentOutOfRange(irContext, null);
                 }
             }
 
@@ -902,7 +908,8 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number <= 0)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    // The caller will localize this error message.
+                    return CommonErrors.ArgumentOutOfRange(irContext, null);
                 }
             }
 

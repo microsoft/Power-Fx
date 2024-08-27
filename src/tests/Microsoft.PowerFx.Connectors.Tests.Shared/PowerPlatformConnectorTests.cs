@@ -449,8 +449,6 @@ namespace Microsoft.PowerFx.Tests
                     args[0] is BlankValue || args[0] is BlobValue
                     ? args[0]
                     : args[0] is not StringValue sv
-
-                    // !!!TODO Test this
                     ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>())
                     : BlobValue.NewBlob(sv.Value, args.Length >= 2 && args[1] is BooleanValue bv && bv.Value));
             }

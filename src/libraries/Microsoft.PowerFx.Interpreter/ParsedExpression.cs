@@ -168,11 +168,6 @@ namespace Microsoft.PowerFx
             {
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
 
-                if (newValue is ErrorValue errorValue)
-                {
-                    return FormulaValue.NewError(errorValue.Errors.Select(expr => expr.GetInLocale(runtimeConfig2.GetService<CultureInfo>())), errorValue.Type);
-                }
-
                 return newValue;
             }
             catch (CustomFunctionErrorException customError)
@@ -182,7 +177,7 @@ namespace Microsoft.PowerFx
             }
             catch (MaxCallDepthException maxCallDepthException)
             {
-                return maxCallDepthException.ToErrorValue(_irnode.IRContext);
+                return maxCallDepthException.ToErrorValue(_irnode.IRContext, evalVisitor.CultureInfo);
             }
         }
 

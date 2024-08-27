@@ -740,7 +740,7 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, value.Value ? 1m : 0m);
         }
 
-        public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
+        public static FormulaValue TextToBoolean(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             if (string.IsNullOrEmpty(args[0].Value))
             {
@@ -749,7 +749,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
 
-            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext, runner.CultureInfo);
         }
 
         public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)

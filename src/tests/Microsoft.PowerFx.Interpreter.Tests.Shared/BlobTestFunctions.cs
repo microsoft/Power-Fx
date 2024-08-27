@@ -60,7 +60,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is not StringValue sv)
             {
-                // !!!TODO Test this
                 return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>()));
             }
             
@@ -115,7 +114,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (blob == null)
             {
-                // !!!TODO Test this
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>());
             }
 
@@ -158,7 +156,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (blobValue == null)
             {
-                // !!!TODO Test this
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>());
             }
 

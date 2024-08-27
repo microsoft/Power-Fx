@@ -306,7 +306,7 @@ namespace Microsoft.PowerFx
             {
                 if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
                 {
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), serviceProvider.GetService<CultureInfo>(), customFunctionErrorException.Message);
                 }
 
                 throw;
@@ -326,7 +326,7 @@ namespace Microsoft.PowerFx
                         return FormulaValue.NewError(customFunctionErrorException.ExpressionError);
                     }
 
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), serviceProvider.GetService<CultureInfo>(), customFunctionErrorException.Message);
                 }
             }
 

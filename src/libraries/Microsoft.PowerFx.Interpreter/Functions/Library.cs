@@ -2404,7 +2404,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return CommonErrors.UnreachableCodeError(irContext);
+            return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
         }
 
         // Error({Kind:<error kind>,Message:<error message>})

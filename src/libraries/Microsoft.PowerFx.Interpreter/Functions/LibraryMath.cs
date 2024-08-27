@@ -566,7 +566,6 @@ namespace Microsoft.PowerFx.Functions
             return result;
         }
 
-        // !!!TODO Run locale tests against all aggregator functions.
         private static async Task<FormulaValue> RunAggregatorAsync(string functionName, IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, CultureInfo locale)
         {
             var arg0 = (TableValue)args.First();
@@ -651,7 +650,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -666,7 +665,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -681,7 +680,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -696,7 +695,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -760,7 +759,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -814,20 +813,20 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
         // Sequence( count:n, start:(n|w), step:(n|w) ) where start and step must be the same type
-        public static FormulaValue Sequence(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Sequence(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             double count = ((NumberValue)args[0]).Value;
 
             if (count < 0 || count > int.MaxValue)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
 
             return (args[1], args[2]) switch
             {
                 (NumberValue startN, NumberValue stepN) => SequenceFloat(irContext, (int)count, startN, stepN),
                 (DecimalValue startW, DecimalValue stepW) => SequenceDecimal(irContext, (int)count, startW, stepW),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
@@ -905,7 +904,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Abs(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Abs(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -913,7 +912,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 NumberValue num => AbsFloat(irContext, num),
                 DecimalValue dec => AbsDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
@@ -931,7 +930,7 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, val);
         }
 
-        public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Round(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -941,18 +940,18 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo),
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, CultureInfo locale, RoundType rt = RoundType.Default)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
@@ -981,7 +980,7 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
             }
 
-            return CommonErrors.UnreachableCodeError(irContext);
+            return CommonErrors.UnreachableCodeError(irContext, locale);
         }
 
         private static readonly IReadOnlyList<decimal> DecPow10 = new decimal[]
@@ -1001,7 +1000,7 @@ namespace Microsoft.PowerFx.Functions
         // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
         // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
         // In the future, some of this can be replaced with built in support in decimal.Round()
-        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, RoundType roundType = RoundType.Default)
+        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, CultureInfo locale, RoundType roundType = RoundType.Default)
         {
             var signedNumber = dec.Value;
 
@@ -1081,7 +1080,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return CommonErrors.UnreachableCodeError(irContext);
+            return CommonErrors.UnreachableCodeError(irContext, locale);
         }
 
         public enum RoundType
@@ -1091,7 +1090,7 @@ namespace Microsoft.PowerFx.Functions
             Down
         }
 
-        public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RoundUp(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -1101,18 +1100,18 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Up),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Up),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Up),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Up),
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
-        public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RoundDown(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -1127,24 +1126,24 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
             }
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Down),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Down),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Down),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Down),
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
-        public static FormulaValue Int(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Int(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return args[0] switch
             {
                 NumberValue num => IntFloat(irContext, num),
                 DecimalValue dec => IntDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
             };
         }
 
@@ -1273,7 +1272,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 (NumberValue lower, NumberValue upper) => RandBetweenFloat(services, irContext, lower, upper),
                 (DecimalValue lower, DecimalValue upper) => RandBetweenDecimal(services, irContext, lower, upper),
-                _ => CommonErrors.UnreachableCodeError(irContext)
+                _ => CommonErrors.UnreachableCodeError(irContext, services.GetService<CultureInfo>())
             };
         }
 
@@ -1434,7 +1433,7 @@ namespace Microsoft.PowerFx.Functions
         //
         // Could these variations be done as an overload?  Yes. But we really want to make sure we get the
         // right onw and not have C# coerce to another data type and possibly lose precision.
-        private static FormulaValue NumberOrDecimalValue(IRContext irContext, int value)
+        private static FormulaValue NumberOrDecimalValue(IRContext irContext, int value, CultureInfo locale)
         {
             // all int values fit in both double and decimal
             if (irContext.ResultType == FormulaType.Number)
@@ -1447,11 +1446,11 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, locale);
             }
         }
 
-        private static FormulaValue NumberOrDecimalValue_Long(IRContext irContext, long value)
+        private static FormulaValue NumberOrDecimalValue_Long(IRContext irContext, long value, CultureInfo locale)
         {
             // all long values fit in both double and decimal, however Number could lose some precision
             if (irContext.ResultType == FormulaType.Number)
@@ -1464,12 +1463,12 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, locale);
             }
         }
 
         // This function should only be used in places where we don't expect value to exceed the range of a decimal
-        private static FormulaValue NumberOrDecimalValue_Double(IRContext irContext, double value)
+        private static FormulaValue NumberOrDecimalValue_Double(IRContext irContext, double value, CultureInfo locale)
         {
             if (irContext.ResultType == FormulaType.Number)
             {
@@ -1488,7 +1487,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                return CommonErrors.UnreachableCodeError(irContext, locale);
             }
         }
 
@@ -1550,13 +1549,13 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        private static FormulaValue Hex2Dec(IRContext irContext, StringValue[] args)
+        private static FormulaValue Hex2Dec(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             var number = args[0].Value;
 
             if (string.IsNullOrEmpty(number))
             {
-                return NumberOrDecimalValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
             }
 
             if (number.Length > 10)
@@ -1570,7 +1569,7 @@ namespace Microsoft.PowerFx.Functions
                 var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
                 negative_result -= maxNumber;
-                return NumberOrDecimalValue_Long(irContext, negative_result);
+                return NumberOrDecimalValue_Long(irContext, negative_result, runner.CultureInfo);
             }
 
             if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
@@ -1578,7 +1577,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return NumberOrDecimalValue_Long(irContext, result);
+            return NumberOrDecimalValue_Long(irContext, result, runner.CultureInfo);
         }
     }
 }

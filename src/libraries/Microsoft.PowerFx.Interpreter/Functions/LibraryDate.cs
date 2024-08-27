@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
         }
 
@@ -314,17 +314,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 case "months":
                     double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
-                    return NumberOrDecimalValue_Double(irContext, months);
+                    return NumberOrDecimalValue_Double(irContext, months, runner.CultureInfo);
 
                 case "quarters":
 
                     // decrementing months by 1 so that we can have months 1-3 (Jan-Mar) on quarter 0, months 4-6 (Apr-Jun) on quarter 1, and so on
                     var quarters = ((end.Year - start.Year) * 4) + Math.Floor((end.Month - 1) / 3.0) - Math.Floor((start.Month - 1) / 3.0);
-                    return NumberOrDecimalValue_Double(irContext, quarters);
+                    return NumberOrDecimalValue_Double(irContext, quarters, runner.CultureInfo);
 
                 case "years":
                     double years = end.Year - start.Year;
-                    return NumberOrDecimalValue_Double(irContext, years);
+                    return NumberOrDecimalValue_Double(irContext, years, runner.CultureInfo);
             }
 
             // This takes care of DST differences
@@ -342,31 +342,31 @@ namespace Microsoft.PowerFx.Functions
             {
                 case "milliseconds":
                     var milliseconds = Math.Floor((end - start).TotalMilliseconds);
-                    return NumberOrDecimalValue_Double(irContext, milliseconds);
+                    return NumberOrDecimalValue_Double(irContext, milliseconds, runner.CultureInfo);
 
                 case "seconds":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, start.Second);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, end.Second);
                     var seconds = Math.Floor((end - start).TotalSeconds);
-                    return NumberOrDecimalValue_Double(irContext, seconds);
+                    return NumberOrDecimalValue_Double(irContext, seconds, runner.CultureInfo);
 
                 case "minutes":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, 0);
                     var minutes = Math.Floor((end - start).TotalMinutes);
-                    return NumberOrDecimalValue_Double(irContext, minutes);
+                    return NumberOrDecimalValue_Double(irContext, minutes, runner.CultureInfo);
 
                 case "hours":
                     start = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, end.Hour, 0, 0);
                     var hours = Math.Floor((end - start).TotalHours);
-                    return NumberOrDecimalValue_Double(irContext, hours);
+                    return NumberOrDecimalValue_Double(irContext, hours, runner.CultureInfo);
 
                 case "days":
                     start = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
                     end = new DateTime(end.Year, end.Month, end.Day, 0, 0, 0);
                     var days = Math.Floor((end - start).TotalDays);
-                    return NumberOrDecimalValue_Double(irContext, days);
+                    return NumberOrDecimalValue_Double(irContext, days, runner.CultureInfo);
 
                 default:
                     return GetInvalidUnitError(irContext, "DateDiff");
@@ -403,13 +403,13 @@ namespace Microsoft.PowerFx.Functions
             if (args[0] is BlankValue)
             {
                 // TODO: Standardize the number 0 - year 1900 logic
-                return NumberOrDecimalValue(irContext, 1900);
+                return NumberOrDecimalValue(irContext, 1900, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var x = arg0.Year;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         public static FormulaValue Day(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -417,13 +417,13 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var x = arg0.Day;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         public static FormulaValue Month(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -431,13 +431,13 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 1);
+                return NumberOrDecimalValue(irContext, 1, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedDateTime(args[0]);
 
             var x = arg0.Month;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         public static FormulaValue Hour(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -445,13 +445,13 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedTimeSpan(args[0]);
 
             var x = arg0.Hours;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         public static FormulaValue Minute(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -459,13 +459,13 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedTimeSpan(args[0]);
 
             var x = arg0.Minutes;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         public static FormulaValue Second(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -473,13 +473,13 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
             }
 
             var arg0 = runner.GetNormalizedTimeSpan(args[0]);
 
             var x = arg0.Seconds;
-            return NumberOrDecimalValue(irContext, x);
+            return NumberOrDecimalValue(irContext, x, runner.CultureInfo);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-date-time
@@ -514,21 +514,21 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
             }
         }
 
-        public static FormulaValue Time(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Time(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             if (args.Length < 4 || !TryGetInt(args[0], out int hour) || !TryGetInt(args[1], out int minute) || !TryGetInt(args[2], out int second) || !TryGetInt(args[3], out int millisecond))
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
             }
 
-            return TimeImpl(irContext, hour, minute, second, millisecond);
+            return TimeImpl(runner, irContext, hour, minute, second, millisecond);
         }
 
-        private static FormulaValue TimeImpl(IRContext irContext, int hour, int minute, int second, int millisecond)
+        private static FormulaValue TimeImpl(EvalVisitor runner, IRContext irContext, int hour, int minute, int second, int millisecond)
         {
             try
             {
@@ -543,7 +543,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -576,7 +576,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext);
+                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -606,7 +606,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!TextFormatUtils.TryGetCulture(languageCode, out locale))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode, runner.CultureInfo);
                 }
             }
 
@@ -636,7 +636,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
             }
         }
 
@@ -663,10 +663,10 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return DateTimeParse(runner.GetFormattingInfo(), irContext, args);
+            return DateTimeParse(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
         }
 
-        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
+        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args, CultureInfo locale)
         {
             // culture will have Cultural info in-case one was passed in argument else it will have the default one.
             CultureInfo culture = formatInfo.CultureInfo;
@@ -676,7 +676,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode, locale);
                 }
             }
 
@@ -691,7 +691,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, locale);
             }
         }
 
@@ -706,7 +706,7 @@ namespace Microsoft.PowerFx.Functions
                 var languageCode = args[1].Value;
                 if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode, runner.CultureInfo);
                 }
             }
 
@@ -716,7 +716,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
+                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
             }
         }
 
@@ -740,7 +740,7 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.GetConvertedValue(tzInfo)).TotalDays * -1440);
 
                 default:
-                    return CommonErrors.InvalidDateTimeError(irContext);
+                    return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
             }
         }
 
@@ -767,7 +767,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
             {
-                return CommonErrors.StartOfWeekInvalid(irContext);
+                return CommonErrors.StartOfWeekInvalid(irContext, runner.CultureInfo);
             }
 
             var zeroIndex = false;
@@ -793,7 +793,7 @@ namespace Microsoft.PowerFx.Functions
                 weekday++;
             }
 
-            return NumberOrDecimalValue(irContext, weekday);
+            return NumberOrDecimalValue(irContext, weekday, runner.CultureInfo);
         }
 
         public static FormulaValue WeekNum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -817,7 +817,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11) || startOfWeek != Math.Floor(startOfWeek))
             {
-                return CommonErrors.StartOfWeekInvalid(irContext);
+                return CommonErrors.StartOfWeekInvalid(irContext, runner.CultureInfo);
             }
 
             if (startOfWeek == 3)
@@ -840,7 +840,7 @@ namespace Microsoft.PowerFx.Functions
             var dayOfWeek = (weekdayResult - WeekStartDay(startOfWeek) + 7) % 7;
             var weeknum = Math.Floor((dateDiff + dayOfWeek) / 7) + 1;
 
-            return NumberOrDecimalValue(irContext, (int)weeknum);
+            return NumberOrDecimalValue(irContext, (int)weeknum, runner.CultureInfo);
         }
 
         public static FormulaValue EDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -864,7 +864,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
             }
             else
@@ -895,7 +895,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
                 }
             }
             else

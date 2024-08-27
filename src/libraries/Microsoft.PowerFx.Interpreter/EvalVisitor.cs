@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx
                 T t => DValue<T>.Of(t),
                 BlankValue b => DValue<T>.Of(b),
                 ErrorValue e => DValue<T>.Of(e),
-                _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext, null))
+                _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext, CultureInfo))
             };
         }
 
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        return CommonErrors.UnreachableCodeError(node.IRContext);
+                        return CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo);
                     }
                 }
                 else if (arg0 is BinaryOpNode bon && bon.Op == BinaryOpKind.DynamicGetField)
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx
 
                     if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue, CultureInfo);
                     }
                     else if (arg0value is ErrorValue || arg0value is BlankValue)
                     {
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx
 
                     if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue, CultureInfo);
                     }
                     else if (child0Value is ErrorValue || child0Value is BlankValue)
                     {
@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    return CommonErrors.UnreachableCodeError(node.IRContext);
+                    return CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo);
                 }
             }
 
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx
             }
 
             // Fail?
-            return CommonErrors.UnreachableCodeError(node.IRContext);
+            return CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo);
         }
 
         // Handle invoke SetProperty(source.Prop, newValue)
@@ -380,7 +380,8 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                        // !!!TODO Localiz "Missing func: {func.Name}"
+                        result = CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"Missing func: {func.Name}");
                     }
                 }
             }
@@ -543,14 +544,14 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.GeqTime:
                     return OperatorGeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DynamicGetField:
-                    return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args));
+                    return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args, CultureInfo));
 
                 default:
-                    return new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext));
+                    return new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo));
             }
         }
 
-        private static FormulaValue OperatorDynamicGetField(BinaryOpNode node, FormulaValue[] args)
+        private static FormulaValue OperatorDynamicGetField(BinaryOpNode node, FormulaValue[] args, CultureInfo locale)
         {
             var arg1 = args[0];
             var arg2 = args[1];
@@ -602,7 +603,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(node.IRContext);
+                return CommonErrors.UnreachableCodeError(node.IRContext, locale);
             }
         }
 
@@ -616,7 +617,8 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
+            // !!!TODO Localize "Unary op {node.Op}"
+            return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"Unary op {node.Op}");
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
@@ -702,7 +704,7 @@ namespace Microsoft.PowerFx
                 return FormulaValue.NewRecordFromFields(fields);
             }
 
-            return CommonErrors.UnreachableCodeError(node.IRContext);
+            return CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo);
         }
 
         public override async ValueTask<FormulaValue> Visit(ScopeAccessNode node, EvalVisitorContext context)
@@ -722,7 +724,7 @@ namespace Microsoft.PowerFx
                 return r.Resolve(string.Empty);
             }
 
-            return CommonErrors.UnreachableCodeError(node.IRContext);
+            return CommonErrors.UnreachableCodeError(node.IRContext, CultureInfo);
         }
 
         public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, EvalVisitorContext context)
@@ -753,7 +755,8 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
+            // !!!TODO Localize "Single column table access"
+            return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, "Single column table access");
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)
@@ -772,7 +775,7 @@ namespace Microsoft.PowerFx
 
             if (!node.Nodes.Any())
             {
-                return CommonErrors.InvalidChain(node.IRContext, node.ToString());
+                return CommonErrors.InvalidChain(node.IRContext, CultureInfo, node.ToString());
             }
 
             FormulaValue fv = null;
@@ -802,7 +805,7 @@ namespace Microsoft.PowerFx
                 case FormulaValue fi:
                     return fi;
                 case IExternalOptionSet optionSet:
-                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
+                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext, CultureInfo);
                 case Func<IServiceProvider, Task<FormulaValue>> getHostObject:
                     FormulaValue hostObj;
                     try
@@ -815,7 +818,7 @@ namespace Microsoft.PowerFx
                     }
                     catch (CustomFunctionErrorException ex)
                     {
-                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                        hostObj = CommonErrors.RuntimeExceptionError(node.IRContext, CultureInfo, ex.Message);
                     }
 
                     return hostObj;

@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             FormulaValue result = await engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            Assert.Equal("Not implemented: Unary op TextToBlob", ev.Errors[0].Message);
+            Assert.Equal("Not implemented: Unary op TextToBlob.", ev.Errors[0].Message);
         }
 
         [Fact]
@@ -182,8 +182,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     args[0] is BlankValue || args[0] is BlobValue
                     ? args[0]
                     : args[0] is not TableValue tv
-
-                    // !!!TODO Test this
                     ? CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>())
                     : BlobValue.NewBlob(tv.Rows.Select((DValue<RecordValue> drv) => (byte)(decimal)drv.Value.GetField("Value").ToObject()).ToArray()));
             }

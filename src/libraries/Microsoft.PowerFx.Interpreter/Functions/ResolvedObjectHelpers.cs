@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
         //   TimeUnit.Hours
         //   If(true, TimeUnit).Hours
         //   If(true, TextPosition, Align).Left
-        public static FormulaValue OptionSet(IExternalOptionSet optionSet, IRContext irContext)
+        public static FormulaValue OptionSet(IExternalOptionSet optionSet, IRContext irContext, CultureInfo locale)
         {
             var options = new List<NamedValue>();
             foreach (var optionName in optionSet.OptionNames)
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     // This is iterating the Options in the option set
                     // so we already know TryGetValue will succeed, making this unreachable.
-                    return CommonErrors.UnreachableCodeError(irContext);
+                    return CommonErrors.UnreachableCodeError(irContext, locale);
                 }
 
                 options.Add(new NamedValue(optionName, osValue));

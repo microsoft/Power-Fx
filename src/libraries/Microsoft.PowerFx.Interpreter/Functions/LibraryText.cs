@@ -55,13 +55,13 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags_IgnoreCase);
 
         // Char is used for PA string escaping 
-        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Char(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = args[0];
+            var arg0 = (NumberValue)args[0];
 
             if (arg0.Value < 1 || arg0.Value >= 256)
             {
-                return CommonErrors.InvalidCharValue(irContext);
+                return CommonErrors.InvalidCharValue(irContext, runner.CultureInfo);
             }
 
             var str = new string((char)arg0.Value, 1);
@@ -150,20 +150,20 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(runner.GetFormattingInfo(), irContext, args);
+            return Value(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Value(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
         {
             if (irContext.ResultType is DecimalType)
             {
-                return Decimal(formatInfo, irContext, args);
+                return Decimal(formatInfo, irContext, args, locale);
             }
             else
             {
-                return Float(formatInfo, irContext, args);
+                return Float(formatInfo, irContext, args, locale);
             }
         }
 
@@ -171,12 +171,12 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(runner.GetFormattingInfo(), irContext, args);
+            return Float(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Float(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Float(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
         {
             if (args[0] is StringValue sv)
             {
@@ -192,13 +192,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value, locale);
                 }
             }
 
             bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
-            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0], locale);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -245,12 +245,12 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(runner.GetFormattingInfo(), irContext, args);
+            return Decimal(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Decimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Decimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
         {
             if (args[0] is StringValue sv)
             {
@@ -266,13 +266,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value, locale);
                 }
             }
 
             bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
-            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0], locale);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -358,10 +358,10 @@ namespace Microsoft.PowerFx.Functions
             }
 
             runner.CancellationToken.ThrowIfCancellationRequested();
-            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
+            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken, runner.CultureInfo);
         }
 
-        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken, CultureInfo locale)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (!TextFormatUtils.TryGetCulture(languageCode.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value, locale);
                 }
             }
 
@@ -895,25 +895,25 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
-        public static FormulaValue Len(IRContext irContext, StringValue[] args)
+        public static FormulaValue Len(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return NumberOrDecimalValue(irContext, args[0].Value.Length);
+            return NumberOrDecimalValue(irContext, args[0].Value.Length, runner.CultureInfo);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-left-mid-right
-        public static FormulaValue Mid(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Mid(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
             var start = (NumberValue)args[1];
             if (double.IsNaN(start.Value) || double.IsInfinity(start.Value) || start.Value <= 0)
             {
-                errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext));
+                errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext, runner.CultureInfo));
             }
 
             var count = (NumberValue)args[2];
             if (double.IsNaN(count.Value) || double.IsInfinity(count.Value) || count.Value < 0)
             {
-                errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext));
+                errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext, runner.CultureInfo));
             }
 
             if (errors.Count != 0)
@@ -996,19 +996,19 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, leftOrRight(source.Value, intCount));
         }
 
-        private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Find(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
 
             if (!TryGetInt(args[2], out int startIndexValue))
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
 
             var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1, StringComparison.Ordinal);
@@ -1017,7 +1017,7 @@ namespace Microsoft.PowerFx.Functions
                               : new BlankValue(irContext);
         }
 
-        private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Replace(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var source = ((StringValue)args[0]).Value;
             var start = ((NumberValue)args[1]).Value;
@@ -1026,7 +1026,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (start <= 0 || count < 0)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
 
             if (!TryGetInt(args[1], out int start1Based))

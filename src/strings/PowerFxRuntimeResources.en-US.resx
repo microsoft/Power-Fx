@@ -130,11 +130,71 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidCharValue" xml:space="preserve">
-    <value>Invalid Char value, must be in 1...255 range.</value>
+    <value>Invalid numerical value, must be in 1...255 range.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrBadLanguageCode" xml:space="preserve">
     <value>Language code '{0}' not supported.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Arguments to the '{0}' function must be finite.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>The function '{0}' returned a non-finite number.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>The Date/Time could not be parsed.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Invalid date/time value.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>The value could not be interpreted as a Boolean.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>The value could not be interpreted as a Color.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Unknown error.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrNotYetImplementedError" xml:space="preserve">
+    <value>Not implemented: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Invalid Chain: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Max call depth exceeded.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>The specified record was not found.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>Only primitive values are allowed for the operation.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>The value '{0}' cannot be converted to a number.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Expected a value from the StartOfWeek enumeration to indicate how to number the weekdays.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>An exception has been thrown: {0}</value>
     <comment>Error Message.</comment>
   </data>
 </root>

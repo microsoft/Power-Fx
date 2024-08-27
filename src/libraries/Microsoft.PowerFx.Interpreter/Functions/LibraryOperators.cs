@@ -802,7 +802,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
         }
 
@@ -821,7 +821,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext);
+                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
             }
         }
 
