@@ -724,6 +724,11 @@ namespace Microsoft.PowerFx
         {
             return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions);
         }
+
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions, ICollection<string> customKnownFunctions)
+        {
+            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions, customKnownFunctions);
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract
