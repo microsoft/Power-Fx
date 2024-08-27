@@ -380,8 +380,7 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        // !!!TODO Localiz "Missing func: {func.Name}"
-                        result = CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"Missing func: {func.Name}");
+                        result = CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"{func.Name} function");
                     }
                 }
             }
@@ -617,7 +616,6 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            // !!!TODO Localize "Unary op {node.Op}"
             return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, $"Unary op {node.Op}");
         }
 
@@ -755,7 +753,6 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            // !!!TODO Localize "Single column table access"
             return CommonErrors.NotYetImplementedError(node.IRContext, CultureInfo, "Single column table access");
         }
 

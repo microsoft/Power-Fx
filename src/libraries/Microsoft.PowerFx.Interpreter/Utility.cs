@@ -50,8 +50,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                // !!!TODO Localize $"Class {untypedObject.GetType()} does not implement 'SetProperty'."
-                return CommonErrors.NotYetImplementedError(context, locale, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, locale, untypedObject.GetType().ToString());
             }
         }
 
@@ -68,7 +67,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.NotYetImplementedError(context, locale, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, locale, untypedObject.GetType().ToString());
             }
         }
     }

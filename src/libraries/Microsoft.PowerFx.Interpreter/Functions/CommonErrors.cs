@@ -47,7 +47,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static ErrorValue OverflowError(IRContext irContext)
         {
-            // !!!TODO work on this later
             return PrimitiveValueConversions.OverflowError(irContext);
         }
 
@@ -75,15 +74,11 @@ namespace Microsoft.PowerFx.Functions
                 NewExpressionError(RuntimeStringResources.ErrInvalidDateTimeError, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
         }
 
-        // !!!TODO There should be no generic error. All runtime errors should be part of resource.
-        public static ErrorValue GenericInvalidArgument(IRContext irContext, string message = "Invalid Argument")
+        public static ErrorValue InvalidArgumentError(IRContext irContext, ErrorResourceKey errorResourceKey, CultureInfo locale)
         {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = message,
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
+            return new ErrorValue(
+                irContext,
+                NewExpressionError(errorResourceKey, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
         }
 
         // The value could not be interpreted as a Boolean.
@@ -110,7 +105,7 @@ namespace Microsoft.PowerFx.Functions
                 NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Validation, irContext.SourceContext, locale));
         }
 
-       //  Not implemented: {0}.
+        // Not implemented: {0}.
         public static ErrorValue NotYetImplementedError(IRContext irContext, CultureInfo locale, string message)
         {
             return new ErrorValue(
@@ -186,6 +181,14 @@ namespace Microsoft.PowerFx.Functions
             return new ErrorValue(
                 irContext,
                 NewExpressionError(RuntimeStringResources.ErrStartOfWeekInvalid, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+        }
+
+        // Class '{0}' does not implement 'SetProperty'.
+        internal static ErrorValue UntypedObjectDoesNotImplementSetPropertyError(IRContext irContext, CultureInfo locale, string className)
+        {
+            return new ErrorValue(
+                irContext,
+                NewExpressionError(RuntimeStringResources.ErrUntypedObjectDoesNotImplementSetProperty, ErrorKind.NotSupported, irContext.SourceContext, locale, className));
         }
 
         private static ExpressionError NewExpressionError(ErrorResourceKey errorKey, ErrorKind kind, Span span, CultureInfo locale, params string[] args)

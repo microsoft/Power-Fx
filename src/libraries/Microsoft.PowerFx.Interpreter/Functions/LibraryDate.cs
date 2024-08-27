@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Exceptions;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using static System.TimeZoneInfo;
 
@@ -822,9 +823,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (startOfWeek == 3)
             {
-                return CommonErrors.GenericInvalidArgument(
-                    irContext,
-                    "The MondayZero value, from the StartOfWeek enumeration, is not supported in the WeekNum function.");
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrMondayZeroValueNotSupported, runner.CultureInfo);
             }
 
             var beginningOfYear = new DateTime(arg0.Year, 1, 1);

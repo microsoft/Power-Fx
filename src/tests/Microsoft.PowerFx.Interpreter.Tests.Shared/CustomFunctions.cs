@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
 
             var errorResult = engine.Eval("CustomFunctionError(-1)");
             Assert.IsType<ErrorValue>(errorResult);
-            Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
+            Assert.Equal("An exception has been thrown: arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
 
             Assert.Throws<AggregateException>(() => engine.Eval("CustomFunctionError(0)"));
 
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Tests
 
             var errorResult2 = await engine.EvalAsync("CustomFunctionError2(-1)", CancellationToken.None);
             Assert.IsType<ErrorValue>(errorResult2);
-            Assert.Equal("An exception has been thrown: arg should be greater than 0", ((ErrorValue)errorResult2).Errors.First().Message);
+            Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult2).Errors.First().Message);
 
             await Assert.ThrowsAsync<NotSupportedException>(async () => await engine.EvalAsync("CustomFunctionError2(0)", CancellationToken.None));
         }

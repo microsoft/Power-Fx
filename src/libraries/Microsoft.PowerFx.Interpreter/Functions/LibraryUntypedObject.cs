@@ -535,14 +535,14 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Guid_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return GuidPure(irContext, new StringValue[] { str });
+                return GuidPure(runner, context, irContext, new StringValue[] { str });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);

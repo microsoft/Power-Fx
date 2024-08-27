@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
@@ -44,7 +45,8 @@ namespace Microsoft.PowerFx.Interpreter
                     return new StringValue(IRContext.NotInSource(FormulaType.String), osv.Option);
             }
 
-            return CommonErrors.GenericInvalidArgument(args[0].IRContext);
+            // !!!TODO Locale not available. Get locale from service.
+            return CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument, null);
         }
     }
 }

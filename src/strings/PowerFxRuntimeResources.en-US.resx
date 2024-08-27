@@ -197,4 +197,24 @@
     <value>An exception has been thrown: {0}</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Name isn't valid. '{0}' isn't recognized.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>The MondayZero value, from the StartOfWeek enumeration, is not supported in the WeekNum function.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Both aggregate args must have the same number of records.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Invalid argument.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>Class '{0}' does not implement 'SetProperty'.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

@@ -121,4 +121,8 @@
     <value>Operação inválida: divisão por zero.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>Nome inválidop. '{0}' não é reconhecido.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>
