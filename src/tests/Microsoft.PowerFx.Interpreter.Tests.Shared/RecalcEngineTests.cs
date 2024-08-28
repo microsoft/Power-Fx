@@ -709,29 +709,20 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(config);
 
             recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11);", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
-            var func = recalcEngine.Functions.WithName("A");
+            var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
 
-            if (func.First() is UserDefinedFunction udf)
-            {
-                Assert.True(udf.IsAsync);
-                Assert.True(udf.IsDelegatable);
-            }
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
 
-            func = recalcEngine.Functions.WithName("C");
+            func = recalcEngine.Functions.WithName("C").First() as UserDefinedFunction;
 
-            if (func.First() is UserDefinedFunction udf2)
-            {
-                Assert.True(udf2.IsAsync);
-                Assert.True(udf2.IsDelegatable);
-            }
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
 
-            func = recalcEngine.Functions.WithName("B");
+            func = recalcEngine.Functions.WithName("B").First() as UserDefinedFunction;
 
-            if (func.First() is UserDefinedFunction udf3)
-            {
-                Assert.True(udf3.IsAsync);
-                Assert.True(udf3.IsDelegatable);
-            }
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
         }
 
         // Binding to inner functions does not impact outer functions. 
