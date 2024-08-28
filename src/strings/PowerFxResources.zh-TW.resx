@@ -1309,14 +1309,14 @@
     <value>色彩 (或色彩值的資料行) 淡化的百分比 (或百分比值的資料行)。百分比為負值會產生較深的網底，而百分比為正值則會產生較淺的網底。</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>傳回包含檔案相關資訊的記錄。</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>要取得相關資訊的檔案 Blob。</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>檔案</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>'{0}' 的第一個引數應為記錄。</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>若要使用此選項 (設定為列舉值或在 Choices 函式中所設定)，'{0}' 實體需要新增為資料來源。若要新增，請使用 [檢視] 功能表，然後選取 [資料來源]。</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>指定的屬性在此內容中無法存取。</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>引數不代表有效的日期或時間值。</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>此資料來源無效。請在 [資料來源] 窗格中按一下 [內容] -&gt; [資料來源] 或 [檢視] -&gt; [選項]，以修正錯誤。</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>對指定的集合新增一或多個項目。項目可來自不同的資料表或集合 (例如 Collect(collection, source_collection))，或是一或多筆記錄 Collect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>先清除集合，然後將一或多個項目新增至指定的集合。項目可來自不同的資料表或集合 (例如 ClearCollect(collection, source_collection))，或是一或多筆記錄 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3765,7 +3757,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重新設定限制。
+    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重設限制。
       </value>
     
   </data>
@@ -3881,6 +3873,10 @@
     <value>函式 {0} 已經定義。</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>警告: 使用者定義的函式 {0} 會覆蓋現有的內建函式 {0}。</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>函式名稱 {0} 受到限制。</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>指定的函式傳回類型 '{0}' 與函式主體的傳回類型 '{1}' 不相符。</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>函式 {0} 參數過多。使用者定義的函式最多支援 {1} 個參數。</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>要新增資料的資料來源。</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>要收集的記錄或資料表。系統會對該資料來源附加一筆記錄。若是資料表，則會對該資料來源附加其資料列。</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>項目</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

@@ -22,6 +22,16 @@ Table({Fruit:"Grapes"},{Fruit:"Lemons"},{Fruit:"Bananas"})
   Supplier, Fruit)
 Table({Fruit:"Grapes",Supplier:"Contoso"},{Fruit:"Lemons",Supplier:"Fabrikam"},{Fruit:"Lemons",Supplier:"Contoso"},{Fruit:"Bananas",Supplier:"Contoso"})
 
+>> Summarize( 
+  Table({Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000003"), Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  Supplier, FruitId)
+Table({FruitId:GUID("00000000-0000-0000-0000-000000000002"),Supplier:"Contoso"},{FruitId:GUID("00000000-0000-0000-0000-000000000001"),Supplier:"Fabrikam"},{FruitId:GUID("00000000-0000-0000-0000-000000000001"),Supplier:"Contoso"},{FruitId:GUID("00000000-0000-0000-0000-000000000003"),Supplier:"Contoso"})
+
 
 // === Testing grouping/aggregate types ==============================================
 
@@ -77,6 +87,26 @@ Table({Soma:251,Timing:Time(2,2,3,99)},{Soma:239,Timing:Time(1,2,3,99)},{Soma:42
   {Supplier:"Contoso",  Fruit:"Bananas", Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
   Supplier, Fruit, CountRows( ThisGroup ) As Count )
 Table({Count:2,Fruit:"Grapes",Supplier:"Contoso"},{Count:2,Fruit:"Lemons",Supplier:"Fabrikam"},{Count:1,Fruit:"Lemons",Supplier:"Contoso"},{Count:1,Fruit:"Bananas",Supplier:"Contoso"})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000003"), Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  FruitId, CountRows( ThisGroup ) As Count)
+Table({Count:2,FruitId:GUID("00000000-0000-0000-0000-000000000002")},{Count:3,FruitId:GUID("00000000-0000-0000-0000-000000000001")},{Count:1,FruitId:GUID("00000000-0000-0000-0000-000000000003")})
+
+>> Summarize( 
+  Table({Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:220, Purchase:Date(2015,10,1), Tags: ["Red","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:31,  Purchase:Date(2015,10,1), Tags: ["Colombia"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:29,  Purchase:Date(2015,10,2), Tags: ["Peru"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000002"),  Price:210, Purchase:Date(2015,10,2), Tags: ["Green","Seedless"]},
+  {Supplier:"Fabrikam", FruitId:GUID("00000000-0000-0000-0000-000000000001"),  Price:30,  Purchase:Date(2015,10,3), Tags: ["Mexico","Seedless"]},
+  {Supplier:"Contoso",  FruitId:GUID("00000000-0000-0000-0000-000000000003"), Price:12,  Purchase:Date(2015,10,3), Tags: ["Mexico"]}),
+  FruitId, GUID("00000000-0000-0000-0000-000000000009") As FixedGuid, CountRows( ThisGroup ) As Count)
+Table({Count:2,FixedGuid:GUID("00000000-0000-0000-0000-000000000009"),FruitId:GUID("00000000-0000-0000-0000-000000000002")},{Count:3,FixedGuid:GUID("00000000-0000-0000-0000-000000000009"),FruitId:GUID("00000000-0000-0000-0000-000000000001")},{Count:1,FixedGuid:GUID("00000000-0000-0000-0000-000000000009"),FruitId:GUID("00000000-0000-0000-0000-000000000003")})
 
 // Aggregates last
 >> Summarize(

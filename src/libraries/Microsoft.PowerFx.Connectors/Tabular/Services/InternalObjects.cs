@@ -2,45 +2,59 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Used by ConnectorDataSource.GetTablesAsync
-    internal class GetTables
+    internal class GetTables : ISupportsPostProcessing
     {
         [JsonPropertyName("value")]
         public List<RawTable> Value { get; set; }
+
+        public void PostProcess()
+        {
+            Value = Value.Select(rt => new RawTable() { Name = rt.Name, DisplayName = rt.DisplayName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty) }).ToList();
+        }
+    }
+
+    internal interface ISupportsPostProcessing
+    {
+        void PostProcess();
     }
 
     internal class RawTable
     {
+        // Logical Name
         [JsonPropertyName("Name")]
         public string Name { get; set; }
 
         [JsonPropertyName("DisplayName")]
         public string DisplayName { get; set; }
+
+        public override string ToString() => $"{DisplayName}: {Name}";
     }
 
     // Used by ConnectorDataSource.GetDatasetsMetadataAsync
-    internal class DatasetMetadata
+    public class DatasetMetadata
     {
         [JsonPropertyName("tabular")]
-        public RawTabular Tabular { get; set; }
+        public MetadataTabular Tabular { get; set; }
 
         [JsonPropertyName("blob")]
-        public RawBlob Blob { get; set; }
+        public MetadataBlob Blob { get; set; }
 
         [JsonPropertyName("datasetFormat")]
         public string DatasetFormat { get; set; }
 
         [JsonPropertyName("parameters")]
-        public List<RawDatasetMetadataParameter> Parameters { get; set; }
+        public IReadOnlyCollection<MetadataParameter> Parameters { get; set; }
 
         public bool IsDoubleEncoding => Tabular?.UrlEncoding == "double";
     }
 
-    internal class RawTabular
+    public class MetadataTabular
     {
         [JsonPropertyName("source")]
         public string Source { get; set; }
@@ -58,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
         public string TablePluralName { get; set; }
     }
 
-    internal class RawBlob
+    public class MetadataBlob
     {
         [JsonPropertyName("source")]
         public string Source { get; set; }
@@ -70,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
         public string UrlEncoding { get; set; }
     }
 
-    internal class RawDatasetMetadataParameter
+    public class MetadataParameter
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -91,10 +105,10 @@ namespace Microsoft.PowerFx.Connectors
         public string XMsSummary { get; set; }
 
         [JsonPropertyName("x-ms-dynamic-values")]
-        public RawDynamicValues XMsDynamicValues { get; set; }
+        public MetadataDynamicValues XMsDynamicValues { get; set; }
     }
 
-    internal class RawDynamicValues
+    public class MetadataDynamicValues
     {
         [JsonPropertyName("path")]
         public string Path { get; set; }

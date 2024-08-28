@@ -148,6 +148,12 @@ namespace Microsoft.PowerFx.Core.Binding
             nodeToCoercedTypeMap = null;
             Dictionary<TexlNode, DType> matchingFuncWithCoercionNodeToCoercedTypeMap = null;
 
+            // If a user-defined function exists as one of the possible overloads, always return that as it shadows existing built-in functions (provided it is not a restricted UDF name).
+            if (overloads.Any(overload => overload is UserDefinedFunction))
+            {
+                overloads = overloads.Where(overload => overload is UserDefinedFunction).ToArray();
+            }
+
             foreach (var maybeFunc in overloads)
             {
                 Contracts.Assert(!maybeFunc.HasLambdas);

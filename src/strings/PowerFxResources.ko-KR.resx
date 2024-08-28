@@ -1309,14 +1309,14 @@
     <value>색(또는 색 값의 열)이 페이드되는 비율(또는 비율 값의 열)입니다. 음수 비율은 어두운 음영을 만들고 양수 비율은 밝은 음영을 만듭니다.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>파일에 대한 정보가 포함된 레코드를 반환합니다.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>정보를 가져올 파일 블롭입니다.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>파일</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>'{0}'의 첫 번째 인수는 레코드여야 합니다.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>이 옵션 집합을 열거형 값으로 또는 Choices 항목 기능에서 사용하려면 '{0}' 엔터티를 데이터 원본으로 추가해야 합니다. 추가하려면 [보기] 메뉴를 사용한 후 데이터 원본을 선택합니다.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>이 컨텍스트에서는 지정된 속성에 액세스할 수 없습니다.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>인수는 유효한 날짜 또는 시간 값을 나타내지 않습니다.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>이 데이터 원본은 잘못되었습니다. "내용 -&gt; 데이터 원본" 또는 "보기 -&gt; 옵션"을 클릭하여 "데이터 원본" 창에서 오류를 수정하세요</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>지정된 컬렉션에 하나 이상의 항목을 추가합니다. 이 항목은 다른 테이블이나 컬렉션(예: Collect(collection, source_collection)) 또는 하나 이상의 레코드 Collect(collection, {key1: val1, key2: val2, ...}, ...)에서 가져올 수 있습니다.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>먼저 컬렉션을 지우고 지정된 컬렉션에 하나 이상의 항목을 추가합니다. 이 항목은 다른 테이블이나 컬렉션(예: ClearCollect(collection, source_collection)) 또는 하나 이상의 레코드 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)에서 가져올 수 있습니다.</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>함수 {0}이(가) 이미 정의되어 있습니다.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>경고: 사용자 정의 함수 {0}이(가) 기존 내장 함수 {0}을(를) 섀도잉합니다.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>함수 이름 {0}은(는) 제한됩니다.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>명시된 함수 반환 형식 '{0}'이(가) 함수 본문 '{1}'의 반환 형식과 일치하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>{0} 함수에 매개 변수가 너무 많습니다. 사용자 정의 함수는 최대 {1}개의 매개 변수를 지원합니다.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>데이터를 추가할 데이터 원본입니다.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>수집할 레코드 또는 테이블입니다. 레코드가 데이터 소스에 추가됩니다. 테이블은 해당 행이 데이터 소스에 추가됩니다.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>항목</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">

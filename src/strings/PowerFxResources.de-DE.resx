@@ -1309,14 +1309,14 @@
     <value>Ein Prozentsatz (oder eine Spalte mit Prozentsätzen), der das Maß der Ausbleichung der Farbe (oder einer Spalte mit Farbwerten) angibt. Negative Prozentsätze führen zu dunkleren Farbtönen, positive zu helleren.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Gibt einen Datensatz mit Informationen zu einer Datei zurück.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Der Datei-BLOB zum Abrufen von Informationen.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>Datei</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Das erste Argument von „{0}“ sollte ein Datensatz sein.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Zur Verwendung dieses Optionssatzes als Enumerationswert oder in der Choices-Funktion muss die Entität "{0}" als Datenquelle hinzugefügt werden. Verwenden Sie zum Hinzufügen das Menü "Ansicht", und wählen Sie dann "Datenquellen" aus.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Auf die angegebene Eigenschaft kann in diesem Kontext nicht zugegriffen werden.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Das Argument stellt keinen gültigen Datums- oder Uhrzeitwert dar.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Diese Datenquelle ist ungültig. Beheben Sie den Fehler im Abschnitt „Datenquellen“, indem Sie auf „Inhalt &gt; Datenquellen“ oder „Ansicht &gt; Optionen“ klicken.</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funktion {0} ist bereits definiert.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Warnung: Die vom Benutzer definierte Funktion {0} spiegelt die vorhandene integrierte Funktion {0} wider.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Der Funktionsname {0} ist eingeschränkt.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Der Rückgabetyp „{0}“ der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers „{1}“.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Die Funktion {0} verfügt über zu viele Parameter. Vom Benutzer definierte Funktionen unterstützen bis zu {1} Parameter.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

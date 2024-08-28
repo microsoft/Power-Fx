@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -215,11 +216,15 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(FormulaType.Decimal, ev.Type);
                 Assert.Single(ev.Errors);
 
-                var err = ev.Errors[0];
+                ExpressionError err = ev.Errors[0];
 
                 Assert.Equal(ErrorKind.Network, err.Kind);
                 Assert.Equal(ErrorSeverity.Critical, err.Severity);
                 Assert.Equal($"TestConnector12.GenerateError failed: The server returned an HTTP error with code {statusCode} ({reasonPhrase}). Response: {statusCode}", err.Message);
+
+                HttpExpressionError her = Assert.IsType<HttpExpressionError>(err);
+
+                Assert.Equal(statusCode, her.StatusCode);
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
@@ -1370,6 +1375,176 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SQL_GetRelationships()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAi...";
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "29941b77eb0a40fe925cd7a03cb85b40", () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            config.AddActionConnector(new ConnectorSettings("SQL") { IncludeInternalFunctions = true, AllowUnsupportedFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+
+            // We can't execute a query like this for unknown reasons so we'll have to do it manually
+            //string query =
+            //    "SELECT fk.name 'FK Name', tp.name 'Parent table', cp.name, tr.name 'Refrenced table', cr.name " +
+            //    "FROM sys.foreign_keys fk " +
+            //    "INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id " +
+            //    "INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id " +
+            //    "INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id " +
+            //    "INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id " +
+            //    "INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id " +
+            //    "ORDER BY tp.name, cp.column_id";
+
+            // This will return 4 tables in an Untyped Object
+            string query =
+                "select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
+                "select object_id, name from sys.tables; " +
+                "select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
+                "select name, object_id, column_id from sys.columns";
+
+            testConnector.SetResponseFromFile(@"Responses\SQL GetRelationships SampleDB.json");
+            var result = await engine.EvalAsync(@$"SQL.ExecutePassThroughNativeQueryV2(""pfxdev-sql.database.windows.net"", ""SampleDB"", {{ query: ""{query}"" }})", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
+
+            UntypedObjectValue uov = Assert.IsType<UntypedObjectValue>(result);
+            JsonUntypedObject juo = Assert.IsType<JsonUntypedObject>(uov.Impl);
+            JsonElement je = juo._element;
+
+            Result r = je.Deserialize<Result>();
+
+            SqlForeignKey[] fkt = r.ResultSets.Table1;
+            SqlTable[] tt = r.ResultSets.Table2;
+            SqlForeignKeyColumn[] fkct = r.ResultSets.Table3;
+            SqlColumn[] ct = r.ResultSets.Table4;
+
+            List<SqlRelationship> sqlRelationShips = new List<SqlRelationship>();
+
+            foreach (SqlForeignKey fk in fkt)
+            {
+                foreach (SqlTable tp in tt.Where(tp => fk.parent_object_id == tp.object_id))
+                {
+                    foreach (SqlTable tr in tt.Where(tr => fk.referenced_object_id == tr.object_id))
+                    {
+                        foreach (SqlForeignKeyColumn fkc in fkct.Where(fkc => fkc.constraint_object_id == fk.object_id))
+                        {
+                            foreach (SqlColumn cp in ct.Where(cp => fkc.parent_column_id == cp.column_id && fkc.parent_object_id == cp.object_id))
+                            {
+                                foreach (SqlColumn cr in ct.Where(cr => fkc.referenced_column_id == cr.column_id && fkc.referenced_object_id == cr.object_id))
+                                {
+                                    sqlRelationShips.Add(new SqlRelationship()
+                                    {
+                                        RelationshipName = fk.name,
+                                        ParentTable = tp.name,
+                                        ColumnName = cp.name,
+                                        ReferencedTable = tr.name,
+                                        ReferencedColumnName = cr.name,
+                                        ColumnId = cp.column_id
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            sqlRelationShips = sqlRelationShips.OrderBy(sr => sr.ParentTable).ThenBy(sr => sr.ColumnId).ToList();
+
+            Assert.Equal(12, sqlRelationShips.Count);
+            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, CustomerAddress, CustomerID, Customer, CustomerID", sqlRelationShips[0].ToString());
+            Assert.Equal("FK_CustomerAddress_Address_AddressID, CustomerAddress, AddressID, Address, AddressID", sqlRelationShips[1].ToString());
+            Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, Product, ProductCategoryID, ProductCategory, ProductCategoryID", sqlRelationShips[2].ToString());
+            Assert.Equal("FK_Product_ProductModel_ProductModelID, Product, ProductModelID, ProductModel, ProductModelID", sqlRelationShips[3].ToString());
+            Assert.Equal("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID, ProductCategory, ParentProductCategoryID, ProductCategory, ProductCategoryID", sqlRelationShips[4].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, ProductModelProductDescription, ProductModelID, ProductModel, ProductModelID", sqlRelationShips[5].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, ProductModelProductDescription, ProductDescriptionID, ProductDescription, ProductDescriptionID", sqlRelationShips[6].ToString());
+            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, SalesOrderDetail, SalesOrderID, SalesOrderHeader, SalesOrderID", sqlRelationShips[7].ToString());
+            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, SalesOrderDetail, ProductID, Product, ProductID", sqlRelationShips[8].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, SalesOrderHeader, CustomerID, Customer, CustomerID", sqlRelationShips[9].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Address_ShipTo_AddressID, SalesOrderHeader, ShipToAddressID, Address, AddressID", sqlRelationShips[10].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, SalesOrderHeader, BillToAddressID, Address, AddressID", sqlRelationShips[11].ToString());
+
+            string expected = @$"POST https://firstrelease-003.azure-apihub.net/invoke
+ authority: firstrelease-003.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
+ x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; select object_id, name from sys.tables; select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; select name, object_id, column_id from sys.columns""}}
+";
+
+            Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+#pragma warning disable SA1300 // Element should begin with upper case
+#pragma warning disable SA1516 // Element should be separated by a blank line
+
+        public class SqlRelationship
+        {
+            public string RelationshipName;
+            public string ParentTable;
+            public string ColumnName;
+            public string ReferencedTable;
+            public string ReferencedColumnName;
+            public long ColumnId;
+            public override string ToString() => $"{RelationshipName}, {ParentTable}, {ColumnName}, {ReferencedTable}, {ReferencedColumnName}";
+        }
+
+        public class Result
+        {
+            public ResultSets ResultSets { get; set; }
+        }
+
+        public class ResultSets
+        {
+            public SqlForeignKey[] Table1 { get; set; }
+            public SqlTable[] Table2 { get; set; }
+            public SqlForeignKeyColumn[] Table3 { get; set; }
+            public SqlColumn[] Table4 { get; set; }
+        }
+
+        public class SqlForeignKey
+        {
+            public string name { get; set; }
+            public long object_id { get; set; }
+            public long parent_object_id { get; set; }
+            public long referenced_object_id { get; set; }
+        }
+
+        public class SqlTable
+        {
+            public long object_id { get; set; }
+            public string name { get; set; }
+        }
+
+        public class SqlForeignKeyColumn
+        {
+            public long constraint_object_id { get; set; }
+            public long parent_column_id { get; set; }
+            public long parent_object_id { get; set; }
+            public long referenced_column_id { get; set; }
+            public long referenced_object_id { get; set; }
+        }
+
+        public class SqlColumn
+        {
+            public string name { get; set; }
+            public long object_id { get; set; }
+            public long column_id { get; set; }
+        }
+
+#pragma warning restore SA1516
+#pragma warning restore SA1300
+
+        [Fact]
         public async Task SQL_ExecuteStoredProc()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
@@ -1424,6 +1599,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig(Features.PowerFxV1);
+            config.AddFunction(new DateTimeNoTZ());
 
             using var httpClient = new HttpClient(testConnector);
 
@@ -1440,10 +1616,13 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             var engine = new RecalcEngine(config);
-            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
+            
+            RuntimeConfig rc = new RuntimeConfig();
+            rc.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            rc.AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50, p2: Date(2019, 11, 6), p3: DateTime(2022, 5, 30, 22, 17, 58, 111), p4: DateTimeNoTZ(2022, 5, 30, 22, 17, 58, 111) })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
             Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
@@ -1462,10 +1641,43 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
  x-ms-user-agent: MyProduct/v1.2 PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""p1"":50}}
+ [body] {{""p1"":50,""p2"":""2019-11-06"",""p3"":""2022-05-31T05:17:58.111Z"",""p4"":""2022-05-30T22:17:58.111""}}
 ";
 
-            Assert.Equal(expected, actual);
+            Assert.Equal<object>(expected, actual);
+        }
+
+        private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction5
+        {
+            public override ArgPreprocessor GetArgPreprocessor(int index, int argCount) => base.GetGenericArgPreprocessor(index);
+
+            public override bool IsSelfContained => true;
+
+            public override bool HasPreciseErrors => true;
+
+            public DateTimeNoTZ()
+                : base("DateTimeNoTZ", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTimeNoTimeZone, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
+            {
+            }
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3 };
+                yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
+            }
+
+            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                int year = args[0] is NumberValue nv0 ? (int)nv0.Value : args[0] is DecimalValue dv0 ? (int)dv0.Value : throw new InvalidOperationException($"Invalid Type for Arg0 {args[0].GetType().Name}");
+                int month = args[1] is NumberValue nv1 ? (int)nv1.Value : args[1] is DecimalValue dv1 ? (int)dv1.Value : throw new InvalidOperationException($"Invalid Type for Arg1 {args[1].GetType().Name}");
+                int day = args[2] is NumberValue nv2 ? (int)nv2.Value : args[2] is DecimalValue dv2 ? (int)dv2.Value : throw new InvalidOperationException($"Invalid Type for Arg2 {args[2].GetType().Name}");
+                int hour = args[3] is NumberValue nv3 ? (int)nv3.Value : args[3] is DecimalValue dv3 ? (int)dv3.Value : throw new InvalidOperationException($"Invalid Type for Arg3 {args[3].GetType().Name}");
+                int minute = args[4] is NumberValue nv4 ? (int)nv4.Value : args[4] is DecimalValue dv4 ? (int)dv4.Value : throw new InvalidOperationException($"Invalid Type for Arg4 {args[4].GetType().Name}");
+                int second = args[5] is NumberValue nv5 ? (int)nv5.Value : args[5] is DecimalValue dv5 ? (int)dv5.Value : throw new InvalidOperationException($"Invalid Type for Arg5 {args[5].GetType().Name}");
+                int milli = args.Length > 6 ? args[6] is NumberValue nv6 ? (int)nv6.Value : args[6] is DecimalValue dv6 ? (int)dv6.Value : throw new InvalidOperationException($"Invalid Type for Arg6 {args[6].GetType().Name}") : 0;
+
+                return Task.FromResult<FormulaValue>(new DateTimeValue(IRContext.NotInSource(FormulaType.DateTimeNoTimeZone), new DateTime(year, month, day, hour, minute, second, milli, DateTimeKind.Unspecified)));
+            }
         }
 
         [Fact]
@@ -1640,7 +1852,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
-            Assert.True(functions.First(f => f.Name == "ReceiptParser").IsSupported);            
+            Assert.True(functions.First(f => f.Name == "ReceiptParser").IsSupported);
         }
 
         [Fact]
@@ -1902,7 +2114,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             // Now, only make a single network call and see the difference: none of the option set values are populated.
             testConnector.SetResponseFromFiles(Enumerable.Range(0, 1).Select(i => $@"Responses\Response_DVReturnType_{i:00}.json").ToArray());
             ConnectorType returnType2 = await listRecordsWithOrganizations.GetConnectorReturnTypeAsync(parameters, runtimeContext, CancellationToken.None);
-            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();            
+            string ft2 = returnType2.FormulaType.ToStringWithDisplayNames();
 
             Assert.Equal(expected, ft2);
             Assert.Equal("address1_addresstypecode", returnType2.Fields[0].Fields[0].Fields[7].Name);
@@ -2034,7 +2246,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    var text = response?.Content == null 
+                    var text = response?.Content == null
                                     ? string.Empty
                                     : await response.Content.ReadAsStringAsync(cancellationToken);
 

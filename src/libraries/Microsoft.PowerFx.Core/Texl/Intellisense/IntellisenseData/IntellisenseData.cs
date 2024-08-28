@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -28,12 +29,12 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
         private readonly IEnumStore _enumStore;
 
-        public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments, CultureInfo locale)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
-            Contracts.AssertValue(binding);
-            Contracts.AssertValue(curNode);
+            Contracts.AssertValueOrNull(binding);
+            Contracts.AssertValueOrNull(curNode);
             Contracts.Assert(context.CursorPosition >= 0 && context.CursorPosition <= context.InputText.Length);
             Contracts.AssertValue(isValidSuggestionFunc);
             Contracts.AssertValueOrNull(missingTypes);
@@ -61,6 +62,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             CleanupHandlers = new List<ISpecialCaseHandler>();
             Services = (context as IntellisenseContext)?.Services;
             ExpectedExpressionReturnType = context.ExpectedExpressionReturnType ?? DType.Unknown;
+            _locale = locale;
         }
 
         // can be null
@@ -110,6 +112,10 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// Type that defines valid symbols in the formula.
         /// </summary>
         internal virtual DType ContextScope => Binding.ContextScope;
+
+        public CultureInfo Locale => _locale;
+
+        private readonly CultureInfo _locale;
 
         /// <summary>
         /// Returns true if <paramref name="suggestion"/> should be added to the suggestion list based on

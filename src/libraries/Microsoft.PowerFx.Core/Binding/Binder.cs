@@ -19,7 +19,9 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -654,7 +656,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return false;
             }
 
-            var isServerDelegatable = function.IsServerDelegatable(node, this);
+            var isServerDelegatable = (function is not UserDefinedFunction udf || udf.Binding != null) && function.IsServerDelegatable(node, this);
             LogTelemetryForFunction(function, node, this, isServerDelegatable);
             return isServerDelegatable;
         }
@@ -759,7 +761,8 @@ namespace Microsoft.PowerFx.Core.Binding
             // It is possible for function to be null here if it referred to
             // a service function from a service we are in the process of
             // deregistering.
-            return GetInfo(callNode).VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
+            // GetInfo on a callNode may return null hence need null conditional operator and it short circuits if null.
+            return GetInfo(callNode)?.VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
         }
 
         internal IExternalRule Rule { get; }
@@ -1193,7 +1196,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(func);
 
             // Server delegatable call always returns a pageable object.
-            if (func.SupportsPaging(node, this))
+            if ((func is not UserDefinedFunction udf || udf.Binding != null) && func.SupportsPaging(node, this))
             {
                 _isPageable.Set(node.Id, true);
             }
@@ -2260,7 +2263,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (function != null)
             {
                 // If the invocation is async then the whole call path is async.
-                if (markIfAsync && function.IsAsyncInvocation(node, this))
+                if (markIfAsync && (function is not UserDefinedFunction udf || udf.Binding != null) && function.IsAsyncInvocation(node, this))
                 {
                     FlagPathAsAsync(node);
                 }
@@ -2642,6 +2645,30 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, DType.ObjNull);
             }
 
+            public override void Visit(TypeLiteralNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+
+                if (_nameResolver == null)
+                {
+                    _txb.SetType(node, DType.Unknown);
+                    return;
+                }
+
+                var type = DTypeVisitor.Run(node.TypeRoot, _nameResolver);
+
+                if (type.IsValid) 
+                {
+                    _txb.SetType(node, type);
+                }
+                else
+                {
+                    _txb.SetType(node, DType.Error);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
+                }
+            }
+
             public override void Visit(BoolLitNode node)
             {
                 AssertValid();
@@ -2790,6 +2817,29 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetIsUnliftable(node, true);
                 }
 
+                // Look up a global variable with this name.
+                NameLookupInfo lookupInfo = default;
+                if (_txb.AffectsScopeVariableName)
+                {
+                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
+                    {
+                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
+
+                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
+                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
+                        }
+
+                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
+                    }
+
+                    // Set the variable name node as DType.String.
+                    _txb.SetType(node, DType.String);
+                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
+                    return;
+                }
+
                 // [@name]
                 if (node.Ident.AtToken != null)
                 {
@@ -2855,29 +2905,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(nodeType, nodeName);
-                    return;
-                }
-
-                // Look up a global variable with this name.
-                NameLookupInfo lookupInfo = default;
-                if (_txb.AffectsScopeVariableName)
-                {
-                    if (haveNameResolver && _nameResolver.CurrentEntity != null)
-                    {
-                        var scopedControl = _txb._glue.GetVariableScopedControlFromTexlBinding(_txb);
-
-                        // App variable name cannot conflict with any existing global entity name, eg. control/data/table/enum.
-                        if (scopedControl.IsAppInfoControl && _nameResolver.LookupGlobalEntity(node.Ident.Name, out lookupInfo))
-                        {
-                            _txb.ErrorContainer.Error(node, TexlStrings.ErrExpectedFound_Ex_Fnd, lookupInfo.Kind, TokKind.Ident);
-                        }
-
-                        _txb.SetAppScopedVariable(node, scopedControl.IsAppInfoControl);
-                    }
-
-                    // Set the variable name node as DType.String.
-                    _txb.SetType(node, DType.String);
-                    _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
                 }
 
@@ -3836,6 +3863,16 @@ namespace Microsoft.PowerFx.Core.Binding
                     type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
                     entityTypes.Add(expandEntityInfo.ExpandPath, type);
                 }
+                else if (!type.ExpandInfo.ExpandPath.IsReachedFromPath(relatedEntityPath))
+                {
+                    // Expands reached via a different path should have a different relatedentitypath.
+                    // If we found an expand in the cache but it's not accessed via the same relationship
+                    // we need to create a different expand info but with the same type. 
+                    // DType.Clone doesn't clone expand info, so we force that with CopyExpandInfo,
+                    // because that sadly mutates expand info on what should otherwise be an immutable dtype. 
+                    type = DType.CopyExpandInfo(type.Clone(), type);
+                    type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
+                }
 
                 return type;
             }
@@ -4287,6 +4324,34 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, maybeFunc.ReturnType);
             }
 
+            // checks if the call node best matches function overloads with UntypedObject/JSON
+            private bool MatchOverloadWithUntypedOrJSONConversionFunctions(CallNode node, TexlFunction maybeFunc)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(maybeFunc);
+                Contracts.Assert(maybeFunc.HasTypeArgs);
+
+                if (maybeFunc.Name == AsTypeFunction.AsTypeInvariantFunctionName &&
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
+                {
+                    return true;
+                }
+
+                if (maybeFunc.Name == IsTypeFunction_UO.IsTypeInvariantFunctionName &&
+                    _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
+                {
+                    return true;
+                }
+
+                if (maybeFunc.Name == ParseJSONFunction.ParseJSONInvariantFunctionName &&
+                    node.Args.Count > 1)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
             public override bool PreVisit(CallNode node)
             {
                 AssertValid();
@@ -4336,6 +4401,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // If there are no overloads with lambdas or identifiers, we can continue the visitation and
                 // yield to the normal overload resolution.
                 var overloadsWithLambdasOrIdentifiers = overloads.Where(func => func.HasLambdas || func.HasColumnIdentifiers);
+
+                var overloadsWithTypeArgs = overloads.Where(func => func.HasTypeArgs);
+
                 if (!overloadsWithLambdasOrIdentifiers.Any())
                 {
                     // We may still need a scope to determine inline-record types
@@ -4361,6 +4429,25 @@ namespace Microsoft.PowerFx.Core.Binding
                         if ((typescope.AssociatedDataSources.Any() || typescope.DisplayNameProvider != null) && typescope.IsTable)
                         {
                             maybeScope = new Scope(node, _currentScope, typescope.ToRecord(), createsRowScope: false);
+                        }
+
+                        startArg++;
+                    }
+
+                    if (overloadsWithTypeArgs.Any() && node.Args.Count > 1)
+                    {
+                        var nodeInp = node.Args.Children[0];
+                        nodeInp.Accept(this);
+
+                        Contracts.Assert(overloadsWithTypeArgs.Count() == 1);
+
+                        var functionWithTypeArg = overloadsWithTypeArgs.First();
+
+                        if (MatchOverloadWithUntypedOrJSONConversionFunctions(node, functionWithTypeArg))
+                        {
+                            PreVisitTypeArgAndProccesCallNode(node, functionWithTypeArg);
+                            FinalizeCall(node);
+                            return false;
                         }
 
                         startArg++;
@@ -5016,6 +5103,96 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // If type check failed and errors were due to Unknown type arg we would like to consider the typeChecking passed and discard all the errors.
                 (fArgsValid, returnType) = CheckDeferredType(argTypes, returnType, fArgsValid, checkErrorContainer, _txb.ErrorContainer);
+
+                if (!fArgsValid)
+                {
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node.Head.Token, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                }
+
+                _txb.SetType(node, returnType);
+            }
+
+            // Method to previsit type arg of callnode if it is determined as untyped/json conversion function
+            private void PreVisitTypeArgAndProccesCallNode(CallNode node, TexlFunction func)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(func);
+                Contracts.Assert(func.HasTypeArgs);
+
+                var args = node.Args.Children.ToArray();
+                var argCount = args.Count();
+
+                Contracts.AssertValue(_txb.GetType(args[0]));
+
+                if (argCount < func.MinArity || argCount > func.MaxArity)
+                {
+                    ArityError(func.MinArity, func.MaxArity, node, argCount, _txb.ErrorContainer);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
+                Contracts.Assert(argCount > 1);
+                Contracts.AssertValue(args[1]);
+
+                if (args[1] is FirstNameNode typeName)
+                {
+                    if (_nameResolver.LookupType(typeName.Ident.Name, out var typeArgType))
+                    {
+                        _txb.SetType(typeName, typeArgType._type);
+                        _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, typeArgType._type, DPath.Root, 0)));
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidName, typeName.Ident.Name.Value);
+                        _txb.SetType(args[1], DType.Error);
+                        _txb.SetInfo(typeName, FirstNameInfo.Create(typeName, new NameLookupInfo(BindKind.NamedType, DType.Error, DPath.Root, 0)));
+
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgumentExpectedType, typeName.Ident.Name.Value);
+                        _txb.SetInfo(node, new CallInfo(func, node));
+                        _txb.SetType(node, DType.Error);
+                    }
+                }
+                else if (args[1] is TypeLiteralNode typeLiteral)
+                {
+                    typeLiteral.Accept(this);
+                }
+                else
+                {
+                    _txb.ErrorContainer.Error(args[1], TexlStrings.ErrInvalidArgumentExpectedType, args[1]);
+                    _txb.SetType(args[1], DType.Error);
+                }
+
+                PostVisit(node.Args);
+
+                var info = _txb.GetInfo(node);
+
+                // If PreVisit resulted in errors for the node (and a non-null CallInfo),
+                // we're done -- we have a match and appropriate errors logged already.
+                if (_txb.ErrorContainer.HasErrors(node) || _txb.ErrorContainer.HasErrors(node.Head.Token))
+                {
+                    Contracts.Assert(info != null);
+
+                    return;
+                }
+
+                Contracts.AssertNull(info);
+
+                _txb.SetInfo(node, new CallInfo(func, node));
+
+                var returnType = func.ReturnType;
+                var argTypes = args.Select(_txb.GetType).ToArray();
+                bool fArgsValid;
+                var checkErrorContainer = new ErrorContainer();
+
+                // Typecheck the invocation and infer the return type.
+                fArgsValid = func.HandleCheckInvocation(_txb, args, argTypes, checkErrorContainer, out returnType, out var _);
+
+                if (checkErrorContainer?.HasErrors() == true)
+                {
+                    _txb.ErrorContainer.MergeErrors(checkErrorContainer.GetErrors());
+                }
 
                 if (!fArgsValid)
                 {

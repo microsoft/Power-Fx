@@ -1309,14 +1309,14 @@
     <value>Peratusan (atau lajur nilai peratusan) yang warna (atau lajur nilai warna) akan dipudarkan. Peratusan negatif menghasilkan warna yang lebih gelap. Peratusan positif menghasilkan warna yang lebih cerah.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Mengembalikan rekod dengan maklumat tentang fail.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Blob fail untuk mendapatkan maklumat.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>fail</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Argumen pertama '{0}' seharusnya rekod.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Menggunakan set opsyen ini sebagai nilai penyenaraian atau dalam fungsi Choices memerlukan entiti '{0}' ditambah sebagai Sumber Data. Untuk menambah, gunakan menu Paparan dan kemudian pilih sumber Data.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Sifat yang ditentukan tidak boleh dicapai dalam konteks ini.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argumen tidak mewakili nilai tarikh atau masa yang sah.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Sumber Data sini tidak sah. Sila betulkan ralat dalam anak tetingkap "Sumber Data" dengan mengklik "Kandungan -&gt; Sumber data" atau "Lihat -&gt; Opsyen"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Fungsi {0} sudah ditakrifkan.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Amaran: Fungsi ditakrifkan pengguna {0} akan membayangi fungsi terbina dalam yang wujud {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Nama fungsi {0} dihadkan.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Jenis kembali fungsi yang dinyatakan '{0}' tidak sepadan dengan jenis kembali isi fungsi '{1}'.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Fungsi {0} mempunyai terlalu banyak parameter. Fungsi ditakrifkan pengguna menyokong sehingga {1} parameter.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

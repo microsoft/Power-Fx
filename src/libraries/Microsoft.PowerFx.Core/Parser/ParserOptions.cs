@@ -88,6 +88,7 @@ namespace Microsoft.PowerFx
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
                         (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
                         (TextFirst ? TexlParser.Flags.TextFirst : 0) |
+                        (AllowParseAsTypeLiteral ? TexlParser.Flags.AllowTypeLiteral : 0) |
                         (features.PowerFxV1CompatibilityRules ? TexlParser.Flags.PFxV1 : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);

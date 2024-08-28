@@ -1309,14 +1309,14 @@
     <value>Wartość procentowa (lub kolumna wartości procentowych) blaknięcia koloru (lub kolumny wartości kolorów). Ujemna wartość procentowa spowoduje powstanie odcienia ciemniejszego, natomiast dodatnia — odcienia jaśniejszego.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Zwraca rekord zawierający informacje o pliku.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Obiekt blob pliku, na temat którego mają zostać pobrane informacje.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>plik</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Pierwszy argument „{0}” powinien być rekordem.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Użycie tego zestawu opcji jako wartości wyliczenia lub w funkcji Choices wymaga, aby jednostka „{0}” została dodana jako źródło danych. Aby ją dodać, otwórz menu Widok, a następnie wybierz pozycję Źródła danych.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Określona właściwość nie jest dostępna w tym kontekście.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument nie reprezentuje prawidłowej wartości daty lub godziny.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>To źródło danych jest nieprawidłowe. Napraw błąd w okienku „Źródła danych”, klikając opcje „Zawartość -&gt; Źródła danych” lub „Widok -&gt; Opcje”</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Dodaje co najmniej jeden element określonej kolekcji. Elementy mogą pochodzić z innej tabeli lub kolekcji (np. Collect(collection, source_collection)) lub co najmniej jednego rekordu Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Najpierw czyści kolekcję, a następnie dodaje co najmniej jeden element do określonej kolekcji. Elementy mogą pochodzić z innej tabeli lub kolekcji (np. ClearCollect(collection, source_collection)) lub co najmniej jednego rekordu ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funkcja {0} została już zdefiniowana.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Ostrzeżenie: zdefiniowana przez użytkownika funkcja {0} przesłoni istniejącą funkcję wbudowaną {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Nazwa funkcji {0} podlega ograniczeniom.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Deklarowany zwracany typ funkcji „{0}” nie pasuje do zwracanego typu treści funkcji „{1}”.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcja {0} ma zbyt wiele parametrów. Maksymalna liczba parametrów obsługiwanych przez funkcje zdefiniowane przez użytkownika wynosi {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Źródło danych, do którego mają zostać dodane dane.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Rekord lub tabela do zebrania. Rekord zostanie dołączony do źródła danych. Wiersze tabeli zostaną dołączone do źródła danych.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>element</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
