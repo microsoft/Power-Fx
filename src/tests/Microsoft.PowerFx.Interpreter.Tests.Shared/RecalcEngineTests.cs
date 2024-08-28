@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
@@ -680,21 +682,36 @@ namespace Microsoft.PowerFx.Tests
 
         public void DelegatableUDFTest()
         {
-            var config = new PowerFxConfig();
-            config.EnableSetFunction();
-
+            var symbolTable = new DelegatableSymbolTable();
             var schema = DType.CreateTable(
                 new TypedName(DType.Guid, new DName("ID")),
                 new TypedName(DType.Number, new DName("Value")));
-            config.SymbolTable.AddEntity(new TestDataSource("MyDataSource", schema));
-            config.SymbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Count | DelegationCapability.Sort),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.GreaterThanOrEqual),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            config.EnableSetFunction();
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(Sort(MyDataSource,Value), Value > 10);C():MyDataSourceTableType = A();", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11);", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var func = recalcEngine.Functions.WithName("A");
 
-            if (func is UserDefinedFunction udf)
+            if (func.First() is UserDefinedFunction udf)
             {
                 Assert.True(udf.IsAsync);
                 Assert.True(udf.IsDelegatable);
@@ -702,10 +719,18 @@ namespace Microsoft.PowerFx.Tests
 
             func = recalcEngine.Functions.WithName("C");
 
-            if (func is UserDefinedFunction udf2)
+            if (func.First() is UserDefinedFunction udf2)
             {
                 Assert.True(udf2.IsAsync);
                 Assert.True(udf2.IsDelegatable);
+            }
+
+            func = recalcEngine.Functions.WithName("B");
+
+            if (func.First() is UserDefinedFunction udf3)
+            {
+                Assert.True(udf3.IsAsync);
+                Assert.True(udf3.IsDelegatable);
             }
         }
 
