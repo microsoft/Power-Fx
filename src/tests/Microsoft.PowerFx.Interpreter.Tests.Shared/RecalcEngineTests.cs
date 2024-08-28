@@ -690,13 +690,13 @@ namespace Microsoft.PowerFx.Tests
                 "MyDataSource",
                 schema,
                 new TestDelegationMetadata(
-                        new DelegationCapability(DelegationCapability.Filter | DelegationCapability.Count | DelegationCapability.Sort),
+                        new DelegationCapability(DelegationCapability.Filter),
                         schema,
                         new FilterOpMetadata(
                             schema,
                             new Dictionary<DPath, DelegationCapability>(),
                             new Dictionary<DPath, DelegationCapability>(),
-                            new DelegationCapability(DelegationCapability.Equal | DelegationCapability.GreaterThanOrEqual),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
                             null)),
                 true));
             symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
