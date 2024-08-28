@@ -56,11 +56,6 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
                 return false;
             }
 
-            if (function is UserDefinedFunction udf)
-            {
-                return udf.TryGetExternalDataSource(out dsInfo);
-            }
-
             var success = function.TryGetDataSource(callNode, binding, out var external);
             dsInfo = (IExternalDataSource)external;
             return success;
