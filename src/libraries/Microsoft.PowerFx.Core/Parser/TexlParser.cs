@@ -318,6 +318,44 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         // Parse expression
                         var result = ParseExpr(Precedence.None);
+
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+
+                        // If the result was an error, keep moving cursor until end of named formula expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
+                    }
+
+                    _curs.TokMove();
+                    ParseTrivia();
+                }
+                else if (_curs.TidCur == TokKind.ColonEqual)
+                {
+                    _curs.TokMove();
+                    ParseTrivia();
+
+                    if (_curs.TidCur == TokKind.Semicolon)
+                    {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    // Extract expression
+                    while (_curs.TidCur != TokKind.Semicolon)
+                    {
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        // Parse expression
+                        var result = ParseExpr(Precedence.None);
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
                             if (typeLiteralNode.IsValid(out _))
@@ -332,9 +370,6 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
-
-                        // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
                         {
                             while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)

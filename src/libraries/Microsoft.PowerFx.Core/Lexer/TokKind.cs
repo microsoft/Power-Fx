@@ -304,5 +304,11 @@ namespace Microsoft.PowerFx.Syntax
         /// <code>=></code>
         /// </summary>
         DoubleBarrelArrow,
+
+        /// <summary>
+        /// Colon immediately followed by equal.
+        /// <code>=></code>
+        /// </summary>
+        ColonEqual,
     }
 }
