@@ -270,6 +270,30 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
+        [InlineData("x= /* test */ 1;", "x = /* test */1;")]
+        [InlineData("y =3 /* test */;", "y = 3/* test */;")]
+        [InlineData("F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;", "F(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;")]
+        [InlineData("X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "X():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        [InlineData("x= /* test */ 1; y =3 /* test */; F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "x = /* test */1;\ny = 3/* test */;\nF(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;\nX():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        public void TestUserDefinitionsPrettyPrint(string script, string expected)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            // Act & Assert
+            var result = FormatUserDefinitions(script, parserOptions);
+            Assert.NotNull(result);
+            Assert.Equal(expected, result);
+
+            // Act & Assert: Ensure idempotence
+            result = FormatUserDefinitions(result, parserOptions);
+            Assert.NotNull(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
         [InlineData(TexlLexer.ReservedBlank)]
         [InlineData(TexlLexer.ReservedChild)]
         [InlineData(TexlLexer.ReservedChildren)]
