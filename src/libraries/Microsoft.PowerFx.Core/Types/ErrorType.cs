@@ -34,11 +34,11 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>
         /// The <see cref="DType"/> of an error value.
         /// </returns>
-        public static DType ReifiedError() => DType.CreateRecord(ReifiedErrorSchema);
+        public static DType ReifiedError() => DType.CreateRecord(ReifiedErrorSchema, isSealed: true);
 
         /// <returns>
         /// The <see cref="DType"/> of a collection of error values.
         /// </returns>
-        public static DType ReifiedErrorTable() => DType.CreateTable(ReifiedErrorSchema);
+        public static DType ReifiedErrorTable() => DType.CreateTable(ReifiedErrorSchema, isSealed: true);
     }
 }
