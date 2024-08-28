@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
         [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
-        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJSON")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
         [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
@@ -192,6 +192,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Table({F1:1, F2:2},{F2:1}).|")]
         [InlineData("[1,2,3].|")]
         [InlineData("With({testVar: \"testStr\"}, InvalidFunc(StartsWith(test|", "testVar")]
+
+        // Suggests keywords and reserved words with indentifier escape.
+        [InlineData("With({'Children':1}, ThisRecord.|", "'Children'")]
+        [InlineData("With({'true':1}, ThisRecord.|", "'true'")]
+        [InlineData("With({'Children':1,'Child':1, Cuscuz:1}, ThisRecord.C|", "'Child'", "'Children'", "Cuscuz")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
@@ -281,6 +286,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
             Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
             Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
+        }
+
+        [Theory]
+        
+        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]        
+        [InlineData("First(|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
+        [InlineData("First(|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
+        public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
+        {
+            var result = Suggest(expression, Default, CultureInfo.InvariantCulture, CultureInfo.CreateSpecificCulture(locale));
+
+            var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+            Assert.Equal(expectedDefinition, currentOverload.Definition);
+            Assert.Equal(expectedParameterDescription, currentOverload.FunctionParameterDescription);
         }
 
         [Theory]

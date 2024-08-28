@@ -1,12 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -35,6 +40,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool PropagatesMutability => true;
+
         public IndexFunction_UO()
             : base(IndexInvariantFunctionName, TexlStrings.AboutIndex, FunctionCategories.Table, DType.UntypedObject, 0, 2, 2, DType.UntypedObject, DType.Number)
         {
@@ -43,6 +50,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
+        }
+    }
+
+    // ParseJSON(JsonString:s, Type:U): ?
+    internal class TypedParseJSONFunction : UntypedOrJSONConversionFunction
+    {
+        public TypedParseJSONFunction()
+            : base(ParseJSONFunction.ParseJSONInvariantFunctionName, TexlStrings.AboutTypedParseJSON, DType.Error, 2, DType.String, DType.Error)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TypedParseJSONArg1, TexlStrings.TypedParseJSONArg2 };
         }
     }
 }

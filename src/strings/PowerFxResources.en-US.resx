@@ -1807,13 +1807,31 @@
     <value>typeTable</value>
     <comment>function_parameter - Second argument of the IsType function - The Entity table representing the type that we wish to compare the value to. For example, if the author has a CDS data source named Account, that table could be passed here (eg IsType(myVal, Account)).</comment>
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Returns true if the provided untyped value is of the given type.</value>
+    <comment>Description of the 'IsType' function.</comment>
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    <comment>function_parameter - First argument of the IsTypeUO function - The untyped value to be inspected.</comment>
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a typeliteral or global named type.</comment>
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>The untyped value to check if it can be casted as specified type.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>The type that we wish to check the untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Uses the provided value as the given type.</value>
     <comment>Description of the 'AsType' function.</comment>
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
     <value>value</value>
-    <comment>function_parameter - First argument of the IsType function - The polymorphic value to be used as the new type.</comment>
+    <comment>function_parameter - First argument of the AsType function - The polymorphic value to be used as the new type.</comment>
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
     <value>typeTable</value>
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>The entity table representing the type we wish the value to be used as.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Checks and uses the provided Untyped value as the given type.</value>
+    <comment>Description of the 'AsType' function.</comment>
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    <comment>function_parameter - First argument of the AsType function - untyped value to be used as the new type.</comment>
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the AsType function - The type that we wish the value to be used as.</comment>
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>The untyped value to cast as a new type.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>The type that we wish the value to be used as.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Executes the formula provided as second parameter using the scope provided by the first.</value>
@@ -2672,6 +2708,24 @@
   </data>
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A JSON string to process.</value>
+  </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Converts a JSON string into a typed object.</value>
+    <comment>Description of 'ParseJSON' function overload that converts a string input to typed object.</comment>
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>A JSON string to convert into typed object.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>type</value>
+    <comment>function_parameter - Second argument of the typed ParseJSON function overload - Inlined type definition or NamedType.</comment>
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>An inlined type definiton or a globally defined named type.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Returns the record in a table at a given index.</value>
@@ -4693,5 +4747,13 @@
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Invalid argument '{0}'. Expected valid type name or type literal.</value>
+    <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
+    <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
   </data>
 </root>

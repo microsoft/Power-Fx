@@ -16,33 +16,38 @@ namespace Microsoft.PowerFx.Connectors
 
         internal IList<ReferencedEntity> ReferencedEntities { get; }
 
+        internal IList<SqlRelationship> SqlRelationships { get; }
+
         internal ICdpTableResolver TableResolver { get; }
 
-        internal CdpRecordType(ConnectorType connectorType, DType recordType, ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities)
+        internal CdpRecordType(ConnectorType connectorType, DType recordType, ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, IList<SqlRelationship> sqlRelationships)
             : base(recordType)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
             ReferencedEntities = referencedEntities;
+            SqlRelationships = sqlRelationships;
         }
 
-        public bool TryGetFieldExternalTableName(string fieldName, out string tableName)
+        public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
         {
             tableName = null;
+            foreignKey = null;
 
             if (!base.TryGetBackingDType(fieldName, out _))
-            {                
+            {
                 return false;
             }
 
             ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
             if (connectorType.ExternalTables?.Any() != true)
-            {             
+            {
                 return false;
             }
 
             tableName = connectorType.ExternalTables.First();
+            foreignKey = connectorType.ForeignKey;
             return true;
         }
 
@@ -54,14 +59,14 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            ConnectorType cr = ConnectorType.Fields.First(ct => ct.Name == fieldName);
+            ConnectorType ct = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
-            if (cr.ExternalTables?.Any() != true)
+            if (ct.ExternalTables?.Any() != true)
             {
                 return base.TryGetFieldType(fieldName, out type);
             }
 
-            string tableName = cr.ExternalTables.First();
+            string tableName = ct.ExternalTables.First();
 
             try
             {
@@ -77,12 +82,10 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
         public override bool Equals(object other)
         {
             throw new NotImplementedException();
         }
-#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
 
         public override int GetHashCode()
         {

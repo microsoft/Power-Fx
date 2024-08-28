@@ -54,7 +54,7 @@ Blank()
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Value(ParseJSON("This "" Is , "" Invalid ").a)
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 // Text tests
 >> Text(Index(ParseJSON("[""s""]"), 1))

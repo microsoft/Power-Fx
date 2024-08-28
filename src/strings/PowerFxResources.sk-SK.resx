@@ -1309,11 +1309,11 @@
     <value>Percento (alebo stĺpec percentuálnych hodnôt), podľa ktorého vybledne farba (alebo stĺpec hodnôt farieb). Záporné percento znamená tmavší odtieň. Kladné percento znamená svetlejší odtieň.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Vráti záznam s informáciami o súbore.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Objekt BLOB súboru, o ktorom sa majú získať informácie.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
     <value>súbor</value>
@@ -1993,10 +1993,6 @@
     <value>Prvý argument pre {0} má byť záznam.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Ak chcete použiť túto množinu možností ako hodnotu enumerácie alebo vo funkcii Choices, musíte entitu {0} pridať ako zdroj údajov. Pridáte ju pomocou ponuky Zobraziť a výberom možnosti Zdroje údajov.</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Zadaná vlastnosť nie je v tomto kontexte prístupná.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Argument nepredstavuje platnú hodnotu dátumu alebo času.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Tento zdroj údajov je neplatný. Opravte chybu na table Zdroje údajov kliknutím na položku Obsah -&gt; Zdroje údajov alebo Zobraziť -&gt; Možnosti.</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3881,6 +3873,10 @@
     <value>Funkcia {0} je už definovaná.</value>
     
   </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Upozornenie: Používateľom definovaná funkcia {0} bude tieňová vo vzťahu k existujúcej integrovanej funkcii {0}.</value>
+    
+  </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
     <value>Názov funkcie {0} je obmedzený.</value>
     
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Uvedený typ vrátenej hodnoty funkcie {0} sa nezhoduje s typom vrátenej hodnoty tela funkcie {1}.</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>Funkcia {0} má príliš veľa parametrov. Maximálny počet parametrov podporovaný používateľom definovanými funkciami je {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -59,6 +58,22 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("A text value from which characters will be extracted.", parameters[0].Description);
 
             Assert.Equal("start_num", parameters[1].Name);
+        }
+
+        [Fact]
+        public void ParameterInfoLocalized()
+        {
+            var infoMid = GetMid();
+
+            var sig = infoMid.Signatures.First();
+            Assert.Equal("Mid(text, start_num)", sig.DebugToString());
+
+            var parameters = sig.GetParameters(CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            Assert.Equal(2, parameters.Length);
+            Assert.Equal("texto", parameters[0].Name);
+            Assert.Equal("Valor de texto do qual os caracteres serão extraídos.", parameters[0].Description);
+            Assert.Equal("núm_inicial", parameters[1].Name);
         }
 
         [Fact]

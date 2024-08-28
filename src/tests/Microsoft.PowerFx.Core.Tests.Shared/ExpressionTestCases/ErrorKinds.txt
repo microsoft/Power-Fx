@@ -413,7 +413,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Numeric})
 
 >> ParseJSON("not a JSON string")
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.InvalidJSON})
 
 >> ParseJSON(If(1/0<2,"not a JSON string"))
 Error({Kind:ErrorKind.Div0})

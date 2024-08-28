@@ -205,7 +205,7 @@ Error({Kind:ErrorKind.EditPermissions})
 "13: Division by zero"
 
 >> IfError(Error({Kind:ErrorKind.BadLanguageCode}), $"{FirstError.Kind}: {FirstError.Message}")
-"14: Bad langauge code or invalid value"
+"14: Bad language code or invalid value"
 
 >> IfError(Error({Kind:ErrorKind.BadRegex}), $"{FirstError.Kind}: {FirstError.Message}")
 "15: Syntax error in regular expression"
@@ -248,6 +248,12 @@ Error({Kind:ErrorKind.EditPermissions})
 
 >> IfError(Error({Kind:ErrorKind.Timeout}), $"{FirstError.Kind}: {FirstError.Message}")
 "28: Timeout error"
+
+>> IfError(Error({Kind:ErrorKind.ServiceUnavailable}), $"{FirstError.Kind}: {FirstError.Message}")
+"29: Online service connection not available"
+
+>> IfError(Error({Kind:ErrorKind.InvalidJSON}), $"{FirstError.Kind}: {FirstError.Message}")
+"30: Invalid JSON format"
 
 >> IfError(Error({Kind:ErrorKind.Custom}), $"{FirstError.Kind}: {FirstError.Message}")
 "1000: Custom error"

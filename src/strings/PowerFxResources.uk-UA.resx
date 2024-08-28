@@ -1309,14 +1309,14 @@
     <value>Відсоток (або стовпець відсоткових значень) для визначення інтенсивності затемнення кольору (або стовпця колірних значень). Якщо вказати негативний відсоток, відтінок стане темнішим. Якщо вказати позитивний відсоток, – світлішим.</value>
   </data>
   <data name="AboutFileInfo" xml:space="preserve">
-    <value>Returns a record with information about a file.</value>
+    <value>Повертає запис з інформацією про файл.</value>
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>The file blob to get information about.</value>
+    <value>Файловий BLOB-об’єкт, інформацію про який потрібно отримати.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
-    <value>file</value>
+    <value>файл</value>
     
   </data>
   <data name="AboutAbs" xml:space="preserve">
@@ -1993,10 +1993,6 @@
     <value>Перший аргумент функції "{0}" має бути записом.</value>
     
   </data>
-  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
-    <value>Щоб використати цей набір параметрів як значення переліку або у функції Choices, сутність "{0}" необхідно додати як джерело даних. Для цього відкрийте меню "Подання" та виберіть "Джерела даних".</value>
-    
-  </data>
   <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
     <value>Указана властивість недоступна в цьому контексті.</value>
     
@@ -2035,10 +2031,6 @@
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
     <value>Аргумент є неприпустимим значенням дати або часу.</value>
-    
-  </data>
-  <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Неприпустиме джерело даних. Виправте помилку в області "Джерела даних", натиснувши елементи "Вміст" -&gt; "Джерела даних" або "Подання" -&gt; "Параметри".</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -3109,7 +3101,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Adds one or more items to the specified collection. The items can be from a different table or collection (e.g. Collect(collection, source_collection)), or one or more records Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Додає один або кілька елементів до вказаної колекції. Елементи можуть походити з іншої таблиці чи колекції (наприклад, Collect(collection, source_collection)) або одного чи кількох записів Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3131,7 +3123,7 @@
     <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Спершу очищує колекцію, а потім додає один або кілька елементів до вказаної колекції. Елементи можуть походити з іншої таблиці чи колекції (наприклад, ClearCollect(collection, source_collection)) або одного чи кількох записів ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
@@ -3766,7 +3758,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
     <value>Якщо для даних перевищено обмеження в 500 записів, але не досягнуто 2000 записів, спробуйте змінити обмеження.
-</value>
+      </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -3874,11 +3866,15 @@
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Визначена користувачем функція повинна мати тіло.</value>
+    <value>У користувацької функції має бути тіло.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
     <value>Функцію {0} уже визначено.</value>
+    
+  </data>
+  <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
+    <value>Увага! Користувацька функція "{0}" повторюватиме наявну вбудовану функцію "{0}".</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
@@ -3895,6 +3891,10 @@
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
     <value>Зазначений тип повернення функції "{0}" не відповідає типу повернення тіла функції "{1}".</value>
+    
+  </data>
+  <data name="ErrUDF_TooManyParameters" xml:space="preserve">
+    <value>У функції "{0}" забагато параметрів. Користувацькі функції підтримують таку максимальну кількість параметрів: {1}.</value>
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
@@ -4439,13 +4439,13 @@
     
   </data>
   <data name="AboutCollect_data_source" xml:space="preserve">
-    <value>The datasource to add data to.</value>
+    <value>Джерело даних, до якого потрібно додати дані.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the datasource. A table will have its rows appended to the datasource.</value>
+    <value>Запис або таблиця, що потрібно додати до колекції. Запис додається до джерела даних. У разі таблиці до джерела даних додаються її рядки.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
-    <value>item</value>
+    <value>елемент</value>
     
   </data>
   <data name="ErrTruncatedArgWarning" xml:space="preserve">
