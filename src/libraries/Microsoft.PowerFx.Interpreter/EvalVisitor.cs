@@ -803,7 +803,7 @@ namespace Microsoft.PowerFx
                 case FormulaValue fi:
                     return fi;
                 case IExternalOptionSet optionSet:
-                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext, CultureInfo);
+                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
                 case Func<IServiceProvider, Task<FormulaValue>> getHostObject:
                     FormulaValue hostObj;
                     try

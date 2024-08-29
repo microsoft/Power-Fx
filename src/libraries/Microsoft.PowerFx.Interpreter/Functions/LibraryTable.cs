@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
@@ -68,7 +69,7 @@ namespace Microsoft.PowerFx.Functions
             return args[0].Last(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
-        public static FormulaValue FirstN(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is BlankValue)
             {
@@ -100,7 +101,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-        public static FormulaValue LastN(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue LastN(IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is BlankValue)
             {
@@ -317,13 +318,13 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // CountRows
-        public static FormulaValue CountRows(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue CountRows(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
             if (arg0 is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -340,21 +341,21 @@ namespace Microsoft.PowerFx.Functions
                     count++;
                 }                
                 
-                return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // Count
-        public static FormulaValue Count(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Count(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             var count = 0;
 
             if (arg0 is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -383,19 +384,19 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // CountA
-        public static FormulaValue CountA(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue CountA(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             if (arg0 is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -426,7 +427,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -436,7 +437,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (args[0] is BlankValue)
             {
-                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             // Streaming 
@@ -482,7 +483,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
+            return NumberOrDecimalValue(irContext, count);
         }
 
         // Filter ([1,2,3,4,5], Value > 5)
@@ -496,7 +497,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = "Filter() only supports one predicate",
+                    ResourceKey = RuntimeStringResources.ErrFilterPredicate,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Validation
                 });
@@ -568,7 +569,7 @@ namespace Microsoft.PowerFx.Functions
                 pairs.Add(await pair.ConfigureAwait(false));
             }
 
-            return DistinctValueType(pairs, irContext, runner.CultureInfo);
+            return DistinctValueType(pairs, irContext);
         }
 
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -1072,7 +1073,7 @@ namespace Microsoft.PowerFx.Functions
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue DistinctValueType(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext, CultureInfo locale)
+        private static FormulaValue DistinctValueType(List<(DValue<RecordValue> row, FormulaValue distinctValue)> pairs, IRContext irContext)
         {
             var lookup = new HashSet<object>();
             var result = new List<DValue<RecordValue>>();

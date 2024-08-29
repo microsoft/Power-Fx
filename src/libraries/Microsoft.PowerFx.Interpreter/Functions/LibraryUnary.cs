@@ -740,7 +740,7 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, value.Value ? 1m : 0m);
         }
 
-        public static FormulaValue TextToBoolean(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
             if (string.IsNullOrEmpty(args[0].Value))
             {

@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return async (runner, context, irContext, args) =>
             {
-                var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args, runner.CultureInfo);
+                var nonFiniteArgError = FiniteArgumentCheck(functionName, irContext, args);
                 if (nonFiniteArgError != null)
                 {
                     return nonFiniteArgError;
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray()).ConfigureAwait(false);
-                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result, runner.CultureInfo);
+                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result);
 
                 return finiteError ?? result;
             };
@@ -812,7 +812,7 @@ namespace Microsoft.PowerFx.Functions
         #endregion
 
         #region Common Runtime Value Checking Pipeline Stages
-        private static ErrorValue FiniteArgumentCheck(string functionName, IRContext irContext, FormulaValue[] args, CultureInfo locale)
+        private static ErrorValue FiniteArgumentCheck(string functionName, IRContext irContext, FormulaValue[] args)
         {
             List<ErrorValue> errors = null;
             foreach (var arg in args)
@@ -847,7 +847,7 @@ namespace Microsoft.PowerFx.Functions
             return errors != null ? ErrorValue.Combine(irContext, errors) : null;
         }
 
-        private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value, CultureInfo locale)
+        private static ErrorValue FiniteResultCheck(string functionName, IRContext irContext, FormulaValue value)
         {
             if (value is ErrorValue ev)
             {
@@ -877,7 +877,6 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number < 0)
                 {
-                    // The caller will localize this error message.
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
@@ -892,7 +891,6 @@ namespace Microsoft.PowerFx.Functions
                 var number = numberArg.Value;
                 if (number <= 0)
                 {
-                    // The caller will localize this error message.
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
@@ -906,8 +904,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var number = numberArg.Value;
                 if (number <= 0)
-                {
-                    // The caller will localize this error message.
+                { 
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }

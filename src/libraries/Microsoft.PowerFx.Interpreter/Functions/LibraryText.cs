@@ -56,9 +56,9 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags_IgnoreCase);
 
         // Char is used for PA string escaping 
-        public static FormulaValue Char(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
-            var arg0 = (NumberValue)args[0];
+            var arg0 = args[0];
 
             if (arg0.Value < 1 || arg0.Value >= 256)
             {
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Scalar
         // Operator & maps to this function call.
-        public static FormulaValue Concatenate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Concatenate(IRContext irContext, FormulaValue[] args)
         {
             var sb = new StringBuilder();
 
@@ -151,20 +151,20 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
+            return Value(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
+        public static FormulaValue Value(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
         {
             if (irContext.ResultType is DecimalType)
             {
-                return Decimal(formatInfo, irContext, args, locale);
+                return Decimal(formatInfo, irContext, args);
             }
             else
             {
-                return Float(formatInfo, irContext, args, locale);
+                return Float(formatInfo, irContext, args);
             }
         }
 
@@ -172,12 +172,12 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
+            return Float(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Float(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
+        public static FormulaValue Float(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is StringValue sv)
             {
@@ -246,12 +246,12 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
+            return Decimal(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Decimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CultureInfo locale)
+        public static FormulaValue Decimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is StringValue sv)
             {
@@ -856,7 +856,7 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext, runner.CultureInfo);
+                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                     }
                 }
 
@@ -898,11 +898,11 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
         public static FormulaValue Len(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return NumberOrDecimalValue(irContext, args[0].Value.Length, runner.CultureInfo);
+            return NumberOrDecimalValue(irContext, args[0].Value.Length);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-left-mid-right
-        public static FormulaValue Mid(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Mid(IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
             var start = (NumberValue)args[1];
@@ -938,14 +938,14 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Left(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Left(IRContext irContext, FormulaValue[] args)
         {
-            return LeftOrRight(irContext, args, Left, runner.CultureInfo);
+            return LeftOrRight(irContext, args, Left);
         }
 
-        public static FormulaValue Right(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Right(IRContext irContext, FormulaValue[] args)
         {
-            return LeftOrRight(irContext, args, Right, runner.CultureInfo);
+            return LeftOrRight(irContext, args, Right);
         }
 
         private static string Left(string str, int i)
@@ -968,7 +968,7 @@ namespace Microsoft.PowerFx.Functions
             return str.Substring(str.Length - i);
         }
 
-        private static FormulaValue LeftOrRight(IRContext irContext, FormulaValue[] args, Func<string, int, string> leftOrRight, CultureInfo locale)
+        private static FormulaValue LeftOrRight(IRContext irContext, FormulaValue[] args, Func<string, int, string> leftOrRight)
         {
             if (args[0] is BlankValue || args[1] is BlankValue)
             {
@@ -997,7 +997,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, leftOrRight(source.Value, intCount));
         }
 
-        private static FormulaValue Find(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
@@ -1018,7 +1018,7 @@ namespace Microsoft.PowerFx.Functions
                               : new BlankValue(irContext);
         }
 
-        private static FormulaValue Replace(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
         {
             var source = ((StringValue)args[0]).Value;
             var start = ((NumberValue)args[1]).Value;
@@ -1218,7 +1218,7 @@ namespace Microsoft.PowerFx.Functions
             return new GuidValue(irContext, Guid.NewGuid());
         }
 
-        public static FormulaValue GuidPure(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             try

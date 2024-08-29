@@ -206,7 +206,6 @@ namespace Microsoft.PowerFx.Functions
 
                 if (args[0] is not StringValue && args[0] is not BlankValue)
                 {
-                    // !!!TODO Locale not available. Get locale from service.
                     return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 
@@ -220,7 +219,6 @@ namespace Microsoft.PowerFx.Functions
                         regularExpression = (string)osv1.ExecutionValue;
                         break;
                     default:
-                        // !!!TODO Locale not available. Get locale from service.
                         return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.InvalidArgumentError(args[1].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 

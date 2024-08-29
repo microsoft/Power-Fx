@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -21,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
         //   TimeUnit.Hours
         //   If(true, TimeUnit).Hours
         //   If(true, TextPosition, Align).Left
-        public static FormulaValue OptionSet(IExternalOptionSet optionSet, IRContext irContext, CultureInfo locale)
+        public static FormulaValue OptionSet(IExternalOptionSet optionSet, IRContext irContext)
         {
             var options = new List<NamedValue>();
             foreach (var optionName in optionSet.OptionNames)

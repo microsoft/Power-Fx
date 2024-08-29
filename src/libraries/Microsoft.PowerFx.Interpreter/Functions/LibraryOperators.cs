@@ -2,11 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -530,17 +527,17 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        private static FormulaValue NumericDiv(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue NumericDiv(IRContext irContext, NumberValue[] args)
         {
-            var dividend = (NumberValue)args[0];
-            var divisor = (NumberValue)args[1];
+            var dividend = args[0].Value;
+            var divisor = args[1].Value;
 
-            if (divisor.Value == 0)
+            if (divisor == 0)
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return new NumberValue(irContext, dividend.Value / divisor.Value);
+            return new NumberValue(irContext, dividend / divisor);
         }
 
         private static BooleanValue NumericGt(IRContext irContext, NumberValue[] args)
@@ -599,20 +596,20 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, result);
         }
 
-        private static FormulaValue DecimalDiv(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue DecimalDiv(IRContext irContext, DecimalValue[] args)
         {
-            var dividend = (DecimalValue)args[0];
-            var divisor = (DecimalValue)args[1];
+            var dividend = args[0].Value;
+            var divisor = args[1].Value;
             decimal result;
 
-            if (divisor.Value == 0m)
+            if (divisor == 0m)
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
             try
             {
-                result = dividend.Value / divisor.Value;
+                result = dividend / divisor;
             }
             catch (OverflowException)
             {

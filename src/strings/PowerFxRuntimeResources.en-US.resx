@@ -353,4 +353,12 @@
     <value>Overflow.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() only supports one predicate.</value>
+    <comment>{Locked=Filter()}</comment>
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>The untyped object argument to the '{0}' function has an incorrect type. Expected: {1}, Actual: {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

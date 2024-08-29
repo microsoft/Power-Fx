@@ -2220,7 +2220,7 @@ namespace Microsoft.PowerFx.Functions
             return arg.IsBlank();
         }
 
-        private static FormulaValue IsEmpty(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is BlankValue)
             {
@@ -2287,7 +2287,7 @@ namespace Microsoft.PowerFx.Functions
                         var trueBranch = args[i + 1];
 
                         var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext, runner.CultureInfo);
+                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
 
@@ -2305,7 +2305,7 @@ namespace Microsoft.PowerFx.Functions
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
 
-                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext, runner.CultureInfo);
+                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -2316,13 +2316,13 @@ namespace Microsoft.PowerFx.Functions
             return irContext.ResultType == FormulaType.Void ? new VoidValue(irContext) : new BlankValue(irContext);
         }
 
-        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext, CultureInfo locale)
+        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
         {
             if (irContext.ResultType is Types.Void)
             {
                 if (result is ErrorValue ev)
                 {
-                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors.Select(expr => expr.GetInLocale(locale)).ToList());
+                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors);
                 }
 
                 return new VoidValue(irContext);
@@ -2389,19 +2389,19 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
                     var errorHandlingBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    return MaybeAdjustToCompileTimeType(errorHandlingBranchResult, irContext, runner.CultureInfo);
+                    return MaybeAdjustToCompileTimeType(errorHandlingBranchResult, irContext);
                 }
 
                 if (i + 1 == args.Length - 1)
                 {
-                    return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext, runner.CultureInfo);
+                    return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                 }
 
                 if (i + 2 == args.Length - 1)
                 {
                     var otherwiseBranch = args[i + 2];
                     var otherwiseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(otherwiseBranch, context, otherwiseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext, runner.CultureInfo);
+                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext);
                 }
             }
 
@@ -2411,7 +2411,7 @@ namespace Microsoft.PowerFx.Functions
         // Error({Kind:<error kind>,Message:<error message>})
         // Error(Table({Kind:<error kind 1>,Message:<error message 1>}, {Kind:<error kind 2>,Message:<error message 2>}))
         // Error(<error message>)
-        public static FormulaValue Error(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Error(IRContext irContext, FormulaValue[] args)
         {
             var result = new ErrorValue(irContext);
 
@@ -2627,7 +2627,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return MaybeAdjustToCompileTimeType(result, irContext, runner.CultureInfo);
+                        return MaybeAdjustToCompileTimeType(result, irContext);
                     }
                 }
             }
@@ -2645,7 +2645,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return MaybeAdjustToCompileTimeType(result, irContext, runner.CultureInfo);
+                    return MaybeAdjustToCompileTimeType(result, irContext);
                 }
             }
 

@@ -2,15 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -23,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
         // CSS format is RGBA
         private static readonly Regex RegexCSS = new Regex(@"^#(?<r>[0-9a-fA-F]{2})(?<g>[0-9a-fA-F]{2})(?<b>[0-9a-fA-F]{2})(?<a>[0-9a-fA-F]{2})?$", LibraryFlags.RegExFlags);
 
-        public static FormulaValue ColorValue(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
             var val = args[0].Value;
 
@@ -61,12 +57,12 @@ namespace Microsoft.PowerFx.Functions
             return byte.Parse(match.Groups[color].Value, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
-        public static FormulaValue RGBA(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RGBA(IRContext irContext, NumberValue[] args)
         {
-            var red = (int)((NumberValue)args[0]).Value;
-            var green = (int)((NumberValue)args[1]).Value;
-            var blue = (int)((NumberValue)args[2]).Value;
-            var alpha = ((NumberValue)args[3]).Value;
+            var red = (int)args[0].Value;
+            var green = (int)args[1].Value;
+            var blue = (int)args[2].Value;
+            var alpha = args[3].Value;
 
             // Ensure rgb numbers are in range (0-255)
             if (red < 0 || red > 255
@@ -87,7 +83,7 @@ namespace Microsoft.PowerFx.Functions
             return new ColorValue(irContext, Color.FromArgb(alpha255, red, green, blue));
         }
 
-        public static FormulaValue ColorFade(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue ColorFade(IRContext irContext, FormulaValue[] args)
         {
             var color = (ColorValue)args[0];
             var fadeDelta = ((NumberValue)args[1]).Value;

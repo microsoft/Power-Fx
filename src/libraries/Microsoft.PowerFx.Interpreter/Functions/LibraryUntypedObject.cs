@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Functions
             return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{0,7})?Z?)?$");
         }
 
-        public static FormulaValue Index_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
@@ -395,14 +395,14 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        public static FormulaValue Boolean_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Boolean_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return TextToBoolean(runner, context, irContext, new StringValue[] { str });
+                return TextToBoolean(irContext, new StringValue[] { str });
             }
             else if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.UntypedNumber)
             {
@@ -490,7 +490,7 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue TimeValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -533,14 +533,14 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
         }
 
-        public static FormulaValue Guid_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
             if (impl.Type == FormulaType.String)
             {
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
-                return GuidPure(runner, context, irContext, new StringValue[] { str });
+                return GuidPure(irContext, new StringValue[] { str });
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.GUID_UO.Name, DType.String.GetKindString(), impl);
@@ -550,9 +550,10 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError
             {
+                ResourceKey = RuntimeStringResources.ErrUntypedObjectIncorrectTypeArg,
                 Kind = ErrorKind.InvalidArgument,
                 Span = irContext.SourceContext,
-                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+                MessageArgs = new[] { functionName, expectedType, actualValue.Type.ToString() }
             });
         }
 
@@ -600,7 +601,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
-        public static FormulaValue ColorValue_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue ColorValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -610,7 +611,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (Regex.IsMatch(str, @"^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"))
                 {
-                    return ColorValue(runner, context, irContext, new StringValue[] { FormulaValue.New(str) });
+                    return ColorValue(irContext, new StringValue[] { FormulaValue.New(str) });
                 }
                 else
                 {

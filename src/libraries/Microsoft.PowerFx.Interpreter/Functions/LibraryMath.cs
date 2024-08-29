@@ -732,15 +732,15 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
-        public static FormulaValue Mod(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
         {
             if (irContext.ResultType == FormulaType.Number)
             {
-                return ModFloat(irContext, (NumberValue)args[0], (NumberValue)args[1], runner.CultureInfo);
+                return ModFloat(irContext, (NumberValue)args[0], (NumberValue)args[1]);
             }
             else if (irContext.ResultType == FormulaType.Decimal)
             {
-                return ModDecimal(irContext, (DecimalValue)args[0], (DecimalValue)args[1], runner.CultureInfo);
+                return ModDecimal(irContext, (DecimalValue)args[0], (DecimalValue)args[1]);
             }
             else
             {
@@ -748,7 +748,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue ModFloat(IRContext irContext, NumberValue arg0nv, NumberValue arg1nv, CultureInfo locale)
+        public static FormulaValue ModFloat(IRContext irContext, NumberValue arg0nv, NumberValue arg1nv)
         {
             double arg0 = arg0nv.Value;
             double arg1 = arg1nv.Value;
@@ -772,7 +772,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        public static FormulaValue ModDecimal(IRContext irContext, DecimalValue arg0dv, DecimalValue arg1dv, CultureInfo locale)
+        public static FormulaValue ModDecimal(IRContext irContext, DecimalValue arg0dv, DecimalValue arg1dv)
         {
             decimal arg0 = arg0dv.Value;
             decimal arg1 = arg1dv.Value;
@@ -798,7 +798,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
         // Sequence( count:n, start:(n|w), step:(n|w) ) where start and step must be the same type
-        public static FormulaValue Sequence(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Sequence(IRContext irContext, FormulaValue[] args)
         {
             double count = ((NumberValue)args[0]).Value;
 
@@ -889,7 +889,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Abs(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Abs(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -915,7 +915,7 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, val);
         }
 
-        public static FormulaValue Round(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -930,13 +930,13 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo),
+                NumberValue num => RoundFloat(irContext, num, digits),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits),
                 _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, CultureInfo locale, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
@@ -985,7 +985,7 @@ namespace Microsoft.PowerFx.Functions
         // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
         // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
         // In the future, some of this can be replaced with built in support in decimal.Round()
-        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, CultureInfo locale, RoundType roundType = RoundType.Default)
+        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, RoundType roundType = RoundType.Default)
         {
             var signedNumber = dec.Value;
 
@@ -1075,7 +1075,7 @@ namespace Microsoft.PowerFx.Functions
             Down
         }
 
-        public static FormulaValue RoundUp(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -1090,13 +1090,13 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Up),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Up),
+                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Up),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Up),
                 _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
-        public static FormulaValue RoundDown(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
         {
             double digits;
 
@@ -1116,13 +1116,13 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0] switch
             {
-                NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Down),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Down),
+                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Down),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Down),
                 _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
-        public static FormulaValue Int(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Int(IRContext irContext, FormulaValue[] args)
         {
             return args[0] switch
             {
@@ -1150,7 +1150,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, Math.Log(number));
         }
 
-        public static FormulaValue Log(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue Log(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
             var numberBase = args[1].Value;
@@ -1176,7 +1176,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, d);
         }
 
-        public static FormulaValue Power(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue Power(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
             var exponent = args[1].Value;
@@ -1346,7 +1346,7 @@ namespace Microsoft.PowerFx.Functions
 
         // Given the absence of Math.Cot function, we compute Cot(x) as 1/Tan(x)
         // Reference: https://en.wikipedia.org/wiki/Trigonometric_functions
-        private static FormulaValue Cot(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        private static FormulaValue Cot(IRContext irContext, NumberValue[] args)
         {
             var arg = args[0].Value;
             var tan = Math.Tan(arg);
@@ -1368,7 +1368,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, (Math.PI / 2) - atan);
         }
 
-        public static FormulaValue Atan2(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue Atan2(IRContext irContext, NumberValue[] args)
         {
             var x = args[0].Value;
             var y = args[1].Value;
@@ -1398,7 +1398,7 @@ namespace Microsoft.PowerFx.Functions
         //
         // Could these variations be done as an overload?  Yes. But we really want to make sure we get the
         // right onw and not have C# coerce to another data type and possibly lose precision.
-        private static FormulaValue NumberOrDecimalValue(IRContext irContext, int value, CultureInfo locale)
+        private static FormulaValue NumberOrDecimalValue(IRContext irContext, int value)
         {
             // all int values fit in both double and decimal
             if (irContext.ResultType == FormulaType.Number)
@@ -1415,7 +1415,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue NumberOrDecimalValue_Long(IRContext irContext, long value, CultureInfo locale)
+        private static FormulaValue NumberOrDecimalValue_Long(IRContext irContext, long value)
         {
             // all long values fit in both double and decimal, however Number could lose some precision
             if (irContext.ResultType == FormulaType.Number)
@@ -1433,7 +1433,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // This function should only be used in places where we don't expect value to exceed the range of a decimal
-        private static FormulaValue NumberOrDecimalValue_Double(IRContext irContext, double value, CultureInfo locale)
+        private static FormulaValue NumberOrDecimalValue_Double(IRContext irContext, double value)
         {
             if (irContext.ResultType == FormulaType.Number)
             {
@@ -1514,13 +1514,13 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        private static FormulaValue Hex2Dec(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        private static FormulaValue Hex2Dec(IRContext irContext, StringValue[] args)
         {
             var number = args[0].Value;
 
             if (string.IsNullOrEmpty(number))
             {
-                return NumberOrDecimalValue(irContext, 0, runner.CultureInfo);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (number.Length > 10)
@@ -1534,7 +1534,7 @@ namespace Microsoft.PowerFx.Functions
                 var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
                 negative_result -= maxNumber;
-                return NumberOrDecimalValue_Long(irContext, negative_result, runner.CultureInfo);
+                return NumberOrDecimalValue_Long(irContext, negative_result);
             }
 
             if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
@@ -1542,7 +1542,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return NumberOrDecimalValue_Long(irContext, result, runner.CultureInfo);
+            return NumberOrDecimalValue_Long(irContext, result);
         }
     }
 }

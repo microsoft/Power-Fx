@@ -70,5 +70,7 @@ namespace Microsoft.PowerFx.Interpreter.Localization
         public static readonly ErrorResourceKey ErrCustomErrorArg = New("ErrCustomErrorArg");
         public static readonly ErrorResourceKey ErrReservedErrorArg = New("ErrReservedErrorArg");
         public static readonly ErrorResourceKey ErrOverflow = New("ErrOverflow");
+        public static readonly ErrorResourceKey ErrFilterPredicate = New("ErrFilterPredicate");
+        public static readonly ErrorResourceKey ErrUntypedObjectIncorrectTypeArg = New("ErrUntypedObjectIncorrectTypeArg");
     }
 }
