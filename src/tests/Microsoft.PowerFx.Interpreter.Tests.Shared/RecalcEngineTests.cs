@@ -708,7 +708,7 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11);", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
@@ -723,6 +723,12 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(func.IsAsync);
             Assert.True(func.IsDelegatable);
+
+            func = recalcEngine.Functions.WithName("D").First() as UserDefinedFunction;
+
+            // Imperative function is not delegable
+            Assert.True(func.IsAsync);
+            Assert.True(!func.IsDelegatable);
         }
 
         // Binding to inner functions does not impact outer functions. 
