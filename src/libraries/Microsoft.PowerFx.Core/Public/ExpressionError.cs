@@ -124,11 +124,11 @@ namespace Microsoft.PowerFx
         /// Get error message in the given locale.
         /// </summary>
         /// <param name="culture">CultureInfo object.</param>
-        /// <param name="fullMessage">If true, get error message with span details.</param>
+        /// <param name="includeSpanDetails">If true, get error message with span details.</param>
         /// <returns></returns>
-        public string GetMessageInLocale(CultureInfo culture, bool fullMessage = false)
+        public string GetMessageInLocale(CultureInfo culture, bool includeSpanDetails = false)
         {
-            if (fullMessage)
+            if (includeSpanDetails)
             {
                 return IncludeSpanDetails(GetFormattedMessage(culture));
             }

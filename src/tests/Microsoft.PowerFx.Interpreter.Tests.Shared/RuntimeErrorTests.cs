@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Tests
             var check = engine.Check(expression);
             var evaluator = check.GetEvaluator();
 
-            //string message = myError.Errors.First().GetMessageInLocale(LOCALE)
-
             var result = evaluator.Eval();            
 
             if (result is StringValue stringValue)
@@ -33,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is ErrorValue errorValue)
             {
+                // Host can call GetMessageInLocale to get a localized message.
                 Assert.Equal(expectedInvariant, errorValue.Errors.First().ToString());
                 Assert.Equal(expectedLocale, errorValue.Errors.First().GetMessageInLocale(culture, true));
             }
