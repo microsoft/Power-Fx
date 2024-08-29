@@ -381,4 +381,8 @@
     <value>Untyped number is not a valid Decimal value, possible overflow.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>Single column table access not yet implemented.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

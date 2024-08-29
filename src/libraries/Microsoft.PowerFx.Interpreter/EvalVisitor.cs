@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx
 
                     if (arg0value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue, CultureInfo);
+                        return impl.SetUntypedObject(node.IRContext, (StringValue)arg1value, newValue);
                     }
                     else if (arg0value is ErrorValue || arg0value is BlankValue)
                     {
@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx
 
                     if (child0Value is UntypedObjectValue uov && uov.Impl is UntypedObjectBase impl)
                     {
-                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue, CultureInfo);
+                        return impl.SetUntypedObject(node.IRContext, (NumberValue)child1Value, newValue);
                     }
                     else if (child0Value is ErrorValue || child0Value is BlankValue)
                     {
@@ -754,7 +754,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            throw new NotImplementedException();
+            return new ErrorValue(node.IRContext, new ExpressionError()
+            {
+                ResourceKey = RuntimeStringResources.ErrSingleColumnTableAccessNodeNotYetImplemented,
+                Span = node.IRContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)

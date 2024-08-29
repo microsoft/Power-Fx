@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx
             return (T)serviceProvider.GetService(typeof(T));
         }
 
-        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, StringValue property, FormulaValue value, CultureInfo locale)
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, StringValue property, FormulaValue value)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, NumberValue property, FormulaValue value, CultureInfo locale)
+        public static FormulaValue SetUntypedObject(this UntypedObjectBase untypedObject, IRContext context, NumberValue property, FormulaValue value)
         {
             try
             {

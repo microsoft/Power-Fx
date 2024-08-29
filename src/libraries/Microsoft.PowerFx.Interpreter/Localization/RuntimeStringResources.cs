@@ -77,5 +77,6 @@ namespace Microsoft.PowerFx.Interpreter.Localization
         public static readonly ErrorResourceKey ErrOrderTableDuplicateValues = New("ErrOrderTableDuplicateValues");
         public static readonly ErrorResourceKey ErrManagedConnRefreshOnly = New("ErrManagedConnRefreshOnly");
         public static readonly ErrorResourceKey ErrUntypedNumberNotValidDecimal = New("ErrUntypedNumberNotValidDecimal");
+        public static readonly ErrorResourceKey ErrSingleColumnTableAccessNodeNotYetImplemented = New("ErrSingleColumnTableAccessNodeNotYetImplemented");
     }
 }

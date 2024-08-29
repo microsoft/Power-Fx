@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -12,7 +15,6 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         [Theory]
         [InlineData("1/0", "Error 1-2: Invalid operation: division by zero.", "Error 1-2: Operação inválida: divisão por zero.")]
-        [InlineData("IfError(1/0, FirstError.Message, \"no error\")", "Invalid operation: division by zero.", "Operação inválida: divisão por zero.")]
         public void RuntimeErrorLocalizedTests(string expression, string expectedInvariant, string expectedLocale)
         {
             var culture = CultureInfo.CreateSpecificCulture("pt-BR");
@@ -34,7 +36,42 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Host can call GetMessageInLocale to get a localized message.
                 Assert.Equal(expectedInvariant, errorValue.Errors.First().ToString());
                 Assert.Equal(expectedLocale, errorValue.Errors.First().GetMessageInLocale(culture, true));
+
+                // This should result in the same message as the invariant one.
+                Assert.Equal(expectedInvariant, errorValue.Errors.First().ToString());
             }
+        }
+
+        [Theory]
+        [InlineData("IfError(1/0, FirstError.Message, \"no error\")", "Operação inválida: divisão por zero.")]
+        [InlineData("IfError(myerror,Concat(AllErrors,Message,\", \"))", "Operação inválida: divisão por zero., Nome inválido. 'My invalid name' não é reconhecido.")]
+        public void RuntimeIfErrorTests(string expression, string expected)
+        {
+            var error = new ErrorValue(IRContext.NotInSource(FormulaType.String), new List<ExpressionError>()
+            {
+                new ExpressionError()
+                {
+                    Kind = ErrorKind.Div0,
+                    Severity = ErrorSeverity.Severe,
+                    ResourceKey = RuntimeStringResources.ErrDivByZero
+                },
+                new ExpressionError()
+                {
+                    Kind = ErrorKind.Div0,
+                    Severity = ErrorSeverity.Severe,
+                    ResourceKey = RuntimeStringResources.ErrNameIsNotValid,
+                    MessageArgs = new object[] { "My invalid name" }
+                },
+            });
+
+            var culture = CultureInfo.CreateSpecificCulture("pt-BR");
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("myerror", error);
+
+            var check = engine.Check(expression);
+            var result = (StringValue)check.GetEvaluator().Eval(runtimeConfig: new RuntimeConfig(null, culture));
+            Assert.Equal(expected, result.Value);
         }
     }
 }

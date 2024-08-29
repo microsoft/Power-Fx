@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
         {
-            // !!!TODO This validation should be moved to the interpreter.
+            // https://github.com/microsoft/Power-Fx/issues/2618
             return DValue<RecordValue>.Of(new ErrorValue(
                 IRContext, 
                 new ExpressionError()

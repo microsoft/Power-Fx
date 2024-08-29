@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Types
 
                 if (!found)
                 {
-                    // !!!TODO This validation should be moved to the interpreter.
+                    // https://github.com/microsoft/Power-Fx/issues/2618
                     errors.Add(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound });
                 }
             }
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                // !!!TODO This validation should be moved to the interpreter.
+                // https://github.com/microsoft/Power-Fx/issues/2618
                 return DValue<RecordValue>.Of(FormulaValue.NewError(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound }));
             }
         }
