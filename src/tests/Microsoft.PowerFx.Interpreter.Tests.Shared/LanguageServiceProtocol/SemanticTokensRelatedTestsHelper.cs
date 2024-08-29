@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         {
             var powerFxConfig = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
             var engine = new Engine(powerFxConfig);
-            var mockSymbolTable = new MockSymbolTable(); 
+            var mockSymbolTable = new MockSymbolTable();
             mockSymbolTable.AddControlAsAggregateType("Label2", new TypedName(DType.String, DName.MakeValid("Text", out _)));
             mockSymbolTable.AddControlAsControlType("NestedLabel1");
             mockSymbolTable.AddControlAsAggregateType("Gallery1", new TypedName(DType.CreateRecord(mockSymbolTable.GetLookupInfoAsTypedName("NestedLabel1")), DName.MakeValid("Selected", out _)));
