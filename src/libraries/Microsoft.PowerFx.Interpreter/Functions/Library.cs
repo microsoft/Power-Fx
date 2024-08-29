@@ -2521,7 +2521,7 @@ namespace Microsoft.PowerFx.Functions
                     return new ExpressionError { Kind = errorKind, ResourceKey = RuntimeStringResources.ErrInvalidRecord };
                 case ErrorKind.Div0:
                     // Default message that is shown to users when they try to divide a number by zero
-                    return new ExpressionError { Kind = errorKind, ResourceKey = RuntimeStringResources.ErrDivByZero };
+                    return new ExpressionError { Kind = errorKind, ResourceKey = RuntimeStringResources.DivisionByZero };
                 case ErrorKind.BadLanguageCode:
                     // Default message that is shown to users when they try to pass a language code to a function that is invalid
                     return new ExpressionError { Kind = errorKind, ResourceKey = RuntimeStringResources.ErrBadLanguage };

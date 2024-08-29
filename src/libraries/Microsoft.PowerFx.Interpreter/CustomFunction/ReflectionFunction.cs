@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
@@ -372,7 +373,15 @@ namespace Microsoft.PowerFx
 
                 if (!isValid)
                 {
-                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", retType, formulaResultType));
+                    return new ErrorValue(
+                        formulaResult.IRContext, 
+                        new ExpressionError()
+                        {
+                            ResourceKey = RuntimeStringResources.ErrReturnTypeDifference,
+                            Span = formulaResult.IRContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument,
+                            MessageArgs = new[] { retType.ToString(), formulaResultType.ToString() }
+                        });
                 }
             }
 

@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Validation, irContext.SourceContext));
+                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Internal, irContext.SourceContext));
         }
 
         // Not yet implemented function: {0}.
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrMaxCallDepth, ErrorKind.Validation, irContext.SourceContext));
+                NewExpressionError(RuntimeStringResources.ErrMaxCallDepth, ErrorKind.Internal, irContext.SourceContext));
         }
 
         // The specified record was not found.

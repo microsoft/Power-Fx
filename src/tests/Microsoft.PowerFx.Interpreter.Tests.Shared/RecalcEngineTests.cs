@@ -22,7 +22,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;

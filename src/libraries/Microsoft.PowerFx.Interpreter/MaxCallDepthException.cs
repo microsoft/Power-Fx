@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
