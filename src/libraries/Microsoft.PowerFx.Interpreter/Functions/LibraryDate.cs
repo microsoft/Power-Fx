@@ -664,10 +664,10 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return DateTimeParse(runner.GetFormattingInfo(), irContext, args, runner.CultureInfo);
+            return DateTimeParse(runner.GetFormattingInfo(), irContext, args);
         }
 
-        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args, CultureInfo locale)
+        public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
         {
             // culture will have Cultural info in-case one was passed in argument else it will have the default one.
             CultureInfo culture = formatInfo.CultureInfo;

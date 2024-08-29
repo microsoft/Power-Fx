@@ -896,7 +896,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
-        public static FormulaValue Len(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
+        public static FormulaValue Len(IRContext irContext, StringValue[] args)
         {
             return NumberOrDecimalValue(irContext, args[0].Value.Length);
         }

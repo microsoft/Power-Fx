@@ -236,7 +236,6 @@ namespace Microsoft.PowerFx.Functions
                             matchOptions = (string)osv3.ExecutionValue;
                             break;
                         default:
-                            // !!!TODO Locale not available. Get locale from service.
                             return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument));
                     }
                 }

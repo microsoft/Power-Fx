@@ -531,7 +531,6 @@ namespace Microsoft.PowerFx.Functions
         {
             var dividend = args[0].Value;
             var divisor = args[1].Value;
-
             if (divisor == 0)
             {
                 return CommonErrors.DivByZeroError(irContext);

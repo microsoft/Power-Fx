@@ -2295,7 +2295,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     // Update error "type" to the type of the If function
                     var resultContext = new IRContext(res.Error.IRContext.SourceContext, irContext.ResultType);
-                    return new ErrorValue(resultContext, res.Error.Errors.Select(expr => expr.GetInLocale(runner.CultureInfo)).ToList());
+                    return new ErrorValue(resultContext, res.Error.Errors.ToList());
                 }
 
                 // False branch
