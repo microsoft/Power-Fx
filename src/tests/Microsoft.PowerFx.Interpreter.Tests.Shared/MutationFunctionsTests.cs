@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -515,6 +514,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = check.GetEvaluator().Eval();
 
             Assert.IsType<ErrorValue>(result);
+        }
+
+        [Theory]
+        [InlineData(
+            "Patch(t1, {name:\"Mary Doe\"});Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "ErrPatchSingleRecordInvalidTableRecord")]
+        [InlineData(
+            "Patch(t1, Table({name:\"Mary Doe\"}));Concat(t1, $\"{name} from {address1_city}\", \",\")",
+            "ErrPatchSingleRecordInvalidTableRecord")]
+        public void PatchEntityMissingPrimaryKeysTests(string expression, string expectedError)
+        {
+            var engine = PatchEngine;
+            var check = engine.Check(expression, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.False(check.IsSuccess);
+            Assert.Equal(expectedError, check.Errors.First().MessageKey);
         }
 
         /// <summary>

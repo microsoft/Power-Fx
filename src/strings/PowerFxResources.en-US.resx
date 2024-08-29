@@ -4756,4 +4756,8 @@
     <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
     <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
   </data>
+  <data name="ErrPatchSingleRecordInvalidTableRecord" xml:space="preserve">
+    <value>Patch single record or table of single records is invalid for tables/records with no primary key.</value>
+    <comment>Error message shown to user when there is an attempt of calling Patch(table, single_record) function where table/record is not a dataverse one.</comment>
+  </data>
 </root>
