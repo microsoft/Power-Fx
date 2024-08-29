@@ -325,6 +325,49 @@ namespace Microsoft.PowerFx.Core.Parser
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
 
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
+                        userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
+                        definitionBeforeTrivia = new List<ITexlSource>();
+
+                        // If the result was an error, keep moving cursor until end of named formula expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
+                    }
+
+                    declarationStart = _curs.TokCur.Span.Lim;
+                    _curs.TokMove();
+                    ParseTrivia();
+                }
+                else if (_curs.TidCur == TokKind.ColonEqual)
+                {
+                    var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
+                    _curs.TokMove();
+                    definitionBeforeTrivia.Add(ParseTrivia());
+
+                    if (_curs.TidCur == TokKind.Semicolon)
+                    {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    // Extract expression
+                    while (_curs.TidCur != TokKind.Semicolon)
+                    {
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        // Parse expression
+                        definitionBeforeTrivia.Add(ParseTrivia());
+                        var result = ParseExpr(Precedence.None);
+
                         if (result is TypeLiteralNode typeLiteralNode)
                         {
                             definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode, typeLiteralNode.IsValid(out var _)));
@@ -334,10 +377,10 @@ namespace Microsoft.PowerFx.Core.Parser
                             definitionBeforeTrivia = new List<ITexlSource>();
                             continue;
                         }
-
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
-                        userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
-                        definitionBeforeTrivia = new List<ITexlSource>();
+                        else
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                        }
 
                         // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
