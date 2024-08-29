@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Docs\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SymbolTableHelperMocks\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IntellisenseTests\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRTests\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LanguageServiceProtocol\*.cs" />
