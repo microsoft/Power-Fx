@@ -5,7 +5,7 @@ using Microsoft.PowerFx.Core.Localization;
 
 namespace Microsoft.PowerFx.Interpreter.Localization
 {
-    public static class RuntimeStringResources
+    internal static class RuntimeStringResources
     {
         internal static readonly IExternalStringResources RuntimeResources = new PowerFxStringResources("Microsoft.PowerFx.Interpreter.strings.PowerFxRuntimeResources", typeof(RuntimeStringResources).Assembly);
 
@@ -72,5 +72,10 @@ namespace Microsoft.PowerFx.Interpreter.Localization
         public static readonly ErrorResourceKey ErrOverflow = New("ErrOverflow");
         public static readonly ErrorResourceKey ErrFilterPredicate = New("ErrFilterPredicate");
         public static readonly ErrorResourceKey ErrUntypedObjectIncorrectTypeArg = New("ErrUntypedObjectIncorrectTypeArg");
+        public static readonly ErrorResourceKey ErrArgumentMustBeBigEnough = New("ErrArgumentMustBeBigEnough");
+        public static readonly ErrorResourceKey ErrInvalidSortColumn = New("ErrInvalidSortColumn");
+        public static readonly ErrorResourceKey ErrOrderTableDuplicateValues = New("ErrOrderTableDuplicateValues");
+        public static readonly ErrorResourceKey ErrManagedConnRefreshOnly = New("ErrManagedConnRefreshOnly");
+        public static readonly ErrorResourceKey ErrUntypedNumberNotValidDecimal = New("ErrUntypedNumberNotValidDecimal");
     }
 }

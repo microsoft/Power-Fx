@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -1505,7 +1506,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places argument must be big enough to hold the result",
+                    ResourceKey = RuntimeStringResources.ErrArgumentMustBeBigEnough,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });

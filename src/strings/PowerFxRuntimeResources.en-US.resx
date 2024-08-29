@@ -361,4 +361,24 @@
     <value>The untyped object argument to the '{0}' function has an incorrect type. Expected: {1}, Actual: {0}.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>Places argument must be big enough to hold the result.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>The specified column '{0}' does not exist or is an invalid sort column type.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>Order table can't have duplicate values</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>Untyped number is not a valid Decimal value, possible overflow.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

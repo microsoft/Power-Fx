@@ -67,7 +67,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
-                $"{ns}.Interpreter.Localization.{nameof(RuntimeStringResources)}",
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
