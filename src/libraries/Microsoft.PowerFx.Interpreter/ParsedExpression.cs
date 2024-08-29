@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx
             }
             catch (MaxCallDepthException maxCallDepthException)
             {
-                return maxCallDepthException.ToErrorValue(_irnode.IRContext, evalVisitor.CultureInfo);
+                return maxCallDepthException.ToErrorValue(_irnode.IRContext);
             }
         }
 

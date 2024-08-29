@@ -749,7 +749,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isBoolean = TryTextToBoolean(irContext, args[0], out BooleanValue result);
 
-            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext, runner.CultureInfo);
+            return isBoolean ? result : CommonErrors.InvalidBooleanFormatError(irContext);
         }
 
         public static bool TryTextToBoolean(IRContext irContext, StringValue value, out BooleanValue result)
@@ -888,7 +888,7 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     return new DateTimeValue(irContext, dv.GetConvertedValue(timeZoneInfo));
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -928,7 +928,7 @@ namespace Microsoft.PowerFx.Functions
                 case DateValue dv:
                     return dv;
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -974,7 +974,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!date.IsValid(runner))
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             return new DateValue(irContext, date.Date);

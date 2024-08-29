@@ -45,8 +45,7 @@ namespace Microsoft.PowerFx.Interpreter
                     return new StringValue(IRContext.NotInSource(FormulaType.String), osv.Option);
             }
 
-            // !!!TODO Locale not available. Get locale from service.
-            return CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument, null);
+            return CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument);
         }
     }
 }

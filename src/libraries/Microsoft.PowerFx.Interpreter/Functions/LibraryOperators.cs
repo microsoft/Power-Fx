@@ -537,7 +537,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (divisor.Value == 0)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             return new NumberValue(irContext, dividend.Value / divisor.Value);
@@ -607,7 +607,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (divisor.Value == 0m)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             try
@@ -802,7 +802,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
@@ -821,7 +821,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 

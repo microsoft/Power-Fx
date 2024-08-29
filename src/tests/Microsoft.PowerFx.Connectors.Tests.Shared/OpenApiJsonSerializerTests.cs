@@ -400,8 +400,7 @@ namespace Microsoft.PowerFx.Tests
         {
             return await SerializeJsonAsync(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                // !!!TODO How to handle locale here?
-                ["a"] = (schema, CommonErrors.DivByZeroError(IRContext.NotInSource(FormulaType.Decimal), null))
+                ["a"] = (schema, CommonErrors.DivByZeroError(IRContext.NotInSource(FormulaType.Decimal)))
             });
         }
     }

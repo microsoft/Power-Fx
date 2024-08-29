@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (args[0] is not StringValue sv)
             {
-                return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>()));
+                return Task.FromResult<FormulaValue>(CommonErrors.RuntimeTypeMismatch(args[0].IRContext));
             }
             
             bool isBase64String = args.Length >= 2 && args[1] is BooleanValue bv && bv.Value;                                    
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (blob == null)
             {
-                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>());
+                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
             return FormulaValue.New(await blob.GetAsStringAsync(null, CancellationToken.None));
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (blobValue == null)
             {
-                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext, runtimeServiceProvider.GetService<CultureInfo>());
+                return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
             return FormulaValue.New(await blobValue.Content.GetAsBase64Async(cancellationToken));

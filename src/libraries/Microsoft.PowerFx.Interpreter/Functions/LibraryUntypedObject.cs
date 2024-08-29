@@ -5,15 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -51,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
@@ -158,7 +156,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
 
                 return Value(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
@@ -173,7 +171,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch (FormatException)
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
             else if (impl.Type == FormulaType.Boolean)
@@ -231,7 +229,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
 
                 return Decimal(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
@@ -267,7 +265,7 @@ namespace Microsoft.PowerFx.Functions
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
 
                 return new NumberValue(irContext, number);
@@ -387,7 +385,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "The UntypedObject does not represent an array",
+                        ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -486,7 +484,7 @@ namespace Microsoft.PowerFx.Functions
                     return new DateValue(irContext, datetime.Date);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateValue_UO.Name, DType.String.GetKindString(), impl);
@@ -506,7 +504,7 @@ namespace Microsoft.PowerFx.Functions
                     return new TimeValue(irContext, res);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.TimeValue_UO.Name, DType.String.GetKindString(), impl);
@@ -529,7 +527,7 @@ namespace Microsoft.PowerFx.Functions
                     return new DateTimeValue(irContext, datetime);
                 }
 
-                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.DateTimeValue_UO.Name, DType.String.GetKindString(), impl);
@@ -616,7 +614,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return CommonErrors.InvalidColorFormatError(irContext, runner.CultureInfo);
+                    return CommonErrors.InvalidColorFormatError(irContext);
                 }
             }
 

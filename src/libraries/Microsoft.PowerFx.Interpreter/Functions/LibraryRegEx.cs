@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -208,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
                 if (args[0] is not StringValue && args[0] is not BlankValue)
                 {
                     // !!!TODO Locale not available. Get locale from service.
-                    return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument, null));
+                    return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 
                 string regularExpression;
@@ -222,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
                     default:
                         // !!!TODO Locale not available. Get locale from service.
-                        return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.InvalidArgumentError(args[1].IRContext, RuntimeStringResources.ErrInvalidArgument, null));
+                        return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.InvalidArgumentError(args[1].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 
                 string inputString = args[0] is StringValue sv0 ? sv0.Value : string.Empty;
@@ -240,7 +239,7 @@ namespace Microsoft.PowerFx.Functions
                             break;
                         default:
                             // !!!TODO Locale not available. Get locale from service.
-                            return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument, null));
+                            return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument));
                     }
                 }
                 else

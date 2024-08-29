@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -153,7 +152,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return CommonErrors.DivByZeroError(context, null);
+                return CommonErrors.DivByZeroError(context);
             }
 
             public virtual FormulaValue GetResult(IRContext irContext)
@@ -507,14 +506,14 @@ namespace Microsoft.PowerFx.Functions
         {
             public override FormulaValue NoElementValue(IRContext context)
             {
-                return CommonErrors.DivByZeroError(context, null);
+                return CommonErrors.DivByZeroError(context);
             }
 
             public override FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
-                    return CommonErrors.DivByZeroError(irContext, null);
+                    return CommonErrors.DivByZeroError(irContext);
                 }
 
                 if (double.IsInfinity(_accumulator))
@@ -530,14 +529,14 @@ namespace Microsoft.PowerFx.Functions
         {
             public override FormulaValue NoElementValue(IRContext context)
             {
-                return CommonErrors.DivByZeroError(context, null);
+                return CommonErrors.DivByZeroError(context);
             }
 
             public override FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
-                    return CommonErrors.DivByZeroError(irContext, null);
+                    return CommonErrors.DivByZeroError(irContext);
                 }
 
                 if (_overflow)
@@ -549,24 +548,17 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values, CultureInfo locale)
+        private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
         {
             foreach (var value in values.Where(v => v is not BlankValue))
             {
                 agg.Apply(value);
             }
 
-            var result = agg.GetResult(irContext);
-
-            if (result is ErrorValue error)
-            {
-                return new ErrorValue(irContext, error.Errors.First().GetInLocale(locale));
-            }
-
-            return result;
+            return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(string functionName, IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, CultureInfo locale)
+        private static async Task<FormulaValue> RunAggregatorAsync(string functionName, IAggregator agg, EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args.First();
             var arg1 = (LambdaFormulaValue)args.Skip(1).First();
@@ -579,22 +571,15 @@ namespace Microsoft.PowerFx.Functions
 
                 var value = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
-                if (value is ErrorValue error1)
+                if (value is ErrorValue error)
                 {
-                    return new ErrorValue(irContext, error1.Errors.First().GetInLocale(locale));
+                    return error;
                 }
 
                 agg.Apply(value);
             }
 
-            var result = agg.GetResult(irContext);
-
-            if (result is ErrorValue error2)
-            {
-                return new ErrorValue(irContext, error2.Errors.First().GetInLocale(locale));
-            }
-
-            return result;
+            return agg.GetResult(irContext);
         }
 
         private static FormulaValue Sqrt(IRContext irContext, NumberValue[] args)
@@ -608,35 +593,35 @@ namespace Microsoft.PowerFx.Functions
         // Sum(1,2,3)     
         internal static FormulaValue Sum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args, runner.CultureInfo);
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args);
         }
 
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // VarP(1,2,3)
         internal static FormulaValue Var(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new VarianceAgg(), irContext, args, runner.CultureInfo);
+            return RunAggregator(new VarianceAgg(), irContext, args);
         }
 
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         internal static FormulaValue Stdev(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new StdDeviationAgg(), irContext, args, runner.CultureInfo);
+            return RunAggregator(new StdDeviationAgg(), irContext, args);
         }
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // Max(1,2,3)     
@@ -646,11 +631,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, irContext, args, runner.CultureInfo);
+                return RunAggregator(agg, irContext, args);
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -661,11 +646,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args).ConfigureAwait(false);
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -676,11 +661,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, irContext, args, runner.CultureInfo);
+                return RunAggregator(agg, irContext, args);
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -691,11 +676,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args).ConfigureAwait(false);
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -730,7 +715,7 @@ namespace Microsoft.PowerFx.Functions
         // Average(1,2,3)
         public static FormulaValue Average(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args, runner.CultureInfo);
+            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args);
         }
 
         // Average([1,2,3], Value * Value)     
@@ -740,10 +725,10 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0.Rows.Count() == 0)
             {
-                return CommonErrors.DivByZeroError(irContext, runner.CultureInfo);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args, runner.CultureInfo).ConfigureAwait(false);
+            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -759,7 +744,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -771,7 +756,7 @@ namespace Microsoft.PowerFx.Functions
             // Both floating point zero and negative zero will satisfy this test
             if (arg1 == 0)
             {
-                return CommonErrors.DivByZeroError(irContext, locale);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             double result = arg0 % arg1;
@@ -791,11 +776,11 @@ namespace Microsoft.PowerFx.Functions
         {
             decimal arg0 = arg0dv.Value;
             decimal arg1 = arg1dv.Value;
-            
+
             // Both decimal zero and negative zero will satisfy this test
             if (arg1 == 0m)
             {
-                return CommonErrors.DivByZeroError(irContext, locale);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             decimal result = arg0 % arg1;
@@ -819,14 +804,14 @@ namespace Microsoft.PowerFx.Functions
 
             if (count < 0 || count > int.MaxValue)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             return (args[1], args[2]) switch
             {
                 (NumberValue startN, NumberValue stepN) => SequenceFloat(irContext, (int)count, startN, stepN),
                 (DecimalValue startW, DecimalValue stepW) => SequenceDecimal(irContext, (int)count, startW, stepW),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -865,7 +850,7 @@ namespace Microsoft.PowerFx.Functions
                 if (isValid)
                 {
                     x += step;
-                    isValid = !double.IsInfinity(x);                   
+                    isValid = !double.IsInfinity(x);
                 }
             }
         }
@@ -875,7 +860,7 @@ namespace Microsoft.PowerFx.Functions
             var x = start;
             bool isValid = true;
             for (var i = 1; i <= records; i++)
-            {                
+            {
                 if (isValid)
                 {
                     yield return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), x);
@@ -912,7 +897,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 NumberValue num => AbsFloat(irContext, num),
                 DecimalValue dec => AbsDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -940,14 +925,14 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
 
             return args[0] switch
             {
                 NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo),
                 DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -980,7 +965,7 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
             }
 
-            return CommonErrors.UnreachableCodeError(irContext, locale);
+            return CommonErrors.UnreachableCodeError(irContext);
         }
 
         private static readonly IReadOnlyList<decimal> DecPow10 = new decimal[]
@@ -1007,8 +992,8 @@ namespace Microsoft.PowerFx.Functions
             var sign = signedNumber < 0 ? -1m : 1m;
             var unsignedNumber = Math.Abs(signedNumber);
 
-            int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
-                               doubleDigs < int.MinValue ? int.MinValue : 
+            int digits = doubleDigs > int.MaxValue ? int.MaxValue :
+                               doubleDigs < int.MinValue ? int.MinValue :
                                     (int)doubleDigs;
 
             if (digits < -28)
@@ -1080,7 +1065,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return CommonErrors.UnreachableCodeError(irContext, locale);
+            return CommonErrors.UnreachableCodeError(irContext);
         }
 
         public enum RoundType
@@ -1100,14 +1085,14 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
 
             return args[0] switch
             {
                 NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Up),
                 DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Up),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -1126,14 +1111,14 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
 
             return args[0] switch
             {
                 NumberValue num => RoundFloat(irContext, num, digits, runner.CultureInfo, RoundType.Down),
                 DecimalValue dec => RoundDecimal(irContext, dec, digits, runner.CultureInfo, RoundType.Down),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -1143,7 +1128,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 NumberValue num => IntFloat(irContext, num),
                 DecimalValue dec => IntDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext, runner.CultureInfo)
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -1165,14 +1150,14 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, Math.Log(number));
         }
 
-        public static FormulaValue Log(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Log(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
             var numberBase = args[1].Value;
 
             if (numberBase == 1)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             return new NumberValue(irContext, Math.Log(number, numberBase));
@@ -1191,7 +1176,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, d);
         }
 
-        public static FormulaValue Power(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Power(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
             var exponent = args[1].Value;
@@ -1200,7 +1185,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (exponent < 0)
                 {
-                    return GetDiv0Error(irContext);
+                    return CommonErrors.DivByZeroError(irContext);
                 }
                 else if (exponent == 0)
                 {
@@ -1272,7 +1257,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 (NumberValue lower, NumberValue upper) => RandBetweenFloat(services, irContext, lower, upper),
                 (DecimalValue lower, DecimalValue upper) => RandBetweenDecimal(services, irContext, lower, upper),
-                _ => CommonErrors.UnreachableCodeError(irContext, services.GetService<CultureInfo>())
+                _ => CommonErrors.UnreachableCodeError(irContext)
             };
         }
 
@@ -1283,12 +1268,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (lower > upper)
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"Lower value cannot be greater than Upper value",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
-                });
+                return CommonErrors.LowerValueGreaterThanUpperValue(irContext);
             }
 
             lower = Math.Ceiling(lower);
@@ -1325,12 +1305,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (lower > upper)
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"Lower value cannot be greater than Upper value",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
-                });
+                return CommonErrors.LowerValueGreaterThanUpperValue(irContext);
             }
 
             lower = Math.Ceiling(lower);
@@ -1371,13 +1346,13 @@ namespace Microsoft.PowerFx.Functions
 
         // Given the absence of Math.Cot function, we compute Cot(x) as 1/Tan(x)
         // Reference: https://en.wikipedia.org/wiki/Trigonometric_functions
-        private static FormulaValue Cot(IRContext irContext, NumberValue[] args)
+        private static FormulaValue Cot(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var arg = args[0].Value;
             var tan = Math.Tan(arg);
             if (tan == 0)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             var cot = 1 / tan;
@@ -1393,14 +1368,14 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, (Math.PI / 2) - atan);
         }
 
-        public static FormulaValue Atan2(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Atan2(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             var x = args[0].Value;
             var y = args[1].Value;
 
             if (x == 0 && y == 0)
             {
-                return GetDiv0Error(irContext);
+                return CommonErrors.DivByZeroError(irContext);
             }
 
             // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
@@ -1415,16 +1390,6 @@ namespace Microsoft.PowerFx.Functions
                 var result = function(arg);
                 return new NumberValue(irContext, result);
             };
-        }
-
-        private static ErrorValue GetDiv0Error(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError
-            {
-                Kind = ErrorKind.Div0,
-                Span = irContext.SourceContext,
-                Message = "Division by zero"
-            });
         }
 
         // Functions that return an integer result, such as Len, will return a Decimal by default or
@@ -1446,7 +1411,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, locale);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -1463,7 +1428,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, locale);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -1487,7 +1452,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext, locale);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 

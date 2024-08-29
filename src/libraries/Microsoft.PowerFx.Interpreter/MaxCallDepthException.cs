@@ -39,9 +39,9 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
-        public FormulaValue ToErrorValue(IRContext irContext, CultureInfo locale)
+        public FormulaValue ToErrorValue(IRContext irContext)
         {
-            return CommonErrors.MaxCallDepth(irContext, locale);
+            return CommonErrors.MaxCallDepth(irContext);
         }
     }
 }

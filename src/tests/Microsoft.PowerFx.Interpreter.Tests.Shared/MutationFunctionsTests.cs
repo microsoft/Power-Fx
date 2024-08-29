@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
                 }
 
-                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound(null)));
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
             }
 
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
@@ -577,7 +577,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
                 }
 
-                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound(null)));
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
             }
 
             public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
@@ -663,7 +663,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // This simulates a possible scenario wher Dataverse turns an error when trying to append a record.
             public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
             {
-                return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound(null))));
+                return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound())));
             }
         }
     }

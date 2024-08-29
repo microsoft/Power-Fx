@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     // This is iterating the Options in the option set
                     // so we already know TryGetValue will succeed, making this unreachable.
-                    return CommonErrors.UnreachableCodeError(irContext, locale);
+                    return CommonErrors.UnreachableCodeError(irContext);
                 }
 
                 options.Add(new NamedValue(optionName, osValue));

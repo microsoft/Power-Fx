@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0.Value < 1 || arg0.Value >= 256)
             {
-                return CommonErrors.InvalidCharValue(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidCharValue(irContext);
             }
 
             var str = new string((char)arg0.Value, 1);
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Functions
                         sb.Append(osv.ExecutionValue is string s ? s : osv.DisplayName);
                         break;
                     default:
-                        return CommonErrors.RuntimeTypeMismatch(arg.IRContext, runner.CultureInfo);
+                        return CommonErrors.RuntimeTypeMismatch(arg.IRContext);
                 }
             }
 
@@ -193,13 +193,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value, locale);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
             }
 
             bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
-            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0], locale);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -267,13 +267,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value, locale);
+                    return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
             }
 
             bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
-            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0], locale);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (!TextFormatUtils.TryGetCulture(languageCode.Value, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value, formatInfo.CultureInfo);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
             }
 
@@ -908,13 +908,13 @@ namespace Microsoft.PowerFx.Functions
             var start = (NumberValue)args[1];
             if (double.IsNaN(start.Value) || double.IsInfinity(start.Value) || start.Value <= 0)
             {
-                errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext, runner.CultureInfo));
+                errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext));
             }
 
             var count = (NumberValue)args[2];
             if (double.IsNaN(count.Value) || double.IsInfinity(count.Value) || count.Value < 0)
             {
-                errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext, runner.CultureInfo));
+                errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext));
             }
 
             if (errors.Count != 0)
@@ -977,14 +977,14 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[1] is not NumberValue count)
             {
-                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument, locale);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             var source = (StringValue)args[0];
 
             if (count.Value < 0)
             {
-                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument, locale);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             if ((count.Value % 1) != 0)
@@ -1004,12 +1004,12 @@ namespace Microsoft.PowerFx.Functions
 
             if (!TryGetInt(args[2], out int startIndexValue))
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1, StringComparison.Ordinal);
@@ -1027,7 +1027,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (start <= 0 || count < 0)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             if (!TryGetInt(args[1], out int start1Based))
@@ -1229,7 +1229,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument, runner.CultureInfo);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
         }
 

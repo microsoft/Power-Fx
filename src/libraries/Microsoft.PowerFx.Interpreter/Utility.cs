@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, locale, untypedObject.GetType().ToString());
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, untypedObject.GetType().ToString());
             }
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, locale, untypedObject.GetType().ToString());
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, untypedObject.GetType().ToString());
             }
         }
     }

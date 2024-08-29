@@ -7,42 +7,41 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static class CommonErrors
     {
         // Runtime type mismatch.
-        public static ErrorValue RuntimeTypeMismatch(IRContext irContext, CultureInfo locale)
+        public static ErrorValue RuntimeTypeMismatch(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrRuntimeTypeMismatch, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrRuntimeTypeMismatch, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Argument out of range.
-        public static ErrorValue ArgumentOutOfRange(IRContext irContext, CultureInfo locale)
+        public static ErrorValue ArgumentOutOfRange(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrArgumentOutOfRange, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrArgumentOutOfRange, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Invalid numerical value, must be in 1...255 range.
-        public static ErrorValue InvalidCharValue(IRContext irContext, CultureInfo locale)
+        public static ErrorValue InvalidCharValue(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidCharValue, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidCharValue, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Invalid operation: division by zero
-        public static ErrorValue DivByZeroError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue DivByZeroError(IRContext irContext)
         {
             return new ErrorValue(
-                irContext, 
-                NewExpressionError(RuntimeStringResources.ErrDivByZero, ErrorKind.Div0, irContext.SourceContext, locale));
+                irContext,
+                NewExpressionError(RuntimeStringResources.ErrDivByZero, ErrorKind.Div0, irContext.SourceContext));
         }
 
         public static ErrorValue OverflowError(IRContext irContext)
@@ -51,96 +50,96 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Language code '{0}' not supported.
-        public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode, CultureInfo locale)
+        public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrBadLanguageCode, ErrorKind.BadLanguageCode, irContext.SourceContext, locale, languageCode));
+                NewExpressionError(RuntimeStringResources.ErrBadLanguageCode, ErrorKind.BadLanguageCode, irContext.SourceContext, languageCode));
         }
 
         // The Date/Time could not be parsed.
-        public static ErrorValue InvalidDateTimeParsingError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue InvalidDateTimeParsingError(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidDateTimeParsingError, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidDateTimeParsingError, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Invalid date/time value.
-        public static ErrorValue InvalidDateTimeError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue InvalidDateTimeError(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidDateTimeError, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidDateTimeError, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
-        public static ErrorValue InvalidArgumentError(IRContext irContext, ErrorResourceKey errorResourceKey, CultureInfo locale)
+        public static ErrorValue InvalidArgumentError(IRContext irContext, ErrorResourceKey errorResourceKey)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(errorResourceKey, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(errorResourceKey, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // The value could not be interpreted as a Boolean.
-        public static ErrorValue InvalidBooleanFormatError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue InvalidBooleanFormatError(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidBooleanFormatError, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidBooleanFormatError, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // The value could not be interpreted as a Color.
-        public static ErrorValue InvalidColorFormatError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue InvalidColorFormatError(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Unknown error.
-        public static ErrorValue UnreachableCodeError(IRContext irContext, CultureInfo locale)
+        public static ErrorValue UnreachableCodeError(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Validation, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrInvalidColorFormatError, ErrorKind.Validation, irContext.SourceContext));
         }
 
         // Not yet implemented function: {0}.
-        public static ErrorValue NotYetImplementedFunctionError(IRContext irContext, CultureInfo locale, string functionName)
+        public static ErrorValue NotYetImplementedFunctionError(IRContext irContext, string functionName)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedFunctionError, ErrorKind.NotSupported, irContext.SourceContext, locale, functionName));
+                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedFunctionError, ErrorKind.NotSupported, irContext.SourceContext, functionName));
         }
 
         // Not yet implemented unary operator: {0}.
-        public static ErrorValue NotYetImplementedUnaryOperatorError(IRContext irContext, CultureInfo locale, string unaryOperatorName)
+        public static ErrorValue NotYetImplementedUnaryOperatorError(IRContext irContext, string unaryOperatorName)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedUnaryOperatorError, ErrorKind.NotSupported, irContext.SourceContext, locale, unaryOperatorName));
+                NewExpressionError(RuntimeStringResources.ErrNotYetImplementedUnaryOperatorError, ErrorKind.NotSupported, irContext.SourceContext, unaryOperatorName));
         }
 
         // Invalid Chain: {0}.
-        public static ErrorValue InvalidChain(IRContext irContext, CultureInfo locale, string message)
+        public static ErrorValue InvalidChain(IRContext irContext, string message)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrInvalidChain, ErrorKind.NotSupported, irContext.SourceContext, locale, message));
+                NewExpressionError(RuntimeStringResources.ErrInvalidChain, ErrorKind.NotSupported, irContext.SourceContext, message));
         }
 
         // Max call depth exceeded.
-        internal static ErrorValue MaxCallDepth(IRContext irContext, CultureInfo locale)
+        internal static ErrorValue MaxCallDepth(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrMaxCallDepth, ErrorKind.Validation, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrMaxCallDepth, ErrorKind.Validation, irContext.SourceContext));
         }
 
         // The specified record was not found.
-        internal static ExpressionError RecordNotFound(CultureInfo locale)
+        internal static ExpressionError RecordNotFound()
         {
-            return NewExpressionError(RuntimeStringResources.ErrRecordNotFound, ErrorKind.NotFound, null, locale);
+            return NewExpressionError(RuntimeStringResources.ErrRecordNotFound, ErrorKind.NotFound, null);
         }
 
         // Custom errors are not localized.
@@ -155,23 +154,23 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // An exception has been thrown: {0}
-        internal static ErrorValue RuntimeExceptionError(IRContext irContext, CultureInfo locale, string message)
+        internal static ErrorValue RuntimeExceptionError(IRContext irContext, string message)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrRuntimeExceptionError, ErrorKind.Internal, irContext.SourceContext, locale, message));
+                NewExpressionError(RuntimeStringResources.ErrRuntimeExceptionError, ErrorKind.Internal, irContext.SourceContext, message));
         }
 
         // Only primitive values are allowed for the operation.
-        internal static ErrorValue OnlyPrimitiveValuesAllowed(IRContext irContext, CultureInfo locale)
+        internal static ErrorValue OnlyPrimitiveValuesAllowed(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrOnlyPrimitiveValuesAllowed, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrOnlyPrimitiveValuesAllowed, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // The value '{0}' cannot be converted to a number.
-        internal static ErrorValue CanNotConvertToNumber(IRContext irContext, FormulaValue arg, CultureInfo locale)
+        internal static ErrorValue CanNotConvertToNumber(IRContext irContext, FormulaValue arg)
         {
             if (!arg.TryGetPrimitiveValue(out var primitveOrKind))
             {
@@ -180,28 +179,36 @@ namespace Microsoft.PowerFx.Functions
 
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrCanNotConvertToNumber, ErrorKind.InvalidArgument, irContext.SourceContext, locale, primitveOrKind.ToString()));
+                NewExpressionError(RuntimeStringResources.ErrCanNotConvertToNumber, ErrorKind.InvalidArgument, irContext.SourceContext, primitveOrKind.ToString()));
         }
 
         // Expected a value from the StartOfWeek enumeration to indicate how to number the weekdays.
-        internal static ErrorValue StartOfWeekInvalid(IRContext irContext, CultureInfo locale)
+        internal static ErrorValue StartOfWeekInvalid(IRContext irContext)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrStartOfWeekInvalid, ErrorKind.InvalidArgument, irContext.SourceContext, locale));
+                NewExpressionError(RuntimeStringResources.ErrStartOfWeekInvalid, ErrorKind.InvalidArgument, irContext.SourceContext));
         }
 
         // Class '{0}' does not implement 'SetProperty'.
-        internal static ErrorValue UntypedObjectDoesNotImplementSetPropertyError(IRContext irContext, CultureInfo locale, string className)
+        internal static ErrorValue UntypedObjectDoesNotImplementSetPropertyError(IRContext irContext, string className)
         {
             return new ErrorValue(
                 irContext,
-                NewExpressionError(RuntimeStringResources.ErrUntypedObjectDoesNotImplementSetProperty, ErrorKind.NotSupported, irContext.SourceContext, locale, className));
+                NewExpressionError(RuntimeStringResources.ErrUntypedObjectDoesNotImplementSetProperty, ErrorKind.NotSupported, irContext.SourceContext, className));
         }
 
-        private static ExpressionError NewExpressionError(ErrorResourceKey errorKey, ErrorKind kind, Span span, CultureInfo locale, params string[] args)
+        // Lower value cannot be greater than upper value.
+        internal static ErrorValue LowerValueGreaterThanUpperValue(IRContext irContext)
         {
-            return new ExpressionError(locale)
+            return new ErrorValue(
+                irContext,
+                NewExpressionError(RuntimeStringResources.ErrLowerValueGreaterThanUpperValue, ErrorKind.Numeric, irContext.SourceContext));
+        }
+
+        private static ExpressionError NewExpressionError(ErrorResourceKey errorKey, ErrorKind kind, Span span, params string[] args)
+        {
+            return new ExpressionError()
             {
                 ResourceKey = errorKey,
                 Span = span,

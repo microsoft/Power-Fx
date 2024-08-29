@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var arg0 = (TableValue)args[0];
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var arg0 = (TableValue)args[0];
@@ -343,7 +343,7 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // Count
@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // CountA
@@ -429,7 +429,7 @@ namespace Microsoft.PowerFx.Functions
                 return NumberOrDecimalValue(irContext, count, runner.CultureInfo);
             }
 
-            return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -586,7 +586,7 @@ namespace Microsoft.PowerFx.Functions
                     isDescending = ((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
                     break;
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
             }
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -641,7 +641,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allTimes || allOptionSets))
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var compareToResultModifier = 1;
@@ -684,7 +684,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -737,7 +737,7 @@ namespace Microsoft.PowerFx.Functions
                             isAscending = !((string)osv.ExecutionValue).Equals("descending", StringComparison.OrdinalIgnoreCase);
                             break;
                         default:
-                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext, runner.CultureInfo);
+                            return CommonErrors.RuntimeTypeMismatch(args[i + 1].IRContext);
                     }
                 }
 
@@ -820,7 +820,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!fieldValue.TryGetPrimitiveValue(out var primitiveValue))
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
                 if (orderTableValues.Contains(primitiveValue))
@@ -983,7 +983,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (InvalidOperationException)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
         }
 
@@ -1087,7 +1087,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!distinctValue.Type._type.IsPrimitive)
                 {
-                    return CommonErrors.OnlyPrimitiveValuesAllowed(irContext, locale);
+                    return CommonErrors.OnlyPrimitiveValuesAllowed(irContext);
                 }
 
                 var key = distinctValue.ToObject();
@@ -1185,7 +1185,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[0] is not TableValue tableValue)
             {
-                return CommonErrors.RuntimeTypeMismatch(irContext, runner.CultureInfo);
+                return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
             var keyRecords = new Dictionary<string, RecordValue>();

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Functions
                 return new ColorValue(irContext, Color.FromArgb(a, r, g, b));
             }
 
-            return CommonErrors.InvalidColorFormatError(irContext, runner.CultureInfo);
+            return CommonErrors.InvalidColorFormatError(irContext);
         }
 
         private static byte ParseColor(Match match, string color)
@@ -73,13 +73,13 @@ namespace Microsoft.PowerFx.Functions
                 || green < 0 || green > 255
                 || blue < 0 || blue > 255)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             // Ensure alpha is between 0 and 1
             if (alpha < 0.0d || alpha > 1.0d)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             var alpha255 = System.Convert.ToInt32(alpha * 255.0d);
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Functions
             // Ensure fade amount is between -1 and 1
             if (fadeDelta < -1.0d || fadeDelta > 1.0d)
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             var interpolator = Math.Abs(fadeDelta);

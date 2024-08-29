@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
 
                     default:
-                        return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
+                        return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
                 }
             }
             else if (args[1] is TimeValue time)
@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
@@ -305,7 +305,7 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
             }
 
             // When converting to months, quarters or years, we don't use the time difference
@@ -515,7 +515,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeError(irContext);
             }
         }
 
@@ -523,7 +523,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (args.Length < 4 || !TryGetInt(args[0], out int hour) || !TryGetInt(args[1], out int minute) || !TryGetInt(args[2], out int second) || !TryGetInt(args[3], out int millisecond))
             {
-                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeError(irContext);
             }
 
             return TimeImpl(runner, irContext, hour, minute, second, millisecond);
@@ -544,7 +544,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeError(irContext);
             }
         }
 
@@ -577,7 +577,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch (ArgumentOutOfRangeException)
             {
-                return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeError(irContext);
             }
         }
 
@@ -607,7 +607,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!TextFormatUtils.TryGetCulture(languageCode, out locale))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode, runner.CultureInfo);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
             }
 
@@ -637,7 +637,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 
@@ -677,7 +677,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode, locale);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
             }
 
@@ -692,7 +692,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext, locale);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 
@@ -707,7 +707,7 @@ namespace Microsoft.PowerFx.Functions
                 var languageCode = args[1].Value;
                 if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode, runner.CultureInfo);
+                    return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
             }
 
@@ -717,7 +717,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return CommonErrors.InvalidDateTimeParsingError(irContext, runner.CultureInfo);
+                return CommonErrors.InvalidDateTimeParsingError(irContext);
             }
         }
 
@@ -741,7 +741,7 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.GetConvertedValue(tzInfo)).TotalDays * -1440);
 
                 default:
-                    return CommonErrors.InvalidDateTimeError(irContext, runner.CultureInfo);
+                    return CommonErrors.InvalidDateTimeError(irContext);
             }
         }
 
@@ -763,12 +763,12 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 default:
-                    return CommonErrors.RuntimeTypeMismatch(args[1].IRContext, runner.CultureInfo);
+                    return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
             }
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
             {
-                return CommonErrors.StartOfWeekInvalid(irContext, runner.CultureInfo);
+                return CommonErrors.StartOfWeekInvalid(irContext);
             }
 
             var zeroIndex = false;
@@ -818,12 +818,12 @@ namespace Microsoft.PowerFx.Functions
 
             if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11) || startOfWeek != Math.Floor(startOfWeek))
             {
-                return CommonErrors.StartOfWeekInvalid(irContext, runner.CultureInfo);
+                return CommonErrors.StartOfWeekInvalid(irContext);
             }
 
             if (startOfWeek == 3)
             {
-                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrMondayZeroValueNotSupported, runner.CultureInfo);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrMondayZeroValueNotSupported);
             }
 
             var beginningOfYear = new DateTime(arg0.Year, 1, 1);
@@ -863,7 +863,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
             else
@@ -894,7 +894,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext, runner.CultureInfo);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
             else
