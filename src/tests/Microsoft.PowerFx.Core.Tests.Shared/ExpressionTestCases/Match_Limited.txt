@@ -579,7 +579,7 @@ Errors: Error 15-70: Invalid regular expression: Unopened groups, too few openin
 {FullMatch:"test",StartMatch:1,one:"t",two:"t"}
 
 >> Match( "test", "((?<one>t)|(?<two>t))" )
-{FullMatch:"t",StartMatch:1,one:"t",two:""}
+{FullMatch:"t",StartMatch:1,one:"t",two:Blank()}
 
 >> Match( "test", "(?<one>t).*(?<one>t)" )
 Errors: Error 15-37: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -955,3 +955,40 @@ false
 
 >> Match( "abcdef", "\w{2,4}?" ).FullMatch
 "ab"
+
+>> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+>> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+>> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( "asdf", "(*MARK)") // PCRE2 extension
+Errors: Error 15-24: Invalid regular expression: Unsupported special group, found "(*MAR...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Node != Net for this test ("b" is empty for Node), a known difference between PCRE2 and Perl too
+// >> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )
+// {FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"b"})}
+
+>> Match( "ab", "a(d)?b", MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "ab", "a(d?)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "ab", "a(?<one>d)?b" )
+{FullMatch:"ab",StartMatch:1,one:Blank()}
+
+>> Match( "ab", "a(?<one>d?)b" )
+{FullMatch:"ab",StartMatch:1,one:""}

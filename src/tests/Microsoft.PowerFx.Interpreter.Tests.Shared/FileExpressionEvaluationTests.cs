@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public static bool RegExCompareEnabled = false;
 
 #if false
-        // This test run will compare the results between .NET, NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel)
+        // a This test run will compare the results between .NET, NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel)
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport,RegEx")]
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"d:\repos\regex-min\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
+            var path = @"d:\repos\regex-min-nolocale\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
                     fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(subject.Substring(start0, end0 - start0))));
                     startMatch = matchAll ? end0 : -1;  // for next iteration
 
-                    List<string> subMatches = new List<string>();
+                    List<FormulaValue> subMatches = new List<FormulaValue>();
                     var oc = NativeMethods.pcre2_get_ovector_count_16(md);
                     for (var i = 1; i < oc; i++)
                     {
@@ -140,17 +140,18 @@ namespace Microsoft.PowerFx.Functions
                         var end = Marshal.ReadInt32(op, ((i * 2) + 1) * Marshal.SizeOf(typeof(long)));
                         if (start >= 0 && end >= 0)
                         {
-                            subMatches.Add(subject.Substring(start, end - start));
+                            subMatches.Add(StringValue.New(subject.Substring(start, end - start)));
                         }
                         else
                         {
-                            subMatches.Add(string.Empty);
+                            subMatches.Add(BlankValue.NewBlank(FormulaType.String));
                         }
                     }
 
                     if (!fields.ContainsKey(SUBMATCHES) && (options & RegexOptions.ExplicitCapture) == 0)
                     {
-                        fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
+                        var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                        fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches.Select(s => FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, s))))));
                     }
                     else
                     {
@@ -160,7 +161,7 @@ namespace Microsoft.PowerFx.Functions
                             if (!int.TryParse(name, out _))
                             {
                                 var ni = NativeMethods.pcre2_substring_number_from_name_16(code, name);
-                                fields.Add(name, new NamedValue(name, StringValue.New(subMatches[ni - 1])));
+                                fields.Add(name, new NamedValue(name, subMatches[ni - 1]));
                             }
                         }
                     }

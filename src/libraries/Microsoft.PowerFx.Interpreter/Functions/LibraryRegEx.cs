@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Functions
                     { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)m.Index + 1)) }
                 };
 
-                List<string> subMatches = new List<string>();
+                List<RecordValue> subMatches = new List<RecordValue>();
                 string[] groupNames = rex.GetGroupNames();
 
                 for (int i = 0; i < groupNames.Length; i++)
@@ -326,28 +326,30 @@ namespace Microsoft.PowerFx.Functions
                     string groupName = groupNames[i];
                     string validName = DName.MakeValid(groupName, out _).Value;
                     Group g = m.Groups[i];
+                    FormulaValue val = g.Success ? StringValue.New(g.Value) : BlankValue.NewBlank(FormulaType.String);
 
                     if (!int.TryParse(groupName, out _))
                     {
                         if (!fields.ContainsKey(validName))
                         {
-                            fields.Add(validName, new NamedValue(validName, StringValue.New(g.Value)));
+                            fields.Add(validName, new NamedValue(validName, val));
                         }
                         else
                         {
-                            fields[validName] = new NamedValue(validName, StringValue.New(g.Value));
+                            fields[validName] = new NamedValue(validName, val);
                         }
                     }
 
                     if (i > 0)
                     {
-                        subMatches.Add(g.Value);
+                        subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, val)));
                     }
                 }
 
                 if (!fields.ContainsKey(SUBMATCHES) && (options & RegexOptions.ExplicitCapture) == 0)
                 {
-                    fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
+                    var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                    fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
                 }
 
                 return RecordValue.NewRecordFromFields(fields.Values);

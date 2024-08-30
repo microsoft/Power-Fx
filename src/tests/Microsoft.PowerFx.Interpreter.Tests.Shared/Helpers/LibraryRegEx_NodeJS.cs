@@ -70,6 +70,7 @@ namespace Microsoft.PowerFx.Functions
                     const [alteredPattern, alteredFlags] = AlterRegex_NodeJS( pattern, flags );
                     const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                     const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
+
                     for(const match of matches)
                     {
                         if (match != null)
@@ -78,20 +79,20 @@ namespace Microsoft.PowerFx.Functions
                             for(var group in match.groups)
                             {
                                 var val = match.groups[group];
-                                if (val === undefined)
+                                if (val !== undefined)
                                 {
-                                    val = '';
+                                    val = '""' + val.replace( / "" /, '""""') + '""'
                                 }
-                                console.log(group + ':""' + val.replace( / "" /, '""""') + '""');
+                                console.log(group + ':' + val);
                             }
                             for (var num = 0; num < match.length; num++)
                             {
                                 var val = match[num];
-                                if (val === undefined)
+                                if (val !== undefined)
                                 {
-                                    val = '';
+                                    val = '""' + val.replace( / "" /, '""""') + '""'
                                 }
-                                console.log(num + ':""' + val.replace( / "" /, '""""') + '""');
+                                console.log(num + ':' + val);
                             }
                             console.log('%end%:');
                         }
@@ -136,10 +137,12 @@ namespace Microsoft.PowerFx.Functions
                     ^(?<end>%end%): |
                     ^(?<done>%done%): |
                     ^(?<num>\d+):""(?<numMatch>(""""|[^""])*)""$ |
-                    ^(?<name>[^:]+):""(?<nameMatch>(""""|[^""])*)""$
+                    ^(?<name>[^:]+):""(?<nameMatch>(""""|[^""])*)""$ |
+                    ^(?<numBlank>\d+):undefined$ |
+                    ^(?<nameBlank>[^:]+):undefined$
                     ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
 
-                List<string> subMatches = new ();
+                List<RecordValue> subMatches = new List<RecordValue>();
                 Dictionary<string, NamedValue> fields = new ();
                 List<RecordValue> allMatches = new ();
 
@@ -155,7 +158,8 @@ namespace Microsoft.PowerFx.Functions
                     {
                         if ((options & RegexOptions.ExplicitCapture) == 0)
                         {
-                            fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
+                            var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                            fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
                         }
 
                         allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
@@ -177,6 +181,10 @@ namespace Microsoft.PowerFx.Functions
                     {
                         fields.Add(token.Groups["name"].Value, new NamedValue(token.Groups["name"].Value, StringValue.New(token.Groups["nameMatch"].Value.Replace(@"""""", @""""))));
                     }
+                    else if (token.Groups["nameBlank"].Success)
+                    {
+                        fields.Add(token.Groups["nameBlank"].Value, new NamedValue(token.Groups["nameBlank"].Value, BlankValue.NewBlank(FormulaType.String)));
+                    }
                     else if (token.Groups["num"].Success)
                     {
                         var num = Convert.ToInt32(token.Groups["num"].Value);
@@ -186,7 +194,19 @@ namespace Microsoft.PowerFx.Functions
                         }
                         else
                         {
-                            subMatches.Add(token.Groups["numMatch"].Value.Replace(@"""""", @""""));
+                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, StringValue.New(token.Groups["numMatch"].Value.Replace(@"""""", @"""")))));
+                        }
+                    }
+                    else if (token.Groups["numBlank"].Success)
+                    {
+                        var num = Convert.ToInt32(token.Groups["numBlank"].Value);
+                        if (num == 0)
+                        {
+                            fields.Add(FULLMATCH, new NamedValue(FULLMATCH, BlankValue.NewBlank(FormulaType.String)));
+                        }
+                        else
+                        {
+                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, BlankValue.NewBlank(FormulaType.String))));
                         }
                     }
                 }
@@ -238,25 +258,24 @@ namespace Microsoft.PowerFx.Functions
                             case '\\':
                                 if (++regexIndex < regex.length)
                                 {
-                                    const letterChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Nd}\\p{Pc}';
-                                    const wordChar = '(?:(?:\\p{L}\\p{M}*)|\\p{N}|_)';
+                                    const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Nd}\\p{Pc}';
                                     const spaceChar = '\\f\\n\\r\\t\\v\\x85\\p{Z}';
                                     const digitChar = '\\p{Nd}';
 
                                     switch (regex.charAt(regexIndex))
                                     { 
                                         case 'w':
-                                            altered = altered.concat((openCharacterClass ? '' : '['), letterChar, (openCharacterClass ? '' : ']'));
+                                            altered = altered.concat((openCharacterClass ? '' : '['), wordChar, (openCharacterClass ? '' : ']'));
                                             break;
                                         case 'W':
-                                            altered = altered.concat('[^', letterChar, ']');
+                                            altered = altered.concat('[^', wordChar, ']');
                                             break;
 
                                         case 'b':
-                                            altered = altered.concat(`(?:(?<=${wordChar})(?!${wordChar})|(?<!${wordChar})(?=${wordChar}))`);
+                                            altered = altered.concat(`(?:(?<=[${wordChar}])(?![${wordChar}])|(?<![${wordChar}])(?=[${wordChar}]))`);
                                             break;
                                         case 'B':
-                                            altered = altered.concat(`(?:(?<=${wordChar})(?=${wordChar})|(?<!${wordChar})(?!${wordChar}))`);
+                                            altered = altered.concat(`(?:(?<=[${wordChar}])(?=[${wordChar}])|(?<![${wordChar}])(?![${wordChar}]))`);
                                             break;
 
                                         case 's':

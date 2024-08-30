@@ -177,12 +177,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
                     (?<goodEscape>\\
                            ([dfnrstw]                        |         # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
-                            [pP]\{\w+\}                      |         # unicode character classes
+                            p\{\w+\}                         |         # unicode character classes
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/] |         # acceptable escaped characters with Unicode aware ECMAScript
                             c[a-zA-Z]                        |         # Ctrl character classes
                             x[0-9a-fA-F]{2}                  |         # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                        | # Unicode characters, must be exactly 4 hex digits
-                    (?<goodEscapeOutside>\\[bBWDS])                  | # acceptable outside a character class, but not within
+                    (?<goodEscapeOutside>\\([bBWDS]|P\{\w+\}))       | # acceptable outside a character class, but not within
                     (?<badEscape>\\.)                                | # all other escaped characters are invalid and reserved for future use
                                                                     
                     # leading (?<, named captures
