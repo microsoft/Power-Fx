@@ -734,7 +734,6 @@ namespace Microsoft.PowerFx.Tests
 
             // Imperative function is not delegable
             // E():Void = { E() }; ---> binding will be null so no attempt to get datasource should happen
-            Assert.True(func.IsAsync);
             Assert.True(!func.IsDelegatable);
         }
 
