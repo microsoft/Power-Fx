@@ -167,7 +167,6 @@ namespace Microsoft.PowerFx
             try
             {
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
-
                 return newValue;
             }
             catch (CustomFunctionErrorException customError)
