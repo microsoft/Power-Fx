@@ -31,11 +31,7 @@ namespace Microsoft.PowerFx
             {
                 if (_message == null && this.MessageKey != null)
                 {
-                    (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(this.MessageKey, this.ResourceManager), _messageLocale, out _);
-
-                    var msg = ErrorUtils.FormatMessage(shortMessage, _messageLocale, _messageArgs);
-
-                    _message = msg;
+                    _message = GetFormattedMessage(_messageLocale);
                 }
 
                 return _message;
@@ -111,17 +107,58 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        public override string ToString()
+        private string GetFormattedMessage(CultureInfo locale)
+        {
+            if (this.ResourceManager != null)
+            {
+                (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(this.MessageKey, this.ResourceManager), locale, out _);
+                return ErrorUtils.FormatMessage(shortMessage, _messageLocale, _messageArgs);
+            }
+            else
+            {
+                return _message;
+            }
+        }
+
+        /// <summary>
+        /// Get error message in the given locale.
+        /// </summary>
+        /// <param name="culture">CultureInfo object.</param>
+        /// <param name="includeSpanDetails">If true, get error message with span details.</param>
+        /// <returns></returns>
+        public string GetMessageInLocale(CultureInfo culture, bool includeSpanDetails = false)
+        {
+            if (includeSpanDetails)
+            {
+                return IncludeSpanDetails(GetFormattedMessage(culture));
+            }
+            else
+            {
+                return GetFormattedMessage(culture);
+            }
+        }
+
+        /// <summary>
+        /// Format error message with span details.
+        /// </summary>
+        /// <param name="message">Message to get formatted.</param>
+        /// <returns></returns>
+        private string IncludeSpanDetails(string message)
         {
             var prefix = IsWarning ? "Warning" : "Error";
             if (Span != null)
             {
-                return $"{prefix} {Span.Min}-{Span.Lim}: {Message}";
+                return $"{prefix} {Span.Min}-{Span.Lim}: {message}";
             }
             else
             {
-                return $"{prefix}: {Message}";
+                return $"{prefix}: {message}";
             }
+        }
+
+        public override string ToString()
+        {
+            return IncludeSpanDetails(Message);
         }
 
         // Build the public object from an internal error object. 

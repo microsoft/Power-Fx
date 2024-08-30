@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -380,7 +381,7 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                        result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
                     }
                 }
             }
@@ -586,7 +587,7 @@ namespace Microsoft.PowerFx
                 {
                     return new ErrorValue(node.IRContext, new ExpressionError()
                     {
-                        Message = "Accessing a field is not valid on this value",
+                        ResourceKey = RuntimeStringResources.ErrAccessingFieldNotValidValue,
                         Span = node.IRContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -616,7 +617,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
+            return CommonErrors.NotYetImplementedUnaryOperatorError(node.IRContext, node.Op.ToString());
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
@@ -753,7 +754,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
+            return new ErrorValue(node.IRContext, new ExpressionError()
+            {
+                ResourceKey = RuntimeStringResources.ErrSingleColumnTableAccessNodeNotYetImplemented,
+                Span = node.IRContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)
@@ -815,7 +821,7 @@ namespace Microsoft.PowerFx
                     }
                     catch (CustomFunctionErrorException ex)
                     {
-                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                        hostObj = CommonErrors.RuntimeExceptionError(node.IRContext, ex.Message);
                     }
 
                     return hostObj;

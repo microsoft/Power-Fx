@@ -337,7 +337,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            // !!!TODO : Defaults has not yet been implemented in Core. We need to revisit this code when it is implemented.
+            // https://github.com/microsoft/Power-Fx/issues/2617
             //// When using Defaults() we add the first item in the schema just to ensure that the call is made
             //if (binding.TryGetCall(args[1].Id, out var recordArg) && recordArg.Function == BuiltinFunctions.Defaults)
             //{

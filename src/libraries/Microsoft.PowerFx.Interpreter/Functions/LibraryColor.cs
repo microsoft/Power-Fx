@@ -2,15 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
