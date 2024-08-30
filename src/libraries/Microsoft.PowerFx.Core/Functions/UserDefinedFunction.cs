@@ -70,6 +70,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
         }
 
+        public override bool TryGetDataSource(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
+        {
+            return TryGetExternalDataSource(out dsInfo);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>

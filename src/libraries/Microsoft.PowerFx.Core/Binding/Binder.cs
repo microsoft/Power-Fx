@@ -4899,7 +4899,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var call = _txb.GetInfo(node).VerifyValue();
                 var func = call.Function;
-                if (func == null || func.IsSelfContained)
+                if (func == null || func.IsSelfContained || (func is UserDefinedFunction udf && udf.Binding == null))
                 {
                     return false;
                 }

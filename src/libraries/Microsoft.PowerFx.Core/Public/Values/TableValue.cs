@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -254,7 +253,15 @@ namespace Microsoft.PowerFx.Types
         /// <returns></returns>
         protected virtual async Task<DValue<RecordValue>> PatchSingleRecordCoreAsync(RecordValue recordValue, CancellationToken cancellationToken)
         {
-            return DValue<RecordValue>.Of(CommonErrors.NotYetImplementedError(IRContext, "Patch single record is invalid for tables/records with no primary key."));
+            // https://github.com/microsoft/Power-Fx/issues/2618
+            return DValue<RecordValue>.Of(new ErrorValue(
+                IRContext, 
+                new ExpressionError()
+                {
+                    Message = $"Not implemented: Patch single record is invalid for tables/records with no primary key.",
+                    Span = IRContext.SourceContext,
+                    Kind = ErrorKind.NotSupported
+                }));
         }
 
         /// <summary>
