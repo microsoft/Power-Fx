@@ -426,9 +426,9 @@ namespace Microsoft.PowerFx.Functions
                     // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
                     var namedErrorValue = new NamedValue(columnNameStr, FormulaValue.NewError(new ExpressionError()
                     {
+                        ResourceKey = RuntimeStringResources.ErrNotApplicable,
                         Kind = ErrorKind.NotApplicable,
                         Severity = ErrorSeverity.Critical,
-                        Message = "Not Applicable"
                     }));
                     var errorRecord = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedErrorValue });
                     var errorRowCount = maxTableSize - minTableSize;

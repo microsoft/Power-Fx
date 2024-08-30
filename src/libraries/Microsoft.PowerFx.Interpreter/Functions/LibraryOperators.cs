@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -884,7 +885,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = $"The operator is invalid for these types",
+                ResourceKey = RuntimeStringResources.ErrInvalidOperatorForTypes,
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.NotSupported
             });

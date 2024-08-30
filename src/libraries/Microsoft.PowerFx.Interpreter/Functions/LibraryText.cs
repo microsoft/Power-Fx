@@ -1289,9 +1289,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} falls outside the allowable range",
+                    ResourceKey = RuntimeStringResources.ErrInputOutsideRange,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
+                    Kind = ErrorKind.InvalidArgument,
+                    MessageArgs = new object[] { number }
                 });
             }
 
@@ -1299,9 +1300,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} is an invalid input",
+                    ResourceKey = RuntimeStringResources.ErrInvalidNumberInput,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.NotApplicable
+                    Kind = ErrorKind.NotApplicable,
+                    MessageArgs = new object[] { number }
                 });
             }
 

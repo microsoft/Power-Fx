@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -43,9 +44,10 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(node.IRContext, new ExpressionError()
             {
-                Message = $"Unrecognized symbol {node?.Value?.GetType()?.Name}".Trim(),
+                ResourceKey = RuntimeStringResources.ErrUnrecognizedSymbol,
                 Span = node.IRContext.SourceContext,
-                Kind = ErrorKind.Validation
+                Kind = ErrorKind.Validation,
+                MessageArgs = new object[] { node?.Value?.GetType()?.Name.Trim() }
             });
         }
     }

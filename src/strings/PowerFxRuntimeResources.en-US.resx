@@ -393,4 +393,44 @@
     <value>Return type should have been '{0}', found '{1}'.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>The third argument to the {0} function is invalid.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>The expression returned a non-finite number.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>The expression returned a number that is beyond the range of decimal values.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Places should be between 1 and 10.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>The operator is invalid for these types.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Regular expression timeout (above {0} ms) - {1}</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Invalid regular expression - {rexParseEx.Message}</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>Input value {0} falls outside the allowable range.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>Input value {0} is an invalid input.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Unrecognized symbol {0}.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        ResourceKey = RuntimeStringResources.ErrUntypedNumberNotValidDecimal,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });

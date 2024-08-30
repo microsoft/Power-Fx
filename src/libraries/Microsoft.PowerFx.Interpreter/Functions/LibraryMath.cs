@@ -842,7 +842,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = $"The expression returned a non-finite number.",
+                        ResourceKey = RuntimeStringResources.ErrReturnedNonFiniteNumber,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
@@ -870,7 +870,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = $"The expression returned a number that is beyond the range of decimal values.",
+                        ResourceKey = RuntimeStringResources.ErrReturnedNumberBeyondDecimalValues,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
@@ -1479,7 +1479,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places should be between 1 and 10",
+                    ResourceKey = RuntimeStringResources.ErrPlacesBetweenRange,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });

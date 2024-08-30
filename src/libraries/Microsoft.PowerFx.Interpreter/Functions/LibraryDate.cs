@@ -391,9 +391,10 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = $"The third argument to the {functionName} function is invalid",
+                ResourceKey = RuntimeStringResources.ErrThirdArgumentIsInvalid,
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
+                Kind = ErrorKind.InvalidArgument,
+                MessageArgs = new[] { functionName }
             });
         }
 

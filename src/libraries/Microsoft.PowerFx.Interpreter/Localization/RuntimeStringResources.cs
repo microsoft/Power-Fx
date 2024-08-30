@@ -80,5 +80,15 @@ namespace Microsoft.PowerFx.Interpreter.Localization
         public static readonly ErrorResourceKey ErrSingleColumnTableAccessNodeNotYetImplemented = New("ErrSingleColumnTableAccessNodeNotYetImplemented");
         public static readonly ErrorResourceKey ErrReturnTypeDifference = New("ErrReturnTypeDifference");
         public static readonly ErrorResourceKey DivisionByZero = New("DivisionByZero");
+        public static readonly ErrorResourceKey ErrThirdArgumentIsInvalid = New("ErrThirdArgumentIsInvalid");
+        public static readonly ErrorResourceKey ErrReturnedNonFiniteNumber = New("ErrReturnedNonFiniteNumber");
+        public static readonly ErrorResourceKey ErrReturnedNumberBeyondDecimalValues = New("ErrReturnedNumberBeyondDecimalValues");
+        public static readonly ErrorResourceKey ErrPlacesBetweenRange = New("ErrPlacesBetweenRange");
+        public static readonly ErrorResourceKey ErrInvalidOperatorForTypes = New("ErrInvalidOperatorForTypes");
+        public static readonly ErrorResourceKey ErrRegexTimeoutException = New("ErrRegexTimeoutException");
+        public static readonly ErrorResourceKey ErrInvalidRegexException = New("ErrInvalidRegexException");
+        public static readonly ErrorResourceKey ErrInputOutsideRange = New("ErrInputOutsideRange");
+        public static readonly ErrorResourceKey ErrInvalidNumberInput = New("ErrInvalidNumberInput");
+        public static readonly ErrorResourceKey ErrUnrecognizedSymbol = New("ErrUnrecognizedSymbol");
     }
 }
