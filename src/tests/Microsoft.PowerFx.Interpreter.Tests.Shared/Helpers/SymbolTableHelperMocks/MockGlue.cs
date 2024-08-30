@@ -55,7 +55,7 @@ internal class MockGlue : IBinderGlue
 
     bool IBinderGlue.TryGetCdsDataSourceByBind(object lhsInfoData, out IExternalControl o)
     {
-        o = default;
+        o = null;
         return false;
     }
 }
