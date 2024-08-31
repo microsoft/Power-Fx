@@ -57,6 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
             { "RegEx", (null, RegExSetup, null, null) },
             { "TraceSetup", (null, null, null, TraceSetup) },
+            { "Net7", (null, null, null, null) }, // Using .NET 7 or later
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)
@@ -65,9 +66,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return null;
         }
 
+        // This "global" turns on regex comparison. Yes, it is a hack, but it is only used for manual testing (no automated testing).
+        public static bool RegExCompareEnabled = false;
+
         private static object RegExSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
-            if (FileExpressionEvaluationTests.RegExCompareEnabled)
+            if (RegExCompareEnabled)
             {
                 Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
             }

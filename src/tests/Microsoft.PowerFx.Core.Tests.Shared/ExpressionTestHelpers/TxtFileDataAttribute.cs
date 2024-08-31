@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -21,19 +22,31 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathSpecific;
         private readonly string _engineName;
         private readonly Dictionary<string, bool> _setup;
+        private readonly Dictionary<string, bool> _requiredSetup;
 
         public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _setup = TestRunner.ParseSetupString(setup);
+            _setup = TestRunner.ParseSetupString(setup, true);
+        }
+
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup, string requiredSetup)
+        {
+            System.Diagnostics.Debugger.Launch();
+
+            _filePathCommon = filePathCommon;
+            _filePathSpecific = filePathSpecific;
+            _engineName = engineName;
+            _setup = TestRunner.ParseSetupString(setup, true);
+            _requiredSetup = TestRunner.ParseSetupString(requiredSetup);
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
             // This is run in a separate process. To debug, need to call Launch() and attach a debugger.
-            // System.Diagnostics.Debugger.Launch();
+  //          System.Diagnostics.Debugger.Launch();
 
             if (testMethod == null)
             {
@@ -58,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                             if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                parser.AddFile(_setup, file);
+                                parser.AddFile(_setup, _requiredSetup, file);
                             }
                         }
                     }

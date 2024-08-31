@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Functions
                 node.Start();
 
                 var jsString = js.ToString();
-                var bytes = Encoding.UTF8.GetBytes(AlterRegex_NodeJS_Src + jsString);
+                var bytes = Encoding.UTF8.GetBytes(RegEx_JavaScript.AlterRegex_JavaScript + jsString);
                 node.StandardInput.BaseStream.Write(bytes, 0, bytes.Length);
                 node.StandardInput.WriteLine();
                 node.StandardInput.Close();
@@ -143,15 +143,15 @@ namespace Microsoft.PowerFx.Functions
                     ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
 
                 List<RecordValue> subMatches = new List<RecordValue>();
-                Dictionary<string, NamedValue> fields = new ();
-                List<RecordValue> allMatches = new ();
+                Dictionary<string, NamedValue> fields = new();
+                List<RecordValue> allMatches = new();
 
                 foreach (Match token in outputRE.Matches(output))
                 {
                     if (token.Groups["start"].Success)
                     {
-                        fields = new ();
-                        subMatches = new ();
+                        fields = new();
+                        subMatches = new();
                         fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
                     }
                     else if (token.Groups["end"].Success)
@@ -213,164 +213,6 @@ namespace Microsoft.PowerFx.Functions
 
                 throw new Exception("%done% marker not found");
             }
-
-            // This JavaScript function assumes that the regular expression has already been compiled and comforms to the Power Fx regular expression language.
-            // For example, no affodance is made for nested character classes or inline options on a subexpression, as those would have already been blocked.
-            private const string AlterRegex_NodeJS_Src = @"
-                function AlterRegex_NodeJS(regex, flags)
-                {
-                    var regexIndex = 0;
-
-                    const inlineFlagsRE = /^\(\?(?<flags>[imsx]+)\)/;
-                    const inlineFlags = inlineFlagsRE.exec( regex );
-                    if (inlineFlags != null)
-                    {
-                        flags = flags.concat(inlineFlags.groups['flags']);
-                        regexIndex = inlineFlags[0].length;
-                    }
-
-                    const freeSpacing = flags.includes('x');
-                    const multiline = flags.includes('m');
-                    const dotAll = flags.includes('s');
-                    const ignoreCase = flags.includes('i');
-
-                    // rebuilding from booleans avoids possible duplicate letters
-                    // x has been handled in this function and does not need to be passed on (and would cause an error)
-                    const alteredFlags = 'u'.concat((ignoreCase ? 'i' : ''), (multiline ? 'm' : ''), (dotAll ? 's' : ''));  
-
-                    var openCharacterClass = false;       // are we defining a character class?
-                    var altered = '';
-
-                    for ( ; regexIndex < regex.length; regexIndex++)
-                    {
-                        switch (regex.charAt(regexIndex) )
-                        {
-                            case '[':
-                                openCharacterClass = true;
-                                altered = altered.concat('[');
-                                break;
-
-                            case ']':
-                                openCharacterClass = false;
-                                altered = altered.concat(']');
-                                break;
-
-                            case '\\':
-                                if (++regexIndex < regex.length)
-                                {
-                                    const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Nd}\\p{Pc}';
-                                    const spaceChar = '\\f\\n\\r\\t\\v\\x85\\p{Z}';
-                                    const digitChar = '\\p{Nd}';
-
-                                    switch (regex.charAt(regexIndex))
-                                    { 
-                                        case 'w':
-                                            altered = altered.concat((openCharacterClass ? '' : '['), wordChar, (openCharacterClass ? '' : ']'));
-                                            break;
-                                        case 'W':
-                                            altered = altered.concat('[^', wordChar, ']');
-                                            break;
-
-                                        case 'b':
-                                            altered = altered.concat(`(?:(?<=[${wordChar}])(?![${wordChar}])|(?<![${wordChar}])(?=[${wordChar}]))`);
-                                            break;
-                                        case 'B':
-                                            altered = altered.concat(`(?:(?<=[${wordChar}])(?=[${wordChar}])|(?<![${wordChar}])(?![${wordChar}]))`);
-                                            break;
-
-                                        case 's':
-                                            altered = altered.concat((openCharacterClass ? '' : '['), spaceChar, (openCharacterClass ? '' : ']'));
-                                            break;
-                                        case 'S':
-                                            altered = altered.concat('[^', spaceChar, ']');
-                                            break;
-
-                                        case 'd':
-                                            altered = altered.concat(digitChar);
-                                            break;
-                                        case 'D':
-                                            altered = altered.concat('[^', digitChar, ']');
-                                            break;
-
-                                        default:
-                                            altered = altered.concat('\\', regex.charAt(regexIndex));
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    // backslash at end of regex
-                                    altered = altered.concat( '\\' );
-                                }
-
-                                break;
-
-                            case '.':
-                                altered = altered.concat(!openCharacterClass && !dotAll ? '[^\\r\\n]' : '.');
-                                break;
-
-                            case '^':
-                                altered = altered.concat(!openCharacterClass && multiline ? '(?<=^|\\r\\n|\\r|\\n)' : '^');
-                                break;
-
-                            case '$':
-                                altered = altered.concat(openCharacterClass ? '$' : (multiline ? '(?=$|\\r\\n|\\r|\\n)' : '(?=$|\\r\\n$|\\r$|\\n$)'));
-                                break;
-
-                            case '(':
-                                if (regex.length - regexIndex > 2 && regex.charAt(regexIndex+1) == '?' && regex.charAt(regexIndex+2) == '#')
-                                {
-                                    // inline comment
-                                    for ( regexIndex++; regexIndex < regex.length && regex.charAt(regexIndex) != ')'; regexIndex++)
-                                    {
-                                        // eat characters until a close paren, it doesn't matter if it is escaped (consistent with .NET)
-                                    }
-                                }
-                                else
-                                {
-                                    altered = altered.concat('('); 
-                                }
-
-                                break;
-
-                            case ' ':
-                            case '\f':
-                            case '\n':
-                            case '\r':
-                            case '\t':
-                            case '\v':
-                                if (!freeSpacing)
-                                {
-                                    altered = altered.concat(regex.charAt(regexIndex));
-                                }
-
-                                break;
-
-                            case '#':
-                                if (freeSpacing)
-                                {
-                                    for ( regexIndex++; regexIndex < regex.length && regex.charAt(regexIndex) != '\r' && regex.charAt(regexIndex) != '\n'; regexIndex++)
-                                    {
-                                        // eat characters until the end of the line
-                                        // leaving dangling whitespace characters will be eaten on next iteration
-                                    }
-                                }
-                                else
-                                {
-                                    altered = altered.concat('#');
-                                }
-
-                                break;
-
-                            default:
-                                altered = altered.concat(regex.charAt(regexIndex));
-                                break;
-                        }
-                    }
-
-                    return [altered, alteredFlags];
-                }
-            ";
         }
 
         public static void EnableRegExFunctions(PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)

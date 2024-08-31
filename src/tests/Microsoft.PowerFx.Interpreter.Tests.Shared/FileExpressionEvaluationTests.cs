@@ -91,16 +91,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
-        // used by the following test run, but needs to be outside the #if for standard usage
-        public static bool RegExCompareEnabled = false;
-
-#if false
-        // a This test run will compare the results between .NET, NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel)
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport,RegEx")]
+#if true
+        // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
+        // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
+        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path. a
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport", "RegEx")]
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
         {
-            RegExCompareEnabled = true;
+            ExpressionEvaluationTests.RegExCompareEnabled = true;
             RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
 #endif
@@ -245,7 +244,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
+            testRunner.AddFile(TestRunner.ParseSetupString(setup), null, path);
 
             if (testRunner.Tests.Count > 0 && testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
             {
@@ -306,7 +305,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(new Dictionary<string, bool>(), path);
+            runner.AddDir(new Dictionary<string, bool>(), null, path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);
