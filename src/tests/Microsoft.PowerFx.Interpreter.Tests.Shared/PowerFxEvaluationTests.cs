@@ -57,7 +57,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "OptionSetTestSetup", (null, OptionSetTestSetup1, OptionSetTestSetup2, null) },
             { "RegEx", (null, RegExSetup, null, null) },
             { "TraceSetup", (null, null, null, TraceSetup) },
-            { "Net7", (null, null, null, null) }, // Using .NET 7 or later
         };
 
         private static object EnableJsonFunctions(PowerFxConfig config, SymbolTable symbolTable)

@@ -68,6 +68,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid DisableMemChecks setup!");
+                    }
+
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
                 }
@@ -99,6 +104,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+
                     var m = new Regex(@"TimeZoneInfo\(""(?<tz>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
@@ -116,6 +126,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else if (part.StartsWith("CultureInfo", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (isDisable)
+                    {
+                        throw new ArgumentException("Invalid CultureInfo setup!");
+                    }
+
                     var m = new Regex(@"CultureInfo\(""(?<culture>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
 
                     if (m.Success)
@@ -128,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                     else
                     {
-                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                        throw new ArgumentException("Invalid CultureInfo setup!");
                     }
                 }
             }           

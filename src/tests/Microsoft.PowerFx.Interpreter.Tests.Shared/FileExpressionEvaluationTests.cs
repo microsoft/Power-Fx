@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Console = output;
         }
 
-        // File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // ab File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
@@ -171,13 +171,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"d:\repos\regex-min-nolocale\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited.txt";
+            var path = @"d:\repos\regex-min-nolocale\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited_Net462.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(new Dictionary<string, bool>(), path);
+            testRunner.AddFile(new Dictionary<string, bool>(), null, path);
 
             // We can filter to just cases we want, set line above 
             if (line > 0)

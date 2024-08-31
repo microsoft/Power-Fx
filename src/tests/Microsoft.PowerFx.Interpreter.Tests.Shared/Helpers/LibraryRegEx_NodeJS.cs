@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Functions
 #endif
 
                 js.AppendLine(@"
-                    const [alteredPattern, alteredFlags] = AlterRegex_NodeJS( pattern, flags );
+                    const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
                     const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                     const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
 

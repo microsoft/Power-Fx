@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _setup = TestRunner.ParseSetupString(setup, true);
+            _setup = TestRunner.ParseSetupString(setup);
             if (requiredSetup != null)
             {
                 _requiredSetup = TestRunner.ParseSetupString(requiredSetup);

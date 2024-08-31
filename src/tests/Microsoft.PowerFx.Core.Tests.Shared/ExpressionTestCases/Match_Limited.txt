@@ -956,24 +956,6 @@ false
 >> Match( "abcdef", "\w{2,4}?" ).FullMatch
 "ab"
 
->> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
-"Ω"
-
->> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
-"Ω"
-
->> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
-"ω"
-
->> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
-"ω"
-
->> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
-"Ω"
-
->> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
-"Ω"
-
 >> Match( "asdf", "(*MARK)") // PCRE2 extension
 Errors: Error 15-24: Invalid regular expression: Unsupported special group, found "(*MAR...".|Error 0-5: The function 'Match' has some invalid arguments.
 

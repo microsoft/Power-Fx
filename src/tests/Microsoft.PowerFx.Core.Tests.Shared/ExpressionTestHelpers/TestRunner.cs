@@ -61,16 +61,11 @@ namespace Microsoft.PowerFx.Core.Tests
         //    * Default, special case
         //    * PowerFxV1, special case, will expand to its constituent Features
         //    * Other handlers listed in this routine
-        public static Dictionary<string, bool> ParseSetupString(string setup, bool includeContext = false)
+        public static Dictionary<string, bool> ParseSetupString(string setup)
         {
             var settings = new Dictionary<string, bool>();
             var possible = new HashSet<string>();
             var powerFxV1 = new Dictionary<string, bool>();
-
-            if (includeContext)
-            {
-                setup += (setup.Length > 0 ? "," : string.Empty) + (Environment.Version.Major >= 7 ? "Net7" : "disable:Net7");
-            }
 
             // Features
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
