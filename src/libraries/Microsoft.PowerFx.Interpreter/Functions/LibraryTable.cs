@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
@@ -496,7 +497,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = "Filter() only supports one predicate",
+                    ResourceKey = RuntimeStringResources.ErrFilterPredicate,
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Validation
                 });
@@ -691,12 +692,12 @@ namespace Microsoft.PowerFx.Functions
         private static ErrorValue CreateInvalidSortColumnError(IRContext irContext, CultureInfo cultureInfo, string columnName)
         {
             // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
-            var invalidSortColumnTemplate = "The specified column '{0}' does not exist or is an invalid sort column type.";
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = string.Format(cultureInfo, invalidSortColumnTemplate, columnName),
+                ResourceKey = RuntimeStringResources.ErrInvalidSortColumn,
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidFunctionUsage
+                Kind = ErrorKind.InvalidFunctionUsage,
+                MessageArgs = new object[] { columnName }
             });
         }
 
@@ -828,7 +829,7 @@ namespace Microsoft.PowerFx.Functions
                     return new ErrorValue(irContext, new ExpressionError()
                     {
                         // Needs to be localized - https://github.com/microsoft/Power-Fx/issues/908
-                        Message = "Order table can't have duplicate values",
+                        ResourceKey = RuntimeStringResources.ErrOrderTableDuplicateValues,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -1164,7 +1165,12 @@ namespace Microsoft.PowerFx.Functions
                 return FormulaValue.New(true);
             }
 
-            return CommonErrors.CustomError(irContext, "Only managed connections can be refreshed.");
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                ResourceKey = RuntimeStringResources.ErrManagedConnRefreshOnly,
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal
+            });
         }
 
         public static FormulaValue PatchRecord(IRContext irContext, FormulaValue[] args)

@@ -1,17 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 
@@ -117,7 +114,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (arg1Rows.Count() != arg2Rows.Count())
             {
-                return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(tableValue.Type), "Both aggregate args must have the same number of records.");
+                return CommonErrors.InvalidArgumentError(IRContext.NotInSource(irContext), RuntimeStringResources.ErrAggregateArgsSameNumberOfRecords);
             }
 
             List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
@@ -278,6 +275,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (arg0 is not TableValue)
             {
+                // We should never hit this.
                 return CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(arg0.Type));
             }
 

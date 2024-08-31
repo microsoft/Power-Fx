@@ -14,6 +14,7 @@
     <Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
     <Description>The Interpreter the Power Fx compiler</Description>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\strings\PowerFxRuntimeResources.*.resx">
+      <Link>strings\%(Filename)%(Extension)</Link>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
