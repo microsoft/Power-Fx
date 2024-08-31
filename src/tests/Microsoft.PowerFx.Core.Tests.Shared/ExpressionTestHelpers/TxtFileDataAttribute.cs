@@ -24,29 +24,22 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly Dictionary<string, bool> _setup;
         private readonly Dictionary<string, bool> _requiredSetup;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup, string requiredSetup = null)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
             _setup = TestRunner.ParseSetupString(setup, true);
-        }
-
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup, string requiredSetup)
-        {
-            System.Diagnostics.Debugger.Launch();
-
-            _filePathCommon = filePathCommon;
-            _filePathSpecific = filePathSpecific;
-            _engineName = engineName;
-            _setup = TestRunner.ParseSetupString(setup, true);
-            _requiredSetup = TestRunner.ParseSetupString(requiredSetup);
+            if (requiredSetup != null)
+            {
+                _requiredSetup = TestRunner.ParseSetupString(requiredSetup);
+            }
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
             // This is run in a separate process. To debug, need to call Launch() and attach a debugger.
-  //          System.Diagnostics.Debugger.Launch();
+            // System.Diagnostics.Debugger.Launch();
 
             if (testMethod == null)
             {
