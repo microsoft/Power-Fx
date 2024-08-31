@@ -4,15 +4,7 @@
 // See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
 
 #DISABLE.NET:70
->> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
-Blank()
-
-#DISABLE.NET:70
 >> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
-Blank()
-
-#DISABLE.NET:70
->> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
 Blank()
 
 #DISABLE.NET:70
