@@ -143,15 +143,15 @@ namespace Microsoft.PowerFx.Functions
                     ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
 
                 List<RecordValue> subMatches = new List<RecordValue>();
-                Dictionary<string, NamedValue> fields = new();
-                List<RecordValue> allMatches = new();
+                Dictionary<string, NamedValue> fields = new ();
+                List<RecordValue> allMatches = new ();
 
                 foreach (Match token in outputRE.Matches(output))
                 {
                     if (token.Groups["start"].Success)
                     {
-                        fields = new();
-                        subMatches = new();
+                        fields = new ();
+                        subMatches = new ();
                         fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
                     }
                     else if (token.Groups["end"].Success)
