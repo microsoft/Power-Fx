@@ -67,3 +67,35 @@ true
 >> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
 false
 
+// MatchOptions.Contains doesn't strip free spacing on PCRE2, good to compare results
+
+>> IsMatch( "ab", "(?x)a # c", MatchOptions.Contains )
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(13)& " c", MatchOptions.Contains )
+false
+
+>> IsMatch( "ab", "(?x)a # " &Char(10)& " c", MatchOptions.Contains )
+false
+
+>> IsMatch( "ab", "(?x)a # " &Char(13)&Char(10)& " c", MatchOptions.Contains )  // one is the newline, the other is just whitespace that is ignored
+false
+
+>> IsMatch( "ab", "(?x)a # " &Char(133)& " c", MatchOptions.Contains )  // \x85
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(12)& " c", MatchOptions.Contains )   // \f
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(11)& " c", MatchOptions.Contains )   // \v
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(9)& " c", MatchOptions.Contains )    // \h
+true
+
+>> IsMatch( "ab", "(?x)a # " &UniChar(2028)& " c", MatchOptions.Contains )  // \u2028
+true
+
+>> IsMatch( "ab", "(?x)a # " &UniChar(2029)& " c", MatchOptions.Contains )  // \u2029
+true
+
