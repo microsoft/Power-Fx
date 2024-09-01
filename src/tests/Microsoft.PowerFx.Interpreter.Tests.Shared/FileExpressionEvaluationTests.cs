@@ -167,11 +167,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if false
-        // Helper to run a single .txt
+        // Helper to run a single .txt d
         [Fact]
         public void RunOne()
         {
-            var path = @"d:\repos\regex-min-nolocale\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_limited_Net462.txt";
+            var path = @"d:\repos\regex-min-3\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_comments.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

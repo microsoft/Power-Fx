@@ -91,8 +91,26 @@ true
 >> IsMatch("(44) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
 false
 
->> IsMatch("""Hello world""", Char(34) & "Hello",  MatchOptions.Contains)
-Errors: Error 36-37: Regular expressions must be constant values.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+>> IsMatch("""Hello world""", Char(34) & "Hello", MatchOptions.Contains)
+true
+
+>> IsMatch("""Hello world""", UniChar(34) & "Hello", MatchOptions.Contains)
+true
+
+>> IsMatch("👽Hello world", UniChar(Hex2Dec("1F47D")) & "Hello", MatchOptions.Contains)
+Errors: Error 51-52: Regular expressions must be constant values.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch("👽Hello world", UniChar(128125) & "Hello", MatchOptions.Contains)
+true
+
+>> IsMatch("👽Hello world", "\ud83d\udc7dHello", MatchOptions.Contains) // surrrogate pairs
+true
+
+>> IsMatch(UniChar(Hex2Dec("1f47d")) & "Hello world", UniChar(128125) & "Hello", MatchOptions.Contains)
+true
+
+>> IsMatch("""Hello world""", Mid( "Hello", 1 ), MatchOptions.Contains)
+Errors: Error 27-44: Regular expressions must be constant values.|Error 0-7: The function 'IsMatch' has some invalid arguments.
 
 >> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
 Errors: Error 27-69: Regular expressions must be constant values.|Error 0-7: The function 'IsMatch' has some invalid arguments.

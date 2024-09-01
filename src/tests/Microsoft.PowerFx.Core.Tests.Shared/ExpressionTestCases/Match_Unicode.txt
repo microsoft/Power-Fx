@@ -1,0 +1,72 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// Unicode character behavior in Power Fx regular expressions.
+//
+//  Effective                                        Usage                        .NET        ECMAScript       PCRE2
+// =====================================================================================================================================
+//  \p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nd}\p{Pc}       \w, \W, \b, \B               Yes         No               Yes
+//  \p{Nd}                                           \d, \D                       Yes         No               Yes
+//  \p{Category}                                     \p, \P                       Yes         Yes              Yes
+//  \p{Script}                                       \p, \P                       Yes         Yes              Yes
+//
+// We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
+// See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
+
+// Unicode letters as word characters are matched
+
+>> Match( "the whole world", "\b(\w+\s*)+" )
+{FullMatch:"the whole world",StartMatch:1}
+
+>> Match( "целый мир", "\b(\w+\s*)+" )
+{FullMatch:"целый мир",StartMatch:1}
+
+>> Match( "el niño", "\b(\w+\s*)+" )
+{FullMatch:"el niño",StartMatch:1}
+
+>> Match( "Müller", "^\w+$" )
+{FullMatch:"Müller",StartMatch:1}
+
+// Unicode numbers as digits are matched
+
+>> Match( "12345", "^\d+$" )
+{FullMatch:"12345",StartMatch:1}
+
+>> Match( "12٤45", "^\d+$" )
+{FullMatch:"12٤45",StartMatch:1}
+
+>> Match( "123४5", "^\d+$" )
+{FullMatch:"123४5",StartMatch:1}
+
+>> Match( "abc3d", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc٤45", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc४5", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+// Changes in case insensitive matching in .NET 7 causes different answers that are consistent with PCRE2 and Node
+// See https://devblogs.microsoft.com/dotnet/regular-expression-improvements-in-dotnet-7/#case-insensitive-matching-and-regexoptions-ignorecase
+
+>> Match( UniChar(Hex2Dec("03a9")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+>> Match( UniChar(Hex2Dec("03c9")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03a9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("03c9")), "\u2126", MatchOptions.IgnoreCase ).FullMatch
+"ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03c9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"
+
+#DISABLE.NET:462
+>> Match( UniChar(Hex2Dec("2126")), "\u03a9", MatchOptions.IgnoreCase ).FullMatch
+"Ω"

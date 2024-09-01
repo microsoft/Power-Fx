@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -77,7 +78,7 @@ namespace Microsoft.PowerFx.Functions
                 NO_AUTO_CAPTURE = 0x00002000,
             }
 
-            internal static FormulaValue Match(string subject, string pattern, RegexOptions options, bool matchAll = false)
+            internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
                 int errorNumber = 0;
                 int errorOffset = 0;
@@ -86,30 +87,58 @@ namespace Microsoft.PowerFx.Functions
                 IntPtr generalContext = (IntPtr)0;
 
                 PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP;
+                RegexOptions options = RegexOptions.None;
 
-                if ((options & RegexOptions.ExplicitCapture) != 0)
+                Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");
+
+                if (inlineOptions.Success)
                 {
-                    pcreOptions |= PCRE2_OPTIONS.NO_AUTO_CAPTURE;
+                    flags = flags + inlineOptions.Groups[1];
+                    pattern = pattern.Substring(inlineOptions.Length);
                 }
 
-                if ((options & RegexOptions.IgnoreCase) != 0)
+                if (!flags.Contains('N'))
+                {
+                    pcreOptions |= PCRE2_OPTIONS.NO_AUTO_CAPTURE;
+                    options |= RegexOptions.ExplicitCapture;
+                }
+
+                if (flags.Contains('i'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.CASELESS;
                 }
 
-                if ((options & RegexOptions.Multiline) != 0)
+                if (flags.Contains('m'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.MULTILINE;
                 }
 
-                if ((options & RegexOptions.Singleline) != 0)
+                if (flags.Contains('s'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.DOTALL;
                 }
 
-                if ((options & RegexOptions.IgnorePatternWhitespace) != 0)
+                if (flags.Contains('x'))
                 {
-                    pcreOptions |= PCRE2_OPTIONS.EXTENDED;
+                    if (flags.Contains('^') || flags.Contains('$'))
+                    {
+                        // we can't use PCRE2_OPTIONS.EXTENDED here because we need to add ^ or $ appropriately next
+                        pattern = StripExtended(pattern);
+                    }
+                    else
+                    {
+                        pcreOptions |= PCRE2_OPTIONS.EXTENDED;
+                    }
+                }
+
+                if (flags.Contains('^') && (pattern.Length == 0 || pattern[0] != '^'))
+                {
+                    pattern = "^" + pattern;
+                }
+
+                if (flags.Contains('$') && (pattern.Length == 0 || pattern[pattern.Length - 1] != '$'))
+                {
+                    pattern = pattern + "$";
                 }
 
                 var patternPCRE2 = Regex.Replace(pattern, @"\\u(?<hex>\w\w\w\w)", @"\x{${hex}}");
@@ -185,6 +214,50 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static string StripExtended(string regex)
+        {
+            StringBuilder alteredRegex = new StringBuilder();
+
+            for (int index = 0; index < regex.Length; index++)
+            {
+                switch (regex[index])
+                {
+                    case '#':
+                        for (index++; index < regex.Length && regex[index] != '\r' && regex[index] != '\n'; index++)
+                        {
+                            // skip the comment characters until the next newline, in case it includes [ ] 
+                        }
+
+                        index--;
+
+                        break;
+
+                    case '\\':
+                        alteredRegex.Append("\\");
+                        if (++index < regex.Length)
+                        {
+                            alteredRegex.Append(regex[index]);
+                        }
+
+                        break;
+
+                    case ' ':
+                    case '\f':
+                    case '\n':
+                    case '\r':
+                    case '\t':
+                    case '\v':
+                        break;
+
+                    default:
+                        alteredRegex.Append(regex[index]);
+                        break;
+                }
+            }
+
+            return alteredRegex.ToString();
+        }
+
         public static void EnableRegExFunctions(PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
@@ -232,7 +305,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 var match = Match(input, regex, options);
 
@@ -251,7 +324,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 return Match(input, regex, options);
             }
@@ -268,7 +341,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 return Match(input, regex, options, matchAll: true);
             }

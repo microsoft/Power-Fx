@@ -23,32 +23,8 @@ namespace Microsoft.PowerFx.Functions
     {
         internal abstract class NodeJS_RegexCommonImplementation : Library.RegexCommonImplementation
         {
-            internal static FormulaValue Match(string subject, string pattern, RegexOptions options, bool matchAll = false)
+            internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
-                StringBuilder flags = new StringBuilder();
-
-                // RegexOptions.ExplicitCapture -> "n" is not done as ECMAScript does not support this flag
-
-                if ((options & RegexOptions.IgnoreCase) != 0)
-                {
-                    flags.Append("i");
-                }
-
-                if ((options & RegexOptions.Multiline) != 0)
-                {
-                    flags.Append("m");
-                }
-
-                if ((options & RegexOptions.Singleline) != 0)
-                {
-                    flags.Append("s");
-                }
-
-                if ((options & RegexOptions.IgnorePatternWhitespace) != 0)
-                {
-                    flags.Append("x");
-                }
-
                 var js = new StringBuilder();
 
                 js.AppendLine($"const subject='{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}';");
@@ -156,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else if (token.Groups["end"].Success)
                     {
-                        if ((options & RegexOptions.ExplicitCapture) == 0)
+                        if (flags.Contains('N'))
                         {
                             var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
                             fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
@@ -168,8 +144,8 @@ namespace Microsoft.PowerFx.Functions
                     {
                         if (allMatches.Count == 0)
                         {
-                            return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options)))
-                                            : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, options))));
+                            return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture)))
+                                            : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture))));
                         }
                         else
                         {
@@ -262,7 +238,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 var match = Match(input, regex, options);
 
@@ -281,7 +257,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 return Match(input, regex, options);
             }
@@ -298,7 +274,7 @@ namespace Microsoft.PowerFx.Functions
                 _regexTimeout = regexTimeout;
             }
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 return Match(input, regex, options, matchAll: true);
             }

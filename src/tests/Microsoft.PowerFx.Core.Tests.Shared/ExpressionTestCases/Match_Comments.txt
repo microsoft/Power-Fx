@@ -1,0 +1,69 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules,SupportColumnNamesAsIdentifiers
+
+// Comments and free spacing behavior in Power Fx regular expressions.
+//
+//  Effective                       Usage                                  .NET        ECMAScript        PCRE2
+// =====================================================================================================================================
+//  (?# ...)                        Inline comment                         Yes         No                Yes
+//  "x" option                      space insiginificant and # comments    Yes         No                Yes
+
+// Inline comments
+
+>> Match( "test", "(?# this is a test)st" )
+{FullMatch:"st",StartMatch:3}
+
+>> Match( "test", "(?# this is a test ( with an open paren )st" )
+Errors: Error 15-60: Invalid regular expression: Inline comments cannot include open parenthesis, found in "(?# this is a test ( with an open paren )".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "test", "(?# this is a test \) with an escaped close paren )st" )  // can't escape a paren in an inline comment
+Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// Free spacing with different newline characters between
+
+>> Match( "atestz", "(?x)
+ # this is free spacing!
+
+ t
+
+ e # e is for elephant
+
+ s
+
+ t # t is for terminte
+
+ ").FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)& "# this is free spacing!" &Char(13)&Char(13)& "t" &Char(13)&Char(13) & "e # e is for elephant" &Char(13)&Char(13)& "s" &Char(13)&Char(13)& "t # t is for terminte" &Char(13)&Char(13)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)& "# this is free spacing!" &Char(10)&Char(10)& "t" &Char(10)&Char(10) & "e # e is for elephant" &Char(10)&Char(10)& "s" &Char(13)&Char(13)& "t # t is for terminte" &Char(10)&Char(10)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)&Char(10)& "# this is free spacing!" &Char(13)&Char(10)&Char(13)&Char(10)& "t" &Char(13)&Char(10)&Char(13)&Char(10)& "e # e is for elephant" &Char(13)&Char(10)&Char(13)&Char(10)& "s" &Char(13)&Char(10)&Char(13)&Char(10)& "t # t is for terminte" &Char(13)&Char(10)&Char(13)&Char(10)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)& "# this is free spacing!" &Char(13)& "t" &Char(13)& "e # e is for elephant" &Char(13)& "s" &Char(13)& "t # t is for terminte").FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)& "# this is free spacing!" &Char(10)& "t" &Char(10)& "e # e is for elephant" &Char(10)& "s" &Char(10)& "t # t is for terminte" &Char(10)).FullMatch
+"test"
+
+>> Match( "atestz", "(?x)" &Char(13)&Char(10)& "# this is free spacing!" &Char(13)&Char(10)& "t" &Char(13)&Char(10)& "e # e is for elephant" &Char(13)&Char(10)& "s" &Char(13)&Char(10)& "t # t is for terminte" &Char(13)&Char(10)).FullMatch
+"test"
+
+>> IsMatch( "ab", "(?x)a # b" )
+false
+
+>> IsMatch( "ab", "(?x)a # " &Char(13)& " b" )
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(10)& " b" )
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(13)&Char(10)& " b" )  // one is the newline, the other is just whitespace that is ignored
+true
+
+>> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
+false
+

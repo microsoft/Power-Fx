@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var regexIndex = 0;
 
-                const inlineFlagsRE = /^\(\?(?<flags>[imsx]+)\)/;
+                const inlineFlagsRE = /^\(\?(?<flags>[imnsx]+)\)/;
                 const inlineFlags = inlineFlagsRE.exec( regex );
                 if (inlineFlags != null)
                 {
@@ -150,6 +150,8 @@ namespace Microsoft.PowerFx.Functions
                                     // eat characters until the end of the line
                                     // leaving dangling whitespace characters will be eaten on next iteration
                                 }
+
+                                regexIndex--;
                             }
                             else
                             {
@@ -164,6 +166,16 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
+                if (flags.includes('^') && (altered.length == 0 || altered[0] != '^'))
+                {
+                    altered = '^' + altered;
+                }       
+
+                if (flags.includes('$') && (altered.length == 0 || altered[altered.length-1] != '$'))
+                {
+                    altered = altered + '$';
+                }  
+                    
                 return [altered, alteredFlags];
             }
         ";

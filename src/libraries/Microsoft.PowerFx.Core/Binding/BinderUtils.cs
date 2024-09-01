@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -14,6 +15,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -1540,6 +1542,49 @@ namespace Microsoft.PowerFx.Core.Binding
                             nodeValue = string.Join(string.Empty, parameters);
                             return true;
                         }
+                    }
+                    else if (callNode.Head.Name.Value == BuiltinFunctionsCore.Char.Name && callNode.Args.Children.Count == 1)
+                    {
+                        int val = -1;
+
+                        if (callNode.Args.Children[0].Kind == NodeKind.DecLit)
+                        {
+                            val = (int)((DecLitNode)callNode.Args.Children[0]).ActualDecValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.NumLit)
+                        {
+                            val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
+                        }
+
+                        if (val < 1 || val > 255)
+                        {
+                            return false;
+                        }
+
+                        nodeValue = ((char)val).ToString();
+                        return true;
+                    }
+                    else if (callNode.Head.Name.Value == BuiltinFunctionsCore.UniChar.Name && callNode.Args.Children.Count == 1)
+                    {
+                        int val = -1;
+
+                        if (callNode.Args.Children[0].Kind == NodeKind.DecLit)
+                        {
+                            val = (int)((DecLitNode)callNode.Args.Children[0]).ActualDecValue;
+                        }
+                        else if (callNode.Args.Children[0].Kind == NodeKind.NumLit)
+                        {
+                            val = (int)((NumLitNode)callNode.Args.Children[0]).ActualNumValue;
+                        }
+
+                        // partial surrogate pair not supported, consistent with interpreter UniChar implementation
+                        if (val < 1 || val > 0x10FFFF || (val >= 0xD800 && val <= 0xDFFF))
+                        {
+                            return false;
+                        }
+
+                        nodeValue = char.ConvertFromUtf32(val);
+                        return true;
                     }
 
                     break;

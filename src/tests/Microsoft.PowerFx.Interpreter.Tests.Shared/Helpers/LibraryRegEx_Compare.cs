@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Functions
             protected Library.RegexCommonImplementation pcre2;
             protected Library.RegexCommonImplementation dotnet;
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
             {
                 var nodeMatch = node.InvokeRegexFunction(input, regex, options);
                 var nodeExpr = nodeMatch.ToExpression();

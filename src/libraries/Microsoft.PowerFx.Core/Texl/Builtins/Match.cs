@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     # leading (?, misc
                     (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imsx]+)\)            | # inline options
+                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)           | # inline options
                     (?<goodInlineComment>\(\?\#[^\)]*\))             | # inline comment
                     (?<goodLookaround>\(\?(=|!|<=|<!))               | # lookahead and lookbehind
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])     | # inline options, including disable of options
@@ -402,6 +402,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (Regex.IsMatch(token.Groups["goodInlineOptions"].Value, @"(?<char>.).*\k<char>"))
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatedInlineOption, token.Value);
+                            return false;
+                        }
+
+                        if (token.Groups["goodInlineOptions"].Value.Contains("n") && numberedCpature)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches, token.Value);
                             return false;
                         }
 

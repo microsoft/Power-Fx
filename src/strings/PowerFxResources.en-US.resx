@@ -4457,6 +4457,10 @@
     <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
     <comment>Error message indicating that the regular expression includes more than one of the same option.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Inline option is incompatible with MatchOptions.NumberedSubMatches, found "{0}".</value>
+    <comment>Error message indicating that the regular expression includes an inline option that is incompatible with numbered sub matches.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadQuantifier_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression does not support possessive quantifiers.</comment>
