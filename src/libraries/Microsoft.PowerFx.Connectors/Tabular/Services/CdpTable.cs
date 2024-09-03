@@ -92,9 +92,9 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
 
             CdpDataSource cds = new CdpDataSource(DatasetName);
-            await cds.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
-            DatasetMetadata = cds.DatasetMetadata ?? throw new InvalidOperationException("Dataset metadata is not available");
+            DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
         }
 
         // TABLE DATA SERVICE - CREATE

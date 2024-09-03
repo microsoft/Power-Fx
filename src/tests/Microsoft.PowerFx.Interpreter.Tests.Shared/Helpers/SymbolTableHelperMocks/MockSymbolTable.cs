@@ -1,16 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx;
+using Microsoft.PowerFx.Core.App.Components;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 /** 
- * Just a small handy mock of symbol table to be able to customize binder to compute different token types.
- * Might not be 100% correct but it works and allows testing against different token types.
- * Meant to be used for semantic tokens related tests.
+* Just a small handy mock of symbol table to be able to customize binder to compute different token types.
+* Might not be 100% correct but it works and allows testing against different token types.
 */
 internal class MockSymbolTable : ReadOnlySymbolTable
 {
@@ -35,6 +40,13 @@ internal class MockSymbolTable : ReadOnlySymbolTable
     {
         var controlType = new DType(DKind.Control);
         var controlInfo = new NameLookupInfo(BindKind.Control, controlType, DPath.Root, 0);
+        Add(name, controlInfo);
+    }
+
+    public void AddControl(string name, IExternalControl dummyControl = null, TypeTree typTree = default)
+    {
+        var controlType = new ControlVirtualType(typTree);
+        var controlInfo = new NameLookupInfo(BindKind.Control, controlType, DPath.Root, 0, dummyControl);
         Add(name, controlInfo);
     }
 

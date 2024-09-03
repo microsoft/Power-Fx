@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
@@ -674,6 +677,65 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Single(definitionsCheckResult.Errors);
                 Assert.Contains(definitionsCheckResult.Errors, err => err.MessageKey == errorKey);
             }
+        }
+
+        [Fact]
+
+        public void DelegableUDFTest()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Guid, new DName("ID")),
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            config.EnableSetFunction();
+
+            var recalcEngine = new RecalcEngine(config);
+
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); }; E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
+
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
+
+            func = recalcEngine.Functions.WithName("C").First() as UserDefinedFunction;
+
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
+
+            func = recalcEngine.Functions.WithName("B").First() as UserDefinedFunction;
+
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
+
+            func = recalcEngine.Functions.WithName("D").First() as UserDefinedFunction;
+
+            // Imperative function is not delegable
+            Assert.True(func.IsAsync);
+            Assert.True(!func.IsDelegatable);
+
+            func = recalcEngine.Functions.WithName("E").First() as UserDefinedFunction;
+
+            // Imperative function is not delegable
+            // E():Void = { E() }; ---> binding will be null so no attempt to get datasource should happen
+            Assert.True(!func.IsDelegatable);
         }
 
         // Binding to inner functions does not impact outer functions. 

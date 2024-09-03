@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -23,6 +25,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
@@ -31,13 +34,26 @@ namespace Microsoft.PowerFx.Core.Functions
     /// This includings the binding (and hence IR for evaluation) - 
     /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
     /// </summary>
-    internal class UserDefinedFunction : TexlFunction
+    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol, IExternalDelegatableSymbol
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
-        public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
+        public override bool IsAsync => _binding.IsAsync(UdfBody);
+
+        public bool IsPageable => _binding.IsPageable(_binding.Top);
+
+        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
+
+        public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+            Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
+
+            return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
+        }
 
         public override bool SupportsParamCoercion => true;
 
@@ -46,6 +62,18 @@ namespace Microsoft.PowerFx.Core.Functions
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
+
+        public TexlBinding Binding => _binding;
+
+        public bool TryGetExternalDataSource(out IExternalDataSource dataSource)
+        {
+            return ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out dataSource);
+        }
+
+        public override bool TryGetDataSource(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
+        {
+            return TryGetExternalDataSource(out dsInfo);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.

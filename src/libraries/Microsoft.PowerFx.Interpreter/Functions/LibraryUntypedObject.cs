@@ -5,15 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -220,7 +218,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        ResourceKey = RuntimeStringResources.ErrUntypedNumberNotValidDecimal,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -283,7 +281,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        ResourceKey = RuntimeStringResources.ErrUntypedNumberNotValidDecimal,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -387,7 +385,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "The UntypedObject does not represent an array",
+                        ResourceKey = RuntimeStringResources.ErrUntypedObjectNotArray,
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -437,7 +435,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 if (impl.TryGetPropertyNames(out var propertyNames))
                 {
@@ -552,9 +550,10 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError
             {
+                ResourceKey = RuntimeStringResources.ErrUntypedObjectIncorrectTypeArg,
                 Kind = ErrorKind.InvalidArgument,
                 Span = irContext.SourceContext,
-                Message = $"The untyped object argument to the '{functionName}' function has an incorrect type. Expected: {expectedType}, Actual: {actualValue.Type}."
+                MessageArgs = new[] { functionName, expectedType, actualValue.Type.ToString() }
             });
         }
 

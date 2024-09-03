@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Handlers;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -111,7 +112,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         [InlineData("Score < 50", true, "#$PowerFxResolvedObject$# < #$decimal$#")]
         [InlineData("missing < 50", false, "#$firstname$# < #$decimal$#")] // doesn't compile, should get filtered out by LSP 
         [InlineData("Score > 50", true, null, "vi-VN")]
-        public async Task TestNL2FX(string expectedExpr, bool success, string anonExpr = null, string expressionCultureName = null)
+        [InlineData("Score < 50", true, "#$PowerFxResolvedObject$# < #$decimal$#", null, true)]
+        [InlineData("missing < 50", false, "#$firstname$# < #$decimal$#", null, true)] // doesn't compile, should get filtered out by LSP 
+        [InlineData("Score > 50", true, null, "vi-VN", true)]
+        public async Task TestNL2FX(string expectedExpr, bool success, string anonExpr = null, string expressionCultureName = null, bool useAsyncFactory = false)
         {
             // Arrange
             var documentUri = "powerfx://app?context=1";
@@ -128,7 +132,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var scope = engine.CreateEditorScope(parserOptions: parserOptions, symbols: symbols);
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => scope);
             Init(new InitParams(scopeFactory: scopeFactory));
-            var nl2FxHandler = CreateAndConfigureNl2FxHandler();
+            var nl2FxHandler = CreateAndConfigureNl2FxHandler(useAsyncFactory);
             nl2FxHandler.Nl2FxDelayTime = 100;
             nl2FxHandler.Expected = expectedExpr;
 
@@ -212,6 +216,18 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal(1, nl2FxHandler.PreHandleNl2FxCallCount);
         }
 
+        [Fact]
+        public void TestDefaultNlHanderIsConfiguredCorrectly()
+        {
+            // Arrange
+            var handler = new NLHandler();
+
+            // Assert
+            Assert.False(handler.SupportsFx2NL);
+            Assert.False(handler.SupportsNL2Fx);
+            Assert.False(handler.SkipDefaultPreHandleForNl2Fx);
+        }
+
         private static (string payload, string id) NL2FxMessageJson(string documentUri)
         {
             var nl2FxParams = new CustomNL2FxParams()
@@ -228,11 +244,36 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             return GetRequestPayload(nl2FxParams, CustomProtocolNames.NL2FX);
         }
 
-        private TestNL2FxHandler CreateAndConfigureNl2FxHandler()
+        private TestNL2FxHandler CreateAndConfigureNl2FxHandler(bool asyncFactory = false)
         {
             var nl2FxHandler = new TestNL2FxHandler();
-            HandlerFactory.SetHandler(CustomProtocolNames.NL2FX, new Nl2FxLanguageServerOperationHandler(new BackwardsCompatibleNLHandlerFactory(nl2FxHandler)));
+            HandlerFactory.SetHandler(CustomProtocolNames.NL2FX, new Nl2FxLanguageServerOperationHandler(TestNlHandlerFactory.Create(nl2FxHandler, asyncFactory)));
             return nl2FxHandler;
+        }
+
+        private sealed class TestNlHandlerFactory : BackwardsCompatibleNLHandlerFactory, IAsyncNLHandlerFactory
+        {
+            public int DelayTime { get; set; } = 50;
+
+            public TestNlHandlerFactory(NLHandler handler)
+                : base(handler)
+            {
+            }
+
+            public async Task<NLHandler> GetNLHandlerAsync(IPowerFxScope scope, BaseNLParams nlParams, CancellationToken cancellationToken = default)
+            {
+                if (DelayTime > 0)
+                {
+                    await Task.Delay(DelayTime, cancellationToken).ConfigureAwait(false);
+                }
+
+                return GetNLHandler(scope, nlParams);
+            }
+
+            public static INLHandlerFactory Create(NLHandler handler, bool asyncFactory = true)
+            {
+                return asyncFactory ? new TestNlHandlerFactory(handler) : new BackwardsCompatibleNLHandlerFactory(handler);
+            }
         }
     }
 }
