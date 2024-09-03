@@ -53,11 +53,6 @@ namespace Microsoft.PowerFx
         internal bool AllowParseAsTypeLiteral { get; set; }
 
         /// <summary>
-        /// Flag to allow single user-definitons to be parsed without semicolon in the end.
-        /// </summary>
-        public bool AllowSingleUserDefinition { get; set; }
-
-        /// <summary>
         /// Allow parsing of attributes on user definitions
         /// This is an early prototype, and so is internal.
         /// </summary>

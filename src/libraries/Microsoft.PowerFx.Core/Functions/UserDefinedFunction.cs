@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 Contracts.Assert(udf.IsParseValid);
 
                 var udfName = udf.Ident.Name;
-                if (texlFunctionSet.AnyWithName(udfName) || nameResolver.Functions.WithName(udfName).Any(func => func is UserDefinedFunction))
+                if (texlFunctionSet.AnyWithName(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;

@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -163,8 +164,25 @@ namespace Microsoft.PowerFx
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
                 }
 
+                var validUdfs = new List<UserDefinedFunction>();
+
+                foreach (var udf in partialUDFs) 
+                {
+                    if (_symbols.Functions.WithName(udf.Name).Any(func => func is UserDefinedFunction))
+                    {
+                        Contracts.Assert(_parse.UDFs.Where(f => f.Ident.Name == udf.Name).Any());
+
+                        var err = new TexlError(_parse.UDFs.Where(f => f.Ident.Name == udf.Name).First().Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udf.Name);
+                        _errors.Add(ExpressionError.New(err, _defaultErrorCulture));
+                    }
+                    else
+                    {
+                        validUdfs.Add(udf);
+                    }
+                }
+
                 var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
-                foreach (var udf in partialUDFs)
+                foreach (var udf in validUdfs)
                 {
                     var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
                     var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);

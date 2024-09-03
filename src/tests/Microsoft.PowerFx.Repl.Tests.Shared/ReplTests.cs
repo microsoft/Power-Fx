@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                 Output = _output,
                 AllowSetDefinitions = true,
                 AllowUserDefinedFunctions = true,
-                ParserOptions = new ParserOptions() { AllowsSideEffects = true, AllowSingleUserDefinition = true }
+                ParserOptions = new ParserOptions() { AllowsSideEffects = true }
             };
         }
 
@@ -273,16 +273,16 @@ Notify(z)
         [Fact]
         public void UserDefinedFunctions()
         {
-            _repl.HandleLine("F(x: Number): Number = x");
+            _repl.HandleLine("F(x: Number): Number = x;");
             _repl.HandleLine("F(42)");
             var log = _output.Get(OutputKind.Repl);
             Assert.Equal("42", log);
 
-            _repl.HandleLine("F(x: Text): Text = x");
+            _repl.HandleLine("F(x: Text): Text = x;");
             var error1 = _output.Get(OutputKind.Error);
             Assert.Equal("Error 0-1: Function F is already defined.", error1);
 
-            _repl.HandleLine("G(x: Currency): Currency = x");
+            _repl.HandleLine("G(x: Currency): Currency = x;");
             var error2 = _output.Get(OutputKind.Error);
             Assert.Equal(
                 @"Error 5-13: Unknown type Currency.

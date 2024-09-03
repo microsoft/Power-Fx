@@ -223,7 +223,6 @@ namespace Microsoft.PowerFx
             { 
                 AllowsSideEffects = allowSideEffects, 
                 Culture = parseCulture ?? CultureInfo.InvariantCulture,
-                AllowSingleUserDefinition = true
             };
 
             var composedSymbols = Compose(this, symbolTable, extraSymbolTable);

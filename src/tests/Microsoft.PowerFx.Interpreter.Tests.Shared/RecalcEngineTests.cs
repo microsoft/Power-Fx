@@ -709,7 +709,7 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); }; E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
@@ -731,11 +731,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(func.IsAsync);
             Assert.True(!func.IsDelegatable);
 
-            func = recalcEngine.Functions.WithName("E").First() as UserDefinedFunction;
-
-            // Imperative function is not delegable
-            // E():Void = { E() }; ---> binding will be null so no attempt to get datasource should happen
-            Assert.True(!func.IsDelegatable);
+            // Binding fails for recursive definitions and hence function is not added.
+            Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
         }
 
         // Binding to inner functions does not impact outer functions. 
@@ -1837,7 +1834,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true));
+                Assert.False(recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true).IsSuccess);
             }
         }
 
