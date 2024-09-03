@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(this, TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
@@ -314,7 +314,15 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// The suggestion kind for the hypothetical suggestion.
         /// </returns>
-        internal virtual SuggestionKind GetFunctionSuggestionKind(TexlFunction function, int argumentIndex) => SuggestionKind.Global;
+        internal virtual SuggestionKind GetFunctionSuggestionKind(TexlFunction function, int argumentIndex)
+        {
+            if (function.HasTypeArgs && function.ArgIsType(argumentIndex))
+            {
+                return SuggestionKind.Type;
+            }
+                
+            return SuggestionKind.Global;
+        }
 
         /// <summary>
         /// This method is called after all default suggestions for value possibilities have been run and may be

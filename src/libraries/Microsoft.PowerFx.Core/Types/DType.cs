@@ -3937,5 +3937,39 @@ namespace Microsoft.PowerFx.Core.Types
 
             return !fError;
         }
+
+        internal static bool IsSupportedType(DType type, ISet<DType> supportedTypes, out DType unsupportedType)
+        {
+            unsupportedType = null;
+
+            // Dataverse types may contain fields with ExpandInfo that may have self / mutually recursive reference
+            // we allow these in type check phase by ignoring validation of types in such fields.
+            if (type.HasExpandInfo)
+            {
+                return true;
+            }
+
+            if ((type.IsRecordNonObjNull || type.IsTableNonObjNull) && type.TypeTree != null)
+            {
+                foreach (var ctype in type.TypeTree)
+                {
+                    if (!IsSupportedType(ctype.Value, supportedTypes, out unsupportedType))
+                    {
+                        return false;
+                    }
+                }
+
+                unsupportedType = null;
+                return true;
+            }
+
+            if (!supportedTypes.Contains(type))
+            {
+                unsupportedType = type;
+                return false;
+            }
+
+            return true;
+        }
     }
 }

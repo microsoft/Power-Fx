@@ -575,5 +575,25 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             // Just check that the execution didn't stack overflow.
             Assert.True(suggestions.Any());
         }
+
+        [Theory]
+        [InlineData("ParseJSON(\"42\", Nu|", "Number")]
+        [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
+        [InlineData("ParseJSON(\"42\", Voi|")]
+        [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
+        public void TypeArgumentsTest(string expression, params string[] expected)
+        {
+            var symbolTable = SymbolTable.WithPrimitiveTypes();
+
+            symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
+            symbolTable.AddFunctions(new TexlFunctionSet(BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs).ToArray()));
+            symbolTable.AddFunctions(new TexlFunctionSet(new[] { BuiltinFunctionsCore.ParseJSON }));
+
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, symbolTable);
+            Assert.Equal(expected, actualSuggestions);
+        }
     }
 }
