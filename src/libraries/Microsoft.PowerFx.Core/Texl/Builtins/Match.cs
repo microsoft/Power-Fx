@@ -172,58 +172,59 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var tokenRE = new Regex(
                 @"
                     # leading backslash, escape sequences
-                    \\k<(?<goodBackRefName>\w+)>                     | # named backreference
-                    (?<badOctal>\\0\d*)                              | # \0 and octal are not accepted, amiguous and not needed (use \x instead)
-                    \\(?<goodBackRefNumber>\d+)                      | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+                    \\k<(?<goodBackRefName>\w+)>                       | # named backreference
+                    (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, amiguous and not needed (use \x instead)
+                    \\(?<goodBackRefNumber>\d+)                        | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
                     (?<goodEscape>\\
-                           ([dfnrstw]                        |         # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
-                            p\{\w+\}                         |         # unicode character classes
-                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/] |         # acceptable escaped characters with Unicode aware ECMAScript
-                            c[a-zA-Z]                        |         # Ctrl character classes
-                            x[0-9a-fA-F]{2}                  |         # hex character, must be exactly 2 hex digits
-                            u[0-9a-fA-F]{4}))                        | # Unicode characters, must be exactly 4 hex digits
-                    (?<goodEscapeOutside>\\([bBWDS]|P\{\w+\}))       | # acceptable outside a character class, but not within
-                    (?<badEscape>\\.)                                | # all other escaped characters are invalid and reserved for future use
+                           ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
+                            p\{\w+\}                               |     # unicode character classes
+                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/|\#|\ ] |     # acceptable escaped characters with Unicode aware ECMAScript with # and space for Free Spacing
+                            c[a-zA-Z]                              |     # Ctrl character classes
+                            x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
+                            u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
+                    (?<goodEscapeOutside>\\([bBWDS]|P\{\w+\}))         | # acceptable outside a character class, but not within
+                    (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                                                                     
                     # leading (?<, named captures
-                    \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>   | # named capture group, can only be letters and numbers and must start with a letter
-                    (?<badBalancing>\(\?<\w*-\w*>)                   | # .NET balancing captures are not supported
-                    (?<badNamedCaptureName>\(\?<[^>]*>)              | # bad named capture name, didn't match goodNamedCapture
-                    (?<badSingleQuoteNamedCapture>\(\?'[^']*')       | # single quoted capture names are not supported
+                    \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
+                    (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
+                    (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
+                    (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
 
                     # leading (?, misc
-                    (?<goodNonCapture>\(\?:)                         | # non-capture group, still need to track to match with closing paren
-                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)           | # inline options
-                    (?<goodInlineComment>\(\?\#[^\)]*\))             | # inline comment
-                    (?<goodLookaround>\(\?(=|!|<=|<!))               | # lookahead and lookbehind
-                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])     | # inline options, including disable of options
-                    (?<badConditional>\(\?\()                        | # .NET conditional alternations are not supported
-                    (?<badParen>\([\?\+\*\|])                        | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
+                    (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
+                    \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
+                    (?<goodInlineComment>\(\?\#)                       | # inline comment
+                    (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
+                    (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
+                    (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
+                    (?<badParen>\([\?\+\*\|])                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
                     # leading ?\*\+, quantifiers
-                    (?<goodQuantifiers>[\?\*\+]\??)                  | # greedy and lazy quantifiers
-                    (?<badQuantifiers>[\?\*\+][\+\*])                | # possessive and useless quantifiers
+                    (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
+                    (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive and useless quantifiers
 
                     # leading {, limited quantifiers
-                    (?<goodLimited>{\d+(,\d*)?}\??)                  | # standard limited quantifiers
-                    (?<badLimited>{\d+(,\d*)?}[\+|\*])               | # possessive and useless quantifiers
-                    (?<badCurly>[{}])                                | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
+                    (?<goodLimited>{\d+(,\d*)?}\??)                    | # standard limited quantifiers
+                    (?<badLimited>{\d+(,\d*)?}[\+|\*])                 | # possessive and useless quantifiers
+                    (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # open and close regions
-                    (?<badCharacterClassEmpty>\[\])                  | # disallow empty chararcter class (supported by XRegExp) and literal ] at front of character class (supported by .NET)
-                    (?<openCapture>\()                               |
-                    (?<closeCapture>\))                              |
-                    (?<openCharacterClass>\[)                        |
-                    (?<closeCharacterClass>\])                       |
-                    (?<poundComment>\#)                              | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                               | # used in free spacing mode (to detect end of comment), ignored otherwise
-                    (?<remainingChars>.)                               # used in free spacing mode (to detect repeats), ignored otherwise
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                    (?<badCharacterClassEmpty>\[\])                    | # disallow empty chararcter class (supported by XRegExp) and literal ] at front of character class (supported by .NET)
+                    (?<openCapture>\()                                 |
+                    (?<closeCapture>\))                                |
+                    (?<openCharacterClass>\[)                          |
+                    (?<closeCharacterClass>\])                         |
+                    (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
+                    (?<newline>[\r\n])                                 | # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<remainingChars>.)                                 # used in free spacing mode (to detect repeats), ignored otherwise
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
             var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
-            var openComment = false;                                // there is an open end-of-line pound comment, only in freeFormMode
+            var openPoundComment = false;                           // there is an open end-of-line pound comment, only in freeFormMode
+            var openInlineComment = false;                          // there is an open inline comment
             var freeSpacing = regexOptions.Contains("x");           // can also be set with inline mode modifier
             var numberedCpature = regexOptions.Contains("N");       // can only be set here, no inline mode modifier
             var openCharacterClass = false;                         // are we defining a character class?
@@ -233,13 +234,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (token.Groups["newline"].Success)
                 {
-                    openComment = false;
+                    openPoundComment = false;
                 }
-                else if (token.Groups["poundComment"].Success)
+                else if (openInlineComment && token.Groups["closeParen"].Success)
                 {
-                    openComment = freeSpacing;
+                    openInlineComment = false;
                 }
-                else if (!openComment)
+                else if (!openPoundComment && !openInlineComment)
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
                     if (token.Groups["goodEscape"].Success || 
@@ -436,10 +437,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodInlineComment"].Success)
                     {
-                        if (token.Groups["goodInlineComment"].Value.Substring(1).Contains("("))
+                        if (!openCharacterClass)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExOpenParenInComment, token.Groups["goodInlineComment"].Value);
-                            return false;
+                            openInlineComment = true;
+                        }
+                    }
+                    else if (token.Groups["poundComment"].Success)
+                    {
+                        if (!openCharacterClass)
+                        {
+                            openPoundComment = freeSpacing;
                         }
                     }
                     else if (token.Groups["badBackRefNum"].Success)
@@ -508,6 +515,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         throw new NotImplementedException("Unknown regular expression match: " + token.Value);
                     }
                 }
+            }
+
+            if (openInlineComment)
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
+                return false;
             }
 
             if (captureStack.Count > 0)

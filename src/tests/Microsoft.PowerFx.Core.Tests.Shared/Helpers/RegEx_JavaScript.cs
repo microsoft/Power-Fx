@@ -15,20 +15,21 @@ namespace Microsoft.PowerFx.Functions
         public const string AlterRegex_JavaScript = @"
             function AlterRegex_JavaScript(regex, flags)
             {
-                var regexIndex = 0;
+                var index = 0;
 
                 const inlineFlagsRE = /^\(\?(?<flags>[imnsx]+)\)/;
                 const inlineFlags = inlineFlagsRE.exec( regex );
                 if (inlineFlags != null)
                 {
                     flags = flags.concat(inlineFlags.groups['flags']);
-                    regexIndex = inlineFlags[0].length;
+                    index = inlineFlags[0].length;
                 }
 
                 const freeSpacing = flags.includes('x');
                 const multiline = flags.includes('m');
                 const dotAll = flags.includes('s');
                 const ignoreCase = flags.includes('i');
+                const numberedSubMatches = flags.includes('N');
 
                 // rebuilding from booleans avoids possible duplicate letters
                 // x has been handled in this function and does not need to be passed on (and would cause an error)
@@ -37,9 +38,9 @@ namespace Microsoft.PowerFx.Functions
                 var openCharacterClass = false;       // are we defining a character class?
                 var altered = '';
 
-                for ( ; regexIndex < regex.length; regexIndex++)
+                for ( ; index < regex.length; index++)
                 {
-                    switch (regex.charAt(regexIndex) )
+                    switch (regex.charAt(index) )
                     {
                         case '[':
                             openCharacterClass = true;
@@ -52,13 +53,13 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         case '\\':
-                            if (++regexIndex < regex.length)
+                            if (++index < regex.length)
                             {
                                 const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Nd}\\p{Pc}';
                                 const spaceChar = '\\f\\n\\r\\t\\v\\x85\\p{Z}';
                                 const digitChar = '\\p{Nd}';
 
-                                switch (regex.charAt(regexIndex))
+                                switch (regex.charAt(index))
                                 { 
                                     case 'w':
                                         altered = altered.concat((openCharacterClass ? '' : '['), wordChar, (openCharacterClass ? '' : ']'));
@@ -88,8 +89,13 @@ namespace Microsoft.PowerFx.Functions
                                         altered = altered.concat('[^', digitChar, ']');
                                         break;
 
+                                    // needed for free spacing
+                                    case '#': case ' ':
+                                        altered = altered.concat(regex.charAt(index));
+                                        break;
+
                                     default:
-                                        altered = altered.concat('\\', regex.charAt(regexIndex));
+                                        altered = altered.concat('\\', regex.charAt(index));
                                         break;
                                 }
                             }
@@ -114,12 +120,18 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         case '(':
-                            if (regex.length - regexIndex > 2 && regex.charAt(regexIndex+1) == '?' && regex.charAt(regexIndex+2) == '#')
+                            if (regex.length - index > 2 && regex.charAt(index+1) == '?' && regex.charAt(index+2) == '#')
                             {
                                 // inline comment
-                                for ( regexIndex++; regexIndex < regex.length && regex.charAt(regexIndex) != ')'; regexIndex++)
+                                for ( index++; index < regex.length && regex.charAt(index) != ')'; index++)
                                 {
                                     // eat characters until a close paren, it doesn't matter if it is escaped (consistent with .NET)
+                                }
+
+                                if (numberedSubMatches && /\\[\d]+$/.test(altered))
+                                {
+                                    // add no op to separate tokens, for the case of \1(?#comment)1 which should not be interpreted as \11
+                                    altered = altered.concat('(?:)');
                                 }
                             }
                             else
@@ -129,29 +141,33 @@ namespace Microsoft.PowerFx.Functions
 
                             break;
 
-                        case ' ':
-                        case '\f':
-                        case '\n':
-                        case '\r':
-                        case '\t':
-                        case '\v':
-                            if (!freeSpacing)
+                        case ' ': case '\f': case '\n': case '\r': case '\t':
+                            if (!freeSpacing || openCharacterClass)
                             {
-                                altered = altered.concat(regex.charAt(regexIndex));
+                                altered = altered.concat(regex.charAt(index));
+                            }
+                            if (numberedSubMatches && /\\[\d]+$/.test(altered))
+                            {
+                                // add no op to separate tokens, for the case of '\1 1' which should not be interpreted as '\11'
+                                altered = altered.concat('(?:)'); 
                             }
 
                             break;
 
                         case '#':
-                            if (freeSpacing)
+                            if (freeSpacing && !openCharacterClass)
                             {
-                                for ( regexIndex++; regexIndex < regex.length && regex.charAt(regexIndex) != '\r' && regex.charAt(regexIndex) != '\n'; regexIndex++)
+                                for ( index++; index < regex.length && regex.charAt(index) != '\r' && regex.charAt(index) != '\n'; index++)
                                 {
                                     // eat characters until the end of the line
                                     // leaving dangling whitespace characters will be eaten on next iteration
                                 }
 
-                                regexIndex--;
+                                if (numberedSubMatches && /\\[\d]+$/.test(alteredRegex))
+                                {
+                                    // add no op to separate tokens, for the case of '\1# commment\n1' which should not be interpreted as '\11'
+                                    altered = altered.concat('(?:)'); 
+                                }
                             }
                             else
                             {
@@ -161,7 +177,7 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         default:
-                            altered = altered.concat(regex.charAt(regexIndex));
+                            altered = altered.concat(regex.charAt(index));
                             break;
                     }
                 }

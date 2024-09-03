@@ -166,8 +166,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
-        // Helper to run a single .txt d
+#if true
+        // Helper to run a single .txt dee
         [Fact]
         public void RunOne()
         {
@@ -185,6 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
             }
 
+            ExpressionEvaluationTests.RegExCompareEnabled = true;
             var result = testRunner.RunTests();
             if (result.Fail > 0)
             {

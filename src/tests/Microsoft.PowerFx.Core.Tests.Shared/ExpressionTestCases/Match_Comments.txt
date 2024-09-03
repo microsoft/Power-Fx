@@ -7,9 +7,12 @@
 //  (?# ...)                        Inline comment                         Yes         No                Yes
 //  "x" option                      space insiginificant and # comments    Yes         No                Yes
 
-// Inline comments
+// INLINE COMMENTS
 
 >> Match( "test", "(?# this is a test)st" )
+{FullMatch:"st",StartMatch:3}
+
+>> Match( "test", "(?# this is a test with a " & Char(10) & " newline)st" )
 {FullMatch:"st",StartMatch:3}
 
 >> Match( "test", "(?# this is a test ( with an open paren )st" )
@@ -18,7 +21,27 @@ Errors: Error 15-60: Invalid regular expression: Inline comments cannot include 
 >> Match( "test", "(?# this is a test \) with an escaped close paren )st" )  // can't escape a paren in an inline comment
 Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
-// Free spacing with different newline characters between
+>> Match( "test", "te (?# this is a test with an unclosed comment" )
+Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts with "(?#...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// with free spacing
+
+>> Match( "test", "(?# this is # a test)st", MatchOptions.FreeSpacing ) // # isn't seen because it is before the closing ) of the inline comment
+{FullMatch:"st",StartMatch:3}
+
+>> Match( "test", " # (?# this is a test)st", MatchOptions.FreeSpacing ) // # inline comment entirely within # comment
+{FullMatch:"",StartMatch:1}
+
+>> Match( "test", " # (?# this is " & Char(10) & " t es t", MatchOptions.FreeSpacing ) // # unclosed inline comment within # comment
+{FullMatch:"test",StartMatch:1}
+
+>> Match( "test", "(?x) # (?# this is a test ( with an open paren )" & Char(10) & "st" )
+{FullMatch:"st", StartMatch:3}
+
+>> Match( "test", "(?x) # (?# this is a test \) with an escaped close paren ) " & Char(13) & "st" )  // can't escape a paren in an inline comment
+{FullMatch:"st", StartMatch:3}
+
+// FREE SPACING NEWLINES SUPPORTED
 
 >> Match( "atestz", "(?x)
  # this is free spacing!
@@ -90,7 +113,7 @@ true
 >> IsMatch( "ab", "(?x)a # " &Char(11)& " c", MatchOptions.Contains )   // \v
 true
 
->> IsMatch( "ab", "(?x)a # " &Char(9)& " c", MatchOptions.Contains )    // \h
+>> IsMatch( "ab", "(?x)a # " &Char(9)& " c", MatchOptions.Contains )    // \t
 true
 
 >> IsMatch( "ab", "(?x)a # " &UniChar(2028)& " c", MatchOptions.Contains )  // \u2028
@@ -98,4 +121,168 @@ true
 
 >> IsMatch( "ab", "(?x)a # " &UniChar(2029)& " c", MatchOptions.Contains )  // \u2029
 true
+
+>> IsMatch( "ac", "(?x)a # \n b" & Char(10) & "c", MatchOptions.Contains )  // \n doesn't terminate comment
+true
+
+>> IsMatch( "ac", "(?x)a # \r b" & Char(10) & "c", MatchOptions.Contains )  // \r doesn't terminate comment
+true
+
+// ESCAPED #
+
+>> Match( "ab#cd", "ab#cd" )
+{FullMatch:"abd",StartMatch:1}
+
+>> Match( "abd#cd", "ab\#cd" )
+{FullMatch:"abd",StartMatch:1}
+
+>> Match( "abd#cd", "ab[#]cd" )
+{FullMatch:"abd",StartMatch:1}
+
+>> Match( "ab#cd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing )
+Blank()
+
+>> Match( "abd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"abd",StartMatch:1}
+
+>> Match( "ab#cd", "a" & Char(10) & " b \# c" & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab#cd",StartMatch:1}
+
+>> Match( "ab#cd", "a" & Char(10) & " b [#] c" & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab#cd",StartMatch:1}
+
+>> Match( "ab#cd", "a" & Char(10) & " b [\#] c" & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab#cd",StartMatch:1}
+
+// ESCAPED SPACE
+
+>> Match( "ab cd", "ab cd" )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "ab\ cd" )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "ab[ ]cd" )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "ab[\ ]cd" )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "a" & Char(10) & " b  c " & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "a" & Char(10) & " b \  c " & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "a" & Char(10) & " b [ ] c" & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab cd",StartMatch:1}
+
+>> Match( "ab cd", "a" & Char(10) & " b [\ ] c" & Char(10) & "d", MatchOptions.FreeSpacing )
+{FullMatch:"ab cd",StartMatch:1}
+
+// FREE SPACING IGNORED SPACE CHARACTERS
+
+>> IsMatch( "ab", "a b", MatchOptions.FreeSpacing) // space
+true
+
+>> IsMatch( "ab", "a" &UniChar(9)& "b", MatchOptions.FreeSpacing)  // \t
+true
+
+>> IsMatch( "ab", "a" &UniChar(10)& "b", MatchOptions.FreeSpacing) // \n
+true
+
+>> IsMatch( "ab", "a" &UniChar(13)& "b", MatchOptions.FreeSpacing) // \r
+true
+
+>> IsMatch( "ab", "a" &UniChar(12)& "b", MatchOptions.FreeSpacing) // \f
+true
+
+>> IsMatch( "ab", "a" &UniChar(11)& "b", MatchOptions.FreeSpacing) // \v
+false
+
+>> IsMatch( "ab", "a" &UniChar(160)& "b", MatchOptions.FreeSpacing) // \u00a0
+false
+
+>> IsMatch( "ab", "a" &UniChar(5760)& "b", MatchOptions.FreeSpacing) // \u1680
+false
+
+>> IsMatch( "ab", "a" &UniChar(8192)& "b", MatchOptions.FreeSpacing) // \u2000
+false
+
+>> IsMatch( "ab", "a" &UniChar(8193)& "b", MatchOptions.FreeSpacing) // \u2001
+false
+
+>> IsMatch( "ab", "a" &UniChar(8194)& "b", MatchOptions.FreeSpacing) // \u2002
+false
+
+>> IsMatch( "ab", "a" &UniChar(8195)& "b", MatchOptions.FreeSpacing) // \u2003
+false
+
+>> IsMatch( "ab", "a" &UniChar(8196)& "b", MatchOptions.FreeSpacing) // \u2004
+false
+
+>> IsMatch( "ab", "a" &UniChar(8197)& "b", MatchOptions.FreeSpacing) // \u2005
+false
+
+>> IsMatch( "ab", "a" &UniChar(8198)& "b", MatchOptions.FreeSpacing) // \u2006
+false
+
+>> IsMatch( "ab", "a" &UniChar(8199)& "b", MatchOptions.FreeSpacing) // \u2007
+false
+
+>> IsMatch( "ab", "a" &UniChar(8200)& "b", MatchOptions.FreeSpacing) // \u2008
+false
+
+>> IsMatch( "ab", "a" &UniChar(8201)& "b", MatchOptions.FreeSpacing) // \u2009
+false
+
+>> IsMatch( "ab", "a" &UniChar(8202)& "b", MatchOptions.FreeSpacing) // \u200a
+false
+
+>> IsMatch( "ab", "a" &UniChar(8232)& "b", MatchOptions.FreeSpacing) // \u2028
+false
+
+>> IsMatch( "ab", "a" &UniChar(8233)& "b", MatchOptions.FreeSpacing) // \u2029
+false
+
+>> IsMatch( "ab", "a" &UniChar(8239)& "b", MatchOptions.FreeSpacing) // \u202f
+false
+
+>> IsMatch( "ab", "a" &UniChar(8287)& "b", MatchOptions.FreeSpacing) // \u205f
+false
+
+>> IsMatch( "ab", "a" &UniChar(12288)& "b", MatchOptions.FreeSpacing) // \u3000
+false
+
+>> IsMatch( "ab", "a" &UniChar(65279)& "b", MatchOptions.FreeSpacing) // \ufeff
+false
+
+// spaces are not merely removed, they are no-ops and regular expression tokens still end at them
+
+>> IsMatch( UniChar(123) & "4", "(?x)\u123 4" ) // too few characters for \u
+Errors: Error 29-42: Invalid regular expression: Invalid escape code, found "\u".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> Match( "aBa1", "(?x)(a)(((((((((((((((B)))))))))))))))\1 1", MatchOptions.NumberedSubMatches ).FullMatch
+"aBa1"
+
+>> Match( "aBa1", "(?x)(a)(((((((((((((((B)))))))))))))))\11", MatchOptions.NumberedSubMatches ).FullMatch
+Blank()
+
+>> Match( "aBa1", "(?x)(a)(((((((((((((((B)))))))))))))))\1(?#comment)1", MatchOptions.NumberedSubMatches ).FullMatch
+"aBa1"
+
+>> Match( "aBa1", "(a)(((((((((((((((B)))))))))))))))\1(?#comment)1", MatchOptions.NumberedSubMatches ).FullMatch
+"aBa1"
+
+>> Match( "aaaaaa", "(?x)a    {3}" ) 
+{FullMatch:"aaa",StartMatch:1}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaaaaaaa", "(?x)a    {  3   }" ) 
+Errors: Error 37-56: Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaaaaaaa", "(?x)a    {  1  2  }" ) 
+Errors: Error 37-58: Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaa", "(?x)a    +" ) 
+{FullMatch:"aaaaaa",StartMatch:1}
 

@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Functions
                     if (flags.Contains('^') || flags.Contains('$'))
                     {
                         // we can't use PCRE2_OPTIONS.EXTENDED here because we need to add ^ or $ appropriately next
-                        pattern = StripExtended(pattern);
+                        pattern = StripExtended(pattern, (options & RegexOptions.ExplicitCapture) == 0);
                     }
                     else
                     {
@@ -214,21 +214,39 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static string StripExtended(string regex)
+        public static string StripExtended(string regex, bool numberedSubMatches)
         {
             StringBuilder alteredRegex = new StringBuilder();
+            bool openCharacterClass = false;
 
             for (int index = 0; index < regex.Length; index++)
             {
                 switch (regex[index])
                 {
+                    case '[':
+                        openCharacterClass = true;
+                        alteredRegex.Append('[');
+                        break;
+
+                    case ']':
+                        openCharacterClass = false;
+                        alteredRegex.Append(']');
+                        break;
+
                     case '#':
-                        for (index++; index < regex.Length && regex[index] != '\r' && regex[index] != '\n'; index++)
+                        if (!openCharacterClass)
                         {
-                            // skip the comment characters until the next newline, in case it includes [ ] 
+                            for (index++; index < regex.Length && regex[index] != '\r' && regex[index] != '\n'; index++)
+                            {
+                                // skip the comment characters until the next newline, in case it includes [ ] 
+                            }
                         }
 
-                        index--;
+                        if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
+                        {
+                            // add no op to separate tokens, for the case of "\1#" & Char(10) & "1" which should not be interpreted as "\11"
+                            alteredRegex.Append("(?:)");
+                        }
 
                         break;
 
@@ -241,12 +259,39 @@ namespace Microsoft.PowerFx.Functions
 
                         break;
 
-                    case ' ':
-                    case '\f':
-                    case '\n':
-                    case '\r':
-                    case '\t':
-                    case '\v':
+                    case '(':
+                        // inline comment
+                        if (regex.Length - index > 2 && regex[index + 1] == '?' && regex[index + 2] == '#')
+                        {
+                            for (index++; index < regex.Length && regex[index] != ')'; index++)
+                            {
+                                // skip the comment characters until the next closing paren, in case it includes [ ] 
+                            }
+
+                            if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
+                            {
+                                // add no op to separate tokens, for the case of "\1(?#comment)1" which should not be interpreted as "\11"
+                                alteredRegex.Append("(?:)");
+                            }
+                        }
+                        else
+                        {
+                            alteredRegex.Append(regex[index]);
+                        }
+
+                        break;
+
+                    case ' ': case '\f': case '\n': case '\r': case '\t':
+                        if (openCharacterClass)
+                        {
+                            alteredRegex.Append(regex[index]);
+                        }
+                        else if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
+                        {
+                            // add no op to separate tokens, for the case of "\1 1" which should not be interpreted as "\11"
+                            alteredRegex.Append("(?:)");
+                        }
+
                         break;
 
                     default:
