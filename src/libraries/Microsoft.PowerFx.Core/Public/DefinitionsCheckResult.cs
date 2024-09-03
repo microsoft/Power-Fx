@@ -157,22 +157,14 @@ namespace Microsoft.PowerFx
             if (_userDefinedFunctions == null)
             {
                 _userDefinedFunctions = new TexlFunctionSet();
-                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), _symbols, out var errors);
 
-                if (errors.Any())
+                var validUdfs = new List<UDF>();
+
+                foreach (var udf in _parse.UDFs.Where(udf => udf.IsParseValid))
                 {
-                    _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
-                }
-
-                var validUdfs = new List<UserDefinedFunction>();
-
-                foreach (var udf in partialUDFs) 
-                {
-                    if (_symbols.Functions.WithName(udf.Name).Any(func => func is UserDefinedFunction))
+                    if (_symbols.Functions.WithName(udf.Ident.Name).Any(func => func is UserDefinedFunction))
                     {
-                        Contracts.Assert(_parse.UDFs.Where(f => f.Ident.Name == udf.Name).Any());
-
-                        var err = new TexlError(_parse.UDFs.Where(f => f.Ident.Name == udf.Name).First().Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udf.Name);
+                        var err = new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udf.Ident.Name);
                         _errors.Add(ExpressionError.New(err, _defaultErrorCulture));
                     }
                     else
@@ -181,8 +173,15 @@ namespace Microsoft.PowerFx
                     }
                 }
 
+                var partialUDFs = UserDefinedFunction.CreateFunctions(validUdfs, _symbols, out var errors);
+
+                if (errors.Any())
+                {
+                    _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
+                }
+
                 var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
-                foreach (var udf in validUdfs)
+                foreach (var udf in partialUDFs)
                 {
                     var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
                     var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
