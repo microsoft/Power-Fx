@@ -128,11 +128,7 @@ namespace Microsoft.PowerFx.Functions
                                     // eat characters until a close paren, it doesn't matter if it is escaped (consistent with .NET)
                                 }
 
-                                if (numberedSubMatches && /\\[\d]+$/.test(altered))
-                                {
-                                    // add no op to separate tokens, for the case of \1(?#comment)1 which should not be interpreted as \11
-                                    altered = altered.concat('(?:)');
-                                }
+                                altered = altered.concat('(?:)');
                             }
                             else
                             {
@@ -142,14 +138,13 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         case ' ': case '\f': case '\n': case '\r': case '\t':
-                            if (!freeSpacing || openCharacterClass)
+                            if (freeSpacing && !openCharacterClass)
+                            {
+                                altered = altered.concat('(?:)'); 
+                            }
+                            else
                             {
                                 altered = altered.concat(regex.charAt(index));
-                            }
-                            if (numberedSubMatches && /\\[\d]+$/.test(altered))
-                            {
-                                // add no op to separate tokens, for the case of '\1 1' which should not be interpreted as '\11'
-                                altered = altered.concat('(?:)'); 
                             }
 
                             break;
@@ -163,11 +158,7 @@ namespace Microsoft.PowerFx.Functions
                                     // leaving dangling whitespace characters will be eaten on next iteration
                                 }
 
-                                if (numberedSubMatches && /\\[\d]+$/.test(alteredRegex))
-                                {
-                                    // add no op to separate tokens, for the case of '\1# commment\n1' which should not be interpreted as '\11'
-                                    altered = altered.concat('(?:)'); 
-                                }
+                                altered = altered.concat('(?:)');
                             }
                             else
                             {
@@ -182,12 +173,12 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                if (flags.includes('^') && (altered.length == 0 || altered[0] != '^'))
+                if (flags.includes('^'))
                 {
                     altered = '^' + altered;
                 }       
 
-                if (flags.includes('$') && (altered.length == 0 || altered[altered.length-1] != '$'))
+                if (flags.includes('$'))
                 {
                     altered = altered + '$';
                 }  

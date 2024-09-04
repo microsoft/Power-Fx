@@ -90,7 +90,6 @@ namespace Microsoft.PowerFx.Functions
                 RegexOptions options = RegexOptions.None;
 
                 Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");
-
                 if (inlineOptions.Success)
                 {
                     flags = flags + inlineOptions.Groups[1];
@@ -120,15 +119,10 @@ namespace Microsoft.PowerFx.Functions
 
                 if (flags.Contains('x'))
                 {
-                    if (flags.Contains('^') || flags.Contains('$'))
-                    {
-                        // we can't use PCRE2_OPTIONS.EXTENDED here because we need to add ^ or $ appropriately next
-                        pattern = StripExtended(pattern, (options & RegexOptions.ExplicitCapture) == 0);
-                    }
-                    else
-                    {
-                        pcreOptions |= PCRE2_OPTIONS.EXTENDED;
-                    }
+                    // replace the three characters that PCRE2 recognizes as white space that Power Fx does not
+                    // add a \n so that we can add a $ at the end, in case there is an unterminated pound comment
+                    pattern = Regex.Replace(pattern, "[\u0011\u2028\u2029]", " ") + '\n';
+                    pcreOptions |= PCRE2_OPTIONS.EXTENDED;
                 }
 
                 if (flags.Contains('^') && (pattern.Length == 0 || pattern[0] != '^'))

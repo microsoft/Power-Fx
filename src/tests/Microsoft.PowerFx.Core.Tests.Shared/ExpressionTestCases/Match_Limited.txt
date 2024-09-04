@@ -288,13 +288,13 @@ Errors: Error 12-25: Invalid regular expression: Character class subtraction is 
 // repeated characters in character class, used by intersection and future character class features, also would catch POSIX cases if wasn't already blocked by nested square brackets
 
 >> Match( "hello", "[a-z&&[k-m]]" )
-Errors: Error 16-30: Invalid regular expression: Character appears more than once in character class, found repeated "&".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-30: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello", "[a-z&&k-m]" )
-Errors: Error 16-28: Invalid regular expression: Character appears more than once in character class, found repeated "&".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-28: Invalid regular expression: Character appears more than once in character class, found repeated "&&".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello", "[a-hh-z]" )
-Errors: Error 16-26: Invalid regular expression: Character appears more than once in character class, found repeated "h".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"h",StartMatch:1}
 
 >> Match( "HellO", "[[:lower:]]" )
 Errors: Error 16-29: Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -523,13 +523,13 @@ Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\p"
 >> Match( "test", "\P{@}" )
 Errors: Error 15-22: Invalid regular expression: Invalid escape code, found "\P".|Error 0-5: The function 'Match' has some invalid arguments.
 
-// Escape characters acceptable to ECMAScript
+// Escape characters acceptable to ECMAScript, plus \# and \<space> for x mode
 
->> Match("^$\.*+?()[]{}|/", "\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/" ) 
-{FullMatch:"^$\.*+?()[]{}|/",StartMatch:1}
+>> Match("^$\.*+?()[]{}|/# ", "\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/\#\ " ) 
+{FullMatch:"^$\.*+?()[]{}|/# ",StartMatch:1}
 
->> Match("^$\.*+?()[]{}|/", "[\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]+" )
-{FullMatch:"^$\.*+?()[]{}|/",StartMatch:1}
+>> Match("^$\.*+?()[]{}|/# ", "[\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/\#\ ]+" )
+{FullMatch:"^$\.*+?()[]{}|/# ",StartMatch:1}
 
 // Escape characters that are blocked
 
@@ -538,9 +538,6 @@ Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\!"
 
 >> Match( "!@#%&=-`~><';:,""", "\@" )
 Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\@".|Error 0-5: The function 'Match' has some invalid arguments.
-
->> Match( "!@#%&=-`~><';:,""", "\#" )
-Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\#".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "!@#%&=-`~><';:,""", "\%" )
 Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\%".|Error 0-5: The function 'Match' has some invalid arguments.

@@ -16,7 +16,7 @@
 {FullMatch:"st",StartMatch:3}
 
 >> Match( "test", "(?# this is a test ( with an open paren )st" )
-Errors: Error 15-60: Invalid regular expression: Inline comments cannot include open parenthesis, found in "(?# this is a test ( with an open paren )".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"st",StartMatch:3}
 
 >> Match( "test", "(?# this is a test \) with an escaped close paren )st" )  // can't escape a paren in an inline comment
 Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -36,10 +36,10 @@ Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts
 {FullMatch:"test",StartMatch:1}
 
 >> Match( "test", "(?x) # (?# this is a test ( with an open paren )" & Char(10) & "st" )
-{FullMatch:"st", StartMatch:3}
+{FullMatch:"st",StartMatch:3}
 
 >> Match( "test", "(?x) # (?# this is a test \) with an escaped close paren ) " & Char(13) & "st" )  // can't escape a paren in an inline comment
-{FullMatch:"st", StartMatch:3}
+{FullMatch:"st",StartMatch:3}
 
 // FREE SPACING NEWLINES SUPPORTED
 
@@ -131,18 +131,18 @@ true
 // ESCAPED #
 
 >> Match( "ab#cd", "ab#cd" )
-{FullMatch:"abd",StartMatch:1}
+{FullMatch:"ab#cd",StartMatch:1}
 
->> Match( "abd#cd", "ab\#cd" )
-{FullMatch:"abd",StartMatch:1}
+>> Match( "ab#cd", "ab\#cd" )
+{FullMatch:"ab#cd",StartMatch:1}
 
->> Match( "abd#cd", "ab[#]cd" )
-{FullMatch:"abd",StartMatch:1}
+>> Match( "ab#cd", "ab[#]cd" )
+{FullMatch:"ab#cd",StartMatch:1}
 
->> Match( "ab#cd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing )
+>> Match( "ab#cd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing )  // c is in a # comment
 Blank()
 
->> Match( "abd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing )
+>> Match( "abd", "a" & Char(10) & " b # c " & Char(10) & "d", MatchOptions.FreeSpacing ) 
 {FullMatch:"abd",StartMatch:1}
 
 >> Match( "ab#cd", "a" & Char(10) & " b \# c" & Char(10) & "d", MatchOptions.FreeSpacing )
@@ -168,8 +168,8 @@ Blank()
 >> Match( "ab cd", "ab[\ ]cd" )
 {FullMatch:"ab cd",StartMatch:1}
 
->> Match( "ab cd", "a" & Char(10) & " b  c " & Char(10) & "d", MatchOptions.FreeSpacing )
-{FullMatch:"ab cd",StartMatch:1}
+>> Match( "ab cd", "a" & Char(10) & " b  c " & Char(10) & "d", MatchOptions.FreeSpacing )  // no actual space between b and c
+Blank()
 
 >> Match( "ab cd", "a" & Char(10) & " b \  c " & Char(10) & "d", MatchOptions.FreeSpacing )
 {FullMatch:"ab cd",StartMatch:1}

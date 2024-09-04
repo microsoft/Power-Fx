@@ -216,12 +216,11 @@ namespace Microsoft.PowerFx.Functions
 
             protected (string, RegexOptions) AlterRegex_DotNet(string regex, string options)
             {
-                var alteredRegex = new StringBuilder();
+                var altered = new StringBuilder();
                 bool openCharacterClass = false;                       // are we defining a character class?
                 int index = 0;
 
-                Match inlineOptions = Regex.Match(regex, @"^\(\?([imnsx]+)\)");
-
+                Match inlineOptions = Regex.Match(regex, @"\A\(\?([imnsx]+)\)");
                 if (inlineOptions.Success)
                 {
                     options = options + inlineOptions.Groups[1];
@@ -242,12 +241,12 @@ namespace Microsoft.PowerFx.Functions
                     {
                         case '[':
                             openCharacterClass = true;
-                            alteredRegex.Append('[');
+                            altered.Append('[');
                             break;
 
                         case ']':
                             openCharacterClass = false;
-                            alteredRegex.Append(']');
+                            altered.Append(']');
                             break;
 
                         case '#':
@@ -258,15 +257,14 @@ namespace Microsoft.PowerFx.Functions
                                     // skip the comment characters until the next newline, in case it includes [ ] 
                                 }
 
-                                if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                                {
-                                    // add no op to separate tokens, for the case of "\1#" & Char(10) & "1" which should not be interpreted as "\11"
-                                    alteredRegex.Append("(?:)");  
-                                }
+                                // need to replace a \r ending comment (supported by Power Fx) with a \n ending comment (supported by .NET)
+                                // also need to make sure the comment terminates with a newline in case we add a "$" below
+                                // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
+                                altered.Append("\n");
                             }
                             else
                             {
-                                alteredRegex.Append('#');
+                                altered.Append('#');
                             }
 
                             break;
@@ -280,81 +278,51 @@ namespace Microsoft.PowerFx.Functions
                                     // skip the comment characters until the next closing paren, in case it includes [ ] 
                                 }
 
-                                if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                                {
-                                    // add no op to separate tokens, for the case of "\1(?#comment)1" which should not be interpreted as "\11"
-                                    alteredRegex.Append("(?:)");
-                                }
+                                // need something to be emitted to avoid "\1(?:)1" being interpreted as "\11"
+                                altered.Append("(?:)");
                             }
                             else
                             {
-                                alteredRegex.Append(regex[index]);
+                                altered.Append(regex[index]);
                             }
 
                             break;
 
                         case '\\':
-                            alteredRegex.Append("\\");
+                            altered.Append("\\");
                             if (++index < regex.Length)
                             {
-                                alteredRegex.Append(regex[index]);
+                                altered.Append(regex[index]);
                             }
 
                             break;
 
                         case '.':
-                            alteredRegex.Append(!openCharacterClass && !dotAll ? @"[^\r\n]" : ".");
+                            altered.Append(!openCharacterClass && !dotAll ? @"[^\r\n]" : ".");
                             break;
 
                         case '^':
-                            alteredRegex.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
+                            altered.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
                             break;
 
                         case '$':
-                            alteredRegex.Append(openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)"));
-                            break;
-
-                        // space characters in freespacing
-                        case ' ': case '\f': case '\n': case '\r': case '\t':
-                            if (!freeSpacing || openCharacterClass)
-                            {
-                                alteredRegex.Append(regex[index]);
-                            }
-                            else if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                            {
-                                // add no op to separate tokens, for the case of '\1 1' which should not be interpreted as '\11'
-                                alteredRegex.Append("(?:)");  
-                            }
-
+                            altered.Append(openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)"));
                             break;
 
                         default:
-                            alteredRegex.Append(regex[index]);
+                            altered.Append(regex[index]);
                             break;
                     }
                 }
 
-                string prefix = string.Empty;
-                string postfix = string.Empty;
-
-                if (matchStart && (alteredRegex.Length == 0 || alteredRegex[0] != '^'))
-                {
-                    prefix = "^";
-                }
-
-                if (matchEnd && (alteredRegex.Length == 0 || alteredRegex[alteredRegex.Length - 1] != '$'))
-                {
-                    postfix = "$";
-                }
-
-                // freeSpacing has already been taken care of in this routine
                 RegexOptions alteredOptions = RegexOptions.CultureInvariant |
                     (multiline ? RegexOptions.Multiline : 0) |
                     (ignoreCase ? RegexOptions.IgnoreCase : 0) |
                     (dotAll ? RegexOptions.Singleline : 0) |
+                    (freeSpacing ? RegexOptions.IgnorePatternWhitespace : 0) |
                     (numberedSubMatches ? 0 : RegexOptions.ExplicitCapture);
 
-                return (prefix + alteredRegex.ToString() + postfix, alteredOptions);
+                return ((matchStart ? "^" : string.Empty) + altered.ToString() + (matchEnd ? "$" : string.Empty), alteredOptions);
             }
 
             protected static RecordValue GetRecordFromMatch(Regex rex, Match m, RegexOptions options)

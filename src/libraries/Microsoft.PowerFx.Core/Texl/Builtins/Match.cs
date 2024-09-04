@@ -160,6 +160,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
         private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, IErrorContainer errors)
         {
+            bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
+            bool numberedCpature = regexOptions.Contains("N");      // can only be set here, no inline mode modifier
+
             // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
             // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
             // Many subexpressions here take advantage of this, matching something that is valid, before falling through to check for something that is invalid.
@@ -198,11 +201,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
-                    (?<badParen>\([\?\+\*\|])                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
+
+                    # leading (, used for other special purposes
+                    (?<badParen>\([\?\+\*])                            | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
                     # leading ?\*\+, quantifiers
                     (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
-                    (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive and useless quantifiers
+                    (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
 
                     # leading {, limited quantifiers
                     (?<goodLimited>{\d+(,\d*)?}\??)                    | # standard limited quantifiers
@@ -210,25 +215,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # open and close regions
-                    (?<badCharacterClassEmpty>\[\])                    | # disallow empty chararcter class (supported by XRegExp) and literal ] at front of character class (supported by .NET)
-                    (?<openCapture>\()                                 |
-                    (?<closeCapture>\))                                |
-                    (?<openCharacterClass>\[)                          |
-                    (?<closeCharacterClass>\])                         |
+                    (?<openParen>\()                                   |
+                    (?<closeParen>\))                                  |
+                    (?<openCharClass>\[)                               |
+                    (?<closeCharClass>\])                              |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                                 | # used in free spacing mode (to detect end of comment), ignored otherwise
-                    (?<remainingChars>.)                                 # used in free spacing mode (to detect repeats), ignored otherwise
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+                    (?<newline>[\r\n])                                   # used in free spacing mode (to detect end of comment), ignored otherwise
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
             var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
-            var openPoundComment = false;                           // there is an open end-of-line pound comment, only in freeFormMode
-            var openInlineComment = false;                          // there is an open inline comment
-            var freeSpacing = regexOptions.Contains("x");           // can also be set with inline mode modifier
-            var numberedCpature = regexOptions.Contains("N");       // can only be set here, no inline mode modifier
-            var openCharacterClass = false;                         // are we defining a character class?
-            List<char> characterClassRepeat = new List<char>();     // encountered character class characters, to detect repeats
+
+            bool openPoundComment = false;                           // there is an open end-of-line pound comment, only in freeFormMode
+            bool openInlineComment = false;                          // there is an open inline comment
+            bool openCharacterClass = false;                         // are we defining a character class?
+            int openCharacterClassStart = -1; 
 
             foreach (Match token in tokenRE.Matches(regexPattern))
             {
@@ -236,14 +238,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     openPoundComment = false;
                 }
-                else if (openInlineComment && token.Groups["closeParen"].Success)
+                else if (openInlineComment && (token.Groups["closeParen"].Success || token.Groups["goodEscape"].Value == "\\)"))
                 {
                     openInlineComment = false;
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
-                    if (token.Groups["goodEscape"].Success || 
+                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success ||
                         token.Groups["goodLookaround"].Success || token.Groups["goodLimited"].Success)
                     {
                         // all is well, nothing to do
@@ -256,7 +258,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
                     }
-                    else if (token.Groups["openCharacterClass"].Success)
+                    else if (token.Groups["openCharClass"].Success)
                     {
                         if (openCharacterClass)
                         {
@@ -273,14 +275,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
+                            openCharacterClassStart = token.Index;
                             openCharacterClass = true;
-                            characterClassRepeat = new List<char>();
                         }
                     }
-                    else if (token.Groups["closeCharacterClass"].Success)
+                    else if (token.Groups["closeCharClass"].Success)
                     {
                         if (openCharacterClass)
                         {
+                            if (token.Index == openCharacterClassStart + 1)
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, token.Groups["badCharacterClassEmpty"].Value);
+                                return false;
+                            }
+
+                            // looking for any doubled punctuaion marks in the character class, as this can be used in the future for set subtraction, intserection, union, etc.
+                            // for example, see https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
+                            Match matchRepeat = Regex.Match(regexPattern.Substring(openCharacterClassStart, token.Index - openCharacterClassStart), "([-|&~+?!@#$%^=:;])\\1");
+                            if (matchRepeat.Success)
+                            {
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, matchRepeat.Value);
+                                return false;
+                            }
+
                             openCharacterClass = false;
                         }
                         else
@@ -318,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             captureStack.Push(null);
                         }
                     }
-                    else if (token.Groups["openCapture"].Success)
+                    else if (token.Groups["openParen"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
@@ -334,7 +351,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
                     }
-                    else if (token.Groups["closeCapture"].Success)
+                    else if (token.Groups["closeParen"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
@@ -417,24 +434,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             freeSpacing = true;
                         }
                     }
-                    else if (token.Groups["goodQuantifiers"].Success || token.Groups["remainingChars"].Success)
-                    {
-                        if (openCharacterClass)
-                        {
-                            foreach (char singleChar in token.Value)
-                            {
-                                if (characterClassRepeat.Contains(singleChar))
-                                {
-                                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, singleChar);
-                                    return false;
-                                }
-                                else if (singleChar != '-')
-                                {
-                                    characterClassRepeat.Add(singleChar);
-                                }
-                            }
-                        }
-                    }
                     else if (token.Groups["goodInlineComment"].Success)
                     {
                         if (!openCharacterClass)
@@ -482,11 +481,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (token.Groups["badConditional"].Success)
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadConditional, token.Groups["badConditional"].Value);
-                        return false;
-                    }
-                    else if (token.Groups["badCharacterClassEmpty"].Success)
-                    {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadCharacterClassLiteralSquareBracket, token.Groups["badCharacterClassEmpty"].Value);
                         return false;
                     }
                     else if (token.Groups["badEscape"].Success)
