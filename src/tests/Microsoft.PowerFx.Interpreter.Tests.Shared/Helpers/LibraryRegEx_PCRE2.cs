@@ -105,24 +105,28 @@ namespace Microsoft.PowerFx.Functions
                 if (flags.Contains('i'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.CASELESS;
+                    options |= RegexOptions.IgnoreCase;
                 }
 
                 if (flags.Contains('m'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.MULTILINE;
+                    options |= RegexOptions.Multiline;
                 }
 
                 if (flags.Contains('s'))
                 {
                     pcreOptions |= PCRE2_OPTIONS.DOTALL;
+                    options |= RegexOptions.Singleline;
                 }
 
                 if (flags.Contains('x'))
                 {
                     // replace the three characters that PCRE2 recognizes as white space that Power Fx does not
                     // add a \n so that we can add a $ at the end, in case there is an unterminated pound comment
-                    pattern = Regex.Replace(pattern, "[\u0011\u2028\u2029]", " ") + '\n';
+                    pattern = pattern.Replace("\u000b", "\\u000b").Replace("\u2028", "\\u2028").Replace("\u2029", "\\u2029") + '\n';
                     pcreOptions |= PCRE2_OPTIONS.EXTENDED;
+                    options |= RegexOptions.IgnorePatternWhitespace;
                 }
 
                 if (flags.Contains('^') && (pattern.Length == 0 || pattern[0] != '^'))
@@ -206,95 +210,6 @@ namespace Microsoft.PowerFx.Functions
                                     : allMatches.First();
                 }
             }
-        }
-
-        public static string StripExtended(string regex, bool numberedSubMatches)
-        {
-            StringBuilder alteredRegex = new StringBuilder();
-            bool openCharacterClass = false;
-
-            for (int index = 0; index < regex.Length; index++)
-            {
-                switch (regex[index])
-                {
-                    case '[':
-                        openCharacterClass = true;
-                        alteredRegex.Append('[');
-                        break;
-
-                    case ']':
-                        openCharacterClass = false;
-                        alteredRegex.Append(']');
-                        break;
-
-                    case '#':
-                        if (!openCharacterClass)
-                        {
-                            for (index++; index < regex.Length && regex[index] != '\r' && regex[index] != '\n'; index++)
-                            {
-                                // skip the comment characters until the next newline, in case it includes [ ] 
-                            }
-                        }
-
-                        if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                        {
-                            // add no op to separate tokens, for the case of "\1#" & Char(10) & "1" which should not be interpreted as "\11"
-                            alteredRegex.Append("(?:)");
-                        }
-
-                        break;
-
-                    case '\\':
-                        alteredRegex.Append("\\");
-                        if (++index < regex.Length)
-                        {
-                            alteredRegex.Append(regex[index]);
-                        }
-
-                        break;
-
-                    case '(':
-                        // inline comment
-                        if (regex.Length - index > 2 && regex[index + 1] == '?' && regex[index + 2] == '#')
-                        {
-                            for (index++; index < regex.Length && regex[index] != ')'; index++)
-                            {
-                                // skip the comment characters until the next closing paren, in case it includes [ ] 
-                            }
-
-                            if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                            {
-                                // add no op to separate tokens, for the case of "\1(?#comment)1" which should not be interpreted as "\11"
-                                alteredRegex.Append("(?:)");
-                            }
-                        }
-                        else
-                        {
-                            alteredRegex.Append(regex[index]);
-                        }
-
-                        break;
-
-                    case ' ': case '\f': case '\n': case '\r': case '\t':
-                        if (openCharacterClass)
-                        {
-                            alteredRegex.Append(regex[index]);
-                        }
-                        else if (numberedSubMatches && Regex.IsMatch(alteredRegex.ToString(), @"\\[\d]+\z"))
-                        {
-                            // add no op to separate tokens, for the case of "\1 1" which should not be interpreted as "\11"
-                            alteredRegex.Append("(?:)");
-                        }
-
-                        break;
-
-                    default:
-                        alteredRegex.Append(regex[index]);
-                        break;
-                }
-            }
-
-            return alteredRegex.ToString();
         }
 
         public static void EnableRegExFunctions(PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
