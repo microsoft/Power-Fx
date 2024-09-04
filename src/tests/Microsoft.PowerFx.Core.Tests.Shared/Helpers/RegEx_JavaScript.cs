@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx.Functions
 
                 var openCharacterClass = false;       // are we defining a character class?
                 var altered = '';
+                var spaceWaiting = false;
 
                 for ( ; index < regex.length; index++)
                 {
@@ -45,11 +46,13 @@ namespace Microsoft.PowerFx.Functions
                         case '[':
                             openCharacterClass = true;
                             altered = altered.concat('[');
+                            spaceWaiting = false;
                             break;
 
                         case ']':
                             openCharacterClass = false;
                             altered = altered.concat(']');
+                            spaceWaiting = false;
                             break;
 
                         case '\\':
@@ -104,19 +107,22 @@ namespace Microsoft.PowerFx.Functions
                                 // backslash at end of regex
                                 altered = altered.concat( '\\' );
                             }
-
+                            spaceWaiting = false;
                             break;
 
                         case '.':
                             altered = altered.concat(!openCharacterClass && !dotAll ? '[^\\r\\n]' : '.');
+                            spaceWaiting = false;
                             break;
 
                         case '^':
                             altered = altered.concat(!openCharacterClass && multiline ? '(?<=^|\\r\\n|\\r|\\n)' : '^');
+                            spaceWaiting = false;
                             break;
 
                         case '$':
                             altered = altered.concat(openCharacterClass ? '$' : (multiline ? '(?=$|\\r\\n|\\r|\\n)' : '(?=$|\\r\\n$|\\r$|\\n$)'));
+                            spaceWaiting = false;
                             break;
 
                         case '(':
@@ -128,11 +134,12 @@ namespace Microsoft.PowerFx.Functions
                                     // eat characters until a close paren, it doesn't matter if it is escaped (consistent with .NET)
                                 }
 
-                                altered = altered.concat('(?:)');
+                                spaceWaiting = true;
                             }
                             else
                             {
-                                altered = altered.concat('('); 
+                                altered = altered.concat('(');
+                                spaceWaiting = false;
                             }
 
                             break;
@@ -140,11 +147,12 @@ namespace Microsoft.PowerFx.Functions
                         case ' ': case '\f': case '\n': case '\r': case '\t':
                             if (freeSpacing && !openCharacterClass)
                             {
-                                altered = altered.concat('(?:)'); 
+                                spaceWaiting = true;
                             }
                             else
                             {
                                 altered = altered.concat(regex.charAt(index));
+                                spaceWaiting = false;
                             }
 
                             break;
@@ -158,16 +166,32 @@ namespace Microsoft.PowerFx.Functions
                                     // leaving dangling whitespace characters will be eaten on next iteration
                                 }
 
-                                altered = altered.concat('(?:)');
+                                spaceWaiting = true;
                             }
                             else
                             {
                                 altered = altered.concat('#');
+                                spaceWaiting = false;
                             }
 
                             break;
 
+                        case '*': case '+': case '?': case '{':
+                            if (spaceWaiting && altered.length > 0 && altered.charAt(altered.length-1) == '(')
+                            {
+                                altered = altered.concat( '(?:)' );
+                                spaceWaiting = false;
+                            }
+                            altered = altered.concat(regex.charAt(index));
+                            spaceWaiting = false;
+                            break;
+
                         default:
+                            if (spaceWaiting)
+                            {
+                                altered = altered.concat( '(?:)' );
+                                spaceWaiting = false;
+                            }
                             altered = altered.concat(regex.charAt(index));
                             break;
                     }
