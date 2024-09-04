@@ -278,10 +278,10 @@ Blank()
 {FullMatch:"aaa",StartMatch:1}
 
 >> Match( "aaaaaaaaaaaaaaaaaaaaaaaaaa", "(?x)a    {  3   }" ) 
-Errors: Error 37-56: Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 37-56: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aaaaaaaaaaaaaaaaaaaaaaaaaa", "(?x)a    {  1  2  }" ) 
-Errors: Error 37-58: Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 37-58: Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aaaaaa", "(?x)a    +" ) 
 {FullMatch:"aaaaaa",StartMatch:1}

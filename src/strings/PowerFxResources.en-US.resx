@@ -4438,7 +4438,7 @@
     <comment>Error message indicating that the regular expression has octal characters.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadCurly_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, for example \{ or \}, found "{0}".</value>
+    <value>Invalid regular expression: Literal curly braces must be escaped with a backslash, found "{0}".</value>
     <comment>Error message indicating that the regular expression has literal curly braces.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">

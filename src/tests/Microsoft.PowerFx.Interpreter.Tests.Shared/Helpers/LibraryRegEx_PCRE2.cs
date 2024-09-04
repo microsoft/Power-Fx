@@ -182,6 +182,8 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
+                        // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
+                        pattern = pattern.Replace('\r', '\n');
                         var regex = new Regex(pattern, options);
                         foreach (var name in regex.GetGroupNames())
                         {

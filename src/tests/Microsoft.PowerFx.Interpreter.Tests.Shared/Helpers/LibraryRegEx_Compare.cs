@@ -73,12 +73,12 @@ namespace Microsoft.PowerFx.Functions
 
                 if (nodeExpr != dotnetExpr)
                 {
-                    throw new Exception($"node != net on input='{input}', re='{regex}', options='{options}', node='{nodeExpr}', net='{dotnetExpr}'");
+                    throw new Exception($"node != net on input='{input}', re='{regex}', options='{options}', \n  node='{nodeExpr}', \n  net='{dotnetExpr}'");
                 }
 
                 if (pcre2Expr != dotnetExpr)
                 {
-                    throw new Exception($"pcre2 != net on input='{input}', re='{regex}', options='{options}', pcre2='{pcre2Expr}', net='{dotnetExpr}'");
+                    throw new Exception($"pcre2 != net on input='{input}', re='{regex}', options='{options}', \n  pcre2='{pcre2Expr}', \n  net='{dotnetExpr}'");
                 }
 
                 return dotnetMatch;

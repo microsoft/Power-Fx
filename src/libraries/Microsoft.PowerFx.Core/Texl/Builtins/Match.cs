@@ -131,9 +131,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 regularExpressionOptions += "N";
             }
 
+            string alteredOptions = regularExpressionOptions;
+
             return fValid && 
-                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, errors)) &&
-                    (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, regularExpressionOptions, errors, ref returnType));
+                    (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors)) &&
+                    (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
         }
 
         // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
@@ -158,10 +160,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //
         // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
         // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
-        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, IErrorContainer errors)
+        private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
         {
             bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
             bool numberedCpature = regexOptions.Contains("N");      // can only be set here, no inline mode modifier
+
+            alteredOptions = regexOptions;
 
             // Scans the regular expression for interesting constructs, ignoring other elements and constructs that are legal, such as letters and numbers.
             // Order of alternation is important. .NET regular expressions are greedy and will match the first of these that it can.
@@ -291,11 +295,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             // looking for any doubled punctuaion marks in the character class, as this can be used in the future for set subtraction, intserection, union, etc.
                             // for example, see https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
-                            Match matchRepeat = Regex.Match(regexPattern.Substring(openCharacterClassStart, token.Index - openCharacterClassStart), "([-|&~+?!@#$%^=:;])\\1");
-                            if (matchRepeat.Success)
+                            for (int i = openCharacterClassStart; i < token.Index - 1; i++)
                             {
-                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, matchRepeat.Value);
-                                return false;
+                                if (regexPattern[i] == regexPattern[i + 1] && "-|&~+?!@#$%^=:;".Contains(regexPattern[i]))
+                                {
+                                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, regexPattern.Substring(i, 2));
+                                    return false;
+                                }
                             }
 
                             openCharacterClass = false;
@@ -490,7 +496,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["badQuantifier"].Success || token.Groups["badLimited"].Success)
                     {
-                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, token.Groups["badQuantifier"].Value);
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadQuantifier, token.Value);
                         return false;
                     }
                     else if (token.Groups["badCurly"].Success)
@@ -529,11 +535,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
+            // may be modifed by inline options; we only care about x and N in the next stage
+            alteredOptions = (freeSpacing ? "x" : string.Empty) + (numberedCpature ? "N" : string.Empty);
+
             return true;
         }
 
         // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
-        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string regexOptions, IErrorContainer errors, ref DType returnType)
+        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
         {
             Contracts.AssertValue(regexPattern);
             string prefixedRegexPattern = this._cachePrefix + regexPattern;
@@ -565,9 +574,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             try
             {
                 var regexDotNetOptions = RegexOptions.None;
-                if (regexOptions.Contains("x"))
+                if (alteredOptions.Contains("x"))
                 {
                     regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
+
+                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
+                    regexPattern = regexPattern.Replace('\r', '\n');                    
                 }
 
                 var regex = new Regex(regexPattern, regexDotNetOptions);
@@ -604,7 +616,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
                 }
 
-                if (!subMatchesHidden && regexOptions.Contains("N"))
+                if (!subMatchesHidden && alteredOptions.Contains("N"))
                 {
                     propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
                 }
