@@ -1,10 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core.App.Controls;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -129,6 +137,95 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
 
             Assert.False(errors.Any());
+        }
+
+        [Fact]
+        public void TestUdfsAndNfsAreMarkedAsAsync()
+        {
+            // Arrange
+            var script = "test(): Text = Button1InScreen2.Text;Nf=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var symbolTable = new MockSymbolTable();
+            var dummyContol = new DummyExternalControl() { DisplayName = "Button1InScreen2" };
+            symbolTable.AddControl("Button1InScreen2", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
+            var config = new BindingConfig(markAsAsyncOnLazilyLoadedControlRef: true);
+
+            // Act & Assert
+            foreach (var udf in udfs)
+            {
+                udf.BindBody(symbolTable, new MockGlue(), config);
+                Assert.True(udf.IsAsync);
+            }
+
+            foreach (var nf in parseResult.NamedFormulas)
+            {
+                var binding = TexlBinding.Run(new MockGlue(), nf.Formula.ParseTree, symbolTable, config, DType.EmptyRecord);
+                Assert.True(binding.IsAsync(binding.Top));
+            }
+        }
+
+        [Fact]
+        public void TestFormulaUsingUdfsOrNamedFormulaReferringControlAsAsync()
+        {
+            // Arrange
+            var script = "test(): Text = Button1InScreen2.Text;Nf=Button1InScreen2.Text;Test2(): Void={Set(x, Button1InScreen2.Text);};";
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var symbolTable = new MockSymbolTable();
+            var dummyContol = new DummyExternalControl() { DisplayName = "Button1InScreen2" };
+            symbolTable.AddControl("Button1InScreen2", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
+            var config = new BindingConfig(markAsAsyncOnLazilyLoadedControlRef: true);
+            var symbolTable2 = new MockSymbolTable();
+            var symbolTable3 = new SymbolTable();
+            foreach (var udf in udfs)
+            {
+                udf.BindBody(symbolTable, new MockGlue(), config);
+                Assert.True(udf.IsAsync);
+                symbolTable3.AddFunction(udf);
+            }
+
+            foreach (var nf in parseResult.NamedFormulas)
+            {
+                var binding = TexlBinding.Run(new MockGlue(), nf.Formula.ParseTree, symbolTable, config, DType.EmptyRecord);
+                Assert.True(binding.IsAsync(binding.Top));
+                symbolTable2.Add(nf.Ident.Name, new NameLookupInfo(BindKind.PowerFxResolvedObject, binding.GetType(binding.Top), DPath.Root, 0, isAsync: binding.IsAsync(binding.Top)));
+            }
+
+            var combinedSymbolTable = ReadOnlySymbolTable.Compose(symbolTable2, symbolTable3);
+
+            // Act
+            var checkResult1 = new Engine().Check("test() & \"ddd\"", null, combinedSymbolTable);
+            var checkResult2 = new Engine().Check("Nf & \"ddd\"", null, combinedSymbolTable);
+            var checkResult3 = new Engine().Check("Test2();", new ParserOptions { AllowsSideEffects = true }, combinedSymbolTable);
+            var checkResults = new List<CheckResult> { checkResult1, checkResult2, checkResult3 };
+
+            // Assert
+            foreach (var checkResult in checkResults)
+            {
+                Assert.True(checkResult.IsSuccess);
+                Assert.True(checkResult.Binding.IsAsync(checkResult.Parse.Root));
+            }
+        }
+
+        [Fact]
+        public void TestUdfsAreNotMarkedAsAsynWhenReferringToNonLazilyLoadedControl()
+        {
+            // Arrange
+            var script = "test(): Text = App.Text;";
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, new ParserOptions() { AllowsSideEffects = true });
+            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), _primitiveTypes, out var errors);
+            var symbolTable = new MockSymbolTable();
+            var dummyContol = new DummyExternalControl() { DisplayName = "App", IsAppInfoControl = true };
+            symbolTable.AddControl("App", dummyContol, TypeTree.Create(Enumerable.Empty<KeyValuePair<string, DType>>()).SetItem("Text", DType.String, true));
+            var config = new BindingConfig(markAsAsyncOnLazilyLoadedControlRef: true);
+
+            // Act & Assert
+            foreach (var udf in udfs)
+            {
+                udf.BindBody(symbolTable, new MockGlue(), config);
+                Assert.False(udf.IsAsync);
+            }
         }
     }
 }

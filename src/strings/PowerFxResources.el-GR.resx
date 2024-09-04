@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>column_name</value>
+    <value>τιμή_συμφωνίας</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -478,7 +478,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>'μορφοποίηση_κείμενο'</value>
+    <value>μορφοποίηση_κείμενο</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Επιστρέφει την τιμή true, αν η παρεχόμενη, μη τυπολογημένη τιμή είναι του παρεχόμενου τύπου.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Η μη τυπολογημένη τιμή για έλεγχο του αν μπορεί να μετατραπεί ρητά ως καθορισμένος τύπος.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Ο τύπος που θέλουμε να ελέγξει το untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Χρησιμοποιεί την καταχωρημένη τιμή ως τον παρεχόμενο τύπο.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Ο πίνακας οντότητας που αντιπροσωπεύει τον τύπο με τον οποίο θέλουμε να χρησιμοποιηθεί η τιμή.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Ελέγχει και χρησιμοποιεί την παρεχόμενη, μη τυπολογημένη τιμή ως τον παρεχόμενο τύπο.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Η μη τυπολογημένη τιμή που θα μετατραπεί ρητά ως νέος τύπος.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Ο τύπος ως τον οποίο θέλουμε να χρησιμοποιηθεί η τιμή.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Εκτελεί τον τύπο που παρέχεται ως δεύτερη παράμετρος χρησιμοποιώντας την εμβέλεια που παρέχεται από την πρώτη.</value>
@@ -2673,6 +2709,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Μια συμβολοσειρά JSON για επεξεργασία.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Μετατρέπει μια συμβολοσειρά JSON σε τυπολογημένο αντικείμενο.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>συμβολοσειρά</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Μια συμβολοσειρά JSON για μετατροπή σε τυπολογημένο αντικείμενο.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>τύπος</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Ένας ορισμός ενσωματωμένου τύπου ή ένας τύπος με όνομα καθολικά ορισμένο.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Επιστρέφει την καρτέλα σε έναν πίνακα σε ένα δεδομένο ευρετήριο.</value>
     
@@ -2690,6 +2744,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Το ευρετήριο της καρτέλας προς ανάκτηση.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2776,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Τύπος γραμμικού κώδικα</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2924,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Η τιμή προς δοκιμή.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Μετατρέπει μια ημερομηνία και ώρα στη μορφή κειμένου σε έναν αριθμό που αντιπροσωπεύει την ημερομηνία σε κώδικα ημερομηνίας-ώρας του Power Apps.</value>
@@ -3117,20 +3219,20 @@
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
-    <value>Νέα ή υπάρχουσα συλλογή για το όρισμα.</value>
+    <value>Μια νέα ή υπάρχουσα συλλογή προς αύξηση.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
+    <value>Καρτέλα ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια καρτέλα. Στη συλλογή θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Απαλείφει πρώτα τη συλλογή και προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή συλλογή (π.χ. ClearCollect(collection, source_collection)) ή μία ή περισσότερες εγγραφές ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Εκκαθαρίζει πρώτα τη συλλογή και προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή διαφορετική συλλογή (π.χ. ClearCollect(collection, source_collection)) ή μία ή περισσότερες εγγραφές ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
-    <value>Νέα ή υπάρχουσα συλλογή για το όρισμα.</value>
+    <value>Μια νέα ή υπάρχουσα συλλογή προς αύξηση.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>Εγγραφή ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια εγγραφή. Στη συλλογή θα προσαρτηθούν οι σειρές ενός πίνακα.</value>
+    <value>Καρτέλα ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια καρτέλα. Στη συλλογή θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Εφαρμόζει τις ενημερώσεις στην καθορισμένη γραμμή και αλλάζει τη γραμμή στην καθορισμένη προέλευση δεδομένων. Επιστρέφει την ενημερωμένη γραμμή.</value>
@@ -3266,6 +3368,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Μη αναμενόμενος χαρακτήρας «{0}» στη θέση «{1}» στον τύπο.</value>
     
@@ -3278,6 +3384,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3405,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Μη αναμενόμενοι χαρακτήρες. Ο τύπος περιέχει "{0}" σε σημείο όπου αναμένεται "{1}".</value>
     
@@ -3308,6 +3422,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3443,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Το όνομα δεν είναι έγκυρο. Αυτό το αναγνωριστικό δεν αναγνωρίζεται.</value>
     
@@ -3338,6 +3460,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3481,10 @@
     <value>Άρθρο: Αναφορά τύπου για το PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Η αναφορά Parent δεν είναι έγκυρη. Δεν μπορείτε να αναφέρετε ένα γονικό στοιχείο ελέγχου σε αυτό το περιβάλλον.</value>
     
@@ -3368,6 +3498,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Άρθρο: Προσθήκη και ρύθμιση παραμέτρων ενός στοιχείου ελέγχου εφαρμογής καμβά στο Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3541,10 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν αριθμός. Σε αυτό το σημείο στον τύπο αναμένεται αριθμός.</value>
     
@@ -3420,6 +3558,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3579,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν άνω και κάτω τελεία. Σε αυτό το σημείο στον τύπο αναμένεται άνω και κάτω τελεία (:).</value>
     
@@ -3452,6 +3598,10 @@
     <value>Άρθρο: Εμφάνιση κειμένου, ημερομηνιών και ωρών στο Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Συνάρτηση συμπεριφοράς σε μια ιδιότητα που δεν σχετίζεται με τη συμπεριφορά. Δεν μπορείτε να χρησιμοποιήσετε αυτή την ιδιότητα για να αλλάξετε τιμές αλλού στην εφαρμογή.</value>
     
@@ -3465,6 +3615,10 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Κατανόηση τύπων συμπεριφοράς για εφαρμογές καμβά στο Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3658,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν κείμενο ή αριθμός. Σε αυτό το σημείο στον τύπο αναμένεται κείμενο ή αριθμός.</value>
     
@@ -3517,6 +3675,10 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -3561,8 +3723,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3747,10 @@
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Μη συμβατός τύπος. Η στήλη "{0}" στην προέλευση δεδομένων που ενημερώνετε αναμένει τύπο "{1}" και εσείς χρησιμοποιείτε τύπο "{2}".</value>
     
@@ -3589,8 +3763,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3785,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3807,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3834,16 @@
     <value>Εκπαιδευτική ενότητα: Χρήση βασικών τύπων</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Εκπαιδευτική ενότητα: Σύνταξη βασικών τύπων με πίνακες και εγγραφές</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3859,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3888,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3923,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3962,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4003,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4039,16 @@
     <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4077,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Αναφορά: ConfirmExit για εφαρμογές καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -4442,7 +4692,7 @@
     <value>Η προέλευση δεδομένων στην οποία θα προστεθούν δεδομένα.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>Καρτέλα ή πίνακας για συλλογή. Στην προέλευση δεδομένων θα προσαρτηθεί μια καρτέλα. Στην προέλευση δεδομένων θα προσαρτηθούν οι σειρές ενός πίνακα.</value>
+    <value>Καρτέλα ή πίνακας για συλλογή. Στην προέλευση δεδομένων θα προσαρτηθεί μια καρτέλα. Στην προέλευση δεδομένων θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
     <value>στοιχείο</value>
@@ -4492,6 +4742,14 @@
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Η καθορισμένη προέλευση δεδομένων δεν μπορεί να χρησιμοποιηθεί με αυτήν τη συνάρτηση.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Μη έγκυρο όρισμα '{0}'. Αναμενόμενο όνομα έγκυρου τύπου ή λεκτική σταθερά τύπου.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Μη υποστηριζόμενος μη τυπολογημένος/JSON τύπος μετατροπής '{0}' στο όρισμα.</value>
     
   </data>
 </root>

@@ -720,9 +720,25 @@ namespace Microsoft.PowerFx
             return GetFunctionNames(false);
         }
 
+        /// <summary>
+        /// Get all function names used in the expression.
+        /// </summary>
+        /// <param name="anonymizeUnknownPublicFunctions">If true, anonymize the name of unknown public functions.</param>
+        /// <returns></returns>
         public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions)
         {
-            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions);
+            return GetFunctionNames(anonymizeUnknownPublicFunctions, null);
+        }
+
+        /// <summary>
+        /// Get all function names used in the expression.
+        /// </summary>
+        /// <param name="anonymizeUnknownPublicFunctions">If true, anonymize the name of unknown public functions.</param>
+        /// <param name="customKnownFunctions">List containing custom functions names that will not be anonymized.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetFunctionNames(bool anonymizeUnknownPublicFunctions, ICollection<string> customKnownFunctions)
+        {
+            return ListFunctionVisitor.Run(ApplyParse(), anonymizeUnknownPublicFunctions, customKnownFunctions);
         }
     }
 

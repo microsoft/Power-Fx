@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Foo() + Abs(1) + Foo()", "$#CustomFunction1#$,Abs", true)]
         [InlineData("true And true", "")]
         [InlineData("If(true, Blank(),Error())", "If,Blank,Error")]
+        [InlineData("If(true && CustomKnownFunction() && CustomPrivateFunction(), Blank(),Error())", "If,CustomKnownFunction,$#CustomFunction1#$,Blank,Error", true)]
         public void ListFunctionNamesTest(string expression, string expectedNames, bool anonymizeUnknownPublicFunctions = false)
         {
             foreach (var textFirst in new bool[] { false, true })
@@ -53,8 +55,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var check = engine.Check(expression, options);
             var checkResult = new CheckResult(engine).SetText(expression, options);
 
-            var functionsNames1 = check.GetFunctionNames(anonymizeUnknownPublicFunctions);
-            var functionsNames2 = checkResult.GetFunctionNames(anonymizeUnknownPublicFunctions);
+            var knownFunctionNames = new HashSet<string> { "CustomKnownFunction" };
+
+            var functionsNames1 = check.GetFunctionNames(anonymizeUnknownPublicFunctions, knownFunctionNames);
+            var functionsNames2 = checkResult.GetFunctionNames(anonymizeUnknownPublicFunctions, knownFunctionNames);
 
             var actualNames1 = string.Join(",", functionsNames1);
             var actualNames2 = string.Join(",", functionsNames2);

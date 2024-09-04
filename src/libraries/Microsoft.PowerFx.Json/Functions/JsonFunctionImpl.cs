@@ -17,7 +17,6 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -63,7 +62,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, _jsonSettings.MaxDepth, out _, out _))
                 {
-                    return CommonErrors.GenericInvalidArgument(IRContext.NotInSource(_type));
+                    var context = IRContext.NotInSource(_type);
+                    return new ErrorValue(context, new ExpressionError()
+                    {
+                        Message = "Invalid Argument",
+                        Span = context.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
                 }
 
                 using MemoryStream memoryStream = new MemoryStream();

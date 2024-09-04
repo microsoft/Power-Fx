@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -15,8 +14,8 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -306,7 +305,7 @@ namespace Microsoft.PowerFx
             {
                 if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
                 {
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
 
                 throw;
@@ -326,7 +325,7 @@ namespace Microsoft.PowerFx
                         return FormulaValue.NewError(customFunctionErrorException.ExpressionError);
                     }
 
-                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.RuntimeExceptionError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
             }
 
@@ -372,7 +371,15 @@ namespace Microsoft.PowerFx
 
                 if (!isValid)
                 {
-                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", retType, formulaResultType));
+                    return new ErrorValue(
+                        formulaResult.IRContext, 
+                        new ExpressionError()
+                        {
+                            ResourceKey = RuntimeStringResources.ErrReturnTypeDifference,
+                            Span = formulaResult.IRContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument,
+                            MessageArgs = new[] { retType.ToString(), formulaResultType.ToString() }
+                        });
                 }
             }
 

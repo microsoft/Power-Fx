@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, untypedObject.GetType().ToString());
             }
         }
 
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
             }
             catch (NotImplementedException)
             {
-                return CommonErrors.NotYetImplementedError(context, $"Class {untypedObject.GetType()} does not implement 'SetProperty'.");
+                return CommonErrors.UntypedObjectDoesNotImplementSetPropertyError(context, untypedObject.GetType().ToString());
             }
         }
     }

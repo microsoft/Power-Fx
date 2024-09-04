@@ -186,5 +186,18 @@ namespace Microsoft.PowerFx.Types
                 return null;
             }
         }
+
+        /// <summary>
+        /// Primarily used for optimizing delegation when looking up record with primary key on a relationship. 
+        /// e.g. LookUp(t1, relationField.PrimaryKey = GUID).
+        /// </summary>
+        /// <param name="primaryKeyFieldName"></param>
+        /// <returns></returns>
+        [Obsolete("preview")]
+        public virtual bool TryGetPrimaryKeyFieldName(out string primaryKeyFieldName)
+        {
+            primaryKeyFieldName = null;
+            return false;
+        }
     }
 }

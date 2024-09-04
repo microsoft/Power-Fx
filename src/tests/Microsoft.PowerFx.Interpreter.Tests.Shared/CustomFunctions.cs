@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
 
             var errorResult = engine.Eval("CustomFunctionError(-1)");
             Assert.IsType<ErrorValue>(errorResult);
-            Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
+            Assert.Equal("An exception has been thrown: arg should be greater than 0", ((ErrorValue)errorResult).Errors.First().Message);
 
             Assert.Throws<AggregateException>(() => engine.Eval("CustomFunctionError(0)"));
 
@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("TestCustom(1/0,true,\"test\")", null, true, "Invalid operation: division by zero.")]
 
         // With Blanks() as arg where expected arg is not a number or a string, Blank() will generate type mismatch error.
-        [InlineData("TestCustom(0, If(false,true), \"test\")", null, true, "Runtime type mismatch")]
+        [InlineData("TestCustom(0, If(false,true), \"test\")", null, true, "Runtime type mismatch.")]
 
         // With Blanks() as arg where expected arg is number, Blank() will be coerced to 0.
         [InlineData("TestCustom(If(false,12),true,\"test\")", "0,True,test", false, null)]
