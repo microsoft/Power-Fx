@@ -755,11 +755,11 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     if (IsMatch(qualifiedName, intellisenseData.MatchingStr))
                     {
-                        AddFunctionOverloads(qualifiedName, intellisenseData.Suggestions, new IntellisenseSuggestion(function, intellisenseData.BoundTo, new UIString(qualifiedName, 0, highlightEnd)));
+                        AddFunctionOverloads(qualifiedName, intellisenseData.Suggestions, new IntellisenseSuggestion(function, intellisenseData.BoundTo, new UIString(qualifiedName, 0, highlightEnd), intellisenseData.Locale));
                     }
                     else if (highlightStart > -1)
                     {
-                        AddFunctionOverloads(qualifiedName, intellisenseData.SubstringSuggestions, new IntellisenseSuggestion(function, intellisenseData.BoundTo, new UIString(qualifiedName, highlightStart, highlightStart + highlightEnd)));
+                        AddFunctionOverloads(qualifiedName, intellisenseData.SubstringSuggestions, new IntellisenseSuggestion(function, intellisenseData.BoundTo, new UIString(qualifiedName, highlightStart, highlightStart + highlightEnd), intellisenseData.Locale));
                     }
                 }
             }
