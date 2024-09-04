@@ -158,8 +158,8 @@ namespace Microsoft.PowerFx.Intellisense
             IsTypeMatch = false;
         }
 
-        public IntellisenseSuggestion(TexlFunction function, string exactMatch, UIString displayText)
-            : this(displayText, SuggestionKind.Function, SuggestionIconKind.Function, function.VerifyValue().ReturnType, exactMatch, -1, function.Description, function.VerifyValue().Name, 0)
+        public IntellisenseSuggestion(TexlFunction function, string exactMatch, UIString displayText, CultureInfo locale = null)
+            : this(displayText, SuggestionKind.Function, SuggestionIconKind.Function, function.VerifyValue().ReturnType, exactMatch, -1, function.GetDescription(locale.Name), function.VerifyValue().Name, 0)
         {
             Contracts.AssertValue(function);
 
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 funcDisplayString.Append(')');
-                _overloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString()), SuggestionKind.Function, SuggestionIconKind.Function, function.VerifyValue().ReturnType, exactMatch, count, function.Description, function.Name, 0));
+                _overloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString()), SuggestionKind.Function, SuggestionIconKind.Function, function.VerifyValue().ReturnType, exactMatch, count, function.GetDescription(locale.Name), function.Name, 0));
             }
         }
 
