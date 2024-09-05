@@ -1,0 +1,141 @@
+{
+  "name": "TeamCalendarCollection",
+  "title": "TeamCalendarCollection",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": {
+      "sortable": true,
+      "unsortableProperties": [],
+      "ascendingOnlyProperties": []
+    },
+    "filterRestrictions": {
+      "filterable": true,
+      "nonFilterableProperties": [],
+      "requiredProperties": []
+    },
+    "selectRestrictions": { "selectable": true },
+    "isOnlyServerPagable": true,
+    "filterFunctionSupport": [ "eq", "ne" ],
+    "serverPagingOptions": [ "skiptoken" ]
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "PERNR": {
+          "title": "PERNR",
+          "description": "Personnel No.",
+          "type": "string",
+          "required": [ "PERNR" ]
+        },
+        "EVENT_NAME": {
+          "title": "EVENT_NAME",
+          "description": "",
+          "type": "string"
+        },
+        "BEGIN_DATE": {
+          "title": "BEGIN_DATE",
+          "description": "Date",
+          "type": "string"
+        },
+        "END_DATE": {
+          "title": "END_DATE",
+          "description": "Date",
+          "type": "string"
+        },
+        "DESCRIPTION": {
+          "title": "DESCRIPTION",
+          "description": "",
+          "type": "string"
+        },
+        "LEGENDID": {
+          "title": "LEGENDID",
+          "description": "",
+          "type": "string"
+        },
+        "LEGEND": {
+          "title": "LEGEND",
+          "description": "",
+          "type": "string"
+        },
+        "LEGEND_TEXT": {
+          "title": "LEGEND_TEXT",
+          "description": "",
+          "type": "string"
+        },
+        "FLAG": {
+          "title": "FLAG",
+          "description": "",
+          "type": "string"
+        },
+        "TYPE": {
+          "title": "TYPE",
+          "description": "",
+          "type": "string"
+        },
+        "APP_MODE": {
+          "title": "APP_MODE",
+          "description": "Application Mode",
+          "type": "string"
+        },
+        "ALL_EMPLOYEES": {
+          "title": "ALL_EMPLOYEES",
+          "description": "Single-Character Flag",
+          "type": "string"
+        },
+        "COMMAND": {
+          "title": "COMMAND",
+          "description": "ESS Command",
+          "type": "string"
+        },
+        "EMP_PERNR": {
+          "title": "EMP_PERNR",
+          "description": "Personnel No.",
+          "type": "string"
+        },
+        "HIDE_PEERS": {
+          "title": "HIDE_PEERS",
+          "description": "Single-Character Flag",
+          "type": "string"
+        },
+        "PERNR_MEM_ID": {
+          "title": "PERNR_MEM_ID",
+          "description": "",
+          "type": "string"
+        },
+        "BEGIN_DATE_CHAR": {
+          "title": "BEGIN_DATE_CHAR",
+          "description": "char8",
+          "type": "string"
+        },
+        "END_DATE_CHAR": {
+          "title": "END_DATE_CHAR",
+          "description": "char8",
+          "type": "string"
+        },
+        "GetMessages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PERNR": {
+                "title": "PERNR",
+                "description": "Personnel No.",
+                "type": "string",
+                "required": [ "PERNR" ]
+              },
+              "MESSAGE": {
+                "title": "MESSAGE",
+                "description": "",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [ "PERNR" ]
+    }
+  },
+  "webUrl": "https://f5de196a-41e6-ee09-92cf-664b4f31a6b2.06.common.tip1002.azure-apihub.net/apim/sapodata/66108f1684944d4994ea38b13d1ee70f/$metadata.json/datasets/http%253a%252f%252fsapecckerb.roomsofthehouse.com%253a8080%252fsap%252fopu%252fodata%252fsap%252fHRESS_TEAM_CALENDAR_SERVICE/tables/TeamCalendarCollection?api-version=2015-09-01"
+}
