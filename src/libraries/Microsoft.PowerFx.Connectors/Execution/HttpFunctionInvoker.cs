@@ -436,7 +436,9 @@ namespace Microsoft.PowerFx.Connectors
             if (statusCode < 300)
             {
                 // We only return UO for unknown fields (not declared in swagger file) if compatibility is SwaggerCompatibility
-                bool returnUnknownRecordFieldAsUO = _function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility && _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
+                bool returnUnknownRecordFieldAsUO = (_function.ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility || 
+                                                     _function.ConnectorSettings.Compatibility == ConnectorCompatibility.CdpCompatibility) && 
+                                                     _function.ConnectorSettings.ReturnUnknownRecordFieldsAsUntypedObjects;
 
                 var typeToUse = _function.ReturnType;
                 if (returnTypeOverride != null)

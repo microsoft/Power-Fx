@@ -432,21 +432,22 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte": // Base64 string
                         case "binary": // octet stream
                             return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
-
-                        case "enum":
-                            if (schema.Enum.All(e => e is OpenApiString))
-                            {
-                                OptionSet optionSet = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
-                            }
-                            else
-                            {
-                                return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}");
-                            }
-
-                        default:
-                            return new ConnectorType(schema, openApiParameter, FormulaType.String);
                     }
+
+                    if (schema.Enum != null && (settings.Compatibility == ConnectorCompatibility.CdpCompatibility || schema.Format == "enum"))
+                    {
+                        if (schema.Enum.All(e => e is OpenApiString))
+                        {
+                            OptionSet optionSet = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                            return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
+                        }
+                        else
+                        {
+                            return new ConnectorType(error: $"Unsupported enum type {schema.Enum.GetType().Name}");
+                        }
+                    }
+
+                    return new ConnectorType(schema, openApiParameter, FormulaType.String);
 
                 // OpenAPI spec: Format could be float, double, or not specified.
                 // we assume not specified implies decimal
@@ -572,7 +573,8 @@ namespace Microsoft.PowerFx.Connectors
 
                                     hiddenRequired = true;
                                 }
-                                else if (settings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                else if (settings.Compatibility == ConnectorCompatibility.SwaggerCompatibility ||
+                                         settings.Compatibility == ConnectorCompatibility.CdpCompatibility)
                                 {
                                     continue;
                                 }

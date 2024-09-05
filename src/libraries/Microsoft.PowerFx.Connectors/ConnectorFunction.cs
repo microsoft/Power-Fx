@@ -1378,7 +1378,8 @@ namespace Microsoft.PowerFx.Connectors
                         // Ex: Api-Version
                         hiddenRequired = true;
                     }
-                    else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                    else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility || 
+                             ConnectorSettings.Compatibility == ConnectorCompatibility.CdpCompatibility)
                     {
                         continue;
                     }
@@ -1448,7 +1449,8 @@ namespace Microsoft.PowerFx.Connectors
 
                                             bodyPropertyHiddenRequired = ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility || !requestBody.Required;
                                         }
-                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility || 
+                                                 ConnectorSettings.Compatibility == ConnectorCompatibility.CdpCompatibility)
                                         {
                                             continue;
                                         }
