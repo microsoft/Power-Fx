@@ -434,7 +434,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
                     }
 
-                    if (schema.Enum != null && (settings.Compatibility == ConnectorCompatibility.CdpCompatibility || schema.Format == "enum"))
+                    if (schema.Enum != null && (settings.Compatibility.IsCDP() || schema.Format == "enum"))
                     {
                         if (schema.Enum.All(e => e is OpenApiString))
                         {
@@ -573,8 +573,7 @@ namespace Microsoft.PowerFx.Connectors
 
                                     hiddenRequired = true;
                                 }
-                                else if (settings.Compatibility == ConnectorCompatibility.SwaggerCompatibility ||
-                                         settings.Compatibility == ConnectorCompatibility.CdpCompatibility)
+                                else if (settings.Compatibility.ExcludeInternals())
                                 {
                                     continue;
                                 }
@@ -1155,5 +1154,15 @@ namespace Microsoft.PowerFx.Connectors
 
             return null;
         }
+
+        internal static bool ExcludeInternals(this ConnectorCompatibility compatibility) => compatibility == ConnectorCompatibility.SwaggerCompatibility ||
+                                                                                            compatibility == ConnectorCompatibility.CdpCompatibility;
+
+        internal static bool IsPowerAppsCompliant(this ConnectorCompatibility compatibility) => compatibility == ConnectorCompatibility.PowerAppsCompatibility;
+
+        internal static bool IncludeUntypedObjects(this ConnectorCompatibility compatibility) => compatibility == ConnectorCompatibility.SwaggerCompatibility ||
+                                                                                                 compatibility == ConnectorCompatibility.CdpCompatibility;
+
+        internal static bool IsCDP(this ConnectorCompatibility compatibility) => compatibility == ConnectorCompatibility.CdpCompatibility;
     }
 }

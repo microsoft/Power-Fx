@@ -1378,8 +1378,7 @@ namespace Microsoft.PowerFx.Connectors
                         // Ex: Api-Version
                         hiddenRequired = true;
                     }
-                    else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility || 
-                             ConnectorSettings.Compatibility == ConnectorCompatibility.CdpCompatibility)
+                    else if (ConnectorSettings.Compatibility.ExcludeInternals())
                     {
                         continue;
                     }
@@ -1447,10 +1446,9 @@ namespace Microsoft.PowerFx.Connectors
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility || !requestBody.Required;
+                                            bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
                                         }
-                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility || 
-                                                 ConnectorSettings.Compatibility == ConnectorCompatibility.CdpCompatibility)
+                                        else if (ConnectorSettings.Compatibility.ExcludeInternals())
                                         {
                                             continue;
                                         }
@@ -1537,7 +1535,7 @@ namespace Microsoft.PowerFx.Connectors
             // Required params are first N params in the final list, "in" parameters first.
             // Optional params are fields on a single record argument at the end.
             // Hidden required parameters do not count here
-            _requiredParameters = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
+            _requiredParameters = ConnectorSettings.Compatibility.IsPowerAppsCompliant() ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
             _optionalParameters = optionalParameters.ToArray();
             _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
             _arityMin = _requiredParameters.Length;
