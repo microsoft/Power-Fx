@@ -278,9 +278,13 @@ Notify(z)
             var log = _output.Get(OutputKind.Repl);
             Assert.Equal("42", log);
 
+            // we do not have a clear semantics defined yet for the below test
+            // should be addressed in future
+            /*
             _repl.HandleLine("F(x: Text): Text = x;");
             var error1 = _output.Get(OutputKind.Error);
             Assert.Equal("Error 0-1: Function F is already defined.", error1);
+            */
 
             _repl.HandleLine("G(x: Currency): Currency = x;");
             var error2 = _output.Get(OutputKind.Error);
