@@ -520,6 +520,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool ArgIsType(int argIndex)
         {
+            Contracts.Assert(!HasTypeArgs);
             return false;
         }
 

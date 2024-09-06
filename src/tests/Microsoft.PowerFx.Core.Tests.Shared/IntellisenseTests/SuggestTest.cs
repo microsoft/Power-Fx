@@ -579,15 +579,19 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
         [InlineData("ParseJSON(\"42\", Nu|", "Number")]
         [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
-        [InlineData("IsType(ParseJSON(\"42\"),|", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
         [InlineData("ParseJSON(\"42\", Voi|")]
         [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
         [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
+        [InlineData("ParseJSON(\"42\", My|", "'My Type With Space'", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", So|", "'Some \" DQuote'")]
         public void TypeArgumentsTest(string expression, params string[] expected)
         {
             var symbolTable = SymbolTable.WithPrimitiveTypes();
 
             symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
+            symbolTable.AddType(new DName("My Type With Space"), FormulaType.String);
+            symbolTable.AddType(new DName("Some \" DQuote"), FormulaType.String);
             symbolTable.AddFunctions(new TexlFunctionSet(BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs).ToArray()));
             symbolTable.AddFunctions(new TexlFunctionSet(new[] { BuiltinFunctionsCore.ParseJSON }));
 

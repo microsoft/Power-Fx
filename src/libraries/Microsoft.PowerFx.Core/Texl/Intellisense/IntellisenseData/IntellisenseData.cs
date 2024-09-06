@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </returns>
         internal virtual SuggestionKind GetFunctionSuggestionKind(TexlFunction function, int argumentIndex)
         {
-            if (function.HasTypeArgs && function.ArgIsType(argumentIndex))
+            if (function.ArgIsType(argumentIndex))
             {
                 return SuggestionKind.Type;
             }
