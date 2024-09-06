@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx
 
         public DefinitionsCheckResult()
         {
-            _localSymbolTable = new SymbolTable();
+            _localSymbolTable = new SymbolTable { DebugName = "LocalUserDefinitions" };
         }
 
         internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
@@ -158,22 +158,7 @@ namespace Microsoft.PowerFx
             {
                 _userDefinedFunctions = new TexlFunctionSet();
 
-                var validUdfs = new List<UDF>();
-
-                foreach (var udf in _parse.UDFs.Where(udf => udf.IsParseValid))
-                {
-                    if (_symbols.Functions.WithName(udf.Ident.Name).Any(func => func is UserDefinedFunction))
-                    {
-                        var err = new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udf.Ident.Name);
-                        _errors.Add(ExpressionError.New(err, _defaultErrorCulture));
-                    }
-                    else
-                    {
-                        validUdfs.Add(udf);
-                    }
-                }
-
-                var partialUDFs = UserDefinedFunction.CreateFunctions(validUdfs, _symbols, out var errors);
+                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), _symbols, out var errors);
 
                 if (errors.Any())
                 {
