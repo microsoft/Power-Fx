@@ -3073,6 +3073,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
+                if (_txb.BindingConfig.MarkAsAsyncOnLazilyLoadedControlRef && 
+                    lookupType.IsControl && 
+                    lookupInfo.Data is IExternalControl control &&
+                    !control.IsAppGlobalControl)
+                {
+                    _txb.FlagPathAsAsync(_txb.Top);
+                }
+
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
@@ -4891,7 +4899,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var call = _txb.GetInfo(node).VerifyValue();
                 var func = call.Function;
-                if (func == null || func.IsSelfContained)
+                if (func == null || func.IsSelfContained || (func is UserDefinedFunction udf && udf.Binding == null))
                 {
                     return false;
                 }

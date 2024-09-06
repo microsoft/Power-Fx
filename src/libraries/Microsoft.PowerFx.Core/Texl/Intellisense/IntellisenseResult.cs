@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Intellisense
                         var signatureInformation = new SignatureInformation()
                         {
                             // Use overload description and not IntellisenseData.CurrFunc overload
-                            Documentation = !string.IsNullOrWhiteSpace(possibleOverload?.Description) ? possibleOverload.Description : func.Description,
+                            Documentation = !string.IsNullOrWhiteSpace(possibleOverload?.GetDescription(data.Locale?.Name)) ? possibleOverload.GetDescription(data.Locale?.Name) : func.GetDescription(data.Locale?.Name),
                             GetDisclaimerMarkdown = possibleOverload.ShowAIDisclaimer ? aiDisclaimer : null,
                             Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
                             Parameters = parameters.ToArray(),
@@ -172,13 +172,13 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     var signatureInformation = new SignatureInformation()
                     {
-                        Documentation = func.Description,
+                        Documentation = func.GetDescription(data.Locale?.Name),
                         GetDisclaimerMarkdown = func.ShowAIDisclaimer ? aiDisclaimer : null,
                         Label = CreateFunctionSignature(func.Name),
                         Parameters = new ParameterInformation[0],
                     };
                     functionSignatures.Add(signatureInformation);
-                    functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.Description, func.Name));
+                    functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.GetDescription(data.Locale?.Name), func.Name));
                     CurrentFunctionOverloadIndex = 0;
                 }
             }

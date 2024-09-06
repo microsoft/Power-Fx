@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -426,9 +426,9 @@ namespace Microsoft.PowerFx.Functions
                     // e.g. Concatenate(["a"],["1","2"] => ["a1", <error>]
                     var namedErrorValue = new NamedValue(columnNameStr, FormulaValue.NewError(new ExpressionError()
                     {
+                        ResourceKey = RuntimeStringResources.ErrNotApplicable,
                         Kind = ErrorKind.NotApplicable,
                         Severity = ErrorSeverity.Critical,
-                        Message = "Not Applicable"
                     }));
                     var errorRecord = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedErrorValue });
                     var errorRowCount = maxTableSize - minTableSize;
@@ -834,9 +834,10 @@ namespace Microsoft.PowerFx.Functions
 
                     errors.Add(new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = $"Arguments to the {functionName} function must be finite.",
+                        ResourceKey = RuntimeStringResources.ErrNonFiniteArgument,
                         Span = irContext.SourceContext,
-                        Kind = ErrorKind.Numeric
+                        Kind = ErrorKind.Numeric,
+                        MessageArgs = new object[] { functionName }
                     }));
                 }
             }
@@ -855,9 +856,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"The function {functionName} returned a non-finite number.",
+                    ResourceKey = RuntimeStringResources.ErrNonFiniteResult,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.Numeric
+                    Kind = ErrorKind.Numeric,
+                    MessageArgs = new object[] { functionName }
                 });
             }
 
@@ -900,7 +902,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var number = numberArg.Value;
                 if (number <= 0)
-                {
+                { 
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
