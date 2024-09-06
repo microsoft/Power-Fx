@@ -1,0 +1,19 @@
+{
+  "@odata.context": "https://f5de196a-41e6-ee09-92cf-664b4f31a6b2.06.common.tip1002.azure-apihub.net/apim/sapodata/66108f1684944d4994ea38b13d1ee70f/datasets/http%253a%252f%252fsapecckerb.roomsofthehouse.com%253a8080%252fsap%252fopu%252fodata%252fsap%252fHRESS_TEAM_CALENDAR_SERVICE/tables",
+  "value": [
+    {
+      "Name": "TeamCalendarCollection",
+      "DisplayName": "TeamCalendarCollection",
+      "tables": [],
+      "procedures": [],
+      "query": []
+    },
+    {
+      "Name": "TeamCalMessagesCollection",
+      "DisplayName": "TeamCalMessagesCollection",
+      "tables": [],
+      "procedures": [],
+      "query": []
+    }
+  ]
+}
