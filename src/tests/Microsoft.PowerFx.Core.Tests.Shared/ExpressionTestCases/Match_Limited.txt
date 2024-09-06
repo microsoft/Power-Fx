@@ -246,6 +246,9 @@ Errors: Error 22-36: Invalid regular expression: Conditional alternation is not 
 // >> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )
 // {FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"b"})}
 
+>> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )
+{FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"})}
+
 >> Match( "aba", "^(a(b)?)+$" )
 {FullMatch:"aba",StartMatch:1}
 
@@ -310,7 +313,7 @@ Errors: Error 13-19: Invalid regular expression: Literal square braces must be e
 // character class subtraction
 
 >> Match( "k", "[a-z-[b-c]]" )
-Errors: Error 12-25: Invalid regular expression: Character class subtraction is not supported, found "-[b-c]...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 12-25: Invalid regular expression: Character class subtraction is not supported, found "-[b-c...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // repeated characters in character class, used by intersection and future character class features, also would catch POSIX cases if wasn't already blocked by nested square brackets
 
@@ -507,7 +510,7 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\_"
 // negated escape class and \b can't appear in a character classes, can't easily transpile without character class subtraction or intersection in ECMAScript
 
 >> Match( "$test" & Char(8) & "test", "[\b]test" )  
-Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\b]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\b]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\B]test" )  
 Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\B]te...".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -519,10 +522,10 @@ Errors: Error 21-28: Invalid regular expression: Escape character not permitted 
 Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\W]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\S]test" )  
-Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\S]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\S]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "foo123test456", "[\P{L}]+" )  // would be problematic if we wanted to implement MatchOptions.LocaleAware in the future
-Errors: Error 24-34: Invalid regular expression: Escape character not permitted within character class, found "[\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-34: Invalid regular expression: Escape character not permitted within character class, found "\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\w]test" )  // \w is OK
 Blank()
@@ -800,3 +803,24 @@ Errors: Error 22-30: Invalid regular expression: Invalid escape code, found "\a"
 
 >> Match( "test\123bed", "\\(\d)" )
 {FullMatch:"\1",StartMatch:5}
+
+>> IsMatch( "abc", "[-a]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, found "[-".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[a-]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, found "-]".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[a-b]+c" )
+true
+
+>> IsMatch( "abc", "(a)[\1]")
+Errors: Error 16-25: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "(?<c>a)[\k<c>]")
+Errors: Error 16-32: Invalid regular expression: Backref in character class, found "\k<c>".|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc", "[(]")
+Errors: Error 16-21: Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch( "abc()", "[\(]", MatchOptions.Contains )
+true

@@ -185,15 +185,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodEscape>\\
                            ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             p\{\w+\}                               |     # unicode character classes
-                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/|\#|\ ] |     # acceptable escaped characters with Unicode aware ECMAScript with # and space for Free Spacing
+                            [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/\#\ ]   |     # acceptable escaped characters with Unicode aware ECMAScript with # and space for Free Spacing
                             c[a-zA-Z]                              |     # Ctrl character classes
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
-                    (?<goodEscapeOutside>\\([bBWDS]|P\{\w+\}))         | # acceptable outside a character class, but not within
+                    (?<goodEscapeOutside>\\([bBWDS]|P\{\w+\}))         | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
+                    (?<goodEscapeInside>\\[\-])                        | # needed for /v compatibility with ECMAScript
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                                                                     
                     # leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
+                    (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
@@ -202,7 +204,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
                     \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
-                    (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
 
@@ -217,6 +218,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodLimited>{\d+(,\d*)?}\??)                    | # standard limited quantifiers
                     (?<badLimited>{\d+(,\d*)?}[\+|\*])                 | # possessive and useless quantifiers
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
+
+                    (?<badHyphen>\[\-|\-\])                            | # literal not allowed within character class, needs to be escaped (ECMAScript v)
 
                     # open and close regions
                     (?<openParen>\()                                   |
@@ -250,7 +253,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // ordered from most common/good to least common/bad, for fewer tests
                     if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success ||
-                        token.Groups["goodLookaround"].Success || token.Groups["goodLimited"].Success)
+                        token.Groups["goodLimited"].Success)
                     {
                         // all is well, nothing to do
                     }
@@ -258,7 +261,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (openCharacterClass)
                         {
-                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeWithinCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 6) + "...");
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeInsideCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodEscapeInside"].Success)
+                    {
+                        if (!openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
                             return false;
                         }
                     }
@@ -268,7 +279,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             if (token.Index > 0 && regexPattern[token.Index - 1] == '-')
                             {
-                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadUnsupportedCharacterClassSubtraction, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 6) + "...");
+                                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadUnsupportedCharacterClassSubtraction, token.Index - 1 >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index - 1) : regexPattern.Substring(token.Index - 1, 5) + "...");
                                 return false;
                             }
                             else
@@ -297,7 +308,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             // for example, see https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
                             for (int i = openCharacterClassStart; i < token.Index - 1; i++)
                             {
-                                if (regexPattern[i] == regexPattern[i + 1] && "-|&~+?!@#$%^=:;".Contains(regexPattern[i]))
+                                if (regexPattern[i] == regexPattern[i + 1] && "-|&~+?!@#$%^=:;<>*,.`".Contains(regexPattern[i]))
                                 {
                                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExRepeatInCharClass, regexPattern.Substring(i, 2));
                                     return false;
@@ -333,7 +344,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             captureNames.Add(token.Groups["goodNamedCapture"].Value);
                         }
                     }
-                    else if (token.Groups["goodNonCapture"].Success)
+                    else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
                     {
                         // parens do not need to be escaped within square brackets
                         if (!openCharacterClass)
@@ -343,9 +354,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["openParen"].Success)
                     {
-                        // parens do not need to be escaped within square brackets
-                        if (!openCharacterClass)
+                        if (openCharacterClass)
                         {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnescapedParensInCharacterClass);
+                            return false;
+                        }
+                        else
+                        { 
                             if (numberedCpature)
                             {
                                 captureNumber++;
@@ -359,8 +374,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["closeParen"].Success)
                     {
-                        // parens do not need to be escaped within square brackets
-                        if (!openCharacterClass)
+                        if (openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnescapedParensInCharacterClass);
+                            return false;
+                        }
+                        else
                         {
                             if (captureStack.Count == 0)
                             {
@@ -380,6 +399,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (numberedCpature)
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches, token.Value);
+                            return false;
+                        }
+
+                        if (openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBackRefInCharacterClass, token.Value);
                             return false;
                         }
 
@@ -404,6 +429,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (!numberedCpature)
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled, token.Value);
+                            return false;
+                        }
+
+                        if (openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBackRefInCharacterClass, token.Value);
                             return false;
                         }
 
@@ -507,6 +538,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (token.Groups["badParen"].Success)
                     {
                         errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadParen, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
+                        return false;
+                    }
+                    else if (token.Groups["badHyphen"].Success)
+                    {
+                        errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExLiteralHyphenInCharacterClass, token.Value);
                         return false;
                     }
                     else

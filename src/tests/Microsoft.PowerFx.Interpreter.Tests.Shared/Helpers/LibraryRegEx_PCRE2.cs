@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Functions
                 IntPtr matchContext = (IntPtr)0;
                 IntPtr generalContext = (IntPtr)0;
 
-                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UCP;
+                PCRE2_OPTIONS pcreOptions = PCRE2_OPTIONS.UTF | PCRE2_OPTIONS.UCP;
                 RegexOptions options = RegexOptions.None;
 
                 Match inlineOptions = Regex.Match(pattern, @"^\(\?([imnsx]+)\)");

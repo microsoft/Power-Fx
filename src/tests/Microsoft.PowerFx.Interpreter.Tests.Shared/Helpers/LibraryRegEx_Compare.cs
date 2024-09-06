@@ -56,11 +56,15 @@ namespace Microsoft.PowerFx.Functions
 
         internal abstract class Compare_CommonImplementation : Library.RegexCommonImplementation
         {
+            protected Library.RegexCommonImplementation dotnet;
             protected Library.RegexCommonImplementation node;
             protected Library.RegexCommonImplementation pcre2;
-            protected Library.RegexCommonImplementation dotnet;
 
-            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
+            protected Library.RegexCommonImplementation dotnet_alt;
+            protected Library.RegexCommonImplementation node_alt;
+            protected Library.RegexCommonImplementation pcre2_alt;
+
+            private FormulaValue InvokeRegexFunctionOne(string input, string regex, string options, Library.RegexCommonImplementation dotnet, Library.RegexCommonImplementation node, Library.RegexCommonImplementation pcre2, string kind)
             {
                 var nodeMatch = node.InvokeRegexFunction(input, regex, options);
                 var nodeExpr = nodeMatch.ToExpression();
@@ -73,15 +77,27 @@ namespace Microsoft.PowerFx.Functions
 
                 if (nodeExpr != dotnetExpr)
                 {
-                    throw new Exception($"node != net on input='{input}', re='{regex}', options='{options}', \n  node='{nodeExpr}', \n  net='{dotnetExpr}'");
+                    throw new Exception($"{kind}: node != net on input='{input}', re='{regex}', options='{options}',\n  net='{dotnetExpr}',\n  node='{nodeExpr}',\n  pcre2='{pcre2Expr}'");
                 }
 
                 if (pcre2Expr != dotnetExpr)
                 {
-                    throw new Exception($"pcre2 != net on input='{input}', re='{regex}', options='{options}', \n  pcre2='{pcre2Expr}', \n  net='{dotnetExpr}'");
+                    throw new Exception($"{kind}: pcre2 != net on input='{input}', re='{regex}', options='{options}',\n  net='{dotnetExpr}',\n  node='{nodeExpr}',\n  pcre2='{pcre2Expr}'");
                 }
 
                 return dotnetMatch;
+            }
+
+            internal override FormulaValue InvokeRegexFunction(string input, string regex, string options)
+            {
+                var result = InvokeRegexFunctionOne(input, regex, options, dotnet, node, pcre2, "main");
+
+                if (dotnet_alt != null)
+                {
+                    InvokeRegexFunctionOne(input, regex, options, dotnet_alt, node_alt, pcre2_alt, "alt");
+                }
+
+                return result;
             }
         }
 
@@ -94,6 +110,10 @@ namespace Microsoft.PowerFx.Functions
                 node = new NodeJS_IsMatchImplementation(regexTimeout);
                 pcre2 = new PCRE2_IsMatchImplementation(regexTimeout);
                 dotnet = new Library.IsMatchImplementation(regexTimeout);
+
+                node_alt = new NodeJS_MatchImplementation(regexTimeout);
+                pcre2_alt = new PCRE2_MatchImplementation(regexTimeout);
+                dotnet_alt = new Library.MatchImplementation(regexTimeout);
             }
         }
 

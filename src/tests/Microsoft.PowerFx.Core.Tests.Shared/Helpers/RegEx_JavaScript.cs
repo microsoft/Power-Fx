@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Functions
 
                 // rebuilding from booleans avoids possible duplicate letters
                 // x has been handled in this function and does not need to be passed on (and would cause an error)
-                const alteredFlags = 'u'.concat((ignoreCase ? 'i' : ''), (multiline ? 'm' : ''), (dotAll ? 's' : ''));  
+                const alteredFlags = 'v'.concat((ignoreCase ? 'i' : ''), (multiline ? 'm' : ''), (dotAll ? 's' : ''));  
 
                 var openCharacterClass = false;       // are we defining a character class?
                 var altered = '';
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Functions
                                         altered = altered.concat('[^', digitChar, ']');
                                         break;
 
-                                    // needed for free spacing
+                                    // needed for free spacing, needs to be unescaped to avoid /v error
                                     case '#': case ' ':
                                         altered = altered.concat(regex.charAt(index));
                                         break;

@@ -278,8 +278,8 @@ namespace Microsoft.PowerFx.Functions
                                     // skip the comment characters until the next closing paren, in case it includes [ ] 
                                 }
 
-                                // need something to be emitted to avoid "\1(?:)1" being interpreted as "\11"
-                                altered.Append("(?:)");
+                                // need something to be emitted to avoid "\1(?#)1" being interpreted as "\11"
+                                altered.Append("(?#)");
                             }
                             else
                             {

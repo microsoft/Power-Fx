@@ -4449,9 +4449,13 @@
     <value>Invalid regular expression: Unsupported special group, found "{0}".</value>
     <comment>Error message indicating that the regular expression that starts with a paren.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBadEscapeWithinCharacterClass_ShortMessage" xml:space="preserve">
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Escape character not permitted within character class, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character within a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Escape character not permitted outside a character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character outside a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
@@ -4544,6 +4548,18 @@
   <data name="ErrorResource_ErrInvalidRegExOpenParenInComment_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Inline comments cannot include open parenthesis, found in "{0}".</value>
     <comment>Error message indicating that the regular expression has an open paren in an inline comment.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has a hyphen in a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Backref in character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has a backref in a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedParensInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class.</value>
+    <comment>Error message indicating that the regular expression has an unescaped paren within a character class.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>

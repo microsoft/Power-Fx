@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #if true
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
-        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.a
+        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.ababceeefeeerwee
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport", "RegEx")]
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)
@@ -166,12 +166,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt deefee
         [Fact]
         public void RunOne()
         {
-            var path = @"d:\repos\regex-min-7\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_comments.txt";
+            var path = @"d:\repos\regex-min-7\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\match_pcre2.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

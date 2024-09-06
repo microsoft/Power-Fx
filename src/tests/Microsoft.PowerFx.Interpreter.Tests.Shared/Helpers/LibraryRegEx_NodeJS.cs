@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Functions
                                 var val = match.groups[group];
                                 if (val !== undefined)
                                 {
-                                    val = '""' + val.replace( / "" /, '""""') + '""'
+                                    val = '""' + val.replace( /""/g, '""""') + '""'
                                 }
                                 console.log(group + ':' + val);
                             }
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Functions
                                 var val = match[num];
                                 if (val !== undefined)
                                 {
-                                    val = '""' + val.replace( / "" /, '""""') + '""'
+                                    val = '""' + val.replace( /""/g, '""""') + '""'
                                 }
                                 console.log(num + ':' + val);
                             }

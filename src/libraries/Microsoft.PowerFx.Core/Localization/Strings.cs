@@ -737,7 +737,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadCurly = new ErrorResourceKey("ErrInvalidRegExBadCurly");
         public static ErrorResourceKey ErrInvalidRegExBadSquare = new ErrorResourceKey("ErrInvalidRegExBadSquare");
         public static ErrorResourceKey ErrInvalidRegExBadParen = new ErrorResourceKey("ErrInvalidRegExBadParen");
-        public static ErrorResourceKey ErrInvalidRegExBadEscapeWithinCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeWithinCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeOutsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeOutsideCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExRepeatInCharClass = new ErrorResourceKey("ErrInvalidRegExRepeatInCharClass");
         public static ErrorResourceKey ErrInvalidRegExRepeatedInlineOption = new ErrorResourceKey("ErrInvalidRegExRepeatedInlineOption");
         public static ErrorResourceKey ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches");
@@ -761,6 +762,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExNumberedSubMatchesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedSubMatchesDisabled");
         public static ErrorResourceKey ErrInvalidRegExBadUnsupportedCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadUnsupportedCharacterClassSubtraction");
         public static ErrorResourceKey ErrInvalidRegExOpenParenInComment = new ErrorResourceKey("ErrInvalidRegExOpenParenInComment");
+        public static ErrorResourceKey ErrInvalidRegExLiteralHyphenInCharacterClass = new ErrorResourceKey("ErrInvalidRegExLiteralHyphenInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBackRefInCharacterClass = new ErrorResourceKey("ErrInvalidRegExBackRefInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExUnescapedParensInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedParensInCharacterClass");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");
