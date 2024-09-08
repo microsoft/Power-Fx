@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
         /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
-        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility.
+        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or  ConnectorCompatibility.CdpCompatibility.
         /// </summary>
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
 
@@ -64,6 +64,11 @@ namespace Microsoft.PowerFx.Connectors
         // Swagger File Conformity
         // - parameters appear in the order specified in the swagger file
         // - internal visible parameters are completely hidden (required/optional, with or without default value)
-        SwaggerCompatibility = 2
+        SwaggerCompatibility = 2,
+
+        // Swagger File Conformity for CDP connectors
+        // - same as Swagger File Conformity
+        // - does not require format="enum" for identifying enumerations
+        CdpCompatibility = 3
     }
 }

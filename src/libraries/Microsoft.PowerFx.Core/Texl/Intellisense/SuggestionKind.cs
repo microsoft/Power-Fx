@@ -19,5 +19,6 @@ namespace Microsoft.PowerFx.Intellisense
         ServiceFunctionOption,
         Service,
         ScopeVariable,
+        Type,
     }
 }

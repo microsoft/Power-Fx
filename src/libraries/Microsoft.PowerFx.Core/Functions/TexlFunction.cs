@@ -520,6 +520,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public virtual bool ArgIsType(int argIndex)
         {
+            Contracts.Assert(!HasTypeArgs);
             return false;
         }
 
@@ -1654,7 +1655,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
                 Label = Name,
-                Detail = Description,
+                Detail = GetDescription(locale),
                 Signatures = GetSignatures().Select(signature => new FunctionSignature()
                 {
                     // $$$ can't use current culture
