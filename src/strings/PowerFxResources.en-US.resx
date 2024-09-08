@@ -4457,6 +4457,10 @@
     <value>Invalid regular expression: Escape character not permitted outside a character class, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character outside a character class.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadUnicodeCategory_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Invalid Unicode category name, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an invalid Unicode caategory name.</comment>
+  </data>  
   <data name="ErrorResource_ErrInvalidRegExRepeatedInlineOption_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Repeated inline option, found "{0}".</value>
     <comment>Error message indicating that the regular expression includes more than one of the same option.</comment>

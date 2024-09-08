@@ -765,6 +765,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExLiteralHyphenInCharacterClass = new ErrorResourceKey("ErrInvalidRegExLiteralHyphenInCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExBackRefInCharacterClass = new ErrorResourceKey("ErrInvalidRegExBackRefInCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExUnescapedParensInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedParensInCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadUnicodeCategory = new ErrorResourceKey("ErrInvalidRegExBadUnicodeCategory");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");
