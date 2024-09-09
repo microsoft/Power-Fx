@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 using MemoryStream memoryStream = new MemoryStream();
                 using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables);
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables, onlyOneLevel: flags.OnlyOneLevel);
 
                 _arguments[0].Visit(jsonWriterVisitor);
                 writer.Flush();
@@ -109,11 +109,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (optionString != null)
                     {
-                        flags.IgnoreBinaryData = optionString.Contains("G");
-                        flags.IgnoreUnsupportedTypes = optionString.Contains("I");
-                        flags.IncludeBinaryData = optionString.Contains("B");
-                        flags.IndentFour = optionString.Contains("4");
-                        flags.FlattenValueTables = optionString.Contains("_");
+                        flags.IgnoreBinaryData = optionString.Contains(_ignoreBinaryDataEnumValue);
+                        flags.IgnoreUnsupportedTypes = optionString.Contains(_ignoreUnsupportedTypesEnumValue);
+                        flags.IncludeBinaryData = optionString.Contains(_includeBinaryDataEnumValue);
+                        flags.IndentFour = optionString.Contains(_indentFourEnumValue);
+                        flags.FlattenValueTables = optionString.Contains(_flattenTableValuesEnumValue);
+                        flags.OnlyOneLevel = optionString.Contains(_onlyOneLevel);
                     }
                 }
 
@@ -132,14 +133,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
                 private readonly bool _flattenValueTables;
+                private readonly bool _onlyOneLevel;                               
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
+                private int _level = 0;
 
-                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables)
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables, bool onlyOneLevel)
                 {
                     _writer = writer;
                     _timeZoneInfo = timeZoneInfo;
                     _flattenValueTables = flattenValueTables;
+                    _onlyOneLevel = onlyOneLevel;
                 }
 
                 public void Visit(BlankValue blankValue)
@@ -256,10 +260,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartObject();
 
-                    foreach (NamedValue namedValue in recordValue.Fields)
+                    if (!_onlyOneLevel || _level < 1)
                     {
-                        _writer.WritePropertyName(namedValue.Name);
-                        namedValue.Value.Visit(this);
+                        _level++;
+                        
+                        foreach (NamedValue namedValue in recordValue.Fields)
+                        {
+                            _writer.WritePropertyName(namedValue.Name);
+                            namedValue.Value.Visit(this);
+                        }
+
+                        _level--;
                     }
 
                     _writer.WriteEndObject();
@@ -274,39 +285,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartArray();
 
-                    var isSingleColumnValueTable = false;
-                    if (_flattenValueTables)
+                    if (!_onlyOneLevel || _level < 1)
                     {
-                        var fieldTypes = tableValue.Type.GetFieldTypes();
-                        var firstField = fieldTypes.FirstOrDefault();
-                        if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == TexlFunction.ColumnName_ValueStr)
-                        {
-                            isSingleColumnValueTable = true;
-                        }
-                    }
+                        _level++;
 
-                    foreach (DValue<RecordValue> row in tableValue.Rows)
-                    {
-                        if (row.IsBlank)
+                        var isSingleColumnValueTable = false;
+                        if (_flattenValueTables)
                         {
-                            row.Blank.Visit(this);
-                        }
-                        else if (row.IsError)
-                        {
-                            row.Error.Visit(this);
-                        }
-                        else
-                        {
-                            if (isSingleColumnValueTable)
+                            var fieldTypes = tableValue.Type.GetFieldTypes();
+                            var firstField = fieldTypes.FirstOrDefault();
+                            if (firstField != null && !fieldTypes.Skip(1).Any() && firstField.Name.Value == TexlFunction.ColumnName_ValueStr)
                             {
-                                var namedValue = row.Value.Fields.First();
-                                namedValue.Value.Visit(this);
+                                isSingleColumnValueTable = true;
+                            }
+                        }
+
+                        foreach (DValue<RecordValue> row in tableValue.Rows)
+                        {
+                            if (row.IsBlank)
+                            {
+                                row.Blank.Visit(this);
+                            }
+                            else if (row.IsError)
+                            {
+                                row.Error.Visit(this);
                             }
                             else
                             {
-                                row.Value.Visit(this);
+                                if (isSingleColumnValueTable)
+                                {
+                                    var namedValue = row.Value.Fields.First();
+                                    namedValue.Value.Visit(this);
+                                }
+                                else
+                                {
+                                    row.Value.Visit(this);
+                                }
                             }
                         }
+
+                        _level--;
                     }
 
                     _writer.WriteEndArray();
@@ -352,6 +370,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 internal bool IndentFour = false;
 
                 internal bool FlattenValueTables = false;
+
+                internal bool OnlyOneLevel = false;
             }
 
             private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)

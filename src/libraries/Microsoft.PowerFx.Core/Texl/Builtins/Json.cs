@@ -17,12 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // JSON(data:any, [format:s])    
     internal class JsonFunction : BuiltinFunction
-    {        
-        private const char _includeBinaryDataEnumValue = 'B';
-        private const char _ignoreBinaryDataEnumValue = 'G';
-        private const char _ignoreUnsupportedTypesEnumValue = 'I';
-        private const char _flattenTableValuesEnumValue = '_';
-        private const char _indentFourEnumValue = '4';
+    {
+        protected const char _includeBinaryDataEnumValue = 'B';
+        protected const char _ignoreBinaryDataEnumValue = 'G';
+        protected const char _ignoreUnsupportedTypesEnumValue = 'I';
+        protected const char _flattenTableValuesEnumValue = '_';
+        protected const char _indentFourEnumValue = '4';
+        protected const char _onlyOneLevel = '1';
 
         protected bool supportsLazyTypes = false;
 
@@ -31,18 +32,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DKind.DataEntity,
             DKind.LazyRecord,
             DKind.LazyTable,
-            DKind.View, 
+            DKind.View,
             DKind.ViewValue
         };
 
         private static readonly DKind[] _unsupportedTypes = new[]
         {
-            DKind.Control, 
+            DKind.Control,
             DKind.LazyRecord,
             DKind.LazyTable,
             DKind.Metadata,
-            DKind.OptionSet, 
-            DKind.PenImage, 
+            DKind.OptionSet,
+            DKind.PenImage,
             DKind.Polymorphic,
             DKind.UntypedObject,
             DKind.Void
@@ -50,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool IsAsync => true;       
+        public override bool IsAsync => true;
 
         public override bool SupportsParamCoercion => false;
 
@@ -78,13 +79,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Do not call base.CheckTypes for arg0
             if (args.Length > 1)
             {
-                if (context.Features.StronglyTypedBuiltinEnums && 
+                if (context.Features.StronglyTypedBuiltinEnums &&
                     !base.CheckType(context, args[1], argTypes[1], BuiltInEnums.JSONFormatEnum.FormulaType._type, errors, ref nodeToCoercedTypeMap))
                 {
                     return false;
                 }
 
-                TexlNode optionsNode = args[1];                
+                TexlNode optionsNode = args[1];
                 if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
                 {
                     errors.EnsureError(optionsNode, TexlStrings.ErrFunctionArg2ParamMustBeConstant, "JSON", TexlStrings.JSONArg2.Invoke());
@@ -117,11 +118,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             bool includeBinaryData = false;
             bool ignoreUnsupportedTypes = false;
-            bool ignoreBinaryData = false;            
-
+            bool ignoreBinaryData = false;
+            
             if (args.Length > 1)
             {
-                TexlNode optionsNode = args[1];                
+                TexlNode optionsNode = args[1];
                 if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, out string nodeValue))
                 {
                     return;
@@ -144,6 +145,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 break;
                             case _flattenTableValuesEnumValue:
                             case _indentFourEnumValue:
+                            case _onlyOneLevel:
                                 // Runtime-only options
                                 break;
                             default:
@@ -185,7 +187,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
                 }
-            }            
+            }
         }
 
         private static bool IsConstant(CheckTypesContext context, DType[] argTypes, TexlNode optionsNode, out string nodeValue)

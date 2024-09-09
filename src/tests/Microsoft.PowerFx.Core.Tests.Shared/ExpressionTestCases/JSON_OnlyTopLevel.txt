@@ -1,0 +1,142 @@
+#SETUP: EnableJsonFunctions
+
+>> JSON(Blank(), JSONFormat.OnlyOneLevel)
+"null"
+
+>> JSON(If(1<0,"true",{a:1}), JSONFormat.OnlyOneLevel)
+Errors: Error 5-25: The JSON function cannot serialize objects of type 'Void'.
+
+>> JSON("hello", JSONFormat.OnlyOneLevel)
+"""hello"""
+
+>> JSON(1.23, JSONFormat.OnlyOneLevel)
+"1.23"
+
+>> JSON(0, JSONFormat.OnlyOneLevel)
+"0"
+
+>> JSON(1, JSONFormat.OnlyOneLevel)
+"1"
+
+>> JSON(-1, JSONFormat.OnlyOneLevel)
+"-1"
+
+>> JSON(true, JSONFormat.OnlyOneLevel)
+"true"
+
+>> JSON(false, JSONFormat.OnlyOneLevel)
+"false"
+
+>> JSON("Back\slash", JSONFormat.OnlyOneLevel)
+"""Back\\slash"""
+
+>> JSON("Quotes "" and ' may be escaped", JSONFormat.OnlyOneLevel)
+"""Quotes \"" and ' may be escaped"""
+
+>> JSON($"Other {Char(13)} escaped {Char(10)} chars {Char(4)} should {Char(9)} also {Char(8)} be {Char(1)} escaped {Char(20)} properly", JSONFormat.OnlyOneLevel)
+"""Other \r escaped \n chars \u0004 should \t also \b be \u0001 escaped \u0014 properly"""
+
+// In \uXXXX escapings, letters of hex characters are upper case while they are lower case in Power Apps.
+// Technically, this is the exactly the same character.
+>> JSON(Concat(Sequence(128), Char(Value)), JSONFormat.OnlyOneLevel)
+"""\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000B\f\r\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F !\""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F\u0080"""
+
+>> JSON(RGBA(10, 30, 50, 0.75), JSONFormat.OnlyOneLevel)
+"""#0a1e32bf"""
+
+>> JSON(Color.Turquoise, JSONFormat.OnlyOneLevel)
+"""#40e0d0ff"""
+
+>> JSON(TimeUnit.Hours, JSONFormat.OnlyOneLevel)
+"""hours"""
+
+>> JSON(Date(2022,8,7), JSONFormat.OnlyOneLevel)
+"""2022-08-07"""
+
+>> JSON(DateTimeValue("1970-01-01T00:00:00Z"), JSONFormat.OnlyOneLevel)
+"""1970-01-01T00:00:00.000Z"""
+
+// Independent from local timezone
+>> With({dt: DateTime(1987,6,5,4,30,0)}, JSON(DateAdd(dt,-TimeZoneOffset(dt),TimeUnit.Minutes), JSONFormat.IndentFour & JSONFormat.OnlyOneLevel))
+"""1987-06-05T04:30:00.000Z"""
+
+>> JSON({a:1,b:"hello",c:true}, JSONFormat.OnlyOneLevel)
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> JSON({a:1,b:"hello",c:true}, JSONFormat.Compact & JSONFormat.OnlyOneLevel)
+"{""a"":1,""b"":""hello"",""c"":true}"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour & JSONFormat.OnlyOneLevel), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
+
+>> JSON(Table({a:1,b:"hello",c:true,e:Blank()},{a:-3,b:"world",c:false,d:GUID("01234567-89AB-CDEF-0123-456789ABCDEF")}), JSONFormat.OnlyOneLevel)
+"[{},{}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:true},{a:-3,b:"world",c:false}), JSONFormat.IndentFour & JSONFormat.OnlyOneLevel), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{},*<t>{}*]"
+
+>> Substitute(Substitute(Substitute(JSON({a:1,b:"hello",c:true}, JSONFormat.IndentFour & JSONFormat.Compact & JSONFormat.OnlyOneLevel), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"{*<t>""a"": 1,*<t>""b"": ""hello"",*<t>""c"": true*}"
+
+>> JSON(DateTimeValue("2022-08-07T12:34:56Z"), JSONFormat.OnlyOneLevel)
+"""2022-08-07T12:34:56.000Z"""
+
+>> JSON(Table({a:GUID("01234567-89AB-CDEF-0123-456789ABCDEF"),b:RGBA(18, 52, 86, 0.5),c:"https://www.microsoft.com",d:Sqrt(9)}), JSONFormat.OnlyOneLevel)
+"[{}]"
+
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:{d: 1, h:"test"}}), JSONFormat.IndentFour & JSONFormat.OnlyOneLevel), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{},*<t>{}*]"
+
+// .Net 4.6.2 returns [*<t>{*<t><t>""a"": 1,*<t><t>""b"": ""hello"",*<t><t>""c"": null*<t>},*<t>{*<t><t>""a"": -3,*<t><t>""b"": ""world"",*<t><t>""c"": [*<t><t><t>{*<t><t><t><t>""r"": 3.1000000000000001,*<t><t><t><t>""s"": ""inner"",*<t><t><t><t>""t"": -7*<t><t><t>}*<t><t>]*<t>}*]
+#DISABLE.NET: 462
+>> Substitute(Substitute(Substitute(JSON(Table({a:1,b:"hello",c:Blank()},{a:-3,b:"world",c:Table({r:3.1,s:"inner",t:-7})}), JSONFormat.IndentFour & JSONFormat.OnlyOneLevel), Char(10), "*"), Char(13), ""), "    ", "<t>")
+"[*<t>{},*<t>{}*]"
+
+>> JSON(1/0, JSONFormat.OnlyOneLevel)
+Error({Kind:ErrorKind.Div0})
+
+>> JSON({a:1,b:Sqrt(-1),c:true}, JSONFormat.OnlyOneLevel)
+Error({Kind:ErrorKind.Numeric})
+
+// No error is returned here as we only look at top level, so 1/0 is not evaluated
+>> JSON([{a:1,b:[2]},{a:3,b:[4,5]},{a:6,b:[7,1/0,9]}], JSONFormat.OnlyOneLevel)
+"[{},{},{}]"
+
+// Blank records
+>> JSON(Table({a:1},Blank(),{a:3}), JSONFormat.OnlyOneLevel)
+"[{},null,{}]"
+
+// Error records
+>> JSON(Filter([-2,-1,0,1,2], 1/Value>0), JSONFormat.OnlyOneLevel)
+Error({Kind:ErrorKind.Div0})
+
+// Flattened tables
+>> JSON([1, 2, 3], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[1,2,3]"
+
+>> JSON({a:["one", "two"]}, JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"{""a"":[]}"
+
+>> JSON([true, false, true], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[true,false,true]"
+
+// Only flatten single-column tables where the column name is 'Value'
+>> JSON([{a:1}, {a:2}], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[{},{}]"
+
+// No difference between blank records and blank values
+>> JSON([{Value:1},Blank(),{Value:3},{Value:Blank()},{Value:5}], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[1,null,3,null,5]"
+
+// Flattening nested tables
+>> JSON([[1,2,3],[4,5],[6]], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[[],[],[]]"
+
+>> JSON([[[1],[2]],[[4],[5]],[[6],[7]]], JSONFormat.FlattenValueTables & JSONFormat.OnlyOneLevel)
+"[[],[],[]]"
+
+>> JSON({a:1, b:["a", "b"], c:Blank(), d:{e:1, f:3}})
+"{""a"":1,""b"":[{""Value"":""a""},{""Value"":""b""}],""c"":null,""d"":{""e"":1,""f"":3}}"
+
+>> JSON({a:1, b:["a", "b"], c:Blank(), d:{e:1, f:3}}, JSONFormat.OnlyOneLevel)
+"{""a"":1,""b"":[],""c"":null,""d"":{}}"

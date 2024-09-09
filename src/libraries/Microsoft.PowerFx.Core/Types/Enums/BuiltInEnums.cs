@@ -170,7 +170,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "IgnoreBinaryData", "G" },
                 { "IncludeBinaryData", "B" },
                 { "IgnoreUnsupportedTypes", "I" },
-                { "FlattenValueTables", "_" }
+                { "FlattenValueTables", "_" },
+                { "OnlyOneLevel", "1" }
             },
             canConcatenateStronglyTyped: true);
 
