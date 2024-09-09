@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
@@ -161,7 +162,11 @@ namespace Microsoft.PowerFx.Types
                     {
                         return FormulaValue.NewBlob(element.GetBytesFromBase64());
                     }
-                    else
+                    else if (formulaType is OptionSetValueType osvt && osvt.TryGetValue(new DName(element.GetString()), out OptionSetValue osv))
+                    {
+                        return osv;
+                    }
+                    else 
                     {
                         throw new PowerFxJsonException($"Expecting {formulaType._type.Kind} but received a String", data.Path);
                     }

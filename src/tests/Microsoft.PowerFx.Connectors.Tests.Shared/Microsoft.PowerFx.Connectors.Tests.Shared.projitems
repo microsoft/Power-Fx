@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseConnectorTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BasicRestTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CompatibilityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorWizardTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileTabularConnector.cs" />
@@ -70,6 +71,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Bing Maps GetRouteV3.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\CardsForPowerApps_CreateCardInstance.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\CardsForPowerApps_Suggestions.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Compatibility GetSchema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Dataverse_Response_3.json" />
@@ -223,6 +225,9 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2A.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_ServiceNowReturnType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetDataSetMetadata.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTable Schema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema Users.json" />
