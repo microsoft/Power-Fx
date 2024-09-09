@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             optionString = sv.Value;
                             break;
 
-                        // if not one of these, will check optionString != null below
+                            // if not one of these, will check optionString != null below
                     }
 
                     if (optionString != null)
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
                 private readonly bool _flattenValueTables;
-                private readonly bool _onlyOneLevel;                               
+                private readonly bool _onlyOneLevel;
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
                 private int _level = 0;
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(ErrorValue errorValue)
-                {                    
+                {
                     ErrorValues.Add(errorValue);
                     _writer.WriteStringValue("ErrorValue");
                 }
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (!_onlyOneLevel || _level < 1)
                     {
                         _level++;
-                        
+
                         foreach (NamedValue namedValue in recordValue.Fields)
                         {
                             _writer.WritePropertyName(namedValue.Name);
@@ -287,8 +287,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (!_onlyOneLevel || _level < 1)
                     {
-                        _level++;
-
                         var isSingleColumnValueTable = false;
                         if (_flattenValueTables)
                         {
@@ -323,8 +321,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 }
                             }
                         }
-
-                        _level--;
                     }
 
                     _writer.WriteEndArray();
@@ -350,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteBase64StringValue(value.GetAsByteArrayAsync(CancellationToken.None).Result);
                     }
-                }                
+                }
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";
