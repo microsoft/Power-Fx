@@ -10,27 +10,67 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Functions
 {
     public class RegEx_NodeJS
     {
+        private static Process node;
+
+        private static readonly StringBuilder OutputSB = new StringBuilder();
+        private static readonly StringBuilder ErrorSB = new StringBuilder();
+        private static TaskCompletionSource<bool> readTask = null;
+
+        private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            OutputSB.Append(outLine.Data);
+            if (outLine.Data.Contains("%%end%%"))
+            {
+                readTask.TrySetResult(true);
+            }
+        }
+
+        private static void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            ErrorSB.Append(outLine.Data);
+            readTask.TrySetResult(true);
+        }
+
+        private class JSMatch
+        {
+            public int Index { get; set; }
+
+            public string[] Numbered { get; set; }
+
+            public Dictionary<string, string> Named { get; set; }
+        }
+
         internal abstract class NodeJS_RegexCommonImplementation : Library.RegexCommonImplementation
         {
             internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
+                Task<FormulaValue> task = Task.Run<FormulaValue>(async () => await MatchAsync(subject, pattern, flags, matchAll));
+                return task.Result;
+            }
+
+            internal static async Task<FormulaValue> MatchAsync(string subject, string pattern, string flags, bool matchAll = false)
+            {
                 var js = new StringBuilder();
 
-                js.AppendLine($"const subject='{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}';");
-                js.AppendLine($"const pattern='{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}';");
-                js.AppendLine($"const flags='{flags}';");
-                js.AppendLine($"const matchAll={(matchAll ? "true" : "false")};");
+                js.Append($"MatchTest('{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                js.Append($"'{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                js.Append($"'{flags}',");
+                js.Append($"{(matchAll ? "true" : "false")});");
 
 #if false
                 // for debugging unicode passing of strings to Node, output ignored by deserializer but visible in the debugger
@@ -42,152 +82,130 @@ namespace Microsoft.PowerFx.Functions
                 ");
 #endif
 
-                js.AppendLine(@"
-                    const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
-                    const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
-                    const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-
-                    for(const match of matches)
-                    {
-                        if (match != null)
+                if (node == null)
+                {
+                    string js2 = @"
+                        function MatchTest( subject, pattern, flags, matchAll )
                         {
-                            console.log('%start%:' + match.index);
-                            for(var group in match.groups)
+                            const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
+                            const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
+                            const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
+                            console.log('%%begin%%');
+                            if (matches.length != 0 && matches[0] != null)
                             {
-                                var val = match.groups[group];
-                                if (val !== undefined)
+                                var arr = new Array();
+                                for (const match of matches)
                                 {
-                                    val = '""' + val.replace( /""/g, '""""') + '""'
+                                    var o = new Object();
+                                    o.Index = match.index;
+                                    o.Named = match.groups;
+                                    o.Numbered = match;
+                                    arr.push(o);
                                 }
-                                console.log(group + ':' + val);
+                                console.log(JSON.stringify(arr));
                             }
-                            for (var num = 0; num < match.length; num++)
-                            {
-                                var val = match[num];
-                                if (val !== undefined)
-                                {
-                                    val = '""' + val.replace( /""/g, '""""') + '""'
-                                }
-                                console.log(num + ':' + val);
-                            }
-                            console.log('%end%:');
+                            console.log('%%end%%');
                         }
-                    }
-                    console.log('%done%:');
-                ");
+                        ";
 
-                var node = new Process();
-                node.StartInfo.FileName = "node.exe";
-                node.StartInfo.RedirectStandardInput = true;
-                node.StartInfo.RedirectStandardOutput = true;
-                node.StartInfo.RedirectStandardError = true;
-                node.StartInfo.CreateNoWindow = true;
-                node.StartInfo.UseShellExecute = false;
-                node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+                    node = new Process();
+                    node.StartInfo.FileName = "node.exe";
+                    node.StartInfo.Arguments = "-i";
+                    node.StartInfo.RedirectStandardInput = true;
+                    node.StartInfo.RedirectStandardOutput = true;
+                    node.StartInfo.RedirectStandardError = true;
+                    node.StartInfo.CreateNoWindow = true;
+                    node.StartInfo.UseShellExecute = false;
+                    node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 
-                // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
-                // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
+                    // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
+                    // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
 
-                node.Start();
+                    node.OutputDataReceived += OutputHandler;
+                    node.ErrorDataReceived += ErrorHandler;
+
+                    node.Start();
+
+                    node.BeginOutputReadLine();
+                    node.BeginErrorReadLine();
+
+                    await node.StandardInput.WriteLineAsync(RegEx_JavaScript.AlterRegex_JavaScript);
+                    await node.StandardInput.WriteLineAsync(js2);
+                }
+
+                OutputSB.Clear();
+                ErrorSB.Clear();
+                readTask = new TaskCompletionSource<bool>();
 
                 var jsString = js.ToString();
-                var bytes = Encoding.UTF8.GetBytes(RegEx_JavaScript.AlterRegex_JavaScript + jsString);
-                node.StandardInput.BaseStream.Write(bytes, 0, bytes.Length);
-                node.StandardInput.WriteLine();
-                node.StandardInput.Close();
+                var bytes = Encoding.UTF8.GetBytes(jsString);
+                await node.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+                await node.StandardInput.WriteLineAsync();
 
-                string output = node.StandardOutput.ReadToEnd();
-                string error = node.StandardError.ReadToEnd();
+                await node.StandardInput.FlushAsync();
 
-                node.WaitForExit();
-                node.Dispose();
+                await readTask.Task;
+
+                string output = OutputSB.ToString();
+                string error = ErrorSB.ToString();
 
                 if (error.Length > 0)
                 {
                     throw new InvalidOperationException(error);
                 }
 
-                var outputRE = new Regex(
-                    @"
-                    ^%start%:(?<start>[-\d]+)$ |
-                    ^(?<end>%end%): |
-                    ^(?<done>%done%): |
-                    ^(?<num>\d+):""(?<numMatch>(""""|[^""])*)""$ |
-                    ^(?<name>[^:]+):""(?<nameMatch>(""""|[^""])*)""$ |
-                    ^(?<numBlank>\d+):undefined$ |
-                    ^(?<nameBlank>[^:]+):undefined$
-                    ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
+                int begin = output.IndexOf("%%begin%%");
+                int end = output.IndexOf("%%end%%");
 
-                List<RecordValue> subMatches = new List<RecordValue>();
-                Dictionary<string, NamedValue> fields = new ();
-                List<RecordValue> allMatches = new ();
+                var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture));
 
-                foreach (Match token in outputRE.Matches(output))
+                if (end == begin + 9)
                 {
-                    if (token.Groups["start"].Success)
-                    {
-                        fields = new ();
-                        subMatches = new ();
-                        fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
-                    }
-                    else if (token.Groups["end"].Success)
-                    {
-                        if (flags.Contains('N'))
-                        {
-                            var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
-                            fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
-                        }
-
-                        allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
-                    }
-                    else if (token.Groups["done"].Success)
-                    {
-                        if (allMatches.Count == 0)
-                        {
-                            return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture)))
-                                            : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture))));
-                        }
-                        else
-                        {
-                            return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches)
-                                            : allMatches.First();
-                        }
-                    }
-                    else if (token.Groups["name"].Success)
-                    {
-                        fields.Add(token.Groups["name"].Value, new NamedValue(token.Groups["name"].Value, StringValue.New(token.Groups["nameMatch"].Value.Replace(@"""""", @""""))));
-                    }
-                    else if (token.Groups["nameBlank"].Success)
-                    {
-                        fields.Add(token.Groups["nameBlank"].Value, new NamedValue(token.Groups["nameBlank"].Value, BlankValue.NewBlank(FormulaType.String)));
-                    }
-                    else if (token.Groups["num"].Success)
-                    {
-                        var num = Convert.ToInt32(token.Groups["num"].Value);
-                        if (num == 0)
-                        {
-                            fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(token.Groups["numMatch"].Value.Replace(@"""""", @""""))));
-                        }
-                        else
-                        {
-                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, StringValue.New(token.Groups["numMatch"].Value.Replace(@"""""", @"""")))));
-                        }
-                    }
-                    else if (token.Groups["numBlank"].Success)
-                    {
-                        var num = Convert.ToInt32(token.Groups["numBlank"].Value);
-                        if (num == 0)
-                        {
-                            fields.Add(FULLMATCH, new NamedValue(FULLMATCH, BlankValue.NewBlank(FormulaType.String)));
-                        }
-                        else
-                        {
-                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, BlankValue.NewBlank(FormulaType.String))));
-                        }
-                    }
+                    return matchAll ? FormulaValue.NewTable(type) : new BlankValue(IRContext.NotInSource(type));
                 }
 
-                throw new Exception("%done% marker not found");
+                string json = output.Substring(begin + 9, end - begin - 9);
+                var result = JsonSerializer.Deserialize<JSMatch[]>(json);
+
+                List<RecordValue> allMatches = new ();
+
+                foreach (JSMatch match in result)
+                {
+                    Dictionary<string, NamedValue> fields = new Dictionary<string, NamedValue>()
+                    {
+                        { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(match.Index) + 1)) },
+                        { FULLMATCH, new NamedValue(FULLMATCH, match.Numbered[0] == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(match.Numbered[0])) },
+                    };
+
+                    if (match.Named != null)
+                    {
+                        foreach (var name in type.FieldNames)
+                        {
+                            if (name != STARTMATCH && name != FULLMATCH && name != SUBMATCHES)
+                            {
+                                fields.Add(name, new NamedValue(name, match.Named.ContainsKey(name) ? StringValue.New(match.Named[name]) : BlankValue.NewBlank(FormulaType.String)));
+                            }
+                        }
+                    }
+
+                    if (flags.Contains('N'))
+                    {
+                        List<RecordValue> subMatches = new List<RecordValue>();
+
+                        for (int i = 1; i < match.Numbered.Count(); i++)
+                        {
+                            var n = match.Numbered[i];
+                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, n == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(n))));
+                        }
+
+                        var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                        fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
+                    }
+
+                    allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
+                }
+
+                return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches) : allMatches.First();
             }
         }
 
