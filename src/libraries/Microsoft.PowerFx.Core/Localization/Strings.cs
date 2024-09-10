@@ -523,8 +523,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutClearCollect = (b) => StringResources.Get("AboutClearCollect", b);
 
         public static StringGetter AboutRemove = (b) => StringResources.Get("AboutRemove", b);
-        public static StringGetter RemoveDataSourceArg = (b) => StringResources.Get("RemoveDataSourceArg", b);
-        public static StringGetter RemoveRecordsArg = (b) => StringResources.Get("RemoveRecordsArg", b);
+        public static StringGetter RemoveArg1 = (b) => StringResources.Get("RemoveArg1", b);
+        public static StringGetter RemoveArg2 = (b) => StringResources.Get("RemoveArg2", b);
+        public static StringGetter RemoveArg3 = (b) => StringResources.Get("RemoveArg3", b);
+        public static StringGetter RemoveAllArg2 = (b) => StringResources.Get("RemoveAllArg2", b);
 
         public static StringGetter AboutDec2Hex = (b) => StringResources.Get("AboutDec2Hex", b);
         public static StringGetter Dec2HexArg1 = (b) => StringResources.Get("Dec2HexArg1", b);
@@ -649,6 +651,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadSchema_ExpectedType = new ErrorResourceKey("ErrBadSchema_ExpectedType");
         public static ErrorResourceKey ErrInvalidArgs_Func = new ErrorResourceKey("ErrInvalidArgs_Func");
         public static ErrorResourceKey ErrNeedTable_Func = new ErrorResourceKey("ErrNeedTable_Func");
+        public static ErrorResourceKey ErrNeedTable_Arg = new ErrorResourceKey("ErrNeedTable_Arg");
         public static ErrorResourceKey ErrNeedTableCol_Func = new ErrorResourceKey("ErrNeedTableCol_Func");
         public static ErrorResourceKey ErrNotAccessibleInCurrentContext = new ErrorResourceKey("ErrNotAccessibleInCurrentContext");
         public static ErrorResourceKey ErrInternalControlInInputProperty = new ErrorResourceKey("ErrInternalControlInInputProperty");
@@ -843,5 +846,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
         public static ErrorResourceKey ErrInvalidArgumentExpectedType = new ErrorResourceKey("ErrInvalidArgumentExpectedType");
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
+        public static ErrorResourceKey ErrCollectionDoesNotAcceptThisType = new ErrorResourceKey("ErrCollectionDoesNotAcceptThisType");
+        public static ErrorResourceKey ErrNeedAll = new ErrorResourceKey("ErrNeedAll");
+        public static ErrorResourceKey ErrNeedCollection_Func = new ErrorResourceKey("ErrNeedCollection_Func");
     }
 }

@@ -199,5 +199,15 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "IgnoreUnsupportedTypes", TraceFunction.IgnoreUnsupportedTypesEnumValue },
             },
             canConcatenateStronglyTyped: true);
+
+        public static readonly EnumSymbol RemoveFlagsEnum = new EnumSymbol(
+            new DName(LanguageConstants.RemoveFlagsEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "First", "first" },
+                { "All", "all" },
+            },
+            canCoerceFromBackingKind: true);
     }
 }

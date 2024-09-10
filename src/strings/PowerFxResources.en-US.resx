@@ -1997,6 +1997,10 @@
     <value>Property expects a required parameter. Please use parentheses to pass the required parameter.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrNeedTable_Arg" xml:space="preserve">
+  <value>Cannot use a non-table value in this context: '{0}'.</value>
+  <comment>Error Message.</comment>
+</data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
     <value>The first argument of '{0}' should be a one-column table.</value>
     <comment>Error Message.</comment>
@@ -3290,16 +3294,36 @@
     <comment>function_parameter - Second argument to the Patch function - the updates to be applied to the given rows.</comment>
   </data>
   <data name="AboutRemove" xml:space="preserve">
-    <value>Removes a specific record or records from a data source</value>
+    <value>Removes (optionally All) items from the specified 'collection'.</value>
     <comment>Description of 'Remove' function.</comment>
   </data>
-  <data name="RemoveDataSourceArg" xml:space="preserve">
-    <value>data_source</value>
-    <comment>function_parameter - First parameter for the Remove function. The data source that contains the records that you want to remove from. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+  <data name="RemoveArg1" xml:space="preserve">
+    <value>collection</value>
+  <comment>function_parameter - First parameter of the Remove function - the name of the collection to have an item removed.</comment>
   </data>
-  <data name="RemoveRecordsArg" xml:space="preserve">
-    <value>remove_record(s)</value>
-    <comment>function_parameter - One or more records to be removed. Translate this string. When translating, maintain as a single word (i.e., do not add spaces).</comment>
+    <data name="RemoveArg2" xml:space="preserve">
+    <value>item</value>
+    <comment>function_parameter - Second parameter to the Remove function - the item to be removed.</comment>
+  </data>
+    <data name="AboutRemove_collection" xml:space="preserve">
+    <value>The collection to remove rows from.</value>
+  </data>
+    <data name="AboutRemove_item" xml:space="preserve">
+    <value>A record value specifying the row to remove.</value>
+  </data>
+    <data name="RemoveAllArg2" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - Second parameter to the RemoveAll function - the source of the elements to be removed.</comment>
+  </data>
+    <data name="AboutRemove_source" xml:space="preserve">
+    <value>A table value that specifies multiple rows to remove from the given collection.</value>
+  </data>
+    <data name="RemoveArg3" xml:space="preserve">
+    <value>all</value>
+    <comment>function_parameter - Third argument for the Remove function - value indicating whether to remove all matches or only the first one.</comment>
+  </data>
+    <data name="AboutRemove_all" xml:space="preserve">
+    <value>An optional argument that specifies whether to remove all matches, or just the first one.</value>
   </data>
   <data name="ErrRemoveAllArg" xml:space="preserve">
     <value>If provided, last argument must be 'RemoveFlags.All'. Is there a typo?</value>
@@ -4744,6 +4768,10 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>The source to clear.</value>
   </data>
+  <data name="ErrNeedCollection_Func" xml:space="preserve">
+    <value>The first argument of '{0}' should be a collection.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
@@ -4755,5 +4783,57 @@
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
     <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Incompatible type. The collection can't contain values of this type.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>You might need to convert the type of the item using, for example, a Datevalue, Text, or Value function.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Article: Create and update a collection in a canvas app</value>
+    <comment>Article: Create and update a collection in a canvas app.</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=722609</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Module: Use basic formulas</value>
+    <comment>3 crown link on basic formulas</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_3" xml:space="preserve">
+    <value>Module: Author basic formulas with tables and records</value>
+    <comment>3 crown link on tables and records</comment>
+  </data>
+  <data name="ErrorResource_ErrCollectionDoesNotAcceptThisType_Link_3_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrNeedAll_ShortMessage" xml:space="preserve">
+    <value>Incorrect argument. This formula expects an optional 'All' argument or no argument.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrNeedAll_LongMessage" xml:space="preserve">
+    <value>If you’re using an Update function, for example, you might supply an optional 'All' argument at the end of the formula. This feature is available because a record might occur more than once (e.g., in a collection) to make sure that all copies of a record are updated.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_ErrNeedAll_HowToFix_1" xml:space="preserve">
+    <value>Either supply the optional 'All' argument or remove it.</value>
+    <comment>1 How to fix the error.</comment>
+  </data>
+  <data name="ErrorResource_ErrNeedAll_Link_1" xml:space="preserve">
+    <value>Article: Formula reference for Power Apps</value>
+    <comment>Article: Formula reference for Power Apps</comment>
+  </data>
+  <data name="ErrorResource_ErrNeedAll_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    <comment>{Locked}</comment>
   </data>
 </root>

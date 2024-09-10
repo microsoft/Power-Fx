@@ -220,7 +220,7 @@ namespace Microsoft.PowerFx.Types
                 if (!found)
                 {
                     // https://github.com/microsoft/Power-Fx/issues/2618
-                    errors.Add(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound });
+                    errors.Add(new ExpressionError() { Kind = ErrorKind.NotFound });
                 }
             }
 
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="mutationCopy">Should we make a copy of the found record, ahead of mutation.</param>/// 
         /// <returns>A record instance within the current table. This record can then be updated.</returns>
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
-        protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
+        internal virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
