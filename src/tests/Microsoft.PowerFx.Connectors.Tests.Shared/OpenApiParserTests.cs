@@ -1372,8 +1372,8 @@ POST https://tip1-shared.azure-apim.net/invoke
             ConnectorFunction[] functionsWithWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, IncludeWebhookFunctions = true }, testConnector._apiDocument).ToArray();
             ConnectorFunction[] functionsWithoutWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
 
-            Assert.Null(functionsWithoutWebhooks.First(f => f.Name == "PostCardAndWaitForResponse"));
-            Assert.NotNull(functionsWithoutWebhooks.First(f => f.Name == "PostCardAndWaitForResponse"));
+            Assert.NotNull(functionsWithWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
+            Assert.Null(functionsWithoutWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
         }
 
         [Fact]
