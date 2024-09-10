@@ -1361,6 +1361,22 @@ POST https://tip1-shared.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task Teams_PostCardAndWaitForResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functionsWithWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, IncludeWebhookFunctions = true }, testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functionsWithoutWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+
+            Assert.NotNull(functionsWithWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
+            Assert.Null(functionsWithoutWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
+        }
+
+        [Fact]
         public void ABS_GetTriggers()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json", _output);

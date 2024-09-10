@@ -36,6 +36,12 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool AllowUnsupportedFunctions { get; init; } = false;
 
+        /// <summary>
+        /// Include webhook functions that contain "x-ms-notification-content" in definition.
+        /// By default these functions won't be accessible by end users.
+        /// </summary>
+        public bool IncludeWebhookFunctions { get; init; } = false;
+
         /// <summary>        
         /// By default these functions won't be accessible by end users.
         /// Internally, internal functions will be kept (ConnectorFunction.FunctionList) as some of those are used for dynamic intellisense.
