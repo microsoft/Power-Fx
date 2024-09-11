@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="mutationCopy">Should we make a copy of the found record, ahead of mutation.</param>/// 
         /// <returns>A record instance within the current table. This record can then be updated.</returns>
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
-        internal virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
+        protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

@@ -1,21 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter.Localization;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
@@ -75,7 +66,7 @@ namespace Microsoft.PowerFx.Interpreter
                 return arg0;
             }
 
-            // If any of the argN (N>0) are an error, return the error.
+            // If any of the argN (N>0) is error, return the error.
             foreach (var arg in args.Skip(1))
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -87,7 +78,7 @@ namespace Microsoft.PowerFx.Interpreter
 
                 if (arg is TableValue tableValue)
                 {
-                    var errorRecord = tableValue.Rows.FirstOrDefault(row => row.IsError);
+                    var errorRecord = tableValue.Rows.First(row => row.IsError);
                     if (errorRecord != null)
                     {
                         return errorRecord.Error;

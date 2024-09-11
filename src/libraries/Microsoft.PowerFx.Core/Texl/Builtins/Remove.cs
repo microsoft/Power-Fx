@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -21,9 +21,6 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
-
-    // !!!TODO MOVE THIS TO src/Cloud/DocumentServer.Core/Document/Texl/Functions/Libraries/BuiltinFunctions.cs
-    //[RequiresErrorContext]
     internal class RemoveFunction : BuiltinFunction, ISuggestionAwareFunction
     {
         public override bool ManipulatesCollections => true;
@@ -328,22 +325,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        // !!!TODO MOVE THIS TO
-        // src/Cloud/DocumentServer.Core/Document/Texl/Functions/Libraries/BuiltinFunctions.cs and
-        // src/Cloud/DocumentServer.Core/Document/Publish/TryPushCustomJsExpressionHandlers.cs
-        //public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
-        //{
-        //    Contracts.Assert(argFragments.Count >= 1);
-
-        //    // If the "ALL" arg was not specified, inject an empty string arg instead.
-        //    var args = node.Args.Children;
-
-        //    if (argFragments.Count < 3 || !DType.String.Accepts(binding.GetType(args[argFragments.Count - 1]), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
-        //    {
-        //        argFragments.Add(translator.CreateFragment(PAStringBuilderConst.EmptyQuotes));
-        //    }
-        //}
-
         protected override bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
         {
             Contracts.AssertValue(args);
@@ -358,9 +339,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Remove(collection:*[], source:*[], ["All"])
-    // !!!TODO MOVE THIS TO src/Cloud/DocumentServer.Core/Document/Texl/Functions/Libraries/BuiltinFunctions.cs
-    //[RequiresErrorContext]
-    //[TexlRuntimeNameOverride(Suffix = "All")]
     internal class RemoveAllFunction : BuiltinFunction
     {
         public override bool ManipulatesCollections => true;
@@ -538,27 +516,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return Arg0RequiresAsync(callNode, binding);
         }
 
-        // !!!TODO MOVE THIS TO
-        // src/Cloud/DocumentServer.Core/Document/Texl/Functions/Libraries/BuiltinFunctions.cs and
-        // src/Cloud/DocumentServer.Core/Document/Publish/TryPushCustomJsExpressionHandlers.cs
-        //public static void PushCustomJsArgs(TexlFunction func, JsTranslator translator, TexlBinding binding, CallNode node, List<Fragment> argFragments)
-        //{
-        //    Contracts.Assert(argFragments.Count >= 1);
-
-        //    if (func.IsServerDelegatable(node, binding))
-        //    {
-        //        // If remove all is delegatable && the "ALL" arg was not specified, the translator handles it
-        //        return;
-        //    }
-
-        //    // If the "ALL" arg was not specified, inject an empty string arg instead.
-        //    var args = node.Args.Children;
-        //    if (argFragments.Count < 3 || !DType.String.Accepts(binding.GetType(args[argFragments.Count - 1]), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
-        //    {
-        //        argFragments.Add(translator.CreateFragment(PAStringBuilderConst.EmptyQuotes));
-        //    }
-        //}
-
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
@@ -569,18 +526,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            // !!!TODO Check with PA team
             // Use ECS flag as a guard.
-            //if (binding.Document != null)
-            //{
-            //    if (binding.Document.Properties is DocumentProperties documentProperties)
-            //    {
-            //        if (!documentProperties.IsRemoveAllDelegationEnabled)
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //}
+            if (binding.Document != null)
+            {
+                if (binding.Document.Properties is IECSFlags flags)
+                {
+                    if (!flags.IsRemoveAllDelegationEnabled)
+                    {
+                        return false;
+                    }
+                }
+            }
 
             if (!binding.TryGetDataSourceInfo(callNode.Args.Children[0], out IExternalDataSource dataSource))
             {
