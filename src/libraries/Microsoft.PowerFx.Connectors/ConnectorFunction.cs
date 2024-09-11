@@ -1177,7 +1177,7 @@ namespace Microsoft.PowerFx.Connectors
                     JsonElement value = ExtractFromJson(jElement, cdv.ValuePath);
 
                     // Note: Some connectors have misalignment between the Swagger definition and the actual response, caused suggestion API
-                    // returning empty result.For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
+                    // returning empty result. For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
                     // in fact returns List<{value, displayName}>.
                     // Fallback to "displayName" and "value" which are the most commonly used property names in suggestion response.
                     if (title.ValueKind == JsonValueKind.Undefined)
