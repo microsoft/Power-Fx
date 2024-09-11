@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
@@ -101,19 +102,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
-
-            // Tests skipped as ConnectorType.AddDataSource is skipping the creation of AssociatedDataSources
-#if false
             Assert.Single(ads);
 
-            TabularDataSource tds = Assert.IsType<TabularDataSource>(ads.First());
+            ExternalCdpDataSource tds = Assert.IsType<ExternalCdpDataSource>(ads.First());
             Assert.NotNull(tds);
             Assert.NotNull(tds.DataEntityMetadataProvider);
 
             CdpEntityMetadataProvider cemp = Assert.IsType<CdpEntityMetadataProvider>(tds.DataEntityMetadataProvider);
             Assert.True(cemp.TryGetEntityMetadata("Customers", out IDataEntityMetadata dem));
 
-            TabularDataSourceMetadata tdsm = Assert.IsType<TabularDataSourceMetadata>(dem);
+            CdpDataSourceMetadata tdsm = Assert.IsType<CdpDataSourceMetadata>(dem);
             Assert.Equal("pfxdev-sql.database.windows.net,connectortest", tdsm.DatasetName);
             Assert.Equal("Customers", tdsm.EntityName);
 
@@ -127,7 +125,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Customers", tds.Name);
             Assert.True(tds.RequiresAsync);
             Assert.NotNull(tds.ServiceCapabilities);
-#endif
 
             Assert.NotNull(sqlTable._connectorType);
             Assert.Null(sqlTable._connectorType.Relationships);

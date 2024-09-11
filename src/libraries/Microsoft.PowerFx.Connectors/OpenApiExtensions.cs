@@ -334,11 +334,20 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetVisibility();
 
+        internal static string GetEnumName(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetEnumName();
+
         // Internal parameters are not showen to the user.
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
         internal static bool IsInternal(this ISwaggerExtensions schema) => string.Equals(schema.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
+        internal static string GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) && 
+                                                                              openApiExt is OpenApiObject openApiObject && 
+                                                                              openApiObject.TryGetValue("name", out IOpenApiAny enumName) &&
+                                                                              enumName is OpenApiString enumNameStr 
+                                                                            ? enumNameStr.Value 
+                                                                            : null;
 
         internal static string GetMediaKind(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
@@ -438,7 +447,8 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         if (schema.Enum.All(e => e is OpenApiString))
                         {
-                            OptionSet optionSet = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                            string enumName = schema.GetEnumName() ?? "enum";
+                            OptionSet optionSet = new OptionSet(enumName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
                             return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                         }
                         else
@@ -467,6 +477,10 @@ namespace Microsoft.PowerFx.Connectors
                         case "decimal":
                         case "currency":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
+
+                        // for testing only
+                        case "fxnumber":
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Number);
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");

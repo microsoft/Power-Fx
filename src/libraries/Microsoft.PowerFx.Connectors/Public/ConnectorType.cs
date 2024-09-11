@@ -278,15 +278,9 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Invalid FormulaType");
             }
 
-            // $$$ Hack to enable IExternalTabularDataSource, will be removed later
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (tableResolver.GenerateADS)
-            {
-                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
-                DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
-                FormulaType = new KnownRecordType(newDType);
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
+            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(connectorType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
+            FormulaType = new KnownRecordType(newDType);
 
             FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
         }

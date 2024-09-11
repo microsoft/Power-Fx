@@ -11,9 +11,6 @@ namespace Microsoft.PowerFx.Connectors
     {
         ConnectorLogger Logger { get; }
 
-        [Obsolete("This property is a temporary hack to generate ADS")]
-        bool GenerateADS { get; init; }
-
         Task<CdpTableDescriptor> ResolveTableAsync(string tableName, CancellationToken cancellationToken);
     }
 }

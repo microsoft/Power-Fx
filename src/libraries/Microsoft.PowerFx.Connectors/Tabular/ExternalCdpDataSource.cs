@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -10,12 +12,15 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
+
+#pragma warning disable SA1117
 
 namespace Microsoft.PowerFx.Connectors
 {
     internal class ExternalCdpDataSource : IExternalTabularDataSource
     {
-        public ExternalCdpDataSource(DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        public ExternalCdpDataSource(ConnectorType connectorType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = name;
             ServiceCapabilities = serviceCapabilities;
@@ -30,9 +35,45 @@ namespace Microsoft.PowerFx.Connectors
             IsConvertingDisplayNameMapping = false;
             DisplayNameMapping = displayNameMapping ?? new BidirectionalDictionary<string, string>();
             PreviousDisplayNameMapping = null;
+            
+            List<ColumnMetadata> columns = connectorType.Fields.Select((ConnectorType f) =>
+                new ColumnMetadata(f.Name, f.FormulaType._type, ToDataFormat(f.FormulaType), f.DisplayName ?? f.Name, f.Permission == ConnectorPermission.PermissionReadOnly, 
+                                   f.KeyType == ConnectorKeyType.Primary, f.IsRequired, ColumnCreationKind.UserProvided, ToColumnVisibility(f.Visibility), f.Name, f.Name, f.Name, null, null)).ToList();
+
+            _tableMetadata = new TableMetadata(name, datasetName, isReadOnly, columns);
+        }
+
+        private static ColumnVisibility ToColumnVisibility(Visibility v)
+        {
+            return v switch
+            {
+                Visibility.Internal => ColumnVisibility.Internal,
+                Visibility.Important => ColumnVisibility.Important,
+                Visibility.Advanced => ColumnVisibility.Advanced,
+                Visibility.None => ColumnVisibility.Default,
+                _ => throw new NotImplementedException($"Unknown visibility {v}")
+            };
+        }
+
+        private static DataFormat? ToDataFormat(FormulaType ft)
+        {
+            return ft._type.Kind switch
+            {
+                DKind.Record or
+                DKind.Table or
+                DKind.OptionSetValue => DataFormat.Lookup,
+                DKind.String or
+                DKind.Decimal or
+                DKind.Number or
+                DKind.Currency => DataFormat.AllowedValues,
+                _ => null
+
+            };
         }
 
         internal ServiceCapabilities ServiceCapabilities;
+
+        private readonly TableMetadata _tableMetadata;
 
         public TabularDataQueryOptions QueryOptions => new TabularDataQueryOptions(this);
 
@@ -56,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public DataSourceKind Kind => DataSourceKind.Connected;
 
-        public IExternalTableMetadata TableMetadata => null; /* _tableMetadata; */
+        public IExternalTableMetadata TableMetadata => _tableMetadata;
 
         public IDelegationMetadata DelegationMetadata => throw new NotImplementedException();
 
@@ -74,18 +115,18 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool CanIncludeExpand(IExpandInfo parentExpandInfo, IExpandInfo expandToAdd) => true;
 
-        public bool CanIncludeSelect(string selectColumnName) => TableMetadata != null; /* && TableMetadata.CanIncludeSelect(selectColumnName);*/
+        public bool CanIncludeSelect(string selectColumnName) => TableMetadata != null && _tableMetadata.CanIncludeSelect(selectColumnName);
 
         public bool CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName) => true;
 
         public IReadOnlyList<string> GetKeyColumns()
         {            
-            return /*TableMetadata?.KeyColumns ??*/ new List<string>();
+            return _tableMetadata?.KeyColumns ?? new List<string>();
         }
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)
         {
             throw new NotImplementedException();
         }
-    }
+    }    
 }

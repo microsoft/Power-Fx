@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors
             return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
         }
 
-        public async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             if (DatasetMetadata == null)
             {
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="logger">Logger.</param>
         /// <returns>CdpTable class.</returns>
         /// <exception cref="InvalidOperationException">When no or more than one tables are identified.</exception>
-        public async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string tableName, bool? logicalOrDisplay, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string tableName, bool? logicalOrDisplay, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
             IEnumerable<CdpTable> tables = await GetTablesAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);

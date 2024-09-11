@@ -22,10 +22,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly string _uriPrefix;
 
-        private readonly bool _doubleEncoding;
-
-        // Temporary hack to generate ADS
-        public bool GenerateADS { get; init; }
+        private readonly bool _doubleEncoding;        
 
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
