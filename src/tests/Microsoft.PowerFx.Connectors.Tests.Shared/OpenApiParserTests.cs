@@ -1361,6 +1361,34 @@ POST https://tip1-shared.azure-apim.net/invoke
         }
 
         [Fact]
+        public async Task Teams_GetMessageLocation_WithSuggestions()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction createRecord = functions.First(f => f.Name == "PostCardToConversation");
+
+            testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageLocations.json");
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("poster", FormulaValue.New("Flow bot"))
+                },
+                createRecord.RequiredParameters[1], // actionName
+                runtimeContext,
+                CancellationToken.None);
+
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
+            Assert.Equal(3, suggestions1.Suggestions.Count);
+            Assert.Equal("Channel", suggestions1.Suggestions[0].DisplayName);
+            Assert.Equal("Group chat", suggestions1.Suggestions[1].DisplayName);
+            Assert.Equal("Chat with Flow bot", suggestions1.Suggestions[2].DisplayName);
+        }
+
         public void ABS_GetTriggers()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json", _output);
