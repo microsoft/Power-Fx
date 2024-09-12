@@ -38,20 +38,10 @@ namespace Microsoft.PowerFx.Connectors
         public bool AllowUnsupportedFunctions { get; init; } = false;
 
         /// <summary>
-        /// Enables the suggestion mapping logic to use "value" and "displayName" as fallback property names.
+        /// Enables the suggestion transformation logic to use "value" and "displayName" as fallback property names.
         /// Serves as a safeguard when the actual response from the suggestion API doesn't align with the Swagger specification.
         /// </summary>
-        public bool AllowSuggestionMappingFallback { get; init; } = false;
-
-        /// <summary>
-        /// Suggestion item's value fallback key. Defaults to "value". 
-        /// </summary>
-        public string SuggestionMappingFallbackValueKey { get; init; } = "value";
-
-        /// <summary>
-        /// Suggestion item's title fallback key. Defaults to "displayName". 
-        /// </summary>
-        public string SuggestionMappingFallbackTitleKey { get; init; } = "displayName";
+        public bool UseDefaultSuggestionKeysAsFallback { get; init; } = false;
 
         /// <summary>
         /// Include webhook functions that contain "x-ms-notification-content" in definition.

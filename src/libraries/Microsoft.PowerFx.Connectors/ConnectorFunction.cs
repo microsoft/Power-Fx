@@ -1182,16 +1182,16 @@ namespace Microsoft.PowerFx.Connectors
                     // returning empty result. For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
                     // in fact returns List<{value, displayName}>.
                     // Fallback to "displayName" and "value" which are the most commonly used property names in suggestion response.
-                    if (connectorSettings != null && connectorSettings.AllowSuggestionMappingFallback)
+                    if (connectorSettings != null && connectorSettings.UseDefaultSuggestionKeysAsFallback)
                     {
                         if (title.ValueKind == JsonValueKind.Undefined)
                         {
-                            title = ExtractFromJson(jElement, connectorSettings.SuggestionMappingFallbackTitleKey);
+                            title = ExtractFromJson(jElement, "displayName");
                         }
 
                         if (value.ValueKind == JsonValueKind.Undefined)
                         {
-                            value = ExtractFromJson(jElement, connectorSettings.SuggestionMappingFallbackValueKey);
+                            value = ExtractFromJson(jElement, "value");
                         }
                     }
 
@@ -1234,16 +1234,16 @@ namespace Microsoft.PowerFx.Connectors
                 JsonElement title = ExtractFromJson(jElement, cdl.ItemTitlePath);
                 JsonElement value = ExtractFromJson(jElement, cdl.ItemValuePath);
 
-                if (connectorSettings != null && connectorSettings.AllowSuggestionMappingFallback)
+                if (connectorSettings != null && connectorSettings.UseDefaultSuggestionKeysAsFallback)
                 {
                     if (title.ValueKind == JsonValueKind.Undefined)
                     {
-                        title = ExtractFromJson(jElement, connectorSettings.SuggestionMappingFallbackTitleKey);
+                        title = ExtractFromJson(jElement, "displayName");
                     }
 
                     if (value.ValueKind == JsonValueKind.Undefined)
                     {
-                        value = ExtractFromJson(jElement, connectorSettings.SuggestionMappingFallbackValueKey);
+                        value = ExtractFromJson(jElement, "value");
                     }
                 }
 
