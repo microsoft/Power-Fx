@@ -334,15 +334,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="connectorParameter">Parameter for which we need a set of suggestions.</param>
         /// <param name="runtimeContext">Runtime connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <param name="connectorSettings">Connector settings.</param>
         /// <returns>ConnectorParameters class with suggestions.</returns>
-        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetParameterSuggestionsAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorParameter(connectorParameter)}");
-                ConnectorParameters parameters = await GetParameterSuggestionsInternalAsync(knownParameters, connectorParameter, runtimeContext, cancellationToken, connectorSettings).ConfigureAwait(false);
+                ConnectorParameters parameters = await GetParameterSuggestionsInternalAsync(knownParameters, connectorParameter, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetParameterSuggestionsAsync))}, returning {LogConnectorParameters(parameters)}");
                 return parameters;
             }
@@ -353,13 +352,13 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<ConnectorParameters> GetParameterSuggestionsInternalAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        internal async Task<ConnectorParameters> GetParameterSuggestionsInternalAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetParameterSuggestionsInternalAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorParameter(connectorParameter)}");
 
             List<ConnectorParameterWithSuggestions> parametersWithSuggestions = new List<ConnectorParameterWithSuggestions>();
-            ConnectorEnhancedSuggestions suggestions = GetConnectorSuggestionsInternalAsync(knownParameters, connectorParameter.ConnectorType, runtimeContext, cancellationToken, connectorSettings).ConfigureAwait(false).GetAwaiter().GetResult();
+            ConnectorEnhancedSuggestions suggestions = GetConnectorSuggestionsInternalAsync(knownParameters, connectorParameter.ConnectorType, runtimeContext, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             runtimeContext.ExecutionLogger?.LogDebug($"In {this.LogFunction(nameof(GetParameterSuggestionsInternalAsync))}, returning from {nameof(GetConnectorSuggestionsInternalAsync)} with {LogConnectorEnhancedSuggestions(suggestions)}");
             foreach (ConnectorParameter parameter in RequiredParameters.Union(OptionalParameters))
@@ -386,15 +385,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="connectorType">Connector type for which we need a set of suggestions.</param>
         /// <param name="runtimeContext">Runtime connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <param name="connectorSettings">Connector settings.</param>
         /// <returns>ConnectorParameters class with suggestions.</returns>
-        public async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        public async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 runtimeContext.ExecutionLogger?.LogInformation($"Entering in {this.LogFunction(nameof(GetConnectorSuggestionsAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorType(connectorType)}");
-                ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsInternalAsync(knownParameters, connectorType, runtimeContext, cancellationToken, connectorSettings).ConfigureAwait(false);
+                ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsInternalAsync(knownParameters, connectorType, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsAsync))}, returning from {nameof(GetConnectorSuggestionsInternalAsync)} with {LogConnectorEnhancedSuggestions(suggestions)}");
                 return suggestions;
             }
@@ -405,7 +403,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        internal async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsInternalAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             runtimeContext.ExecutionLogger?.LogDebug($"Entering in {this.LogFunction(nameof(GetConnectorSuggestionsInternalAsync))}, with {LogKnownParameters(knownParameters)}, {LogConnectorType(connectorType)}");
@@ -414,7 +412,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (connectorType.DynamicList != null)
                 {
-                    ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, runtimeContext, connectorType.DynamicList, cancellationToken, connectorSettings).ConfigureAwait(false);
+                    ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, runtimeContext, connectorType.DynamicList, cancellationToken).ConfigureAwait(false);
                     runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicListAsync)} with {LogConnectorEnhancedSuggestions(suggestions)}");
                     return suggestions;
                 }
@@ -422,7 +420,7 @@ namespace Microsoft.PowerFx.Connectors
                 // BuiltInOperation and capability are currently not supported
                 if (connectorType.DynamicValues != null)
                 {
-                    ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken, connectorSettings).ConfigureAwait(false);
+                    ConnectorEnhancedSuggestions suggestions = await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken).ConfigureAwait(false);
                     runtimeContext.ExecutionLogger?.LogDebug($"Exiting {this.LogFunction(nameof(GetConnectorSuggestionsInternalAsync))}, returning from {nameof(GetConnectorSuggestionsFromDynamicValueAsync)} with {LogConnectorEnhancedSuggestions(suggestions)}");
                     return suggestions;
                 }
@@ -1145,7 +1143,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicValue cdv, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdv, knownParameters, runtimeContext);
@@ -1182,17 +1180,14 @@ namespace Microsoft.PowerFx.Connectors
                     // returning empty result. For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
                     // in fact returns List<{value, displayName}>.
                     // Fallback to "displayName" and "value" which are the most commonly used property names in suggestion response.
-                    if (connectorSettings != null && connectorSettings.UseDefaultSuggestionKeysAsFallback)
+                    if (title.ValueKind == JsonValueKind.Undefined)
                     {
-                        if (title.ValueKind == JsonValueKind.Undefined)
-                        {
-                            title = ExtractFromJson(jElement, "displayName");
-                        }
+                        title = ExtractFromJson(jElement, "displayName");
+                    }
 
-                        if (value.ValueKind == JsonValueKind.Undefined)
-                        {
-                            value = ExtractFromJson(jElement, "value");
-                        }
+                    if (value.ValueKind == JsonValueKind.Undefined)
+                    { 
+                        value = ExtractFromJson(jElement, "value");
                     }
 
                     if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)
@@ -1208,7 +1203,7 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorEnhancedSuggestions(SuggestionMethod.DynamicValue, suggestions);
         }
 
-        private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicListAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicList cdl, CancellationToken cancellationToken, ConnectorSettings connectorSettings = null)
+        private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicListAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicList cdl, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdl, knownParameters, runtimeContext);
@@ -1234,17 +1229,14 @@ namespace Microsoft.PowerFx.Connectors
                 JsonElement title = ExtractFromJson(jElement, cdl.ItemTitlePath);
                 JsonElement value = ExtractFromJson(jElement, cdl.ItemValuePath);
 
-                if (connectorSettings != null && connectorSettings.UseDefaultSuggestionKeysAsFallback)
+                if (title.ValueKind == JsonValueKind.Undefined)
                 {
-                    if (title.ValueKind == JsonValueKind.Undefined)
-                    {
-                        title = ExtractFromJson(jElement, "displayName");
-                    }
+                    title = ExtractFromJson(jElement, "displayName");
+                }
 
-                    if (value.ValueKind == JsonValueKind.Undefined)
-                    {
-                        value = ExtractFromJson(jElement, "value");
-                    }
+                if (value.ValueKind == JsonValueKind.Undefined)
+                {
+                    value = ExtractFromJson(jElement, "value");
                 }
 
                 if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)

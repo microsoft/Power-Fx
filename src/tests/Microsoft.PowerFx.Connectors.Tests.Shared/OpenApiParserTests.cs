@@ -1389,7 +1389,7 @@ POST https://tip1-shared.azure-apim.net/invoke
             ConnectorFunction createRecord = functions.First(f => f.Name == "PostCardToConversation");
 
             testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageLocations.json");
-            ConnectorParameters parametersWithoutFallback = await createRecord.GetParameterSuggestionsAsync(
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
                 new NamedValue[]
                 {
                     new NamedValue("poster", FormulaValue.New("Flow bot"))
@@ -1398,25 +1398,11 @@ POST https://tip1-shared.azure-apim.net/invoke
                 runtimeContext,
                 CancellationToken.None);
 
-            ConnectorParameterWithSuggestions suggestionsWithoutFallback = parametersWithoutFallback.ParametersWithSuggestions[1];
-            Assert.Empty(suggestionsWithoutFallback.Suggestions);
-
-            testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageLocations.json");
-            ConnectorParameters parametersWithFallback = await createRecord.GetParameterSuggestionsAsync(
-                new NamedValue[]
-                {
-                    new NamedValue("poster", FormulaValue.New("Flow bot"))
-                },
-                createRecord.RequiredParameters[1], // actionName
-                runtimeContext,
-                CancellationToken.None,
-                new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, UseDefaultSuggestionKeysAsFallback = true });
-            ConnectorParameterWithSuggestions suggestionsWithFallback = parametersWithFallback.ParametersWithSuggestions[1];
-
-            Assert.Equal(3, suggestionsWithFallback.Suggestions.Count);
-            Assert.Equal("Channel", suggestionsWithFallback.Suggestions[0].DisplayName);
-            Assert.Equal("Group chat", suggestionsWithFallback.Suggestions[1].DisplayName);
-            Assert.Equal("Chat with Flow bot", suggestionsWithFallback.Suggestions[2].DisplayName);
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
+            Assert.Equal(3, suggestions1.Suggestions.Count);
+            Assert.Equal("Channel", suggestions1.Suggestions[0].DisplayName);
+            Assert.Equal("Group chat", suggestions1.Suggestions[1].DisplayName);
+            Assert.Equal("Chat with Flow bot", suggestions1.Suggestions[2].DisplayName);
         }
 
         [Fact]
