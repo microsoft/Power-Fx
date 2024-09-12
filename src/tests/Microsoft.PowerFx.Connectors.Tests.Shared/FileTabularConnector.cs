@@ -73,12 +73,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
 
-        public override bool IsDelegable => false;
-
-        public override ConnectorType ConnectorType => null;
+        public override bool IsDelegable => false;        
 
         // No need for files
         public override HttpClient HttpClient => null;
+
+        public override IReadOnlyDictionary<string, Relationship> Relationships => null;
 
         // Initialization can be synchronous
         public void Init()

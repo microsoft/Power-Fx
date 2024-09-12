@@ -33,13 +33,13 @@ namespace Microsoft.PowerFx.Tests
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 
-            ConnectorType ctCdp = ConnectorFunction.GetConnectorTypeAndTableCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
-            ConnectorType ctPa = ConnectorFunction.GetConnectorTypeAndTableCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
-            ConnectorType ctSw = ConnectorFunction.GetConnectorTypeAndTableCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctCdp, var _) = ConnectorFunction.GetRelationshipsAndTypeWithCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctPa, var _) = ConnectorFunction.GetRelationshipsAndTypeWithCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctSw, var _) = ConnectorFunction.GetRelationshipsAndTypeWithCapabilities(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
 
-            string cdp = ctCdp.FormulaType._type.ToString();
-            string pa = ctPa.FormulaType._type.ToString();
-            string sw = ctSw.FormulaType._type.ToString();
+            string cdp = ctCdp._type.ToString();
+            string pa = ctPa._type.ToString();
+            string sw = ctSw._type.ToString();
 
             // CDP compatibility: priority is an enum, when "format": "enum" isn't present
             Assert.Equal("![Id1:s, Id3:s, Id4:s, priority:l, priority2:l]", cdp);

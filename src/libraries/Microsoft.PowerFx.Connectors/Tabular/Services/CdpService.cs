@@ -20,16 +20,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool IsInitialized => TableType != null;
 
-        public abstract bool IsDelegable { get; }
+        public abstract bool IsDelegable { get; }        
 
-        public abstract ConnectorType ConnectorType { get; }
+        public abstract IReadOnlyDictionary<string, Relationship> Relationships { get; }
 
         public abstract HttpClient HttpClient { get; }
 
         public virtual CdpTableValue GetTableValue()
         {
             return IsInitialized
-                ? new CdpTableValue(this, ConnectorType)
+                ? new CdpTableValue(this, Relationships)
                 : throw new InvalidOperationException(NotInitialized);
         }
 

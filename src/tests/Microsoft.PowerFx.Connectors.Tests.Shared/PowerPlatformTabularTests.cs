@@ -124,10 +124,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(DataSourceKind.Connected, tds.Kind);
             Assert.Equal("Customers", tds.Name);
             Assert.True(tds.RequiresAsync);
-            Assert.NotNull(tds.ServiceCapabilities);
-
-            Assert.NotNull(sqlTable._connectorType);
-            Assert.Null(sqlTable._connectorType.Relationships);
+            Assert.NotNull(tds.ServiceCapabilities);                        
+            Assert.Null(sqlTable.Relationships);
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -225,9 +223,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
-
-            Assert.NotNull(sqlTable._connectorType);
-            Assert.Null(sqlTable._connectorType.Relationships); // TO BE CHANGED, x-ms-relationships only for now
+            
+            Assert.Null(sqlTable.Relationships); // TO BE CHANGED, x-ms-relationships only for now
 
             SymbolValues symbolValues = new SymbolValues().Add(fxTableName, sqlTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -437,14 +434,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Documents", tds.Name);
             Assert.True(tds.RequiresAsync);
             Assert.NotNull(tds.ServiceCapabilities);
-#endif
-
-            Assert.NotNull(spTable._connectorType);
-            Assert.NotNull(spTable._connectorType.Relationships);
-            Assert.Equal(3, spTable._connectorType.Relationships.Count);
-            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => kvp.Key)));
-            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => kvp.Value.TargetEntity)));
-            Assert.Equal("Editor#Claims-Claims, Author#Claims-Claims, CheckoutUser#Claims-Claims", string.Join(", ", spTable._connectorType.Relationships.Select(kvp => string.Join("|", kvp.Value.ReferentialConstraints.Select(kvp2 => $"{kvp2.Key}-{kvp2.Value}")))));
+#endif          
+            Assert.NotNull(spTable.Relationships);
+            Assert.Equal(3, spTable.Relationships.Count);
+            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable.Relationships.Select(kvp => kvp.Key)));
+            Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable.Relationships.Select(kvp => kvp.Value.TargetEntity)));
+            Assert.Equal("Editor#Claims-Claims, Author#Claims-Claims, CheckoutUser#Claims-Claims", string.Join(", ", spTable.Relationships.Select(kvp => string.Join("|", kvp.Value.ReferentialConstraints.Select(kvp2 => $"{kvp2.Key}-{kvp2.Value}")))));
 
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -689,11 +684,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(tds.RequiresAsync);
             Assert.NotNull(tds.ServiceCapabilities);
 #endif
-
-            Assert.NotNull(sfTable._connectorType);
-
+            
             // SF doesn't use x-ms-releationships extension
-            Assert.Null(sfTable._connectorType.Relationships);
+            Assert.Null(sfTable.Relationships);
 
             // needs Microsoft.PowerFx.Connectors.CdpExtensions
             // this call does not make any network call

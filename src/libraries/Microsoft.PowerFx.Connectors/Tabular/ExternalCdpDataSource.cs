@@ -43,6 +43,32 @@ namespace Microsoft.PowerFx.Connectors
             _tableMetadata = new TableMetadata(name, datasetName, isReadOnly, columns);
         }
 
+        public ExternalCdpDataSource(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        {
+            EntityName = name;
+            ServiceCapabilities = serviceCapabilities;
+            IsWritable = !isReadOnly;
+
+            CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
+            CdpDataSourceMetadata tabularDataSourceMetadata = new CdpDataSourceMetadata(name.Value, datasetName);
+            tabularDataSourceMetadata.LoadClientSemantics();
+            metadataProvider.AddSource(name.Value, tabularDataSourceMetadata);
+
+            DataEntityMetadataProvider = metadataProvider;
+            IsConvertingDisplayNameMapping = false;
+            DisplayNameMapping = displayNameMapping ?? new BidirectionalDictionary<string, string>();
+            PreviousDisplayNameMapping = null;
+
+            List<ColumnMetadata> columns = recordType.FieldNames.Select((string fieldName) =>
+            {
+                FormulaType fieldType = recordType.GetFieldType(fieldName);
+                return new ColumnMetadata(fieldName, fieldType._type, ToDataFormat(fieldType), fieldName /* display name */, false /* is read-only */, false /* primary key */, false /* isRequired */, 
+                                          ColumnCreationKind.UserProvided, ColumnVisibility.Default, fieldName, fieldName, fieldName, null, null);
+            }).ToList();
+
+            _tableMetadata = new TableMetadata(name, datasetName, isReadOnly, columns);
+        }
+
         private static ColumnVisibility ToColumnVisibility(Visibility v)
         {
             return v switch

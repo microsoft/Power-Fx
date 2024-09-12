@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Entities; 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -18,9 +18,9 @@ namespace Microsoft.PowerFx.Connectors
     {
         public bool IsDelegable => _tabularService.IsDelegable;
 
-        protected internal readonly CdpService _tabularService;
+        protected internal readonly CdpService _tabularService;        
 
-        protected internal readonly ConnectorType _connectorType;
+        internal readonly IReadOnlyDictionary<string, Relationship> Relationships;
 
         private IReadOnlyCollection<DValue<RecordValue>> _cachedRows;
 
@@ -28,12 +28,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public RecordType TabularRecordType => _tabularService?.TabularRecordType;
         
-        public CdpTableValue(CdpService tabularService, ConnectorType connectorType)
+        public CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
             : base(IRContext.NotInSource(new CdpTableType(tabularService.TableType)))
         {
             _tabularService = tabularService;
-            _connectorType = connectorType;
-            
+            Relationships = relationships;                        
             HttpClient = tabularService.HttpClient;
         }
 

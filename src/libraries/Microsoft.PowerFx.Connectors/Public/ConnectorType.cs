@@ -271,18 +271,25 @@ namespace Microsoft.PowerFx.Connectors
             ForeignKey = relationship.ReferencedColumnName;
         }
 
-        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             if (FormulaType is not RecordType)
             {
                 throw new PowerFxConnectorException("Invalid FormulaType");
             }
 
-            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(connectorType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(this, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
             DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
             FormulaType = new KnownRecordType(newDType);
 
-            FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
+            FormulaType = new CdpRecordType(this, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
+        }
+
+        internal static FormulaType GetRecordTypeWithADS(RecordType recordType, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        {            
+            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(recordType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
+            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);
+            return new KnownRecordType(newDType);            
         }
 
         private void AggregateErrors(ConnectorType[] types)

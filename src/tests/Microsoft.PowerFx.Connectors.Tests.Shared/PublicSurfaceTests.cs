@@ -59,6 +59,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
+              "Microsoft.PowerFx.Connectors.Relationship",
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",

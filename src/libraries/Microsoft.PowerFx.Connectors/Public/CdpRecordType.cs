@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 CdpTableDescriptor ttd = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                type = ttd.ConnectorType.FormulaType;
+                type = ttd.FormulaType;
                 return true;
             }
             catch (Exception ex)

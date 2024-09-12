@@ -24,11 +24,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
-        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;
-
-        public override ConnectorType ConnectorType => TabularTableDescriptor.ConnectorType;
+        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;        
 
         internal ServiceCapabilities TableCapabilities => TabularTableDescriptor.TableCapabilities;
+
+        public override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 
         internal DatasetMetadata DatasetMetadata;
 
@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Connectors
         private string _uriPrefix;
 
         private HttpClient _httpClient;
+
+        private IReadOnlyDictionary<string, Relationship> _relationships;
 
         internal CdpTable(string dataset, string table, IReadOnlyCollection<RawTable> tables)
         {
@@ -76,7 +78,8 @@ namespace Microsoft.PowerFx.Connectors
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
-            SetRecordType((RecordType)TabularTableDescriptor.ConnectorType?.FormulaType);
+            SetRecordType((RecordType)TabularTableDescriptor.FormulaType);
+            _relationships = TabularTableDescriptor.Relationships;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
