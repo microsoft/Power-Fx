@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.ComponentModel;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -35,6 +36,12 @@ namespace Microsoft.PowerFx.Connectors
         /// NotSupportedReason property will still be specified.
         /// </summary>
         public bool AllowUnsupportedFunctions { get; init; } = false;
+
+        /// <summary>
+        /// Enables the suggestion transformation logic to use "value" and "displayName" as fallback property names.
+        /// Serves as a safeguard when the actual response from the suggestion API doesn't align with the Swagger specification.
+        /// </summary>
+        public bool UseDefaultSuggestionKeysAsFallback { get; init; } = false;
 
         /// <summary>
         /// Include webhook functions that contain "x-ms-notification-content" in definition.
