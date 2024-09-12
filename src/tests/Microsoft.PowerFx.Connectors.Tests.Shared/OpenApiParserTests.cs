@@ -1410,7 +1410,7 @@ POST https://tip1-shared.azure-apim.net/invoke
                 createRecord.RequiredParameters[1], // actionName
                 runtimeContext,
                 CancellationToken.None,
-                new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, UseDefaultSuggestionKeysAsFallback = true });
+                new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, AllowSuggestionMappingFallback = true });
             ConnectorParameterWithSuggestions suggestionsWithFallback = parametersWithFallback.ParametersWithSuggestions[1];
 
             Assert.Equal(3, suggestionsWithFallback.Suggestions.Count);
