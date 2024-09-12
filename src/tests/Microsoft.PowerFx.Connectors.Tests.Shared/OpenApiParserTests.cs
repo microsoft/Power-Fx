@@ -1385,10 +1385,12 @@ POST https://tip1-shared.azure-apim.net/invoke
 
             BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, AllowSuggestionMappingFallback = true }, testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "PostCardToConversation");
 
+            // This example response returns with "value" and "displayName", only when AllowSuggestionMappingFallback = true it will be recognized.
             testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageLocations.json");
+
             ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
                 new NamedValue[]
                 {
