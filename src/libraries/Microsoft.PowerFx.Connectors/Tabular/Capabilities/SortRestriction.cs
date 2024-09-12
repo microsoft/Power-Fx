@@ -27,7 +27,10 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertValueOrNull(unsortableProperties);
             Contracts.AssertValueOrNull(ascendingOnlyProperties);
 
+            // List of properties which support ascending order only
             AscendingOnlyProperties = ascendingOnlyProperties;
+
+            // List of unsortable properties
             UnsortableProperties = unsortableProperties;
         }
     }

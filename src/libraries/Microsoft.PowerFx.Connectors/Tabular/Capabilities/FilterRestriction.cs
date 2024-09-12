@@ -27,7 +27,10 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertValueOrNull(requiredProperties);
             Contracts.AssertValueOrNull(nonFilterableProperties);
 
+            // List of required properties
             RequiredProperties = requiredProperties;
+
+            // List of non filterable properties
             NonFilterableProperties = nonFilterableProperties;
         }
     }
