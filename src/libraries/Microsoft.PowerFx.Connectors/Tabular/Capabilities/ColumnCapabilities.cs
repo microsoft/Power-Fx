@@ -19,12 +19,24 @@ namespace Microsoft.PowerFx.Connectors
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, ColumnCapabilitiesBase> Properties => _childColumnsCapabilities.Any() ? _childColumnsCapabilities : null;
 
-        private readonly Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
+        private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
         [JsonInclude]
         [JsonPropertyName(Constants.XMsCapabilities)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly ColumnCapabilitiesDefinition Capabilities;
+        public ColumnCapabilitiesDefinition Capabilities;
+
+        public static readonly string[] DefaultCdsFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
+
+        public static ColumnCapabilities DefaultCdsColumnCapabilities => new ColumnCapabilities()
+        {
+            Capabilities = new ColumnCapabilitiesDefinition(DefaultCdsFilterFunctionSupport, null, null),
+            _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>()
+        };
+
+        private ColumnCapabilities()
+        {
+        }
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {

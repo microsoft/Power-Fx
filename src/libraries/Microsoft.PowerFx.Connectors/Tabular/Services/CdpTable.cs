@@ -55,6 +55,14 @@ namespace Microsoft.PowerFx.Connectors
             DatasetMetadata = datasetMetadata;
         }
 
+        // For testing only (in Dataverse)
+        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, CdpTableDescriptor cdpTableDescriptor, RecordType recordType)
+            : this(dataset, table, datasetMetadata, tables)
+        {
+            TabularTableDescriptor = cdpTableDescriptor;
+            SetRecordType(recordType);
+        }
+
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
         public async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)

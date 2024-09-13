@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
 // as it defines CapabilitiesConstants which has invalid values.
@@ -133,6 +134,14 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             _columnsCapabilities.Add(name, capability);
+        }
+
+        public void AddCdsColumnCapabilities(RecordType recordType)
+        {
+            foreach (string fieldName in recordType.FieldNames)
+            {
+                AddColumnCapability(fieldName, ColumnCapabilities.DefaultCdsColumnCapabilities);
+            }
         }
 
         // From PowerApps-Client repo, src\AppMagic\dll\AuthoringCore\Importers\DataDescription\ServiceCapabilitiesParser.cs

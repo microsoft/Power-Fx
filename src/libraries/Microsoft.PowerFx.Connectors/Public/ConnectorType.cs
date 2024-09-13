@@ -285,7 +285,8 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = new CdpRecordType(this, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
         }
 
-        internal static FormulaType GetRecordTypeWithADS(RecordType recordType, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        // Used for testing only
+        internal static RecordType GetRecordTypeWithADS(RecordType recordType, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {            
             HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(recordType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
             DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);

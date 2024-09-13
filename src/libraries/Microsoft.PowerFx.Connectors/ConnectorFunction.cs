@@ -1005,7 +1005,8 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetRelationshipsAndTypeWithCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
+        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetCapabilitiesAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1017,8 +1018,14 @@ namespace Microsoft.PowerFx.Connectors
             // Json version to be able to read SalesForce unique properties
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je, sqlRelationships);
             connectorType.Name = name;
-            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
 
+            foreach (ConnectorType field in connectorType.Fields.Where(f => f.Capabilities != null))            
+            {
+                // Column capabilities
+                tableCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+            }
+
+            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
             ConnectorPermission tablePermission = tableSchema.GetPermission();
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
 
