@@ -1,22 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
-using CallNode = Microsoft.PowerFx.Syntax.CallNode;
-using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -69,6 +62,37 @@ namespace Microsoft.PowerFx.Core.Utils
                 errors.EnsureError(targetArg, TexlStrings.ErrInvalidArgs_Func, function.Name);
                 return;
             }
+        }
+
+        public static bool CheckPrimaryKeys(TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            var arg0 = argTypes[0];
+            var arg1 = argTypes[1];
+
+            if (arg0.AssociatedDataSources.Any() &&
+                arg0.AssociatedDataSources.Single() is IExternalTabularDataSource externalTabularDataSource)
+            {
+                if (!externalTabularDataSource.GetKeyColumns().Any())
+                {
+                    errors.EnsureError(args[0], TexlStrings.ErrPatchSingleRecordInvalidTableRecord);
+                    return false;
+                }
+
+                var primaryKeys = externalTabularDataSource.GetKeyColumns();
+                var arg1Names = arg1.GetNames(DPath.Root).Select(tn => tn.Name.Value);
+                var missingPrimaryKey = primaryKeys.Where(name => !arg1Names.Contains(name)).Any();
+
+                if (missingPrimaryKey)
+                {
+                    errors.EnsureError(args[0], TexlStrings.ErrPatchSingleRecordInvalidTableRecord);
+                    return false;
+                }
+
+                return true;
+            }
+
+            errors.EnsureError(args[0], TexlStrings.ErrPatchSingleRecordInvalidTableRecord);
+            return false;
         }
     }
 }

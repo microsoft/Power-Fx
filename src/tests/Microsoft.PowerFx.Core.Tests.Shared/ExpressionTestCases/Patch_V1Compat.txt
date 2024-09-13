@@ -272,17 +272,17 @@ Table({Field1:123,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},
 // **********************************************************
 
 >> Patch(t1, Table(r1))
-Error({Kind:ErrorKind.NotSupported})
+Errors: Error 6-8: Patch single record or table of single records is invalid for tables/records with no primary key.
 
 >> Patch(t1, If(false,t1))
-Blank()
+Errors: Error 6-8: Patch single record or table of single records is invalid for tables/records with no primary key.
 
 
 // **********************************************************
 // Patch(DS, record_with_keys_and_updates)
 // **********************************************************
 >> Patch(t1, r1)
-Error({Kind:ErrorKind.NotSupported})
+Errors: Error 6-8: Patch single record or table of single records is invalid for tables/records with no primary key.
 
 >> Patch(t1, If(false,r1))
-Blank()
+Errors: Error 6-8: Patch single record or table of single records is invalid for tables/records with no primary key.

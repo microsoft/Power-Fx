@@ -10,13 +10,10 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.DLP;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -474,6 +471,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.PatchArg_Source, TexlStrings.PatchArg_Record };
         }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            MutationUtils.CheckPrimaryKeys(args, argTypes, errors);
+        }
     }
 
     // Patch(DS, table_of_rows, table_of_updates)
@@ -515,6 +517,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.PatchArg_Source, TexlStrings.PatchArg_Rows };
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            MutationUtils.CheckPrimaryKeys(args, argTypes, errors);
         }
     }
 

@@ -843,5 +843,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
         public static ErrorResourceKey ErrInvalidArgumentExpectedType = new ErrorResourceKey("ErrInvalidArgumentExpectedType");
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
+        public static ErrorResourceKey ErrPatchSingleRecordInvalidTableRecord = new ErrorResourceKey("ErrPatchSingleRecordInvalidTableRecord");
     }
 }
