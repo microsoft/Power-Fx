@@ -621,6 +621,73 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
     }
+    
+    // Workday(timestamp: d, delta: n : d
+    internal sealed class WorkdayFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public WorkdayFunction()
+            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2 };
+            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2, TexlStrings.DateAddArg3 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
+        }
+
+        // This method returns true if there are special suggestions for a particular parameter of the function.
+        public override bool HasSuggestionsForParam(int argumentIndex)
+        {
+            Contracts.Assert(argumentIndex >= 0);
+
+            return argumentIndex == 2;
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.AssertValue(errors);
+            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType == DType.DateTime);
+
+            var type0 = argTypes[0];
+
+            if (fValid)
+            {
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
+                {
+                    // Arg0 should be a DateTime or Date.
+                    returnType = type0;
+                }
+                else if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
+                {
+                    // Or a type that can be coerced to it
+                    returnType = coercedType;
+                }
+                else
+                {
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDateExpected);
+                    returnType = ReturnType;
+                }
+            }
+
+            return fValid;
+        }
+    }
 
     // DateDiff(startdate: d, enddate : d, [ unit: TimeUnits ]) : n
     internal sealed class DateDiffFunction : BuiltinFunction
@@ -630,14 +697,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public DateDiffFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
+            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 2, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2 };
-            yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
