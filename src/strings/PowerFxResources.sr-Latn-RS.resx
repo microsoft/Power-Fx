@@ -2591,6 +2591,10 @@
     <value>Dodajte navedeni broj jedinica u datum.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Dodajte broj radnih dana pre ili posle datuma.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Izračunava razliku između dva datuma.</value>
     

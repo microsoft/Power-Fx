@@ -2591,6 +2591,10 @@
     <value>Přičte ke kalendářnímu datu zadaný počet jednotek.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Přidejte počet pracovních dnů před nebo po datu.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Vypočítá rozdíl mezi dvěma kalendářními daty.</value>
     

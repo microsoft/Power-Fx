@@ -2591,6 +2591,10 @@
     <value>Додавання до дати вказаної кількості одиниць вимірювання.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Додайте кількість робочих днів до або після дати.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Обчислення різниці між двома датами.</value>
     

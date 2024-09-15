@@ -2591,6 +2591,10 @@
     <value>Fügt einem Datum die angegebene Anzahl Einheiten hinzu.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Anzahl der Arbeitstage vor oder nach einem Datum hinzufügen.</value>
+    
+  </data>  
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Berechnet die Differenz zwischen zwei Datumswerten.</value>
     

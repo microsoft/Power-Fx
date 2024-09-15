@@ -2591,6 +2591,10 @@
     <value>किसी दिनांक की निर्दिष्ट इकाईयों की संख्या जोड़ता है.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>तारीख से पहले या बाद में कार्य दिवसों की संख्या जोड़ें.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>दो दिनांकों के बीच अंतर की गणना करता है.</value>
     

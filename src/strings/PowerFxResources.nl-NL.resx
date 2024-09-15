@@ -2591,6 +2591,10 @@
     <value>Voeg het opgegeven aantal units toe aan een datum.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Voeg aantal werkdagen toe voor of na een datum.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Bereken het verschil tussen twee datums.</value>
     

@@ -2591,6 +2591,10 @@
     <value>Engade o número especificado de unidades a unha data.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Engadir número de días laborables antes ou despois dunha data.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Calcule a diferenza entre dúas datas.</value>
     

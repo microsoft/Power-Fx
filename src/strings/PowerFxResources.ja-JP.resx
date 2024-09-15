@@ -2591,6 +2591,10 @@
     <value>日付に、指定数の単位を追加します。</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>日付の前後の稼働日数を追加します。</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>2 つの日付の差を計算します。</value>
     

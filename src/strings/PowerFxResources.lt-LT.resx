@@ -2591,6 +2591,10 @@
     <value>Į datą įtraukti nurodytą vienetų skaičių.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Darbo dienų prieš datą arba po jos skaičiaus pridėjimas.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Apskaičiuoti skirtumą tarp dviejų datų.</value>
     

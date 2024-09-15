@@ -2591,6 +2591,10 @@
     <value>Thêm số đơn vị được chỉ định cho một ngày.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Thêm số ngày làm việc trước hoặc sau một ngày.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Tính chênh lệch giữa hai ngày.</value>
     

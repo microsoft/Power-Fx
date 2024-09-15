@@ -2591,6 +2591,10 @@
     <value>Føj det angivne antal enheder til en dato.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Tilføj antal arbejdsdage før eller efter en dato.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Beregn forskellen mellem de to datoer.</value>
     

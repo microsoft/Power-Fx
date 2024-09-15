@@ -2591,6 +2591,10 @@
     <value>Gehitu zehaztutako unitate kopurua data batean.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Gehitu lanegun kopurua data baten aurretik edo ondoren.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>Kalkulatu bi daten arteko aldea.</value>
     

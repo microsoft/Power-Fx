@@ -2591,6 +2591,10 @@
     <value>Belirtilen birim sayısını tarihe ekler.</value>
     
   </data>
+  <data name="AboutWorkday" xml:space="preserve">
+    <value>Bir tarihten önce veya sonra çalışma günü sayısını ekleyin.</value>
+    
+  </data>
   <data name="AboutDateDiff" xml:space="preserve">
     <value>İki tarih arasındaki farkı hesaplar.</value>
     
