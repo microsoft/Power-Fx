@@ -2591,7 +2591,7 @@
     <value>Engade o número especificado de unidades a unha data.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Engadir número de días laborables antes ou despois dunha data.</value>
     
   </data>

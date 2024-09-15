@@ -2591,7 +2591,7 @@
     <value>Adiciona o número especificado de unidades a uma data.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Adicionar número de dias úteis antes ou depois de uma data.</value>
     
   </data>

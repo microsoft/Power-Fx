@@ -2591,7 +2591,7 @@
     <value>Afegeix el nombre d'unitats especificat a una data.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Afegir el nombre de dies laborables abans o després d’una data.</value>
     
   </data>

@@ -2591,7 +2591,7 @@
     <value>Dodaj określoną liczbę jednostek do daty.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Dodaj liczbę dni roboczych przed lub po dacie.</value>
     
   </data>

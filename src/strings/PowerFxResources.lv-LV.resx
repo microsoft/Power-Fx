@@ -2591,7 +2591,7 @@
     <value>Pievienojiet norādīto vienību skaitu datumam.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Pievienojiet darba dienu skaitu pirms vai pēc datuma.</value>
     
   </data>

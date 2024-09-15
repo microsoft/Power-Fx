@@ -2591,7 +2591,7 @@
     <value>向日期添加指定数量的单位。</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>添加日期前后的工作日数。</value>
     
   </data>

@@ -2591,7 +2591,7 @@
     <value>Lisää määritetty määrä yksiköitä päivämäärään.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Päivämäärää edeltävien tai sen jälkeisten työpäivien määrän lisääminen.</value>
     
   </data>

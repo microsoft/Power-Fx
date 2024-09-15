@@ -2591,7 +2591,7 @@
     <value>날짜에 지정된 단위 수를 추가합니다.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>날짜 전후의 근무일 수를 추가합니다.</value>
     
   </data>

@@ -2591,7 +2591,7 @@
     <value>เพิ่มตัวเลขของหน่วยที่ระบุไปยังวันที่</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>เพิ่มจำนวนวันทำงานก่อนหรือหลังวันที่</value>
     
   </data>

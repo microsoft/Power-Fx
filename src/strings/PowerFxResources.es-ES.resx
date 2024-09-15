@@ -2591,7 +2591,7 @@
     <value>Agregue el número especificado de unidades a una fecha.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Agregar el número de días hábiles antes o después de una fecha.</value>
     
   </data>

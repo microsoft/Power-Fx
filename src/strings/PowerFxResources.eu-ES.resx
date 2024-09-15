@@ -2591,7 +2591,7 @@
     <value>Gehitu zehaztutako unitate kopurua data batean.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Gehitu lanegun kopurua data baten aurretik edo ondoren.</value>
     
   </data>

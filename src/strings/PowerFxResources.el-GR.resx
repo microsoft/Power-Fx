@@ -2591,7 +2591,7 @@
     <value>Προσθέτει τον καθορισμένο αριθμό μονάδων σε μια ημερομηνία.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Добавяне на брой работни дни преди или след дата.</value>
     
   </data>

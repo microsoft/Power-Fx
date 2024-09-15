@@ -2591,7 +2591,7 @@
     <value>Doda določeno število enot datumu.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Dodajte število delovnih dni pred ali po datumu.</value>
     
   </data>

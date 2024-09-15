@@ -2591,7 +2591,7 @@
     <value>Menambahkan jumlah unit yang ditentukan untuk tanggal.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Tambahkan jumlah hari kerja sebelum atau sesudah tanggal.</value>
     
   </data>

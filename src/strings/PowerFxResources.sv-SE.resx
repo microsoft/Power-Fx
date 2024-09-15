@@ -2591,7 +2591,7 @@
     <value>Lägg till det angivna antalet enheter till ett datum.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Lägg till antal arbetsdagar före eller efter ett datum.</value>
     
   </data>

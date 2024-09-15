@@ -2591,7 +2591,7 @@
     <value>Į datą įtraukti nurodytą vienetų skaičių.</value>
     
   </data>
-  <data name="AboutWorkday" xml:space="preserve">
+  <data name="AboutWorkday_date" xml:space="preserve">
     <value>Darbo dienų prieš datą arba po jos skaičiaus pridėjimas.</value>
     
   </data>
