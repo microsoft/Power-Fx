@@ -628,14 +628,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public WorkdayFunction()
-            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number)
+            : base("Workday", TexlStrings.AboutWorkday, FunctionCategories.DateTime, DType.DateTime, 0, 2, 2, DType.DateTime, DType.Number)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2 };
-            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2, TexlStrings.DateAddArg3 };
         }
 
         public override IEnumerable<string> GetRequiredEnumNames()
@@ -697,13 +696,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public DateDiffFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 2, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
+            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2 };
+            yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
