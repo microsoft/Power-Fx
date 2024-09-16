@@ -184,3 +184,6 @@ Error({Kind:ErrorKind.Div0})
 
 >> JSON(ParseJSON("[""True"", ""False""]"))
 "[""True"",""False""]"
+
+>> JSON(ParseJSON("   {  ""a"" :  1 }  "))
+"{""a"":1}"
