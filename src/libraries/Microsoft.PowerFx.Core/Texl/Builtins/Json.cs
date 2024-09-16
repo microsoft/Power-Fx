@@ -179,13 +179,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!ignoreUnsupportedTypes)
-            {
-                if (dataArgType.Kind == DKind.UntypedObject)
-                {
-                    errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
-                    return;
-                }
-
+            {                
                 if (HasUnsupportedType(dataArgType, supportsLazyTypes, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());

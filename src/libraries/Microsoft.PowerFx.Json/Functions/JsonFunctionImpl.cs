@@ -322,9 +322,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     Visit(untypedObjectValue.Impl);
                 }
 
-                private void Visit(IUntypedObject untypedObject)
-                {                    
+                private void Visit(IUntypedObject untypedObject, int index = 0)
+                {
                     FormulaType type = untypedObject.Type;
+
+                    if (index > 40)
+                    {
+                        return;
+                    }
 
                     if (type is StringType)
                     {
@@ -347,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                             {
                                 IUntypedObject row = untypedObject[i];
-                                Visit(row);                                
+                                Visit(row, index + 1);
                             }
 
                             _writer.WriteEndArray();
@@ -361,7 +366,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 if (untypedObject.TryGetProperty(propertyName, out IUntypedObject res))
                                 {
                                     _writer.WritePropertyName(propertyName);
-                                    Visit(res);                                    
+                                    Visit(res, index + 1);
                                 }
                             }
 
