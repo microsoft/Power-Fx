@@ -476,11 +476,7 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
-
-                        // for testing only
-                        case "fxnumber":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Number);
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);                       
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
