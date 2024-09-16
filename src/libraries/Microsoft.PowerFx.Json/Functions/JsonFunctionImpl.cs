@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             optionString = sv.Value;
                             break;
 
-                        // if not one of these, will check optionString != null below
+                            // if not one of these, will check optionString != null below
                     }
 
                     if (optionString != null)
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(ErrorValue errorValue)
-                {                    
+                {
                     ErrorValues.Add(errorValue);
                     _writer.WriteStringValue("ErrorValue");
                 }
@@ -319,7 +319,63 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 public void Visit(UntypedObjectValue untypedObjectValue)
                 {
-                    throw new ArgumentException($"Unable to serialize type {untypedObjectValue.GetType().FullName} to Json format.");
+                    Visit(untypedObjectValue.Impl);
+                }
+
+                private void Visit(IUntypedObject untypedObject)
+                {                    
+                    FormulaType type = untypedObject.Type;
+
+                    if (type is StringType)
+                    {
+                        _writer.WriteStringValue(untypedObject.GetString());
+                    }
+                    else if (type is NumberType || (type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+                    {
+                        _writer.WriteNumberValue(untypedObject.GetDouble());
+                    }
+                    else if (type is BooleanType)
+                    {
+                        _writer.WriteBooleanValue(untypedObject.GetBoolean());
+                    }
+                    else if (type is ExternalType externalType)
+                    {
+                        if (externalType.Kind == ExternalTypeKind.Array)
+                        {
+                            _writer.WriteStartArray();
+
+                            for (var i = 0; i < untypedObject.GetArrayLength(); i++)
+                            {
+                                IUntypedObject row = untypedObject[i];
+                                Visit(row);                                
+                            }
+
+                            _writer.WriteEndArray();
+                        }
+                        else if (externalType.Kind == ExternalTypeKind.Object && untypedObject.TryGetPropertyNames(out IEnumerable<string> propertyNames))
+                        {
+                            _writer.WriteStartObject();
+
+                            foreach (var propertyName in propertyNames)
+                            {
+                                if (untypedObject.TryGetProperty(propertyName, out IUntypedObject res))
+                                {
+                                    _writer.WritePropertyName(propertyName);
+                                    Visit(res);                                    
+                                }
+                            }
+
+                            _writer.WriteEndObject();
+                        }
+                        else
+                        {
+                            throw new NotSupportedException("Unknown ExternalType");
+                        }
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("Unknown IUntypedObject");
+                    }
                 }
 
                 public void Visit(BlobValue value)
@@ -332,7 +388,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteBase64StringValue(value.GetAsByteArrayAsync(CancellationToken.None).Result);
                     }
-                }                
+                }
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";

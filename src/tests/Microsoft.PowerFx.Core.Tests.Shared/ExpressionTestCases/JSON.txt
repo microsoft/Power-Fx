@@ -133,3 +133,60 @@ Error({Kind:ErrorKind.Div0})
 // Flattening nested tables
 >> JSON([[1,2,3],[4,5],[6]], JSONFormat.FlattenValueTables)
 "[[1,2,3],[4,5],[6]]"
+
+>> JSON(ParseJSON("{}"))
+Errors: Error 5-20: The JSON function cannot serialize objects of type 'UntypedObject'.
+
+>> JSON(ParseJSON("[]"))
+Errors: Error 5-20: The JSON function cannot serialize objects of type 'UntypedObject'.
+
+>> JSON(ParseJSON("{}"), JSONFormat.IgnoreUnsupportedTypes)
+"{}"
+
+>> JSON(ParseJSON("[]"), JSONFormat.IgnoreUnsupportedTypes)
+"[]"
+
+>> JSON(ParseJSON("1"), JSONFormat.IgnoreUnsupportedTypes)
+"1"
+
+>> JSON(ParseJSON("1.77"), JSONFormat.IgnoreUnsupportedTypes)
+"1.77"
+
+>> JSON(ParseJSON("-871"), JSONFormat.IgnoreUnsupportedTypes)
+"-871"
+
+>> JSON(ParseJSON("""John"""), JSONFormat.IgnoreUnsupportedTypes)
+"""John"""
+
+>> JSON(ParseJSON("true"), JSONFormat.IgnoreUnsupportedTypes)
+"true"
+
+>> JSON(ParseJSON("false"), JSONFormat.IgnoreUnsupportedTypes)
+"false"
+
+>> JSON(ParseJSON("{""a"": 1}"), JSONFormat.IgnoreUnsupportedTypes)
+"{""a"":1}"
+
+>> JSON(ParseJSON("{""a"": ""x""}"), JSONFormat.IgnoreUnsupportedTypes)
+"{""a"":""x""}"
+
+>> JSON(ParseJSON("[1]"), JSONFormat.IgnoreUnsupportedTypes)
+"[1]"
+
+>> JSON(ParseJSON("{""a"": 1.9}"), JSONFormat.IgnoreUnsupportedTypes)
+"{""a"":1.9}"
+
+>> JSON(ParseJSON("[1.9]"), JSONFormat.IgnoreUnsupportedTypes)
+"[1.9]"
+
+>> JSON(ParseJSON("{""a"":[1]}"), JSONFormat.IgnoreUnsupportedTypes)
+"{""a"":[1]}"
+
+>> JSON(ParseJSON("[{""a"": -17}]"), JSONFormat.IgnoreUnsupportedTypes)
+"[{""a"":-17}]"
+
+>> JSON(ParseJSON("[true, false]"), JSONFormat.IgnoreUnsupportedTypes)
+"[true,false]"
+
+>> JSON(ParseJSON("[""True"", ""False""]"), JSONFormat.IgnoreUnsupportedTypes)
+"[""True"",""False""]"
