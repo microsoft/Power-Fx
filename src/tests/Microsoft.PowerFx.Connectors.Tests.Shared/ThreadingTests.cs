@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var bugNames = new HashSet<string>()
             {
                 "ConnectorFunction._slash",
-                "ColumnCapabilities.DefaultCdsFilterFunctionSupport"
+                "ColumnCapabilities.DefaultFilterFunctionSupport"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

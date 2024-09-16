@@ -123,6 +123,23 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
+        public static ServiceCapabilities Default(RecordType recordType)
+        {
+            ServiceCapabilities serviceCapabilities = new ServiceCapabilities(
+                new SortRestriction(new List<string>() /* unsortableProperties */, new List<string>() /* ascendingOnlyProperties */),
+                new FilterRestriction(new List<string>() /* requiredProperties */, new List<string>() /* nonFilterableProperties */),
+                new SelectionRestriction(true /* isSelectable */),
+                new GroupRestriction(new List<string>() /* ungroupableProperties */),
+                ColumnCapabilities.DefaultFilterFunctionSupport, // filterFunctions
+                ColumnCapabilities.DefaultFilterFunctionSupport, // filterSupportedFunctions
+                new PagingCapabilities(false /* isOnlyServerPagable */, new string[0] /* serverPagingOptions */),
+                true); // recordPermissionCapabilities                                
+
+            serviceCapabilities.AddCdsColumnCapabilities(recordType);
+
+            return serviceCapabilities;
+        }
+
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {
             Contracts.AssertNonEmpty(name);

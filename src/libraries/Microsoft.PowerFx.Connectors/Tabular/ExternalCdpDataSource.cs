@@ -97,9 +97,16 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
+        internal void SetType(DType type)
+        {
+            _type = type;
+        }
+
         internal ServiceCapabilities ServiceCapabilities;
 
         private readonly TableMetadata _tableMetadata;
+
+        private DType _type;
 
         public TabularDataQueryOptions QueryOptions => new TabularDataQueryOptions(this);
 
@@ -129,7 +136,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public DName EntityName { get; }
 
-        public DType Type => throw new NotImplementedException();
+        public DType Type => _type;
 
         public bool IsConvertingDisplayNameMapping { get; protected set; }
 
