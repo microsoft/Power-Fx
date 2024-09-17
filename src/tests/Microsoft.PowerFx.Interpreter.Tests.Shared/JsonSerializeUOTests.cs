@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
             yield return (10, new TestUO(new bool[0]), @"""[]""");
             yield return (11, new TestUO(new[] { "abc", "def" }), @"""[""""abc"""",""""def""""]""");
             yield return (12, new TestUO(new string[0]), @"""[]""");
-            yield return (13, new TestUO(new[] { 11.7m, -7.5m }), @"""[11.7,-7.5]""");
+            yield return (13, new TestUO(new[] { 11.5m, -7.5m }), @"""[11.5,-7.5]""");
             yield return (14, new TestUO(new string[0]), @"""[]""");
             yield return (15, new TestUO(new[] { new[] { 1, 2 }, new[] { 3, 4 } }), @"""[[1,2],[3,4]]""");
             yield return (16, new TestUO(new[] { new object[] { 1, 2 }, new object[] { true, "a", 7 } }), @"""[[1,2],[true,""""a"""",7]]""");
