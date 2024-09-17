@@ -529,12 +529,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Use ECS flag as a guard.
             if (binding.Document != null)
             {
-                if (binding.Document.Properties is IECSFlags flags)
+                if (!binding.Features.IsRemoveAllDelegationEnabled)
                 {
-                    if (!flags.IsRemoveAllDelegationEnabled)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

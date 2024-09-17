@@ -91,6 +91,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsLookUpReductionDelegationEnabled { get; set; }
 
+        /// <summary>
+        /// Temporary flag.
+        /// </summary>
+        internal bool IsRemoveAllDelegationEnabled { get; set; }
+
         internal static Features None => new Features();
 
         public static Features PowerFxV1 => new Features
