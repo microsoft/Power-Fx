@@ -1,4 +1,4 @@
-﻿#SETUP: EnableJsonFunctions
+﻿#SETUP: EnableJsonFunctions, PowerFxV1CompatibilityRules
 
 >> JSON()
 Errors: Error 0-6: Invalid number of arguments: received 0, expected 1-2.
@@ -201,4 +201,7 @@ Error({Kind:ErrorKind.Custom})
 // Depth 41
 >> JSON(ParseJSON("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"))
 Error({Kind:ErrorKind.Custom})
+
+>> JSON(Decimal(ParseJSON("123456789012345.6789012345678")))
+"123456789012345.6789012345678"
 

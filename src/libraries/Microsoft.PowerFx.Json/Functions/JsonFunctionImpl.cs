@@ -129,6 +129,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             private class Utf8JsonWriterVisitor : IValueVisitor
             {
+                private const int _maxDepth = 20;
+
                 private readonly Utf8JsonWriter _writer;
                 private readonly TimeZoneInfo _timeZoneInfo;
                 private readonly bool _flattenValueTables;
@@ -326,7 +328,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     FormulaType type = untypedObject.Type;
 
-                    if (index > 40)
+                    if (index > _maxDepth)
                     {
                         IRContext irContext = IRContext.NotInSource(FormulaType.UntypedObject);
                         ErrorValues.Add(new ErrorValue(irContext, new ExpressionError()
@@ -343,7 +345,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteStringValue(untypedObject.GetString());
                     }
-                    else if (type is NumberType || (type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+                    else if (type is DecimalType || (type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+                    {
+                        _writer.WriteNumberValue(untypedObject.GetDecimal());
+                    }
+                    else if (type is NumberType)
                     {
                         _writer.WriteNumberValue(untypedObject.GetDouble());
                     }

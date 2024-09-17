@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Tests
             yield return (4, new TestUO("abc"), @"""""""abc""""""");
             yield return (5, new TestUO(null), @"""null""");
             yield return (6, new TestUO(0), @"""0""");
-            yield return (7, new TestUO(1.3f), @"""1.2999999523162842""");
+            yield return (7, new TestUO(1.3f), @"""1.3""");            
             yield return (8, new TestUO(-1.7m), @"""-1.7""");
             yield return (9, new TestUO(new[] { true, false }), @"""[true,false]""");
             yield return (10, new TestUO(new bool[0]), @"""[]""");
@@ -63,6 +63,7 @@ namespace Microsoft.PowerFx.Tests
             yield return (17, new TestUO(new { a = 10, b = -20m, c = "abc" }), @"""{""""a"""":10,""""b"""":-20,""""c"""":""""abc""""}""");
             yield return (18, new TestUO(new { x = new { y = true } }), @"""{""""x"""":{""""y"""":true}}""");
             yield return (19, new TestUO(new { x = new { y = new[] { 1 }, z = "a", t = new { } }, a = false }), @"""{""""x"""":{""""y"""":[1],""""z"""":""""a"""",""""t"""":{}},""""a"""":false}""");
+            yield return (20, new TestUO(123456789012345.6789012345678m), @"""123456789012345.6789012345678""");
         }
 
         public class TestUO : IUntypedObject
@@ -89,7 +90,8 @@ namespace Microsoft.PowerFx.Tests
             public FormulaType Type => _o == null ? FormulaType.String : _o switch
             {
                 string => FormulaType.String,
-                int or decimal or double or float => new ExternalType(ExternalTypeKind.UntypedNumber),
+                int or double or float => new ExternalType(ExternalTypeKind.UntypedNumber),
+                decimal => FormulaType.Decimal,
                 bool => FormulaType.Boolean,
                 Array => new ExternalType(ExternalTypeKind.Array),
                 object o => new ExternalType(ExternalTypeKind.Object),                
@@ -117,13 +119,14 @@ namespace Microsoft.PowerFx.Tests
 
             public decimal GetDecimal()
             {
-                return _o is decimal d ? d : throw new Exception("Not a decimal");
+                return _o is int i ? (decimal)i
+                     : _o is float f ? (decimal)f
+                     : _o is decimal dec ? dec : throw new Exception("Not a decimal");
             }
 
             public double GetDouble()
             {
-                return _o is int i ? (double)i 
-                     : _o is decimal d ? (double)d
+                return _o is int i ? (double)i                      
                      : _o is float f ? (double)f
                      : _o is double dbl ? dbl : throw new Exception("Not a double");
             }
