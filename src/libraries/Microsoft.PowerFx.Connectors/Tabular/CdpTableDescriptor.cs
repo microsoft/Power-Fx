@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal readonly struct CdpTableDescriptor
+    public readonly struct CdpTableDescriptor
     {
         public FormulaType FormulaType { get; init; }
 

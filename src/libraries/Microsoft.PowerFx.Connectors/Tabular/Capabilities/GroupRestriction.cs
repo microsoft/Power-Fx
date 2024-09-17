@@ -10,14 +10,14 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class GroupRestriction
+    public sealed class GroupRestriction
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.UngroupableProperties)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly List<string> UngroupableProperties;
+        public readonly IList<string> UngroupableProperties;
 
-        public GroupRestriction(List<string> ungroupableProperties)
+        public GroupRestriction(IList<string> ungroupableProperties)
         {
             Contracts.AssertValueOrNull(ungroupableProperties);
 

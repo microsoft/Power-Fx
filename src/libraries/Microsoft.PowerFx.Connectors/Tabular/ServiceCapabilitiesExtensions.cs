@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal static class ServiceCapabilitiesExtensions
+    public static class ServiceCapabilitiesExtensions
     {
         public static IList<string> GetNonFilterableProperties(this ServiceCapabilities serviceCapabilities)
         {
@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
                 : serviceCapabilities.FilterRestriction.NonFilterableProperties;
         }
 
-        public static IList<string> GetColumnFilterFunctions(this ServiceCapabilities serviceCapabilities, string columnName)
+        public static IEnumerable<string> GetColumnFilterFunctions(this ServiceCapabilities serviceCapabilities, string columnName)
         {
             if (serviceCapabilities == null || serviceCapabilities._columnsCapabilities == null || !serviceCapabilities._columnsCapabilities.TryGetValue(columnName, out ColumnCapabilitiesBase columnCapabilitiesBase))
             {

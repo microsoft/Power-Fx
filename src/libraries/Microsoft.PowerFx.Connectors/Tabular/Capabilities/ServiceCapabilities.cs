@@ -19,7 +19,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ServiceCapabilities : IColumnsCapabilities
+    public sealed class ServiceCapabilities : IColumnsCapabilities
     {
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ServerPagingOptions)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string[] ServerPagingOptions => PagingCapabilities.ServerPagingOptions;
+        public IEnumerable<string> ServerPagingOptions => PagingCapabilities.ServerPagingOptions;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.IsOnlyServerPagable)]

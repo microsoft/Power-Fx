@@ -18,7 +18,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ExternalCdpDataSource : IExternalTabularDataSource
+    internal class ExternalCdpDataSource : IExternalTabularDataSource, IExternalSupportsServiceCapabilities
     {
         public ExternalCdpDataSource(ConnectorType connectorType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Connectors
             _type = type;
         }
 
-        internal ServiceCapabilities ServiceCapabilities;
+        public ServiceCapabilities ServiceCapabilities { get; private set; }
 
         private readonly TableMetadata _tableMetadata;
 

@@ -54,9 +54,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             DatasetMetadata = datasetMetadata;
         }
-
-        // For testing only (in Dataverse)
-        internal CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, CdpTableDescriptor cdpTableDescriptor, RecordType recordType)
+        
+        public CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, CdpTableDescriptor cdpTableDescriptor, RecordType recordType)
             : this(dataset, table, datasetMetadata, tables)
         {
             TabularTableDescriptor = cdpTableDescriptor;

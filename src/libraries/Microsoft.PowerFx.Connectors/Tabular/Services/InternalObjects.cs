@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors
         void PostProcess();
     }
 
-    internal class RawTable
+    public class RawTable
     {
         // Logical Name
         [JsonPropertyName("Name")]

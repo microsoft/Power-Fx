@@ -12,7 +12,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
+    public sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ColumnProperties)]
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ColumnCapabilitiesDefinition Capabilities;
 
-        public static readonly string[] DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
+        public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
 
         public static ColumnCapabilities DefaultCdsColumnCapabilities => new ColumnCapabilities()
         {

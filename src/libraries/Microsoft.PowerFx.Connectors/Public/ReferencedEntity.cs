@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ReferencedEntity
+    public class ReferencedEntity
     {
         public string FieldName { get; init; }
 

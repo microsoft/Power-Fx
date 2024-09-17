@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class PagingCapabilities
+    public sealed class PagingCapabilities
     {
         public readonly bool IsOnlyServerPagable;
 
-        public readonly string[] ServerPagingOptions;
+        public readonly IEnumerable<string> ServerPagingOptions;
 
         public PagingCapabilities(bool isOnlyServerPagable, string[] serverPagingOptions)
         {

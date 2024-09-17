@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                (FormulaType ft, IReadOnlyDictionary<string, Relationship> rels) = ConnectorFunction.GetCapabilitiesAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
+                (FormulaType ft, IReadOnlyDictionary<string, Relationship> rels) = ConnectorFunction.GetTypeWithAdsAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
 
                 return new CdpTableDescriptor() { FormulaType = ft, Name = name, DisplayName = displayName, TableCapabilities = tableCapabilities, Relationships = rels };
             }
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable SA1300 // Element should begin with upper case
 #pragma warning disable SA1516 // Element should be separated by a blank line
 
-    internal class SqlRelationship
+    public class SqlRelationship
     {
         public string RelationshipName;
         public string ParentTable;

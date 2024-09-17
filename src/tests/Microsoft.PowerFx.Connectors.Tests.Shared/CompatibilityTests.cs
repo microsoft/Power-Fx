@@ -33,9 +33,9 @@ namespace Microsoft.PowerFx.Tests
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 
-            (FormulaType ctCdp, var _) = ConnectorFunction.GetCapabilitiesAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctPa, var _) = ConnectorFunction.GetCapabilitiesAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctSw, var _) = ConnectorFunction.GetCapabilitiesAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctCdp, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctPa, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctSw, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
 
             string cdp = ctCdp._type.ToString();
             string pa = ctPa._type.ToString();

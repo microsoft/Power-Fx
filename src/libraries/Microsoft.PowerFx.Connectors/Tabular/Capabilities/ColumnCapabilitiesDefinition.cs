@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -9,12 +10,12 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ColumnCapabilitiesDefinition
+    public sealed class ColumnCapabilitiesDefinition
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctions)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly string[] FilterFunctions;
+        public readonly IEnumerable<string> FilterFunctions;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.PropertyQueryAlias)]
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Connectors
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public readonly bool? IsChoice;
 
-        public ColumnCapabilitiesDefinition(string[] filterFunction, string alias, bool? isChoice)
+        public ColumnCapabilitiesDefinition(IEnumerable<string> filterFunction, string alias, bool? isChoice)
         {
             Contracts.AssertValueOrNull(filterFunction);
             Contracts.AssertValueOrNull(alias);
