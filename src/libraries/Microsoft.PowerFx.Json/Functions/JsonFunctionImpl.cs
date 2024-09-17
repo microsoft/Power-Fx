@@ -328,6 +328,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (index > 40)
                     {
+                        IRContext irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+                        ErrorValues.Add(new ErrorValue(irContext, new ExpressionError()
+                        {
+                            Message = "Max depth reached while traversing JSON payload",
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.Custom
+                        }));
+                        _writer.WriteStringValue(string.Empty);
                         return;
                     }
 
