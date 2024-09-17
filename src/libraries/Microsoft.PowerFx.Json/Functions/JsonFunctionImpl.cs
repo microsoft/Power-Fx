@@ -16,7 +16,10 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -333,9 +336,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         IRContext irContext = IRContext.NotInSource(FormulaType.UntypedObject);
                         ErrorValues.Add(new ErrorValue(irContext, new ExpressionError()
                         {
-                            Message = "Max depth reached while traversing JSON payload",
+                            ResourceKey = TexlStrings.ErrReachedMaxJsonDepth,
                             Span = irContext.SourceContext,
-                            Kind = ErrorKind.Custom
+                            Kind = ErrorKind.InvalidArgument                            
                         }));
                         _writer.WriteStringValue(string.Empty);
                         return;
