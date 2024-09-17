@@ -53,12 +53,12 @@ namespace Microsoft.PowerFx.Connectors
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctions)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly string[] FilterFunctions;
+        public readonly IEnumerable<string> FilterFunctions;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctionSupport)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly string[] FilterSupportedFunctions;
+        public readonly IEnumerable<string> FilterSupportedFunctions;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ServerPagingOptions)]
@@ -96,8 +96,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public const int CurrentODataVersion = 4;
 
-        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, string[] filterFunctions, string[] filterSupportedFunctions,
-                                   PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false)
+        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, IEnumerable<string> filterFunctions, 
+                                   IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false)
         {
             Contracts.AssertValueOrNull(sortRestriction);
             Contracts.AssertValueOrNull(filterRestriction);
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Connectors
                 new PagingCapabilities(false /* isOnlyServerPagable */, new string[0] /* serverPagingOptions */),
                 true); // recordPermissionCapabilities                                
 
-            serviceCapabilities.AddCdsColumnCapabilities(recordType);
+            serviceCapabilities.AddColumnCapabilities(recordType);
 
             return serviceCapabilities;
         }
@@ -145,15 +145,11 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValue(capability);
 
-            if (_columnsCapabilities == null)
-            {
-                _columnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>();
-            }
-
+            _columnsCapabilities ??= new Dictionary<string, ColumnCapabilitiesBase>();            
             _columnsCapabilities.Add(name, capability);
         }
 
-        public void AddCdsColumnCapabilities(RecordType recordType)
+        public void AddColumnCapabilities(RecordType recordType)
         {
             foreach (string fieldName in recordType.FieldNames)
             {
@@ -186,32 +182,32 @@ namespace Microsoft.PowerFx.Connectors
         {
             IDictionary<string, IOpenApiAny> filterRestritionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.FilterRestrictions);
             return filterRestritionMetaData?.GetBool(CapabilityConstants.Filterable) == true
-                        ? new FilterRestriction(filterRestritionMetaData.GetList(CapabilityConstants.FilterRequiredProperties), filterRestritionMetaData.GetList(CapabilityConstants.NonFilterableProperties))
-                        : null;
+                    ? new FilterRestriction(filterRestritionMetaData.GetList(CapabilityConstants.FilterRequiredProperties), filterRestritionMetaData.GetList(CapabilityConstants.NonFilterableProperties))
+                    : null;
         }
 
         private static SortRestriction ParseSortRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             IDictionary<string, IOpenApiAny> sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
-                        ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
-                        : null;
+                    ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
+                    : null;
         }
 
         private static SelectionRestriction ParseSelectionRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             IDictionary<string, IOpenApiAny> selectRestrictionsMetadata = capabilitiesMetaData.GetObject(CapabilityConstants.SelectionRestriction);
             return selectRestrictionsMetadata == null
-                        ? null
-                        : new SelectionRestriction(selectRestrictionsMetadata.GetBool(CapabilityConstants.Selectable, "selectable property is mandatory and not found."));
+                    ? null
+                    : new SelectionRestriction(selectRestrictionsMetadata.GetBool(CapabilityConstants.Selectable, "selectable property is mandatory and not found."));
         }
 
         private static GroupRestriction ParseGroupRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             IDictionary<string, IOpenApiAny> groupRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.GroupRestriction);
             return groupRestrictionMetaData == null
-                        ? null
-                        : new GroupRestriction(groupRestrictionMetaData.GetList(CapabilityConstants.UngroupableProperties));
+                    ? null
+                    : new GroupRestriction(groupRestrictionMetaData.GetList(CapabilityConstants.UngroupableProperties));
         }
 
         internal static string[] ParseFilterFunctions(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
