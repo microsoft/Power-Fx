@@ -18,11 +18,6 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        private static bool IsValidDateTimeUO(string s)
-        {
-            return Regex.IsMatch(s, @"^[0-9]{4,4}-[0-1][0-9]-[0-3][0-9](T[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]{0,7})?Z?)?$");
-        }
-
         public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
@@ -474,7 +469,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
+                if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
                     var timeZoneInfo = runner.TimeZoneInfo;
                     datetime = MakeValidDateTime(runner, datetime, timeZoneInfo);
@@ -518,7 +513,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var s = impl.GetString();
 
-                if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
+                if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
                     datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
 
