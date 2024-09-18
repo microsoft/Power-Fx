@@ -93,6 +93,70 @@ namespace Microsoft.PowerFx.Core.Functions
             this.UdfBody = body;
         }
 
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, string description)
+            : base(DPath.Root, functionName, functionName, SG(!string.IsNullOrWhiteSpace(description) ? description : "Using " + functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
+        {
+            this._args = args;
+            this._isImperative = isImperative;
+
+            this.UdfBody = body;
+        }
+
+        public static IEnumerable<UserDefinedFunction> CreateFunctionsWithSignatures(IEnumerable<UDF> uDFs, INameResolver nameResolver, IDictionary<UDF, string> descriptions, out List<TexlError> errors)
+        {
+            Contracts.AssertValue(uDFs);
+            Contracts.AssertAllValues(uDFs);
+
+            var userDefinedFunctions = new List<UserDefinedFunction>();
+            var texlFunctionSet = new TexlFunctionSet();
+            errors = new List<TexlError>();
+
+            foreach (var udf in uDFs)
+            {
+                Contracts.Assert(udf.IsParseValid);
+
+                var udfName = udf.Ident.Name;
+                if (texlFunctionSet.AnyWithName(udfName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+                else if (_restrictedUDFNames.Contains(udfName) ||
+                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
+                    continue;
+                }
+
+                if (udf.Args.Count > MaxParameterCount)
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
+                    continue;
+                }
+
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
+                if (!parametersOk || !returnTypeOk)
+                {
+                    continue;
+                }
+
+                if (nameResolver.Functions.WithName(udfName).Any())
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
+                }
+
+                descriptions.TryGetValue(udf, out var description);
+
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, description);
+
+                texlFunctionSet.Add(func);
+                userDefinedFunctions.Add(func);
+            }
+
+            return userDefinedFunctions;
+        }
+
         /// <summary>
         /// Gets argument index for a given argument.
         /// </summary>
@@ -208,7 +272,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, this.Description);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
