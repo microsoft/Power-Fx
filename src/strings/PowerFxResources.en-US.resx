@@ -4332,6 +4332,10 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows may return a cached value. Use CountIf(DataSource, true) to get the latest count.</value>
+    <comment>{Locked=CountRows}. Warning message when an expression with the CountRows function is used with a data source that caches its size.</comment>
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Determines if the supplied text has a match of the supplied text format.</value>
     <comment>Description of 'IsMatch' function.</comment>
