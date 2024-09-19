@@ -491,7 +491,7 @@ namespace Microsoft.PowerFx.Syntax
                 { BinaryOp.LessEqual, Precedence.Compare },
             };
 
-        public PrettyPrintVisitor(string script)
+        internal PrettyPrintVisitor(string script)
         {
             _script = script;
         }
@@ -553,7 +553,7 @@ namespace Microsoft.PowerFx.Syntax
                 TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator;
         }
 
-        private LazyList<string> CommentsOf(SourceList list)
+        internal LazyList<string> CommentsOf(SourceList list)
         {
             if (list == null)
             {
