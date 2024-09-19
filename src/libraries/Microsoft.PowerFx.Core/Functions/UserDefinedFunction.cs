@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -155,6 +156,59 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return userDefinedFunctions;
+        }
+
+        public static Dictionary<UDF, string> CommentsByUdf(string script, ParserOptions parserOptions, out ParseUserDefinitionResult parseResult)
+        {
+            parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            var spans = new List<(int, int, Token, UDF)>();
+            var commentsByUdf = new Dictionary<UDF, string>();
+            foreach (var udf in parseResult.UDFs)
+            {
+                var span = udf.Ident.Span;
+                spans.Add((udf.Ident.Span.Min, udf.Body.GetCompleteSpan().Lim, null, udf));
+            }
+
+            foreach (var comment in parseResult.Comments ?? Enumerable.Empty<Token>())
+            {
+                spans.Add((comment.Span.Min, comment.Span.Lim, comment, null));
+            }
+
+            spans.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+
+            var descripion = new StringBuilder();
+            foreach (var span in spans)
+            {
+                var (low, high, comment, udf) = span;
+                if (comment != null)
+                {
+                    var commentText = comment.Span.GetFragment(script);
+                    var isMultliLineComment = commentText.StartsWith("/*", StringComparison.InvariantCulture);
+                    if (isMultliLineComment)
+                    {
+                        commentText = commentText.Replace("/*", string.Empty).Replace("*/", string.Empty);
+                    }
+                    else
+                    {
+                        commentText = commentText.Replace("//", string.Empty);
+                    }
+
+                    commentText = commentText.Trim();   
+                    if (!commentText.EndsWith("\n", StringComparison.InvariantCulture))
+                    {
+                        commentText += "\n";
+                    }
+
+                    descripion.Append(commentText);
+                }
+                else
+                {
+                    commentsByUdf[udf] = descripion.ToString();
+                    descripion = new StringBuilder();
+                }
+            }
+
+            return commentsByUdf;
         }
 
         /// <summary>
