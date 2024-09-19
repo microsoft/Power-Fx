@@ -78,3 +78,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Round-trip is not guaranteed - escaped characters that don't need escaping will not be re-escaped when JSON-ified
 >> JSON(ParseJSON("""\u0048\u0065\u006c\u006c\u006f"""))
 """Hello"""
+
+>> JSON(ParseJSON("1e300"))
+"1e300"
+
+>> JSON(ParseJSON("1111111111111111111111111111111.2222222222222222222222222222222222"))
+"1111111111111111111111111111111.2222222222222222222222222222222222"

@@ -348,10 +348,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteStringValue(untypedObject.GetString());
                     }
-                    else if (type is DecimalType || (type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+                    else if (type is DecimalType)
                     {
                         _writer.WriteNumberValue(untypedObject.GetDecimal());
-                    }
+                    }                    
                     else if (type is NumberType)
                     {
                         _writer.WriteNumberValue(untypedObject.GetDouble());
@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (type is ExternalType externalType)
                     {
-                        if (externalType.Kind == ExternalTypeKind.Array)
+                        if (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject)
                         {
                             _writer.WriteStartArray();
 
@@ -374,7 +374,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             _writer.WriteEndArray();
                         }
-                        else if (externalType.Kind == ExternalTypeKind.Object && untypedObject.TryGetPropertyNames(out IEnumerable<string> propertyNames))
+                        else if ((externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject) && untypedObject.TryGetPropertyNames(out IEnumerable<string> propertyNames))
                         {
                             _writer.WriteStartObject();
 
@@ -388,6 +388,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
 
                             _writer.WriteEndObject();
+                        }
+                        else if (externalType.Kind == ExternalTypeKind.UntypedNumber)
+                        {
+                            if (true /* numberIsFloat */)
+                            {
+                                _writer.WriteNumberValue(untypedObject.GetDouble());
+                            }
+                            else
+                            {
+                                _writer.WriteNumberValue(untypedObject.GetDecimal());
+                            }                            
                         }
                         else
                         {
