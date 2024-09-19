@@ -19,7 +19,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ExternalCdpDataSource : IExternalTabularDataSource, IExternalSupportsServiceCapabilities
+    internal class ExternalCdpDataSource : IExternalTabularDataSource
     {
         public ExternalCdpDataSource(ConnectorType connectorType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
