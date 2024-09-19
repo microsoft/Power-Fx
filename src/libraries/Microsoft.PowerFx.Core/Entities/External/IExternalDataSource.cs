@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {

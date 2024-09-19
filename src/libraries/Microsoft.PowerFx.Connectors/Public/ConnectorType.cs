@@ -8,9 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -278,23 +276,9 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Invalid FormulaType");
             }
 
-            RecordType recordTypeWithADS = GetRecordTypeWithADS(recordType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping);
+            RecordType recordTypeWithADS = recordType.AddAssociatedDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping);
             FormulaType = new CdpRecordType(this, recordTypeWithADS._type, tableResolver, referencedEntities, sqlRelationships);
-        }
-        
-        public static RecordType GetRecordTypeWithADS(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly)
-        {            
-            return GetRecordTypeWithADS(recordType, name, datasetName, serviceCapabilities, isReadOnly, new BidirectionalDictionary<string, string>());
-        }
-
-        internal static RecordType GetRecordTypeWithADS(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
-        {            
-            ExternalCdpDataSource eds = new ExternalCdpDataSource(recordType, name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping);
-            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { eds };
-            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);
-            eds.SetType(newDType);
-            return new KnownRecordType(newDType);
-        }
+        }      
 
         private void AggregateErrors(ConnectorType[] types)
         {

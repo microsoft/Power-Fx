@@ -73,11 +73,11 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.SelectionRestriction",
-              "Microsoft.PowerFx.Connectors.ServiceCapabilities",
-              "Microsoft.PowerFx.Connectors.ServiceCapabilitiesExtensions",
+              "Microsoft.PowerFx.Connectors.ServiceCapabilities",              
               "Microsoft.PowerFx.Connectors.SortRestriction",
               "Microsoft.PowerFx.Connectors.SqlRelationship",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
+              "Microsoft.PowerFx.Connectors.TabularExtensions",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 

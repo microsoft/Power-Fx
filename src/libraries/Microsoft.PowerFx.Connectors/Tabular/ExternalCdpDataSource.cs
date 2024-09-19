@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
@@ -22,8 +23,9 @@ namespace Microsoft.PowerFx.Connectors
     {
         public ExternalCdpDataSource(ConnectorType connectorType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
-            EntityName = name;
-            ServiceCapabilities = serviceCapabilities;
+            EntityName = name;            
+            ServiceCapabilities = serviceCapabilities;            
+            _delegationMetadata = serviceCapabilities.ToDelegationMetadata(connectorType.FormulaType._type);
             IsWritable = !isReadOnly;
 
             CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
@@ -46,7 +48,8 @@ namespace Microsoft.PowerFx.Connectors
         public ExternalCdpDataSource(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
         {
             EntityName = name;
-            ServiceCapabilities = serviceCapabilities;
+            ServiceCapabilities = serviceCapabilities;            
+            _delegationMetadata = serviceCapabilities?.ToDelegationMetadata(recordType._type);
             IsWritable = !isReadOnly;
 
             CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
@@ -102,9 +105,15 @@ namespace Microsoft.PowerFx.Connectors
             _type = type;
         }
 
-        public ServiceCapabilities ServiceCapabilities { get; private set; }
+        public ServiceCapabilities ServiceCapabilities { get; private set; }       
+
+        public IExternalTableMetadata TableMetadata => _tableMetadata;
 
         private readonly TableMetadata _tableMetadata;
+
+        public IDelegationMetadata DelegationMetadata => _delegationMetadata;
+
+        private readonly DelegationMetadata _delegationMetadata;
 
         private DType _type;
 
@@ -128,11 +137,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
-        public DataSourceKind Kind => DataSourceKind.Connected;
-
-        public IExternalTableMetadata TableMetadata => _tableMetadata;
-
-        public IDelegationMetadata DelegationMetadata => throw new NotImplementedException();
+        public DataSourceKind Kind => DataSourceKind.Connected;          
 
         public DName EntityName { get; }
 
@@ -159,7 +164,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo)
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<string>();
         }
     }    
 }
