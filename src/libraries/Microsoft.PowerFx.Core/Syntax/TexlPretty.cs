@@ -491,7 +491,7 @@ namespace Microsoft.PowerFx.Syntax
                 { BinaryOp.LessEqual, Precedence.Compare },
             };
 
-        private PrettyPrintVisitor(string script)
+        public PrettyPrintVisitor(string script)
         {
             _script = script;
         }
