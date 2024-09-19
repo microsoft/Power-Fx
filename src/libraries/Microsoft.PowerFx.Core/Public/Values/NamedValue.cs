@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Types;
 
@@ -17,7 +18,17 @@ namespace Microsoft.PowerFx.Types
     {
         public string Name { get; }
 
-        public FormulaValue Value => _value ?? _getFormulaValue().ConfigureAwait(false).GetAwaiter().GetResult();
+        public FormulaValue Value => ValueAsync().GetAwaiter().GetResult();
+
+        public async Task<FormulaValue> ValueAsync()
+        { 
+            if (_value != null)
+            {
+                return _value;
+            }
+
+            return await _getFormulaValue().ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Useful for determining if the value is an entity or not.

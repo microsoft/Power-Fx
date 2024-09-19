@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -66,6 +67,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out var preferredFunctionDelegationCapability);
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            if (args[0] is not FirstNameNode node)
+            {
+                // No additional check
+                return;
+            }
+
+            var info = binding.GetInfo(args[0] as FirstNameNode);
+            if (info.Kind != BindKind.Data)
+            {
+                // No additional check
+                return;
+            }
+
+            if (argTypes[0].AssociatedDataSources?.Count == 1)
+            {
+                var associatedDataSource = argTypes[0].AssociatedDataSources.Single();
+                if (associatedDataSource.HasCachedCountRows)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WrnCountRowsMayReturnCachedValue);
+                }
+            }
         }
 
         // See if CountDistinct delegation is available. If true, we can make use of it on primary key as a workaround for CountRows delegation
