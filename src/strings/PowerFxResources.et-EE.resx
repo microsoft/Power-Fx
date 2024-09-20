@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Tagastab väärtuse „tõene“, kui esitatud tüübita väärtus on antud tüüpi.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Tüübita väärtus kontrollimaks, kas seda saab määratud tüübiks teisendada.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Tüüp, millena soovime untypedValue-väärtust kontrollida.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Kasutab esitatud väärtust antud tüübina.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Olemi tabel, mis esindab seda tüüpi, millena soovime väärtust kasutada.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Kontrollib ja kasutab antud tüübina esitatud tüübita väärtust.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Tüübita väärtus uueks tüübiks teisendamiseks.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Tüüp, millena soovime väärtust kasutada.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Käivitab esitatud valemi teise parameetrina, kasutades esimese esitatud ulatust.</value>
@@ -2673,6 +2709,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Töödeldav JSON-string.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Teisendab JSON-stringi tüübiga objektiks.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Tüübiga objektiks teisendatav JSON-string.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>tüüp</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Lehesisene tüübimääratlus või globaalselt määratletud nimega tüüp.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Tagastab tabelis kirje antud registriga.</value>
     
@@ -2690,6 +2744,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Toodava kirje register.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2776,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Vöötkoodi tüüp</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2924,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Testitav väärtus.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Teisendab kuupäeva ja kellaaja tekstivormingust arvuvormingusse, millega tähistatakse Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
@@ -3101,7 +3203,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt Collect(collection, source_collection)) või ühest või mitmest kirjest Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt Collect(collection, source_collection)) või ühest või mitmest kirjest Collect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3117,20 +3219,20 @@
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
-    <value>Uus või olemasolev täiendatav kogum.</value>
+    <value>Uus või olemasolev kogum täiendamiseks.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
+    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeliread lisatakse kogumisse.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Tühjendab esmalt kogumi ja seejärel lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla pärit mõnest muust tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Esmalt tühjendab kogumi ja lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla teisest tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
-    <value>Uus või olemasolev täiendatav kogum.</value>
+    <value>Uus või olemasolev kogum täiendamiseks.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeli read lisatakse kogumisse.</value>
+    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeliread lisatakse kogumisse.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Rakendab värskendused määratud reale ja muudab rea määratud andmeallikas. Tagastab värskendatud rea.</value>
@@ -3266,6 +3368,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Valemi asukohas '{1}' on ootamatu märk '{0}'.</value>
     
@@ -3278,6 +3384,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3405,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Ootamatud tärgid. Valem sisaldab tärki '{0}', kuid eeldatud on '{1}'.</value>
     
@@ -3308,6 +3422,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3443,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
     
@@ -3338,6 +3460,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3481,10 @@
     <value>Artikkel: PowerAppsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Viide 'Parent' ei sobi. Te ei saa selles kontekstis emajuhtelemendile viidata.</value>
     
@@ -3368,6 +3498,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Artikkel: lõuendirakenduse juhtelemendi lisamine ja konfigureerimine Power Appsis</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3541,10 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati arvu. Siinkohal eeldame valemis arvu.</value>
     
@@ -3420,6 +3558,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3579,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati koolonit. Siinkohal eeldame valemis koolonit (:).</value>
     
@@ -3452,6 +3598,10 @@
     <value>Artikkel: Power Appsis teksti, kuupäevade ja kellaaegade kuvamine</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Käitumise funktsioon on mitte-käitumise atribuut. Te ei saa seda atribuuti kasutada väärtuste muutmiseks mujal rakenduses.</value>
     
@@ -3465,6 +3615,10 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi lõuendirakenduste käitumisvalemite mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3658,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati teksti või arvu. Siinkohal eeldame valemis teksti või arvu.</value>
     
@@ -3517,6 +3675,10 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -3561,8 +3723,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3747,10 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Ühildumatu tüüp. Värskendatavas andmeallikas olev veerg '{0}' eeldab tüüpi '{1}', teie kasutate tüüpi '{2}'.</value>
     
@@ -3589,8 +3763,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3785,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3807,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3834,16 @@
     <value>Moodul: põhivalemite kasutamine</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3859,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3888,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3923,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3962,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4003,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4039,16 @@
     <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Ajaveeb: delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4077,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Viide: ConfirmExit lõuendirakenduste jaoks</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -4492,6 +4742,14 @@
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Sobimatu argument „{0}“. Eeldati sobivat tüübinime või sõnasõnalist tüüpi.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Toetuseta tüübita/JSON-i teisenduse tüüp „{0}“ argumendis.</value>
     
   </data>
 </root>

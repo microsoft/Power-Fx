@@ -17,7 +17,9 @@ using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -42,11 +44,6 @@ namespace Microsoft.PowerFx.Functions
         {
             ErrorSB.Append(outLine.Data);
             readTask.TrySetResult(true);
-        }
-
-        private class JSResult
-        {
-            public JSMatch[] Matches { get; set; }
         }
 
         private class JSMatch
@@ -93,17 +90,20 @@ namespace Microsoft.PowerFx.Functions
                             const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-                            var arr = new Array();
-                            for (const m in matches)
-                            {
-                                var o = new Object();
-                                o.Index = m.index;
-                                o.Named = m.groups;
-                                o.Numbered = m;
-                                arr.push(o);
-                            }
                             console.log('%%begin%%');
-                            console.log(JSON.stringify(arr));
+                            if (matches.length != 0 && matches[0] != null)
+                            {
+                                var arr = new Array();
+                                for (const match of matches)
+                                {
+                                    var o = new Object();
+                                    o.Index = match.index;
+                                    o.Named = match.groups;
+                                    o.Numbered = match;
+                                    arr.push(o);
+                                }
+                                console.log(JSON.stringify(arr));
+                            }
                             console.log('%%end%%');
                         }
                         ";
@@ -156,90 +156,56 @@ namespace Microsoft.PowerFx.Functions
 
                 int begin = output.IndexOf("%%begin%%");
                 int end = output.IndexOf("%%end%%");
-                string json = output.Substring(begin + 9, end - begin - 9);
 
-                var result = JsonSerializer.Deserialize<JSResult>(json);
-                var outputRE = new Regex(
-                    @"
-                    ^%start%:(?<start>[-\d]+)$ |
-                    ^(?<end>%end%): |
-                    ^(?<done>%done%): |
-                    ^(?<num>\d+):""(?<numMatch>(""""|[^""])*)""$ |
-                    ^(?<name>[^:]+):""(?<nameMatch>(""""|[^""])*)""$ |
-                    ^(?<numBlank>\d+):undefined$ |
-                    ^(?<nameBlank>[^:]+):undefined$
-                    ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
+                var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture));
 
-                List<RecordValue> subMatches = new List<RecordValue>();
-                Dictionary<string, NamedValue> fields = new ();
-                List<RecordValue> allMatches = new ();
-
-                foreach (Match token in outputRE.Matches(output.ToString()))
+                if (end == begin + 9)
                 {
-                    if (token.Groups["start"].Success)
-                    {
-                        fields = new ();
-                        subMatches = new ();
-                        fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(token.Groups["start"].Value) + 1)));
-                    }
-                    else if (token.Groups["end"].Success)
-                    {
-                        if (flags.Contains('N'))
-                        {
-                            var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
-                            fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
-                        }
-
-                        allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
-                    }
-                    else if (token.Groups["done"].Success)
-                    {
-                        if (allMatches.Count == 0)
-                        {
-                            return matchAll ? FormulaValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture)))
-                                            : new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture))));
-                        }
-                        else
-                        {
-                            return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches)
-                                            : allMatches.First();
-                        }
-                    }
-                    else if (token.Groups["name"].Success)
-                    {
-                        fields.Add(token.Groups["name"].Value, new NamedValue(token.Groups["name"].Value, StringValue.New(token.Groups["nameMatch"].Value.Replace(@"""""", @""""))));
-                    }
-                    else if (token.Groups["nameBlank"].Success)
-                    {
-                        fields.Add(token.Groups["nameBlank"].Value, new NamedValue(token.Groups["nameBlank"].Value, BlankValue.NewBlank(FormulaType.String)));
-                    }
-                    else if (token.Groups["num"].Success)
-                    {
-                        var num = Convert.ToInt32(token.Groups["num"].Value);
-                        if (num == 0)
-                        {
-                            fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(token.Groups["numMatch"].Value.Replace(@"""""", @""""))));
-                        }
-                        else
-                        {
-                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, StringValue.New(token.Groups["numMatch"].Value.Replace(@"""""", @"""")))));
-                        }
-                    }
-                    else if (token.Groups["numBlank"].Success)
-                    {
-                        var num = Convert.ToInt32(token.Groups["numBlank"].Value);
-                        if (num == 0)
-                        {
-                            fields.Add(FULLMATCH, new NamedValue(FULLMATCH, BlankValue.NewBlank(FormulaType.String)));
-                        }
-                        else
-                        {
-                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, BlankValue.NewBlank(FormulaType.String))));
-                        }
-                    }
+                    return matchAll ? FormulaValue.NewTable(type) : new BlankValue(IRContext.NotInSource(type));
                 }
 
-                throw new Exception("%done% marker not found");
+                string json = output.Substring(begin + 9, end - begin - 9);
+                var result = JsonSerializer.Deserialize<JSMatch[]>(json);
+
+                List<RecordValue> allMatches = new ();
+
+                foreach (JSMatch match in result)
+                {
+                    Dictionary<string, NamedValue> fields = new Dictionary<string, NamedValue>()
+                    {
+                        { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(match.Index) + 1)) },
+                        { FULLMATCH, new NamedValue(FULLMATCH, match.Numbered[0] == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(match.Numbered[0])) },
+                    };
+
+                    if (match.Named != null)
+                    {
+                        foreach (var name in type.FieldNames)
+                        {
+                            if (name != STARTMATCH && name != FULLMATCH && name != SUBMATCHES)
+                            {
+                                fields.Add(name, new NamedValue(name, match.Named.ContainsKey(name) ? StringValue.New(match.Named[name]) : BlankValue.NewBlank(FormulaType.String)));
+                            }
+                        }
+                    }
+
+                    if (flags.Contains('N'))
+                    {
+                        List<RecordValue> subMatches = new List<RecordValue>();
+
+                        for (int i = 1; i < match.Numbered.Count(); i++)
+                        {
+                            var n = match.Numbered[i];
+                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, n == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(n))));
+                        }
+
+                        var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                        fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
+                    }
+
+                    allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
+                }
+
+                return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches) : allMatches.First();
             }
         }
 

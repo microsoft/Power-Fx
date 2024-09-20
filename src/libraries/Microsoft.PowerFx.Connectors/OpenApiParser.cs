@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
                 string notSupportedReasonForPath = string.Empty;
 
                 // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
+                if (!connectorSettings.IncludeWebhookFunctions && ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
                     configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
                     continue;

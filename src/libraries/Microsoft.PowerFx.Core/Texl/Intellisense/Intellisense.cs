@@ -187,13 +187,14 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown &&
+                var suggestionType = suggestion.Type;
+                if (!suggestionType.IsUnknown &&
 
                     // Most type acceptance is straightforward
-                    (type.Accepts(suggestion.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                    (type.Accepts(suggestionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
 
                     // Option Set expected types should also include the option set base as a reccomendation.
-                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))))
+                    (suggestionType.IsOptionSet && suggestionType.OptionSetInfo != null && type.Accepts(DType.CreateOptionSetValueType(suggestionType.OptionSetInfo), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))))
                 {
                     suggestion.SortPriority++;
                 }

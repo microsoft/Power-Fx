@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             "L", "Lu", "Ll", "Lt", "Lm", "Lo",
             "M", "Mn", "Mc", "Me",
             "N", "Nd", "Nl", "No",
-            "P", "Pc", "Pd", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
+            "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
             "S", "Sm", "Sc", "Sk", "So",
             "Z", "Zs", "Zl", "Zp", 
             "C", "Cc", "Cf", "Cs", "Co", "Cn",
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             c[a-zA-Z]                              |     # Ctrl character classes
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
-                    \\[pP]\{(?<goodUnicodeCategory>[\\w=:-]+)\}        | # Unicode chaeracter classes, extra characters here for a better error message
+                    \\[pP]\{(?<goodUnicodeCategory>[\w=:-]+)\}         | # Unicode chaeracter classes, extra characters here for a better error message
                     (?<goodEscapeOutside>\\[bBWDS])                    | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeInside>\\[\-])                        | # needed for /v compatibility with ECMAScript
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
