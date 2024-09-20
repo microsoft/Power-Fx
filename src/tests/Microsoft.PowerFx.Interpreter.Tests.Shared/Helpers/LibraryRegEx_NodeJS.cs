@@ -10,7 +10,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -21,16 +23,57 @@ namespace Microsoft.PowerFx.Functions
 {
     public class RegEx_NodeJS
     {
+        private static Process node;
+
+        private static readonly StringBuilder OutputSB = new StringBuilder();
+        private static readonly StringBuilder ErrorSB = new StringBuilder();
+        private static TaskCompletionSource<bool> readTask = null;
+
+        private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            OutputSB.Append(outLine.Data);
+            if (outLine.Data.Contains("%%end%%"))
+            {
+                readTask.TrySetResult(true);
+            }
+        }
+
+        private static void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            ErrorSB.Append(outLine.Data);
+            readTask.TrySetResult(true);
+        }
+
+        private class JSResult
+        {
+            public JSMatch[] Matches { get; set; }
+        }
+
+        private class JSMatch
+        {
+            public int Index { get; set; }
+
+            public string[] Numbered { get; set; }
+
+            public Dictionary<string, string> Named { get; set; }
+        }
+
         internal abstract class NodeJS_RegexCommonImplementation : Library.RegexCommonImplementation
         {
             internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
+                Task<FormulaValue> task = Task.Run<FormulaValue>(async () => await MatchAsync(subject, pattern, flags, matchAll));
+                return task.Result;
+            }
+
+            internal static async Task<FormulaValue> MatchAsync(string subject, string pattern, string flags, bool matchAll = false)
+            {
                 var js = new StringBuilder();
 
-                js.AppendLine($"const subject='{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}';");
-                js.AppendLine($"const pattern='{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}';");
-                js.AppendLine($"const flags='{flags}';");
-                js.AppendLine($"const matchAll={(matchAll ? "true" : "false")};");
+                js.Append($"MatchTest('{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                js.Append($"'{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                js.Append($"'{flags}',");
+                js.Append($"{(matchAll ? "true" : "false")});");
 
 #if false
                 // for debugging unicode passing of strings to Node, output ignored by deserializer but visible in the debugger
@@ -42,71 +85,80 @@ namespace Microsoft.PowerFx.Functions
                 ");
 #endif
 
-                js.AppendLine(@"
-                    const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
-                    const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
-                    const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-
-                    for(const match of matches)
-                    {
-                        if (match != null)
+                if (node == null)
+                {
+                    string js2 = @"
+                        function MatchTest( subject, pattern, flags, matchAll )
                         {
-                            console.log('%start%:' + match.index);
-                            for(var group in match.groups)
+                            const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
+                            const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
+                            const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
+                            var arr = new Array();
+                            for (const m in matches)
                             {
-                                var val = match.groups[group];
-                                if (val !== undefined)
-                                {
-                                    val = '""' + val.replace( /""/g, '""""') + '""'
-                                }
-                                console.log(group + ':' + val);
+                                var o = new Object();
+                                o.Index = m.index;
+                                o.Named = m.groups;
+                                o.Numbered = m;
+                                arr.push(o);
                             }
-                            for (var num = 0; num < match.length; num++)
-                            {
-                                var val = match[num];
-                                if (val !== undefined)
-                                {
-                                    val = '""' + val.replace( /""/g, '""""') + '""'
-                                }
-                                console.log(num + ':' + val);
-                            }
-                            console.log('%end%:');
+                            console.log('%%begin%%');
+                            console.log(JSON.stringify(arr));
+                            console.log('%%end%%');
                         }
-                    }
-                    console.log('%done%:');
-                ");
+                        ";
 
-                var node = new Process();
-                node.StartInfo.FileName = "node.exe";
-                node.StartInfo.RedirectStandardInput = true;
-                node.StartInfo.RedirectStandardOutput = true;
-                node.StartInfo.RedirectStandardError = true;
-                node.StartInfo.CreateNoWindow = true;
-                node.StartInfo.UseShellExecute = false;
-                node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+                    node = new Process();
+                    node.StartInfo.FileName = "node.exe";
+                    node.StartInfo.Arguments = "-i";
+                    node.StartInfo.RedirectStandardInput = true;
+                    node.StartInfo.RedirectStandardOutput = true;
+                    node.StartInfo.RedirectStandardError = true;
+                    node.StartInfo.CreateNoWindow = true;
+                    node.StartInfo.UseShellExecute = false;
+                    node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 
-                // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
-                // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
+                    // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
+                    // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
 
-                node.Start();
+                    node.OutputDataReceived += OutputHandler;
+                    node.ErrorDataReceived += ErrorHandler;
+
+                    node.Start();
+
+                    node.BeginOutputReadLine();
+                    node.BeginErrorReadLine();
+
+                    await node.StandardInput.WriteLineAsync(RegEx_JavaScript.AlterRegex_JavaScript);
+                    await node.StandardInput.WriteLineAsync(js2);
+                }
+
+                OutputSB.Clear();
+                ErrorSB.Clear();
+                readTask = new TaskCompletionSource<bool>();
 
                 var jsString = js.ToString();
-                var bytes = Encoding.UTF8.GetBytes(RegEx_JavaScript.AlterRegex_JavaScript + jsString);
-                node.StandardInput.BaseStream.Write(bytes, 0, bytes.Length);
-                node.StandardInput.WriteLine();
-                node.StandardInput.Close();
+                var bytes = Encoding.UTF8.GetBytes(jsString);
+                await node.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+                await node.StandardInput.WriteLineAsync();
 
-                string output = node.StandardOutput.ReadToEnd();
-                string error = node.StandardError.ReadToEnd();
+                await node.StandardInput.FlushAsync();
 
-                node.WaitForExit();
-                node.Dispose();
+                await readTask.Task;
+
+                string output = OutputSB.ToString();
+                string error = ErrorSB.ToString();
 
                 if (error.Length > 0)
                 {
                     throw new InvalidOperationException(error);
                 }
 
+                int begin = output.IndexOf("%%begin%%");
+                int end = output.IndexOf("%%end%%");
+                string json = output.Substring(begin + 9, end - begin - 9);
+
+                var result = JsonSerializer.Deserialize<JSResult>(json);
                 var outputRE = new Regex(
                     @"
                     ^%start%:(?<start>[-\d]+)$ |
@@ -122,7 +174,7 @@ namespace Microsoft.PowerFx.Functions
                 Dictionary<string, NamedValue> fields = new ();
                 List<RecordValue> allMatches = new ();
 
-                foreach (Match token in outputRE.Matches(output))
+                foreach (Match token in outputRE.Matches(output.ToString()))
                 {
                     if (token.Groups["start"].Success)
                     {
