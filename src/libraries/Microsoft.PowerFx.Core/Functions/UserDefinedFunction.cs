@@ -147,9 +147,9 @@ namespace Microsoft.PowerFx.Core.Functions
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
                 }
 
-                descriptions.TryGetValue(udf, out var description);
+                var description = descriptions.ToList().First(kv => kv.Key.Ident.Name == udf.Ident.Name);
 
-                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, description);
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, description.Value);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
