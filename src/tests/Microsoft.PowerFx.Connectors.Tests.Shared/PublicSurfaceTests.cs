@@ -76,6 +76,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.SortRestriction",
               "Microsoft.PowerFx.Connectors.SqlRelationship",
               "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
+              "Microsoft.PowerFx.Connectors.TabularDataSource",
               "Microsoft.PowerFx.Connectors.TabularExtensions",
               "Microsoft.PowerFx.Connectors.Visibility"
             };

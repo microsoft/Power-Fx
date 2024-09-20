@@ -1035,9 +1035,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 // $$$ need to check what triggers RO for SQL
                 //isTableReadOnly = true;
-            }
+            }            
 
-            connectorType.AddTabularDataSource(tableResolver, referencedEntities, sqlRelationships, new DName(name), datasetName, tableCapabilities, isTableReadOnly);
+            connectorType.AddTabularDataSource(tableResolver, referencedEntities, sqlRelationships, new DName(name), datasetName, tableCapabilities, isTableReadOnly, null);
 
             return (connectorType.FormulaType, connectorType.Relationships);
         }

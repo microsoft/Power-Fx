@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -36,6 +37,14 @@ namespace Microsoft.PowerFx.Types
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
             _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
+        }      
+
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, DelegationHost delegationHost)
+            : base()
+        {
+            var lazyTypeProvider = new LazyTypeProvider(this);
+
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider, new HashSet<IExternalTabularDataSource> { delegationHost.TabularDataSource });            
         }
 
         public FormulaType GetFieldType(string fieldName)

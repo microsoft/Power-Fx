@@ -9,7 +9,6 @@ using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -269,14 +268,14 @@ namespace Microsoft.PowerFx.Connectors
             ForeignKey = relationship.ReferencedColumnName;
         }
 
-        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
         {
             if (FormulaType is not RecordType recordType)
             {
                 throw new PowerFxConnectorException("Invalid FormulaType");
             }
 
-            RecordType recordTypeWithADS = recordType.AddAssociatedDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping);
+            RecordType recordTypeWithADS = recordType.AddAssociatedDataSource(name, datasetName, serviceCapabilities, isReadOnly, fields);
             FormulaType = new CdpRecordType(this, recordTypeWithADS._type, tableResolver, referencedEntities, sqlRelationships);
         }      
 

@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
-        public static ServiceCapabilities Default(RecordType recordType)
+        public static ServiceCapabilities Default(RecordType recordType, IEnumerable<string> fieldNames = null)
         {
             ServiceCapabilities serviceCapabilities = new ServiceCapabilities(
                 new SortRestriction(new List<string>() /* unsortableProperties */, new List<string>() /* ascendingOnlyProperties */),
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors
                 new PagingCapabilities(false /* isOnlyServerPagable */, new string[0] /* serverPagingOptions */),
                 true); // recordPermissionCapabilities                                
 
-            serviceCapabilities.AddColumnCapabilities(recordType);
+            serviceCapabilities.AddColumnCapabilities(recordType, fieldNames);
 
             return serviceCapabilities;
         }
@@ -326,9 +326,9 @@ namespace Microsoft.PowerFx.Connectors
             _columnsCapabilities.Add(name, capability);
         }
 
-        public void AddColumnCapabilities(RecordType recordType)
+        public void AddColumnCapabilities(RecordType recordType, IEnumerable<string> fieldNames = null)
         {
-            foreach (string fieldName in recordType.FieldNames)
+            foreach (string fieldName in fieldNames ?? recordType.FieldNames)
             {
                 AddColumnCapability(fieldName, ColumnCapabilities.DefaultCdsColumnCapabilities);
             }

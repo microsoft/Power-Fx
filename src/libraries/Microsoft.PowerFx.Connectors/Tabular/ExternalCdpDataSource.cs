@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.Delegation;
@@ -21,34 +22,16 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class ExternalCdpDataSource : IExternalTabularDataSource
     {
-        public ExternalCdpDataSource(ConnectorType connectorType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
+        // recordType can be lazy, then fields has to be provided and will describe all fields non-lazily       
+        public ExternalCdpDataSource(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
         {
-            EntityName = name;            
-            ServiceCapabilities = serviceCapabilities;            
-            _delegationMetadata = serviceCapabilities.ToDelegationMetadata(connectorType.FormulaType._type);
-            IsWritable = !isReadOnly;
+            if (recordType._type.Kind == DKind.LazyRecord && fields == null)
+            {
+                throw new InvalidOperationException("When a LazyRecord is provided, fields cannot be null");
+            }
 
-            CdpEntityMetadataProvider metadataProvider = new CdpEntityMetadataProvider();
-            CdpDataSourceMetadata tabularDataSourceMetadata = new CdpDataSourceMetadata(name.Value, datasetName);
-            tabularDataSourceMetadata.LoadClientSemantics();
-            metadataProvider.AddSource(name.Value, tabularDataSourceMetadata);
-
-            DataEntityMetadataProvider = metadataProvider;
-            IsConvertingDisplayNameMapping = false;
-            DisplayNameMapping = displayNameMapping ?? new BidirectionalDictionary<string, string>();
-            PreviousDisplayNameMapping = null;
-            
-            List<ColumnMetadata> columns = connectorType.Fields.Select((ConnectorType f) =>
-                new ColumnMetadata(f.Name, f.FormulaType._type, ToDataFormat(f.FormulaType), f.DisplayName ?? f.Name, f.Permission == ConnectorPermission.PermissionReadOnly, 
-                                   f.KeyType == ConnectorKeyType.Primary, f.IsRequired, ColumnCreationKind.UserProvided, ToColumnVisibility(f.Visibility), f.Name, f.Name, f.Name, null, null)).ToList();
-
-            _tableMetadata = new TableMetadata(name, datasetName, isReadOnly, columns);
-        }
-
-        public ExternalCdpDataSource(RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
-        {
             EntityName = name;
-            ServiceCapabilities = serviceCapabilities;            
+            ServiceCapabilities = serviceCapabilities;
             _delegationMetadata = serviceCapabilities?.ToDelegationMetadata(recordType._type);
             IsWritable = !isReadOnly;
 
@@ -59,15 +42,28 @@ namespace Microsoft.PowerFx.Connectors
 
             DataEntityMetadataProvider = metadataProvider;
             IsConvertingDisplayNameMapping = false;
-            DisplayNameMapping = displayNameMapping ?? new BidirectionalDictionary<string, string>();
             PreviousDisplayNameMapping = null;
 
-            List<ColumnMetadata> columns = recordType.FieldNames.Select((string fieldName) =>
+            List<ColumnMetadata> columns = null;
+
+            if (fields != null)
             {
-                FormulaType fieldType = recordType.GetFieldType(fieldName);
-                return new ColumnMetadata(fieldName, fieldType._type, ToDataFormat(fieldType), fieldName /* display name */, false /* is read-only */, false /* primary key */, false /* isRequired */, 
-                                          ColumnCreationKind.UserProvided, ColumnVisibility.Default, fieldName, fieldName, fieldName, null, null);
-            }).ToList();
+                DisplayNameMapping = new BidirectionalDictionary<string, string>(fields.Select(f => new KeyValuePair<string, string>(f.logicalName, f.displayName ?? f.logicalName)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+                columns = fields.Select(f => new ColumnMetadata(f.logicalName, f.type._type, ToDataFormat(f.type), f.displayName, false /* is read-only */, false /* primary key */, false /* isRequired */,
+                                                                ColumnCreationKind.UserProvided, ColumnVisibility.Default, f.logicalName, f.logicalName, f.logicalName, null, null)).ToList();
+            }
+            else
+            {
+                string GetDisplayName(string fieldName)
+                {
+                    DisplayNameProvider dnp = recordType._type.DisplayNameProvider;
+                    return dnp == null || !dnp.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
+                }
+
+                DisplayNameMapping = new BidirectionalDictionary<string, string>(recordType.FieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+                columns = recordType.FieldNames.Select(f => new ColumnMetadata(f, recordType.GetFieldType(f)._type, ToDataFormat(recordType.GetFieldType(f)), GetDisplayName(f), false /* is read-only */,
+                                                                               false /* primary key */, false /* isRequired */, ColumnCreationKind.UserProvided, ColumnVisibility.Default, f, f, f, null, null)).ToList();
+            }
 
             _tableMetadata = new TableMetadata(name, datasetName, isReadOnly, columns);
         }
@@ -105,7 +101,7 @@ namespace Microsoft.PowerFx.Connectors
             _type = type;
         }
 
-        public ServiceCapabilities ServiceCapabilities { get; private set; }       
+        public ServiceCapabilities ServiceCapabilities { get; private set; }
 
         public IExternalTableMetadata TableMetadata => _tableMetadata;
 
@@ -137,7 +133,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 
-        public DataSourceKind Kind => DataSourceKind.Connected;          
+        public DataSourceKind Kind => DataSourceKind.Connected;
 
         public DName EntityName { get; }
 
@@ -158,7 +154,7 @@ namespace Microsoft.PowerFx.Connectors
         public bool CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName) => true;
 
         public IReadOnlyList<string> GetKeyColumns()
-        {            
+        {
             return _tableMetadata?.KeyColumns ?? new List<string>();
         }
 
@@ -166,5 +162,5 @@ namespace Microsoft.PowerFx.Connectors
         {
             return Enumerable.Empty<string>();
         }
-    }    
+    }
 }
