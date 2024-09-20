@@ -11,6 +11,13 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         TabularDataQueryOptions QueryOptions { get; }
 
+        /// <summary>
+        /// Some data sources (like Dataverse) may return a cached value for
+        /// the number of rows (calls to CountRows) instead of always retrieving
+        /// the latest count.
+        /// </summary>
+        bool HasCachedCountRows { get; }
+
         IReadOnlyList<string> GetKeyColumns();
 
         IEnumerable<string> GetKeyColumns(IExpandInfo expandInfo);
