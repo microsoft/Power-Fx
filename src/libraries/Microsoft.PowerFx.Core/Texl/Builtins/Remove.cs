@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -20,23 +19,20 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
-    internal class RemoveFunction : BuiltinFunction, ISuggestionAwareFunction
+    internal abstract class RemoveFunctionBase : BuiltinFunction
     {
         public override bool ManipulatesCollections => true;
-        
+
         public override bool ModifiesValues => true;
-        
+
         public override bool CanSuggestInputColumns => true;
 
         public override bool IsSelfContained => false;
-        
-        public bool CanSuggestThisItem => true;
-        
+
         public override bool RequiresDataSourceScope => true;
-        
+
         public override bool SupportsParamCoercion => false;
-        
+
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Delete;
 
         // Return true if this function affects datasource query options.
@@ -44,54 +40,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
-        public override bool ArgMatchesDatasourceType(int argNum)
+        public override bool RequireAllParamColumns => true;
+
+        public RemoveFunctionBase(int arityMax, params DType[] paramTypes)
+           : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, arityMax, paramTypes)
         {
-            return argNum >= 1;
-        }
-
-        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
-        {
-            if (argIndex > 0)
-            {
-                type = default;
-                return false;
-            }
-
-            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
-        }
-
-        public RemoveFunction()
-            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
-        { 
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2 };
-            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2 };
-            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2 };
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
-        {
-            if (arity > 2)
-            {
-                return GetGenericSignatures(arity, TexlStrings.RemoveArg1, TexlStrings.RemoveArg2);
-            }
-
-            return base.GetSignatures(arity);
-        }
-
-        public override IEnumerable<string> GetRequiredEnumNames()
-        {
-            return new List<string>() { LanguageConstants.RemoveFlagsEnumString };
-        }
-
-        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
-        {
-            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
-            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
-            return index == 0;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -113,88 +66,54 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(args[0], TexlStrings.ErrNeedCollection_Func, Name);
             }
 
-            int argCount = argTypes.Length;
+            // !!!TODO New stuff. In case this doesnt work, delete from here to the end of the function
+            var argCount = argTypes.Count();
+
             for (int i = 1; i < argCount; i++)
             {
-                DType argType = argTypes[i];
+                var argType = argTypes[i];
+                var arg = args[i];
 
-                if (!argType.IsRecord)
+                if (!argType.IsAggregate)
                 {
                     if (argCount >= 3 && i == argCount - 1)
                     {
-                        if (context.AnalysisMode)
-                        {
-                            if (!DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
-                                !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                            {
-                                fValid = false;
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRemoveAllArg);
-                            }
-                        }
-                        else
-                        {
-                            if (!BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                            {
-                                fValid = false;
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRemoveAllArg);
-                            }
-                        }
+                        fValid = (context.Features.StronglyTypedBuiltinEnums && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                                        (!context.Features.StronglyTypedBuiltinEnums && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules));
 
-                        continue;
+                        if (!fValid)
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrRemoveAllArg);
+                        }
                     }
                     else
                     {
                         fValid = false;
                         errors.EnsureError(args[i], TexlStrings.ErrNeedRecord_Arg, args[i]);
-                        continue;
                     }
+
+                    continue;
                 }
 
                 var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                 var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
-                // The item schema should be compatible with the collection schema.
-                if (!collectionAcceptsRecord && !recordAcceptsCollection)
+                // PFxV1 is more restrictive than PA in terms of column matching. If the collection does not accept the record or vice versa, it is an error.
+                if ((context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord || !recordAcceptsCollection)) ||
+                    (!context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord && !recordAcceptsCollection)))
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
-                    { 
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrCollectionDoesNotAcceptThisType);
-                    }
+                    SetErrorForMismatchedColumns(collectionType, argType, arg, errors, context.Features);
                 }
-                
+
                 // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
                 else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrCollectionDoesNotAcceptThisType);
                 }
-
-                if (!context.AnalysisMode)
-                {
-                    // ArgType[N] (0<N<argCount) must match all the fields with the data source.
-                    bool checkAggregateNames = argType.CheckAggregateNames(collectionType, args[i], errors, context.Features, SupportsParamCoercion);
-
-                    // The item schema should be compatible with the collection schema.
-                    if (!checkAggregateNames)
-                    {
-                        fValid = false;
-                        if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
-                        }
-                    }
-                }
             }
 
-            if (context.AnalysisMode)
-            {
-                // Remove returns the new collection, so the return schema is the same as the collection schema.
-                returnType = collectionType;
-            }
-            else
-            {
-                returnType = DType.Void;
-            }
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
 
             return fValid;
         }
@@ -206,12 +125,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
         }
 
-        // This method returns true if there are special suggestions for a particular parameter of the function.
-        public override bool HasSuggestionsForParam(int argumentIndex)
+        public override IEnumerable<string> GetRequiredEnumNames()
         {
-            Contracts.Assert(argumentIndex >= 0);
+            return new List<string>() { LanguageConstants.RemoveFlagsEnumString };
+        }
 
-            return argumentIndex != 1;
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
         }
 
         public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
@@ -235,11 +158,72 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 firstNameNode.Ident
             };
+
             return identifiers;
         }
 
+        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            return Arg0RequiresAsync(callNode, binding);
+        }
+    }
+
+    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
+    internal class RemoveFunction : RemoveFunctionBase, ISuggestionAwareFunction
+    {
+        public bool CanSuggestThisItem => true;
+
+        public override bool ArgMatchesDatasourceType(int argNum)
+        {
+            return argNum >= 1;
+        }
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex > 0)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
+        public RemoveFunction()
+            : base(int.MaxValue, DType.EmptyTable)
+        { 
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2 };
+            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2 };
+            yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2, TexlStrings.RemoveArg2 };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 2)
+            {
+                return GetGenericSignatures(arity, TexlStrings.RemoveArg1, TexlStrings.RemoveArg2);
+            }
+
+            return base.GetSignatures(arity);
+        }
+
+        // This method returns true if there are special suggestions for a particular parameter of the function.
+        public override bool HasSuggestionsForParam(int argumentIndex)
+        {
+            Contracts.Assert(argumentIndex >= 0);
+
+            return argumentIndex != 1;
+        }
+
         /// <summary>
-        /// As Remove uses the source record in it's entirity to find the entry in table, uses deepcompare at runtime, we need all fields from source.
+        /// As Remove uses the source record in it's entirety to find the entry in table, uses deepcompare at runtime, we need all fields from source.
         /// So update the selects for all columns in the source in this case except when datasource is pageable.
         /// In that case, we can get the info at runtime.
         /// </summary>
@@ -339,29 +323,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Remove(collection:*[], source:*[], ["All"])
-    internal class RemoveAllFunction : BuiltinFunction
+    internal class RemoveAllFunction : RemoveFunctionBase
     {
-        public override bool ManipulatesCollections => true;
-
-        public override bool ModifiesValues => true;
-
-        public override bool IsSelfContained => false;
-
-        public override bool RequiresDataSourceScope => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Delete;
-
-        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
-
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum == 1;
         }
 
         public RemoveAllFunction()
-            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, 3, DType.EmptyTable, DType.EmptyTable, DType.String)
+            : base(3, DType.EmptyTable, DType.EmptyTable, DType.String)
         {
         }
 
@@ -371,109 +341,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.RemoveArg1, TexlStrings.RemoveAllArg2, TexlStrings.RemoveArg3 };
         }
 
-        public override IEnumerable<string> GetRequiredEnumNames()
-        {
-            return new List<string>() { LanguageConstants.RemoveFlagsEnumString };
-        }
-
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
         {
             // First argument to mutation functions is Lazy for datasources that are copy-on-write.
             // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
             return index == 0;
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
-
-            DType collectionType = argTypes[0];
-            if (!collectionType.IsTable)
-            {
-                fValid = false;
-                errors.EnsureError(args[0], TexlStrings.ErrNeedTable_Func, Name);
-            }
-
-            // The source to be collected must be a table.
-            DType sourceType = argTypes[1];
-            if (!sourceType.IsTable)
-            {
-                fValid = false;
-                errors.EnsureError(args[1], TexlStrings.ErrNeedTable_Arg, args[1]);
-            }
-
-            if (!context.AnalysisMode)
-            {
-                bool checkAggregateNames = sourceType.CheckAggregateNames(collectionType, args[1], errors, context.Features, SupportsParamCoercion);
-
-                // The item schema should be compatible with the collection schema.
-                if (!checkAggregateNames)
-                {
-                    fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, sourceType, args[1], errors, context.Features))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTableDoesNotAcceptThisType);
-                    }
-                }
-            }
-
-            // The source schema should be compatible with the collection schema.
-            else if (!collectionType.Accepts(sourceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) && !sourceType.Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-            {
-                fValid = false;
-                if (!SetErrorForMismatchedColumns(collectionType, sourceType, args[1], errors, context.Features))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrCollectionDoesNotAcceptThisType);
-                }
-            }
-
-            if (args.Length == 3)
-            {
-                if (context.AnalysisMode)
-                {
-                    if (!DType.String.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
-                        !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
-                    }
-                }
-                else
-                {
-                    if (!BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
-                    }
-                }
-            }
-
-            if (context.AnalysisMode)
-            {
-                // Remove returns the new collection, so the return schema is the same as the collection schema.
-                returnType = collectionType;
-            }
-            else
-            {
-                returnType = DType.Void;
-            }
-
-            return fValid;
-        }
-
-        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            base.CheckSemantics(binding, args, argTypes, errors);
-            base.ValidateArgumentIsMutable(binding, args[0], errors);
-            MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -482,38 +354,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 0;
-        }
-
-        public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
-        {
-            Contracts.AssertValue(args);
-
-            identifierNode = null;
-            if (args.Length == 0)
-            {
-                return null;
-            }
-
-            var firstNameNode = args[0]?.AsFirstName();
-            identifierNode = firstNameNode;
-            if (firstNameNode == null)
-            {
-                return null;
-            }
-
-            var identifiers = new List<Identifier>
-            {
-                firstNameNode.Ident
-            };
-            return identifiers;
-        }
-
-        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            return Arg0RequiresAsync(callNode, binding);
         }
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)

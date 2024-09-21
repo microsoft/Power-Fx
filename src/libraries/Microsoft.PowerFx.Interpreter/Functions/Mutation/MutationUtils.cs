@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Interpreter
                recordsToRemove = args
                     .Skip(1)
                     .Where(arg => arg is RecordValue)
-                    .Select(row => (RecordValue)row)
+                    .OfType<RecordValue>()
                     .ToList();
             }
 

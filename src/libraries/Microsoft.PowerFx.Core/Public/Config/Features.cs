@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx
         internal bool IsLookUpReductionDelegationEnabled { get; set; }
 
         /// <summary>
-        /// Temporary flag.
+        /// Enables Remove All delegation.
         /// </summary>
         internal bool IsRemoveAllDelegationEnabled { get; set; }
 
