@@ -350,8 +350,13 @@ namespace Microsoft.PowerFx
             Inc();
             _functions.Add(function);
 
+            if (EnumStoreBuilder == null)
+            {
+                _enumStoreBuilder = new EnumStoreBuilder();
+            }
+
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
+            EnumStoreBuilder.WithRequiredEnums(new TexlFunctionSet(function));
         }
 
         internal EnumStoreBuilder EnumStoreBuilder
