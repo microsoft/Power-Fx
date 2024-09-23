@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartObject();
 
-                    foreach (NamedValue namedValue in recordValue.Fields)
+                    foreach (NamedValue namedValue in recordValue.Fields.OrderBy(f => f.Name, StringComparer.InvariantCulture))
                     {
                         _writer.WritePropertyName(namedValue.Name);
                         namedValue.Value.Visit(this);
@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             _writer.WriteStartObject();
 
-                            foreach (var propertyName in propertyNames)
+                            foreach (var propertyName in propertyNames.OrderBy(prop => prop, StringComparer.InvariantCulture))
                             {
                                 if (untypedObject.TryGetProperty(propertyName, out IUntypedObject res))
                                 {

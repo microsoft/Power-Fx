@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
             yield return (16, new TestUO(new[] { new object[] { 1, 2 }, new object[] { true, "a", 7 } }), @"""[[1,2],[true,""""a"""",7]]""");
             yield return (17, new TestUO(new { a = 10, b = -20m, c = "abc" }), @"""{""""a"""":10,""""b"""":-20,""""c"""":""""abc""""}""");
             yield return (18, new TestUO(new { x = new { y = true } }), @"""{""""x"""":{""""y"""":true}}""");
-            yield return (19, new TestUO(new { x = new { y = new[] { 1 }, z = "a", t = new { } }, a = false }), @"""{""""x"""":{""""y"""":[1],""""z"""":""""a"""",""""t"""":{}},""""a"""":false}""");
+            yield return (19, new TestUO(new { x = new { y = new[] { 1 }, z = "a", t = new { } }, a = false }), @"""{""""a"""":false,""""x"""":{""""t"""":{},""""y"""":[1],""""z"""":""""a""""}}""");
             yield return (20, new TestUO(123456789012345.6789012345678m), @"""123456789012345.6789012345678""");
         }
 
