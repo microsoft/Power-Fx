@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -17,9 +18,9 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -338,7 +339,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             ResourceKey = TexlStrings.ErrReachedMaxJsonDepth,
                             Span = irContext.SourceContext,
-                            Kind = ErrorKind.InvalidArgument                            
+                            Kind = ErrorKind.InvalidArgument
                         }));
                         _writer.WriteStringValue(string.Empty);
                         return;
@@ -351,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (type is DecimalType)
                     {
                         _writer.WriteNumberValue(untypedObject.GetDecimal());
-                    }                    
+                    }
                     else if (type is NumberType)
                     {
                         _writer.WriteNumberValue(untypedObject.GetDouble());
@@ -391,14 +392,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else if (externalType.Kind == ExternalTypeKind.UntypedNumber)
                         {
-                            if (true /* numberIsFloat */)
-                            {
-                                _writer.WriteNumberValue(untypedObject.GetDouble());
-                            }
-                            else
-                            {
-                                _writer.WriteNumberValue(untypedObject.GetDecimal());
-                            }                            
+                            _writer.WriteRawValue(untypedObject.GetUntypedNumber());                            
                         }
                         else
                         {

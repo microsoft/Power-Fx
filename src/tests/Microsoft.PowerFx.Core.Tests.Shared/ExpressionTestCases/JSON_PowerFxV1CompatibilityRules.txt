@@ -1,4 +1,5 @@
-#SETUP: EnableJsonFunctions, PowerFxV1CompatibilityRules
+#SETUP: PowerFxV1CompatibilityRules
+#SETUP: EnableJsonFunctions
 
 >> JSON(ParseJSON("{}"))
 "{}"
