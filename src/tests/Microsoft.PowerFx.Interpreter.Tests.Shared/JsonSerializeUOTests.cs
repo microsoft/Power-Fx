@@ -114,32 +114,40 @@ namespace Microsoft.PowerFx.Tests
 
             public bool GetBoolean()
             {
-                return _o is bool b ? b : throw new Exception("Not a boolean");
+                return _o is bool b ? b 
+                     : throw new Exception("Not a boolean");
             }
 
             public decimal GetDecimal()
             {
                 return _o is int i ? (decimal)i
                      : _o is float f ? (decimal)f
-                     : _o is decimal dec ? dec : throw new Exception("Not a decimal");
+                     : _o is decimal dec ? dec 
+                     : throw new Exception("Not a decimal");
             }
 
             public double GetDouble()
             {
                 return _o is int i ? (double)i                      
                      : _o is float f ? (double)f
-                     : _o is double dbl ? dbl : throw new Exception("Not a double");
+                     : _o is double dbl ? dbl 
+                     : throw new Exception("Not a double");
             }
 
             public string GetString()
             {
                 return _o == null ? null 
-                     : _o is string str ? str : throw new Exception("Not a string");
+                     : _o is string str ? str 
+                     : throw new Exception("Not a string");
             }
 
             public string GetUntypedNumber()
             {
-                throw new System.NotImplementedException();
+                return _o is int i ? i.ToString()
+                     : _o is float f ? f.ToString()
+                     : _o is double dbl ? dbl.ToString()
+                     : _o is decimal dec ? dec.ToString() 
+                     : throw new Exception("Not valid untyped number");
             }
 
             public bool TryGetProperty(string value, out IUntypedObject result)
