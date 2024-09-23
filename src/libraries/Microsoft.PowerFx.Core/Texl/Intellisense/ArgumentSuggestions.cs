@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Texl.Intellisense.SuggestionHandlers.CleanupHandlers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -40,8 +42,13 @@ namespace Microsoft.PowerFx.Intellisense
                 { typeof(ValueFunction), LanguageCodeSuggestion }
             }, isThreadSafe: true);
 
-        public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
+        public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(IntellisenseData.IntellisenseData intellisenseData, TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
+            if (function.HasTypeArgs)
+            {
+                return NamedTypeSuggestions(intellisenseData, function, argumentIndex, out requiresSuggestionEscaping);
+            }
+
             if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.GetType(), out var suggestor))
             {
                 return suggestor(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
@@ -213,6 +220,31 @@ namespace Microsoft.PowerFx.Intellisense
             return scopeType
                 .GetNames(DPath.Root)
                 .Select(name => new KeyValuePair<string, DType>(TexlLexer.EscapeName(name.Name.Value), name.Type));
+        }
+
+        // This method returns the suggestions for type arguments of the JSON , Untyped object conversion functions
+        public static IEnumerable<KeyValuePair<string, DType>> NamedTypeSuggestions(IntellisenseData.IntellisenseData data, TexlFunction function, int argumentIndex, out bool requiresSuggestionEscaping)
+        {
+            Contracts.AssertValue(data);
+            Contracts.AssertValue(data.Binding);
+            Contracts.AssertValue(data.Binding.NameResolver);
+            Contracts.AssertValue(data.Binding.NameResolver.NamedTypes);
+            Contracts.Assert(function.HasTypeArgs);
+
+            requiresSuggestionEscaping = false;
+
+            if (argumentIndex == 1)
+            {
+                Contracts.Assert(function.ArgIsType(argumentIndex));
+
+                // If cursor is currently at type argument, add handler to cleanup SuggestionKinds other than Type.
+                data.CleanupHandlers.Add(new TypeArgCleanUpHandler());
+
+                var types = data.Binding.NameResolver.NamedTypes.Where(t => DType.IsSupportedType(t.Value._type, UntypedOrJSONConversionFunction.SupportedJSONTypes, out var _));
+                return types.Select(t => new KeyValuePair<string, DType>(TexlLexer.EscapeName(t.Key), t.Value._type));
+            }
+
+            return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
         }
     }
 }

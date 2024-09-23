@@ -1,0 +1,16 @@
+{
+  "value": [
+    {
+      "value": "Channel",
+      "displayName": "Channel"
+    },
+    {
+      "value": "Group chat",
+      "displayName": "Group chat"
+    },
+    {
+      "value": "Chat with Flow bot",
+      "displayName": "Chat with Flow bot"
+    }
+  ]
+}

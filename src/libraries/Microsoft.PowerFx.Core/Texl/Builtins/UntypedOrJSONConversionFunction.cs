@@ -32,7 +32,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argIndex == 1;
         }
 
-        private static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
+        public override bool HasSuggestionsForParam(int argIndex)
+        {
+            return argIndex == 1;
+        }
+
+        internal static readonly ISet<DType> SupportedJSONTypes = new HashSet<DType> { DType.Boolean, DType.Number, DType.Decimal, DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time, DType.String, DType.Guid, DType.Hyperlink, DType.UntypedObject };
 
         public UntypedOrJSONConversionFunction(string name, TexlStrings.StringGetter description, DType returnType, int arityMax, params DType[] paramTypes)
             : base(name, description, FunctionCategories.Text, returnType, 0, 2, arityMax, paramTypes)
@@ -68,28 +73,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             base.CheckSemantics(binding, args, argTypes, errors);
 
-            CheckTypeArgHasSupportedTypes(args[1], argTypes[1], errors);
-        }
-
-        private void CheckTypeArgHasSupportedTypes(TexlNode typeArg, DType type, IErrorContainer errors)
-        {
-            // Dataverse types may contain fields with ExpandInfo that may have self / mutually recursive reference
-            // we allow these in type check phase by ignoring validation of types in such fields.
-            if (type.HasExpandInfo)
+            // check if the given type argument is not supported
+            if (!DType.IsSupportedType(argTypes[1], SupportedJSONTypes, out var unsupportedType))
             {
-                return;
-            }
-
-            if ((type.IsRecordNonObjNull || type.IsTableNonObjNull) && type.TypeTree != null)
-            {
-                type.TypeTree.ToList().ForEach(t => CheckTypeArgHasSupportedTypes(typeArg, t.Value, errors));
-                return;
-            }
-
-            if (!SupportedJSONTypes.Contains(type))
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, typeArg, TexlStrings.ErrUnsupportedTypeInTypeArgument, type.Kind);
-                return;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrUnsupportedTypeInTypeArgument, unsupportedType.Kind);
             }
         }
     }

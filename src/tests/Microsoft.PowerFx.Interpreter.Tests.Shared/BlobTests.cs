@@ -16,12 +16,12 @@ using Xunit;
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class BlobTests
-    {        
+    {
         [Fact]
         public async Task BlobTest_NoCopy()
         {
             PowerFxConfig config = new PowerFxConfig();
-            config.EnableSetFunction();            
+            config.EnableSetFunction();
 
             SymbolTable symbolTable = new SymbolTable();
             ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");
@@ -46,11 +46,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.EnableSetFunction();
 
             SymbolTable symbolTable = new SymbolTable();
-            ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");            
+            ISymbolSlot var1Slot = symbolTable.AddVariable("var1", FormulaType.Blob, false, "var1");
 
             BlobValue blob = new BlobValue(new StringBlob("abc"));
             SymbolValues symbolValues = new SymbolValues(symbolTable);
-            symbolValues.Set(var1Slot, blob);            
+            symbolValues.Set(var1Slot, blob);
 
             RuntimeConfig runtimeConfig = new RuntimeConfig(symbolValues);
             RecalcEngine engine = new RecalcEngine(config);
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             FormulaValue result = await engine.EvalAsync(@"If(false, var1, If(false, ""a"", var1))", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, symbolTable, runtimeConfig);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(result);
-            Assert.Equal("Not implemented: Unary op TextToBlob", ev.Errors[0].Message);
+            Assert.Equal("Not yet implemented unary operator: TextToBlob.", ev.Errors[0].Message);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             CheckResult checkResult = engine.Check(@$"JSON({blob})");
             Assert.False(checkResult.IsSuccess);
             Assert.Equal("The value passed to the JSON function contains media, and it is not supported by default. To allow JSON serialization of media values, make sure to use the IncludeBinaryData option in the 'format' parameter.", checkResult.Errors.First().Message);
-           
+
             checkResult = engine.Check(@$"JSON({blob}, JSONFormat.IgnoreBinaryData)");
             Assert.True(checkResult.IsSuccess);
 
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var objStr = val.ToObject()?.ToString();
                 var expectedToStr = expectedValue?.ToString();
                 Assert.Equal(expectedToStr, objStr);
-            }            
+            }
         }
 
         // Must call EnableFileFunctions() to get file functions. 
@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void FileInfoTestNotInDefault()
         {
             var config = new PowerFxConfig();
-                        
+
             var engine = new RecalcEngine(config);
 
             var blob = new MyBlobValue();
@@ -170,7 +170,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
-                yield return new TexlStrings.StringGetter[] { (loc) => "table" };                
+                yield return new TexlStrings.StringGetter[] { (loc) => "table" };
             }
 
             public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)

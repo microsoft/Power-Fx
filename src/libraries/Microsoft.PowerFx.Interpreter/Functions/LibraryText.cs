@@ -15,6 +15,7 @@ using System.Web;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -381,7 +382,7 @@ namespace Microsoft.PowerFx.Functions
                 if (!TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
                 {
                     var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
-                    return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                    return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"), Kind = ErrorKind.InvalidArgument });
                 }
 
                 if (args[1] is StringValue fs)
@@ -403,13 +404,13 @@ namespace Microsoft.PowerFx.Functions
             if (formatString != null && formatString.Length > formatSize)
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrTextFormatTooLarge, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
+                return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize), Kind = ErrorKind.InvalidArgument });
             }
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
-                return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                return new ErrorValue(irContext, new ExpressionError() { Message = string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"), Kind = ErrorKind.InvalidArgument });
             }
 
             if (args.Length > 1 && args[1] is OptionSetValue ops)
@@ -420,7 +421,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, cancellationToken, out StringValue result);
 
-            return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
+            return isText ? result : new ErrorValue(irContext, new ExpressionError() { Message = StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name), Kind = ErrorKind.InvalidArgument });
         }
 
         public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, CancellationToken cancellationToken, out StringValue result)
@@ -976,14 +977,14 @@ namespace Microsoft.PowerFx.Functions
 
             if (args[1] is not NumberValue count)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             var source = (StringValue)args[0];
 
             if (count.Value < 0)
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
 
             if ((count.Value % 1) != 0)
@@ -1228,7 +1229,7 @@ namespace Microsoft.PowerFx.Functions
             }
             catch
             {
-                return CommonErrors.GenericInvalidArgument(irContext);
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
             }
         }
 
@@ -1288,9 +1289,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} falls outside the allowable range",
+                    ResourceKey = RuntimeStringResources.ErrInputOutsideRange,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidArgument
+                    Kind = ErrorKind.InvalidArgument,
+                    MessageArgs = new object[] { number }
                 });
             }
 
@@ -1298,9 +1300,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Input value {number} is an invalid input",
+                    ResourceKey = RuntimeStringResources.ErrInvalidNumberInput,
                     Span = irContext.SourceContext,
-                    Kind = ErrorKind.NotApplicable
+                    Kind = ErrorKind.NotApplicable,
+                    MessageArgs = new object[] { number }
                 });
             }
 

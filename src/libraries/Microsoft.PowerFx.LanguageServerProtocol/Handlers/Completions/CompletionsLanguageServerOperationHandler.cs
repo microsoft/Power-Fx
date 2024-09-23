@@ -145,6 +145,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
                     return CompletionItemKind.Module;
                 case SuggestionKind.ScopeVariable:
                     return CompletionItemKind.Variable;
+                case SuggestionKind.Type:
+                    return CompletionItemKind.TypeParameter;
                 default:
                     return CompletionItemKind.Text;
             }

@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private static object GetFileText(string filename)
+        internal static object GetFileText(string filename)
         {
             return !string.IsNullOrEmpty(filename) ? Helpers.ReadStream(filename) : string.Empty;
         }
