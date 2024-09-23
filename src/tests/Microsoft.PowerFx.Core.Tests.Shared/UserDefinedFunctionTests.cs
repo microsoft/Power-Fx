@@ -425,7 +425,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Empty symbol table doesn't get builtins. 
             var st = SymbolTable.WithPrimitiveTypes();
             st.AddUserDefinedFunction("Foo1(x: Number): Number = x;"); // ok 
-            Assert.Throws<InvalidOperationException>(() => st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);"));
+            Assert.False(st.AddUserDefinedFunction("Foo2(x: Number): Number = Abs(x);").IsSuccess);
         }
 
         // Show definitions on public symbol tables

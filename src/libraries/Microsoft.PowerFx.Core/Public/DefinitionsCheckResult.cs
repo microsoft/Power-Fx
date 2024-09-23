@@ -12,6 +12,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -30,10 +33,15 @@ namespace Microsoft.PowerFx
 
         private IReadOnlyDictionary<DName, FormulaType> _resolvedTypes;
 
+        private TexlFunctionSet _userDefinedFunctions;
+
         private CultureInfo _defaultErrorCulture;
         private ParserOptions _parserOptions;
 
         private ParseUserDefinitionResult _parse;
+
+        // Local symboltable to store new symbols in a given script and use in binding.
+        private readonly SymbolTable _localSymbolTable;
 
         // Power Fx expression containing definitions
         private string _definitions;
@@ -43,6 +51,7 @@ namespace Microsoft.PowerFx
 
         public DefinitionsCheckResult()
         {
+            _localSymbolTable = new SymbolTable { DebugName = "LocalUserDefinitions" };
         }
 
         internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
@@ -59,7 +68,7 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        internal DefinitionsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
+        public DefinitionsCheckResult SetText(string definitions, ParserOptions parserOptions = null)
         {
             Contracts.AssertValue(definitions);
 
@@ -97,6 +106,8 @@ namespace Microsoft.PowerFx
 
         public IReadOnlyDictionary<DName, FormulaType> ResolvedTypes => _resolvedTypes;
 
+        public bool ContainsUDF => _parse.UDFs.Any();
+
         internal IReadOnlyDictionary<DName, FormulaType> ApplyResolveTypes()
         {
             if (_parse == null)
@@ -114,6 +125,7 @@ namespace Microsoft.PowerFx
                 if (_parse.DefinedTypes.Any())
                 {
                     this._resolvedTypes = DefinedTypeResolver.ResolveTypes(_parse.DefinedTypes.Where(dt => dt.IsParseValid), _symbols, out var errors);
+                    this._localSymbolTable.AddTypes(this._resolvedTypes);
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
                 }
                 else
@@ -125,14 +137,77 @@ namespace Microsoft.PowerFx
             return this._resolvedTypes;
         }
 
+        internal TexlFunctionSet ApplyCreateUserDefinedFunctions()
+        {
+            if (_parse == null)
+            {
+                this.ApplyParse();
+            }
+
+            if (_symbols == null)
+            {
+                throw new InvalidOperationException($"Must call {nameof(SetBindingInfo)} before calling ApplyCreateUserDefinedFunctions().");
+            }
+
+            if (_resolvedTypes == null)
+            {
+                this.ApplyResolveTypes();
+            }
+
+            if (_userDefinedFunctions == null)
+            {
+                _userDefinedFunctions = new TexlFunctionSet();
+
+                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), _symbols, out var errors);
+
+                if (errors.Any())
+                {
+                    _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
+                }
+
+                var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
+                foreach (var udf in partialUDFs)
+                {
+                    var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
+                    var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
+
+                    List<TexlError> bindErrors = new List<TexlError>();
+
+                    if (binding.ErrorContainer.HasErrors())
+                    {
+                        _errors.AddRange(ExpressionError.New(binding.ErrorContainer.GetErrors(), _defaultErrorCulture));
+                    }
+                    else
+                    {
+                        _localSymbolTable.AddFunction(udf);
+                        _userDefinedFunctions.Add(udf);
+                    }
+                }
+
+                return this._userDefinedFunctions;
+            }
+
+            return this._userDefinedFunctions;
+        }
+
         internal IEnumerable<ExpressionError> ApplyErrors()
         {
             if (_resolvedTypes == null)
             {
-                ApplyResolveTypes();
+                this.ApplyCreateUserDefinedFunctions();
             }
 
             return this.Errors;
+        }
+
+        public IEnumerable<ExpressionError> ApplyParseErrors()
+        {
+            if (_parse == null)
+            {
+                this.ApplyParse();
+            }
+
+            return ExpressionError.New(_parse.Errors, _defaultErrorCulture);
         }
 
         /// <summary>
