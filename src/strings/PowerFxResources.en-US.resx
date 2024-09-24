@@ -4761,7 +4761,9 @@
     <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
-    <value>Maximum depth reached while traversing JSON payload.</value>
-    <comment>Error Message shown to user when we get an UntypedObject that is too deep.</comment>
+    <value>Maximum depth reached while traversing JSON payload.</value>    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximum length reached in JSON function.</value>    
   </data>  
 </root>

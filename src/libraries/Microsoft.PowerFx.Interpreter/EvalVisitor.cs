@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx
                 }
                 else if (func is IAsyncTexlFunction4 asyncFunc4)
                 {
-                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, () => CheckCancel()).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction5 asyncFunc5)
                 {

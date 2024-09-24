@@ -11,6 +11,6 @@ namespace Microsoft.PowerFx.Core.Functions
     // A Texl function capable of async invokes, using TimeZoneInfo and IRContext. 
     internal interface IAsyncTexlFunction4
     {
-        Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken);
+        Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType irContext, FormulaValue[] args, Action checkCancellation);
     }
 }
