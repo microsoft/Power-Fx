@@ -4115,7 +4115,7 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
-  <data name="ErrNamedType_MissingValue" xml:space="preserve">
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
     <value>Named type must be a TypeLiteral.</value>
     <comment>This error message shows up when Named type is not a TypeLiteral. For example, T := ; T2 := 5;</comment>
   </data>
