@@ -37,6 +37,13 @@ namespace Microsoft.PowerFx
         // Allow repl to create new UserDefinedFunctions. 
         public bool AllowUserDefinedFunctions { get; set; }
 
+        /// <summary>
+        /// Enable the Import() function for importing modules. 
+        /// Defaults to false. 
+        /// </summary>
+        [Obsolete("preview")]
+        public bool AllowImport { get; set; }
+
         // Do we print each command before evaluation?
         // Useful if we're running a file and are debugging, or if input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
@@ -76,6 +83,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
 
+        // Map from Module identity to Module.
+        private readonly Dictionary<string, Module> _loadedModules = new Dictionary<string, Module>();
+
+        internal IEnumerable<Module> Modules => _loadedModules.Values;
+
         /// <summary>
         /// Get sorted names of all functions. This includes functions from the <see cref="Engine"/> as well as <see cref="MetaFunctions"/>.
         /// </summary>
@@ -92,6 +104,35 @@ namespace Microsoft.PowerFx
                 
                 return list;
             }
+        }
+
+        // Get combined symbol values (extra, modules, etc)
+        public ReadOnlySymbolValues GetCombined()
+        {
+            // Combine with symbols from modules. 
+            var list = new List<ReadOnlySymbolTable>();
+
+            foreach (var module in _loadedModules.Values)
+            {
+                list.Add(module.Symbols);
+            }
+
+            if (this.ExtraSymbolValues != null)
+            {
+                list.Add(this.ExtraSymbolValues.SymbolTable);
+            }
+
+            var m1 = ReadOnlySymbolTable.Compose(list.ToArray());
+
+            var values = m1.CreateValues(this.ExtraSymbolValues);
+
+            return values;
+        }
+
+        internal void AddModule(Module module)
+        {
+            string id = module.FullPath;
+            _loadedModules[id] = module;
         }
 
         // Interpreter should normally not throw.
@@ -122,6 +163,8 @@ namespace Microsoft.PowerFx
             this.MetaFunctions.AddFunction(new Help0Function(this));
             this.MetaFunctions.AddFunction(new Help1Function(this));
         }
+
+        private bool _finishInit = false;
 
         private bool _userEnabled = false;
 
@@ -217,6 +260,20 @@ namespace Microsoft.PowerFx
             }
         }
 
+        // Property ctor is run before Init properties are set. 
+        // So apply final initialization after property initializers but before we execute commands. 
+        private void FinishInit()
+        {
+            if (!_finishInit)
+            {
+                _finishInit = true;
+                if (this.AllowImport)
+                {
+                    this.MetaFunctions.AddFunction(new ImportFunction(this));
+                }
+            }
+        }
+
         /// <summary>
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
@@ -239,6 +296,8 @@ namespace Microsoft.PowerFx
                 return new ReplResult();
             }
 
+            FinishInit();
+
             if (this.Echo)
             {
                 await this.WritePromptAsync(cancel);
@@ -247,9 +306,10 @@ namespace Microsoft.PowerFx
                 await this.Output.WriteLineAsync(expression.TrimEnd(), OutputKind.Repl, cancel);
             }
 
-            var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
+            var extraValues = this.GetCombined();
+            var extraSymbolTable = extraValues.SymbolTable;
             
-            var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
+            var runtimeConfig = new RuntimeConfig(extraValues)
             {
                  ServiceProvider = new BasicServiceProvider(this.InnerServices)
             };
@@ -363,7 +423,7 @@ namespace Microsoft.PowerFx
                         // Get the type. 
                         var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(expression);
 
-                        var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
+                        var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.GetCombined().SymbolTable);
                         if (!setCheck.IsSuccess)
                         {
                             await this.Output.WriteLineAsync($"Error: Failed to initialize '{name}'.", OutputKind.Error, cancel)

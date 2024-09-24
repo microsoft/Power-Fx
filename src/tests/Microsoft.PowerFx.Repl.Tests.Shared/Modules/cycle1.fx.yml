@@ -1,0 +1,6 @@
+# Test circular dependency 
+Imports:
+- File: cycle2.fx.yml
+
+Formulas: |
+  Func1(x: Number) : Number = 1;
