@@ -2703,7 +2703,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 var features = powerFxV1 ? Features.PowerFxV1 : Features.None;
                 var engine = new Engine(new PowerFxConfig(features));
-                var options = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var options = new ParserOptions() { AllowsSideEffects = true };
                 var result = engine.Check(expression, options);
 
                 var expectedType = powerFxV1 ? DType.Void : DType.Boolean;
