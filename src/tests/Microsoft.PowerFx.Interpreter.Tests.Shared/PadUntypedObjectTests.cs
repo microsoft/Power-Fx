@@ -180,6 +180,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.IsAssignableFrom<TableValue>(result);
         }
 
+        [Theory]
+        [InlineData("Column(First(padTable),\"Id\")")]
+        [InlineData("CountRows(padTable)")]
+        public void PadUntypedObjectFunctionsSupportTest(string expression)
+        {
+            var dt = GetDataTable();
+            var uoTable = new PadUntypedObject(dt);
+            var uoRow = new PadUntypedObject(dt.Rows[0]); // First row
+
+            var uovTable = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uoTable);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("padTable", uovTable);
+
+            var result = engine.Eval(expression);
+            Assert.IsNotType<ErrorValue>(result);   
+        }
+
         private DataTable GetDataTable()
         {
             var dt = new DataTable("someTable");

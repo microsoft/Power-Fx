@@ -448,11 +448,6 @@ namespace Microsoft.PowerFx.Tests
             null,
             true)]
         [InlineData(
-            "foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2))));",
-            "foo(Float(0))",
-            false,
-            2.0)]
-        [InlineData(
             "foo():Blank = foo();",
             "foo()",
             true)]
@@ -473,6 +468,10 @@ namespace Microsoft.PowerFx.Tests
             14.0)]
 
         // Recursive calls are not allowed
+        [InlineData(
+            "foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2))));",
+            "foo(Float(0))",
+            true)]
         [InlineData(
             "hailstone(x:Number):Number = If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x);",
             "hailstone(Float(192))",
@@ -574,7 +573,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            Assert.Throws<InvalidOperationException>(() => engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture));
+            Assert.False(engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture).IsSuccess);
         }
 
         // Overloads and conflict 
@@ -651,30 +650,32 @@ namespace Microsoft.PowerFx.Tests
             "F1(x:Number) : Boolean = { Set(a, x); Today(); };",
             null,
             true,
-            "AddUserDefinedFunction",
+            "ErrUDF_ReturnTypeDoesNotMatch",
             0)]
 
-        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string expectedMethodFailure, double expected)
+        public void ImperativeUserDefinedFunctionTest(string udfExpression, string expression, bool expectedError, string errorKey, double expected)
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var recalcEngine = new RecalcEngine(config);
             recalcEngine.UpdateVariable("a", 1m);
 
-            try
-            {
-                recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            var definitionsCheckResult = recalcEngine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+
+            if (!expectedError)
+            { 
+                Assert.True(definitionsCheckResult.IsSuccess);
 
                 var result = recalcEngine.Eval(expression, options: _opts);
                 var fvExpected = FormulaValue.New(expected);
 
                 Assert.Equal(fvExpected.AsDecimal(), result.AsDecimal());
-                Assert.False(expectedError);
             }
-            catch (Exception ex)
+            else 
             {
-                Assert.True(expectedError, ex.Message);
-                Assert.Contains(expectedMethodFailure, ex.StackTrace);
+                Assert.False(definitionsCheckResult.IsSuccess);
+                Assert.Single(definitionsCheckResult.Errors);
+                Assert.Contains(definitionsCheckResult.Errors, err => err.MessageKey == errorKey);
             }
         }
 
@@ -708,7 +709,7 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); }; E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
             var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
@@ -730,11 +731,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(func.IsAsync);
             Assert.True(!func.IsDelegatable);
 
-            func = recalcEngine.Functions.WithName("E").First() as UserDefinedFunction;
-
-            // Imperative function is not delegable
-            // E():Void = { E() }; ---> binding will be null so no attempt to get datasource should happen
-            Assert.True(!func.IsDelegatable);
+            // Binding fails for recursive definitions and hence function is not added.
+            Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
         }
 
         // Binding to inner functions does not impact outer functions. 
@@ -1836,7 +1834,7 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true));
+                Assert.False(recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true).IsSuccess);
             }
         }
 
