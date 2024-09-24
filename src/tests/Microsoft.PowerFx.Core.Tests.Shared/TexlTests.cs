@@ -2694,6 +2694,25 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Trace(\"hello\")")]
+        [InlineData("Trace(\"hello\", TraceSeverity.Warning)")]
+        [InlineData("Trace(\"hello\", TraceSeverity.Warning, { a: 1 })")]
+        public void TexlFunctionTypeSemanticsTrace(string expression)
+        {
+            foreach (var powerFxV1 in new[] { false, true })
+            {
+                var features = powerFxV1 ? Features.PowerFxV1 : Features.None;
+                var engine = new Engine(new PowerFxConfig(features));
+                var options = new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true };
+                var result = engine.Check(expression, options);
+
+                var expectedType = powerFxV1 ? DType.Void : DType.Boolean;
+                Assert.Equal(expectedType, result.Binding.ResultType);
+                Assert.True(result.IsSuccess);
+            }
+        }
+
+        [Theory]
         [InlineData("Concat([], \"\")")]
         [InlineData("Concat([1, 2, 3], Text(Value))")]
         [InlineData("Concat(Table({a:1, b:\"hello\"}, {b:\"world\"}), b)")]
