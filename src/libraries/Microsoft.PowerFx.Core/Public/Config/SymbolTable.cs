@@ -250,14 +250,14 @@ namespace Microsoft.PowerFx
             foreach (var udf in udfs)
             {
                 AddFunction(udf);
-                var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
+                var config = new BindingConfig(allowsSideEffects: allowSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
                 var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
                 if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
-                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
                 }
             }
 

@@ -667,7 +667,7 @@ namespace Microsoft.PowerFx.Tests
             catch (Exception ex)
             {
                 Assert.True(expectedError);
-                Assert.Contains(expectedMessage, ex.StackTrace);
+                Assert.Contains(expectedMessage, ex.Message);
             }
         }
 
@@ -1813,7 +1813,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
+                AllowParseAsTypeLiteral = true,
             };
 
             if (isValid)

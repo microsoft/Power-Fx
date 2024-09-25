@@ -4828,7 +4828,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
-                    if (func is UserDefinedFunction)
+                    if (_txb.BindingConfig.UserDefinitionsMode)
                     {
                         _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorFunctionInDataUDF);
                     }
