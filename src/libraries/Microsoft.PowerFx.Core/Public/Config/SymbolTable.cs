@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx
 
                 if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
-                    sb.AppendLine(string.Join(", ", errors.Select(err => err.ToString())));
+                    sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
                 }
             }
 
