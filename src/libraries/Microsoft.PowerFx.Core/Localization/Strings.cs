@@ -745,6 +745,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
         public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");
 
+        public static ErrorResourceKey WrnCountRowsMayReturnCachedValue = new ErrorResourceKey("WrnCountRowsMayReturnCachedValue");
+
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);
         public static StringGetter InfoTok_Tok = (b) => StringResources.Get("InfoTok_Tok", b);
