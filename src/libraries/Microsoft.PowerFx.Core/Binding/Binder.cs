@@ -4828,7 +4828,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    if (func is UserDefinedFunction)
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorFunctionInDataUDF);
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    }
                 }
 
                 // Test-only functions can only be used within test cases.

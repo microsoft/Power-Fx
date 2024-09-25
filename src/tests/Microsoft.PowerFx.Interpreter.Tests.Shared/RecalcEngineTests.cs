@@ -638,6 +638,41 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
 
+        // Behavior function in non-imperative udf
+        [InlineData(
+            "TestFunc():Void = Set(a, 123);",
+            true,
+            "Behavior function in a non-behavior user-defined function",
+            false)]
+
+        // Behavior function in imperative udf
+        [InlineData(
+            "TestFunc():Void = { Set(a, 123); };",
+            false,
+            null,
+            true)]
+
+        public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("a", 1m);
+
+            try
+            {
+                engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+                Assert.False(expectedError);
+            }
+            catch (Exception ex)
+            {
+                Assert.True(expectedError);
+                Assert.Contains(expectedMessage, ex.StackTrace);
+            }
+        }
+
+        [Theory]
+
         // Return value with side effectful UDF
         [InlineData(
             "F1(x:Number) : Number = { Set(a, x); a+1; };",
