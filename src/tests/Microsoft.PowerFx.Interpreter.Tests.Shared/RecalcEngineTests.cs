@@ -678,6 +678,32 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // Behavior function in imperative udf
+        [InlineData(
+            "MismatchType():Number = { 1+3; Set(x, 123); };",
+            true,
+            "does not match the return type of the function body",
+            true)]
+
+        public void TestMismatchReturnType(string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("a", 1m);
+
+            try
+            {
+                engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+                Assert.False(expectedError);
+            }
+            catch (Exception ex)
+            {
+                Assert.True(expectedError);
+                Assert.Contains(expectedMessage, ex.StackTrace);
+            }
+        }
+
         [Fact]
 
         public void DelegableUDFTest()
