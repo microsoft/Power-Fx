@@ -78,19 +78,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 catch (InvalidOperationException)
                 {
-                    if (jsonWriterVisitor.ErrorValues.Any())
+                    if (!jsonWriterVisitor.ErrorValues.Any())
                     {
-                        if (jsonWriterVisitor.ErrorValues.Count == 1)
-                        {
-                            return jsonWriterVisitor.ErrorValues[0];
-                        }
+                        // Unexpected error, rethrow
+                        throw;
+                    }
+                }
 
-                        return ErrorValue.Combine(IRContext.NotInSource(_type), jsonWriterVisitor.ErrorValues);
+                if (jsonWriterVisitor.ErrorValues.Any())
+                {
+                    if (jsonWriterVisitor.ErrorValues.Count == 1)
+                    {
+                        return jsonWriterVisitor.ErrorValues[0];
                     }
 
-                    // Unexpected error, rethrow
-                    throw;
-                }                
+                    return ErrorValue.Combine(IRContext.NotInSource(_type), jsonWriterVisitor.ErrorValues);
+                }
 
                 string json = Encoding.UTF8.GetString(memoryStream.ToArray());
 
