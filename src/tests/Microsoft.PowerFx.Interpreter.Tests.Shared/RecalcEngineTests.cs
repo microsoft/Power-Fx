@@ -689,7 +689,6 @@ namespace Microsoft.PowerFx.Tests
             true,
             36,
             41)]
-
         public void TestMismatchReturnType(string name, string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects, int min, int lim)
         {
             var config = new PowerFxConfig();
