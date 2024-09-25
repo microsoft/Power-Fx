@@ -225,6 +225,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2A.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_ServiceNowReturnType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetDataSetMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTable Schema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables.json" />
