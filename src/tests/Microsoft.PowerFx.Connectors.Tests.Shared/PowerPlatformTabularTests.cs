@@ -108,7 +108,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             InternalTableCapabilities tds = Assert.IsType<InternalTableCapabilities>(ads.First());
             Assert.NotNull(tds);            
 
-
             Assert.Equal("Customers", tds.EntityName.Value);
             Assert.True(tds.IsDelegatable);
             Assert.True(tds.IsPageable);

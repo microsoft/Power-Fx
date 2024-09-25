@@ -112,6 +112,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
         BidirectionalDictionary<string, string> IDisplayMapped<string>.PreviousDisplayNameMapping => _previousDisplayNameMapping;
 
+        public bool HasCachedCountRows => false;
+
         public IReadOnlyList<string> GetKeyColumns() => _externalTableMetadata?.KeyColumns ?? new List<string>();
 
         IEnumerable<string> IExternalTabularDataSource.GetKeyColumns(IExpandInfo expandInfo)
