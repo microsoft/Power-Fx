@@ -39,12 +39,12 @@ namespace Microsoft.PowerFx.Types
             _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
         }      
 
-        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, DelegationHost delegationHost)
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, TableCapabilities tableCapabilities)
             : base()
         {
             var lazyTypeProvider = new LazyTypeProvider(this);
 
-            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider, new HashSet<IExternalTabularDataSource> { delegationHost.TabularDataSource });            
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider, new HashSet<IExternalTabularDataSource> { tableCapabilities.DataSource });            
         }
 
         public FormulaType GetFieldType(string fieldName)

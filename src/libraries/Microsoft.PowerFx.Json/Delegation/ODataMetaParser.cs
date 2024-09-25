@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                             if (propertyCapabilityJsonObject.TryGetProperty(CapabilitiesConstants.PropertyQueryAlias, out var alias))
                             {
-                                oDataReplacement.Add(propertyPath, GetReplacementPath(alias.GetString(), columnPath));
+                                oDataReplacement.Add(propertyPath, Entities.InternalTableCapabilities.GetReplacementPath(alias.GetString(), columnPath));
                             }
                         }
                     }
@@ -62,26 +62,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                 return new ODataOpMetadata(schema, oDataReplacement);
             }
-        }
-
-        internal static DPath GetReplacementPath(string alias, DPath currentColumnPath)
-        {
-            if (alias.Contains("/"))
-            {
-                var fullPath = DPath.Root;
-
-                foreach (var name in alias.Split('/'))
-                {
-                    fullPath = fullPath.Append(new DName(name));
-                }
-
-                return fullPath;
-            }
-            else
-            {
-                // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
-                return currentColumnPath.Append(new DName(alias));
-            }
-        }
+        }        
     }
 }

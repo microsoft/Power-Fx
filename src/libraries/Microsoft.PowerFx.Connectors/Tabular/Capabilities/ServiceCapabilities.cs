@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
 // as it defines CapabilitiesConstants which has invalid values.
@@ -23,7 +21,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class ServiceCapabilities : IColumnsCapabilities
+    internal sealed class ServiceCapabilities : IColumnsCapabilities
     {
 #pragma warning disable SA1300 // Element should begin with upper-case letter
 
@@ -127,195 +125,25 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
-        public static ServiceCapabilities Default(IEnumerable<string> fieldNames)
+        public ServiceCapabilities2 ToServiceCapabilities2()
         {
-            ServiceCapabilities serviceCapabilities = new ServiceCapabilities(
-                new SortRestriction(new List<string>() /* unsortableProperties */, new List<string>() /* ascendingOnlyProperties */),
-                new FilterRestriction(new List<string>() /* requiredProperties */, new List<string>() /* nonFilterableProperties */),
-                new SelectionRestriction(true /* isSelectable */),
-                new GroupRestriction(new List<string>() /* ungroupableProperties */),
-                ColumnCapabilities.DefaultFilterFunctionSupport, // filterFunctions
-                ColumnCapabilities.DefaultFilterFunctionSupport, // filterSupportedFunctions
-                new PagingCapabilities(false /* isOnlyServerPagable */, new string[0] /* serverPagingOptions */),
-                true); // recordPermissionCapabilities                                
+            SortRestriction2 sortRestriction = new SortRestriction2(SortRestriction?.UnsortableProperties, SortRestriction?.AscendingOnlyProperties);
+            FilterRestriction2 filterRestriction = new FilterRestriction2(FilterRestriction?.RequiredProperties, FilterRestriction?.NonFilterableProperties);
+            SelectionRestriction2 selectionRestriction = new SelectionRestriction2(SelectionRestriction?.IsSelectable ?? false);
+            GroupRestriction2 groupRestriction = new GroupRestriction2(GroupRestriction?.UngroupableProperties);
+            PagingCapabilities2 pagingCapabilities = new PagingCapabilities2(PagingCapabilities?.IsOnlyServerPagable ?? false, PagingCapabilities?.ServerPagingOptions?.ToArray());
 
-            serviceCapabilities.AddColumnCapabilities(fieldNames);
-
-            return serviceCapabilities;
-        }
-
-        internal DelegationMetadata ToDelegationMetadata(DType type)
-        {
-            List<OperationCapabilityMetadata> capabilities = new List<OperationCapabilityMetadata>();
-
-            Dictionary<DPath, DelegationCapability> columnRestrictions = new Dictionary<DPath, DelegationCapability>();
-
-            if (FilterRestriction?.NonFilterableProperties != null)
-            {
-                foreach (string nonFilterableProperties in FilterRestriction.NonFilterableProperties)
-                {
-                    AddOrUpdate(columnRestrictions, nonFilterableProperties, DelegationCapability.Filter);
-                }
-            }
-
-            Dictionary<DPath, DelegationCapability> columnCapabilities = new Dictionary<DPath, DelegationCapability>();
-
-            if (_columnsCapabilities != null)
-            {
-                foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in _columnsCapabilities)
-                {
-                    if (kvp.Value is ColumnCapabilities cc)
+            Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities = _columnsCapabilities?.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value switch
                     {
-                        DelegationCapability columnDelegationCapability = DelegationCapability.None;
+                        ColumnCapabilities cc => new ColumnCapabilities2(new ColumnCapabilitiesDefinition2(cc.Capabilities.FilterFunctions, cc.Capabilities.QueryAlias, cc.Capabilities.IsChoice)) as ColumnCapabilitiesBase2,
+                        ComplexColumnCapabilities ccc => new ComplexColumnCapabilities2() as ColumnCapabilitiesBase2,
+                        _ => throw new NotImplementedException()
+                    });
 
-                        if (cc.Capabilities?.FilterFunctions != null)
-                        {
-                            foreach (string columnFilterFunction in cc.Capabilities.FilterFunctions)
-                            {
-                                if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
-                                {
-                                    columnDelegationCapability |= filterFunctionCapability;
-                                }
-                            }
-                        }
-
-                        if (columnDelegationCapability.Capabilities != DelegationCapability.None && !columnRestrictions.ContainsKey(GetDPath(kvp.Key)))
-                        {
-                            AddOrUpdate(columnCapabilities, kvp.Key, columnDelegationCapability | DelegationCapability.Filter);
-                        }
-
-                        if (cc.Capabilities.IsChoice == true && !columnRestrictions.ContainsKey(GetDPath(CapabilityConstants.IsChoiceValue)))
-                        {
-                            AddOrUpdate(columnCapabilities, CapabilityConstants.IsChoiceValue, columnDelegationCapability | DelegationCapability.Filter);
-                        }
-                    }
-                    else if (kvp.Value is ComplexColumnCapabilities)
-                    {
-                        throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-                    }
-                }
-            }
-
-            DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
-
-            if (FilterFunctions != null)
-            {
-                foreach (string globalFilterFunction in FilterFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalFilterFunction, out DelegationCapability globalFilterFunctionCapability))
-                    {
-                        filterFunctionSupportedByAllColumns |= globalFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            DelegationCapability? filterFunctionsSupportedByTable = null;
-
-            if (FilterSupportedFunctions != null)
-            {
-                filterFunctionsSupportedByTable = DelegationCapability.None;
-
-                foreach (string globalSupportedFilterFunction in FilterSupportedFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalSupportedFilterFunction, out DelegationCapability globalSupportedFilterFunctionCapability))
-                    {
-                        filterFunctionsSupportedByTable |= globalSupportedFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            Dictionary<DPath, DelegationCapability> groupByRestrictions = new Dictionary<DPath, DelegationCapability>();
-
-            if (GroupRestriction?.UngroupableProperties != null)
-            {
-                foreach (string ungroupableProperty in GroupRestriction.UngroupableProperties)
-                {
-                    AddOrUpdate(groupByRestrictions, ungroupableProperty, DelegationCapability.Group);
-                }
-            }
-            
-            Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
-
-            if (_columnsCapabilities != null)
-            {
-                foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in _columnsCapabilities)
-                {
-                    if (kvp.Value is ColumnCapabilities cc)
-                    {
-                        DPath columnPath = GetDPath(kvp.Key);
-                        DelegationCapability columnDelegationCapability = DelegationCapability.None;
-
-                        if (cc.Capabilities.IsChoice == true)
-                        {
-                            oDataReplacements.Add(columnPath.Append(GetDPath(CapabilityConstants.IsChoiceValue)), columnPath);
-                        }
-
-                        if (!string.IsNullOrEmpty(cc.Capabilities.QueryAlias))
-                        {
-                            oDataReplacements.Add(columnPath, DelegationMetadata.GetReplacementPath(cc.Capabilities.QueryAlias, columnPath));
-                        }
-                    }
-                    else if (kvp.Value is ComplexColumnCapabilities)
-                    {
-                        throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-                    }
-                }
-            }
-
-            Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
-
-            if (SortRestriction?.UnsortableProperties != null)
-            {
-                foreach (string unsortableProperty in SortRestriction.UnsortableProperties)
-                {
-                    AddOrUpdate(sortRestrictions, unsortableProperty, DelegationCapability.Sort);
-                }
-            }
-
-            if (SortRestriction?.AscendingOnlyProperties != null)
-            {
-                foreach (string ascendingOnlyProperty in SortRestriction.AscendingOnlyProperties)
-                {
-                    AddOrUpdate(sortRestrictions, ascendingOnlyProperty, DelegationCapability.SortAscendingOnly);
-                }
-            }
-
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(type, columnRestrictions, columnCapabilities, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
-            GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
-            ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
-            SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
-            
-            capabilities.Add(filterOpMetadata);
-            capabilities.Add(groupOpMetadata);
-            capabilities.Add(oDataOpMetadata);
-            capabilities.Add(sortOpMetadata);
-
-            return new DelegationMetadata(type, capabilities);
-        }
-
-        private DPath GetDPath(string prop) => DPath.Root.Append(new DName(prop));
-
-        private void AddOrUpdate(Dictionary<DPath, DelegationCapability> dic, string prop, DelegationCapability capability)
-        {
-            DPath dPath = GetDPath(prop);
-
-            if (!dic.TryGetValue(dPath, out DelegationCapability existingCapability))
-            {
-                dic.Add(dPath, capability);
-            }
-            else
-            {
-                dic[dPath] = new DelegationCapability(existingCapability.Capabilities | capability.Capabilities);
-            }
-        }
+            return new ServiceCapabilities2(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, FilterFunctions, FilterSupportedFunctions, pagingCapabilities, SupportsRecordPermission, SupportsDataverseOffline, columnCapabilities);
+        }        
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {

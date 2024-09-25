@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx.Core.Entities
 {
-    internal sealed class TableMetadata : IExternalTableMetadata
+    internal class InternalTableMetadata : IExternalTableMetadata
     {
         private readonly IReadOnlyDictionary<string, ColumnMetadata> _columnsByName;
 
-        public TableMetadata(string name, string displayName, bool isReadOnly, IReadOnlyList<ColumnMetadata> columns, string parameterPkColumnName = "")
+        public InternalTableMetadata(string name, string displayName, bool isReadOnly, IReadOnlyList<ColumnMetadata> columns, string parameterPkColumnName = "")
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertNonEmpty(displayName);

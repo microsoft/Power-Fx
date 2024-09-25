@@ -11,12 +11,11 @@ namespace Microsoft.PowerFx.Connectors
 {
     public static class TabularExtensions
     {
-        public static RecordType AddAssociatedDataSource(this RecordType recordType, DName name, string datasetName, ServiceCapabilities serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
+        public static RecordType AddAssociatedDataSource(this RecordType recordType, DName name, string datasetName, ServiceCapabilities2 serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
         {
-            ExternalCdpDataSource eds = new ExternalCdpDataSource(recordType, name, datasetName, serviceCapabilities, isReadOnly, fields);
-            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { eds };
-            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);
-            eds.SetType(newDType);
+            InternalTableCapabilities internalDataSource = new InternalTableCapabilities(name, serviceCapabilities, isReadOnly, recordType._type, datasetName);
+            HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { internalDataSource };
+            DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);                        
             return new KnownRecordType(newDType);
         }
     }

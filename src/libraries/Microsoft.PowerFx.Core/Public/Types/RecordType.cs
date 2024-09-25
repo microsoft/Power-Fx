@@ -48,8 +48,8 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public RecordType(DisplayNameProvider displayNameProvider, DelegationHost delegationHost)
-            : base(false, displayNameProvider, delegationHost)
+        public RecordType(DisplayNameProvider displayNameProvider, TableCapabilities tableCapabilities)
+            : base(false, displayNameProvider, tableCapabilities)
         {
         }        
 

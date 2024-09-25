@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -24,9 +25,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
-        public override bool IsDelegable => TableCapabilities?.IsDelegable ?? false;        
+        public override bool IsDelegable => (TableCapabilities?.SortRestriction != null) || (TableCapabilities?.FilterRestriction != null) || (TableCapabilities?.FilterFunctions != null);        
 
-        internal ServiceCapabilities TableCapabilities => TabularTableDescriptor.TableCapabilities;
+        internal ServiceCapabilities2 TableCapabilities => TabularTableDescriptor.TableCapabilities2;
 
         public override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 
@@ -54,11 +55,19 @@ namespace Microsoft.PowerFx.Connectors
         {
             DatasetMetadata = datasetMetadata;
         }
-        
-        public CdpTable(string dataset, string table, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, CdpTableDescriptor cdpTableDescriptor, RecordType recordType)
-            : this(dataset, table, datasetMetadata, tables)
+
+        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, FormulaType formulaType, string displayName, ServiceCapabilities2 tableCapabilities, IReadOnlyDictionary<string, Relationship> relationships, RecordType recordType)
+            : this(dataset, tableName, datasetMetadata, tables)
         {
-            TabularTableDescriptor = cdpTableDescriptor;
+            TabularTableDescriptor = new CdpTableDescriptor()
+            {
+                DisplayName = displayName,
+                TableCapabilities2 = tableCapabilities,
+                FormulaType = formulaType,
+                Name = tableName,
+                Relationships = relationships,
+            };
+
             SetRecordType(recordType);
         }
 

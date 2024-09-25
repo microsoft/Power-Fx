@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
+using static Microsoft.PowerFx.Core.Entities.TableCapabilities;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -104,16 +105,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(ads);
             Assert.Single(ads);
 
-            ExternalCdpDataSource tds = Assert.IsType<ExternalCdpDataSource>(ads.First());
-            Assert.NotNull(tds);
-            Assert.NotNull(tds.DataEntityMetadataProvider);
+            InternalTableCapabilities tds = Assert.IsType<InternalTableCapabilities>(ads.First());
+            Assert.NotNull(tds);            
 
-            CdpEntityMetadataProvider cemp = Assert.IsType<CdpEntityMetadataProvider>(tds.DataEntityMetadataProvider);
-            Assert.True(cemp.TryGetEntityMetadata("Customers", out IDataEntityMetadata dem));
-
-            CdpDataSourceMetadata tdsm = Assert.IsType<CdpDataSourceMetadata>(dem);
-            Assert.Equal("pfxdev-sql.database.windows.net,connectortest", tdsm.DatasetName);
-            Assert.Equal("Customers", tdsm.EntityName);
 
             Assert.Equal("Customers", tds.EntityName.Value);
             Assert.True(tds.IsDelegatable);
@@ -121,10 +115,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(tds.IsRefreshable);
             Assert.True(tds.IsSelectable);
             Assert.True(tds.IsWritable);
-            Assert.Equal(DataSourceKind.Connected, tds.Kind);
+            
             Assert.Equal("Customers", tds.Name);
             Assert.True(tds.RequiresAsync);
-            Assert.NotNull(tds.ServiceCapabilities);                        
+            
             Assert.Null(sqlTable.Relationships);
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);

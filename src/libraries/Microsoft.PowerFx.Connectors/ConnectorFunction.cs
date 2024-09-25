@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -1006,12 +1007,12 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities2 tableCapabilities)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
-            tableCapabilities = tableSchema.GetTableCapabilities();
+            ServiceCapabilities serviceCapabilities = tableSchema.GetTableCapabilities();
 
             JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
 
@@ -1022,8 +1023,10 @@ namespace Microsoft.PowerFx.Connectors
             foreach (ConnectorType field in connectorType.Fields.Where(f => f.Capabilities != null))            
             {
                 // Column capabilities
-                tableCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+                serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
             }
+
+            tableCapabilities = serviceCapabilities?.ToServiceCapabilities2();
 
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
             ConnectorPermission tablePermission = tableSchema.GetPermission();
