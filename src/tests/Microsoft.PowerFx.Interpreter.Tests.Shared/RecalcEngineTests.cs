@@ -704,7 +704,9 @@ namespace Microsoft.PowerFx.Tests
             catch (Exception ex)
             {
                 Assert.True(expectedError);
-                var func = engine.Functions.WithName("MismatchType").First() as UserDefinedFunction;
+                Assert.Contains(expectedMessage, ex.Message);
+                var func = engine.Functions.WithName(name).FirstOrDefault() as UserDefinedFunction;
+                Assert.NotNull(func);
                 var error = func.Binding.ErrorContainer.GetErrors().FirstOrDefault(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
                 Assert.NotNull(error);
                 var span = error.TextSpan;
