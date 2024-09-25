@@ -274,9 +274,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(testConnector);
-            string connectionId = "66108f1684944d4994ea38b13d1ee70f";
+            string connectionId = "1e702ce4f10c482684cee1465e686764";
             string jwt = "eyJ0eXAi...";
-            using var client = new PowerPlatformConnectorClient("f5de196a-41e6-ee09-92cf-664b4f31a6b2.06.common.tip1002.azure-apihub.net", "f5de196a-41e6-ee09-92cf-664b4f31a6b2", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            using var client = new PowerPlatformConnectorClient("066d5714-1ffc-e316-90bd-affc61d8e6fd.18.common.tip2.azure-apihub.net", "066d5714-1ffc-e316-90bd-affc61d8e6fd", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             testConnector.SetResponseFromFile(@"Responses\SAP GetDataSetMetadata.json");
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sapodata/{connectionId}", CancellationToken.None, logger);
@@ -292,6 +292,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             CdpTableValue sapTableValue = sapTable.GetTableValue();
             Assert.Equal<object>("*[ALL_EMPLOYEES:s, APP_MODE:s, BEGIN_DATE:s, BEGIN_DATE_CHAR:s, COMMAND:s, DESCRIPTION:s, EMP_PERNR:s, END_DATE:s, END_DATE_CHAR:s, EVENT_NAME:s, FLAG:s, GetMessages:*[MESSAGE:s, PERNR:s], HIDE_PEERS:s, LEGEND:s, LEGENDID:s, LEGEND_TEXT:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type._type.ToString());
+
+            string expr = "First(TeamCalendarCollection).LEGEND_TEXT";
+
+            SymbolValues symbolValues = new SymbolValues().Add("TeamCalendarCollection", sapTableValue);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+            
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            testConnector.SetResponseFromFile(@"Responses\SAP GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            StringValue sv = Assert.IsType<StringValue>(result);
+            Assert.Equal("Holiday", sv.Value);
         }
 
         [Fact]
