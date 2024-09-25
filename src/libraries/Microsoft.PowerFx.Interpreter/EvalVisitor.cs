@@ -328,11 +328,23 @@ namespace Microsoft.PowerFx
                 }
                 else if (func is IAsyncTexlFunction4 asyncFunc4)
                 {
-                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, () => CheckCancel()).ConfigureAwait(false);
+                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction5 asyncFunc5)
                 {
-                    result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                    BasicServiceProvider services2 = new BasicServiceProvider(_services);
+
+                    if (services2.GetService(typeof(TimeZoneInfo)) == null)
+                    {
+                        services2.AddService(TimeZoneInfo);
+                    }
+
+                    if (services2.GetService(typeof(Canceller)) == null)
+                    {
+                        services2.AddService(new Canceller(CheckCancel));
+                    }
+
+                    result = await asyncFunc5.InvokeAsync(services2, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
                 {
