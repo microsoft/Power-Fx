@@ -677,6 +677,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColonExpected = new ErrorResourceKey("ErrColonExpected");
         public static ErrorResourceKey ErrExpectedDataSourceRestriction = new ErrorResourceKey("ErrExpectedDataSourceRestriction");
         public static ErrorResourceKey ErrBehaviorPropertyExpected = new ErrorResourceKey("ErrBehaviorPropertyExpected");
+        public static ErrorResourceKey ErrBehaviorFunctionInDataUDF = new ErrorResourceKey("ErrBehaviorFunctionInDataUDF");
         public static ErrorResourceKey ErrTestPropertyExpected = new ErrorResourceKey("ErrTestPropertyExpected");
         public static ErrorResourceKey ErrStringExpected = new ErrorResourceKey("ErrStringExpected");
         public static ErrorResourceKey ErrDateExpected = new ErrorResourceKey("ErrDateExpected");
