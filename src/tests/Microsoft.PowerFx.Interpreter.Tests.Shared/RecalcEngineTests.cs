@@ -678,19 +678,24 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+
         // Behavior function in imperative udf
         [InlineData(
-            "MismatchType():Number = { 1+3; Set(x, 123); };",
+            "MismatchType",
+            "MismatchType():Number = { 1+3; Color.Blue; };",
             true,
             "does not match the return type of the function body",
-            true)]
+            true,
+            36,
+            41)]
 
-        public void TestMismatchReturnType(string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects)
+        public void TestMismatchReturnType(string name, string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects, int min, int lim)
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
-            engine.UpdateVariable("a", 1m);
+            engine.UpdateVariable("x", 1m);
 
             try
             {
@@ -700,7 +705,11 @@ namespace Microsoft.PowerFx.Tests
             catch (Exception ex)
             {
                 Assert.True(expectedError);
-                Assert.Contains(expectedMessage, ex.StackTrace);
+                var func = engine.Functions.WithName("MismatchType").First() as UserDefinedFunction;
+                var error = func.Binding.ErrorContainer.GetErrors().FirstOrDefault(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
+                Assert.NotNull(error);
+                var span = error.TextSpan;
+                Assert.True(span.Min == min && span.Lim == lim);
             }
         }
 
