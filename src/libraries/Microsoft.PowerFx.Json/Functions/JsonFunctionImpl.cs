@@ -78,17 +78,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 catch (InvalidOperationException)
                 {
-                }
-
-                if (jsonWriterVisitor.ErrorValues.Any())
-                {
-                    if (jsonWriterVisitor.ErrorValues.Count == 1)
+                    if (jsonWriterVisitor.ErrorValues.Any())
                     {
-                        return jsonWriterVisitor.ErrorValues[0];
+                        if (jsonWriterVisitor.ErrorValues.Count == 1)
+                        {
+                            return jsonWriterVisitor.ErrorValues[0];
+                        }
+
+                        return ErrorValue.Combine(IRContext.NotInSource(_type), jsonWriterVisitor.ErrorValues);
                     }
 
-                    return ErrorValue.Combine(IRContext.NotInSource(_type), jsonWriterVisitor.ErrorValues);
-                }
+                    // Unexpected error, rethrow
+                    throw;
+                }                
 
                 string json = Encoding.UTF8.GetString(memoryStream.ToArray());
 
@@ -166,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     _canceller = canceller;
                 }
 
-                private void ThrowIfCancellationRequested(int index)
+                private void CheckLimitsAndCancellation(int index)
                 {
                     _canceller.ThrowIfCancellationRequested();
 
@@ -180,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             Kind = ErrorKind.InvalidArgument
                         }));
 
-                        throw new InvalidOperationException("Maximum depth reached while traversing JSON payload.");
+                        throw new InvalidOperationException($"Maximum depth {_maxDepth} reached while traversing JSON payload.");
                     }
 
                     if (_writer.BytesCommitted + _writer.BytesPending > _maxLength)
@@ -193,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             Kind = ErrorKind.InvalidArgument
                         }));
 
-                        throw new InvalidOperationException("Maximum length reached in JSON function.");
+                        throw new InvalidOperationException($"Maximum length {_maxLength} reached in JSON function.");
                     }
                 }
 
@@ -313,7 +315,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     foreach (NamedValue namedValue in recordValue.Fields.OrderBy(f => f.Name, StringComparer.Ordinal))
                     {
-                        ThrowIfCancellationRequested(0);
+                        CheckLimitsAndCancellation(0);
 
                         _writer.WritePropertyName(namedValue.Name);
                         namedValue.Value.Visit(this);
@@ -344,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
-                        ThrowIfCancellationRequested(0);
+                        CheckLimitsAndCancellation(0);
 
                         if (row.IsBlank)
                         {
@@ -381,11 +383,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     Visit(untypedObjectValue.Impl);
                 }
 
-                private void Visit(IUntypedObject untypedObject, int index = 0)
+                private void Visit(IUntypedObject untypedObject, int depth = 0)
                 {
                     FormulaType type = untypedObject.Type;
 
-                    ThrowIfCancellationRequested(index);
+                    CheckLimitsAndCancellation(depth);
 
                     if (type is StringType)
                     {
@@ -411,10 +413,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                             {
-                                ThrowIfCancellationRequested(index);
+                                CheckLimitsAndCancellation(depth);
 
                                 IUntypedObject row = untypedObject[i];
-                                Visit(row, index + 1);
+                                Visit(row, depth + 1);
                             }
 
                             _writer.WriteEndArray();
@@ -425,12 +427,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             foreach (var propertyName in propertyNames.OrderBy(prop => prop, StringComparer.Ordinal))
                             {
-                                ThrowIfCancellationRequested(index);
+                                CheckLimitsAndCancellation(depth);
 
                                 if (untypedObject.TryGetProperty(propertyName, out IUntypedObject res))
                                 {
                                     _writer.WritePropertyName(propertyName);
-                                    Visit(res, index + 1);
+                                    Visit(res, depth + 1);
                                 }
                             }
 
