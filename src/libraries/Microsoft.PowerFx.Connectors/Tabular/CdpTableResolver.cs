@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable SA1300 // Element should begin with upper case
 #pragma warning disable SA1516 // Element should be separated by a blank line
 
-    public class SqlRelationship
+    internal class SqlRelationship
     {
         public string RelationshipName;
         public string ParentTable;
