@@ -1,0 +1,265 @@
+{
+  "name": "tickets",
+  "title": "tickets",
+  "x-ms-permission": "read-write",
+  "x-ms-capabilities": {
+    "sortRestrictions": {
+      "sortable": true,
+      "unsortableProperties": [ "collaborator_ids", "tags", "via", "custom_fields", "satisfaction_rating", "sharing_agreement_ids", "followup_ids" ]
+    },
+    "filterRestrictions": {
+      "filterable": true,
+      "nonFilterableProperties": [ "collaborator_ids", "tags", "via", "custom_fields", "satisfaction_rating", "sharing_agreement_ids", "followup_ids" ]
+    },
+    "selectRestrictions": { "selectable": true },
+    "filterFunctionSupport": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "now", "not", "and", "or", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes", "totalseconds", "round", "floor", "ceiling", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat", "sum", "min", "max", "average", "countdistinct", "null" ]
+  },
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "id": {
+          "title": "id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-keyOrder": 1,
+          "x-ms-keyType": "primary",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "url": {
+          "title": "url",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "external_id": {
+          "title": "external_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "type": {
+          "title": "type",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "subject": {
+          "title": "subject",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "raw_subject": {
+          "title": "raw_subject",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "description": {
+          "title": "description",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "priority": {
+          "title": "priority",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "status": {
+          "title": "status",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "recipient": {
+          "title": "recipient",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
+          "type": "string",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "requester_id": {
+          "title": "requester_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "submitter_id": {
+          "title": "submitter_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "assignee_id": {
+          "title": "assignee_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "organization_id": {
+          "title": "organization_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "group_id": {
+          "title": "group_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "collaborator_ids": {
+          "title": "collaborator_ids",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "forum_topic_id": {
+          "title": "forum_topic_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "problem_id": {
+          "title": "problem_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "has_incidents": {
+          "title": "has_incidents",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "not", "and", "or" ] },
+          "type": "boolean",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "due_at": {
+          "title": "due_at",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
+          "type": "string",
+          "format": "date-time",
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "tags": {
+          "title": "tags",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "via": {
+          "title": "via",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "custom_fields": {
+          "title": "custom_fields",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "satisfaction_rating": {
+          "title": "satisfaction_rating",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "sharing_agreement_ids": {
+          "title": "sharing_agreement_ids",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "followup_ids": {
+          "title": "followup_ids",
+          "type": "string",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "ticket_form_id": {
+          "title": "ticket_form_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "brand_id": {
+          "title": "brand_id",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
+          "type": "integer",
+          "format": "int64",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-ms-permission": "read-write",
+          "x-ms-sort": "none"
+        },
+        "created_at": {
+          "title": "created_at",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
+          "type": "string",
+          "format": "date-time",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        },
+        "updated_at": {
+          "title": "updated_at",
+          "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
+          "type": "string",
+          "format": "date-time",
+          "x-ms-permission": "read-only",
+          "x-ms-sort": "none"
+        }
+      }
+    },
+    "x-ms-permission": "read-write"
+  }
+}
