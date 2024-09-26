@@ -1382,8 +1382,8 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
-            string jwt = "eyJ0eXAi...";
-            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "29941b77eb0a40fe925cd7a03cb85b40", () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            string jwt = "eyJ0eXAiO...";
+            using var client = new PowerPlatformConnectorClient("4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net", "4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f", "53f515b50c3e4925803ec1f0945e799f", () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             config.AddActionConnector(new ConnectorSettings("SQL") { IncludeInternalFunctions = true, AllowUnsupportedFunctions = true }, apiDoc, new ConsoleLogger(_output));
             RecalcEngine engine = new RecalcEngine(config);
@@ -1403,7 +1403,7 @@ namespace Microsoft.PowerFx.Tests
             // This will return 4 tables in an Untyped Object
             string query =
                 "select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
-                "select object_id, name from sys.tables; " +
+                "select object_id, '[' + it.TABLE_SCHEMA + '].[' + it.TABLE_NAME + ']' as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; " +
                 "select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
                 "select name, object_id, column_id from sys.columns";
 
@@ -1454,31 +1454,31 @@ namespace Microsoft.PowerFx.Tests
             sqlRelationShips = sqlRelationShips.OrderBy(sr => sr.ParentTable).ThenBy(sr => sr.ColumnId).ToList();
 
             Assert.Equal(12, sqlRelationShips.Count);
-            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, CustomerAddress, CustomerID, Customer, CustomerID", sqlRelationShips[0].ToString());
-            Assert.Equal("FK_CustomerAddress_Address_AddressID, CustomerAddress, AddressID, Address, AddressID", sqlRelationShips[1].ToString());
-            Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, Product, ProductCategoryID, ProductCategory, ProductCategoryID", sqlRelationShips[2].ToString());
-            Assert.Equal("FK_Product_ProductModel_ProductModelID, Product, ProductModelID, ProductModel, ProductModelID", sqlRelationShips[3].ToString());
-            Assert.Equal("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID, ProductCategory, ParentProductCategoryID, ProductCategory, ProductCategoryID", sqlRelationShips[4].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, ProductModelProductDescription, ProductModelID, ProductModel, ProductModelID", sqlRelationShips[5].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, ProductModelProductDescription, ProductDescriptionID, ProductDescription, ProductDescriptionID", sqlRelationShips[6].ToString());
-            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, SalesOrderDetail, SalesOrderID, SalesOrderHeader, SalesOrderID", sqlRelationShips[7].ToString());
-            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, SalesOrderDetail, ProductID, Product, ProductID", sqlRelationShips[8].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, SalesOrderHeader, CustomerID, Customer, CustomerID", sqlRelationShips[9].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Address_ShipTo_AddressID, SalesOrderHeader, ShipToAddressID, Address, AddressID", sqlRelationShips[10].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, SalesOrderHeader, BillToAddressID, Address, AddressID", sqlRelationShips[11].ToString());
+            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, [SalesLT].[CustomerAddress], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[0].ToString());
+            Assert.Equal("FK_CustomerAddress_Address_AddressID, [SalesLT].[CustomerAddress], AddressID, [SalesLT].[Address], AddressID", sqlRelationShips[1].ToString());
+            Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, [SalesLT].[Product], ProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[2].ToString());
+            Assert.Equal("FK_Product_ProductModel_ProductModelID, [SalesLT].[Product], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[3].ToString());
+            Assert.Equal("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID, [SalesLT].[ProductCategory], ParentProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[4].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, [SalesLT].[ProductModelProductDescription], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[5].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, [SalesLT].[ProductModelProductDescription], ProductDescriptionID, [SalesLT].[ProductDescription], ProductDescriptionID", sqlRelationShips[6].ToString());
+            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, [SalesLT].[SalesOrderDetail], SalesOrderID, [SalesLT].[SalesOrderHeader], SalesOrderID", sqlRelationShips[7].ToString());
+            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, [SalesLT].[SalesOrderDetail], ProductID, [SalesLT].[Product], ProductID", sqlRelationShips[8].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, [SalesLT].[SalesOrderHeader], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[9].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Address_ShipTo_AddressID, [SalesLT].[SalesOrderHeader], ShipToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[10].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, [SalesLT].[SalesOrderHeader], BillToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[11].ToString());
 
-            string expected = @$"POST https://firstrelease-003.azure-apihub.net/invoke
- authority: firstrelease-003.azure-apihub.net
+            string expected = @$"POST https://4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net/invoke
+ authority: 4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net
  Authorization: Bearer {jwt}
  path: /invoke
  scheme: https
- x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f
  x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
  x-ms-request-method: POST
- x-ms-request-url: /apim/sql/29941b77eb0a40fe925cd7a03cb85b40/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
+ x-ms-request-url: /apim/sql/53f515b50c3e4925803ec1f0945e799f/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; select object_id, name from sys.tables; select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; select name, object_id, column_id from sys.columns""}}
+ [body] {{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; select object_id, \u0027[\u0027 \u002B it.TABLE_SCHEMA \u002B \u0027].[\u0027 \u002B it.TABLE_NAME \u002B \u0027]\u0027 as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; select name, object_id, column_id from sys.columns""}}
 ";
 
             Assert.Equal(expected, testConnector._log.ToString());

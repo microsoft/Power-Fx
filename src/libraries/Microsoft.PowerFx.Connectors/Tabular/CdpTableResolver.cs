@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors
                     uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
                     string body =
                         @"{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
-                        @"select object_id, name from sys.tables; " +
+                        @"select object_id, '[' + it.TABLE_SCHEMA + '].[' + it.TABLE_NAME + ']' as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; " +
                         @"select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
                         @"select name, object_id, column_id from sys.columns""}";
 
@@ -90,9 +90,8 @@ namespace Microsoft.PowerFx.Connectors
                     // Result should be cached
                     sqlRelationships = GetSqlRelationships(text2);
 
-                    // Filter on ParentTable
-                    string tbl = tableName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty);
-                    sqlRelationships = sqlRelationships.Where(sr => sr.ParentTable == tbl).ToList();
+                    // Filter on ParentTable (logical name)                   
+                    sqlRelationships = sqlRelationships.Where(sr => sr.ParentTable == tableName).ToList();
                 }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -138,8 +137,12 @@ namespace Microsoft.PowerFx.Connectors
                                     sqlRelationShips.Add(new SqlRelationship()
                                     {
                                         RelationshipName = fk.name,
+
+                                        // logical name
                                         ParentTable = tp.name,
                                         ColumnName = cp.name,
+
+                                        // logical name
                                         ReferencedTable = tr.name,
                                         ReferencedColumnName = cr.name,
                                         ColumnId = cp.column_id
@@ -194,6 +197,8 @@ namespace Microsoft.PowerFx.Connectors
     internal class SqlTable
     {
         public long object_id { get; set; }
+
+        // logical name
         public string name { get; set; }
     }
 

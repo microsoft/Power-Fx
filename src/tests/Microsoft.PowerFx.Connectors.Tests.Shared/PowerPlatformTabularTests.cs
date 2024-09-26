@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             bool b = sqlTable.TabularRecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.True(b);
-            Assert.Equal("ProductModel", externalTableName); // Display Name
+            Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
             Assert.Equal("ProductModelID", foreignKey);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");

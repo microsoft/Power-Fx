@@ -77,55 +77,55 @@
     "Table2": [
       {
         "object_id": 1074102867,
-        "name": "sysdiagrams"
+        "name": "[dbo].[sysdiagrams]"
       },
       {
         "object_id": 1573580644,
-        "name": "Customer"
+        "name": "[SalesLT].[Customer]"
       },
       {
         "object_id": 1621580815,
-        "name": "ProductModel"
+        "name": "[SalesLT].[ProductModel]"
       },
       {
         "object_id": 1669580986,
-        "name": "ProductDescription"
+        "name": "[SalesLT].[ProductDescription]"
       },
       {
         "object_id": 1701581100,
-        "name": "Product"
+        "name": "[SalesLT].[Product]"
       },
       {
         "object_id": 1733581214,
-        "name": "ProductModelProductDescription"
+        "name": "[SalesLT].[ProductModelProductDescription]"
       },
       {
         "object_id": 1781581385,
-        "name": "ProductCategory"
+        "name": "[SalesLT].[ProductCategory]"
       },
       {
         "object_id": 1829581556,
-        "name": "BuildVersion"
+        "name": "[dbo].[BuildVersion]"
       },
       {
         "object_id": 1861581670,
-        "name": "ErrorLog"
+        "name": "[dbo].[ErrorLog]"
       },
       {
         "object_id": 1893581784,
-        "name": "Address"
+        "name": "[SalesLT].[Address]"
       },
       {
         "object_id": 1925581898,
-        "name": "CustomerAddress"
+        "name": "[SalesLT].[CustomerAddress]"
       },
       {
         "object_id": 1957582012,
-        "name": "SalesOrderDetail"
+        "name": "[SalesLT].[SalesOrderDetail]"
       },
       {
         "object_id": 1989582126,
-        "name": "SalesOrderHeader"
+        "name": "[SalesLT].[SalesOrderHeader]"
       }
     ],
     "Table3": [
