@@ -1102,6 +1102,34 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(type11.GetType(DPath.Root.Append(new DName("A"))) == DType.Error);
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void RecordAndTableFieldOrder(bool useRecord)
+        {
+            var type = useRecord ? DType.EmptyRecord : DType.EmptyTable;
+
+            var fieldNames = new[] { "C", "ß", "ç", "A", "b", "á", "é", "ss", "word", "wórd" };
+            var expectedFieldOrder = new List<string>(fieldNames);
+            expectedFieldOrder.Sort(StringComparer.Ordinal);
+
+            foreach (var fieldName in fieldNames)
+            {
+                type = type.Add(new DName(fieldName), DType.String);
+            }
+
+            var expectedTypeStr =
+                (useRecord ? "!" : "*") +
+                "[" +
+                string.Join(", ", expectedFieldOrder.Select(f => f + ":s")) +
+                "]";
+
+            Assert.Equal(expectedTypeStr, type.ToString());
+
+            var actualFieldNames = type.GetNames(DPath.Root).Select(tn => tn.Name.Value).ToArray();
+            Assert.Equal(expectedFieldOrder, actualFieldNames);
+        }
+
         [Fact]
         public void EnumDTypeTests()
         {
