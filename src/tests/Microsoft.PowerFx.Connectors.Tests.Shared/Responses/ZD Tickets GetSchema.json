@@ -78,6 +78,12 @@
           "title": "priority",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
           "type": "string",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "urgent"
+          ],
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
