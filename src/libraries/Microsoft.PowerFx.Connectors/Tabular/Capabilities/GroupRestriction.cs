@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class GroupRestriction
+    internal sealed class GroupRestriction
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.UngroupableProperties)]

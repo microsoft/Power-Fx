@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class PagingCapabilities
+    internal sealed class PagingCapabilities
     {
         public readonly bool IsOnlyServerPagable;
 

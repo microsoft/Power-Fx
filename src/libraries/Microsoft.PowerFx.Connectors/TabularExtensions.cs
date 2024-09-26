@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static RecordType AddAssociatedDataSource(this RecordType recordType, DName name, string datasetName, ServiceCapabilities2 serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
         {
-            InternalTableCapabilities internalDataSource = new InternalTableCapabilities(name, serviceCapabilities, isReadOnly, recordType._type, datasetName);
+            TableCapabilities.InternalTableCapabilities internalDataSource = new TableCapabilities.InternalTableCapabilities(name, serviceCapabilities, isReadOnly, recordType._type, datasetName);
             HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { internalDataSource };
             DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(recordType._type, dataSource, null);                        
             return new KnownRecordType(newDType);

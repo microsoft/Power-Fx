@@ -7,23 +7,26 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal class InternalDataEntityMetadataProvider : IExternalDataEntityMetadataProvider
+    public partial class TableCapabilities
     {
-        private readonly Dictionary<string, IDataEntityMetadata> _entityIdToMetadataMap;
-
-        public InternalDataEntityMetadataProvider()
+        internal class InternalDataEntityMetadataProvider : IExternalDataEntityMetadataProvider
         {
-            _entityIdToMetadataMap = new Dictionary<string, IDataEntityMetadata>();
-        }
+            private readonly Dictionary<string, IDataEntityMetadata> _entityIdToMetadataMap;
 
-        public void AddSource(string sourceName, IDataEntityMetadata tabularDataSource)
-        {
-            _entityIdToMetadataMap.Add(sourceName, tabularDataSource);
-        }
+            public InternalDataEntityMetadataProvider()
+            {
+                _entityIdToMetadataMap = new Dictionary<string, IDataEntityMetadata>();
+            }
 
-        public bool TryGetEntityMetadata(string expandInfoIdentity, out IDataEntityMetadata entityMetadata)
-        {
-            return _entityIdToMetadataMap.TryGetValue(expandInfoIdentity, out entityMetadata);
+            public void AddSource(string sourceName, IDataEntityMetadata tabularDataSource)
+            {
+                _entityIdToMetadataMap.Add(sourceName, tabularDataSource);
+            }
+
+            public bool TryGetEntityMetadata(string expandInfoIdentity, out IDataEntityMetadata entityMetadata)
+            {
+                return _entityIdToMetadataMap.TryGetValue(expandInfoIdentity, out entityMetadata);
+            }
         }
     }
 }

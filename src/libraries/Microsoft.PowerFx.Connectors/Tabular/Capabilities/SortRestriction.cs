@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class SortRestriction
+    internal sealed class SortRestriction
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.AscendingOnlyProperties)]

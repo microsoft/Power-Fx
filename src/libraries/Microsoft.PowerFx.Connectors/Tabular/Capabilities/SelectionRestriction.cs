@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class SelectionRestriction
+    internal sealed class SelectionRestriction
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.Selectable)]

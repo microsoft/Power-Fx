@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class FilterRestriction
+    internal sealed class FilterRestriction
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterRequiredProperties)]

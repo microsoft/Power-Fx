@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    public class TableCapabilities
+    public partial class TableCapabilities
     {
         public TableCapabilities(DName name, ServiceCapabilities2 serviceCapabilities2, bool isReadOnly, FormulaType type, string datasetName)
         {

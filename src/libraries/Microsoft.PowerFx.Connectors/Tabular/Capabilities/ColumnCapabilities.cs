@@ -12,7 +12,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
+    internal sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ColumnProperties)]
