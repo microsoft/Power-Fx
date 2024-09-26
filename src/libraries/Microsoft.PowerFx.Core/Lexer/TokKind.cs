@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Syntax
 
         /// <summary>
         /// Colon immediately followed by equal.
-        /// <code>=></code>
+        /// <code>:=</code>
         /// </summary>
         ColonEqual,
     }
