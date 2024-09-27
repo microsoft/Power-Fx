@@ -12,7 +12,6 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
