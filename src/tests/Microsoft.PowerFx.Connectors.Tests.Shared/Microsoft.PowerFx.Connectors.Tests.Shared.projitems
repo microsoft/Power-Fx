@@ -225,6 +225,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_O365Users_UserProfileV2A.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_ServiceNowReturnType.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetDataSetMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTable Schema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables.json" />
@@ -269,6 +270,8 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetRows.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Users GetSchema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Tickets GetSchema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\ZD Tickets GetRows.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.1.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language v2.2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Azure Cognitive Service for Language.json" />

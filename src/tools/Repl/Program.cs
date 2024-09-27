@@ -43,6 +43,9 @@ namespace Microsoft.PowerFx
         private const string OptionRegExCompare = "RegExCompare";
         private static bool _regExCompare = false;
 
+        private const string OptionUDF = "UserDefinedFunctions";
+        private static bool _enableUDFs = true;
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static StandardFormatter _standardFormatter;
@@ -71,6 +74,7 @@ namespace Microsoft.PowerFx
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
                 { OptionRegExCompare, OptionRegExCompare },
+                { OptionUDF, OptionUDF },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -153,6 +157,7 @@ namespace Microsoft.PowerFx
                 this.InnerServices = bsp;
 
                 this.AllowSetDefinitions = true;
+                this.AllowUserDefinedFunctions = _enableUDFs;
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
@@ -275,6 +280,7 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -323,6 +329,11 @@ namespace Microsoft.PowerFx
                     return BooleanValue.New(_stackTrace);
                 }
 
+                if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_enableUDFs);
+                }
+
                 return FormulaValue.NewError(new ExpressionError()
                 {
                     Kind = ErrorKind.InvalidArgument,
@@ -359,6 +370,13 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionTextFirst, StringComparison.OrdinalIgnoreCase))
                 {
                     _textFirst = value.Value;
+                    _reset = true;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
+                {
+                    _enableUDFs = value.Value;
                     _reset = true;
                     return value;
                 }
@@ -487,6 +505,9 @@ Options.PowerFxV1
 
 Options.None
     Removed all the feature flags, which is even less than Canvas uses.
+
+Options.EnableUDFs
+    Enables UserDefinedFunctions to be added.
 
 ";
 
