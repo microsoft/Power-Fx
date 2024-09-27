@@ -300,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.ColonEqual)
+                if (_curs.TidCur == TokKind.ColonEqual && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
