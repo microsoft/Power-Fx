@@ -44,6 +44,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.TraceArg1, TexlStrings.TraceArg2, TexlStrings.TraceArg3, TexlStrings.TraceArg4 };
         }
 
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var result = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : DType.Boolean;
+            return result;
+        }
+
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             Contracts.AssertValue(args);
