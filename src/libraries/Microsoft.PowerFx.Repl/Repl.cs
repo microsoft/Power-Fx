@@ -141,6 +141,11 @@ namespace Microsoft.PowerFx
             this.EnableUserObject(UserInfo.AllKeys);
         }
 
+        public void EnableEnvVarObject(RecordType recordType)
+        {
+            this.Engine.Config.SymbolTable.AddEnvVarObject(recordType);
+        }
+
         // Either inherited symbols must define User (and it's schema), 
         // or we can define it now. 
         public void EnableUserObject(params string[] keys)

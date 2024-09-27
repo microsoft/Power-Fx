@@ -3,16 +3,13 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
     public static class SymbolExtensions
-    {        
+    {
         /// <summary>
         /// Set TimeZoneInfo.
         /// </summary>
@@ -70,7 +67,7 @@ namespace Microsoft.PowerFx
 
         public static void SetUserInfo(this RuntimeConfig symbols, BasicUserInfo userInfo)
         {
-            symbols.SetUserInfo(userInfo.UserInfo);            
+            symbols.SetUserInfo(userInfo.UserInfo);
         }
 
         /// <summary>
@@ -87,10 +84,11 @@ namespace Microsoft.PowerFx
             symbolTable.AddHostObject(UserInfo.ObjectName, userInfoType, (sp) => UserInfoRecordValue.GetUserInfoObject(userInfoType, sp));
         }
 
-        /// <summary>
-        /// Create a set of values against this symbol table.
-        /// </summary>
-        /// <returns></returns>
+        public static void AddEnvVarObject(this SymbolTable symbolTable, RecordType recordType)
+        {
+            symbolTable.AddHostObject("Variables", recordType, (sp) => sp.GetService<EnvironmentVariables>());
+        }
+
         public static ReadOnlySymbolValues CreateValues(this ReadOnlySymbolTable symbolTable, params ReadOnlySymbolValues[] existing)
         {
             return ComposedReadOnlySymbolValues.New(true, symbolTable, existing);
