@@ -300,7 +300,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.Equ)
+                if (_curs.TidCur == TokKind.ColonEqual && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
-                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeLiteral);
                     }
 
                     // Extract expression
@@ -334,6 +334,49 @@ namespace Microsoft.PowerFx.Core.Parser
                             definitionBeforeTrivia = new List<ITexlSource>();
                             continue;
                         }
+                        else
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeLiteral);
+                        }
+
+                        // If the result was an error, keep moving cursor until end of named type expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
+                    }
+
+                    declarationStart = _curs.TokCur.Span.Lim;
+                    _curs.TokMove();
+                    ParseTrivia();
+                }
+                else if (_curs.TidCur == TokKind.Equ)
+                {
+                    var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
+                    _curs.TokMove();
+                    definitionBeforeTrivia.Add(ParseTrivia());
+
+                    if (_curs.TidCur == TokKind.Semicolon)
+                    {
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    // Extract expression
+                    while (_curs.TidCur != TokKind.Semicolon)
+                    {
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
+                        // Parse expression
+                        definitionBeforeTrivia.Add(ParseTrivia());
+                        var result = ParseExpr(Precedence.None);
 
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
