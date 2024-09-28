@@ -34,6 +34,10 @@ namespace Microsoft.PowerFx.Repl
         }
     }
 
+    /// <summary>
+    /// Context for loading a single module. 
+    /// This can ensure the module dependencies don't have cycles. 
+    /// </summary>
     internal class ModuleLoadContext
     {
         // Core symbols we resolve against. 
@@ -49,6 +53,13 @@ namespace Microsoft.PowerFx.Repl
             _commonIncomingSymbols = commonIncomingSymbols;
         }
 
+        /// <summary>
+        /// Load and return a resolved module.  May throw on errors. 
+        /// </summary>
+        /// <param name="name">name to resolve via loader parameter.</param>
+        /// <param name="loader">file loader to resolve the name and any further imports.</param>
+        /// <param name="errors">error collection to populate if there are errors in parsing, binding, etc. </param>
+        /// <returns>A module. Or possible null if there are errors. Or may throw. </returns>        
         public async Task<Module> LoadAsync(string name, IFileLoader loader, List<ExpressionError> errors)
         {
             (var poco, var loader2) = await loader.LoadAsync(name).ConfigureAwait(false);
@@ -101,7 +112,7 @@ namespace Microsoft.PowerFx.Repl
 
             var moduleExports = new SymbolTable { DebugName = name };
 
-            bool ok = Resolve2(poco, moduleExports, incomingSymbols, errors);
+            bool ok = ResolveBody(poco, moduleExports, incomingSymbols, errors);
 
             if (!ok)
             {
@@ -122,7 +133,7 @@ namespace Microsoft.PowerFx.Repl
         //   any module dependencies should already be resolved and included here. 
         // moduleExports - symbols to add to. 
         // Return true on successful load, false on failure
-        private bool Resolve2(ModulePoco poco, SymbolTable moduleExports, ReadOnlySymbolTable incomingSymbols, List<ExpressionError> errors)
+        private bool ResolveBody(ModulePoco poco, SymbolTable moduleExports, ReadOnlySymbolTable incomingSymbols, List<ExpressionError> errors)
         {
             var str = poco.Formulas;
 
