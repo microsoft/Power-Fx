@@ -621,8 +621,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
     }
-    
-    // Workday(timestamp: d, delta: n : d
+
+    // Workday(timestamp: d, delta: n) : d
     internal sealed class WorkdayFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
@@ -634,20 +634,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2 };
-        }
-
-        public override IEnumerable<string> GetRequiredEnumNames()
-        {
-            return new List<string>() { LanguageConstants.TimeUnitEnumString };
-        }
-
-        // This method returns true if there are special suggestions for a particular parameter of the function.
-        public override bool HasSuggestionsForParam(int argumentIndex)
-        {
-            Contracts.Assert(argumentIndex >= 0);
-
-            return argumentIndex == 2;
+            yield return new[] { TexlStrings.WorkdayArg1, TexlStrings.WorkdayArg2 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -666,9 +653,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (fValid)
             {
-                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime)
+                if (type0.Kind == DKind.Date || type0.Kind == DKind.DateTime || type0.Kind == DKind.Time)
                 {
-                    // Arg0 should be a DateTime or Date.
+                    // Arg0 should be a Time, DateTime or Date.
                     returnType = type0;
                 }
                 else if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))

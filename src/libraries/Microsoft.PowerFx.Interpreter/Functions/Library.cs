@@ -474,7 +474,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Workday,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Workday.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
                     replaceBlankValues: ReplaceBlankWith(
                         new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
                         new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
