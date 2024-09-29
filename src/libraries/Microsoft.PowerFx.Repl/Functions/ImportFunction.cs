@@ -14,7 +14,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Repl.Functions
 {
-    // Import a module 
+    /// <summary>
+    /// Import a module.
+    /// </summary>
     internal class ImportFunction : ReflectionFunction
     {
         private readonly PowerFxREPL _repl;
@@ -61,16 +63,25 @@ namespace Microsoft.PowerFx.Repl.Functions
                 await output.WriteLineAsync(header, OutputKind.Notify, cancel)
                     .ConfigureAwait(false);
 
-                foreach (var funcName in module.Symbols.FunctionNames)
-                {
-                    await output.WriteLineAsync($"  {funcName}", OutputKind.Notify, cancel)
+                await PrintModuleAsync(module, output, cancel)
                     .ConfigureAwait(false);
-                }
 
                 _repl.AddModule(module);
             }
 
             return FormulaValue.NewVoid();
+        }
+
+        internal static async Task PrintModuleAsync(Module module, IReplOutput output, CancellationToken cancel)
+        {
+            foreach (var funcName in module.Symbols.FunctionNames)
+            {
+                await output.WriteLineAsync($"  {funcName}", OutputKind.Notify, cancel)
+                .ConfigureAwait(false);
+            }
+
+            await output.WriteLineAsync(string.Empty, OutputKind.Notify, cancel)
+                .ConfigureAwait(false);
         }
     }
 }

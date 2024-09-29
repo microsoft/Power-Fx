@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
 
         // Map from Module identity to Module.
-        private readonly Dictionary<string, Module> _loadedModules = new Dictionary<string, Module>();
+        private readonly Dictionary<string, Module> _loadedModules = new Dictionary<string, Module>(StringComparer.OrdinalIgnoreCase);
 
         internal IEnumerable<Module> Modules => _loadedModules.Values;
 
@@ -127,6 +127,39 @@ namespace Microsoft.PowerFx
             var values = m1.CreateValues(this.ExtraSymbolValues);
 
             return values;
+        }
+
+        internal bool TryResolveModule(string path, out Module module)
+        {
+            if (_loadedModules.TryGetValue(path, out module))
+            {
+                return true;
+            }
+
+            // can we resolve by short name?
+            List<Module> list = new List<Module>();
+
+            foreach (var m in _loadedModules.Values)
+            {
+                string shortName = System.IO.Path.GetFileName(m.FullPath);
+                if (string.Equals(shortName, path, StringComparison.OrdinalIgnoreCase))
+                {
+                    list.Add(m);                    
+                }
+            }
+
+            if (list.Count == 1)
+            {
+                module = list[0];
+                return true;
+            }
+
+            return false;
+        }
+
+        internal void DeleteModule(Module module)
+        {
+            _loadedModules.Remove(module.FullPath);
         }
 
         internal void AddModule(Module module)
@@ -268,8 +301,10 @@ namespace Microsoft.PowerFx
             {
                 _finishInit = true;
                 if (this.AllowImport)
-                {
+                {   
                     this.MetaFunctions.AddFunction(new ImportFunction(this));
+                    this.MetaFunctions.AddFunction(new ListModulesFunction(this));
+                    this.MetaFunctions.AddFunction(new DeleteModuleFunction(this));
                 }
             }
         }
