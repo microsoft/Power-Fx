@@ -389,10 +389,14 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter DateTimeValueArg2 = (b) => StringResources.Get("DateTimeValueArg2", b);
 
         public static StringGetter AboutDateAdd = (b) => StringResources.Get("AboutDateAdd", b);
-        public static StringGetter AboutWorkday = (b) => StringResources.Get("AboutWorkday", b);
         public static StringGetter DateAddArg1 = (b) => StringResources.Get("DateAddArg1", b);
         public static StringGetter DateAddArg2 = (b) => StringResources.Get("DateAddArg2", b);
         public static StringGetter DateAddArg3 = (b) => StringResources.Get("DateAddArg3", b);
+
+        public static StringGetter AboutWorkday = (b) => StringResources.Get("AboutWorkday", b);
+        public static StringGetter WorkdayArg1 = (b) => StringResources.Get("WorkdayArg1", b);
+        public static StringGetter WorkdayArg2 = (b) => StringResources.Get("WorkdayArg2", b);
+        public static StringGetter WorkdayArg3 = (b) => StringResources.Get("WorkdayArg3", b);
 
         public static StringGetter AboutDateAddT = (b) => StringResources.Get("AboutDateAddT", b);
         public static StringGetter DateAddTArg1 = (b) => StringResources.Get("DateAddTArg1", b);
