@@ -67,12 +67,19 @@ namespace Microsoft.PowerFx.Repl.Tests
             Assert.Empty(_output.Get(OutputKind.Error));
         }
 
-        private void Import(string path, bool expectErrors = false)
+        private string GetModuleFullPath(string path)
         {
             string fullpath = Path.Combine(
                 Environment.CurrentDirectory,
                 "Modules",
                 path);
+
+            return fullpath;
+        }
+
+        private void Import(string path, bool expectErrors = false)
+        {
+            string fullpath = GetModuleFullPath(path);
 
             var expr = $"Import(\"{fullpath}\")";
             HandleLine(expr, expectErrors);
@@ -161,6 +168,53 @@ namespace Microsoft.PowerFx.Repl.Tests
             Import("basic2.fx.yml");
             log = HandleLine("Add1(3)");
             Assert.Equal("4", log);
+        }
+
+        // Load with imports
+        [Fact]
+        public void Recursion()
+        {
+            Import("recursion.fx.yml");
+
+            // 0,1, 1, 2, 3, 5, 8,13
+            var log = HandleLine("Fib(7)"); 
+            Assert.Equal("13", log);
+        }
+
+        // Load with imports
+        [Fact]
+        public void Shadow()
+        {
+            Import("shadow.fx.yml");
+
+            var log = HandleLine("Foo()");
+            Assert.Equal("-2", log);
+
+            log = HandleLine("Abs(-7)"); // calls new one from module
+        }
+
+        // Conflict if we import 2 modules that define the same symbols. 
+        [Fact]
+        public void DuplicateSymbolsConflict()
+        {
+            Import("conflict1.fx.yml", expectErrors: true);
+            var errorMsg = _output.Get(OutputKind.Error);
+
+            // message contains useful information.
+            Assert.Contains("DoubleIt", errorMsg); // conflicting symbol
+            Assert.Contains("basic1.fx.yml", errorMsg); // module 1
+            Assert.Contains("basic1_dup.fx.yml", errorMsg); // module 2
+        }
+
+        // Import() is a meta function and can only be called 
+        // at top-levle repl and not within a module itself.
+        [Fact]
+        public void ImportIsAMetafunction()
+        {
+            Import("ErrorImport.fx.yml", expectErrors: true);
+            var errorMsg = _output.Get(OutputKind.Error);
+
+            Assert.Contains("'Import' is an unknown or unsupported function", errorMsg);
         }
 
         // When we import a file twice, we get the updated contents.

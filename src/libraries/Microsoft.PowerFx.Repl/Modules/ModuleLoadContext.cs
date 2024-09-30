@@ -77,26 +77,32 @@ namespace Microsoft.PowerFx.Repl
             {
                 _commonIncomingSymbols
             };
+            var unique = new ConflictTracker();
 
             if (poco.Imports != null)
             {
                 foreach (var import in poco.Imports)
                 {
+                    int count = 0;
                     string file = import.File;
                     if (file != null)
                     {
+                        count++;
                         var m2 = await LoadAsync(file, loader2, errors).ConfigureAwait(false);
                         if (m2 == null)
                         {
                             return null;
                         }
 
+                        unique.VerifyUnique(m2);
                         symbolList.Add(m2.Symbols);
                     }
 
+#if false // $$$
                     // Host symbols. 
                     if (import.Host != null)
                     {
+                        count++;
                         /*
                         if (import.Host == "json")
                         {
@@ -104,10 +110,15 @@ namespace Microsoft.PowerFx.Repl
                             st.EnableJson
                         }*/
                     }
+
+                    if (count > 0)
+                    {
+                        throw new InvalidOperationException($"Only one Import kind can be specified");
+                    }
+#endif
                 }
             }
 
-            //var incomingSymbols = engine.GetCombinedEngineSymbols();
             var incomingSymbols = ReadOnlySymbolTable.Compose(symbolList.ToArray());
 
             var moduleExports = new SymbolTable { DebugName = name };
