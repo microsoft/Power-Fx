@@ -65,33 +65,23 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    // We can't execute a query like below for unknown reasons so we'll have to do it in retrieving each table's data
-                    // and doing the joins manually (in GetSqlRelationships)
-                    // --
-                    //    SELECT fk.name 'FK Name', tp.name 'Parent table', cp.name, tr.name 'Refrenced table', cr.name
-                    //    FROM sys.foreign_keys fk
-                    //    INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id
-                    //    INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id
-                    //    INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id
-                    //    INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id
-                    //    INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id
-                    //    ORDER BY tp.name, cp.column_id
-                    // --
-
                     uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
                     string body =
-                        @"{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
-                        @"select object_id, '[' + it.TABLE_SCHEMA + '].[' + it.TABLE_NAME + ']' as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; " +
-                        @"select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
-                        @"select name, object_id, column_id from sys.columns""}";
+                        @"{""query"":""SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column" +
+                          @" FROM sys.foreign_keys fk" +
+                          @" INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id" +
+                          @" INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id" +
+                          @" INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id" +
+                          @" INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id" +
+                          @" INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id" +
+                          @" INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id" +
+                          @" INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id" +
+                          @" WHERE '[' + sp.name + '].[' + tp.name + ']' = '" + tableName + "'" + @"""}";
 
                     string text2 = await CdpServiceBase.GetObject(_httpClient, $"Get SQL relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false);
 
                     // Result should be cached
                     sqlRelationships = GetSqlRelationships(text2);
-
-                    // Filter on ParentTable (logical name)                   
-                    sqlRelationships = sqlRelationships.Where(sr => sr.ParentTable == tableName).ToList();
                 }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -106,55 +96,30 @@ namespace Microsoft.PowerFx.Connectors
         private bool IsSql() => _uriPrefix.Contains("/sql/");
 
         private List<SqlRelationship> GetSqlRelationships(string text)
-        {            
-            Result r = JsonSerializer.Deserialize<Result>(text);
+        {
+            RelationshipResult r = JsonSerializer.Deserialize<RelationshipResult>(text);
 
-            SqlForeignKey[] fkt = r.ResultSets.Table1;
-
-            if (fkt == null || fkt.Length == 0)
+            var relationships = r.ResultSets.Table1;
+            if (relationships == null || relationships.Length == 0)
             {
                 return new List<SqlRelationship>();
             }
 
-            SqlTable[] tt = r.ResultSets.Table2;
-            SqlForeignKeyColumn[] fkct = r.ResultSets.Table3;
-            SqlColumn[] ct = r.ResultSets.Table4;
-
             List<SqlRelationship> sqlRelationShips = new List<SqlRelationship>();
 
-            foreach (SqlForeignKey fk in fkt)
+            foreach (var fk in relationships)
             {
-                foreach (SqlTable tp in tt.Where(tp => fk.parent_object_id == tp.object_id))
+                sqlRelationShips.Add(new SqlRelationship()
                 {
-                    foreach (SqlTable tr in tt.Where(tr => fk.referenced_object_id == tr.object_id))
-                    {
-                        foreach (SqlForeignKeyColumn fkc in fkct.Where(fkc => fkc.constraint_object_id == fk.object_id))
-                        {
-                            foreach (SqlColumn cp in ct.Where(cp => fkc.parent_column_id == cp.column_id && fkc.parent_object_id == cp.object_id))
-                            {
-                                foreach (SqlColumn cr in ct.Where(cr => fkc.referenced_column_id == cr.column_id && fkc.referenced_object_id == cr.object_id))
-                                {
-                                    sqlRelationShips.Add(new SqlRelationship()
-                                    {
-                                        RelationshipName = fk.name,
-
-                                        // logical name
-                                        ParentTable = tp.name,
-                                        ColumnName = cp.name,
-
-                                        // logical name
-                                        ReferencedTable = tr.name,
-                                        ReferencedColumnName = cr.name,
-                                        ColumnId = cp.column_id
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
+                    RelationshipName = fk.FK_Name,
+                    ParentTable = fk.Parent_Table,
+                    ColumnName = fk.Parent_Column,
+                    ReferencedTable = fk.Referenced_Table,
+                    ReferencedColumnName = fk.Referenced_Column
+                });
             }
 
-            return sqlRelationShips.OrderBy(sr => sr.ParentTable).ThenBy(sr => sr.ColumnId).ToList();
+            return sqlRelationShips;
         }
     }
 
@@ -168,54 +133,31 @@ namespace Microsoft.PowerFx.Connectors
         public string ColumnName;
         public string ReferencedTable;
         public string ReferencedColumnName;
-        public long ColumnId;
 
         public override string ToString() => $"{RelationshipName}, {ParentTable}, {ColumnName}, {ReferencedTable}, {ReferencedColumnName}";
     }
 
-    internal class Result
+    internal class RelationshipResult
     {
-        public ResultSets ResultSets { get; set; }
+        public RelationshipResultSets ResultSets { get; set; }
     }
 
-    internal class ResultSets
+    internal class RelationshipResultSets
     {
-        public SqlForeignKey[] Table1 { get; set; }
-        public SqlTable[] Table2 { get; set; }
-        public SqlForeignKeyColumn[] Table3 { get; set; }
-        public SqlColumn[] Table4 { get; set; }
+        public FKRelationship[] Table1 { get; set; }
     }
 
-    internal class SqlForeignKey
+    internal class FKRelationship
     {
-        public string name { get; set; }
-        public long object_id { get; set; }
-        public long parent_object_id { get; set; }
-        public long referenced_object_id { get; set; }
-    }
+        public string FK_Name { get; set; }
 
-    internal class SqlTable
-    {
-        public long object_id { get; set; }
+        public string Parent_Table { get; set; }
 
-        // logical name
-        public string name { get; set; }
-    }
+        public string Parent_Column { get; set; }
 
-    internal class SqlForeignKeyColumn
-    {
-        public long constraint_object_id { get; set; }
-        public long parent_column_id { get; set; }
-        public long parent_object_id { get; set; }
-        public long referenced_column_id { get; set; }
-        public long referenced_object_id { get; set; }
-    }
+        public string Referenced_Table { get; set; }
 
-    internal class SqlColumn
-    {
-        public string name { get; set; }
-        public long object_id { get; set; }
-        public long column_id { get; set; }
+        public string Referenced_Column { get; set; }
     }
 
 #pragma warning restore SA1516

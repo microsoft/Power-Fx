@@ -21,9 +21,11 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
+using static System.Net.Mime.MediaTypeNames;
 using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
@@ -1389,23 +1391,17 @@ namespace Microsoft.PowerFx.Tests
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
 
-            // We can't execute a query like this for unknown reasons so we'll have to do it manually
-            //string query =
-            //    "SELECT fk.name 'FK Name', tp.name 'Parent table', cp.name, tr.name 'Refrenced table', cr.name " +
-            //    "FROM sys.foreign_keys fk " +
-            //    "INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id " +
-            //    "INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id " +
-            //    "INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id " +
-            //    "INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id " +
-            //    "INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id " +
-            //    "ORDER BY tp.name, cp.column_id";
-
-            // This will return 4 tables in an Untyped Object
             string query =
-                "select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
-                "select object_id, '[' + it.TABLE_SCHEMA + '].[' + it.TABLE_NAME + ']' as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; " +
-                "select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
-                "select name, object_id, column_id from sys.columns";
+                "SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column" +
+                @" FROM sys.foreign_keys fk" +
+                @" INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id" +
+                @" INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id" +
+                @" INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id" +
+                @" INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id" +
+                @" INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id" +
+                @" INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id" +
+                @" INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id" +
+                @" WHERE '[' + sp.name + '].[' + tp.name + ']' = '[SalesLT].[Product]'";
 
             testConnector.SetResponseFromFile(@"Responses\SQL GetRelationships SampleDB.json");
             var result = await engine.EvalAsync(@$"SQL.ExecutePassThroughNativeQueryV2(""pfxdev-sql.database.windows.net"", ""SampleDB"", {{ query: ""{query}"" }})", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
@@ -1414,58 +1410,36 @@ namespace Microsoft.PowerFx.Tests
             JsonUntypedObject juo = Assert.IsType<JsonUntypedObject>(uov.Impl);
             JsonElement je = juo._element;
 
-            Result r = je.Deserialize<Result>();
-
-            SqlForeignKey[] fkt = r.ResultSets.Table1;
-            SqlTable[] tt = r.ResultSets.Table2;
-            SqlForeignKeyColumn[] fkct = r.ResultSets.Table3;
-            SqlColumn[] ct = r.ResultSets.Table4;
+            RelationshipResult r = je.Deserialize<RelationshipResult>();
+            var relationships = r.ResultSets.Table1;
 
             List<SqlRelationship> sqlRelationShips = new List<SqlRelationship>();
 
-            foreach (SqlForeignKey fk in fkt)
+            foreach (var fk in relationships)
             {
-                foreach (SqlTable tp in tt.Where(tp => fk.parent_object_id == tp.object_id))
+                sqlRelationShips.Add(new SqlRelationship()
                 {
-                    foreach (SqlTable tr in tt.Where(tr => fk.referenced_object_id == tr.object_id))
-                    {
-                        foreach (SqlForeignKeyColumn fkc in fkct.Where(fkc => fkc.constraint_object_id == fk.object_id))
-                        {
-                            foreach (SqlColumn cp in ct.Where(cp => fkc.parent_column_id == cp.column_id && fkc.parent_object_id == cp.object_id))
-                            {
-                                foreach (SqlColumn cr in ct.Where(cr => fkc.referenced_column_id == cr.column_id && fkc.referenced_object_id == cr.object_id))
-                                {
-                                    sqlRelationShips.Add(new SqlRelationship()
-                                    {
-                                        RelationshipName = fk.name,
-                                        ParentTable = tp.name,
-                                        ColumnName = cp.name,
-                                        ReferencedTable = tr.name,
-                                        ReferencedColumnName = cr.name,
-                                        ColumnId = cp.column_id
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
+                    RelationshipName = fk.FK_Name,
+                    ParentTable = fk.Parent_Table,
+                    ColumnName = fk.Parent_Column,
+                    ReferencedTable = fk.Referenced_Table,
+                    ReferencedColumnName = fk.Referenced_Column
+                });
             }
 
-            sqlRelationShips = sqlRelationShips.OrderBy(sr => sr.ParentTable).ThenBy(sr => sr.ColumnId).ToList();
-
             Assert.Equal(12, sqlRelationShips.Count);
-            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, [SalesLT].[CustomerAddress], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[0].ToString());
-            Assert.Equal("FK_CustomerAddress_Address_AddressID, [SalesLT].[CustomerAddress], AddressID, [SalesLT].[Address], AddressID", sqlRelationShips[1].ToString());
+            Assert.Equal("FK_CustomerAddress_Address_AddressID, [SalesLT].[CustomerAddress], AddressID, [SalesLT].[Address], AddressID", sqlRelationShips[0].ToString());
+            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, [SalesLT].[CustomerAddress], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[1].ToString());
             Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, [SalesLT].[Product], ProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[2].ToString());
             Assert.Equal("FK_Product_ProductModel_ProductModelID, [SalesLT].[Product], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[3].ToString());
             Assert.Equal("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID, [SalesLT].[ProductCategory], ParentProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[4].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, [SalesLT].[ProductModelProductDescription], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[5].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, [SalesLT].[ProductModelProductDescription], ProductDescriptionID, [SalesLT].[ProductDescription], ProductDescriptionID", sqlRelationShips[6].ToString());
-            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, [SalesLT].[SalesOrderDetail], SalesOrderID, [SalesLT].[SalesOrderHeader], SalesOrderID", sqlRelationShips[7].ToString());
-            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, [SalesLT].[SalesOrderDetail], ProductID, [SalesLT].[Product], ProductID", sqlRelationShips[8].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, [SalesLT].[SalesOrderHeader], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[9].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, [SalesLT].[ProductModelProductDescription], ProductDescriptionID, [SalesLT].[ProductDescription], ProductDescriptionID", sqlRelationShips[5].ToString());
+            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, [SalesLT].[ProductModelProductDescription], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[6].ToString());
+            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, [SalesLT].[SalesOrderDetail], ProductID, [SalesLT].[Product], ProductID", sqlRelationShips[7].ToString());
+            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, [SalesLT].[SalesOrderDetail], SalesOrderID, [SalesLT].[SalesOrderHeader], SalesOrderID", sqlRelationShips[8].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, [SalesLT].[SalesOrderHeader], BillToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[9].ToString());
             Assert.Equal("FK_SalesOrderHeader_Address_ShipTo_AddressID, [SalesLT].[SalesOrderHeader], ShipToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[10].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, [SalesLT].[SalesOrderHeader], BillToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[11].ToString());
+            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, [SalesLT].[SalesOrderHeader], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[11].ToString());
 
             string expected = @$"POST https://4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net/invoke
  authority: 4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net
@@ -1478,9 +1452,8 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/sql/53f515b50c3e4925803ec1f0945e799f/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; select object_id, \u0027[\u0027 \u002B it.TABLE_SCHEMA \u002B \u0027].[\u0027 \u002B it.TABLE_NAME \u002B \u0027]\u0027 as name from sys.tables st, INFORMATION_SCHEMA.TABLES it where st.name = it.TABLE_NAME; select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; select name, object_id, column_id from sys.columns""}}
+ [body] {{""query"":""SELECT fk.name AS FK_Name, \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 AS Parent_Table, cp.name AS Parent_Column, \u0027[\u0027 \u002B sr.name \u002B \u0027].[\u0027 \u002B tr.name \u002B \u0027]\u0027 AS Referenced_Table, cr.name AS Referenced_Column FROM sys.foreign_keys fk INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id WHERE \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 = \u0027[SalesLT].[Product]\u0027""}}
 ";
-
             Assert.Equal(expected, testConnector._log.ToString());
         }
 
@@ -1494,51 +1467,30 @@ namespace Microsoft.PowerFx.Tests
             public string ColumnName;
             public string ReferencedTable;
             public string ReferencedColumnName;
-            public long ColumnId;
             public override string ToString() => $"{RelationshipName}, {ParentTable}, {ColumnName}, {ReferencedTable}, {ReferencedColumnName}";
         }
 
-        public class Result
+        internal class RelationshipResult
         {
-            public ResultSets ResultSets { get; set; }
+            public RelationshipResultSets ResultSets { get; set; }
         }
 
-        public class ResultSets
+        internal class RelationshipResultSets
         {
-            public SqlForeignKey[] Table1 { get; set; }
-            public SqlTable[] Table2 { get; set; }
-            public SqlForeignKeyColumn[] Table3 { get; set; }
-            public SqlColumn[] Table4 { get; set; }
+            public FKRelationship[] Table1 { get; set; }
         }
 
-        public class SqlForeignKey
+        internal class FKRelationship
         {
-            public string name { get; set; }
-            public long object_id { get; set; }
-            public long parent_object_id { get; set; }
-            public long referenced_object_id { get; set; }
-        }
+            public string FK_Name { get; set; }
 
-        public class SqlTable
-        {
-            public long object_id { get; set; }
-            public string name { get; set; }
-        }
+            public string Parent_Table { get; set; }
 
-        public class SqlForeignKeyColumn
-        {
-            public long constraint_object_id { get; set; }
-            public long parent_column_id { get; set; }
-            public long parent_object_id { get; set; }
-            public long referenced_column_id { get; set; }
-            public long referenced_object_id { get; set; }
-        }
+            public string Parent_Column { get; set; }
 
-        public class SqlColumn
-        {
-            public string name { get; set; }
-            public long object_id { get; set; }
-            public long column_id { get; set; }
+            public string Referenced_Table { get; set; }
+
+            public string Referenced_Column { get; set; }
         }
 
 #pragma warning restore SA1516
@@ -1616,7 +1568,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddActionConnector("SQL", apiDoc, new ConsoleLogger(_output));
             var engine = new RecalcEngine(config);
-            
+
             RuntimeConfig rc = new RuntimeConfig();
             rc.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             rc.AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client, console: _output));
