@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public TableType TableType => TabularRecordType?.ToTable();
 
-        public RecordType TabularRecordType { get; private set; } = null;
+        public RecordType TabularRecordType { get; protected internal set; } = null;
 
         public bool IsInitialized => TableType != null;
 
@@ -31,12 +31,7 @@ namespace Microsoft.PowerFx.Connectors
             return IsInitialized
                 ? new CdpTableValue(this, Relationships)
                 : throw new InvalidOperationException(NotInitialized);
-        }
-
-        protected void SetRecordType(RecordType recordType)
-        {
-            TabularRecordType = recordType;
-        }
+        }       
 
         // TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01

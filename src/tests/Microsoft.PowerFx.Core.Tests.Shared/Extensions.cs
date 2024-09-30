@@ -37,18 +37,13 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public static string ToStringWithDisplayNames(this FormulaType ftype)
         {
-            return ftype._type.ToStringWithDisplayNames();
-        }        
-
-        internal static string ToStringWithDisplayNames(this DType dtype)
-        {
             var sb = new StringBuilder();
-            sb.AppendToWithDisplayNames(dtype);
+            sb.AppendToWithDisplayNames(ftype._type, ftype);
             return sb.ToString();
         }
 
-        internal static string AppendToWithDisplayNames(this StringBuilder sb, DType dtype)
-        {                      
+        internal static string AppendToWithDisplayNames(this StringBuilder sb, DType dtype, FormulaType ftype)
+        {
             sb.Append(DType.MapKindToStr(dtype.Kind));
 
             switch (dtype.Kind)
@@ -56,6 +51,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 case DKind.Record:
                 case DKind.Table:
                     AppendAggregateType(sb, dtype.TypeTree, dtype.DisplayNameProvider);
+                    break;
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    AppendAggregateLazyType(sb, ftype as AggregateType ?? throw new InvalidOperationException("Not a valid type"));
                     break;
                 case DKind.OptionSet:
                 case DKind.View:
@@ -85,8 +84,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         sb.Append(',');
                     }
-                    
-                    first = false;                    
+
+                    first = false;
 
                     sb.Append(TexlLexer.EscapeName(name.Value));
                     if (es.TryLookupValueByName(name.Value, out object value))
@@ -107,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Tests
             sb.Append("[");
 
             var strPre = string.Empty;
-            foreach (var kvp in tree.GetPairs())
+            foreach (var kvp in tree.GetPairs().OrderBy(kvp => kvp.Key))
             {
                 Contracts.Assert(kvp.Value.IsValid);
                 sb.Append(strPre);
@@ -122,7 +121,65 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 sb.Append(":");
-                sb.AppendToWithDisplayNames(kvp.Value);
+                sb.AppendToWithDisplayNames(kvp.Value, null);
+                strPre = ", ";
+            }
+
+            sb.Append("]");
+        }
+
+        private static void AppendAggregateLazyType(StringBuilder sb, AggregateType fType)
+        {
+            Contracts.AssertValue(sb);
+
+            sb.Append("[");
+
+            var strPre = string.Empty;
+            foreach (string fieldName in fType.FieldNames.OrderBy(f => f))
+            {
+                sb.Append(strPre);
+                sb.Append(TexlLexer.EscapeName(fieldName));
+
+                string display = fType._type.DisplayNameProvider.LogicalToDisplayPairs.FirstOrDefault(kvp => kvp.Key.Value == fieldName).Value.Value;
+
+                if (!string.IsNullOrEmpty(display) && TexlLexer.EscapeName(display) != TexlLexer.EscapeName(fieldName))
+                {
+                    sb.Append("`");
+                    sb.Append(TexlLexer.EscapeName(display));
+                }
+
+                sb.Append(":");
+
+                IExternalTabularDataSource ads = fType._type.AssociatedDataSources.FirstOrDefault();
+                InternalTableCapabilities itc = ads as InternalTableCapabilities;
+
+                if (itc == null && fType._type.TryGetType(new DName(fieldName), out DType type))
+                {
+                    sb.Append(type.ToString());
+                }
+                else if (itc != null)
+                {
+                    if (itc.ColumnsWithRelationships.TryGetValue(fieldName, out string remoteTable))
+                    {
+                        sb.Append('~');
+                        sb.Append(remoteTable);
+                        sb.Append(':');
+                    }
+
+                    if (ads.Type.TryGetType(new DName(fieldName), out DType type2))
+                    {
+                        sb.Append(type2.ToString());
+                    }
+                    else
+                    {
+                        sb.Append('§');
+                    }
+                }
+                else
+                {
+                    sb.Append("§§");
+                }
+
                 strPre = ", ";
             }
 
@@ -151,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 sb.Append(":");
-                sb.AppendToWithDisplayNames(kvp.Value);
+                sb.AppendToWithDisplayNames(kvp.Value, null);
                 strPre = ", ";
             }
 

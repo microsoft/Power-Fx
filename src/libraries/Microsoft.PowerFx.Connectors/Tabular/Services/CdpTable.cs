@@ -15,7 +15,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     // Implements CDP protocol for Tabular connectors
-    public sealed class CdpTable : CdpService
+    public class CdpTable : CdpService
     {
         public string TableName { get; private set; }
 
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors
             DatasetMetadata = datasetMetadata;
         }
 
-        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, FormulaType formulaType, string displayName, ServiceCapabilities2 tableCapabilities, IReadOnlyDictionary<string, Relationship> relationships, RecordType recordType)
+        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, FormulaType formulaType, string displayName, ServiceCapabilities2 tableCapabilities, IReadOnlyDictionary<string, Relationship> relationships)
             : this(dataset, tableName, datasetMetadata, tables)
         {
             TabularTableDescriptor = new CdpTableDescriptor()
@@ -66,14 +66,12 @@ namespace Microsoft.PowerFx.Connectors
                 FormulaType = formulaType,
                 Name = tableName,
                 Relationships = relationships,
-            };
-
-            SetRecordType(recordType);
+            };            
         }
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
-        public async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -93,9 +91,10 @@ namespace Microsoft.PowerFx.Connectors
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
-
-            SetRecordType((RecordType)TabularTableDescriptor.FormulaType);
+            
             _relationships = TabularTableDescriptor.Relationships;
+
+            TabularRecordType = (RecordType)TabularTableDescriptor.FormulaType;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)

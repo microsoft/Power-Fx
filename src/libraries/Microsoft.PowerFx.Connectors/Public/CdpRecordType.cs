@@ -5,28 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     internal class CdpRecordType : RecordType
     {
-        internal ConnectorType ConnectorType { get; }
+        internal ConnectorType ConnectorType { get; }        
 
-        internal IList<ReferencedEntity> ReferencedEntities { get; }
-
-        internal IList<SqlRelationship> SqlRelationships { get; }
+        private List<string> _fieldNames;
 
         internal ICdpTableResolver TableResolver { get; }
 
-        internal CdpRecordType(ConnectorType connectorType, DType recordType, ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, IList<SqlRelationship> sqlRelationships)
-            : base(recordType)
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, ServiceCapabilities2 tableCapabilities)
+            : base(connectorType.DisplayNameProvider, tableCapabilities)
         {
             ConnectorType = connectorType;
-            TableResolver = tableResolver;
-            ReferencedEntities = referencedEntities;
-            SqlRelationships = sqlRelationships;
+            TableResolver = tableResolver;           
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
@@ -59,14 +55,15 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            ConnectorType ct = ConnectorType.Fields.First(ct => ct.Name == fieldName);
+            ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);   
 
-            if (ct.ExternalTables?.Any() != true)
+            if (field.ExternalTables?.Any() != true)
             {
-                return base.TryGetFieldType(fieldName, out type);
+                type = field.FormulaType;
+                return true;
             }
 
-            string tableName = ct.ExternalTables.First();
+            string tableName = field.ExternalTables.First();
 
             try
             {
@@ -84,7 +81,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool Equals(object other)
         {
-            throw new NotImplementedException();
+            if (other is not RecordType recordType || recordType._type.Kind != Core.Types.DKind.LazyRecord)
+            {
+                return false;
+            }
+
+            // $$$ TO BE TESTED
+            throw new Exception();
+            return true;
         }
 
         public override int GetHashCode()
@@ -94,6 +98,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public override string TableSymbolName => ConnectorType.Name;
 
-        public override IEnumerable<string> FieldNames => _type.GetRootFieldNames().Select(name => name.Value);
+        public override IEnumerable<string> FieldNames
+        {
+            get
+            {
+                _fieldNames ??= ConnectorType.Fields.Select(field => field.Name).ToList();
+                return _fieldNames;
+            }
+        }
     }
 }

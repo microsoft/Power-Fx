@@ -8,14 +8,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
-using static Microsoft.PowerFx.Core.Entities.TableCapabilities;
+
+#pragma warning disable SA1116
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpTableValue sqlTable = connectorTable.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.True(sqlTable.IsDelegable);
-            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+            Assert.Equal("r*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -212,7 +212,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpTableValue sqlTable = connectorTable.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.True(sqlTable.IsDelegable);
-            Assert.Equal("*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:w, ProductID:w, ProductModelID:w, ProductNumber:s, SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type._type.ToString());
+
+            // Note relationships to ProductCategory and ProductModel with ~ notation
+            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~ProductCategory:w, ProductID:w, ProductModelID:~ProductModel:w, ProductNumber:s, rowguid:s, SellEndDate:d, SellStartDate:d, " +
+                                 "Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -249,7 +252,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // External relationship table name
             Assert.Equal("[SalesLT].[ProductModel]", productModelRecordType.TableSymbolName);
-            Assert.Equal("![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
+            Assert.Equal<object>("r![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
         }
 
         [Fact]
@@ -278,7 +281,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sapTable.IsInitialized);
 
             CdpTableValue sapTableValue = sapTable.GetTableValue();
-            Assert.Equal<object>("*[ALL_EMPLOYEES:s, APP_MODE:s, BEGIN_DATE:s, BEGIN_DATE_CHAR:s, COMMAND:s, DESCRIPTION:s, EMP_PERNR:s, END_DATE:s, END_DATE_CHAR:s, EVENT_NAME:s, FLAG:s, GetMessages:*[MESSAGE:s, PERNR:s], HIDE_PEERS:s, LEGEND:s, LEGENDID:s, LEGEND_TEXT:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type._type.ToString());
+            Assert.Equal<object>(
+                "r*[ALL_EMPLOYEES:s, APP_MODE:s, BEGIN_DATE:s, BEGIN_DATE_CHAR:s, COMMAND:s, DESCRIPTION:s, EMP_PERNR:s, END_DATE:s, END_DATE_CHAR:s, EVENT_NAME:s, FLAG:s, GetMessages:*[MESSAGE:s, PERNR:s], " +
+                "HIDE_PEERS:s, LEGEND:s, LEGEND_TEXT:s, LEGENDID:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type.ToStringWithDisplayNames());
 
             string expr = "First(TeamCalendarCollection).LEGEND_TEXT";
 
@@ -328,7 +333,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpTableValue sqlTable = tabularService.GetTableValue();
             Assert.True(sqlTable._tabularService.IsInitialized);
             Assert.True(sqlTable.IsDelegable);
-            Assert.Equal("*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type._type.ToString());
+            Assert.Equal<object>("r*[Address:s, Country:s, CustomerId:w, Name:s, Phone:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -405,13 +410,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(spTable._tabularService.IsInitialized);
             Assert.True(spTable.IsDelegable);
 
-            Assert.Equal(
-                "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
-                "Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, " +
-                "OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full " +
-                "Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'Comments associated with the content approval of this " +
-                "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
-                "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>(
+                "r*['{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link " +
+                "to item':s, '{ModerationComment}'`'Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder " +
+                "path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Ve" +
+                "rsion number':s, Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, " +
+                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance " +
+                "Policy Properties':s, Title:s]", spTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = spTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -493,13 +499,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(spTable._tabularService.IsInitialized);
             Assert.True(spTable.IsDelegable);
 
-            Assert.Equal(
-                "*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance " +
-                "Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, " +
-                "OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full " +
-                "Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'Comments associated with the content approval of this " +
-                "list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window " +
-                "End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>(
+                "r*['{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link " +
+                "to item':s, '{ModerationComment}'`'Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder " +
+                "path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Ve" +
+                "rsion number':s, Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, " +
+                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
+                "ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance " +
+                "Policy Properties':s, Title:s]", spTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -645,21 +652,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //   MasterRecordId`'Master Record ID'[Account]:s
             //   OwnerId`'Owner ID'[User]:s
             //   ParentId`'Parent Account ID'[Account]:s
-            Assert.Equal(
-                "![AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
-                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, " +
+            // Note 2: ~ notation denotes a relationship. Ex: fieldname`displayname:~externaltable:type
+            Assert.Equal<object>(
+                "r![AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:~User:s, CreatedDate`'Created Date':d, " +
                 "Description`'Account Description':s, Id`'Account ID':s, Industry:l, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last " +
-                "Modified By ID'[User]:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:s, Name`'Account " +
-                "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:s, ParentId`'Parent Account ID'[Account]:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
-                "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
-                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", ((CdpRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
+                "Modified By ID'[User]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:~Account:s, " +
+                "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
+                "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
+                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", 
+                ((CdpRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.TabularRecordType.TableSymbolName);
 
             RecordType rt = sfTable.TabularRecordType;
-            NamedFormulaType nft = rt.GetFieldTypes().First();
-
-            Assert.Equal("AccountSource", nft.Name);
+            NamedFormulaType nft = rt.GetFieldTypes().First(nf => nf.Name == "AccountSource");
+            
             Assert.Equal("Account Source", nft.DisplayName);
 
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
@@ -714,41 +722,46 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // External relationship table name
             Assert.Equal("User", userTable.TableSymbolName);
 
-            Assert.Equal(
-                "![AboutMe`'About Me':s, AccountId`'Account ID'[Account]:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call Center ID':s, City:s, CommunityNickname`Nickname:s, " +
-                "CompanyName`'Company Name':s, ContactId`'Contact ID'[Contact]:s, Country:s, CreatedById`'Created By ID'[User]:s, CreatedDate`'Created Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency " +
-                "when Joining Groups':l, DelegatedApproverId`'Delegated Approver ID':s, Department:s, DigestFrequency`'Chatter Email Highlights Frequency':l, Division:s, Email:s, EmailEncodingKey`'Email Encoding':l, EmailPreferencesAutoBcc`AutoBcc:b, " +
-                "EmailPreferencesAutoBccStayInTouch`AutoBccStayInTouch:b, EmailPreferencesStayInTouchReminder`StayInTouchReminder:b, EmployeeNumber`'Employee Number':s, Extension:s, Fax:s, FederationIdentifier`'SAML Federation " +
-                "ID':s, FirstName`'First Name':s, ForecastEnabled`'Allow Forecasting':b, FullPhotoUrl`'Url for full-sized Photo':s, GeocodeAccuracy`'Geocode Accuracy':l, Id`'User ID':s, IsActive`Active:b, IsExtIndicatorVisible`'Show " +
-                "external indicator':b, IsProfilePhotoActive`'Has Profile Photo':b, LanguageLocaleKey`Language:l, LastLoginDate`'Last Login':d, LastModifiedById`'Last Modified By ID'[User]:s, LastModifiedDate`'Last Modified " +
-                "Date':d, LastName`'Last Name':s, LastPasswordChangeDate`'Last Password Change or Reset':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, Latitude:w, LocaleSidKey`Locale:l, " +
-                "Longitude:w, ManagerId`'Manager ID'[User]:s, MediumBannerPhotoUrl`'Url for Android banner photo':s, MediumPhotoUrl`'Url for medium profile photo':s, MiddleName`'Middle Name':s, MobilePhone`Mobile:s, Name`'Full " +
-                "Name':s, OfflinePdaTrialExpirationDate`'Sales Anywhere Trial Expiration Date':d, OfflineTrialExpirationDate`'Offline Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, " +
-                "PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[Profile]:s, ReceivesAdminInfoEmails`'Admin Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email " +
-                "Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url for IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch " +
-                "Email Signature':s, StayInTouchSubject`'Stay-in-Touch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, UserPermissionsAvantgoUser`'AvantGo " +
-                "User':b, UserPermissionsCallCenterAutoLogin`'Auto-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat " +
-                "User':b, UserPermissionsMarketingUser`'Marketing User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content " +
-                "User':b, UserPermissionsSupportUser`'Service Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDiagnostics`CacheDiagnostics:b, " +
-                "UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b, UserPreferencesDisProfPostCommentEmail`DisProfP" +
-                "ostCommentEmail:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmarkEmail:b, UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, " +
-                "UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`DisableFileShareNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, " +
-                "UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`DisableLikeEmail:b, UserPreferencesDisableMentionsPostEmail`DisableMentionsPostEmail:b, UserPreferencesDisableMessageEmail`DisableMessageEmai" +
-                "l:b, UserPreferencesDisableProfilePostEmail`DisableProfilePostEmail:b, UserPreferencesDisableSharePostEmail`DisableSharePostEmail:b, UserPreferencesEnableAutoSubForFeeds`EnableAutoSubForFeeds:b, UserPreferencesEventRemindersCheckboxDefault`E" +
-                "ventRemindersCheckboxDefault:b, UserPreferencesExcludeMailAppAttachments`ExcludeMailAppAttachments:b, UserPreferencesFavoritesShowTopFavorites`FavoritesShowTopFavorites:b, UserPreferencesFavoritesWTShown`FavoritesWTShown:b, " +
-                "UserPreferencesGlobalNavBarWTShown`GlobalNavBarWTShown:b, UserPreferencesGlobalNavGridMenuWTShown`GlobalNavGridMenuWTShown:b, UserPreferencesHideBiggerPhotoCallout`HideBiggerPhotoCallout:b, UserPreferencesHideCSNDesktopTask`HideCSNDesktopTas" +
-                "k:b, UserPreferencesHideCSNGetChatterMobileTask`HideCSNGetChatterMobileTask:b, UserPreferencesHideChatterOnboardingSplash`HideChatterOnboardingSplash:b, UserPreferencesHideEndUserOnboardingAssistantModal`HideEndUserOnboardingAssistantModal:b" +
-                ", UserPreferencesHideLightningMigrationModal`HideLightningMigrationModal:b, UserPreferencesHideS1BrowserUI`HideS1BrowserUI:b, UserPreferencesHideSecondChatterOnboardingSplash`HideSecondChatterOnboardingSplash:b, " +
-                "UserPreferencesHideSfxWelcomeMat`HideSfxWelcomeMat:b, UserPreferencesLightningExperiencePreferred`LightningExperiencePreferred:b, UserPreferencesPathAssistantCollapsed`PathAssistantCollapsed:b, UserPreferencesPreviewLightning`PreviewLightnin" +
-                "g:b, UserPreferencesRecordHomeReservedWTShown`RecordHomeReservedWTShown:b, UserPreferencesRecordHomeSectionCollapseWTShown`RecordHomeSectionCollapseWTShown:b, UserPreferencesReminderSoundOff`ReminderSoundOff:b, " +
-                "UserPreferencesShowCityToExternalUsers`ShowCityToExternalUsers:b, UserPreferencesShowCityToGuestUsers`ShowCityToGuestUsers:b, UserPreferencesShowCountryToExternalUsers`ShowCountryToExternalUsers:b, UserPreferencesShowCountryToGuestUsers`Show" +
-                "CountryToGuestUsers:b, UserPreferencesShowEmailToExternalUsers`ShowEmailToExternalUsers:b, UserPreferencesShowEmailToGuestUsers`ShowEmailToGuestUsers:b, UserPreferencesShowFaxToExternalUsers`ShowFaxToExternalUsers:b, " +
-                "UserPreferencesShowFaxToGuestUsers`ShowFaxToGuestUsers:b, UserPreferencesShowManagerToExternalUsers`ShowManagerToExternalUsers:b, UserPreferencesShowManagerToGuestUsers`ShowManagerToGuestUsers:b, UserPreferencesShowMobilePhoneToExternalUsers" +
-                "`ShowMobilePhoneToExternalUsers:b, UserPreferencesShowMobilePhoneToGuestUsers`ShowMobilePhoneToGuestUsers:b, UserPreferencesShowPostalCodeToExternalUsers`ShowPostalCodeToExternalUsers:b, UserPreferencesShowPostalCodeToGuestUsers`ShowPostalCo" +
-                "deToGuestUsers:b, UserPreferencesShowProfilePicToGuestUsers`ShowProfilePicToGuestUsers:b, UserPreferencesShowStateToExternalUsers`ShowStateToExternalUsers:b, UserPreferencesShowStateToGuestUsers`ShowStateToGuestUsers:b, " +
-                "UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, " +
-                "UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUsers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, " +
-                "UserPreferencesSortFeedByComment`SortFeedByComment:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:s, UserType`'User Type':l, Username:s]", userTable.ToStringWithDisplayNames());
+            Assert.Equal<object>(
+                "r![AboutMe`'About Me':s, AccountId`'Account ID'[Account]:~Account:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call " +
+                "Center ID':s, City:s, CommunityNickname`Nickname:s, CompanyName`'Company Name':s, ContactId`'Contact ID'[Contact]:~Contact:s, Country:s, CreatedById`'Created By ID'[User]:~User:s, CreatedDate`'Created " +
+                "Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency when Joining Groups':l, DelegatedApproverId`'Delegated Approver ID':s, Department:s, DigestFrequency`'Chatter " +
+                "Email Highlights Frequency':l, Division:s, Email:s, EmailEncodingKey`'Email Encoding':l, EmailPreferencesAutoBcc`AutoBcc:b, EmailPreferencesAutoBccStayInTouch`AutoBccStayInTouch:b, " +
+                "EmailPreferencesStayInTouchReminder`StayInTouchReminder:b, EmployeeNumber`'Employee Number':s, Extension:s, Fax:s, FederationIdentifier`'SAML Federation ID':s, FirstName`'First Name':s, " +
+                "ForecastEnabled`'Allow Forecasting':b, FullPhotoUrl`'Url for full-sized Photo':s, GeocodeAccuracy`'Geocode Accuracy':l, Id`'User ID':s, IsActive`Active:b, IsExtIndicatorVisible`'Show " +
+                "external indicator':b, IsProfilePhotoActive`'Has Profile Photo':b, LanguageLocaleKey`Language:l, LastLoginDate`'Last Login':d, LastModifiedById`'Last Modified By ID'[User]:~User:s, " +
+                "LastModifiedDate`'Last Modified Date':d, LastName`'Last Name':s, LastPasswordChangeDate`'Last Password Change or Reset':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last " +
+                "Viewed Date':d, Latitude:w, LocaleSidKey`Locale:l, Longitude:w, ManagerId`'Manager ID'[User]:~User:s, MediumBannerPhotoUrl`'Url for Android banner photo':s, MediumPhotoUrl`'Url for " +
+                "medium profile photo':s, MiddleName`'Middle Name':s, MobilePhone`Mobile:s, Name`'Full Name':s, OfflinePdaTrialExpirationDate`'Sales Anywhere Trial Expiration Date':d, OfflineTrialExpirationDate`'Offlin" +
+                "e Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[Profile]:~Profile:s, ReceivesAdminInfoEmails`'Admin " +
+                "Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url for " +
+                "IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch Email Signature':s, StayInTouchSubject`'Stay-in-T" +
+                "ouch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, Username:s, UserPermissionsAvantgoUser`'AvantGo User':b, UserPermissionsCallCenterA" +
+                "utoLogin`'Auto-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat User':b, UserPermissionsMarketi" +
+                "ngUser`'Marketing User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content User':b, " +
+                "UserPermissionsSupportUser`'Service Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDi" +
+                "agnostics`CacheDiagnostics:b, UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmark" +
+                "Email:b, UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`Disab" +
+                "leFileShareNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`Disab" +
+                "leLikeEmail:b, UserPreferencesDisableMentionsPostEmail`DisableMentionsPostEmail:b, UserPreferencesDisableMessageEmail`DisableMessageEmail:b, UserPreferencesDisableProfilePostEmail`DisableProfilePostEma" +
+                "il:b, UserPreferencesDisableSharePostEmail`DisableSharePostEmail:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b," +
+                " UserPreferencesDisProfPostCommentEmail`DisProfPostCommentEmail:b, UserPreferencesEnableAutoSubForFeeds`EnableAutoSubForFeeds:b, UserPreferencesEventRemindersCheckboxDefault`EventRemindersCheckboxDefau" +
+                "lt:b, UserPreferencesExcludeMailAppAttachments`ExcludeMailAppAttachments:b, UserPreferencesFavoritesShowTopFavorites`FavoritesShowTopFavorites:b, UserPreferencesFavoritesWTShown`FavoritesWTShown:b, " +
+                "UserPreferencesGlobalNavBarWTShown`GlobalNavBarWTShown:b, UserPreferencesGlobalNavGridMenuWTShown`GlobalNavGridMenuWTShown:b, UserPreferencesHideBiggerPhotoCallout`HideBiggerPhotoCallout:b, " +
+                "UserPreferencesHideChatterOnboardingSplash`HideChatterOnboardingSplash:b, UserPreferencesHideCSNDesktopTask`HideCSNDesktopTask:b, UserPreferencesHideCSNGetChatterMobileTask`HideCSNGetChatterMobileTask:" +
+                "b, UserPreferencesHideEndUserOnboardingAssistantModal`HideEndUserOnboardingAssistantModal:b, UserPreferencesHideLightningMigrationModal`HideLightningMigrationModal:b, UserPreferencesHideS1BrowserUI`Hid" +
+                "eS1BrowserUI:b, UserPreferencesHideSecondChatterOnboardingSplash`HideSecondChatterOnboardingSplash:b, UserPreferencesHideSfxWelcomeMat`HideSfxWelcomeMat:b, UserPreferencesLightningExperiencePreferred`L" +
+                "ightningExperiencePreferred:b, UserPreferencesPathAssistantCollapsed`PathAssistantCollapsed:b, UserPreferencesPreviewLightning`PreviewLightning:b, UserPreferencesRecordHomeReservedWTShown`RecordHomeRes" +
+                "ervedWTShown:b, UserPreferencesRecordHomeSectionCollapseWTShown`RecordHomeSectionCollapseWTShown:b, UserPreferencesReminderSoundOff`ReminderSoundOff:b, UserPreferencesShowCityToExternalUsers`ShowCityTo" +
+                "ExternalUsers:b, UserPreferencesShowCityToGuestUsers`ShowCityToGuestUsers:b, UserPreferencesShowCountryToExternalUsers`ShowCountryToExternalUsers:b, UserPreferencesShowCountryToGuestUsers`ShowCountryTo" +
+                "GuestUsers:b, UserPreferencesShowEmailToExternalUsers`ShowEmailToExternalUsers:b, UserPreferencesShowEmailToGuestUsers`ShowEmailToGuestUsers:b, UserPreferencesShowFaxToExternalUsers`ShowFaxToExternalUs" +
+                "ers:b, UserPreferencesShowFaxToGuestUsers`ShowFaxToGuestUsers:b, UserPreferencesShowManagerToExternalUsers`ShowManagerToExternalUsers:b, UserPreferencesShowManagerToGuestUsers`ShowManagerToGuestUsers:b" +
+                ", UserPreferencesShowMobilePhoneToExternalUsers`ShowMobilePhoneToExternalUsers:b, UserPreferencesShowMobilePhoneToGuestUsers`ShowMobilePhoneToGuestUsers:b, UserPreferencesShowPostalCodeToExternalUsers`" +
+                "ShowPostalCodeToExternalUsers:b, UserPreferencesShowPostalCodeToGuestUsers`ShowPostalCodeToGuestUsers:b, UserPreferencesShowProfilePicToGuestUsers`ShowProfilePicToGuestUsers:b, UserPreferencesShowState" +
+                "ToExternalUsers`ShowStateToExternalUsers:b, UserPreferencesShowStateToGuestUsers`ShowStateToGuestUsers:b, UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, " +
+                "UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUs" +
+                "ers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, UserPreferencesSortFeedByComment`SortFeedByComme" +
+                "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:~UserRole:s, UserType`'User Type':l]", userTable.ToStringWithDisplayNames());
 
             // Missing field
             b = sfTable.TabularRecordType.TryGetFieldType("XYZ", out FormulaType xyzType);
@@ -805,14 +818,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sfTable._tabularService.IsInitialized);
             Assert.True(sfTable.IsDelegable);
 
-            Assert.Equal(
-                "*[AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
-                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':s, CreatedDate`'Created Date':d, Description`'Account " +
-                "Description':s, Id`'Account ID':s, Industry:l, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By " +
-                "ID':s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':s, Name`'Account Name':s, NumberOfEmployees`Employees:w, " +
-                "OwnerId`'Owner ID':s, ParentId`'Parent Account ID':s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping " +
-                "Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping " +
-                "Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", sfTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>(
+                "r*[AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
+                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID':~User:s, CreatedDate`'Created Date':d, " +
+                "Description`'Account Description':s, Id`'Account ID':s, Industry:l, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last " +
+                "Modified By ID':~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID':~Account:s, Name`'Account " +
+                "Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID':~User:s, ParentId`'Parent Account ID':~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping " +
+                "Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, ShippingState`'Shipping " +
+                "State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", sfTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Accounts", sfTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -881,7 +894,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(zdTable.IsDelegable);
 
             Assert.Equal(
-                "![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
+                "r![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Users", zdTable);

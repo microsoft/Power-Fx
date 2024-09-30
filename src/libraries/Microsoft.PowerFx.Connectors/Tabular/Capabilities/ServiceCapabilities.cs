@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
 // as it defines CapabilitiesConstants which has invalid values.
@@ -125,15 +126,17 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
-        public ServiceCapabilities2 ToServiceCapabilities2()
+        public static ServiceCapabilities2 ToServiceCapabilities2(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
         {
-            SortRestriction2 sortRestriction = new SortRestriction2(SortRestriction?.UnsortableProperties, SortRestriction?.AscendingOnlyProperties);
-            FilterRestriction2 filterRestriction = new FilterRestriction2(FilterRestriction?.RequiredProperties, FilterRestriction?.NonFilterableProperties);
-            SelectionRestriction2 selectionRestriction = new SelectionRestriction2(SelectionRestriction?.IsSelectable ?? false);
-            GroupRestriction2 groupRestriction = new GroupRestriction2(GroupRestriction?.UngroupableProperties);
-            PagingCapabilities2 pagingCapabilities = new PagingCapabilities2(PagingCapabilities?.IsOnlyServerPagable ?? false, PagingCapabilities?.ServerPagingOptions?.ToArray());
+            FormulaType recordType = connectorType.FormulaType;
 
-            Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities = _columnsCapabilities?.ToDictionary(
+            SortRestriction2 sortRestriction = new SortRestriction2(serviceCapabilities?.SortRestriction?.UnsortableProperties, serviceCapabilities?.SortRestriction?.AscendingOnlyProperties);
+            FilterRestriction2 filterRestriction = new FilterRestriction2(serviceCapabilities?.FilterRestriction?.RequiredProperties, serviceCapabilities?.FilterRestriction?.NonFilterableProperties);
+            SelectionRestriction2 selectionRestriction = new SelectionRestriction2(serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false);
+            GroupRestriction2 groupRestriction = new GroupRestriction2(serviceCapabilities?.GroupRestriction?.UngroupableProperties);
+            PagingCapabilities2 pagingCapabilities = new PagingCapabilities2(serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false, serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.ToArray());
+
+            Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(
                     kvp => kvp.Key,
                     kvp => kvp.Value switch
                     {
@@ -142,7 +145,11 @@ namespace Microsoft.PowerFx.Connectors
                         _ => throw new NotImplementedException()
                     });
 
-            return new ServiceCapabilities2(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, FilterFunctions, FilterSupportedFunctions, pagingCapabilities, SupportsRecordPermission, SupportsDataverseOffline, columnCapabilities);
+            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
+
+            return new ServiceCapabilities2(tableName, isReadOnly, recordType, datasetName, sortRestriction, filterRestriction, selectionRestriction, groupRestriction, 
+                                            serviceCapabilities?.FilterFunctions, serviceCapabilities?.FilterSupportedFunctions, pagingCapabilities, serviceCapabilities?.SupportsRecordPermission ?? false, 
+                                            serviceCapabilities?.SupportsDataverseOffline ?? false, columnCapabilities, columnWithRelationships);
         }        
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)

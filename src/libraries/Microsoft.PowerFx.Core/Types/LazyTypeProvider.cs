@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -33,6 +31,11 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(type is not KnownRecordType and not TableType);
 
             BackingFormulaType = type;
+        }
+
+        public LazyTypeProvider(ServiceCapabilities2 tableCapabilities)
+        {
+            BackingFormulaType = tableCapabilities?.RecordType as AggregateType;
         }
 
         // Wrapper function around AggregateType.TryGetFieldType, provides caching

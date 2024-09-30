@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
@@ -48,7 +47,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public RecordType(DisplayNameProvider displayNameProvider, TableCapabilities tableCapabilities)
+        public RecordType(DisplayNameProvider displayNameProvider, ServiceCapabilities2 tableCapabilities)
             : base(false, displayNameProvider, tableCapabilities)
         {
         }        

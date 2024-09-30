@@ -343,8 +343,8 @@ namespace Microsoft.PowerFx.Connectors
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
         internal static string GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) && 
-                                                                              openApiExt is OpenApiObject openApiObject && 
-                                                                              openApiObject.TryGetValue("name", out IOpenApiAny enumName) &&
+                                                                              openApiExt is SwaggerJsonObject jsonObject &&
+                                                                              jsonObject.TryGetValue("name", out IOpenApiAny enumName) &&
                                                                               enumName is OpenApiString enumNameStr 
                                                                             ? enumNameStr.Value 
                                                                             : null;
@@ -482,8 +482,13 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
                     }
 
+                // For testing only
+                case "fxnumber":
+                    return new ConnectorType(schema, openApiParameter, FormulaType.Number);
+
                 // Always a boolean (Format not used)
-                case "boolean": return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
+                case "boolean": 
+                    return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
                 case "integer":

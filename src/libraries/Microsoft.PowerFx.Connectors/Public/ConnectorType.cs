@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -261,6 +262,17 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
+        internal DisplayNameProvider DisplayNameProvider
+        {
+            get
+            {
+                _displayNameProvider ??= new SingleSourceDisplayNameProvider(Fields.Select(field => new KeyValuePair<DName, DName>(new DName(field.Name), new DName(field.DisplayName ?? field.Name))));
+                return _displayNameProvider;
+            }
+        }
+
+        private DisplayNameProvider _displayNameProvider;
+
         internal void SetRelationship(SqlRelationship relationship)
         {
             ExternalTables ??= new List<string>();
@@ -269,15 +281,9 @@ namespace Microsoft.PowerFx.Connectors
             ForeignKey = relationship.ReferencedColumnName;
         }
 
-        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ServiceCapabilities2 serviceCapabilities, bool isReadOnly, IEnumerable<(string logicalName, string displayName, FormulaType type)> fields)
-        {
-            if (FormulaType is not RecordType recordType)
-            {
-                throw new PowerFxConnectorException("Invalid FormulaType");
-            }
-
-            RecordType recordTypeWithADS = recordType.AddAssociatedDataSource(name, datasetName, serviceCapabilities, isReadOnly, fields);
-            FormulaType = new CdpRecordType(this, recordTypeWithADS._type, tableResolver, referencedEntities, sqlRelationships);
+        internal void SetType(ICdpTableResolver tableResolver, ServiceCapabilities2 serviceCapabilities)
+        {            
+            FormulaType = new CdpRecordType(this, tableResolver, serviceCapabilities);
         }      
 
         private void AggregateErrors(ConnectorType[] types)

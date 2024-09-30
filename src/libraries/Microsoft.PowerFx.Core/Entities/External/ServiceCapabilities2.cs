@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 #pragma warning disable SA1117
 
@@ -32,10 +33,25 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly bool SupportsRecordPermission;
 
-        public ServiceCapabilities2(SortRestriction2 sortRestriction, FilterRestriction2 filterRestriction, SelectionRestriction2 selectionRestriction, GroupRestriction2 groupRestriction,
-                                    IEnumerable<string> filterFunctions, IEnumerable<string> filterSupportedFunctions, PagingCapabilities2 pagingCapabilities, bool recordPermissionCapabilities,
-                                    bool supportsDataverseOffline, Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities)
+        public readonly string TableName;
+
+        public readonly bool IsReadOnly;
+
+        public readonly FormulaType RecordType;
+
+        public readonly string DatasetName;
+
+        public readonly Dictionary<string, string> ColumnsWithRelationships;
+
+        public ServiceCapabilities2(string tableName, bool isReadOnly, FormulaType recordType, string datasetName, SortRestriction2 sortRestriction, FilterRestriction2 filterRestriction, 
+                                    SelectionRestriction2 selectionRestriction, GroupRestriction2 groupRestriction, IEnumerable<string> filterFunctions, IEnumerable<string> filterSupportedFunctions, 
+                                    PagingCapabilities2 pagingCapabilities, bool recordPermissionCapabilities, bool supportsDataverseOffline, Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities,
+                                    Dictionary<string, string> columnWithRelationships)
         {
+            TableName = tableName;
+            IsReadOnly = isReadOnly;
+            RecordType = recordType;
+            DatasetName = datasetName;
             SortRestriction = sortRestriction;
             FilterRestriction = filterRestriction;
             FilterFunctions = filterFunctions;
@@ -46,11 +62,16 @@ namespace Microsoft.PowerFx.Core.Entities
             FilterSupportedFunctions = filterSupportedFunctions;
             ColumnsCapabilities = columnCapabilities;
             SupportsRecordPermission = recordPermissionCapabilities;
+            ColumnsWithRelationships = columnWithRelationships;
         }
 
-        public static ServiceCapabilities2 Default(IEnumerable<string> fieldNames)
+        public static ServiceCapabilities2 Default(string tableName, bool isReadOnly, FormulaType recordType, string datasetName, IEnumerable<string> fieldNames)
         {
             return new ServiceCapabilities2(
+                tableName,
+                isReadOnly,
+                recordType,
+                datasetName,
                 new SortRestriction2(new List<string>() /* unsortableProperties */, new List<string>() /* ascendingOnlyProperties */),
                 new FilterRestriction2(new List<string>() /* requiredProperties */, new List<string>() /* nonFilterableProperties */),
                 new SelectionRestriction2(true /* isSelectable */),
@@ -58,9 +79,10 @@ namespace Microsoft.PowerFx.Core.Entities
                 ColumnCapabilities2.DefaultFilterFunctionSupport, // filterFunctions
                 ColumnCapabilities2.DefaultFilterFunctionSupport, // filterSupportedFunctions
                 new PagingCapabilities2(false /* isOnlyServerPagable */, new string[0] /* serverPagingOptions */),
-                true, // recordPermissionCapabilities
-                false, // supportsDataverseOffline
-                fieldNames.Select(f => new KeyValuePair<string, ColumnCapabilitiesBase2>(f, ColumnCapabilities2.DefaultCdsColumnCapabilities)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+                true, /* recordPermissionCapabilities */
+                false, /* supportsDataverseOffline */
+                fieldNames.Select(f => new KeyValuePair<string, ColumnCapabilitiesBase2>(f, ColumnCapabilities2.DefaultCdsColumnCapabilities)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                null /* no relationship */);
         }
     }
 

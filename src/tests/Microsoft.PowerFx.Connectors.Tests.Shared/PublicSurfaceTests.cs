@@ -63,8 +63,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.Relationship",
               "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",              
-              "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",
-              "Microsoft.PowerFx.Connectors.TabularExtensions",
+              "Microsoft.PowerFx.Connectors.SupportsConnectorErrors",              
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 

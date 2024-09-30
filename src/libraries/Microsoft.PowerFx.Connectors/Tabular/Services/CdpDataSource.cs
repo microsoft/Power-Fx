@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
                 + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
-            return tables?.Value?.Select(rt => new CdpTable(DatasetName, rt.Name, DatasetMetadata, tables?.Value) { DisplayName = rt.DisplayName });
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>

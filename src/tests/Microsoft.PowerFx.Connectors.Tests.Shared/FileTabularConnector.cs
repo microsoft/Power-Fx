@@ -82,8 +82,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         // Initialization can be synchronous
         public void Init()
-        {            
-            SetRecordType(RecordType.Empty().Add("line", FormulaType.String));
+        {
+            TabularRecordType = RecordType.Empty().Add("line", FormulaType.String);
         }
 
         protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)

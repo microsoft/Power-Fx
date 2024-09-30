@@ -33,22 +33,22 @@ namespace Microsoft.PowerFx.Tests
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 
-            (FormulaType ctCdp, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctPa, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctSw, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "Schema/Items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctCdp, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctPa, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
+            (FormulaType ctSw, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
 
-            string cdp = ctCdp._type.ToString();
-            string pa = ctPa._type.ToString();
-            string sw = ctSw._type.ToString();
+            string cdp = ctCdp.ToStringWithDisplayNames();
+            string pa = ctPa.ToStringWithDisplayNames();
+            string sw = ctSw.ToStringWithDisplayNames();
 
             // CDP compatibility: priority is an enum, when "format": "enum" isn't present
-            Assert.Equal("![Id1:s, Id3:s, Id4:s, priority:l, priority2:l]", cdp);
+            Assert.Equal<object>("r![Id1`'User ID 1':s, Id3`'User ID 3':s, Id4`'User ID 4':s, priority`Priority:l, priority2`'Priority 2':l]", cdp);
 
             // Swagger compatibility: priority is a string as "format": "enum" isn't present
-            Assert.Equal("![Id1:s, Id3:s, Id4:s, priority:s, priority2:l]", sw);
+            Assert.Equal<object>("r![Id1`'User ID 1':s, Id3`'User ID 3':s, Id4`'User ID 4':s, priority`Priority:s, priority2`'Priority 2':l]", sw);
 
             // PA compatibility: Id2 is internal and present (not the case for CDP/Swagger compatibilities)
-            Assert.Equal("![Id1:s, Id2:s, Id3:s, Id4:s, priority:s, priority2:l]", pa);            
+            Assert.Equal<object>("r![Id1`'User ID 1':s, Id2`'User ID 2':s, Id3`'User ID 3':s, Id4`'User ID 4':s, priority`Priority:s, priority2`'Priority 2':l]", pa);            
         }
     }
 }

@@ -868,7 +868,7 @@ namespace Microsoft.PowerFx.Connectors
                 ExpressionError newError = er is HttpExpressionError her
                     ? new HttpExpressionError(her.StatusCode) { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }
                     : new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" };
-                result = FormulaValue.NewError(newError, ev.Type); 
+                result = FormulaValue.NewError(newError, ev.Type);
             }
 
             if (IsPageable && result is RecordValue rv)
@@ -1020,17 +1020,17 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je, sqlRelationships);
             connectorType.Name = name;
 
-            foreach (ConnectorType field in connectorType.Fields.Where(f => f.Capabilities != null))            
+            foreach (ConnectorType field in connectorType.Fields.Where(f => f.Capabilities != null))
             {
                 // Column capabilities
                 serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
             }
 
-            tableCapabilities = serviceCapabilities?.ToServiceCapabilities2();
-
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
             ConnectorPermission tablePermission = tableSchema.GetPermission();
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+
+            tableCapabilities = ServiceCapabilities.ToServiceCapabilities2(serviceCapabilities, name, isTableReadOnly, connectorType, datasetName);
 
             List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
 
@@ -1038,9 +1038,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 // $$$ need to check what triggers RO for SQL
                 //isTableReadOnly = true;
-            }            
+            }
 
-            connectorType.AddTabularDataSource(tableResolver, referencedEntities, sqlRelationships, new DName(name), datasetName, tableCapabilities, isTableReadOnly, null);
+            connectorType.SetType(tableResolver, tableCapabilities);
 
             return (connectorType.FormulaType, connectorType.Relationships);
         }
