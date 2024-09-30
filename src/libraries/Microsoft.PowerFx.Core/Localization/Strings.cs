@@ -763,6 +763,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
+        public static ErrorResourceKey ErrNamedType_MissingTypeLiteral = new ErrorResourceKey("ErrNamedType_MissingTypeLiteral");
         public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
@@ -845,5 +846,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
         public static ErrorResourceKey ErrInvalidArgumentExpectedType = new ErrorResourceKey("ErrInvalidArgumentExpectedType");
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
+        public static ErrorResourceKey ErrReachedMaxJsonDepth = new ErrorResourceKey("ErrReachedMaxJsonDepth");
+        public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
     }
 }

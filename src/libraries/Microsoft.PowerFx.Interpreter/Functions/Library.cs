@@ -2797,7 +2797,7 @@ namespace Microsoft.PowerFx.Functions
                 throw new CustomFunctionErrorException(ex.Message);
             }
 
-            return FormulaValue.New(true);
+            return irContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
         }
     }
 }

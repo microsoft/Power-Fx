@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly ParserOptions _parseOptions = new ParserOptions() { AllowsSideEffects = true };
 
         [Theory]
-        [InlineData("Foo = Type(Number);")]
+        [InlineData("Foo := Type(Number);")]
         public void DefSimpleTypeTest(string script)
         {
             var parserOptions = new ParserOptions()
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo = Type({ Age: Number });")]
+        [InlineData("Foo := Type({ Age: Number });")]
         public void DefRecordTypeTest(string script)
         {
             var parserOptions = new ParserOptions()
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo = Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
+        [InlineData("Foo := Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
         public void FailParsingTest(string script)
         {
             var parserOptions = new ParserOptions()
