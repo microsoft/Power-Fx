@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // No need for files
         public override HttpClient HttpClient => null;
 
-        public override IReadOnlyDictionary<string, Relationship> Relationships => null;
+        internal override IReadOnlyDictionary<string, Relationship> Relationships => null;
 
         // Initialization can be synchronous
         public void Init()

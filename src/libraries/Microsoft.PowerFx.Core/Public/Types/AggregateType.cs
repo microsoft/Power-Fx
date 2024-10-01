@@ -33,18 +33,16 @@ namespace Microsoft.PowerFx.Types
         }
 
         public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
-            : base()
-        {
-            var lazyTypeProvider = new LazyTypeProvider(this);
-            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
+            : this(isTable, displayNameProvider, null)
+        {                       
         }      
 
-        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, ServiceCapabilities2 tableCapabilities)
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
             : base()
         {
-            _type = tableCapabilities == null
+            _type = tableParameters == null
                 ? new DType(new LazyTypeProvider(this), isTable: isTable, displayNameProvider)
-                : new DType(new LazyTypeProvider(tableCapabilities), isTable: isTable, displayNameProvider, new HashSet<IExternalTabularDataSource> { new InternalTableCapabilities(tableCapabilities) });
+                : new DType(new LazyTypeProvider(tableParameters), isTable: isTable, displayNameProvider, new HashSet<IExternalTabularDataSource> { new InternalTableParameters(tableParameters) });
         }
 
         public FormulaType GetFieldType(string fieldName)

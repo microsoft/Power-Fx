@@ -1007,7 +1007,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities2 tableCapabilities)
+        internal static (FormulaType, IReadOnlyDictionary<string, Relationship>) GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableParameters tableParameters)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1030,7 +1030,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorPermission tablePermission = tableSchema.GetPermission();
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
 
-            tableCapabilities = ServiceCapabilities.ToServiceCapabilities2(serviceCapabilities, name, isTableReadOnly, connectorType, datasetName);
+            tableParameters = ServiceCapabilities.ToTableParameters(serviceCapabilities, name, isTableReadOnly, connectorType, datasetName);
 
             List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
 
@@ -1040,7 +1040,7 @@ namespace Microsoft.PowerFx.Connectors
                 //isTableReadOnly = true;
             }
 
-            connectorType.SetType(tableResolver, tableCapabilities);
+            connectorType.SetType(tableResolver, tableParameters);
 
             return (connectorType.FormulaType, connectorType.Relationships);
         }

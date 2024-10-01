@@ -105,18 +105,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(ads);
             Assert.Single(ads);
 
-            InternalTableCapabilities tds = Assert.IsType<InternalTableCapabilities>(ads.First());
-            Assert.NotNull(tds);            
+            InternalTableParameters tableParameters = Assert.IsType<InternalTableParameters>(ads.First());
+            Assert.NotNull(tableParameters);            
 
-            Assert.Equal("Customers", tds.EntityName.Value);
-            Assert.True(tds.IsDelegatable);
-            Assert.True(tds.IsPageable);
-            Assert.True(tds.IsRefreshable);
-            Assert.True(tds.IsSelectable);
-            Assert.True(tds.IsWritable);
+            Assert.Equal("Customers", tableParameters.EntityName.Value);
+            Assert.True(tableParameters.IsDelegatable);
+            Assert.True(tableParameters.IsPageable);
+            Assert.True(tableParameters.IsRefreshable);
+            Assert.True(tableParameters.IsSelectable);
+            Assert.True(tableParameters.IsWritable);
             
-            Assert.Equal("Customers", tds.Name);
-            Assert.True(tds.RequiresAsync);
+            Assert.Equal("Customers", tableParameters.Name);
+            Assert.True(tableParameters.RequiresAsync);
             
             Assert.Null(sqlTable.Relationships);
 
@@ -964,7 +964,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(zdTable.IsDelegable);
 
             Assert.Equal(
-                "![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
+                "r![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
                 "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
                 "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
 

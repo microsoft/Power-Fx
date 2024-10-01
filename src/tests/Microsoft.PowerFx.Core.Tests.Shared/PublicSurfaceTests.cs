@@ -192,27 +192,27 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // TBD ...
                 "Microsoft.PowerFx.BasicUserInfo",
-                "Microsoft.PowerFx.PowerFxFileInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Entities.IRefreshable",                
-                "Microsoft.PowerFx.Core.Entities.ServiceCapabilities2",
-                "Microsoft.PowerFx.Core.Entities.ColumnCapabilities2",
-                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesDefinition2",
-                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesBase2",
-                "Microsoft.PowerFx.Core.Entities.PagingCapabilities2",
-                "Microsoft.PowerFx.Core.Entities.GroupRestriction2",
-                "Microsoft.PowerFx.Core.Entities.SelectionRestriction2",
-                "Microsoft.PowerFx.Core.Entities.FilterRestriction2",
-                "Microsoft.PowerFx.Core.Entities.SortRestriction2",                
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilities",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesBase",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesDefinition",
+                "Microsoft.PowerFx.Core.Entities.FilterRestrictions",
+                "Microsoft.PowerFx.Core.Entities.GroupRestrictions",
+                "Microsoft.PowerFx.Core.Entities.IRefreshable",
+                "Microsoft.PowerFx.Core.Entities.PagingCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
+                "Microsoft.PowerFx.Core.Entities.SortRestrictions",                
+                "Microsoft.PowerFx.Core.Entities.TableParameters",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
-                "Microsoft.PowerFx.Logging.TraceSeverity"
+                "Microsoft.PowerFx.Logging.TraceSeverity",
+                "Microsoft.PowerFx.PowerFxFileInfo",
+                "Microsoft.PowerFx.UserInfo"
             };
 
             var sb = new StringBuilder();

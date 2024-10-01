@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Any;
 namespace Microsoft.PowerFx.Connectors
 {
     // x-ms-relationships
-    public sealed class Relationship
+    internal sealed class Relationship
     {
         public string TargetEntity;
 

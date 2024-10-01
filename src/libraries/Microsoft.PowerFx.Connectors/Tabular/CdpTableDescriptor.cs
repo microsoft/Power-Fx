@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string DisplayName { get; init; }
 
-        public ServiceCapabilities2 TableCapabilities2 { get; init; }
+        public TableParameters TableParameters { get; init; }
 
         public IReadOnlyDictionary<string, Relationship> Relationships { get; init; }
     }

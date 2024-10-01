@@ -151,15 +151,15 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append(":");
 
                 IExternalTabularDataSource ads = fType._type.AssociatedDataSources.FirstOrDefault();
-                InternalTableCapabilities itc = ads as InternalTableCapabilities;
+                InternalTableParameters internalTableParameters = ads as InternalTableParameters;
 
-                if (itc == null && fType._type.TryGetType(new DName(fieldName), out DType type))
+                if (internalTableParameters == null && fType._type.TryGetType(new DName(fieldName), out DType type))
                 {
                     sb.Append(type.ToString());
                 }
-                else if (itc != null)
+                else if (internalTableParameters != null)
                 {
-                    if (itc.ColumnsWithRelationships.TryGetValue(fieldName, out string remoteTable))
+                    if (internalTableParameters.ColumnsWithRelationships.TryGetValue(fieldName, out string remoteTable))
                     {
                         sb.Append('~');
                         sb.Append(remoteTable);

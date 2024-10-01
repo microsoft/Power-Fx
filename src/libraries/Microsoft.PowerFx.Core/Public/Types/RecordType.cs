@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public RecordType(DisplayNameProvider displayNameProvider, ServiceCapabilities2 tableCapabilities)
-            : base(false, displayNameProvider, tableCapabilities)
+        public RecordType(DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+            : base(false, displayNameProvider, tableParameters)
         {
         }        
 

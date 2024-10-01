@@ -25,11 +25,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
-        public override bool IsDelegable => (TableCapabilities?.SortRestriction != null) || (TableCapabilities?.FilterRestriction != null) || (TableCapabilities?.FilterFunctions != null);        
+        public override bool IsDelegable => (TableParameters?.SortRestriction != null) || (TableParameters?.FilterRestriction != null) || (TableParameters?.FilterFunctions != null);
 
-        internal ServiceCapabilities2 TableCapabilities => TabularTableDescriptor.TableCapabilities2;
+        internal TableParameters TableParameters => TabularTableDescriptor.TableParameters;
 
-        public override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
+        internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 
         internal DatasetMetadata DatasetMetadata;
 
@@ -56,17 +56,18 @@ namespace Microsoft.PowerFx.Connectors
             DatasetMetadata = datasetMetadata;
         }
 
-        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, IReadOnlyCollection<RawTable> tables, FormulaType formulaType, string displayName, ServiceCapabilities2 tableCapabilities, IReadOnlyDictionary<string, Relationship> relationships)
-            : this(dataset, tableName, datasetMetadata, tables)
+        // For testing only
+        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, FormulaType formulaType, string displayName, TableParameters tableCapabilities)
+            : this(dataset, tableName, datasetMetadata, new List<RawTable>() { new RawTable() { Name = tableName, DisplayName = tableName } })
         {
             TabularTableDescriptor = new CdpTableDescriptor()
             {
                 DisplayName = displayName,
-                TableCapabilities2 = tableCapabilities,
+                TableParameters = tableCapabilities,
                 FormulaType = formulaType,
                 Name = tableName,
-                Relationships = relationships,
-            };            
+                Relationships = null,
+            };
         }
 
         //// TABLE METADATA SERVICE
@@ -80,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors
                 throw new InvalidOperationException("TabularService already initialized");
             }
 
-            _httpClient = httpClient;            
+            _httpClient = httpClient;
 
             if (DatasetMetadata == null)
             {
@@ -91,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors
 
             CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, uriPrefix, DatasetMetadata.IsDoubleEncoding, logger);
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
-            
+
             _relationships = TabularTableDescriptor.Relationships;
 
             TabularRecordType = (RecordType)TabularTableDescriptor.FormulaType;

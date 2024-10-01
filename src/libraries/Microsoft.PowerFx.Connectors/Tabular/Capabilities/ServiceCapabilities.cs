@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public const int CurrentODataVersion = 4;
 
-        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, IEnumerable<string> filterFunctions, 
+        public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, IEnumerable<string> filterFunctions,
                                    IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false)
         {
             Contracts.AssertValueOrNull(sortRestriction);
@@ -126,38 +126,76 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
-        public static ServiceCapabilities2 ToServiceCapabilities2(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
+        public static TableParameters ToTableParameters(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
         {
             FormulaType recordType = connectorType.FormulaType;
 
-            SortRestriction2 sortRestriction = new SortRestriction2(serviceCapabilities?.SortRestriction?.UnsortableProperties, serviceCapabilities?.SortRestriction?.AscendingOnlyProperties);
-            FilterRestriction2 filterRestriction = new FilterRestriction2(serviceCapabilities?.FilterRestriction?.RequiredProperties, serviceCapabilities?.FilterRestriction?.NonFilterableProperties);
-            SelectionRestriction2 selectionRestriction = new SelectionRestriction2(serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false);
-            GroupRestriction2 groupRestriction = new GroupRestriction2(serviceCapabilities?.GroupRestriction?.UngroupableProperties);
-            PagingCapabilities2 pagingCapabilities = new PagingCapabilities2(serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false, serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.ToArray());
+            SortRestrictions sortRestriction = new SortRestrictions()
+            {
+                AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
+                UnsortableProperties = serviceCapabilities?.SortRestriction?.UnsortableProperties
+            };
+            FilterRestrictions filterRestriction = new FilterRestrictions()
+            {
+                RequiredProperties = serviceCapabilities?.FilterRestriction?.RequiredProperties,
+                NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
+            };
+            SelectionRestrictions selectionRestriction = new SelectionRestrictions()
+            {
+                IsSelectable = serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false
+            };
+            GroupRestrictions groupRestriction = new GroupRestrictions()
+            {
+                UngroupableProperties = serviceCapabilities?.GroupRestriction?.UngroupableProperties
+            };
+            Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
+            {
+                IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
+                ServerPagingOptions = serviceCapabilities?.PagingCapabilities?.ServerPagingOptions?.ToArray()
+            };
 
-            Dictionary<string, ColumnCapabilitiesBase2> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value switch
+            Dictionary<string, Core.Entities.ColumnCapabilitiesBase> columnCapabilities = serviceCapabilities?._columnsCapabilities?.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value switch
+                {
+                    ColumnCapabilities cc => new Core.Entities.ColumnCapabilities(new Core.Entities.ColumnCapabilitiesDefinition() 
                     {
-                        ColumnCapabilities cc => new ColumnCapabilities2(new ColumnCapabilitiesDefinition2(cc.Capabilities.FilterFunctions, cc.Capabilities.QueryAlias, cc.Capabilities.IsChoice)) as ColumnCapabilitiesBase2,
-                        ComplexColumnCapabilities ccc => new ComplexColumnCapabilities2() as ColumnCapabilitiesBase2,
-                        _ => throw new NotImplementedException()
-                    });
+                        FilterFunctions = cc.Capabilities.FilterFunctions,
+                        QueryAlias = cc.Capabilities.QueryAlias, 
+                        IsChoice = cc.Capabilities.IsChoice
+                    }) as Core.Entities.ColumnCapabilitiesBase,
+                    ComplexColumnCapabilities ccc => new Core.Entities.ComplexColumnCapabilities() as Core.Entities.ColumnCapabilitiesBase,
+                    _ => throw new NotImplementedException()
+                });
 
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
 
-            return new ServiceCapabilities2(tableName, isReadOnly, recordType, datasetName, sortRestriction, filterRestriction, selectionRestriction, groupRestriction, 
-                                            serviceCapabilities?.FilterFunctions, serviceCapabilities?.FilterSupportedFunctions, pagingCapabilities, serviceCapabilities?.SupportsRecordPermission ?? false, 
-                                            serviceCapabilities?.SupportsDataverseOffline ?? false, columnCapabilities, columnWithRelationships);
-        }        
+            return new TableParameters()
+            {
+                TableName = tableName,
+                IsReadOnly = isReadOnly,
+                RecordType = recordType,
+                DatasetName = datasetName,
+                SortRestriction = sortRestriction,
+                FilterRestriction = filterRestriction,
+                SelectionRestriction = selectionRestriction,
+                GroupRestriction = groupRestriction,
+                FilterFunctions = serviceCapabilities?.FilterFunctions,
+                FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctions,
+                PagingCapabilities = pagingCapabilities,
+                SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
+                SupportsDataverseOffline = serviceCapabilities?.SupportsDataverseOffline ?? false,
+                ColumnsCapabilities = columnCapabilities,
+                ColumnsWithRelationships = columnWithRelationships
+            };
+        }
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValue(capability);
 
-            _columnsCapabilities ??= new Dictionary<string, ColumnCapabilitiesBase>();            
+            _columnsCapabilities ??= new Dictionary<string, ColumnCapabilitiesBase>();
             _columnsCapabilities.Add(name, capability);
         }
 

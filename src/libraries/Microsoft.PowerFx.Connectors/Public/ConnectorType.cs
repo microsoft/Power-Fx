@@ -281,9 +281,9 @@ namespace Microsoft.PowerFx.Connectors
             ForeignKey = relationship.ReferencedColumnName;
         }
 
-        internal void SetType(ICdpTableResolver tableResolver, ServiceCapabilities2 serviceCapabilities)
+        internal void SetType(ICdpTableResolver tableResolver, TableParameters tableParameters)
         {            
-            FormulaType = new CdpRecordType(this, tableResolver, serviceCapabilities);
+            FormulaType = new CdpRecordType(this, tableResolver, tableParameters);
         }      
 
         private void AggregateErrors(ConnectorType[] types)

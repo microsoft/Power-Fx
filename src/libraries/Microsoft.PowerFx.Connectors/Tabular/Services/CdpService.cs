@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public abstract bool IsDelegable { get; }        
 
-        public abstract IReadOnlyDictionary<string, Relationship> Relationships { get; }
+        internal abstract IReadOnlyDictionary<string, Relationship> Relationships { get; }
 
         public abstract HttpClient HttpClient { get; }
 

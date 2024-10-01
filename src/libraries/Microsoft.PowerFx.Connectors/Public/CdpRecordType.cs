@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ICdpTableResolver TableResolver { get; }
 
-        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, ServiceCapabilities2 tableCapabilities)
-            : base(connectorType.DisplayNameProvider, tableCapabilities)
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableParameters tableParameters)
+            : base(connectorType.DisplayNameProvider, tableParameters)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;           
@@ -81,14 +81,22 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool Equals(object other)
         {
-            if (other is not RecordType recordType || recordType._type.Kind != Core.Types.DKind.LazyRecord)
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other is not RecordType otherRecordType || otherRecordType._type.Kind != _type.Kind)
             {
                 return false;
             }
 
-            // $$$ TO BE TESTED
-            throw new Exception();
-            return true;
+            if (_type.IsLazyType && otherRecordType._type.IsLazyType && _type.IsRecord == otherRecordType._type.IsRecord)
+            {
+                return _type.LazyTypeProvider.BackingFormulaType.Equals(otherRecordType._type.LazyTypeProvider.BackingFormulaType);
+            }
+
+            return _type.Equals(otherRecordType._type);
         }
 
         public override int GetHashCode()

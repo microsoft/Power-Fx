@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public RecordType TabularRecordType => _tabularService?.TabularRecordType;
         
-        public CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
+        internal CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
             : base(IRContext.NotInSource(tabularService.TableType))
         {
             _tabularService = tabularService;
