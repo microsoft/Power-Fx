@@ -214,8 +214,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
 
             // Note relationships to ProductCategory and ProductModel with ~ notation
-            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~ProductCategory:w, ProductID:w, ProductModelID:~ProductModel:w, ProductNumber:s, rowguid:s, SellEndDate:d, SellStartDate:d, " +
-                                 "Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w]", sqlTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~ProductCategory:w, ProductID:w, ProductModelID:~ProductModel:w, ProductNumber:s, SellEndDate:d, " +
+                                 "SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             CdpTableValue sapTableValue = sapTable.GetTableValue();
             Assert.Equal<object>(
                 "r*[ALL_EMPLOYEES:s, APP_MODE:s, BEGIN_DATE:s, BEGIN_DATE_CHAR:s, COMMAND:s, DESCRIPTION:s, EMP_PERNR:s, END_DATE:s, END_DATE_CHAR:s, EVENT_NAME:s, FLAG:s, GetMessages:*[MESSAGE:s, PERNR:s], " +
-                "HIDE_PEERS:s, LEGEND:s, LEGEND_TEXT:s, LEGENDID:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type.ToStringWithDisplayNames());
+                "HIDE_PEERS:s, LEGEND:s, LEGENDID:s, LEGEND_TEXT:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type.ToStringWithDisplayNames());
 
             string expr = "First(TeamCalendarCollection).LEGEND_TEXT";
 
@@ -411,13 +411,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(spTable.IsDelegable);
 
             Assert.Equal<object>(
-                "r*['{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link " +
-                "to item':s, '{ModerationComment}'`'Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder " +
-                "path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Ve" +
-                "rsion number':s, Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, " +
-                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
-                "ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance " +
-                "Policy Properties':s, Title:s]", spTable.Type.ToStringWithDisplayNames());
+                "r*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, " +
+                "Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color" +
+                " Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtensi" +
+                "on}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'" +
+                "Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, " +
+                "Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = spTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -500,13 +499,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(spTable.IsDelegable);
 
             Assert.Equal<object>(
-                "r*['{FilenameWithExtension}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link " +
-                "to item':s, '{ModerationComment}'`'Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder " +
-                "path':s, '{Thumbnail}'`Thumbnail:![Large:s, Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Ve" +
-                "rsion number':s, Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, " +
-                "Email:s, JobTitle:s, Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], " +
-                "ID:w, Modified:d, OData__ColorTag`'Color Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance " +
-                "Policy Properties':s, Title:s]", spTable.Type.ToStringWithDisplayNames());
+                "r*[Author`'Created By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], CheckoutUser`'Checked Out To':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, " +
+                "Picture:s], ComplianceAssetId`'Compliance Asset Id':s, Created:d, Editor`'Modified By':![Claims:s, Department:s, DisplayName:s, Email:s, JobTitle:s, Picture:s], ID:w, Modified:d, OData__ColorTag`'Color" +
+                " Tag':s, OData__DisplayName`Sensitivity:s, OData__ExtendedDescription`Description:s, OData__ip_UnifiedCompliancePolicyProperties`'Unified Compliance Policy Properties':s, Title:s, '{FilenameWithExtensi" +
+                "on}'`'File name with extension':s, '{FullPath}'`'Full Path':s, '{Identifier}'`Identifier:s, '{IsCheckedOut}'`'Checked out':b, '{IsFolder}'`IsFolder:b, '{Link}'`'Link to item':s, '{ModerationComment}'`'" +
+                "Comments associated with the content approval of this list item':s, '{ModerationStatus}'`'Content approval status':s, '{Name}'`Name:s, '{Path}'`'Folder path':s, '{Thumbnail}'`Thumbnail:![Large:s, " +
+                "Medium:s, Small:s], '{TriggerWindowEndToken}'`'Trigger Window End Token':s, '{TriggerWindowStartToken}'`'Trigger Window Start Token':s, '{VersionNumber}'`'Version number':s]", spTable.Type.ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Documents", spTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -736,19 +734,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "e Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[Profile]:~Profile:s, ReceivesAdminInfoEmails`'Admin " +
                 "Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url for " +
                 "IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch Email Signature':s, StayInTouchSubject`'Stay-in-T" +
-                "ouch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, Username:s, UserPermissionsAvantgoUser`'AvantGo User':b, UserPermissionsCallCenterA" +
-                "utoLogin`'Auto-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat User':b, UserPermissionsMarketi" +
-                "ngUser`'Marketing User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content User':b, " +
-                "UserPermissionsSupportUser`'Service Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDi" +
-                "agnostics`CacheDiagnostics:b, UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmark" +
-                "Email:b, UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`Disab" +
-                "leFileShareNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`Disab" +
-                "leLikeEmail:b, UserPreferencesDisableMentionsPostEmail`DisableMentionsPostEmail:b, UserPreferencesDisableMessageEmail`DisableMessageEmail:b, UserPreferencesDisableProfilePostEmail`DisableProfilePostEma" +
-                "il:b, UserPreferencesDisableSharePostEmail`DisableSharePostEmail:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b," +
-                " UserPreferencesDisProfPostCommentEmail`DisProfPostCommentEmail:b, UserPreferencesEnableAutoSubForFeeds`EnableAutoSubForFeeds:b, UserPreferencesEventRemindersCheckboxDefault`EventRemindersCheckboxDefau" +
-                "lt:b, UserPreferencesExcludeMailAppAttachments`ExcludeMailAppAttachments:b, UserPreferencesFavoritesShowTopFavorites`FavoritesShowTopFavorites:b, UserPreferencesFavoritesWTShown`FavoritesWTShown:b, " +
+                "ouch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, UserPermissionsAvantgoUser`'AvantGo User':b, UserPermissionsCallCenterAutoLogin`'Au" +
+                "to-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat User':b, UserPermissionsMarketingUser`'Mark" +
+                "eting User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content User':b, UserPermissionsSupportUser`'Ser" +
+                "vice Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDiagnostics`CacheDiagnostics:b, " +
+                "UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b, " +
+                "UserPreferencesDisProfPostCommentEmail`DisProfPostCommentEmail:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmarkEmail:b, " +
+                "UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`DisableFileSha" +
+                "reNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`DisableLikeEma" +
+                "il:b, UserPreferencesDisableMentionsPostEmail`DisableMentionsPostEmail:b, UserPreferencesDisableMessageEmail`DisableMessageEmail:b, UserPreferencesDisableProfilePostEmail`DisableProfilePostEmail:b, " +
+                "UserPreferencesDisableSharePostEmail`DisableSharePostEmail:b, UserPreferencesEnableAutoSubForFeeds`EnableAutoSubForFeeds:b, UserPreferencesEventRemindersCheckboxDefault`EventRemindersCheckboxDefault:b," +
+                " UserPreferencesExcludeMailAppAttachments`ExcludeMailAppAttachments:b, UserPreferencesFavoritesShowTopFavorites`FavoritesShowTopFavorites:b, UserPreferencesFavoritesWTShown`FavoritesWTShown:b, " +
                 "UserPreferencesGlobalNavBarWTShown`GlobalNavBarWTShown:b, UserPreferencesGlobalNavGridMenuWTShown`GlobalNavGridMenuWTShown:b, UserPreferencesHideBiggerPhotoCallout`HideBiggerPhotoCallout:b, " +
-                "UserPreferencesHideChatterOnboardingSplash`HideChatterOnboardingSplash:b, UserPreferencesHideCSNDesktopTask`HideCSNDesktopTask:b, UserPreferencesHideCSNGetChatterMobileTask`HideCSNGetChatterMobileTask:" +
+                "UserPreferencesHideCSNDesktopTask`HideCSNDesktopTask:b, UserPreferencesHideCSNGetChatterMobileTask`HideCSNGetChatterMobileTask:b, UserPreferencesHideChatterOnboardingSplash`HideChatterOnboardingSplash:" +
                 "b, UserPreferencesHideEndUserOnboardingAssistantModal`HideEndUserOnboardingAssistantModal:b, UserPreferencesHideLightningMigrationModal`HideLightningMigrationModal:b, UserPreferencesHideS1BrowserUI`Hid" +
                 "eS1BrowserUI:b, UserPreferencesHideSecondChatterOnboardingSplash`HideSecondChatterOnboardingSplash:b, UserPreferencesHideSfxWelcomeMat`HideSfxWelcomeMat:b, UserPreferencesLightningExperiencePreferred`L" +
                 "ightningExperiencePreferred:b, UserPreferencesPathAssistantCollapsed`PathAssistantCollapsed:b, UserPreferencesPreviewLightning`PreviewLightning:b, UserPreferencesRecordHomeReservedWTShown`RecordHomeRes" +
@@ -761,7 +759,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "ToExternalUsers`ShowStateToExternalUsers:b, UserPreferencesShowStateToGuestUsers`ShowStateToGuestUsers:b, UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, " +
                 "UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUs" +
                 "ers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, UserPreferencesSortFeedByComment`SortFeedByComme" +
-                "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:~UserRole:s, UserType`'User Type':l]", userTable.ToStringWithDisplayNames());
+                "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:~UserRole:s, UserType`'User Type':l, Username:s]", userTable.ToStringWithDisplayNames());
 
             // Missing field
             b = sfTable.TabularRecordType.TryGetFieldType("XYZ", out FormulaType xyzType);

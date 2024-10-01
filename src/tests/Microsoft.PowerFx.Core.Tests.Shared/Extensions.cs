@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append('(');
                 bool first = true;
 
-                foreach (DName name in es.OptionNames)
+                foreach (DName name in es.OptionNames.OrderBy(dn => dn.Value, StringComparer.Ordinal))
                 {
                     if (!first)
                     {
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Tests
             sb.Append("[");
 
             var strPre = string.Empty;
-            foreach (var kvp in tree.GetPairs().OrderBy(kvp => kvp.Key))
+            foreach (var kvp in tree.GetPairs().OrderBy(kvp => kvp.Key, StringComparer.Ordinal))
             {
                 Contracts.Assert(kvp.Value.IsValid);
                 sb.Append(strPre);
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
             sb.Append("[");
 
             var strPre = string.Empty;
-            foreach (string fieldName in fType.FieldNames.OrderBy(f => f))
+            foreach (string fieldName in fType.FieldNames.OrderBy(f => f, StringComparer.Ordinal))
             {
                 sb.Append(strPre);
                 sb.Append(TexlLexer.EscapeName(fieldName));
@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Tests
             sb.Append("{");
 
             var strPre = string.Empty;
-            foreach (var kvp in tree.GetPairs())
+            foreach (var kvp in tree.GetPairs().OrderBy(kvp => kvp.Key, StringComparer.Ordinal))
             {
                 Contracts.Assert(kvp.Value.IsValid);
                 sb.Append(strPre);
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Core.Tests
             sb.Append("[");
 
             var strPre = string.Empty;
-            foreach (var kvp in tree.GetPairs())
+            foreach (var kvp in tree.GetPairs().OrderBy(kvp => kvp.Key, StringComparer.Ordinal))
             {
                 Contracts.AssertNonEmpty(kvp.Key);
                 Contracts.AssertValue(kvp.Value.Object);

@@ -2059,16 +2059,16 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-                "!['@odata.nextLink'`'Next link':s, value:*[Array:![_createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Type)':s, _createdbyexternalparty_va" +
-                "lue`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) (Type)':s, _createdonbehalfby_value`'Created " +
-                "By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'Price List (Value)':s, '_defaultpricelevelid_" +
-                "value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Master ID (Type)':s, " +
-                "_modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modified By (External " +
-                "Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External Party) (Type)':s, _modifiedonbehalfby_value`'Modified By (Delegate) " +
-                "(Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing Partner (Value)':s, '_msa_managingpartnerid_va" +
-                "lue@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'KPI " +
-                "(Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales " +
-                "Acceleration Insights ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, " +
+                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
+                "By (Type)':s, _createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) " +
+                "(Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'" +
+                "Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookup" +
+                "logicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modifi" +
+                "ed By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External Party) (Type)':s, _modifiedonbehalfby_value`'Modified " +
+                "By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing Partner (Value)':s, " +
+                "'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookupl" +
+                "ogicalname'`'KPI (Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales" +
+                " Acceleration Insights ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, " +
                 "_ownerid_value`'Owner (Value)':s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owner (Type)':s, _owningbusinessunit_value`'Owning Business Unit (Value)':s, '_owningbusinessunit_value@Micr" +
                 "osoft.Dynamics.CRM.lookuplogicalname'`'Owning Business Unit (Type)':s, _owningteam_value`'Owning Team (Value)':s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning " +
                 "Team (Type)':s, _owninguser_value`'Owning User (Value)':s, '_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning User (Type)':s, _parentaccountid_value`'Parent Account " +
@@ -2078,10 +2078,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
                 "User (Type)':s, _primarycontactid_value`'Primary Contact (Value)':s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Primary Contact (Type)':s, _slaid_value`'SLA " +
                 "(Value)':s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'SLA (Type)':s, _slainvokedid_value`'Last SLA applied (Value)':s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Las" +
                 "t SLA applied (Type)':s, _territoryid_value`'Territory (Value)':s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Territory (Type)':s, _transactioncurrencyid_value`'Currency " +
-                "(Value)':s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Currency (Type)':s, '@odata.id'`'OData Id':s, accountcategorycode`Category:w, accountclassificationcode`Classificati" +
-                "on:w, accountid`Account:s, accountnumber`'Account Number':s, accountratingcode`'Account Rating':w, address1_addressid`'Address 1: ID':s, address1_addresstypecode`'Address 1: Address " +
-                "Type':w, address1_city`'Address 1: City':s, address1_composite`'Address 1':s, address1_country`'Address 1: Country/Region':s, address1_county`'Address 1: County':s, address1_fax`'Address " +
-                "1: Fax':s, address1_freighttermscode`'Address 1: Freight Terms':w, address1_latitude`'Address 1: Latitude':w, address1_line1`'Address 1: Street 1':s, address1_line2`'Address 1: Street " +
+                "(Value)':s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Currency (Type)':s, accountcategorycode`Category:w, accountclassificationcode`Classification:w, " +
+                "accountid`Account:s, accountnumber`'Account Number':s, accountratingcode`'Account Rating':w, address1_addressid`'Address 1: ID':s, address1_addresstypecode`'Address 1: Address Type':w, " +
+                "address1_city`'Address 1: City':s, address1_composite`'Address 1':s, address1_country`'Address 1: Country/Region':s, address1_county`'Address 1: County':s, address1_fax`'Address 1: " +
+                "Fax':s, address1_freighttermscode`'Address 1: Freight Terms':w, address1_latitude`'Address 1: Latitude':w, address1_line1`'Address 1: Street 1':s, address1_line2`'Address 1: Street " +
                 "2':s, address1_line3`'Address 1: Street 3':s, address1_longitude`'Address 1: Longitude':w, address1_name`'Address 1: Name':s, address1_postalcode`'Address 1: ZIP/Postal Code':s, address1_postofficebox`" +
                 "'Address 1: Post Office Box':s, address1_primarycontactname`'Address 1: Primary Contact Name':s, address1_shippingmethodcode`'Address 1: Shipping Method':w, address1_stateorprovince`'Address " +
                 "1: State/Province':s, address1_telephone1`'Address Phone':s, address1_telephone2`'Address 1: Telephone 2':s, address1_telephone3`'Address 1: Telephone 3':s, address1_upszone`'Address " +
