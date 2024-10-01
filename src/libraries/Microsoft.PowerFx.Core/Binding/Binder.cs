@@ -4114,14 +4114,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                     {
-                        // We only have to check the property's rule and the calling arguments for purity as scoped variables
-                        // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
-                            ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
-                        {
-                            hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);
-                            isStateFul |= rule.Binding.IsStateful(rule.Binding.Top);
-                        }
+                        // Behavior only component properties should be treated as stateful.
+                        hasSideEffects |= infoTexlFunction.IsBehaviorOnly;
+
+                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful. 
+                        // This ensures that we don't lift these function invocations in loops, and that they are re-evaluated every time they are called,
+                        // which is always correct, although less efficient in some cases. 
+                        isStateFul |= true;
                     }
                     else
                     {
