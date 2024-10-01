@@ -595,7 +595,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service For Language v2.1_Invalid Response 2.json");
 
             var xx = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList();
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];            
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, logger).OrderBy(cf => cf.Name).ToList()[11];
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
             string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
@@ -610,7 +610,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
-            Assert.Equal(ErrorKind.InvalidJson, ev.Errors.First().Kind);
+            Assert.Equal(ErrorKind.InvalidArgument, ev.Errors.First().Kind);
             Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting Table but received a Number, in result/prediction/intents", ev.Errors.First().Message);
         }
 
@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             // valid result
-            Assert.IsAssignableFrom<RecordValue>(httpResult); 
+            Assert.IsAssignableFrom<RecordValue>(httpResult);
         }
 
         [Fact]
@@ -675,7 +675,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { kind, analysisInputParam, parametersParam }, context, CancellationToken.None);
 
             ErrorValue ev = Assert.IsType<ErrorValue>(httpResult);
-            Assert.Equal(ErrorKind.InvalidJson, ev.Errors.First().Kind);
+            Assert.Equal(ErrorKind.InvalidArgument, ev.Errors.First().Kind);
             Assert.Equal("ACSL.ConversationAnalysisAnalyzeConversationConversation failed: PowerFxJsonException Expecting String but received a Table with 2 elements, in result/prediction/entities/category", ev.Errors.First().Message);
         }
 
@@ -917,7 +917,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // "enum"
             Assert.Equal(FormulaType.Decimal, functions[1].OptionalParameters[2].ConnectorType.FormulaType); // "leadsourcecode"
-            Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);            
+            Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);
             Assert.Equal(Enumerable.Range(1, 10).Select(i => (decimal)i).ToArray(), functions[1].OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (decimal)fv.ToObject()));
             Assert.Equal("Advertisement, Employee Referral, External Referral, Partner, Public Relations, Seminar, Trade Show, Web, Word of Mouth, Other", string.Join(", ", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames));
             Assert.Equal(4m, functions[1].OptionalParameters[2].ConnectorType.Enum["Partner"].ToObject());
@@ -931,7 +931,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("2b629105-4a26-4607-97a5-0715059e0a55", functions[1].RequiredParameters[2].ConnectorType.EnumValues[0].ToObject());
             Assert.Equal("5cacddd3-d47f-4023-a68e-0ce3e0d401fb", functions[1].RequiredParameters[2].ConnectorType.EnumValues[1].ToObject());
             Assert.Equal("INMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[0]);
-            Assert.Equal("MYMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[1]);            
+            Assert.Equal("MYMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[1]);
         }
 
         [Fact]
@@ -1104,7 +1104,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(returnType);
             Assert.True(returnType.FormulaType is RecordType);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
@@ -1138,6 +1138,9 @@ POST https://tip1002-002.azure-apihub.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -1184,7 +1187,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
             Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
  authority: tip1-shared.azure-apim.net
@@ -1210,6 +1213,9 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{version}
 ";
 
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
             Assert.Equal(expected, input);
         }
 
@@ -1258,9 +1264,9 @@ POST https://tip1-shared.azure-apim.net/invoke
                 runtimeContext,
                 CancellationToken.None);
 
-            string input = testConnector._log.ToString().Replace("\r", string.Empty);
+            string input = testConnector._log.ToString();
             Assert.Equal("AdaptiveCard", (((RecordValue)result).GetField("type") as UntypedObjectValue).Impl.GetString());
-            Assert.Equal(
+            var expected =
                 $@"POST https://tip1002-002.azure-apihub.net/invoke
  authority: tip1002-002.azure-apihub.net
  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...
@@ -1273,7 +1279,12 @@ POST https://tip1-shared.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""inputs"":{{""property1"":""test1"",""property2"":""test2""}}}}
-", input);
+";
+
+            // Normalize CRLF ==> LF
+            expected = expected.Replace("\r", string.Empty);
+            input = input.Replace("\r", string.Empty);
+            Assert.Equal(expected, input);
         }
 
         [Fact]
@@ -1347,6 +1358,66 @@ POST https://tip1-shared.azure-apim.net/invoke
             Assert.Equal(2, connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions.Count);
             Assert.Equal("channelName", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[0].DisplayName);
             Assert.Equal("channelName2", connectorTypeWithSuggestions.ConnectorSuggestions.Suggestions[1].DisplayName);
+        }
+
+        [Fact]
+        public async Task Teams_PostCardAndWaitForResponse()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functionsWithWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, IncludeWebhookFunctions = true }, testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functionsWithoutWebhooks = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+
+            Assert.NotNull(functionsWithWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
+            Assert.Null(functionsWithoutWebhooks.FirstOrDefault(f => f.Name == "PostCardAndWaitForResponse"));
+        }
+
+        [Fact]
+        public async Task Teams_GetMessageLocation_WithSuggestions()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "7592282b-e371-e3f6-8e04-e8f23e64227c" /* environment Id */, "shared-cardsforpower-eafc4fa0-c560-4eba-a5b2-3e1ebc63193a" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dC...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility, AllowSuggestionMappingFallback = true }, testConnector._apiDocument).ToArray();
+            ConnectorFunction createRecord = functions.First(f => f.Name == "PostCardToConversation");
+
+            // This example response returns with "value" and "displayName", only when AllowSuggestionMappingFallback = true it will be recognized.
+            testConnector.SetResponseFromFile(@"Responses\Teams_GetMessageLocations.json");
+
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("poster", FormulaValue.New("Flow bot"))
+                },
+                createRecord.RequiredParameters[1], // actionName
+                runtimeContext,
+                CancellationToken.None);
+
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
+            Assert.Equal(3, suggestions1.Suggestions.Count);
+            Assert.Equal("Channel", suggestions1.Suggestions[0].DisplayName);
+            Assert.Equal("Group chat", suggestions1.Suggestions[1].DisplayName);
+            Assert.Equal("Chat with Flow bot", suggestions1.Suggestions[2].DisplayName);
+        }
+
+        [Fact]
+        public void ABS_GetTriggers()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json", _output);
+            List<ConnectorFunction> triggers = OpenApiParser.GetTriggers("AzureBlobStorage", doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            Assert.NotNull(triggers);
+            Assert.Equal(2, triggers.Count);
+            var onUpdatedFilesTrigger = triggers.FirstOrDefault(t => t.Name.Equals("OnUpdatedFiles"));
+            Assert.NotNull(onUpdatedFilesTrigger);
+            Assert.Equal(HttpMethod.Get, onUpdatedFilesTrigger.HttpMethod);
+            Assert.Equal("/apim/azureblob/{connectionId}/datasets/default/triggers/batch/onupdatedfile", onUpdatedFilesTrigger.OperationPath);
         }
     }
 

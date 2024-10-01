@@ -82,6 +82,14 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, new TextLiteralNode(context.GetIRContext(node), node.Value), context);
             }
 
+            public override IntermediateNode Visit(TypeLiteralNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
+            }
+
             public override IntermediateNode Visit(NumLitNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -674,6 +682,11 @@ namespace Microsoft.PowerFx.Core.IR
                             break;
                         }
 
+                    case BindKind.NamedType:
+                        {
+                            return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
+                        }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -871,7 +884,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             public override IntermediateNode Visit(SelfNode node, IRTranslatorContext context)
             {
-                Contracts.Assert(false, "Parent Keyword not supported in PowerFx");
+                Contracts.Assert(false, "Self Keyword not supported in PowerFx");
                 throw new NotSupportedException();
             }
 

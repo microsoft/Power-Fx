@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -205,7 +206,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (args[0] is not StringValue && args[0] is not BlankValue)
                 {
-                    return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.GenericInvalidArgument(args[0].IRContext));
+                    return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.InvalidArgumentError(args[0].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 
                 string regularExpression;
@@ -218,7 +219,7 @@ namespace Microsoft.PowerFx.Functions
                         regularExpression = (string)osv1.ExecutionValue;
                         break;
                     default:
-                        return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.GenericInvalidArgument(args[1].IRContext));
+                        return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.InvalidArgumentError(args[1].IRContext, RuntimeStringResources.ErrInvalidArgument));
                 }
 
                 string inputString = args[0] is StringValue sv0 ? sv0.Value : string.Empty;
@@ -235,7 +236,7 @@ namespace Microsoft.PowerFx.Functions
                             matchOptions = (string)osv3.ExecutionValue;
                             break;
                         default:
-                            return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.GenericInvalidArgument(args[2].IRContext));
+                            return Task.FromResult<FormulaValue>(args[2] is ErrorValue ? args[2] : CommonErrors.InvalidArgumentError(args[2].IRContext, RuntimeStringResources.ErrInvalidArgument));
                     }
                 }
                 else
@@ -273,9 +274,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return Task.FromResult<FormulaValue>(new ErrorValue(args[0].IRContext, new ExpressionError()
                     {
-                        Message = $"Regular expression timeout (above {rexTimeoutEx.MatchTimeout.TotalMilliseconds} ms) - {rexTimeoutEx.Message}",
+                        ResourceKey = RuntimeStringResources.ErrRegexTimeoutException,
                         Span = args[0].IRContext.SourceContext,
-                        Kind = ErrorKind.Timeout
+                        Kind = ErrorKind.Timeout,
+                        MessageArgs = new object[] { rexTimeoutEx.MatchTimeout.TotalMilliseconds, rexTimeoutEx.Message }
                     }));
                 }
 
@@ -287,9 +289,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return Task.FromResult<FormulaValue>(new ErrorValue(args[1].IRContext, new ExpressionError()
                     {
-                        Message = $"Invalid regular expression - {rexParseEx.Message}",
+                        ResourceKey = RuntimeStringResources.ErrInvalidRegexException,
                         Span = args[1].IRContext.SourceContext,
-                        Kind = ErrorKind.BadRegex
+                        Kind = ErrorKind.BadRegex,
+                        MessageArgs = new object[] { rexParseEx.Message }
                     }));
                 }
 

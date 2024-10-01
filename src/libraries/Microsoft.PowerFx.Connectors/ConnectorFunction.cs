@@ -861,7 +861,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             ExpressionError er = null;
 
-            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJson)) != null)
+            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network || e.Kind == ErrorKind.InvalidJSON || e.Kind == ErrorKind.InvalidArgument)) != null)
             {
                 runtimeContext.ExecutionLogger?.LogError($"{this.LogFunction(nameof(PostProcessResultAsync))}, ErrorValue is returned with {er.Message}");
                 ExpressionError newError = er is HttpExpressionError her
@@ -1176,6 +1176,23 @@ namespace Microsoft.PowerFx.Connectors
                     JsonElement title = ExtractFromJson(jElement, cdv.ValueTitle);
                     JsonElement value = ExtractFromJson(jElement, cdv.ValuePath);
 
+                    // Note: Some connectors have misalignment between the Swagger definition and the actual response, caused suggestion API
+                    // returning empty result. For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
+                    // in fact returns List<{value, displayName}>.
+                    // Fallback to "displayName" and "value" which are the most commonly used property names in suggestion response.
+                    if (ConnectorSettings?.AllowSuggestionMappingFallback == true)
+                    {
+                        if (title.ValueKind == JsonValueKind.Undefined)
+                        {
+                            title = ExtractFromJson(jElement, "displayName");
+                        }
+
+                        if (value.ValueKind == JsonValueKind.Undefined)
+                        {
+                            value = ExtractFromJson(jElement, "value");
+                        }
+                    }
+
                     if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)
                     {
                         continue;
@@ -1214,6 +1231,19 @@ namespace Microsoft.PowerFx.Connectors
             {
                 JsonElement title = ExtractFromJson(jElement, cdl.ItemTitlePath);
                 JsonElement value = ExtractFromJson(jElement, cdl.ItemValuePath);
+
+                if (ConnectorSettings?.AllowSuggestionMappingFallback == true)
+                {
+                    if (title.ValueKind == JsonValueKind.Undefined)
+                    {
+                        title = ExtractFromJson(jElement, "displayName");
+                    }
+
+                    if (value.ValueKind == JsonValueKind.Undefined)
+                    {
+                        value = ExtractFromJson(jElement, "value");
+                    }
+                }
 
                 if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)
                 {
@@ -1378,7 +1408,7 @@ namespace Microsoft.PowerFx.Connectors
                         // Ex: Api-Version
                         hiddenRequired = true;
                     }
-                    else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                    else if (ConnectorSettings.Compatibility.ExcludeInternals())
                     {
                         continue;
                     }
@@ -1446,9 +1476,9 @@ namespace Microsoft.PowerFx.Connectors
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = ConnectorSettings.Compatibility != ConnectorCompatibility.PowerAppsCompatibility || !requestBody.Required;
+                                            bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
                                         }
-                                        else if (ConnectorSettings.Compatibility == ConnectorCompatibility.SwaggerCompatibility)
+                                        else if (ConnectorSettings.Compatibility.ExcludeInternals())
                                         {
                                             continue;
                                         }
@@ -1535,7 +1565,7 @@ namespace Microsoft.PowerFx.Connectors
             // Required params are first N params in the final list, "in" parameters first.
             // Optional params are fields on a single record argument at the end.
             // Hidden required parameters do not count here
-            _requiredParameters = ConnectorSettings.Compatibility == ConnectorCompatibility.PowerAppsCompatibility ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
+            _requiredParameters = ConnectorSettings.Compatibility.IsPowerAppsCompliant() ? GetPowerAppsParameterOrder(requiredParameters) : requiredParameters.ToArray();
             _optionalParameters = optionalParameters.ToArray();
             _hiddenRequiredParameters = hiddenRequiredParameters.ToArray();
             _arityMin = _requiredParameters.Length;

@@ -59,6 +59,48 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return GetTriggers(@namespace, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
+                return functions.Where(f => ShouldIncludeFunction(f));
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, {nameof(ConnectorSettings)} Namespace {@namespace}, {LogException(ex)}");
+                throw;
+            }
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null)
+        {
+            return GetTriggers(connectorSettings, openApiDocument, null, configurationLogger);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
+        {
+            try
+            {
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);
+                configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
+                return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
+            }
+            catch (Exception ex)
+            {
+                configurationLogger?.LogException(ex, $"Exception in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, {LogException(ex)}");
+                throw;
+            }
+        }
+
         private static bool ShouldIncludeFunction(ConnectorFunction function, ConnectorSettings settings = null)
         {
             // By default, internal & unsupported functions are excluded
@@ -67,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors
                    (function.IsSupported || settings?.AllowUnsupportedFunctions == true);
         }
 
-        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null, FunctionType functionType = FunctionType.Function)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
@@ -113,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
                 string notSupportedReasonForPath = string.Empty;
 
                 // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
+                if (!connectorSettings.IncludeWebhookFunctions && ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
                     configurationLogger?.LogInformation($"Skipping Webhook {path} {ops.Description}");
                     continue;
@@ -135,10 +177,15 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    // We only want to keep "actions", triggers are always ignored
-                    if (op.IsTrigger())
+                    if (functionType == FunctionType.Function && op.IsTrigger())
                     {
                         configurationLogger?.LogInformation($"Operation {verb} {path} is trigger");
+                        continue;
+                    }
+
+                    if (functionType == FunctionType.Trigger && !op.IsTrigger())
+                    {
+                        configurationLogger?.LogInformation($"Operation {verb} {path} is a function");
                         continue;
                     }
 
@@ -485,5 +532,12 @@ namespace Microsoft.PowerFx.Connectors
 
             return null;
         }
+    }
+
+    internal enum FunctionType
+    {
+        Function,
+
+        Trigger
     }
 }

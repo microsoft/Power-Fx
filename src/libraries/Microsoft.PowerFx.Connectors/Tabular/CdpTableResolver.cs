@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                ConnectorType ct = ConnectorFunction.GetConnectorTypeAndTableCapabilities(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.SwaggerCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
+                ConnectorType ct = ConnectorFunction.GetConnectorTypeAndTableCapabilities(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
 
                 return new CdpTableDescriptor() { ConnectorType = ct, Name = name, DisplayName = displayName, TableCapabilities = tableCapabilities };
             }
@@ -111,6 +111,12 @@ namespace Microsoft.PowerFx.Connectors
             Result r = JsonSerializer.Deserialize<Result>(text);
 
             SqlForeignKey[] fkt = r.ResultSets.Table1;
+
+            if (fkt == null || fkt.Length == 0)
+            {
+                return new List<SqlRelationship>();
+            }
+
             SqlTable[] tt = r.ResultSets.Table2;
             SqlForeignKeyColumn[] fkct = r.ResultSets.Table3;
             SqlColumn[] ct = r.ResultSets.Table4;

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
@@ -21,6 +22,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         public int ArgIndex => 0;
 
         public string Script => string.Empty;
+
+        public CultureInfo Locale => CultureInfo.InvariantCulture;
 
         /// <summary>
         /// No-op, default Intellisense does not augment signatures at this stage.

@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // AddSuggestionsForEnums
         [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
         [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
-        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJson")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage", "InvalidJSON")]
         [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
         [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
         [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
@@ -286,6 +286,41 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
             Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
             Assert.Equal(expectedDescription, currentOverload.FunctionParameterDescription);
+        }
+
+        [Theory]
+        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]
+        [InlineData("First(|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
+        [InlineData("First(|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
+        [InlineData("If(|", "Condição que resulta em um valor booleano.", "Verifica se alguma das condições especificadas foi atendida e retorna o valor correspondente. Se nenhuma das condições for atendida, a função retornará o valor padrão especificado.", "pt-BR")]
+        public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
+        {
+            var result = Suggest(expression, Default, CultureInfo.InvariantCulture, CultureInfo.CreateSpecificCulture(locale));
+
+            var signature = result.SignatureHelp.Signatures[result.SignatureHelp.ActiveSignature];
+            var overload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+
+            Assert.Equal(expectedDefinition, signature.Documentation);
+            Assert.Equal(expectedDefinition, overload.Definition);
+
+            Assert.Equal(expectedParameterDescription, signature.Parameters[0].Documentation);
+            Assert.Equal(expectedParameterDescription, overload.FunctionParameterDescription);
+        }
+
+        /// <summary>
+        /// In cases for which Intellisense produces exceedingly numerous results, they should
+        /// contain localized strings.
+        /// </summary>
+        [Fact]
+        public void TestNonEmptyLocalizedSuggest()
+        {
+            var expression = "| ForAll([1],Value)";
+            var config = Default;
+            var suggestions = Suggest(expression, Default, null, CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            // Fetching arg1 (Abs function).
+            var definition = suggestions.Suggestions.ToArray()[1].Definition;
+            Assert.Equal("Retorna o valor absoluto de um número, sem o sinal.", definition);
         }
 
         [Theory]
@@ -560,6 +595,30 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             // Just check that the execution didn't stack overflow.
             Assert.True(suggestions.Any());
+        }
+
+        [Theory]
+        [InlineData("ParseJSON(\"42\", Nu|", "Number")]
+        [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
+        [InlineData("ParseJSON(\"42\", Voi|")]
+        [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
+        [InlineData("ParseJSON(\"42\", My|", "'My Type With Space'", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", So|", "'Some \" DQuote'")]
+        public void TypeArgumentsTest(string expression, params string[] expected)
+        {
+            var symbolTable = SymbolTable.WithPrimitiveTypes();
+
+            symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
+            symbolTable.AddType(new DName("My Type With Space"), FormulaType.String);
+            symbolTable.AddType(new DName("Some \" DQuote"), FormulaType.String);
+            symbolTable.AddFunctions(new TexlFunctionSet(BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs).ToArray()));
+            symbolTable.AddFunctions(new TexlFunctionSet(new[] { BuiltinFunctionsCore.ParseJSON }));
+
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, symbolTable);
+            Assert.Equal(expected, actualSuggestions);
         }
     }
 }

@@ -34,6 +34,9 @@ namespace Microsoft.PowerFx
         // Allow repl to create new definitions, such as Set(). 
         public bool AllowSetDefinitions { get; set; }
 
+        // Allow repl to create new UserDefinedFunctions. 
+        public bool AllowUserDefinedFunctions { get; set; }
+
         // Do we print each command before evaluation?
         // Useful if we're running a file and are debugging, or if input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
@@ -405,6 +408,30 @@ namespace Microsoft.PowerFx
             var errors = check.ApplyErrors();
             if (!check.IsSuccess)
             {
+                var definitionsCheckResult = new DefinitionsCheckResult();
+
+                definitionsCheckResult.SetText(expression, this.ParserOptions)
+                    .ApplyParseErrors();
+
+                if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
+                {
+                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
+
+                    if (!defCheckResult.IsSuccess)
+                    {
+                        foreach (var error in defCheckResult.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            var msg = error.ToString();
+
+                            await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                                .ConfigureAwait(false);
+                        }
+                    }
+
+                    return new ReplResult();
+                }
+
                 foreach (var error in check.Errors)
                 {
                     var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;

@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
+using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -331,7 +332,19 @@ namespace Microsoft.PowerFx
                 }
                 else if (func is IAsyncTexlFunction5 asyncFunc5)
                 {
-                    result = await asyncFunc5.InvokeAsync(_services, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                    BasicServiceProvider services2 = new BasicServiceProvider(_services);
+
+                    if (services2.GetService(typeof(TimeZoneInfo)) == null)
+                    {
+                        services2.AddService(TimeZoneInfo);
+                    }
+
+                    if (services2.GetService(typeof(Canceller)) == null)
+                    {
+                        services2.AddService(new Canceller(CheckCancel));
+                    }
+
+                    result = await asyncFunc5.InvokeAsync(services2, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
                 {
@@ -380,7 +393,7 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        result = CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
+                        result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
                     }
                 }
             }
@@ -559,6 +572,11 @@ namespace Microsoft.PowerFx
             {
                 if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
+                    if (cov.Impl is UntypedObjectBase untypedObjectBase)
+                    {
+                        return untypedObjectBase.GetProperty(sv.Value, node.IRContext.ResultType);
+                    }
+
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {
                         if (res.Type == FormulaType.Blank)
@@ -581,7 +599,7 @@ namespace Microsoft.PowerFx
                 {
                     return new ErrorValue(node.IRContext, new ExpressionError()
                     {
-                        Message = "Accessing a field is not valid on this value",
+                        ResourceKey = RuntimeStringResources.ErrAccessingFieldNotValidValue,
                         Span = node.IRContext.SourceContext,
                         Kind = ErrorKind.InvalidArgument
                     });
@@ -611,7 +629,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
-            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
+            return CommonErrors.NotYetImplementedUnaryOperatorError(node.IRContext, node.Op.ToString());
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
@@ -748,7 +766,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, EvalVisitorContext context)
         {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
+            return new ErrorValue(node.IRContext, new ExpressionError()
+            {
+                ResourceKey = RuntimeStringResources.ErrSingleColumnTableAccessNodeNotYetImplemented,
+                Span = node.IRContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
         }
 
         public override async ValueTask<FormulaValue> Visit(ErrorNode node, EvalVisitorContext context)
@@ -810,7 +833,7 @@ namespace Microsoft.PowerFx
                     }
                     catch (CustomFunctionErrorException ex)
                     {
-                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                        hostObj = CommonErrors.RuntimeExceptionError(node.IRContext, ex.Message);
                     }
 
                     return hostObj;

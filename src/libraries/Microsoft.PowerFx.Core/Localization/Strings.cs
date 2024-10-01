@@ -466,9 +466,17 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter IsTypeArg1 = (b) => StringResources.Get("IsTypeArg1", b);
         public static StringGetter IsTypeArg2 = (b) => StringResources.Get("IsTypeArg2", b);
 
+        public static StringGetter AboutIsTypeUO = (b) => StringResources.Get("AboutIsTypeUO", b);
+        public static StringGetter IsTypeUOArg1 = (b) => StringResources.Get("IsTypeUOArg1", b);
+        public static StringGetter IsTypeUOArg2 = (b) => StringResources.Get("IsTypeUOArg2", b);
+
         public static StringGetter AboutAsType = (b) => StringResources.Get("AboutAsType", b);
         public static StringGetter AsTypeArg1 = (b) => StringResources.Get("AsTypeArg1", b);
         public static StringGetter AsTypeArg2 = (b) => StringResources.Get("AsTypeArg2", b);
+
+        public static StringGetter AboutAsTypeUO = (b) => StringResources.Get("AboutAsTypeUO", b);
+        public static StringGetter AsTypeUOArg1 = (b) => StringResources.Get("AsTypeUOArg1", b);
+        public static StringGetter AsTypeUOArg2 = (b) => StringResources.Get("AsTypeUOArg2", b);
 
         public static StringGetter AboutWith = (b) => StringResources.Get("AboutWith", b);
         public static StringGetter WithArg1 = (b) => StringResources.Get("WithArg1", b);
@@ -481,6 +489,10 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
         public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
+
+        public static StringGetter AboutTypedParseJSON = (b) => StringResources.Get("AboutTypedParseJSON", b);
+        public static StringGetter TypedParseJSONArg1 = (b) => StringResources.Get("TypedParseJSONArg1", b);
+        public static StringGetter TypedParseJSONArg2 = (b) => StringResources.Get("TypedParseJSONArg2", b);
 
         public static StringGetter AboutFileInfo = (b) => StringResources.Get("AboutFileInfo", b);
         public static StringGetter FileInfoArg1 = (b) => StringResources.Get("FileInfoArg1", b);
@@ -733,6 +745,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WarnDeferredType = new ErrorResourceKey("WarnDeferredType");
         public static ErrorResourceKey ErrColRenamedTwice_Name = new ErrorResourceKey("ErrColRenamedTwice_Name");
 
+        public static ErrorResourceKey WrnCountRowsMayReturnCachedValue = new ErrorResourceKey("WrnCountRowsMayReturnCachedValue");
+
         public static StringGetter InfoMessage = (b) => StringResources.Get("InfoMessage", b);
         public static StringGetter InfoNode_Node = (b) => StringResources.Get("InfoNode_Node", b);
         public static StringGetter InfoTok_Tok = (b) => StringResources.Get("InfoTok_Tok", b);
@@ -749,6 +763,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
+        public static ErrorResourceKey ErrNamedType_MissingTypeLiteral = new ErrorResourceKey("ErrNamedType_MissingTypeLiteral");
         public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
@@ -829,5 +844,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrSummarizeDataSourceScopeNotSupported = new ErrorResourceKey("ErrSummarizeDataSourceScopeNotSupported");
 
         public static ErrorResourceKey ErrInvalidDataSourceForFunction = new ErrorResourceKey("ErrInvalidDataSourceForFunction");
+        public static ErrorResourceKey ErrInvalidArgumentExpectedType = new ErrorResourceKey("ErrInvalidArgumentExpectedType");
+        public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
+        public static ErrorResourceKey ErrReachedMaxJsonDepth = new ErrorResourceKey("ErrReachedMaxJsonDepth");
+        public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
     }
 }

@@ -83,12 +83,37 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public ISwaggerSchema Items => throw new NotImplementedException();
+        public ISwaggerSchema Items
+        {
+            get
+            {
+                if (_schema.TryGetProperty("items", out JsonElement items))
+                {
+                    return SwaggerJsonSchema.New(items);
+                }
+
+                throw new NotImplementedException();
+            }
+        }
 
         public IList<IOpenApiAny> Enum
-        {
-            // Not supported yet
-            get => null;
+        {           
+            get
+            {
+                if (_schema.TryGetProperty("enum", out JsonElement items) && items.ValueKind == JsonValueKind.Array)
+                {
+                    List<IOpenApiAny> e = new List<IOpenApiAny>();
+
+                    foreach (JsonElement je in items.EnumerateArray())
+                    {
+                        e.Add(new OpenApiString(je.GetString()));
+                    }
+
+                    return e;
+                }
+
+                return null;
+            }
 
             set => throw new NotImplementedException();
         }

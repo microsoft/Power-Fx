@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Tests
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root));
-            
+
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
             check.SetText(script, new ParserOptions { AllowsSideEffects = true });
@@ -159,7 +161,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("// line one\n// line two\n// line three\n", "", true)]
         [InlineData("false /*this is false*/true", " false  true ", true)]
         [InlineData("false /*this is false*/true", " false /*this is false*/ true ", false)]
-        public void TestMinificationWithCommentRemovalInNonTextFirst(string script, string expected, bool removeComments = false) 
+        public void TestMinificationWithCommentRemovalInNonTextFirst(string script, string expected, bool removeComments = false)
         {
             // Arrange
             var flags = TexlLexer.Flags.None;
@@ -167,7 +169,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Act
             var result = TexlLexer.InvariantLexer.GetMinifiedScript(script, options);
-          
+
             // Assert
             Assert.Equal(expected, result);
         }
@@ -268,6 +270,30 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
+        [InlineData("x= /* test */ 1;", "x = /* test */1;")]
+        [InlineData("y =3 /* test */;", "y = 3/* test */;")]
+        [InlineData("F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;", "F(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;")]
+        [InlineData("X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "X():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        [InlineData("x= /* test */ 1; y =3 /* test */; F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "x = /* test */1;\ny = 3/* test */;\nF(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;\nX():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        public void TestUserDefinitionsPrettyPrint(string script, string expected)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            // Act & Assert
+            var result = FormatUserDefinitions(script, parserOptions);
+            Assert.NotNull(result);
+            Assert.Equal(expected, result);
+
+            // Act & Assert: Ensure idempotence
+            result = FormatUserDefinitions(result, parserOptions);
+            Assert.NotNull(result);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
         [InlineData(TexlLexer.ReservedBlank)]
         [InlineData(TexlLexer.ReservedChild)]
         [InlineData(TexlLexer.ReservedChildren)]
@@ -295,7 +321,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Act: Ensure idempotence
             result = Format(result, flags);
-            
+
             // Assert: Ensure idempotence
             Assert.NotNull(result);
             Assert.Equal(expectedFormattedExpr, result);
@@ -318,7 +344,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Act
             var outcome = unformattedExpr;
-            for (var i = 1; i <= trips; ++i) 
+            for (var i = 1; i <= trips; ++i)
             {
                 outcome = i % 2 == 0 ?
                           TexlLexer.InvariantLexer.RemoveWhiteSpace(outcome) :
@@ -327,6 +353,98 @@ namespace Microsoft.PowerFx.Tests
 
             // Assert
             Assert.Equal(expectedOutcome, outcome);
+        }
+
+        // Testing for hosts to provide a custom way to print the structural representation of an expression.
+        [Theory]
+        [InlineData("With({myfield:firstNameControl.Text}, myfield & \"something\")", "With({ #$fieldname$#:TextInputControl.#$righthandid$# }, #$LambdaField$# & #$string$#)")]
+        public void CustomStructuralPrintTest(string expression, string expected)
+        {
+            var engine = new Engine();
+            var result = engine.Check(expression);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("score", FormulaType.Decimal);
+
+            var check = new CheckResult(new Engine())
+                .SetText("1+Sum(score, missing)")
+                .SetBindingInfo(symbolTable);
+
+            var errors = check.ApplyErrors();
+            var parse = check.ApplyParse();
+
+            var log = result.ApplyGetLogging(new CustomStructuralPrintSanitizer());
+
+            Assert.Equal(expected, log);
+        }
+
+        [Fact]
+        public void CustomStructuralPrintSanitizerTest()
+        {
+            var engine = new Engine();
+            var expression = "With({myfield:firstNameControl.Text}, myfield & \"something\")";
+
+            var result = engine.Check(expression);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("score", FormulaType.Decimal);
+
+            var check = new CheckResult(new Engine())
+                .SetText("1+Sum(score, missing)")
+                .SetBindingInfo(symbolTable);
+
+            var errors = check.ApplyErrors();
+            var parse = check.ApplyParse();
+
+            var mapping1 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping1" }
+            };
+
+            var logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping1));
+            Assert.Equal("With({ #$fieldname$#:Mapping1.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+
+            var mapping2 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping2" }
+            };
+
+            logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping2));
+            Assert.Equal("With({ #$fieldname$#:Mapping2.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+
+            var mapping3 = new Dictionary<string, string>()
+            {
+                { "firstNameControl", "Mapping3" }
+            };
+
+            logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping3));
+            Assert.Equal("With({ #$fieldname$#:Mapping3.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+        }
+
+        /// <summary>
+        /// This simulates a host that provides a map of control names and their sanitized names.
+        /// </summary>
+        internal class CustomStructuralPrintSanitizer : ISanitizedNameProvider
+        {
+            private readonly IReadOnlyDictionary<string, string> _mapping;
+
+            public CustomStructuralPrintSanitizer(IReadOnlyDictionary<string, string> mapping)
+            {
+                _mapping = mapping;
+            }
+
+            public CustomStructuralPrintSanitizer()
+            {
+                _mapping = new Dictionary<string, string>()
+                {
+                    { "firstNameControl", "TextInputControl" }
+                };
+            }
+
+            public bool TrySanitizeIdentifier(Identifier identifier, out string sanitizedName, DottedNameNode dottedNameNode = null)
+            {
+                return _mapping.TryGetValue(identifier.Name.Value, out sanitizedName);
+            }
         }
     }
 }

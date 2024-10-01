@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1807,6 +1807,24 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>"यदि प्रदान किया गया अनटाइप्ड मान दिए गए प्रकार का है, तो सही लौटाता है."</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>अनटाइप्ड मान यह जाँचने के लिए कि क्या इसे निर्दिष्ट प्रकार के रूप में डाला जा सकता है.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>वह प्रकार जिसे हम untypedValue जाँचना चाहते हैं.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>प्रदत्त मान को दिए गए प्रकार के तौर पर उपयोग करता है.</value>
     
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>निकाय तालिका ऐसे प्रकार का प्रतिनिधित्व कर रही है, जिसे हमारे अनुसार मान के तौर पर उपयोग किया जाना चाहिए.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>दिए गए अनटाइप्ड मान को दिए गए प्रकार के रूप में जांचता है और उपयोग करता है.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>नये प्रकार के रूप में कास्ट किया जाने वाला अनटाइप्ड मान.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>वह प्रकार जिस रूप में हम मान का उपयोग करना चाहते हैं.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>पहले पैरामीटर द्वारा प्रदान किए गए स्कोप का उपयोग करके, दूसरे पैरामीटर के रूप में प्रदान किए गए सूत्र को निष्पादित करता है.</value>
@@ -2673,6 +2709,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>प्रोसेस की जाने वाली एक JSON स्ट्रिंग.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>एक JSON स्ट्रिंग को टाइप किए गए ऑब्जेक्ट में रूपांतरित करता है.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>स्ट्रिंग</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>टाइप की गई वस्तु में रूपांतरित करने के लिए एक JSON स्ट्रिंग.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>प्रकार</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>एक इनलाइन प्रकार परिभाषा या एक वैश्विक रूप से परिभाषित नामित प्रकार.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>तालिका में किसी दिए गए इंडेक्स पर रिकॉर्ड लौटाता है.</value>
     
@@ -2690,6 +2744,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>रिकॉर्ड का इंडेक्स जिसे पुनर्प्राप्त किया जाना है.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2776,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>बारकोड प्रकार</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2924,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>परीक्षण किया जाने वाला मान.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>पाठ के रूप में दिनांक और समय को एक संख्या के रूप में रूपांतरित करता है, जो Power Apps दिनांक-समय कोड में दिनांक को दर्शाता है.</value>
@@ -3101,7 +3203,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>निर्दिष्ट 'संग्रह' में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे कि Collect(collection, source_collection)), या एक या अधिक रेकॉर्ड Collect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
+    <value>निर्दिष्ट संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे Collect(collection, source_collection)) से हो सकते हैं, या एक या अधिक रिकॉर्ड Collect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3117,20 +3219,20 @@
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
-    <value>एक नया या मौजूदा संग्रह बढ़ाने के लिए.</value>
+    <value>एक नया या मौजूदा संग्रह बढ़ाना.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
+    <value>संग्रहित करने के लिए एक रिकॉर्ड या तालिका. संग्रह में एक रिकॉर्ड जोड़ा जाएगा. एक तालिका की पंक्तियाँ संग्रह में जोड़ी जाएँगी.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>पहले संग्रह को साफ़ करता है और 'निर्दिष्ट' संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह (जैसे कि ClearCollect(collection, source_collection)), या एक या अधिक रेकॉर्ड ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) से हो सकते हैं.</value>
+    <value>पहले संग्रह को साफ़ करता है और निर्दिष्ट संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह से हो सकते हैं (जैसे ClearCollect(collection, source_collection)) या एक या अधिक रिकॉर्ड ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
-    <value>एक नया या मौजूदा संग्रह बढ़ाने के लिए.</value>
+    <value>एक नया या मौजूदा संग्रह बढ़ाना.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>एक रेकॉर्ड या तालिका संग्रहीत करने के लिए. संग्रह में एक रेकॉर्ड जोड़ दिया जाएगा. संग्रह में तालिका की अपनी पंक्तियाँ जुड़ी होंगी.</value>
+    <value>संग्रहित करने के लिए एक रिकॉर्ड या तालिका. संग्रह में एक रिकॉर्ड जोड़ा जाएगा. एक तालिका की पंक्तियाँ संग्रह में जोड़ी जाएँगी.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>अद्यतनों को निर्दिष्ट पंक्ति पर लागू करता है और निर्दिष्ट डेटास्रोत की पंक्ति को बदलता है. अद्यतित पंक्ति लौटाता है.</value>
@@ -3266,6 +3368,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>सूत्र में स्थिति '{1}' पर अप्रत्याशित चरित्र '{0}'.</value>
     
@@ -3278,6 +3384,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3405,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>अनपेक्षित वर्ण. सूत्र में '{0}' शामिल है, जबकि '{1}' अपेक्षित है.</value>
     
@@ -3308,6 +3422,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3443,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>नाम मान्य नहीं है. इस पहचानकर्ता को पहचाना नहीं गया है.</value>
     
@@ -3338,6 +3460,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3481,10 @@
     <value>आलेख: PowerApps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>'Parent' का संदर्भ मान्य नहीं है. आप इस प्रसंग में किसी पैरेंट नियंत्रण का संदर्भ नहीं दे सकते.</value>
     
@@ -3368,6 +3498,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps में किसी कैनवास-ऐप नियंत्रण को जोड़ें और कॉन्फ़िगर करें</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3541,10 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>संख्या अपेक्षित है. हम सूत्र में इस बिंदु पर संख्या की अपेक्षा रखते हैं.</value>
     
@@ -3420,6 +3558,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3579,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>अर्धविराम अपेक्षित है. हम सूत्र में इस बिंदु पर एक अर्धविराम (:) की अपेक्षा रखते हैं.</value>
     
@@ -3452,6 +3598,10 @@
     <value>आलेख: Power Apps में पाठ, दिनांक और समय दिखाएँ</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>गैर-व्यवहार गुण में व्यवहार फ़ंक्शन. आप ऐप में कहीं और मान परिवर्तित करने के लिए इस गुण का उपयोग नहीं कर सकते.</value>
     
@@ -3465,6 +3615,10 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps में कैनवास ऐप के लिए व्यवहार सूत्रों को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3658,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>पाठ या संख्या अपेक्षित है. हम सूत्र में इस बिंदु पर किसी पाठ या संख्या की अपेक्षा रखते हैं.</value>
     
@@ -3517,6 +3675,10 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -3561,8 +3723,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3747,10 @@
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>असंगत प्रकार. डेटा स्रोत में आप जिस '{0}' स्तंभ को अद्यतित कर रहे हैं, उसके लिए '{1}' प्रकार चाहिए लेकिन आप '{2}' प्रकार का उपयोग कर रहे हैं.</value>
     
@@ -3589,8 +3763,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3785,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3807,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3834,16 @@
     <value>मॉड्यूल: बुनियादी सूत्रों का उपयोग करें</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>मॉड्यूल: तालिकाओं और रिकॉर्ड्स के साथ लेखक के बुनियादी सूत्र</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3859,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3888,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3923,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3962,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3757,7 +3987,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>यदि आपके डेटा सेट में 500 की रिकॉर्ड सीमा से अधिक लेकिन 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
+    <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
       </value>
     
   </data>
@@ -3773,8 +4003,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4039,16 @@
     <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4077,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>संदर्भ: कैनवास ऐप्स के लिए ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3898,7 +4148,7 @@
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>अनुपस्थित फ़ंक्शन रिटर्न प्रकार, उदाहरण के लिए ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>अनुपस्थित फ़ंक्शन रिटर्न प्रकार, उदाहरण के लिए "FindMonth( d:Text ):Number = Month( DateParse( d ));" में ":Number"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
@@ -3921,7 +4171,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>{1}' को '{0}' के साथ संशोधित नहीं किया जा सकता है या यह किसी मौजूदा कार्यक्षेत्र वैरिएबल, डेटा स्रोत या अन्य ऑब्जेक्ट के नाम के साथ टकराव नहीं करता है.</value>
+    <value>'{1}' को '{0}' के साथ संशोधित नहीं किया जा सकता है या यह किसी मौजूदा कार्यक्षेत्र वैरिएबल, डेटा स्रोत या अन्य ऑब्जेक्ट के नाम के साथ टकराव नहीं करता है.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4492,6 +4742,14 @@
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>अमान्य तर्क '{0}'. अपेक्षित वैध प्रकार नाम या प्रकार लिटरल.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>तर्क में असमर्थित अनटाइप्ड/JSON रूपांतरण प्रकार '{0}'.</value>
     
   </data>
 </root>
