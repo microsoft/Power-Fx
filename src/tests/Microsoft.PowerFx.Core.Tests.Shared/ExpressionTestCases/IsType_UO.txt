@@ -1,4 +1,4 @@
-#SETUP: AllowTypeLiteral, TimeZoneInfo("Pacific Standard Time")
+#SETUP: AllowTypeLiteral, TimeZoneInfo("Pacific Standard Time"), IsUserDefinedTypesEnabled
 
 // Primitives
 >> IsType(ParseJSON("987654321"), Number)
@@ -107,16 +107,16 @@ Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: I
 Error({Kind:ErrorKind.InvalidJSON})
 
 >> IsType(ParseJSON("true"), Void)
-Errors: Error 26-30: Unsupported untyped/JSON conversion type 'Void' in argument.
+Errors: Error 26-30: Unsupported type 'Void' in type argument.
 
 >> IsType(ParseJSON("{""a"": 5}"), Type({a: Number}), "Hello")
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> IsType(ParseJSON("true"), None)
-Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 26-30: Unsupported type 'ObjNull' in type argument.
 
 >> IsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
-Errors: Error 28-29: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 28-29: Unsupported type 'Color' in type argument.
 
 >> IsType(If(1/0 > 1, ParseJSON("42")), Number)
 Error({Kind:ErrorKind.Div0})

@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var config = new PowerFxConfig();
             config.EnableJsonFunctions();
+            config.Features.IsUserDefinedTypesEnabled = true;
             return new RecalcEngine(config);
         }
 
