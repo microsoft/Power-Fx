@@ -4115,6 +4115,10 @@
     <value>Именованная формула должна быть выражением.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Пользовательская функция должна иметь тело.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows может возвращать кэшированное значение. Для получения последнего количества используйте CountIf(DataSource, true).</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Неподдерживаемый тип преобразования между нетипизированным значением и JSON "{0}" в аргументе.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Достигнута максимальная глубина при обходе полезных данных JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Достигнута максимальная глубина в функции JSON.</value>
     
   </data>
 </root>

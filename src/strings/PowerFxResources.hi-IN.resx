@@ -4115,6 +4115,10 @@
     <value>नामित सूत्र एक व्यंजक होना चाहिए.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>उपयोगकर्ता-परिभाषित फ़ंक्शन में एक बॉडी होनी चाहिए.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} को प्रतिनिधि नहीं कर सकते हैं: एक व्यवहार फ़ंक्‍शन '{1}' शामिल है.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows कैश्ड मान लौटा सकती है. नवीनतम गणना प्राप्त करने के लिए CountIf(DataSource, true) का उपयोग करें.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>तर्क में असमर्थित अनटाइप्ड/JSON रूपांतरण प्रकार '{0}'.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON पेलोड को ट्रैवर्स करते समय अधिकतम गहराई तक पहुँच गया.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON फ़ंक्शन में अधिकतम लंबाई पहुँच गई.</value>
     
   </data>
 </root>

@@ -4115,6 +4115,10 @@
     <value>名前付き計算式は式である必要があります。</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>ユーザー定義関数には本文が必要です。</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows はキャッシュされた値を返す場合があります。最新の件数を取得する際は CountIf(DataSource, true) を使用します。</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>引数に存在する型指定されていない/JSON 変換型 '{0}' には対応していません。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON ペイロードを移動する際に深さの上限に到達しました。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON 関数で長さの上限に達しました。</value>
     
   </data>
 </root>
