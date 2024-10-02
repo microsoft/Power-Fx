@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Repl
         // Return true on successful load, false on failure
         private bool ResolveBody(ModulePoco poco, SymbolTable moduleExports, ReadOnlySymbolTable incomingSymbols, List<ExpressionError> errors)
         {
-            var str = poco.Formulas;
+            var str = poco.Formulas.Value;
 
             bool allowSideEffects = true;
             var options = new ParserOptions
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Repl
 
             var parseResult = UserDefinitions.Parse(str, options);
 
-            var fragmentLocation = poco.Src_Formulas;
+            var fragmentLocation = poco.Formulas.Location;
 
             // Scan for errors.
             errors.AddRange(ExpressionError.NewFragment(parseResult.Errors, str, fragmentLocation));

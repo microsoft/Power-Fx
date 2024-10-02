@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using YamlDotNet.Core;
+using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NodeDeserializers;
 
@@ -44,33 +45,13 @@ namespace Microsoft.PowerFx.Repl
 
             // Deserialize.
             var deserializer = new DeserializerBuilder()                
+                .WithTypeConverter(new StringWithSourceConverter(fullPath, txt))
                 .Build();
             var poco = deserializer.Deserialize<ModulePoco>(txt);
 
             poco.Src_Filename = fullPath;
-                        
-            poco.Src_Formulas = GetFormulaOffset(fullPath);
+
             return (poco, this);
-        }
-
-        // $$$ Must be a better way to do this!  
-        // Can we tie into lexer somehow? 
-        private static FileLocation GetFormulaOffset(string fullPath)
-        {
-            var lines = File.ReadAllLines(fullPath);
-            var iLine = lines.FindIndex(x => x.StartsWith("Formulas: |", StringComparison.Ordinal));
-
-            // Find column start
-            var colStart = lines[iLine + 1].FindIndex(x => !char.IsWhiteSpace(x));
-
-            var loc = new FileLocation
-            {
-                Filename = fullPath,
-                LineStart = iLine + 2,
-                ColStart = colStart + 1
-            };
-
-            return loc;
         }
     }
 }

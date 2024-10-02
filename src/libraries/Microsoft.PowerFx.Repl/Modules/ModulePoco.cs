@@ -20,14 +20,7 @@ namespace Microsoft.PowerFx.Repl
         /// <summary>
         /// Contain Power Fx UDF declarations. 
         /// </summary>
-        public string Formulas { get; set; }
-
-        /// <summary>
-        /// Source location of the "Formulas" property's content within the overall yaml file. 
-        /// This is set by the deserializer and not part of the yaml file contents. 
-        /// This is used for error reporting.
-        /// </summary>
-        public FileLocation Src_Formulas { get; set; }
+        public StringWithSource Formulas { get; set; }
 
         /// <summary>
         /// Set of modules that this depends on. 

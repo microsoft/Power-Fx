@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Syntax
         // 1-based index
         public int LineStart { get; init; }
 
+        // 1-based index. 
         public int ColStart { get; init; }
 
         /// <summary>

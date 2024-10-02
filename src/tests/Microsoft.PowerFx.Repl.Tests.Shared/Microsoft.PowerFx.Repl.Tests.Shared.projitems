@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MultilineProcessorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReplTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mocks\TestReplOutput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringWithSourceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Modules\" />
