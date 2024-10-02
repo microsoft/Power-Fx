@@ -25,7 +25,6 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
-using static System.Net.Mime.MediaTypeNames;
 using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
@@ -1427,19 +1426,9 @@ namespace Microsoft.PowerFx.Tests
                 });
             }
 
-            Assert.Equal(12, sqlRelationShips.Count);
-            Assert.Equal("FK_CustomerAddress_Address_AddressID, [SalesLT].[CustomerAddress], AddressID, [SalesLT].[Address], AddressID", sqlRelationShips[0].ToString());
-            Assert.Equal("FK_CustomerAddress_Customer_CustomerID, [SalesLT].[CustomerAddress], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[1].ToString());
-            Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, [SalesLT].[Product], ProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[2].ToString());
-            Assert.Equal("FK_Product_ProductModel_ProductModelID, [SalesLT].[Product], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[3].ToString());
-            Assert.Equal("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID, [SalesLT].[ProductCategory], ParentProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[4].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID, [SalesLT].[ProductModelProductDescription], ProductDescriptionID, [SalesLT].[ProductDescription], ProductDescriptionID", sqlRelationShips[5].ToString());
-            Assert.Equal("FK_ProductModelProductDescription_ProductModel_ProductModelID, [SalesLT].[ProductModelProductDescription], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[6].ToString());
-            Assert.Equal("FK_SalesOrderDetail_Product_ProductID, [SalesLT].[SalesOrderDetail], ProductID, [SalesLT].[Product], ProductID", sqlRelationShips[7].ToString());
-            Assert.Equal("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID, [SalesLT].[SalesOrderDetail], SalesOrderID, [SalesLT].[SalesOrderHeader], SalesOrderID", sqlRelationShips[8].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Address_BillTo_AddressID, [SalesLT].[SalesOrderHeader], BillToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[9].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Address_ShipTo_AddressID, [SalesLT].[SalesOrderHeader], ShipToAddressID, [SalesLT].[Address], AddressID", sqlRelationShips[10].ToString());
-            Assert.Equal("FK_SalesOrderHeader_Customer_CustomerID, [SalesLT].[SalesOrderHeader], CustomerID, [SalesLT].[Customer], CustomerID", sqlRelationShips[11].ToString());
+            Assert.Equal(2, sqlRelationShips.Count);
+            Assert.Equal("FK_Product_ProductModel_ProductModelID, [SalesLT].[Product], ProductModelID, [SalesLT].[ProductModel], ProductModelID", sqlRelationShips[0].ToString());
+            Assert.Equal("FK_Product_ProductCategory_ProductCategoryID, [SalesLT].[Product], ProductCategoryID, [SalesLT].[ProductCategory], ProductCategoryID", sqlRelationShips[1].ToString());
 
             string expected = @$"POST https://4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net/invoke
  authority: 4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net

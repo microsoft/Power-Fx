@@ -2,27 +2,6 @@
   "ResultSets": {
     "Table1": [
       {
-        "FK_Name": "FK_CustomerAddress_Address_AddressID",
-        "Parent_Table": "[SalesLT].[CustomerAddress]",
-        "Parent_Column": "AddressID",
-        "Referenced_Table": "[SalesLT].[Address]",
-        "Referenced_Column": "AddressID"
-      },
-      {
-        "FK_Name": "FK_CustomerAddress_Customer_CustomerID",
-        "Parent_Table": "[SalesLT].[CustomerAddress]",
-        "Parent_Column": "CustomerID",
-        "Referenced_Table": "[SalesLT].[Customer]",
-        "Referenced_Column": "CustomerID"
-      },
-      {
-        "FK_Name": "FK_Product_ProductCategory_ProductCategoryID",
-        "Parent_Table": "[SalesLT].[Product]",
-        "Parent_Column": "ProductCategoryID",
-        "Referenced_Table": "[SalesLT].[ProductCategory]",
-        "Referenced_Column": "ProductCategoryID"
-      },
-      {
         "FK_Name": "FK_Product_ProductModel_ProductModelID",
         "Parent_Table": "[SalesLT].[Product]",
         "Parent_Column": "ProductModelID",
@@ -30,60 +9,11 @@
         "Referenced_Column": "ProductModelID"
       },
       {
-        "FK_Name": "FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID",
-        "Parent_Table": "[SalesLT].[ProductCategory]",
-        "Parent_Column": "ParentProductCategoryID",
+        "FK_Name": "FK_Product_ProductCategory_ProductCategoryID",
+        "Parent_Table": "[SalesLT].[Product]",
+        "Parent_Column": "ProductCategoryID",
         "Referenced_Table": "[SalesLT].[ProductCategory]",
         "Referenced_Column": "ProductCategoryID"
-      },
-      {
-        "FK_Name": "FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID",
-        "Parent_Table": "[SalesLT].[ProductModelProductDescription]",
-        "Parent_Column": "ProductDescriptionID",
-        "Referenced_Table": "[SalesLT].[ProductDescription]",
-        "Referenced_Column": "ProductDescriptionID"
-      },
-      {
-        "FK_Name": "FK_ProductModelProductDescription_ProductModel_ProductModelID",
-        "Parent_Table": "[SalesLT].[ProductModelProductDescription]",
-        "Parent_Column": "ProductModelID",
-        "Referenced_Table": "[SalesLT].[ProductModel]",
-        "Referenced_Column": "ProductModelID"
-      },
-      {
-        "FK_Name": "FK_SalesOrderDetail_Product_ProductID",
-        "Parent_Table": "[SalesLT].[SalesOrderDetail]",
-        "Parent_Column": "ProductID",
-        "Referenced_Table": "[SalesLT].[Product]",
-        "Referenced_Column": "ProductID"
-      },
-      {
-        "FK_Name": "FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID",
-        "Parent_Table": "[SalesLT].[SalesOrderDetail]",
-        "Parent_Column": "SalesOrderID",
-        "Referenced_Table": "[SalesLT].[SalesOrderHeader]",
-        "Referenced_Column": "SalesOrderID"
-      },
-      {
-        "FK_Name": "FK_SalesOrderHeader_Address_BillTo_AddressID",
-        "Parent_Table": "[SalesLT].[SalesOrderHeader]",
-        "Parent_Column": "BillToAddressID",
-        "Referenced_Table": "[SalesLT].[Address]",
-        "Referenced_Column": "AddressID"
-      },
-      {
-        "FK_Name": "FK_SalesOrderHeader_Address_ShipTo_AddressID",
-        "Parent_Table": "[SalesLT].[SalesOrderHeader]",
-        "Parent_Column": "ShipToAddressID",
-        "Referenced_Table": "[SalesLT].[Address]",
-        "Referenced_Column": "AddressID"
-      },
-      {
-        "FK_Name": "FK_SalesOrderHeader_Customer_CustomerID",
-        "Parent_Table": "[SalesLT].[SalesOrderHeader]",
-        "Parent_Column": "CustomerID",
-        "Referenced_Table": "[SalesLT].[Customer]",
-        "Referenced_Column": "CustomerID"
       }
     ]
   },
