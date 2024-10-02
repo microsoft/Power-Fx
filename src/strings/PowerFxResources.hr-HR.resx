@@ -1856,7 +1856,7 @@
     
   </data>
   <data name="AboutAsType_untypedValue" xml:space="preserve">
-    <value>Netipizirana vrijednost za konverziju kao novi tip.</value>
+    <value>Netipizirana vrijednost za konverziju kao nova vrsta.</value>
   </data>
   <data name="AboutAsType_type" xml:space="preserve">
     <value>Vrstu za koju želimo koristiti određenu vrijednost.</value>
@@ -4115,6 +4115,10 @@
     <value>Imenovana formula mora biti izraz.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Korisnički definirana funkcija mora imati tijelo.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows može vratiti predmemoriranu vrijednost. Upotrijebite CountIf(DataSource, true) za dobivanje posljednjeg zbroja.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Nepodržana netipizirana/JSON vrsta pretvorbe '{0}' u argumentu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Dosegnuta je maksimalna dubina tijekom prelaska korisnih podataka JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Dosegnuta je maksimalna duljina u funkciji JSON.</value>
     
   </data>
 </root>

@@ -4115,6 +4115,10 @@
     <value>Іменована формула має бути виразом.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>У користувацької функції має бути тіло.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Команда CountRows може повернути кешоване значення. Щоб отримати актуальну кількість, використовуйте команду CountIf(DataSource, true).</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Непідтримуваний тип перетворення нетипізованих/JSON-даних '{0}' в аргументі.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Під час обходження корисних даних JSON досягнуто максимальної глибини.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Досягнуто максимальної довжини функції JSON.</value>
     
   </data>
 </root>

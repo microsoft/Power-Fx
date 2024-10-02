@@ -4115,6 +4115,10 @@
     <value>La fórmula con nombre debe ser una expresión.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>La función definida por el usuario debe tener un cuerpo.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>No se puede delegar {0}: contiene una función de comportamiento "{1}".</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows puede devolver un valor guardado en caché. Utilice CountIf(DataSource, true) para obtener el recuento más reciente.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Tipo de conversión de sin tipo / JSON "{0}" en el argumento.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Profundidad máxima alcanzada al recorrer la carga de JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Longitud máxima alcanzada en una función JSON.</value>
     
   </data>
 </root>
