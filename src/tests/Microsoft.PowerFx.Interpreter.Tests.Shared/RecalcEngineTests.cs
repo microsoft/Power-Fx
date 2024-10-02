@@ -651,22 +651,19 @@ namespace Microsoft.PowerFx.Tests
             null,
             true)]
 
-        public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedMessage, bool allowSideEffects)
+        public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedErrorKey, bool allowSideEffects)
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("a", 1m);
 
-            try
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
             {
-                engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
-                Assert.False(expectedError);
-            }
-            catch (Exception ex)
-            {
-                Assert.True(expectedError);
-                Assert.Contains(expectedMessage, ex.Message);
+                result.Errors.Any(error => error.MessageKey == expectedErrorKey);
             }
         }
 
