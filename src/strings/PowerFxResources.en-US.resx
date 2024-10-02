@@ -3626,8 +3626,8 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
-    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions. 'OnSelect', 'OnVisible', and other 'On …' properties are common behavior-based properties.</value>
-    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}{Locked=OnSelect}{Locked=OnVisible}{Locked=On}</comment>
+    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions.</value>
+    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}</comment>
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
     <value>Edit the user-defined function expression so that it is inside curly braces ({...}).</value>
