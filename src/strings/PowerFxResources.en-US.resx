@@ -4115,6 +4115,14 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    <comment>
+      This error message shows up when Named type is not a type literal. A valid type literal expression is of syntax "Type(Expression)". 
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+      Some examples for invalid named type declarations - "T1 := 5;" , "T2 := ;" , "T3 := [1, 2, 3];".
+    </comment>
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>User-defined function must have a body.</value>
     <comment>This error message shows up when user-defined function does not have a body</comment>

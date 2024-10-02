@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             SymbolValues symbolValues = new SymbolValues().Add("TeamCalendarCollection", sapTableValue);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
-            
+
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
 
@@ -915,6 +915,78 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue userName = Assert.IsType<StringValue>(result);
             Assert.Equal("Ram Sitwat", userName.Value);
+        }
+
+        [Fact]
+        public async Task ZD_CdpTabular_GetTables2()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "ca06d34f4b684e38b7cf4c0f517a7e99";
+            string uriPrefix = $"/apim/zendesk/{connectionId}";
+            string jwt = "eyJ0eXA...";
+            using var client = new PowerPlatformConnectorClient("4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net", "4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFile(@"Responses\ZD GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+            Assert.Null(dm.DatasetFormat);
+            Assert.Null(dm.Parameters);
+
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("singleton", dm.Tabular.Source);
+            Assert.Equal("table", dm.Tabular.TableDisplayName);
+            Assert.Equal("tables", dm.Tabular.TablePluralName);
+            Assert.Equal("double", dm.Tabular.UrlEncoding);
+
+            CdpDataSource cds = new CdpDataSource("default");
+
+            // only one network call as we already read metadata
+            testConnector.SetResponseFromFiles(@"Responses\ZD GetDatasetsMetadata.json", @"Responses\ZD GetTables.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(tables);
+            Assert.Equal(18, tables.Count());
+
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Tickets");
+            Assert.Equal("tickets", connectorTable.TableName);
+            Assert.False(connectorTable.IsInitialized);
+
+            testConnector.SetResponseFromFile(@"Responses\ZD Tickets GetSchema.json");
+            await connectorTable.InitAsync(client, uriPrefix, CancellationToken.None, logger);
+            Assert.True(connectorTable.IsInitialized);
+
+            CdpTableValue zdTable = connectorTable.GetTableValue();
+            Assert.True(zdTable._tabularService.IsInitialized);
+            Assert.True(zdTable.IsDelegable);
+
+            Assert.Equal(
+                "![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
+                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
+                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
+
+            SymbolValues symbolValues = new SymbolValues().Add("Tickets", zdTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Tickets).priority";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\ZD Tickets GetRows.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            OptionSetValue priority = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal("normal", priority.Option);
+            Assert.Equal("normal", priority.DisplayName);
         }
     }
 
