@@ -546,10 +546,10 @@ namespace Microsoft.PowerFx
             return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
 
-        internal void AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
+        public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
             var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions);
-            Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
+            return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
         }
     }
 }

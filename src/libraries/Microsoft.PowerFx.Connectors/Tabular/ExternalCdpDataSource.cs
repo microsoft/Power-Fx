@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public TabularDataQueryOptions QueryOptions => new TabularDataQueryOptions(this);
 
+        public bool HasCachedCountRows => false;
+
         public string Name => EntityName.Value;
 
         public bool IsSelectable => ServiceCapabilities.IsSelectable;

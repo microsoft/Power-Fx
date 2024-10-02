@@ -3,3 +3,6 @@
 // Error for unknown options in the second argument
 >> JSON({a:1,b:[1,2,3]}, "_U")
 Errors: Error 22-26: Invalid argument type (Text). Expecting a Enum (JSONFormat) value instead.
+
+>> JSON(Decimal(ParseJSON("123456789012345.6789012345678")))
+"123456789012345.6789012345678"
