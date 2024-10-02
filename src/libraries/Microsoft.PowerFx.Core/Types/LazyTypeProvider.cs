@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public LazyTypeProvider(TableParameters tableParameters)
         {
-            BackingFormulaType = tableParameters?.RecordType as AggregateType;
+            BackingFormulaType = (AggregateType)tableParameters.RecordType;
         }
 
         // Wrapper function around AggregateType.TryGetFieldType, provides caching
