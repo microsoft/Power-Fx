@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -19,6 +20,8 @@ namespace Microsoft.PowerFx.Core.Tests
         internal Features Features { get; set; }
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
+
+        internal CultureInfo CultureInfo { get; set; }
 
         /// <summary>
         /// By default, we run expressions with a memory governor to enforce a limited amount of memory. 
@@ -104,6 +107,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         // This call will throw if the Id in invalid
                         iSetup.TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(tz);
+                        parts.Remove(part);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid TimeZoneInfo setup!");
+                    }
+                }
+                else if (part.StartsWith("CultureInfo", StringComparison.OrdinalIgnoreCase))
+                {
+                    var m = new Regex(@"CultureInfo\(""(?<culture>[^)]+)""\)", RegexOptions.IgnoreCase).Match(part);
+
+                    if (m.Success)
+                    {
+                        var culture = m.Groups["culture"].Value;
+
+                        // This call will throw if the Language tag in invalid
+                        iSetup.CultureInfo = new CultureInfo(culture);
                         parts.Remove(part);
                     }
                     else
