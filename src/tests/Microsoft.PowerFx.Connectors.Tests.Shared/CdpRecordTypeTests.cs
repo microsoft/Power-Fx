@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 properties.Add($"prop{j}", new OpenApiSchema() { Type = "string" });
             }
-                       
+
             ConnectorType connectorType = new ConnectorType(SwaggerSchema.New(new OpenApiSchema() { Properties = properties }), ConnectorCompatibility.Default);
             TableParameters tableParameters = new TableParameters()
             {

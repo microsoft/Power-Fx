@@ -12,9 +12,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class CdpRecordType : RecordType
     {
-        internal ConnectorType ConnectorType { get; }        
-
-        private List<string> _fieldNames;
+        internal ConnectorType ConnectorType { get; }
 
         internal ICdpTableResolver TableResolver { get; }
 
@@ -22,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors
             : base(connectorType.DisplayNameProvider, tableParameters)
         {
             ConnectorType = connectorType;
-            TableResolver = tableResolver;           
+            TableResolver = tableResolver;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
@@ -55,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);   
+            ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);
 
             if (field.ExternalTables?.Any() != true)
             {
@@ -67,9 +65,9 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                CdpTableDescriptor ttd = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                CdpTableDescriptor tableDescriptor = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                type = ttd.FormulaType;
+                type = tableDescriptor.RecordType;
                 return true;
             }
             catch (Exception ex)
@@ -106,13 +104,6 @@ namespace Microsoft.PowerFx.Connectors
 
         public override string TableSymbolName => ConnectorType.Name;
 
-        public override IEnumerable<string> FieldNames
-        {
-            get
-            {
-                _fieldNames ??= ConnectorType.Fields.Select(field => field.Name).ToList();
-                return _fieldNames;
-            }
-        }
+        public override IEnumerable<string> FieldNames => ConnectorType.Fields.Select(field => field.Name);
     }
 }

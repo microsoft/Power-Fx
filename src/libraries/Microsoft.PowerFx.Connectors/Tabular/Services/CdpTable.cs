@@ -57,14 +57,14 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // For testing only
-        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, FormulaType formulaType, string displayName, TableParameters tableCapabilities)
+        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, FormulaType recordType, string displayName, TableParameters tableCapabilities)
             : this(dataset, tableName, datasetMetadata, new List<RawTable>() { new RawTable() { Name = tableName, DisplayName = tableName } })
         {
             TabularTableDescriptor = new CdpTableDescriptor()
             {
                 DisplayName = displayName,
                 TableParameters = tableCapabilities,
-                FormulaType = formulaType,
+                RecordType = recordType,
                 Name = tableName,
                 Relationships = null,
             };
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _relationships = TabularTableDescriptor.Relationships;
 
-            TabularRecordType = (RecordType)TabularTableDescriptor.FormulaType;
+            TabularRecordType = (RecordType)TabularTableDescriptor.RecordType;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)

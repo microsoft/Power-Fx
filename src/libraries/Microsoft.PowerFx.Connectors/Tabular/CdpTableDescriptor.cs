@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class CdpTableDescriptor
     {
-        public FormulaType FormulaType { get; init; }
+        public FormulaType RecordType { get; init; }
 
         public string Name { get; init; }
 

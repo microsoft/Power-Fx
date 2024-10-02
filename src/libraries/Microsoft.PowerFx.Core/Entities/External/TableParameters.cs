@@ -11,47 +11,69 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     public class TableParameters
     {
+        // Defines unsortable columns or columns only supporting ascending ordering
         public SortRestrictions SortRestriction { get; init; }
 
+        // Defines columns that cannot be sorted and required properties
         public FilterRestrictions FilterRestriction { get; init; }
 
+        // Used to indicate whether this table has selectable columns
         public SelectionRestrictions SelectionRestriction { get; init; }
 
+        // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
+        // Filter functions supported by all columns
         public IEnumerable<string> FilterFunctions { get; init; }
 
+        // Filter functions supported by table
         public IEnumerable<string> FilterSupportedFunctions { get; init; }
 
-        public PagingCapabilities PagingCapabilities { get; init; }
+        // Defines paging capabilities
+        internal PagingCapabilities PagingCapabilities { get; init; }
 
+        // Defined per column capabilities
         public IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
 
-        public bool SupportsDataverseOffline { get; init; }
+        // Used for offline DV tables
+        internal bool SupportsDataverseOffline { get; init; }
 
-        public bool SupportsRecordPermission { get; init; }
+        // Supports per record permission
+        internal bool SupportsRecordPermission { get; init; }
 
+        // Name of table
         public string TableName { get; init; }
 
+        // Read-Only
         public bool IsReadOnly { get; init; }
 
+        // Backing field record type
         public FormulaType RecordType { get; init; }
 
+        // Dataset name
         public string DatasetName { get; init; }
 
-        public Dictionary<string, string> ColumnsWithRelationships { get; init; }
+        // Defines columns with relationships
+        internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
         public TableParameters()
         {
+            PagingCapabilities = new PagingCapabilities()
+            {
+                IsOnlyServerPagable = false,
+                ServerPagingOptions = new string[0]
+            };
+            SupportsDataverseOffline = false;
+            SupportsRecordPermission = true;
+            ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public static TableParameters Default(string tableName, bool isReadOnly, FormulaType recordType, string datasetName, IEnumerable<string> fieldNames)
+        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName, IEnumerable<string> fieldNames)
         {
             return new TableParameters()
             {
                 TableName = tableName,
-                IsReadOnly = isReadOnly,
-                RecordType = recordType,
+                IsReadOnly = isReadOnly,                
                 DatasetName = datasetName,
                 SortRestriction = new SortRestrictions()
                 {
@@ -73,15 +95,7 @@ namespace Microsoft.PowerFx.Core.Entities
                 },
                 FilterFunctions = ColumnCapabilities.DefaultFilterFunctionSupport,
                 FilterSupportedFunctions = ColumnCapabilities.DefaultFilterFunctionSupport,
-                PagingCapabilities = new PagingCapabilities()
-                {
-                    IsOnlyServerPagable = false,
-                    ServerPagingOptions = new string[0]
-                },
-                SupportsRecordPermission = true,
-                SupportsDataverseOffline = false,
-                ColumnsCapabilities = fieldNames.Select(f => new KeyValuePair<string, ColumnCapabilitiesBase>(f, ColumnCapabilities.DefaultCdsColumnCapabilities)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
-                ColumnsWithRelationships = null
+                ColumnsCapabilities = fieldNames.Select(f => new KeyValuePair<string, ColumnCapabilitiesBase>(f, ColumnCapabilities.DefaultCdsColumnCapabilities)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
             };
         }
     }
