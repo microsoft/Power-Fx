@@ -83,11 +83,9 @@ namespace Microsoft.PowerFx.Repl
             {
                 foreach (var import in poco.Imports)
                 {
-                    int count = 0;
                     string file = import.File;
                     if (file != null)
                     {
-                        count++;
                         var m2 = await LoadAsync(file, loader2, errors).ConfigureAwait(false);
                         if (m2 == null)
                         {
@@ -97,25 +95,6 @@ namespace Microsoft.PowerFx.Repl
                         unique.VerifyUnique(m2);
                         symbolList.Add(m2.Symbols);
                     }
-
-#if false // $$$
-                    // Host symbols. 
-                    if (import.Host != null)
-                    {
-                        count++;
-                        /*
-                        if (import.Host == "json")
-                        {
-                            var st = new SymbolTable();
-                            st.EnableJson
-                        }*/
-                    }
-
-                    if (count > 0)
-                    {
-                        throw new InvalidOperationException($"Only one Import kind can be specified");
-                    }
-#endif
                 }
             }
 
