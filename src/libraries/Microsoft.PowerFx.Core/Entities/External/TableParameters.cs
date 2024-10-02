@@ -68,12 +68,13 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName, IEnumerable<string> fieldNames)
+        public static TableParameters Default(string tableName, bool isReadOnly, RecordType recordType, string datasetName, IEnumerable<string> fieldNames)
         {
             return new TableParameters()
             {
                 TableName = tableName,
-                IsReadOnly = isReadOnly,                
+                IsReadOnly = isReadOnly,
+                RecordType = recordType,
                 DatasetName = datasetName,
                 SortRestriction = new SortRestrictions()
                 {
