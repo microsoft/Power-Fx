@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core
             return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new ParserOptions() { Culture = culture }, flags, toDisplay);
         }
 
-        private static IDictionary<Span, string> GetLocaleSpecificTokenConversions(string script, TexlLexer sourceLexer, TexlLexer targetLexer)
+        internal static IDictionary<Span, string> GetLocaleSpecificTokenConversions(string script, TexlLexer sourceLexer, TexlLexer targetLexer)
         {
             var worklist = new Dictionary<Span, string>();
 

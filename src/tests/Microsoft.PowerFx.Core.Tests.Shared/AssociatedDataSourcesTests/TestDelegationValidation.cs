@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Types;
@@ -99,6 +100,39 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             // validate we can generate the display expression
             string displayExpr = engine.GetDisplayExpression(expression, symbolTable);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestCountRowsWarningForCachedData(bool isCachedData)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddEntity(new AccountsEntity(isCachedData));
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("CountRows(Accounts)");
+            Assert.True(result.IsSuccess);
+
+            if (!isCachedData)
+            {
+                Assert.Empty(result.Errors);
+            }
+            else
+            {
+                Assert.Single(result.Errors);
+                var error = result.Errors.Single();
+                Assert.Equal(ErrorSeverity.Warning, error.Severity);
+            }
+
+            // Only shows warning if data source is passed directly to CountRows
+            result = engine.Check("CountRows(Filter(Accounts, IsBlank('Address 1: City')))");
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
         }
     }
 }

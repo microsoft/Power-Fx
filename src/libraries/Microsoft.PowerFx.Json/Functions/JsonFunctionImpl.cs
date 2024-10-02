@@ -16,24 +16,30 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction4
+    internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction5
     {
-        public Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new JsonProcessing(timezoneInfo, type, args, supportsLazyTypes).Process());
+            TimeZoneInfo timeZoneInfo = runtimeServiceProvider.GetService(typeof(TimeZoneInfo)) as TimeZoneInfo ?? throw new InvalidOperationException("TimeZoneInfo is required");
+            Canceller canceller = runtimeServiceProvider.GetService(typeof(Canceller)) as Canceller ?? new Canceller(() => cancellationToken.ThrowIfCancellationRequested());
+
+            return Task.FromResult(new JsonProcessing(timeZoneInfo, type, args, supportsLazyTypes).Process(canceller));
         }
 
         internal class JsonProcessing
         {
             private readonly FormulaValue[] _arguments;
+
             private readonly FormulaType _type;
+
             private readonly TimeZoneInfo _timeZoneInfo;
+
             private readonly bool _supportsLazyTypes;
 
             internal JsonProcessing(TimeZoneInfo timezoneInfo, FormulaType type, FormulaValue[] args, bool supportsLazyTypes)
@@ -44,8 +50,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 _supportsLazyTypes = supportsLazyTypes;
             }
 
-            internal FormulaValue Process()
+            internal FormulaValue Process(Canceller canceller)
             {
+                canceller.ThrowIfCancellationRequested();
+
                 JsonFlags flags = GetFlags();
 
                 if (flags == null || JsonFunction.HasUnsupportedType(_arguments[0].Type._type, _supportsLazyTypes, out _, out _))
@@ -61,10 +69,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 using MemoryStream memoryStream = new MemoryStream();
                 using Utf8JsonWriter writer = new Utf8JsonWriter(memoryStream, new JsonWriterOptions() { Indented = flags.IndentFour, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables);
+                Utf8JsonWriterVisitor jsonWriterVisitor = new Utf8JsonWriterVisitor(writer, _timeZoneInfo, flattenValueTables: flags.FlattenValueTables, canceller);
 
-                _arguments[0].Visit(jsonWriterVisitor);
-                writer.Flush();
+                try
+                {
+                    _arguments[0].Visit(jsonWriterVisitor);
+                    writer.Flush();
+                }
+                catch (InvalidOperationException)
+                {
+                    if (!jsonWriterVisitor.ErrorValues.Any())
+                    {
+                        // Unexpected error, rethrow
+                        throw;
+                    }
+                }
 
                 if (jsonWriterVisitor.ErrorValues.Any())
                 {
@@ -104,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             optionString = sv.Value;
                             break;
 
-                        // if not one of these, will check optionString != null below
+                            // if not one of these, will check optionString != null below
                     }
 
                     if (optionString != null)
@@ -129,17 +148,58 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             private class Utf8JsonWriterVisitor : IValueVisitor
             {
+                private const int _maxDepth = 20;           // maximum depth of UO
+
+                private const int _maxLength = 1024 * 1024; // 1 MB, maximum number of bytes allowed to be sent to Utf8JsonWriter
+
                 private readonly Utf8JsonWriter _writer;
+
                 private readonly TimeZoneInfo _timeZoneInfo;
+
                 private readonly bool _flattenValueTables;
+
+                private readonly Canceller _canceller;
 
                 internal readonly List<ErrorValue> ErrorValues = new List<ErrorValue>();
 
-                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables)
+                internal Utf8JsonWriterVisitor(Utf8JsonWriter writer, TimeZoneInfo timeZoneInfo, bool flattenValueTables, Canceller canceller)
                 {
                     _writer = writer;
                     _timeZoneInfo = timeZoneInfo;
                     _flattenValueTables = flattenValueTables;
+
+                    _canceller = canceller;
+                }
+
+                private void CheckLimitsAndCancellation(int index)
+                {
+                    _canceller.ThrowIfCancellationRequested();
+
+                    if (index > _maxDepth)
+                    {
+                        IRContext irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+                        ErrorValues.Add(new ErrorValue(irContext, new ExpressionError()
+                        {
+                            ResourceKey = TexlStrings.ErrReachedMaxJsonDepth,
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        }));
+
+                        throw new InvalidOperationException($"Maximum depth {_maxDepth} reached while traversing JSON payload.");
+                    }
+
+                    if (_writer.BytesCommitted + _writer.BytesPending > _maxLength)
+                    {
+                        IRContext irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+                        ErrorValues.Add(new ErrorValue(irContext, new ExpressionError()
+                        {
+                            ResourceKey = TexlStrings.ErrReachedMaxJsonLength,
+                            Span = irContext.SourceContext,
+                            Kind = ErrorKind.InvalidArgument
+                        }));
+
+                        throw new InvalidOperationException($"Maximum length {_maxLength} reached in JSON function.");
+                    }
                 }
 
                 public void Visit(BlankValue blankValue)
@@ -173,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 public void Visit(ErrorValue errorValue)
-                {                    
+                {
                     ErrorValues.Add(errorValue);
                     _writer.WriteStringValue("ErrorValue");
                 }
@@ -256,8 +316,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     _writer.WriteStartObject();
 
-                    foreach (NamedValue namedValue in recordValue.Fields)
+                    foreach (NamedValue namedValue in recordValue.Fields.OrderBy(f => f.Name, StringComparer.Ordinal))
                     {
+                        CheckLimitsAndCancellation(0);
+
                         _writer.WritePropertyName(namedValue.Name);
                         namedValue.Value.Visit(this);
                     }
@@ -287,6 +349,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     foreach (DValue<RecordValue> row in tableValue.Rows)
                     {
+                        CheckLimitsAndCancellation(0);
+
                         if (row.IsBlank)
                         {
                             row.Blank.Visit(this);
@@ -319,7 +383,77 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 public void Visit(UntypedObjectValue untypedObjectValue)
                 {
-                    throw new ArgumentException($"Unable to serialize type {untypedObjectValue.GetType().FullName} to Json format.");
+                    Visit(untypedObjectValue.Impl);
+                }
+
+                private void Visit(IUntypedObject untypedObject, int depth = 0)
+                {
+                    FormulaType type = untypedObject.Type;
+
+                    CheckLimitsAndCancellation(depth);
+
+                    if (type is StringType)
+                    {
+                        _writer.WriteStringValue(untypedObject.GetString());
+                    }
+                    else if (type is DecimalType)
+                    {
+                        _writer.WriteNumberValue(untypedObject.GetDecimal());
+                    }
+                    else if (type is NumberType)
+                    {
+                        _writer.WriteNumberValue(untypedObject.GetDouble());
+                    }
+                    else if (type is BooleanType)
+                    {
+                        _writer.WriteBooleanValue(untypedObject.GetBoolean());
+                    }
+                    else if (type is ExternalType externalType)
+                    {
+                        if (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject)
+                        {
+                            _writer.WriteStartArray();
+
+                            for (var i = 0; i < untypedObject.GetArrayLength(); i++)
+                            {
+                                CheckLimitsAndCancellation(depth);
+
+                                IUntypedObject row = untypedObject[i];
+                                Visit(row, depth + 1);
+                            }
+
+                            _writer.WriteEndArray();
+                        }
+                        else if ((externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject) && untypedObject.TryGetPropertyNames(out IEnumerable<string> propertyNames))
+                        {
+                            _writer.WriteStartObject();
+
+                            foreach (var propertyName in propertyNames.OrderBy(prop => prop, StringComparer.Ordinal))
+                            {
+                                CheckLimitsAndCancellation(depth);
+
+                                if (untypedObject.TryGetProperty(propertyName, out IUntypedObject res))
+                                {
+                                    _writer.WritePropertyName(propertyName);
+                                    Visit(res, depth + 1);
+                                }
+                            }
+
+                            _writer.WriteEndObject();
+                        }
+                        else if (externalType.Kind == ExternalTypeKind.UntypedNumber)
+                        {
+                            _writer.WriteRawValue(untypedObject.GetUntypedNumber());
+                        }
+                        else
+                        {
+                            throw new NotSupportedException("Unknown ExternalType");
+                        }
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("Unknown IUntypedObject");
+                    }
                 }
 
                 public void Visit(BlobValue value)
@@ -332,7 +466,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         _writer.WriteBase64StringValue(value.GetAsByteArrayAsync(CancellationToken.None).Result);
                     }
-                }                
+                }
             }
 
             internal static string GetColorString(Color color) => $"#{color.R:x2}{color.G:x2}{color.B:x2}{color.A:x2}";

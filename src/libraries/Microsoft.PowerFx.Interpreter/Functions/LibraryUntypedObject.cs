@@ -423,7 +423,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 return new NumberValue(irContext, impl.GetArrayLength());
             }
@@ -452,7 +452,7 @@ namespace Microsoft.PowerFx.Functions
             var impl = (args[0] as UntypedObjectValue).Impl;
             var propertyName = (args[1] as StringValue).Value;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 if (impl.TryGetProperty(propertyName, out var propertyValue))
                 {

@@ -1176,6 +1176,23 @@ namespace Microsoft.PowerFx.Connectors
                     JsonElement title = ExtractFromJson(jElement, cdv.ValueTitle);
                     JsonElement value = ExtractFromJson(jElement, cdv.ValuePath);
 
+                    // Note: Some connectors have misalignment between the Swagger definition and the actual response, caused suggestion API
+                    // returning empty result. For example, Teams declares the GetMessageLocations response as List<{id, displayName}> but
+                    // in fact returns List<{value, displayName}>.
+                    // Fallback to "displayName" and "value" which are the most commonly used property names in suggestion response.
+                    if (ConnectorSettings?.AllowSuggestionMappingFallback == true)
+                    {
+                        if (title.ValueKind == JsonValueKind.Undefined)
+                        {
+                            title = ExtractFromJson(jElement, "displayName");
+                        }
+
+                        if (value.ValueKind == JsonValueKind.Undefined)
+                        {
+                            value = ExtractFromJson(jElement, "value");
+                        }
+                    }
+
                     if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)
                     {
                         continue;
@@ -1214,6 +1231,19 @@ namespace Microsoft.PowerFx.Connectors
             {
                 JsonElement title = ExtractFromJson(jElement, cdl.ItemTitlePath);
                 JsonElement value = ExtractFromJson(jElement, cdl.ItemValuePath);
+
+                if (ConnectorSettings?.AllowSuggestionMappingFallback == true)
+                {
+                    if (title.ValueKind == JsonValueKind.Undefined)
+                    {
+                        title = ExtractFromJson(jElement, "displayName");
+                    }
+
+                    if (value.ValueKind == JsonValueKind.Undefined)
+                    {
+                        value = ExtractFromJson(jElement, "value");
+                    }
+                }
 
                 if (title.ValueKind == JsonValueKind.Undefined || value.ValueKind == JsonValueKind.Undefined)
                 {
