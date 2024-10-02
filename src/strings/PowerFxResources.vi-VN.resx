@@ -4115,6 +4115,10 @@
     <value>Công thức được đặt tên phải là một biểu thức.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Hàm do người dùng xác định phải có nội dung.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chứa hàm hành vi "{1}".</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows có thể trả về giá trị được lưu trong bộ đệm ẩn. Hãy dùng hàm CountIf(DataSource, true) để lấy số lượng mới nhất.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Loại chuyển đổi JSON/chưa được phân loại '{0}' không được hỗ trợ trong đối số.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Đã đạt đến độ sâu tối đa trong khi chuyển ngang tải trọng JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Đã đạt đến độ dài tối đa trong hàm JSON.</value>
     
   </data>
 </root>

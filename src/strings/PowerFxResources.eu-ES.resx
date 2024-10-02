@@ -4115,6 +4115,10 @@
     <value>Izendatutako formulak adierazpen bat izan behar du.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Erabiltzaileak definitutako funtzioak gorputz bat izan behar du.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: "{1}" portaera-funtzioa dauka.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Baliteke CountRows-ek cachean gordetako balio bat itzultzea. Erabili CountIf(DataSource, true) azken zenbaketa lortzeko.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Argumentuan "{0}" motako onartu gabeko motarik gabeko/JSON bihurketa</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Gehieneko sakonerara iritsi da JSON karga aztertu bitartean.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Gehieneko luzerara iritsi da JSON funtzioan.</value>
     
   </data>
 </root>

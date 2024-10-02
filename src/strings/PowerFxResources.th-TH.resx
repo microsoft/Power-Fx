@@ -4115,6 +4115,10 @@
     <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>ฟังก์ชันที่ผู้ใช้กำหนดต้องมีเนื้อหา</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows อาจส่งคืนค่าที่เก็บไว้ในแคช ใช้ CountIf(DataSource, true) เพื่อรับจำนวนล่าสุด</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>ชนิดการแปลงที่ไม่ได้ระบุชนิด/JSON '{0}' ที่ไม่รองรับในอาร์กิวเมนต์</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>ความลึกสูงสุดที่เข้าถึงขณ ะส่งผ่านส่วนข้อมูล JSON</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>ถึงความยาวสูงสุดในฟังก์ชัน JSON แล้ว</value>
     
   </data>
 </root>

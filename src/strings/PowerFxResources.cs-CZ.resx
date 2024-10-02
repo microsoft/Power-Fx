@@ -4115,6 +4115,10 @@
     <value>Pojmenovaný vzorec musí být výraz.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Uživatelem definovaná funkce musí mít text.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nelze delegovat {0}: obsahuje funkci chování '{1}'.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows může vrátit hodnotu uloženou v mezipaměti. Pomocí CountIf(DataSource, true) získáte nejnovější počet.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Nepodporovaný typ konverze bez definovaného typu / JSON „{0}“ v argumentu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Při procházení datové části JSON bylo dosaženo maximální hloubky.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Ve funkci JSON byla dosažena maximální délka.</value>
     
   </data>
 </root>
