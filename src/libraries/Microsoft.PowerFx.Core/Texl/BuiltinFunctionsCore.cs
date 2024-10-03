@@ -128,6 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsBlankOrError = _library.Add(new IsBlankOrErrorFunction());
         public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
         public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
+        public static readonly TexlFunction IsEmpty_UO = _library.Add(new IsEmptyFunction_UO());
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
@@ -254,7 +255,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
-        public static readonly TexlFunction IsEmpty_UO = _featureGateFunctions.Add(new IsEmptyFunction_UO());
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
