@@ -4828,7 +4828,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    if (_txb.BindingConfig.UserDefinitionsMode)
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorFunctionInDataUDF);
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    }
                 }
 
                 // Test-only functions can only be used within test cases.
@@ -5136,6 +5143,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (argCount < func.MinArity || argCount > func.MaxArity)
                 {
                     ArityError(func.MinArity, func.MaxArity, node, argCount, _txb.ErrorContainer);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
+                if (!_features.IsUserDefinedTypesEnabled)
+                {
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUserDefinedTypesDisabled);
                     _txb.SetInfo(node, new CallInfo(func, node));
                     _txb.SetType(node, DType.Error);
                     return;

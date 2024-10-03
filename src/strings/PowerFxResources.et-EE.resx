@@ -4115,6 +4115,10 @@
     <value>Nimega valem peab olema avaldis.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Kasutaja määratletud funktsioonil peab olema sisu.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows võib tagastada vahemällu salvestatud väärtuse. Uusima arvu toomiseks kasutage parameetrit CountIf(DataSource, true).</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Toetuseta tüübita/JSON-i teisenduse tüüp „{0}“ argumendis.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON-i lasti läbimisel on saavutatud sügavuse maksimum.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON-i funktsioonis on jõutud pikkuse ülempiirini.</value>
     
   </data>
 </root>

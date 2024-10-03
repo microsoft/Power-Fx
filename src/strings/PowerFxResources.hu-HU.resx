@@ -4115,6 +4115,10 @@
     <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>A felhasználó által definiált függvénynek rendelkeznie kell egy törzzsel.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>A CountRows gyorsítótárazott értéket adhat vissza. A legújabb mennyiség beolvasása érdekében használja a CountIf(DataSource, true) függvényt.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Nem támogatott típus nélküli/JSON átalakítási típus a(z) „{0}” argumentumban.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Elérte a maximális mélységet a JSON hasznos adat végigjárása során.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Elérte a JSON függvény maximális hosszát.</value>
     
   </data>
 </root>
