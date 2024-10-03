@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Behavior function in a non-behavior user-defined function (UDF). Please wrap the user-defined function body with curly braces ({...}) to declare a behavior UDF.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions.</value>
+    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit the user-defined function expression so that it is inside curly braces ({...}).</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test function in a non-test property. You can't use this property to invoke test-only functions.</value>
     <comment>Error Message. The term 'Test' is an adjective ('Test function' = 'function for testing').</comment>

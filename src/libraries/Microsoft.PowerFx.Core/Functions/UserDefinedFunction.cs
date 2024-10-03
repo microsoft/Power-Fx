@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new InvalidOperationException($"Body should only get bound once: {this.Name}");
             }
 
-            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
+            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative, userDefinitionsMode: true);
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
