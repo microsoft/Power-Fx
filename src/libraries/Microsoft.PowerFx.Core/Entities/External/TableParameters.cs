@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
@@ -47,9 +46,6 @@ namespace Microsoft.PowerFx.Core.Entities
         // Read-Only
         public bool IsReadOnly { get; init; }
 
-        // Backing field record type
-        public FormulaType RecordType { get; init; }
-
         // Dataset name
         public string DatasetName { get; init; }
 
@@ -68,13 +64,12 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public static TableParameters Default(string tableName, bool isReadOnly, RecordType recordType, string datasetName, IEnumerable<string> fieldNames)
+        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName, IEnumerable<string> fieldNames)
         {
             return new TableParameters()
             {
                 TableName = tableName,
-                IsReadOnly = isReadOnly,
-                RecordType = recordType,
+                IsReadOnly = isReadOnly,                
                 DatasetName = datasetName,
                 SortRestriction = new SortRestrictions()
                 {

@@ -127,9 +127,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static TableParameters ToTableParameters(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
-        {
-            FormulaType recordType = connectorType.FormulaType;
-
+        {            
             SortRestrictions sortRestriction = new SortRestrictions()
             {
                 AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
@@ -173,8 +171,7 @@ namespace Microsoft.PowerFx.Connectors
             return new TableParameters()
             {
                 TableName = tableName,
-                IsReadOnly = isReadOnly,
-                RecordType = recordType,
+                IsReadOnly = isReadOnly,               
                 DatasetName = datasetName,
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,

@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.IPostCheckErrorHandler",
-
+                "Microsoft.PowerFx.ITabularFieldAccessor",
                 "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols

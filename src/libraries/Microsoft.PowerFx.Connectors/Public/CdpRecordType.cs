@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ICdpTableResolver TableResolver { get; }
 
         internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableParameters tableParameters)
-            : base(connectorType.DisplayNameProvider, tableParameters)
+            : base(new CdpFieldAccessor(connectorType), connectorType.DisplayNameProvider, tableParameters)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
@@ -47,13 +47,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool TryGetFieldType(string fieldName, out FormulaType type)
         {
-            if (!base.TryGetBackingDType(fieldName, out _))
+            ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);
+
+            if (field == null)
             {
                 type = null;
                 return false;
             }
-
-            ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);
 
             if (field.ExternalTables?.Any() != true)
             {

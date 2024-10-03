@@ -44,8 +44,7 @@ namespace Microsoft.PowerFx.Tests
             ConnectorType connectorType = new ConnectorType(SwaggerSchema.New(new OpenApiSchema() { Properties = properties }), ConnectorCompatibility.Default);
             TableParameters tableParameters = new TableParameters()
             {
-                TableName = "test",
-                RecordType = connectorType.FormulaType
+                TableName = "test"
             };
 
             CdpRecordType cdpRecordType = new CdpRecordType(connectorType, null, tableParameters);

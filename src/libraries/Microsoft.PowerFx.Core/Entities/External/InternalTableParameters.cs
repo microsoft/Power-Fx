@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
@@ -21,34 +22,23 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(TableParameters tableParameters)
-        {
-            DType type = tableParameters.RecordType._type;
-
-            string GetDisplayName(string fieldName)
+        public InternalTableParameters(DType dType, ITabularFieldAccessor fieldAccessor, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        {            
+            string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;            
+            DType GetFieldType(string fieldName) => fieldAccessor.TryGetFieldType(fieldName, out FormulaType ft) ? ft._type : DType.ObjNull /* Blank */;
+            DataFormat? ToDataFormat(DType dType) => dType.Kind switch
             {
-                DisplayNameProvider dnp = type.DisplayNameProvider;
-                return dnp == null || !dnp.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
-            }
-
-            DType GetFieldType(string fieldName) => type.TryGetType(new DName(fieldName), out var dType) ? dType : DType.ObjNull /* Blank */;
-
-            DataFormat? ToDataFormat(DType dType)
-            {
-                return dType.Kind switch
-                {
-                    DKind.Record or DKind.Table or DKind.OptionSetValue => DataFormat.Lookup,
-                    DKind.String or DKind.Decimal or DKind.Number or DKind.Currency => DataFormat.AllowedValues,
-                    _ => null
-                };
-            }
+                DKind.Record or DKind.Table or DKind.OptionSetValue => DataFormat.Lookup,
+                DKind.String or DKind.Decimal or DKind.Number or DKind.Currency => DataFormat.AllowedValues,
+                _ => null
+            };            
 
             EntityName = new DName(tableParameters.TableName);
             IsWritable = !tableParameters.IsReadOnly;
             _tableParameters = tableParameters;
-            _type = type;
+            _type = dType;
 
-            IEnumerable<string> fieldNames = type.GetRootFieldNames().Select(name => name.Value);
+            IEnumerable<string> fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value);
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
@@ -57,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Entities
             _externalTableMetadata = new InternalTableMetadata(Name, Name, tableParameters.IsReadOnly, columns);
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
             _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));
-            _delegationMetadata = new DelegationMetadataBase(type, new CompositeCapabilityMetadata(type, GetCapabilityMetadata(type, tableParameters)));
+            _delegationMetadata = new DelegationMetadataBase(dType, new CompositeCapabilityMetadata(dType, GetCapabilityMetadata(dType, tableParameters)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
 

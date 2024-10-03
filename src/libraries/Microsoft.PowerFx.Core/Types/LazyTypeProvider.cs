@@ -5,7 +5,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -33,9 +32,23 @@ namespace Microsoft.PowerFx.Core.Types
             BackingFormulaType = type;
         }
 
-        public LazyTypeProvider(TableParameters tableParameters)
+        public LazyTypeProvider(DisplayNameProvider displayNameProvider, ITabularFieldAccessor accessor)
         {
-            BackingFormulaType = (AggregateType)tableParameters.RecordType;
+            RecordType recordType = RecordType.Empty();
+
+            foreach (KeyValuePair<DName, DName> field in displayNameProvider.LogicalToDisplayPairs)
+            {
+                string logicalName = field.Key.Value;
+                string displayName = field.Value.Value;
+
+                if (accessor.TryGetFieldType(logicalName, out FormulaType type))
+                {
+
+                    recordType = recordType.Add(field.Key.Value, type, displayName);
+                }
+            }
+
+            BackingFormulaType = recordType;
         }
 
         // Wrapper function around AggregateType.TryGetFieldType, provides caching
@@ -61,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Beyond that scenario, fully expanding a lazy type is inefficient and should be avoided
         internal DType GetExpandedType(bool isTable)
         {
-            var fields = FieldNames.Select(field => 
+            var fields = FieldNames.Select(field =>
                 TryGetFieldType(field, out var type) ?
                     new TypedName(type, field) :
                     throw new InvalidOperationException($"Fx type of field {field} not found"));
