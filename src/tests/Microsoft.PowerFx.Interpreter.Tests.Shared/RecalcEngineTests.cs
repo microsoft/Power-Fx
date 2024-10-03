@@ -729,20 +729,14 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("x", 1m);
 
-            try
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
             {
-                engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
-                Assert.False(expectedError);
-            }
-            catch (Exception ex)
-            {
-                Assert.True(expectedError);
-                Assert.Contains(expectedMessage, ex.Message);
-                var func = engine.Functions.WithName(name).FirstOrDefault() as UserDefinedFunction;
-                Assert.NotNull(func);
-                var error = func.Binding.ErrorContainer.GetErrors().FirstOrDefault(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
+                var error = result.Errors.First(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
                 Assert.NotNull(error);
-                var span = error.TextSpan;
+                var span = error.Span;
                 Assert.True(span.Min == min && span.Lim == lim);
             }
         }
