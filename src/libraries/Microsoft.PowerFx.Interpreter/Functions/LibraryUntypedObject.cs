@@ -69,6 +69,19 @@ namespace Microsoft.PowerFx.Functions
             return new UntypedObjectValue(irContext, result);
         }
 
+        public static FormulaValue IsEmpty_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var element = args[0].Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return FormulaValue.New(true);
+            }
+
+            return FormulaValue.New(false);
+        }
+
         public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
