@@ -849,5 +849,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
         public static ErrorResourceKey ErrReachedMaxJsonDepth = new ErrorResourceKey("ErrReachedMaxJsonDepth");
         public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
+
+        public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
     }
 }

@@ -128,6 +128,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsBlankOrError = _library.Add(new IsBlankOrErrorFunction());
         public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
         public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
+        public static readonly TexlFunction IsEmpty_UO = _library.Add(new IsEmptyFunction_UO());
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());

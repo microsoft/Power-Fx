@@ -5148,6 +5148,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (!_features.IsUserDefinedTypesEnabled)
+                {
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUserDefinedTypesDisabled);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
                 Contracts.Assert(argCount > 1);
                 Contracts.AssertValue(args[1]);
 

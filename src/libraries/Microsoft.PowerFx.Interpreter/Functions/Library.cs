@@ -983,6 +983,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsEmpty)
             },
             {
+                BuiltinFunctionsCore.IsEmpty_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.IsEmpty_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectArrayChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: IsEmpty_UO)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 NoErrorHandling(IsError)
             },
