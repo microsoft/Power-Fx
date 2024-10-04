@@ -713,13 +713,18 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
 
-        // Behavior function in imperative udf
         [InlineData(
             "MismatchType():Number = { 1+3; Color.Blue; };",
             true,
             true,
             36,
             41)]
+        [InlineData(
+            "MatchType():Text = { 4; 3 };",
+            false,
+            true,
+            0,
+            0)]
         public void TestMismatchReturnType(string udfExpression, bool expectedError, bool allowSideEffects, int min, int lim)
         {
             var config = new PowerFxConfig();
