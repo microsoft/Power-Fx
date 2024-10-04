@@ -711,6 +711,39 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+
+        [InlineData(
+            "MismatchType():Number = { 1+3; Color.Blue; };",
+            true,
+            true,
+            36,
+            41)]
+        [InlineData(
+            "MatchType():Text = { 4; 3 };",
+            false,
+            true,
+            0,
+            0)]
+        public void TestMismatchReturnType(string udfExpression, bool expectedError, bool allowSideEffects, int min, int lim)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", 1m);
+
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
+            {
+                var error = result.Errors.First(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
+                Assert.NotNull(error);
+                var span = error.Span;
+                Assert.True(span.Min == min && span.Lim == lim);
+            }
+        }
+
         [Fact]
 
         public void DelegableUDFTest()
