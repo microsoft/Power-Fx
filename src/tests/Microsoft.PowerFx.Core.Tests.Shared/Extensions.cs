@@ -164,9 +164,15 @@ namespace Microsoft.PowerFx.Core.Tests
                         sb.Append('~');
                         sb.Append(remoteTable);
                         sb.Append(':');
-                    }
 
-                    if (ads.Type.TryGetType(new DName(fieldName), out DType type2))
+                        if (!internalTableParameters.TabularRecordType.TryGetFieldType(fieldName, true, out FormulaType backingFieldType))
+                        {
+                            throw new InvalidOperationException();
+                        }
+
+                        sb.Append(backingFieldType._type.ToString());
+                    }
+                    else if (ads.Type.TryGetType(new DName(fieldName), out DType type2))
                     {
                         sb.Append(type2.ToString());
                     }

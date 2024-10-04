@@ -9,7 +9,6 @@ using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -41,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType[] HiddenFields { get; }
 
         // FormulaType
-        public FormulaType FormulaType { get; private set; }
+        public FormulaType FormulaType { get; internal set; }
 
         // "x-ms-explicit-input"
         public bool ExplicitInput { get; }
@@ -279,12 +278,7 @@ namespace Microsoft.PowerFx.Connectors
             ExternalTables.Add(relationship.ReferencedTable);
             RelationshipName = relationship.RelationshipName;
             ForeignKey = relationship.ReferencedColumnName;
-        }
-
-        internal void SetType(ICdpTableResolver tableResolver, TableParameters tableParameters)
-        {            
-            FormulaType = new CdpRecordType(this, tableResolver, tableParameters);
-        }      
+        }          
 
         private void AggregateErrors(ConnectorType[] types)
         {
@@ -323,6 +317,36 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public bool Equals(ConnectorType other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return GetHashCode() == other.GetHashCode();            
+        }
+
+        public new int GetHashCode()
+        {
+            int h = 5381;
+
+            h = Hashing.CombineHash(h, Name?.GetHashCode() ?? 0);
+            h = Hashing.CombineHash(h, DisplayName?.GetHashCode() ?? 0);
+                        
+            foreach (ConnectorType field in Fields)
+            {
+                h = Hashing.CombineHash(h, field.GetHashCode());
+            }
+
+            return h;
         }
     }
 }

@@ -47,9 +47,9 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public RecordType(ITabularFieldAccessor fieldAccessor, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
-            : base(fieldAccessor, false, displayNameProvider, tableParameters)
-        {
+        public RecordType(DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+            : base(false, displayNameProvider, tableParameters)
+        {            
         }        
 
         public override void Visit(ITypeVisitor vistor)

@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                (FormulaType recordType, IReadOnlyDictionary<string, Relationship> rels) = ConnectorFunction.GetTypeWithAdsAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableParameters tableParameters);
+                (TabularRecordType recordType, IReadOnlyDictionary<string, Relationship> rels) = ConnectorFunction.GetTypeWithAdsAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableParameters tableParameters);
 
                 return new CdpTableDescriptor() { RecordType = recordType, Name = name, DisplayName = displayName, TableParameters = tableParameters, Relationships = rels };
             }

@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ColumnCapabilitiesDefinition
+    public sealed class ColumnCapabilitiesDefinition
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctions)]

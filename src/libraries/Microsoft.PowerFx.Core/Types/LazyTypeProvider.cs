@@ -32,25 +32,6 @@ namespace Microsoft.PowerFx.Core.Types
             BackingFormulaType = type;
         }
 
-        public LazyTypeProvider(DisplayNameProvider displayNameProvider, ITabularFieldAccessor accessor)
-        {
-            RecordType recordType = RecordType.Empty();
-
-            foreach (KeyValuePair<DName, DName> field in displayNameProvider.LogicalToDisplayPairs)
-            {
-                string logicalName = field.Key.Value;
-                string displayName = field.Value.Value;
-
-                if (accessor.TryGetFieldType(logicalName, out FormulaType type))
-                {
-
-                    recordType = recordType.Add(field.Key.Value, type, displayName);
-                }
-            }
-
-            BackingFormulaType = recordType;
-        }
-
         // Wrapper function around AggregateType.TryGetFieldType, provides caching
         // in case computing field types is non-trivial for derived AggregateTypes.
         internal bool TryGetFieldType(DName name, out DType type)

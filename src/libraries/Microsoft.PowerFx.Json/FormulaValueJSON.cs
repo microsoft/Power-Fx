@@ -248,7 +248,11 @@ namespace Microsoft.PowerFx.Types
                 var value = pair.Value;
                 FormulaType fieldType = null;
 
-                if (recordType?.TryGetFieldType(name, out fieldType) == false)
+                bool? present = recordType is TabularRecordType trt 
+                    ? trt.TryGetFieldType(name, true, out fieldType) // do not use relationships to deserialize
+                    : recordType?.TryGetFieldType(name, out fieldType);
+
+                if (present == false)
                 {
                     if (!settings.AllowUnknownRecordFields)
                     {

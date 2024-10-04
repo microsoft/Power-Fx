@@ -33,24 +33,14 @@ namespace Microsoft.PowerFx.Types
         }
 
         public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
-            : this(null, isTable, displayNameProvider, null)
+            : this(isTable, displayNameProvider, null)
         {
         }
 
-        public AggregateType(ITabularFieldAccessor fieldAccessor, bool isTable, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        public AggregateType(bool isTable, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
             : base()
-        {            
-            if (tableParameters == null)
-            {
-                _type = new DType(new LazyTypeProvider(this), isTable, displayNameProvider);
-                return;
-            }
-            
-            _type = new DType(new LazyTypeProvider(displayNameProvider, fieldAccessor), isTable, displayNameProvider);
-
-            IExternalTabularDataSource dataSource = new InternalTableParameters(_type, fieldAccessor, displayNameProvider, tableParameters);
-
-            _type = DType.AttachDataSourceInfo(_type, dataSource);
+        {
+            _type = new DType(new LazyTypeProvider(this), isTable, displayNameProvider);                 
         }
         
         public FormulaType GetFieldType(string fieldName)
@@ -89,6 +79,15 @@ namespace Microsoft.PowerFx.Types
                 }
             }
             
+            //if (this is TabularRecordType trt)
+            //{
+            //    if (trt.TryGetFieldType(fieldName, true, out FormulaType ft))
+            //    {
+            //        type = ft._type;
+            //        return true;
+            //    }
+            //}
+
             return _type.TryGetType(new DName(fieldName), out type);
         }
 

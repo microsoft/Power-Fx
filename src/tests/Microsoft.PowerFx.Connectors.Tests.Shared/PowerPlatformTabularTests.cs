@@ -663,11 +663,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal("Account", sfTable.TabularRecordType.TableSymbolName);
 
-            RecordType rt = sfTable.TabularRecordType;
-            NamedFormulaType nft = rt.GetFieldTypes().First(nf => nf.Name == "AccountSource");
-            
-            Assert.Equal("Account Source", nft.DisplayName);
+            TabularRecordType rt = sfTable.TabularRecordType;            
 
+            Assert.True(rt.TryGetFieldType("AccountSource", true, out FormulaType ft));
+            
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
 

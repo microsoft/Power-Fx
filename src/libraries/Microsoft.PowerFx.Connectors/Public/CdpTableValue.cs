@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal readonly HttpClient HttpClient;
 
-        public RecordType TabularRecordType => _tabularService?.TabularRecordType;
+        public TabularRecordType TabularRecordType => _tabularService?.TabularRecordType;
         
         internal CdpTableValue(CdpService tabularService, IReadOnlyDictionary<string, Relationship> relationships)
             : base(IRContext.NotInSource(tabularService.TableType))

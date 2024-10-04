@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
@@ -64,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName, IEnumerable<string> fieldNames)
+        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName)
         {
             return new TableParameters()
             {
@@ -90,8 +91,7 @@ namespace Microsoft.PowerFx.Core.Entities
                     UngroupableProperties = new List<string>()
                 },
                 FilterFunctions = ColumnCapabilities.DefaultFilterFunctionSupport,
-                FilterSupportedFunctions = ColumnCapabilities.DefaultFilterFunctionSupport,
-                ColumnsCapabilities = fieldNames.Select(f => new KeyValuePair<string, ColumnCapabilitiesBase>(f, ColumnCapabilities.DefaultCdsColumnCapabilities)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                FilterSupportedFunctions = ColumnCapabilities.DefaultFilterFunctionSupport                
             };
         }
     }
@@ -170,6 +170,23 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public ColumnCapabilitiesDefinition()
         {
+        }
+
+        internal DelegationCapability ToDelegationCapability()
+        {
+            DelegationCapability columnDelegationCapability = DelegationCapability.None;
+
+            foreach (string columnFilterFunction in FilterFunctions)
+            {
+                if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
+                {
+                    columnDelegationCapability |= filterFunctionCapability;
+                }
+            }
+
+            columnDelegationCapability |= DelegationCapability.Filter;
+
+            return columnDelegationCapability;
         }
     }
 

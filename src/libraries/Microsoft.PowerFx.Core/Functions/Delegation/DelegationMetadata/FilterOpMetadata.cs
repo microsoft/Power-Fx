@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 {
@@ -11,19 +13,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     internal sealed class FilterOpMetadata : OperationCapabilityMetadata
     {
         private readonly Dictionary<DPath, DelegationCapability> _columnCapabilities;
+
         private readonly Dictionary<DPath, DelegationCapability> _columnRestrictions;
+
         private readonly DelegationCapability? _filterFunctionsSupportedByTable;
 
         // Filter functions supported at the table level.
         // If no capability at column level specified then this would be the default filter functionality supported by column.
         private readonly DelegationCapability _defaultCapabilities;
 
-        public FilterOpMetadata(
-            DType tableSchema,
-            Dictionary<DPath, DelegationCapability> columnRestrictions,
-            Dictionary<DPath, DelegationCapability> columnCapabilities,
-            DelegationCapability filterFunctionsSupportedByAllColumns,
-            DelegationCapability? filterFunctionsSupportedByTable)
+        public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions, Dictionary<DPath, DelegationCapability> columnCapabilities, DelegationCapability filterFunctionsSupportedByAllColumns, DelegationCapability? filterFunctionsSupportedByTable)
             : base(tableSchema)
         {
             Contracts.AssertValue(columnRestrictions);
@@ -33,6 +32,22 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _columnRestrictions = columnRestrictions;
             _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
             _defaultCapabilities = filterFunctionsSupportedByAllColumns;
+
+            if (_filterFunctionsSupportedByTable != null)
+            {
+                _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
+            }
+        }
+
+        public FilterOpMetadata(AggregateType schema, DelegationCapability filterFunctionsSupportedByAllColumns, DelegationCapability? filterFunctionsSupportedByTable)
+            : base(schema)
+        {
+            _columnCapabilities = null;
+            _columnRestrictions = null;
+
+            _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
+            _defaultCapabilities = filterFunctionsSupportedByAllColumns;
+
             if (_filterFunctionsSupportedByTable != null)
             {
                 _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
@@ -55,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 {
                     // If there are no capabilities defined at column level then filter is not supported.
                     // Otherwise this simply means that filter operators at table level are not supported.
-                    // For example, Filter(CDS, Lower(Col1) != Lower(Col2)), here != operator at table level needs to be supported as it's not operating on any column directly. 
+                    // For example, Filter(CDS, Lower(Col1) != Lower(Col2)), here != operator at table level needs to be supported as it's not operating on any column directly.
                     if (DefaultColumnCapabilities.Capabilities == DelegationCapability.None)
                     {
                         return DelegationCapability.None;
@@ -71,6 +86,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public override bool TryGetColumnCapabilities(DPath columnPath, out DelegationCapability capabilities)
         {
             Contracts.AssertValid(columnPath);
+
+            if (_columnCapabilities == null)
+            {
+                ColumnCapabilitiesDefinition columnCapabilityDefinition = _type.GetColumnCapability(columnPath.Name.Value);
+                capabilities = columnCapabilityDefinition.ToDelegationCapability();
+                return true;
+            }
 
             // See if there is a specific capability defined for column.
             // If not then just return default one.

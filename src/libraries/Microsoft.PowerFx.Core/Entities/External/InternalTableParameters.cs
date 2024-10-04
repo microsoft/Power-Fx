@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -22,32 +21,23 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(DType dType, ITabularFieldAccessor fieldAccessor, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
-        {            
-            string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;            
-            DType GetFieldType(string fieldName) => fieldAccessor.TryGetFieldType(fieldName, out FormulaType ft) ? ft._type : DType.ObjNull /* Blank */;
-            DataFormat? ToDataFormat(DType dType) => dType.Kind switch
-            {
-                DKind.Record or DKind.Table or DKind.OptionSetValue => DataFormat.Lookup,
-                DKind.String or DKind.Decimal or DKind.Number or DKind.Currency => DataFormat.AllowedValues,
-                _ => null
-            };            
+        public InternalTableParameters(AggregateType aType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        {
+            string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
 
             EntityName = new DName(tableParameters.TableName);
             IsWritable = !tableParameters.IsReadOnly;
             _tableParameters = tableParameters;
-            _type = dType;
+            _type = aType._type;
+            TabularRecordType = (TabularRecordType)aType;
 
             IEnumerable<string> fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value);
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
-
-            List<ColumnMetadata> columns = fieldNames.Select(f => new ColumnMetadata(f, GetFieldType(f), ToDataFormat(GetFieldType(f)), GetDisplayName(f), false /* is read-only */, false /* primary key */, false /* isRequired */, ColumnCreationKind.UserProvided, ColumnVisibility.Default, f, f, f, null, null)).ToList();
-
-            _externalTableMetadata = new InternalTableMetadata(Name, Name, tableParameters.IsReadOnly, columns);
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
-            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));
-            _delegationMetadata = new DelegationMetadataBase(dType, new CompositeCapabilityMetadata(dType, GetCapabilityMetadata(dType, tableParameters)));
+            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));            
+            _externalTableMetadata = new InternalTableMetadata(aType, Name, Name, tableParameters.IsReadOnly);
+            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(aType, tableParameters)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
 
@@ -100,6 +90,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
         DType IExternalEntity.Type => _type;
 
+        public TabularRecordType TabularRecordType { get; }
+
         public bool IsPageable => _tableParameters.PagingCapabilities.IsOnlyServerPagable || IsDelegatable;
 
         public bool IsConvertingDisplayNameMapping => false;
@@ -134,8 +126,10 @@ namespace Microsoft.PowerFx.Core.Entities
             throw new System.NotImplementedException();
         }
 
-        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(DType type, TableParameters tableParameters)
+        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType atype, TableParameters tableParameters)
         {
+            DType type = atype._type;
+
             DPath GetDPath(string prop) => DPath.Root.Append(new DName(prop));
 
             void AddOrUpdate(Dictionary<DPath, DelegationCapability> dic, string prop, DelegationCapability capability)
@@ -154,57 +148,59 @@ namespace Microsoft.PowerFx.Core.Entities
 
             List<OperationCapabilityMetadata> capabilities = new List<OperationCapabilityMetadata>();
 
-            Dictionary<DPath, DelegationCapability> columnRestrictions = new Dictionary<DPath, DelegationCapability>();
+            // *** Keeping this code for now
 
-            if (tableParameters?.FilterRestriction?.NonFilterableProperties != null)
-            {
-                foreach (string nonFilterableProperties in tableParameters.FilterRestriction.NonFilterableProperties)
-                {
-                    AddOrUpdate(columnRestrictions, nonFilterableProperties, DelegationCapability.Filter);
-                }
-            }
+            //Dictionary<DPath, DelegationCapability> columnRestrictions = new Dictionary<DPath, DelegationCapability>();
 
-            Dictionary<DPath, DelegationCapability> columnCapabilities = new Dictionary<DPath, DelegationCapability>();
+            //if (tableParameters?.FilterRestriction?.NonFilterableProperties != null)
+            //{
+            //    foreach (string nonFilterableProperties in tableParameters.FilterRestriction.NonFilterableProperties)
+            //    {
+            //        AddOrUpdate(columnRestrictions, nonFilterableProperties, DelegationCapability.Filter);
+            //    }
+            //}
 
-            if (tableParameters?.ColumnsCapabilities != null)
-            {
-                foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
-                {
-                    if (kvp.Value is ColumnCapabilities cc)
-                    {
-                        DelegationCapability columnDelegationCapability = DelegationCapability.None;
+            //Dictionary<DPath, DelegationCapability> columnCapabilities = new Dictionary<DPath, DelegationCapability>();
 
-                        if (cc.Capabilities?.FilterFunctions != null)
-                        {
-                            foreach (string columnFilterFunction in cc.Capabilities.FilterFunctions)
-                            {
-                                if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
-                                {
-                                    columnDelegationCapability |= filterFunctionCapability;
-                                }
-                            }
-                        }
+            //if (tableParameters?.ColumnsCapabilities != null)
+            //{
+            //    foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
+            //    {
+            //        if (kvp.Value is ColumnCapabilities cc)
+            //        {
+            //            DelegationCapability columnDelegationCapability = DelegationCapability.None;
 
-                        if (columnDelegationCapability.Capabilities != DelegationCapability.None && !columnRestrictions.ContainsKey(GetDPath(kvp.Key)))
-                        {
-                            AddOrUpdate(columnCapabilities, kvp.Key, columnDelegationCapability | DelegationCapability.Filter);
-                        }
+            //            if (cc.Capabilities?.FilterFunctions != null)
+            //            {
+            //                foreach (string columnFilterFunction in cc.Capabilities.FilterFunctions)
+            //                {
+            //                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
+            //                    {
+            //                        columnDelegationCapability |= filterFunctionCapability;
+            //                    }
+            //                }
+            //            }
 
-                        if (cc.Capabilities.IsChoice == true && !columnRestrictions.ContainsKey(GetDPath(IsChoiceValue)))
-                        {
-                            AddOrUpdate(columnCapabilities, IsChoiceValue, columnDelegationCapability | DelegationCapability.Filter);
-                        }
-                    }
-                    else if (kvp.Value is ComplexColumnCapabilities)
-                    {
-                        throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-                    }
-                }
-            }
+            //            if (columnDelegationCapability.Capabilities != DelegationCapability.None && !columnRestrictions.ContainsKey(GetDPath(kvp.Key)))
+            //            {
+            //                AddOrUpdate(columnCapabilities, kvp.Key, columnDelegationCapability | DelegationCapability.Filter);
+            //            }
+
+            //            if (cc.Capabilities.IsChoice == true && !columnRestrictions.ContainsKey(GetDPath(IsChoiceValue)))
+            //            {
+            //                AddOrUpdate(columnCapabilities, IsChoiceValue, columnDelegationCapability | DelegationCapability.Filter);
+            //            }
+            //        }
+            //        else if (kvp.Value is ComplexColumnCapabilities)
+            //        {
+            //            throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
+            //        }
+            //        else
+            //        {
+            //            throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
+            //        }
+            //    }
+            //}
 
             DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
 
@@ -246,35 +242,37 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
 
-            if (tableParameters?.ColumnsCapabilities != null)
-            {
-                foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
-                {
-                    if (kvp.Value is ColumnCapabilities cc)
-                    {
-                        DPath columnPath = GetDPath(kvp.Key);
-                        DelegationCapability columnDelegationCapability = DelegationCapability.None;
+            // *** Keeping this code for now
 
-                        if (cc.Capabilities.IsChoice == true)
-                        {
-                            oDataReplacements.Add(columnPath.Append(GetDPath(IsChoiceValue)), columnPath);
-                        }
+            //if (tableParameters?.ColumnsCapabilities != null)
+            //{
+            //    foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
+            //    {
+            //        if (kvp.Value is ColumnCapabilities cc)
+            //        {
+            //            DPath columnPath = GetDPath(kvp.Key);
+            //            DelegationCapability columnDelegationCapability = DelegationCapability.None;
 
-                        if (!string.IsNullOrEmpty(cc.Capabilities.QueryAlias))
-                        {
-                            oDataReplacements.Add(columnPath, GetReplacementPath(cc.Capabilities.QueryAlias, columnPath));
-                        }
-                    }
-                    else if (kvp.Value is ComplexColumnCapabilities)
-                    {
-                        throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-                    }
-                }
-            }
+            //            if (cc.Capabilities.IsChoice == true)
+            //            {
+            //                oDataReplacements.Add(columnPath.Append(GetDPath(IsChoiceValue)), columnPath);
+            //            }
+
+            //            if (!string.IsNullOrEmpty(cc.Capabilities.QueryAlias))
+            //            {
+            //                oDataReplacements.Add(columnPath, GetReplacementPath(cc.Capabilities.QueryAlias, columnPath));
+            //            }
+            //        }
+            //        else if (kvp.Value is ComplexColumnCapabilities)
+            //        {
+            //            throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
+            //        }
+            //        else
+            //        {
+            //            throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
+            //        }
+            //    }
+            //}
 
             Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
 
@@ -294,7 +292,9 @@ namespace Microsoft.PowerFx.Core.Entities
                 }
             }
 
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(type, columnRestrictions, columnCapabilities, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
+            // Passing aggregate type
+            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(atype, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
+
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);

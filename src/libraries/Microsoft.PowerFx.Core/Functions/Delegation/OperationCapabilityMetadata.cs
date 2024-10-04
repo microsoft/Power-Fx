@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
@@ -16,7 +17,18 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             Contracts.AssertValid(schema);
 
             Schema = schema;
+            _type = null;
         }
+
+        public OperationCapabilityMetadata(AggregateType schema)
+        {
+            Contracts.Assert(schema is TabularRecordType);
+
+            _type = (TabularRecordType)schema;
+            Schema = schema._type;
+        }
+
+        public readonly TabularRecordType _type;
 
         protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions => new Dictionary<DPath, DelegationCapability>();
 

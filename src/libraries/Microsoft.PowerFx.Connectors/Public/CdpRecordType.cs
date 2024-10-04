@@ -10,14 +10,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class CdpRecordType : RecordType
+    internal class CdpRecordType : TabularRecordType
     {
         internal ConnectorType ConnectorType { get; }
 
         internal ICdpTableResolver TableResolver { get; }
 
         internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableParameters tableParameters)
-            : base(new CdpFieldAccessor(connectorType), connectorType.DisplayNameProvider, tableParameters)
+            : base(connectorType.DisplayNameProvider, tableParameters)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
@@ -28,14 +28,9 @@ namespace Microsoft.PowerFx.Connectors
             tableName = null;
             foreignKey = null;
 
-            if (!base.TryGetBackingDType(fieldName, out _))
-            {
-                return false;
-            }
-
             ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
-            if (connectorType.ExternalTables?.Any() != true)
+            if (connectorType == null || connectorType.ExternalTables?.Any() != true)
             {
                 return false;
             }
@@ -45,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        public override bool TryGetFieldType(string fieldName, out FormulaType type)
+        public override bool TryGetFieldType(string fieldName, bool ignorelationship, out FormulaType type)
         {
             ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);
 
@@ -55,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            if (field.ExternalTables?.Any() != true)
+            if (field.ExternalTables?.Any() != true || ignorelationship)
             {
                 type = field.FormulaType;
                 return true;
@@ -77,6 +72,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        public override Core.Entities.ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
+        {
+            // No need to implement as column capabilities are retrieved from CDP schema
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(object other)
         {
             if (object.ReferenceEquals(this, other))
@@ -84,17 +85,12 @@ namespace Microsoft.PowerFx.Connectors
                 return true;
             }
 
-            if (other is not RecordType otherRecordType || otherRecordType._type.Kind != _type.Kind)
+            if (other is not CdpRecordType otherRecordType)
             {
                 return false;
             }
 
-            if (_type.IsLazyType && otherRecordType._type.IsLazyType && _type.IsRecord == otherRecordType._type.IsRecord)
-            {
-                return _type.LazyTypeProvider.BackingFormulaType.Equals(otherRecordType._type.LazyTypeProvider.BackingFormulaType);
-            }
-
-            return _type.Equals(otherRecordType._type);
+            return ConnectorType.Equals(otherRecordType.ConnectorType);
         }
 
         public override int GetHashCode()

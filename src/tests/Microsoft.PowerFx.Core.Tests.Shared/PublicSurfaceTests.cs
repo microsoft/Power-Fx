@@ -46,8 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
-                "Microsoft.PowerFx.IPostCheckErrorHandler",
-                "Microsoft.PowerFx.ITabularFieldAccessor",
+                "Microsoft.PowerFx.IPostCheckErrorHandler",                
                 "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols
@@ -159,6 +158,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.StringValue",
                 "Microsoft.PowerFx.Types.TableType",
                 "Microsoft.PowerFx.Types.TableValue",
+                "Microsoft.PowerFx.Types.TabularRecordType",
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
