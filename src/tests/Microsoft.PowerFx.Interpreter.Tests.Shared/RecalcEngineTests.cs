@@ -715,10 +715,8 @@ namespace Microsoft.PowerFx.Tests
 
         // Behavior function in imperative udf
         [InlineData(
-            "MismatchType",
             "MismatchType():Number = { 1+3; Color.Blue; };",
             true,
-            "does not match the return type of the function body",
             true,
             36,
             41)]
