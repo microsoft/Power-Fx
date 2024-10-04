@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Types
         private readonly IEnumerable<string> _fieldNames; 
 
         public TabularRecordType(DisplayNameProvider displayNameProvider, TableParameters tableParameters)
-            : base(displayNameProvider, tableParameters)
+            : base(displayNameProvider)
         {
             _type = DType.AttachDataSourceInfo(_type, new InternalTableParameters(this, displayNameProvider, tableParameters));            
             _fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value).ToList();
