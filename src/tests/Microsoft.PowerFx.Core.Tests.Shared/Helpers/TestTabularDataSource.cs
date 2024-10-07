@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public DType Schema => throw new NotImplementedException();
 
-        public BidirectionalDictionary<string, string> DisplayNameMapping => throw new NotImplementedException();
+        public BidirectionalDictionary<string, string> DisplayNameMapping => new BidirectionalDictionary<string, string>();
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => throw new NotImplementedException();
 
