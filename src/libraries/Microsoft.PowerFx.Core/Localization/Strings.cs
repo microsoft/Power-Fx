@@ -677,6 +677,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColonExpected = new ErrorResourceKey("ErrColonExpected");
         public static ErrorResourceKey ErrExpectedDataSourceRestriction = new ErrorResourceKey("ErrExpectedDataSourceRestriction");
         public static ErrorResourceKey ErrBehaviorPropertyExpected = new ErrorResourceKey("ErrBehaviorPropertyExpected");
+        public static ErrorResourceKey ErrBehaviorFunctionInDataUDF = new ErrorResourceKey("ErrBehaviorFunctionInDataUDF");
         public static ErrorResourceKey ErrTestPropertyExpected = new ErrorResourceKey("ErrTestPropertyExpected");
         public static ErrorResourceKey ErrStringExpected = new ErrorResourceKey("ErrStringExpected");
         public static ErrorResourceKey ErrDateExpected = new ErrorResourceKey("ErrDateExpected");
@@ -848,5 +849,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
         public static ErrorResourceKey ErrReachedMaxJsonDepth = new ErrorResourceKey("ErrReachedMaxJsonDepth");
         public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
+
+        public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
     }
 }

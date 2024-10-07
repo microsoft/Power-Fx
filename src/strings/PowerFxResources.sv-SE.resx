@@ -4115,6 +4115,10 @@
     <value>Den namngivna formeln måste vara ett uttryck.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>En användardefinierad funktion måste ha en brödtext.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows kan returnera ett cachelagrat värde. Använd CountIf(DataSource, true) för att få det senaste värdet.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>I argumentet finns den typlösa/JSON-konverteringstypen {0} som inte stöds.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximalt djup uppnått vid genomgång av JSON-nyttolast.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximal längd uppnådd i JSON-funktion.</value>
     
   </data>
 </root>

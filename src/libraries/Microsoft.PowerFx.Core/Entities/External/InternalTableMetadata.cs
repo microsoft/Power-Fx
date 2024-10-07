@@ -13,14 +13,14 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     internal class InternalTableMetadata : IExternalTableMetadata
     {        
-        private readonly AggregateType _type;
+        private readonly TabularRecordType _type;
 
         public InternalTableMetadata(AggregateType tabularRecordType, string name, string displayName, bool isReadOnly, string parameterPkColumnName = "")
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertNonEmpty(displayName);
 
-            _type = tabularRecordType;
+            _type = (TabularRecordType)tabularRecordType;
 
             Name = name;
             DisplayName = displayName;
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Contracts.AssertNonEmpty(columnName);
 
-            if (_type.TryGetFieldType(columnName, out FormulaType ft))
+            if (_type.TryGetFieldType(columnName, true, out FormulaType ft))
             {
                 column = new ColumnMetadata(
                     columnName,

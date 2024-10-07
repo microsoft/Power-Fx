@@ -26,10 +26,11 @@ namespace Microsoft.PowerFx.Json.Tests
             AllowParseAsTypeLiteral = true,
         };
 
-        private RecalcEngine SetupEngine()
+        private RecalcEngine SetupEngine(bool udtFeaturedEnabled = true)
         {
             var config = new PowerFxConfig();
             config.EnableJsonFunctions();
+            config.Features.IsUserDefinedTypesEnabled = udtFeaturedEnabled;
             return new RecalcEngine(config);
         }
 
@@ -146,6 +147,18 @@ namespace Microsoft.PowerFx.Json.Tests
                 Assert.False(result.IsSuccess);
                 Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
             }
+        }
+
+        [Theory]
+        [InlineData("AsType(ParseJSON(\"123\"), Number)")]
+        [InlineData("IsType(ParseJSON(\"123\"), Type(Number))")]
+        [InlineData("ParseJSON(\"\"\"Hello\"\"\", Type(Text))")]
+        public void TestCompileErrorsWithUDTFeatureDisabled(string expression)
+        {
+            var engine = SetupEngine(udtFeaturedEnabled: false);
+            var result = engine.Check(expression);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == "ErrUserDefinedTypesDisabled");
         }
 
         [Fact]

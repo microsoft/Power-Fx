@@ -4115,6 +4115,10 @@
     <value>Наименуваната формула трябва да бъде израз.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Дефинираната от потребителя функция трябва да има тяло.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Не може да се делегира {0}: съдържа функция за поведение „{1}“.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows може да върне кеширана стойност. Използвайте CountIf(DataSource, true), за да получите актуалната стойност за броя.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Неподдържан нетипизиран тип/тип преобразуване JSON „{0}“ в аргумента.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>При изследването на полезния обем в JSON бе достигната максималната дълбочина.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Във функцията в JSON бе достигната максималната дължина.</value>
     
   </data>
 </root>

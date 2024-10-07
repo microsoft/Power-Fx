@@ -214,8 +214,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
 
             // Note relationships to ProductCategory and ProductModel with ~ notation
-            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~ProductCategory:w, ProductID:w, ProductModelID:~ProductModel:w, ProductNumber:s, SellEndDate:d, " +
-                                 "SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~[SalesLT].[ProductCategory]:w, ProductID:w, ProductModelID:~[SalesLT].[ProductModel]:w, ProductNumber:s, " +
+                                 "SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -239,7 +239,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             bool b = sqlTable.TabularRecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.True(b);
-            Assert.Equal("ProductModel", externalTableName); // Display Name
+            Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
             Assert.Equal("ProductModelID", foreignKey);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");

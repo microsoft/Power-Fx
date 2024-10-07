@@ -4115,6 +4115,10 @@
     <value>이름이 지정된 수식은 식이어야 합니다.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>사용자 정의 함수에는 본문이 있어야 합니다.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0}을(를) 위임할 수 없음: 동작 함수 '{1}'을(를) 포함합니다.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows는 캐시된 값을 반환할 수 있습니다. CountIf(DataSource, true)를 사용하여 최신 카운트를 가져옵니다.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>인수에 미지원 형식화되지 않은/JSON 변환 유형 '{0}'이(가) 있습니다.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON 페이로드를 트래버스하는 동안 최대 깊이에 도달했습니다.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON 함수의 최대 길이에 도달했습니다.</value>
     
   </data>
 </root>
