@@ -33,13 +33,13 @@ namespace Microsoft.PowerFx.Tests
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 
-            (FormulaType ctCdp, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctPa, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
-            (FormulaType ctSw, var _) = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
+            ConnectorType ctCdp = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _);
+            ConnectorType ctPa = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _);
+            ConnectorType ctSw = ConnectorFunction.GetTypeWithAdsAndRelationships(tableResolver, "name", "schema/items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _);
 
-            string cdp = ctCdp.ToStringWithDisplayNames();
-            string pa = ctPa.ToStringWithDisplayNames();
-            string sw = ctSw.ToStringWithDisplayNames();
+            string cdp = ctCdp.FormulaType.ToStringWithDisplayNames();
+            string pa = ctPa.FormulaType.ToStringWithDisplayNames();
+            string sw = ctSw.FormulaType.ToStringWithDisplayNames();
 
             // CDP compatibility: priority is an enum, when "format": "enum" isn't present
             Assert.Equal<object>("r![Id1`'User ID 1':s, Id3`'User ID 3':s, Id4`'User ID 4':s, priority`Priority:l, priority2`'Priority 2':l]", cdp);

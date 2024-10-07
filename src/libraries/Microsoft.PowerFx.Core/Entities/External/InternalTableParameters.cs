@@ -21,28 +21,30 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(AggregateType aType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        public InternalTableParameters(AggregateType tabularRecordType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
         {
             string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
 
             EntityName = new DName(tableParameters.TableName);
             IsWritable = !tableParameters.IsReadOnly;
             _tableParameters = tableParameters;
-            _type = aType._type;
-            TabularRecordType = (TabularRecordType)aType;
+            _type = tabularRecordType._type;
+            TabularRecordType = (TabularRecordType)tabularRecordType;
 
             IEnumerable<string> fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value);
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
             _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));            
-            _externalTableMetadata = new InternalTableMetadata(aType, Name, Name, tableParameters.IsReadOnly);
-            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(aType, tableParameters)));
+            _externalTableMetadata = new InternalTableMetadata(tabularRecordType, Name, Name, tableParameters.IsReadOnly);
+            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(tabularRecordType, tableParameters)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
 
             ColumnsWithRelationships = tableParameters.ColumnsWithRelationships;
         }
+
+        public TableParameters TableParameters => _tableParameters;
 
         private readonly TableParameters _tableParameters;
 
@@ -126,9 +128,9 @@ namespace Microsoft.PowerFx.Core.Entities
             throw new System.NotImplementedException();
         }
 
-        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType atype, TableParameters tableParameters)
+        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType tabularRecordType, TableParameters tableParameters)
         {
-            DType type = atype._type;
+            DType type = tabularRecordType._type;
 
             DPath GetDPath(string prop) => DPath.Root.Append(new DName(prop));
 
@@ -144,64 +146,8 @@ namespace Microsoft.PowerFx.Core.Entities
                 {
                     dic[dPath] = new DelegationCapability(existingCapability.Capabilities | capability.Capabilities);
                 }
-            }
-
-            List<OperationCapabilityMetadata> capabilities = new List<OperationCapabilityMetadata>();
-
-            // *** Keeping this code for now
-
-            //Dictionary<DPath, DelegationCapability> columnRestrictions = new Dictionary<DPath, DelegationCapability>();
-
-            //if (tableParameters?.FilterRestriction?.NonFilterableProperties != null)
-            //{
-            //    foreach (string nonFilterableProperties in tableParameters.FilterRestriction.NonFilterableProperties)
-            //    {
-            //        AddOrUpdate(columnRestrictions, nonFilterableProperties, DelegationCapability.Filter);
-            //    }
-            //}
-
-            //Dictionary<DPath, DelegationCapability> columnCapabilities = new Dictionary<DPath, DelegationCapability>();
-
-            //if (tableParameters?.ColumnsCapabilities != null)
-            //{
-            //    foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
-            //    {
-            //        if (kvp.Value is ColumnCapabilities cc)
-            //        {
-            //            DelegationCapability columnDelegationCapability = DelegationCapability.None;
-
-            //            if (cc.Capabilities?.FilterFunctions != null)
-            //            {
-            //                foreach (string columnFilterFunction in cc.Capabilities.FilterFunctions)
-            //                {
-            //                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
-            //                    {
-            //                        columnDelegationCapability |= filterFunctionCapability;
-            //                    }
-            //                }
-            //            }
-
-            //            if (columnDelegationCapability.Capabilities != DelegationCapability.None && !columnRestrictions.ContainsKey(GetDPath(kvp.Key)))
-            //            {
-            //                AddOrUpdate(columnCapabilities, kvp.Key, columnDelegationCapability | DelegationCapability.Filter);
-            //            }
-
-            //            if (cc.Capabilities.IsChoice == true && !columnRestrictions.ContainsKey(GetDPath(IsChoiceValue)))
-            //            {
-            //                AddOrUpdate(columnCapabilities, IsChoiceValue, columnDelegationCapability | DelegationCapability.Filter);
-            //            }
-            //        }
-            //        else if (kvp.Value is ComplexColumnCapabilities)
-            //        {
-            //            throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-            //        }
-            //        else
-            //        {
-            //            throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-            //        }
-            //    }
-            //}
-
+            }            
+            
             DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
 
             if (tableParameters?.FilterFunctions != null)
@@ -238,41 +184,7 @@ namespace Microsoft.PowerFx.Core.Entities
                 {
                     AddOrUpdate(groupByRestrictions, ungroupableProperty, DelegationCapability.Group);
                 }
-            }
-
-            Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
-
-            // *** Keeping this code for now
-
-            //if (tableParameters?.ColumnsCapabilities != null)
-            //{
-            //    foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in tableParameters.ColumnsCapabilities)
-            //    {
-            //        if (kvp.Value is ColumnCapabilities cc)
-            //        {
-            //            DPath columnPath = GetDPath(kvp.Key);
-            //            DelegationCapability columnDelegationCapability = DelegationCapability.None;
-
-            //            if (cc.Capabilities.IsChoice == true)
-            //            {
-            //                oDataReplacements.Add(columnPath.Append(GetDPath(IsChoiceValue)), columnPath);
-            //            }
-
-            //            if (!string.IsNullOrEmpty(cc.Capabilities.QueryAlias))
-            //            {
-            //                oDataReplacements.Add(columnPath, GetReplacementPath(cc.Capabilities.QueryAlias, columnPath));
-            //            }
-            //        }
-            //        else if (kvp.Value is ComplexColumnCapabilities)
-            //        {
-            //            throw new NotImplementedException($"ComplexColumnCapabilities not supported yet");
-            //        }
-            //        else
-            //        {
-            //            throw new NotImplementedException($"Unknown ColumnCapabilitiesBase, type {kvp.Value.GetType().Name}");
-            //        }
-            //    }
-            //}
+            }            
 
             Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
 
@@ -292,19 +204,20 @@ namespace Microsoft.PowerFx.Core.Entities
                 }
             }
 
-            // Passing aggregate type
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(atype, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
-
+            Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
+            
+            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(tabularRecordType, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
 
-            capabilities.Add(filterOpMetadata);
-            capabilities.Add(groupOpMetadata);
-            capabilities.Add(oDataOpMetadata);
-            capabilities.Add(sortOpMetadata);
-
-            return capabilities;
+            return new List<OperationCapabilityMetadata>()
+            {
+                filterOpMetadata,
+                groupOpMetadata,
+                oDataOpMetadata,
+                sortOpMetadata
+            };            
         }
 
         internal static DPath GetReplacementPath(string alias, DPath currentColumnPath)

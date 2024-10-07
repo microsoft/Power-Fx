@@ -25,12 +25,10 @@ namespace Microsoft.PowerFx.Connectors
         [JsonPropertyName(Constants.XMsCapabilities)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ColumnCapabilitiesDefinition Capabilities;
-
-        public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
-
-        public static ColumnCapabilities DefaultCdsColumnCapabilities => new ColumnCapabilities()
+        
+        public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
         {
-            Capabilities = new ColumnCapabilitiesDefinition(DefaultFilterFunctionSupport, null, null),
+            Capabilities = new ColumnCapabilitiesDefinition(null),
             _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>()
         };
 
@@ -68,7 +66,11 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return new ColumnCapabilities(new ColumnCapabilitiesDefinition(filterFunctions, propertyAlias, isChoice));
+            return new ColumnCapabilities(new ColumnCapabilitiesDefinition(filterFunctions)
+            {
+                QueryAlias = propertyAlias,
+                IsChoice = isChoice
+            });
         }
     }
 }

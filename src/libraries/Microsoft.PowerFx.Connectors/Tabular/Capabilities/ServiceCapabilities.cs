@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
 // as it defines CapabilitiesConstants which has invalid values.
@@ -133,19 +132,23 @@ namespace Microsoft.PowerFx.Connectors
                 AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
                 UnsortableProperties = serviceCapabilities?.SortRestriction?.UnsortableProperties
             };
+
             FilterRestrictions filterRestriction = new FilterRestrictions()
             {
                 RequiredProperties = serviceCapabilities?.FilterRestriction?.RequiredProperties,
                 NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
             };
+            
             SelectionRestrictions selectionRestriction = new SelectionRestrictions()
             {
                 IsSelectable = serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false
             };
+            
             GroupRestrictions groupRestriction = new GroupRestrictions()
             {
                 UngroupableProperties = serviceCapabilities?.GroupRestriction?.UngroupableProperties
             };
+            
             Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
             {
                 IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
@@ -194,14 +197,6 @@ namespace Microsoft.PowerFx.Connectors
 
             _columnsCapabilities ??= new Dictionary<string, ColumnCapabilitiesBase>();
             _columnsCapabilities.Add(name, capability);
-        }
-
-        public void AddColumnCapabilities(IEnumerable<string> fieldNames = null)
-        {
-            foreach (string fieldName in fieldNames)
-            {
-                AddColumnCapability(fieldName, ColumnCapabilities.DefaultCdsColumnCapabilities);
-            }
         }
 
         // From PowerApps-Client repo, src\AppMagic\dll\AuthoringCore\Importers\DataDescription\ServiceCapabilitiesParser.cs

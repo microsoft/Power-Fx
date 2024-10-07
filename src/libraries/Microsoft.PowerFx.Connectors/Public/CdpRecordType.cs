@@ -60,9 +60,9 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                CdpTableDescriptor tableDescriptor = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                ConnectorType connectorType = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                type = tableDescriptor.RecordType;
+                type = connectorType.FormulaType;
                 return true;
             }
             catch (Exception ex)

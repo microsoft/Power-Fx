@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType[] HiddenFields { get; }
 
         // FormulaType
-        public FormulaType FormulaType { get; internal set; }
+        public FormulaType FormulaType { get; private set; }
 
         // "x-ms-explicit-input"
         public bool ExplicitInput { get; }
@@ -201,6 +201,19 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships)
             : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
         {
+        }
+
+        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
+        {
+            Name = name;
+
+            foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
+            {                
+                serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+            }                           
+
+            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToTableParameters(serviceCapabilities, name, isTableReadOnly, this, datasetName));
         }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)

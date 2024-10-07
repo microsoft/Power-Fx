@@ -27,13 +27,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool IsDelegable => (TableParameters?.SortRestriction != null) || (TableParameters?.FilterRestriction != null) || (TableParameters?.FilterFunctions != null);
 
-        internal TableParameters TableParameters => TabularTableDescriptor.TableParameters;
+        internal TableParameters TableParameters => ((InternalTableParameters)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).TableParameters;
 
         internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 
         internal DatasetMetadata DatasetMetadata;
 
-        internal CdpTableDescriptor TabularTableDescriptor;
+        internal ConnectorType TabularTableDescriptor;
 
         internal IReadOnlyCollection<RawTable> Tables;
 
@@ -54,20 +54,6 @@ namespace Microsoft.PowerFx.Connectors
             : this(dataset, table, tables)
         {
             DatasetMetadata = datasetMetadata;
-        }
-
-        // For testing only
-        public CdpTable(string dataset, string tableName, DatasetMetadata datasetMetadata, string displayName, TableParameters tableCapabilities)
-            : this(dataset, tableName, datasetMetadata, new List<RawTable>() { new RawTable() { Name = tableName, DisplayName = tableName } })
-        {
-            TabularTableDescriptor = new CdpTableDescriptor()
-            {
-                DisplayName = displayName,
-                TableParameters = tableCapabilities,
-                RecordType = null,
-                Name = tableName,
-                Relationships = null,
-            };
         }
 
         //// TABLE METADATA SERVICE
@@ -95,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _relationships = TabularTableDescriptor.Relationships;
 
-            TabularRecordType = TabularTableDescriptor.RecordType;
+            TabularRecordType = (TabularRecordType)TabularTableDescriptor.FormulaType;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)

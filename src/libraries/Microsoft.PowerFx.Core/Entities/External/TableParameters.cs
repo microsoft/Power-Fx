@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
 
-        public static ColumnCapabilities DefaultCdsColumnCapabilities => new ColumnCapabilities()
+        public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
         {
             Capabilities = new ColumnCapabilitiesDefinition()
             {
@@ -157,16 +157,23 @@ namespace Microsoft.PowerFx.Core.Entities
     }
 
     public sealed class ColumnCapabilitiesDefinition
-    {
-        // ex: lt, le, eq, ne, gt, ge, and, or, not, contains, startswith, endswith, countdistinct, day, month, year, time
-        public IEnumerable<string> FilterFunctions { get; init; }
-
-        // used to rename column names
-        // used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/AppMagic/js/Core/Core.Data/ConnectedDataDeserialization/TabularDataDeserialization.ts&_a=contents&version=GBmaster
-        public string QueryAlias { get; init; }
+    {        
+        public IEnumerable<string> FilterFunctions
+        {
+            get => _filterFunctions ?? DefaultFilterFunctionSupport;
+            set => _filterFunctions = value;
+        }
+        
+        // used in PowerApps-Client/src/AppMagic/js/Core/Core.Data/ConnectedDataDeserialization/TabularDataDeserialization.ts
+        internal string QueryAlias { get; init; }
 
         // sharepoint delegation specific
-        public bool? IsChoice { get; init; }
+        internal bool? IsChoice { get; init; }
+
+        private IEnumerable<string> _filterFunctions;
+
+        // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
+        public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
 
         public ColumnCapabilitiesDefinition()
         {

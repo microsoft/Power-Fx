@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -73,15 +72,6 @@ namespace Microsoft.PowerFx.Types
                     return false;
                 }
             }
-            
-            //if (this is TabularRecordType trt)
-            //{
-            //    if (trt.TryGetFieldType(fieldName, true, out FormulaType ft))
-            //    {
-            //        type = ft._type;
-            //        return true;
-            //    }
-            //}
 
             return _type.TryGetType(new DName(fieldName), out type);
         }

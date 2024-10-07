@@ -1007,42 +1007,23 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static (TabularRecordType, IReadOnlyDictionary<string, Relationship>) GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableParameters tableParameters)
+        internal static ConnectorType GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableParameters tableParameters)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
+            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(stringValue.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
+
             ServiceCapabilities serviceCapabilities = tableSchema.GetTableCapabilities();
-
-            JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
-
-            // Json version to be able to read SalesForce unique properties
-            ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je, sqlRelationships);
-            connectorType.Name = name;
-
-            foreach (ConnectorType field in connectorType.Fields.Where(f => f.Capabilities != null))
-            {
-                // Column capabilities
-                serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
-            }
-
-            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
             ConnectorPermission tablePermission = tableSchema.GetPermission();
+            
+            JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out name, out displayName);
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
+            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
+            
+            ConnectorType connectorType = new ConnectorType(jsonElement, compatibility, sqlRelationships, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            tableParameters = ((InternalTableParameters)connectorType.FormulaType._type.AssociatedDataSources.First()).TableParameters;
 
-            tableParameters = ServiceCapabilities.ToTableParameters(serviceCapabilities, name, isTableReadOnly, connectorType, datasetName);
-
-            List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
-
-            if (primaryKeyParts.Count == 0)
-            {
-                // $$$ need to check what triggers RO for SQL
-                //isTableReadOnly = true;
-            }
-
-            connectorType.FormulaType = new CdpRecordType(connectorType, tableResolver, tableParameters);
-
-            return ((TabularRecordType)connectorType.FormulaType, connectorType.Relationships);
+            return connectorType;
         }
 
         private static IList<ReferencedEntity> GetReferenceEntities(string connectorName, StringValue sv)

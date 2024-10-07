@@ -4,7 +4,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -55,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Beyond that scenario, fully expanding a lazy type is inefficient and should be avoided
         internal DType GetExpandedType(bool isTable)
         {
-            var fields = FieldNames.Select(field =>
+            var fields = FieldNames.Select(field => 
                 TryGetFieldType(field, out var type) ?
                     new TypedName(type, field) :
                     throw new InvalidOperationException($"Fx type of field {field} not found"));

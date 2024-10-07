@@ -15,12 +15,12 @@ namespace Microsoft.PowerFx.Core.Entities
     {        
         private readonly AggregateType _type;
 
-        public InternalTableMetadata(AggregateType type, string name, string displayName, bool isReadOnly, string parameterPkColumnName = "")
+        public InternalTableMetadata(AggregateType tabularRecordType, string name, string displayName, bool isReadOnly, string parameterPkColumnName = "")
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertNonEmpty(displayName);
 
-            _type = type;
+            _type = tabularRecordType;
 
             Name = name;
             DisplayName = displayName;

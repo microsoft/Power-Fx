@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly string _uriPrefix;
 
-        private readonly bool _doubleEncoding;        
+        private readonly bool _doubleEncoding;
 
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors
             Logger = logger;
         }
 
-        public async Task<CdpTableDescriptor> ResolveTableAsync(string tableName, CancellationToken cancellationToken)
+        public async Task<ConnectorType> ResolveTableAsync(string tableName, CancellationToken cancellationToken)
         {
             // out string name, out string displayName, out ServiceCapabilities tableCapabilities
             cancellationToken.ThrowIfCancellationRequested();
@@ -54,58 +54,57 @@ namespace Microsoft.PowerFx.Connectors
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
-            if (!string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text))
             {
-                List<SqlRelationship> sqlRelationships = null;
-
-                // for SQL need to get relationships separately as they aren't included by CDP connector
-                if (IsSql())
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    // We can't execute a query like below for unknown reasons so we'll have to do it in retrieving each table's data
-                    // and doing the joins manually (in GetSqlRelationships)
-                    // --
-                    //    SELECT fk.name 'FK Name', tp.name 'Parent table', cp.name, tr.name 'Refrenced table', cr.name
-                    //    FROM sys.foreign_keys fk
-                    //    INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id
-                    //    INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id
-                    //    INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id
-                    //    INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id
-                    //    INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id
-                    //    ORDER BY tp.name, cp.column_id
-                    // --
-
-                    uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
-                    string body =
-                        @"{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
-                        @"select object_id, name from sys.tables; " +
-                        @"select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
-                        @"select name, object_id, column_id from sys.columns""}";
-
-                    string text2 = await CdpServiceBase.GetObject(_httpClient, $"Get SQL relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false);
-
-                    // Result should be cached
-                    sqlRelationships = GetSqlRelationships(text2);
-
-                    // Filter on ParentTable
-                    string tbl = tableName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty);
-                    sqlRelationships = sqlRelationships.Where(sr => sr.ParentTable == tbl).ToList();
-                }
-
-                string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                (TabularRecordType recordType, IReadOnlyDictionary<string, Relationship> rels) = ConnectorFunction.GetTypeWithAdsAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableParameters tableParameters);
-
-                return new CdpTableDescriptor() { RecordType = recordType, Name = name, DisplayName = displayName, TableParameters = tableParameters, Relationships = rels };
+                return null;
             }
 
-            return new CdpTableDescriptor();
+            List<SqlRelationship> sqlRelationships = null;
+
+            // for SQL need to get relationships separately as they aren't included by CDP connector
+            if (IsSql())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // We can't execute a query like below for unknown reasons so we'll have to do it in retrieving each table's data
+                // and doing the joins manually (in GetSqlRelationships)
+                // --
+                //    SELECT fk.name 'FK Name', tp.name 'Parent table', cp.name, tr.name 'Refrenced table', cr.name
+                //    FROM sys.foreign_keys fk
+                //    INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id
+                //    INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id
+                //    INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id
+                //    INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id
+                //    INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id
+                //    ORDER BY tp.name, cp.column_id
+                // --
+
+                uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
+                string body =
+                    @"{""query"":""select name, object_id, parent_object_id, referenced_object_id from sys.foreign_keys; " +
+                    @"select object_id, name from sys.tables; " +
+                    @"select constraint_object_id, parent_column_id, parent_object_id, referenced_column_id, referenced_object_id from sys.foreign_key_columns; " +
+                    @"select name, object_id, column_id from sys.columns""}";
+
+                string text2 = await CdpServiceBase.GetObject(_httpClient, $"Get SQL relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false);
+
+                // Result should be cached
+                sqlRelationships = GetSqlRelationships(text2);
+
+                // Filter on ParentTable
+                string tbl = tableName.Split('.').Last().Replace("[", string.Empty).Replace("]", string.Empty);
+                sqlRelationships = sqlRelationships.Where(sr => sr.ParentTable == tbl).ToList();
+            }
+
+            string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
+
+            return ConnectorFunction.GetTypeWithAdsAndRelationships(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableParameters tableParameters);
         }
 
         private bool IsSql() => _uriPrefix.Contains("/sql/");
 
         private List<SqlRelationship> GetSqlRelationships(string text)
-        {            
+        {
             Result r = JsonSerializer.Deserialize<Result>(text);
 
             SqlForeignKey[] fkt = r.ResultSets.Table1;
