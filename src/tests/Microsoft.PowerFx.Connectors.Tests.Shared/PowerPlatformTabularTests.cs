@@ -252,7 +252,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // External relationship table name
             Assert.Equal("[SalesLT].[ProductModel]", productModelRecordType.TableSymbolName);
-            Assert.Equal<object>("r![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
+            Assert.Equal<object>("r![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:~[SalesLT].[ProductModel]:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
         }
 
         [Fact]
