@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="type">Type for the input Display or Logical name.</param>
         /// <returns>true or false.</returns>
         /// <exception cref="ArgumentNullException">Throws, if input displayOrLogicalName is empty.</exception>
-        public bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
+        public virtual bool TryGetFieldType(string displayOrLogicalName, out string logical, out FormulaType type)
         {
             Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
 
