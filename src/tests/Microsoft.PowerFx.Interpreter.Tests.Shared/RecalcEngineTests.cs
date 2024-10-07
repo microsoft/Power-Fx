@@ -637,6 +637,38 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
 
+        // Behavior function in non-imperative udf
+        [InlineData(
+            "TestFunc():Void = Set(a, 123);",
+            true,
+            "Behavior function in a non-behavior user-defined function",
+            false)]
+
+        // Behavior function in imperative udf
+        [InlineData(
+            "TestFunc():Void = { Set(a, 123); };",
+            false,
+            null,
+            true)]
+
+        public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedErrorKey, bool allowSideEffects)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("a", 1m);
+
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
+            {
+                result.Errors.Any(error => error.MessageKey == expectedErrorKey);
+            }
+        }
+
+        [Theory]
+
         // Return value with side effectful UDF
         [InlineData(
             "F1(x:Number) : Number = { Set(a, x); a+1; };",
@@ -676,6 +708,39 @@ namespace Microsoft.PowerFx.Tests
                 Assert.False(definitionsCheckResult.IsSuccess);
                 Assert.Single(definitionsCheckResult.Errors);
                 Assert.Contains(definitionsCheckResult.Errors, err => err.MessageKey == errorKey);
+            }
+        }
+
+        [Theory]
+
+        [InlineData(
+            "MismatchType():Number = { 1+3; Color.Blue; };",
+            true,
+            true,
+            36,
+            41)]
+        [InlineData(
+            "MatchType():Text = { 4; 3 };",
+            false,
+            true,
+            0,
+            0)]
+        public void TestMismatchReturnType(string udfExpression, bool expectedError, bool allowSideEffects, int min, int lim)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", 1m);
+
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
+            {
+                var error = result.Errors.First(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
+                Assert.NotNull(error);
+                var span = error.Span;
+                Assert.True(span.Min == min && span.Lim == lim);
             }
         }
 
@@ -1776,7 +1841,7 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
+                AllowParseAsTypeLiteral = true,
             };
 
             if (isValid)

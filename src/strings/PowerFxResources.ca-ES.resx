@@ -4115,6 +4115,10 @@
     <value>La fórmula amb nom ha de ser una expressió.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>La funció definida per l'usuari ha de tenir un cos.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>No es pot delegar {0}: conté una funció de comportament "{1}".</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows pot tornar un valor emmagatzemat a la memòria cau. Utilitzeu CountIf(DataSource, true) per obtenir el recompte més recent.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Tipus de conversió sense tipus/JSON no admès "{0}" a l'argument.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>S'ha assolit la profunditat màxima mentre es recorria la càrrega útil de JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>S'ha assolit la longitud màxima a la funció JSON.</value>
     
   </data>
 </root>

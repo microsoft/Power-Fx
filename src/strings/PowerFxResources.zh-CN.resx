@@ -4115,6 +4115,10 @@
     <value>指定的公式必须为表达式。</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>用户定义的函数必须有正文。</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows 可能会返回缓存的值。请使用 CountIf(DataSource, true) 获取最新计数。</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>参数中不支持非类型化/JSON 转换类型“{0}”。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>遍历 JSON 有效负载时达到最大深度。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>在 JSON 函数中达到最大长度。</value>
     
   </data>
 </root>
