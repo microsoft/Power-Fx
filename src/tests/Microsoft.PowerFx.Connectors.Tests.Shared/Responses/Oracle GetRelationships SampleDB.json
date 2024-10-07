@@ -1,0 +1,28 @@
+{
+  "OutputParameters": {},
+  "ResultSets": {
+    "Table1": [
+      {
+        "FK_NAME": "EMP_DEPT_FK",
+        "PARENT_TABLE": "[HR].[EMPLOYEES]",
+        "PARENT_COLUMN": "DEPARTMENT_ID",
+        "REFERENCED_TABLE": "[HR].[DEPARTMENTS]",
+        "REFERENCED_COLUMN": "DEPARTMENT_ID"
+      },
+      {
+        "FK_NAME": "EMP_JOB_FK",
+        "PARENT_TABLE": "[HR].[EMPLOYEES]",
+        "PARENT_COLUMN": "JOB_ID",
+        "REFERENCED_TABLE": "[HR].[JOBS]",
+        "REFERENCED_COLUMN": "JOB_ID"
+      },
+      {
+        "FK_NAME": "EMP_MANAGER_FK",
+        "PARENT_TABLE": "[HR].[EMPLOYEES]",
+        "PARENT_COLUMN": "MANAGER_ID",
+        "REFERENCED_TABLE": "[HR].[EMPLOYEES]",
+        "REFERENCED_COLUMN": "EMPLOYEE_ID"
+      }
+    ]
+  }
+}

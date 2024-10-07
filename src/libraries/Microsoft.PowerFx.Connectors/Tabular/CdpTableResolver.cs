@@ -24,6 +24,11 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
+        private readonly JsonSerializerOptions _deserializationOptions = new ()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
         // Temporary hack to generate ADS
         public bool GenerateADS { get; init; }
 
@@ -83,6 +88,21 @@ namespace Microsoft.PowerFx.Connectors
                     // Result should be cached
                     sqlRelationships = GetSqlRelationships(text2);
                 }
+                else if (IsOracle())
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    uri = (_uriPrefix ?? string.Empty) + $"/datasets/{dataset}/query/oracle";
+                    string body =
+                        @"{""query"":""SELECT TAB_CONS.CONSTRAINT_NAME AS FK_Name, '[' || TAB_CONS.OWNER || '].[' || TAB_CONS.TABLE_NAME || ']' AS Parent_Table, TAB_CONS_COLS.COLUMN_NAME AS Parent_Column, '[' || REF_CONS.OWNER || '].[' || REF_CONS.TABLE_NAME || ']' AS Referenced_Table, REF_CONS_COLS.COLUMN_NAME AS Referenced_Column" +
+                          @" FROM ALL_CONSTRAINTS TAB_CONS" +
+                          @" INNER JOIN ALL_CONS_COLUMNS TAB_CONS_COLS ON TAB_CONS.CONSTRAINT_NAME = TAB_CONS_COLS.CONSTRAINT_NAME AND TAB_CONS.OWNER = TAB_CONS_COLS.OWNER" +
+                          @" INNER JOIN ALL_CONSTRAINTS REF_CONS ON TAB_CONS.R_CONSTRAINT_NAME = REF_CONS.CONSTRAINT_NAME" +
+                          @" INNER JOIN ALL_CONS_COLUMNS REF_CONS_COLS ON REF_CONS.CONSTRAINT_NAME = REF_CONS_COLS.CONSTRAINT_NAME AND REF_CONS.OWNER = REF_CONS_COLS.OWNER" +
+                          @" WHERE '[' || TAB_CONS.OWNER || '].[' || TAB_CONS.TABLE_NAME || ']' = '" + tableName + "'" + @"""}";
+
+                    sqlRelationships = GetSqlRelationships(await CdpServiceBase.GetObject(_httpClient, $"Get Oracle relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false));
+                }
 
                 string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
                 ConnectorType ct = ConnectorFunction.GetConnectorTypeAndTableCapabilities(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
@@ -95,9 +115,11 @@ namespace Microsoft.PowerFx.Connectors
 
         private bool IsSql() => _uriPrefix.Contains("/sql/");
 
+        private bool IsOracle() => _uriPrefix.Contains("/oracle/");
+
         private List<SqlRelationship> GetSqlRelationships(string text)
         {
-            RelationshipResult r = JsonSerializer.Deserialize<RelationshipResult>(text);
+            RelationshipResult r = JsonSerializer.Deserialize<RelationshipResult>(text, _deserializationOptions);
 
             var relationships = r.ResultSets.Table1;
             if (relationships == null || relationships.Length == 0)

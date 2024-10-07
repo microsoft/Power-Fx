@@ -1588,6 +1588,77 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal<object>(expected, actual);
         }
 
+        [Fact]
+        public async Task Oracle_GetRelationships()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Oracle.json", _output);
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+            string jwt = "eyJ0eXAiO...";
+            using var client = new PowerPlatformConnectorClient("4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net", "4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f", "53f515b50c3e4925803ec1f0945e799f", () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            config.AddActionConnector(new ConnectorSettings("Oracle") { IncludeInternalFunctions = true, AllowUnsupportedFunctions = true }, apiDoc, new ConsoleLogger(_output));
+            RecalcEngine engine = new RecalcEngine(config);
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Oracle", client, console: _output));
+
+            string query =
+                "SELECT TAB_CONS.CONSTRAINT_NAME AS FK_Name, '[' || TAB_CONS.OWNER || '].[' || TAB_CONS.TABLE_NAME || ']' AS Parent_Table, TAB_CONS_COLS.COLUMN_NAME AS Parent_Column, '[' || REF_CONS.OWNER || '].[' || REF_CONS.TABLE_NAME || ']' AS Referenced_Table, REF_CONS_COLS.COLUMN_NAME AS Referenced_Column" +
+                          @" FROM ALL_CONSTRAINTS TAB_CONS" +
+                          @" INNER JOIN ALL_CONS_COLUMNS TAB_CONS_COLS ON TAB_CONS.CONSTRAINT_NAME = TAB_CONS_COLS.CONSTRAINT_NAME AND TAB_CONS.OWNER = TAB_CONS_COLS.OWNER" +
+                          @" INNER JOIN ALL_CONSTRAINTS REF_CONS ON TAB_CONS.R_CONSTRAINT_NAME = REF_CONS.CONSTRAINT_NAME" +
+                          @" INNER JOIN ALL_CONS_COLUMNS REF_CONS_COLS ON REF_CONS.CONSTRAINT_NAME = REF_CONS_COLS.CONSTRAINT_NAME AND REF_CONS.OWNER = REF_CONS_COLS.OWNER" +
+                          @" WHERE '[' || TAB_CONS.OWNER || '].[' || TAB_CONS.TABLE_NAME || ']' = '[HR].[EMPLOYEES]'";
+
+            testConnector.SetResponseFromFile(@"Responses\Oracle GetRelationships SampleDB.json");
+            var result = await engine.EvalAsync(@$"Oracle.ExecutePassThroughNativeQuery({{ query: ""{query}"" }})", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc);
+
+            UntypedObjectValue uov = Assert.IsType<UntypedObjectValue>(result);
+            JsonUntypedObject juo = Assert.IsType<JsonUntypedObject>(uov.Impl);
+            JsonElement je = juo._element;
+
+            RelationshipResult r = je.Deserialize<RelationshipResult>(new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            var relationships = r.ResultSets.Table1;
+
+            List<SqlRelationship> sqlRelationShips = new List<SqlRelationship>();
+
+            foreach (var fk in relationships)
+            {
+                sqlRelationShips.Add(new SqlRelationship()
+                {
+                    RelationshipName = fk.FK_Name,
+                    ParentTable = fk.Parent_Table,
+                    ColumnName = fk.Parent_Column,
+                    ReferencedTable = fk.Referenced_Table,
+                    ReferencedColumnName = fk.Referenced_Column
+                });
+            }
+
+            Assert.Equal(3, sqlRelationShips.Count);
+            Assert.Equal("EMP_DEPT_FK, [HR].[EMPLOYEES], DEPARTMENT_ID, [HR].[DEPARTMENTS], DEPARTMENT_ID", sqlRelationShips[0].ToString());
+            Assert.Equal("EMP_JOB_FK, [HR].[EMPLOYEES], JOB_ID, [HR].[JOBS], JOB_ID", sqlRelationShips[1].ToString());
+            Assert.Equal("EMP_MANAGER_FK, [HR].[EMPLOYEES], MANAGER_ID, [HR].[EMPLOYEES], EMPLOYEE_ID", sqlRelationShips[2].ToString());
+
+            string expected = @$"POST https://4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net/invoke
+ authority: 4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/oracle/53f515b50c3e4925803ec1f0945e799f/datasets/default/query/oracle
+ x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""query"":""SELECT TAB_CONS.CONSTRAINT_NAME AS FK_Name, \u0027[\u0027 || TAB_CONS.OWNER || \u0027].[\u0027 || TAB_CONS.TABLE_NAME || \u0027]\u0027 AS Parent_Table, TAB_CONS_COLS.COLUMN_NAME AS Parent_Column, \u0027[\u0027 || REF_CONS.OWNER || \u0027].[\u0027 || REF_CONS.TABLE_NAME || \u0027]\u0027 AS Referenced_Table, REF_CONS_COLS.COLUMN_NAME AS Referenced_Column FROM ALL_CONSTRAINTS TAB_CONS INNER JOIN ALL_CONS_COLUMNS TAB_CONS_COLS ON TAB_CONS.CONSTRAINT_NAME = TAB_CONS_COLS.CONSTRAINT_NAME AND TAB_CONS.OWNER = TAB_CONS_COLS.OWNER INNER JOIN ALL_CONSTRAINTS REF_CONS ON TAB_CONS.R_CONSTRAINT_NAME = REF_CONS.CONSTRAINT_NAME INNER JOIN ALL_CONS_COLUMNS REF_CONS_COLS ON REF_CONS.CONSTRAINT_NAME = REF_CONS_COLS.CONSTRAINT_NAME AND REF_CONS.OWNER = REF_CONS_COLS.OWNER WHERE \u0027[\u0027 || TAB_CONS.OWNER || \u0027].[\u0027 || TAB_CONS.TABLE_NAME || \u0027]\u0027 = \u0027[HR].[EMPLOYEES]\u0027""}}
+";
+            Assert.Equal(expected, testConnector._log.ToString());
+        }
+
         private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction5
         {
             public override ArgPreprocessor GetArgPreprocessor(int index, int argCount) => base.GetGenericArgPreprocessor(index);
