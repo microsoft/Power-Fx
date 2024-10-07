@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -45,7 +47,7 @@ namespace Microsoft.PowerFx.Types
         public RecordType(DisplayNameProvider displayNameProvider)
             : base(false, displayNameProvider)
         {
-        }   
+        }
 
         public override void Visit(ITypeVisitor vistor)
         {

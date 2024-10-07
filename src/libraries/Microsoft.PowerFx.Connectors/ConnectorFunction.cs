@@ -1007,7 +1007,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static ConnectorType GetTypeWithAdsAndRelationships(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableParameters tableParameters)
+        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableParameters tableParameters)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };

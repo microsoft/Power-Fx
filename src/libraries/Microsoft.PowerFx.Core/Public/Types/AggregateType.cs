@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -34,9 +35,10 @@ namespace Microsoft.PowerFx.Types
         public AggregateType(bool isTable, DisplayNameProvider displayNameProvider)
             : base()
         {
-            _type = new DType(new LazyTypeProvider(this), isTable, displayNameProvider);
+            var lazyTypeProvider = new LazyTypeProvider(this);
+            _type = new DType(lazyTypeProvider, isTable: isTable, displayNameProvider);
         }
-       
+
         public FormulaType GetFieldType(string fieldName)
         {
             return TryGetFieldType(fieldName, out var type) ?
@@ -72,7 +74,7 @@ namespace Microsoft.PowerFx.Types
                     return false;
                 }
             }
-
+            
             return _type.TryGetType(new DName(fieldName), out type);
         }
 
