@@ -1,0 +1,40 @@
+﻿#SETUP: RegEx,PowerFxV1CompatibilityRules
+
+>> Match("Hello", "\w")
+{FullMatch:"H",StartMatch:1}
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 1).Value
+"e"
+
+>> Index(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, 2).Value
+"l"
+
+>> Concat(ForAll(Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches, With({x:Value}, x)), Value, ", ")
+"e, l"
+
+>> Match("Hello", "(\w)l(\w)", MatchOptions.NumberedSubMatches).SubMatches
+Table({Value:"e"},{Value:"l"})
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete)
+Blank()
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline & MatchOptions.NumberedSubMatches)
+{FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1}
+
+>> Match("(555) 123-4567", "^[\+]?[\(]?[0-9]{3}[\)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+{FullMatch:"(555) 123-4567",StartMatch:1}
+
+>> Match("Hello", "Hello", MatchOptions.IgnoreCase)
+{FullMatch:"Hello",StartMatch:1}
+
+>> Match("Hi", "Hi", MatchOptions.Multiline)
+{FullMatch:"Hi",StartMatch:1}
+
+>> Match("28", "28", Blank())
+Errors: Error 18-25: Regular expression options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match("28", "28", 28)
+Errors: Error 18-20: Regular expression options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
