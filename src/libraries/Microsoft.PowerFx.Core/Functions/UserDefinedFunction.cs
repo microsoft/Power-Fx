@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -91,6 +92,123 @@ namespace Microsoft.PowerFx.Core.Functions
             this._isImperative = isImperative;
 
             this.UdfBody = body;
+        }
+
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, DType[] argTypes, string description)
+            : base(DPath.Root, functionName, functionName, SG(!string.IsNullOrWhiteSpace(description) ? description : "Using " + functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, argTypes)
+        {
+            this._args = args;
+            this._isImperative = isImperative;
+
+            this.UdfBody = body;
+        }
+
+        public static IEnumerable<UserDefinedFunction> CreateFunctionsWithSignatures(IEnumerable<UDF> uDFs, INameResolver nameResolver, IDictionary<UDF, string> descriptions, out List<TexlError> errors)
+        {
+            Contracts.AssertValue(uDFs);
+            Contracts.AssertAllValues(uDFs);
+
+            var userDefinedFunctions = new List<UserDefinedFunction>();
+            var texlFunctionSet = new TexlFunctionSet();
+            errors = new List<TexlError>();
+
+            foreach (var udf in uDFs)
+            {
+                Contracts.Assert(udf.IsParseValid);
+
+                var udfName = udf.Ident.Name;
+                if (texlFunctionSet.AnyWithName(udfName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
+                    continue;
+                }
+                else if (_restrictedUDFNames.Contains(udfName) ||
+                    nameResolver.Functions.WithName(udfName).Any(func => func.IsRestrictedUDFName))
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionNameRestricted, udfName));
+                    continue;
+                }
+
+                if (udf.Args.Count > MaxParameterCount)
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_TooManyParameters, udfName, MaxParameterCount));
+                    continue;
+                }
+
+                var parametersOk = CheckParameters(udf.Args, errors, nameResolver, out var parameterTypes);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors, nameResolver, out var returnType);
+                if (!parametersOk || !returnTypeOk)
+                {
+                    continue;
+                }
+
+                if (nameResolver.Functions.WithName(udfName).Any())
+                {
+                    errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Warning, TexlStrings.WrnUDF_ShadowingBuiltInFunction, udfName));
+                }
+
+                var description = descriptions.ToList().First(kv => kv.Key.Ident.Name == udf.Ident.Name);
+
+                var func = new UserDefinedFunction(udfName.Value, returnType, udf.Body, udf.IsImperative, udf.Args, parameterTypes, description.Value);
+
+                texlFunctionSet.Add(func);
+                userDefinedFunctions.Add(func);
+            }
+
+            return userDefinedFunctions;
+        }
+
+        public static Dictionary<UDF, string> CommentsByUdf(string script, ParserOptions parserOptions, out ParseUserDefinitionResult parseResult)
+        {
+            parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            var spans = new List<(int, int, Token, UDF)>();
+            var commentsByUdf = new Dictionary<UDF, string>();
+            foreach (var udf in parseResult.UDFs)
+            {
+                var span = udf.Ident.Span;
+                spans.Add((udf.Ident.Span.Min, udf.Body.GetCompleteSpan().Lim, null, udf));
+            }
+
+            foreach (var comment in parseResult.Comments ?? Enumerable.Empty<Token>())
+            {
+                spans.Add((comment.Span.Min, comment.Span.Lim, comment, null));
+            }
+
+            spans.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+
+            var descripion = new StringBuilder();
+            foreach (var span in spans)
+            {
+                var (low, high, comment, udf) = span;
+                if (comment != null)
+                {
+                    var commentText = comment.Span.GetFragment(script);
+                    var isMultliLineComment = commentText.StartsWith("/*", StringComparison.InvariantCulture);
+                    if (isMultliLineComment)
+                    {
+                        commentText = commentText.Replace("/*", string.Empty).Replace("*/", string.Empty);
+                    }
+                    else
+                    {
+                        commentText = commentText.Replace("//", string.Empty);
+                    }
+
+                    commentText = commentText.Trim();   
+                    if (!commentText.EndsWith("\n", StringComparison.InvariantCulture))
+                    {
+                        commentText += "\n";
+                    }
+
+                    descripion.Append(commentText);
+                }
+                else
+                {
+                    commentsByUdf[udf] = descripion.ToString();
+                    descripion = new StringBuilder();
+                }
+            }
+
+            return commentsByUdf;
         }
 
         /// <summary>
@@ -209,7 +327,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(binderGlue));
             }
 
-            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
+            var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes, this.Description);
             binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
 
             return func;
