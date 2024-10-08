@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         sb.Append(remoteTable);
                         sb.Append(':');
 
-                        if (!internalTableParameters.TabularRecordType.TryGetFieldType(fieldName, true, out FormulaType backingFieldType))
+                        if (!internalTableParameters.RecordType.TryGetUnderlyingFieldType(fieldName, out FormulaType backingFieldType))
                         {
                             throw new InvalidOperationException();
                         }

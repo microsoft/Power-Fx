@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _relationships = TabularTableDescriptor.Relationships;
 
-            TabularRecordType = (TabularRecordType)TabularTableDescriptor.FormulaType;
+            RecordType = (RecordType)TabularTableDescriptor.FormulaType;
         }
 
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)

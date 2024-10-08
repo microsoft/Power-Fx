@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -43,11 +43,28 @@ namespace Microsoft.PowerFx.Types
         /// Derived classes calling this must override <see cref="AggregateType.FieldNames"/>
         /// and <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
         /// </summary>
-        /// <param name="displayNameProvider">Provide DispayNamerovide to be used.</param>
+        /// <param name="displayNameProvider">Provide DisplayNameProvider to be used.</param>
         public RecordType(DisplayNameProvider displayNameProvider)
             : base(false, displayNameProvider)
-        {
+        {         
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/> and <see cref="TableParameters"/>.
+        /// Derived classes calling this must override <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
+        /// </summary>
+        /// <param name="displayNameProvider">Provide DisplayNameProvider to be used.</param>
+        /// <param name="tableParameters">Table provider to be used.</param>
+        public RecordType(DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+            : base(false, displayNameProvider)
+        {
+            _type = DType.AttachDataSourceInfo(_type, new InternalTableParameters(this, displayNameProvider, tableParameters));            
+            _fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value).ToList();
+        }
+
+        public override IEnumerable<string> FieldNames => _fieldNames;
+
+        private readonly IEnumerable<string> _fieldNames = null;
 
         public override void Visit(ITypeVisitor vistor)
         {

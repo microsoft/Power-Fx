@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -63,6 +64,12 @@ namespace Microsoft.PowerFx.Core.Entities
             SupportsDataverseOffline = false;
             SupportsRecordPermission = true;
             ColumnsWithRelationships = new Dictionary<string, string>();
+        }
+
+        public virtual ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
+        {
+            // We should never reach that point
+            throw new NotImplementedException();
         }
 
         public static TableParameters Default(string tableName, bool isReadOnly, string datasetName)

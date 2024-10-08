@@ -237,13 +237,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("HL Road Frame - Black, 58", address.Value);
 
-            bool b = sqlTable.TabularRecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
+            bool b = sqlTable.RecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.True(b);
             Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
             Assert.Equal("ProductModelID", foreignKey);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");
-            b = sqlTable.TabularRecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
+            b = sqlTable.RecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
 
             Assert.True(b);
             CdpRecordType productModelRecordType = Assert.IsType<CdpRecordType>(productModelID);
@@ -659,13 +659,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
                 "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
                 "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", 
-                ((CdpRecordType)sfTable.TabularRecordType).ToStringWithDisplayNames());
+                ((CdpRecordType)sfTable.RecordType).ToStringWithDisplayNames());
 
-            Assert.Equal("Account", sfTable.TabularRecordType.TableSymbolName);
+            Assert.Equal("Account", sfTable.RecordType.TableSymbolName);
 
-            TabularRecordType rt = sfTable.TabularRecordType;            
+            RecordType rt = sfTable.RecordType;            
 
-            Assert.True(rt.TryGetFieldType("AccountSource", true, out FormulaType ft));
+            Assert.True(rt.TryGetUnderlyingFieldType("AccountSource", out FormulaType ft));
             
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -702,18 +702,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // needs Microsoft.PowerFx.Connectors.CdpExtensions
             // this call does not make any network call
-            bool b = sfTable.TabularRecordType.TryGetFieldExternalTableName("OwnerId", out string externalTableName, out string foreignKey);
+            bool b = sfTable.RecordType.TryGetFieldExternalTableName("OwnerId", out string externalTableName, out string foreignKey);
             Assert.True(b);
             Assert.Equal("User", externalTableName);
             Assert.Null(foreignKey); // Always the case with SalesForce
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema Users.json");
-            b = sfTable.TabularRecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
+            b = sfTable.RecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
 
             Assert.True(b);
             CdpRecordType userTable = Assert.IsType<CdpRecordType>(ownerIdType);
 
-            Assert.False((CdpRecordType)sfTable.TabularRecordType is null);
+            Assert.False((CdpRecordType)sfTable.RecordType is null);
             Assert.False(userTable is null);
 
             // External relationship table name
@@ -761,12 +761,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:~UserRole:s, UserType`'User Type':l, Username:s]", userTable.ToStringWithDisplayNames());
 
             // Missing field
-            b = sfTable.TabularRecordType.TryGetFieldType("XYZ", out FormulaType xyzType);
+            b = sfTable.RecordType.TryGetFieldType("XYZ", out FormulaType xyzType);
             Assert.False(b);
             Assert.Null(xyzType);
 
             // Field with no relationship
-            b = sfTable.TabularRecordType.TryGetFieldType("BillingCountry", out FormulaType billingCountryType);
+            b = sfTable.RecordType.TryGetFieldType("BillingCountry", out FormulaType billingCountryType);
             Assert.True(b);
             Assert.Equal("s", billingCountryType._type.ToString());
 
@@ -892,7 +892,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(
                 "r![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
-                "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
+                "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Users", zdTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -963,7 +963,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(
                 "r![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
                 "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
-                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
+                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Tickets", zdTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);

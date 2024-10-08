@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
 
         public OperationCapabilityMetadata(AggregateType schema)
         {
-            Contracts.Assert(schema is TabularRecordType);
+            Contracts.Assert(schema is RecordType);
 
-            _type = (TabularRecordType)schema;
+            _type = (RecordType)schema;
             Schema = schema._type;
         }
 
-        public readonly TabularRecordType _type;
+        public readonly RecordType _type;
 
         protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions => new Dictionary<DPath, DelegationCapability>();
 

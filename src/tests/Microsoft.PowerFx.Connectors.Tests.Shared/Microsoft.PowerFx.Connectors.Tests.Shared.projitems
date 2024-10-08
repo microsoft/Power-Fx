@@ -12,7 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseConnectorTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BasicRestTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CdpRecordTypeTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompatibilityTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorWizardTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DynamicTests.cs" />

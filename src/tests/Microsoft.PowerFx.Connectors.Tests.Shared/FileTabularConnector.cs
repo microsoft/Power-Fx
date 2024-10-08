@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             StringValue str = Assert.IsType<StringValue>(result);
             Assert.Equal("b", str.Value);
 
-            RecordType trt = fileTable.TabularRecordType;
+            RecordType trt = fileTable.RecordType;
             Assert.NotNull(trt);
         }
     }
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // Initialization can be synchronous
         public void Init()
         {            
-            TabularRecordType = new FileTabularRecordType(RecordType.Empty().Add("line", FormulaType.String));
+            RecordType = new FileTabularRecordType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
         protected override async Task<IReadOnlyCollection<DValue<RecordValue>>> GetItemsInternalAsync(IServiceProvider serviceProvider, ODataParameters oDataParameters, CancellationToken cancellationToken)
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
     }
 
-    internal class FileTabularRecordType : TabularRecordType
+    internal class FileTabularRecordType : RecordType
     {
         internal readonly RecordType _recordType;
 
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private static DisplayNameProvider GetDisplayNameProvider(RecordType recordType) => DisplayNameProvider.New(recordType.FieldNames.Select(f => new KeyValuePair<Core.Utils.DName, Core.Utils.DName>(new Core.Utils.DName(f), new Core.Utils.DName(f))));        
 
-        public override bool TryGetFieldType(string name, bool backingType, out FormulaType type)
+        public override bool TryGetFieldType(string name, out FormulaType type)
         {
             return _recordType.TryGetFieldType(name, out type);
         }
@@ -142,11 +142,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public override int GetHashCode()
         {
             throw new NotImplementedException();
-        }
-
-        public override Core.Entities.ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
-        {
-            throw new NotImplementedException();
-        }
+        }       
     }
 }

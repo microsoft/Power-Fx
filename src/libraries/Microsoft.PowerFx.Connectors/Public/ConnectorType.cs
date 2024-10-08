@@ -331,35 +331,5 @@ namespace Microsoft.PowerFx.Connectors
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
-
-        public bool Equals(ConnectorType other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return GetHashCode() == other.GetHashCode();            
-        }
-
-        public new int GetHashCode()
-        {
-            int h = 5381;
-
-            h = Hashing.CombineHash(h, Name?.GetHashCode() ?? 0);
-            h = Hashing.CombineHash(h, DisplayName?.GetHashCode() ?? 0);
-                        
-            foreach (ConnectorType field in Fields)
-            {
-                h = Hashing.CombineHash(h, field.GetHashCode());
-            }
-
-            return h;
-        }
     }
 }

@@ -14,9 +14,9 @@ namespace Microsoft.PowerFx.Connectors
     {
         private const string NotInitialized = "Tabular service is not initialized.";
 
-        public TableType TableType => TabularRecordType?.ToTable();
+        public TableType TableType => RecordType?.ToTable();
 
-        public TabularRecordType TabularRecordType { get; protected internal set; } = null;
+        public RecordType RecordType { get; protected internal set; } = null;
 
         public bool IsInitialized => TableType != null;
 

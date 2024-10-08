@@ -21,23 +21,23 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(AggregateType tabularRecordType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        public InternalTableParameters(AggregateType recordType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
         {
             string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
 
             EntityName = new DName(tableParameters.TableName);
             IsWritable = !tableParameters.IsReadOnly;
             _tableParameters = tableParameters;
-            _type = tabularRecordType._type;
-            TabularRecordType = (TabularRecordType)tabularRecordType;
+            _type = recordType._type;
+            RecordType = (RecordType)recordType;
 
             IEnumerable<string> fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value);
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
             _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));            
-            _externalTableMetadata = new InternalTableMetadata(tabularRecordType, Name, Name, tableParameters.IsReadOnly);
-            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(tabularRecordType, tableParameters)));
+            _externalTableMetadata = new InternalTableMetadata(recordType, Name, Name, tableParameters.IsReadOnly);
+            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(recordType, tableParameters)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
 
@@ -72,7 +72,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public bool IsDelegatable => (_tableParameters.SortRestriction != null) ||
                                      (_tableParameters.FilterRestriction != null) ||
-                                     (_tableParameters.FilterFunctions != null);
+                                     (_tableParameters.FilterFunctions != null) ||
+                                     (_tableParameters.GetType().BaseType == typeof(TableParameters));
 
         public bool IsRefreshable => true;
 
@@ -92,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         DType IExternalEntity.Type => _type;
 
-        public TabularRecordType TabularRecordType { get; }
+        public RecordType RecordType { get; }
 
         public bool IsPageable => _tableParameters.PagingCapabilities.IsOnlyServerPagable || IsDelegatable;
 
@@ -128,9 +129,9 @@ namespace Microsoft.PowerFx.Core.Entities
             throw new System.NotImplementedException();
         }
 
-        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType tabularRecordType, TableParameters tableParameters)
+        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableParameters tableParameters)
         {
-            DType type = tabularRecordType._type;
+            DType type = recordType._type;
 
             DPath GetDPath(string prop) => DPath.Root.Append(new DName(prop));
 
@@ -206,7 +207,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
             
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(tabularRecordType, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable);
+            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable, tableParameters);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);

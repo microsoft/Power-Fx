@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class CdpRecordType : TabularRecordType
+    internal class CdpRecordType : RecordType
     {
         internal ConnectorType ConnectorType { get; }
 
@@ -40,7 +40,11 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        public override bool TryGetFieldType(string fieldName, bool ignorelationship, out FormulaType type)
+        public override bool TryGetUnderlyingFieldType(string name, out FormulaType type) => TryGetFieldType(name, true, out type);
+
+        public override bool TryGetFieldType(string name, out FormulaType type) => TryGetFieldType(name, false, out type);
+
+        private bool TryGetFieldType(string fieldName, bool ignorelationship, out FormulaType type)
         {
             ConnectorType field = ConnectorType.Fields.FirstOrDefault(ct => ct.Name == fieldName);
 
@@ -70,12 +74,6 @@ namespace Microsoft.PowerFx.Connectors
                 TableResolver?.Logger.LogException(ex, $"Cannot resolve external table {tableName}");
                 throw;
             }
-        }
-
-        public override Core.Entities.ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
-        {
-            // No need to implement as column capabilities are retrieved from CDP schema
-            throw new NotImplementedException();
         }
 
         public override bool Equals(object other)
