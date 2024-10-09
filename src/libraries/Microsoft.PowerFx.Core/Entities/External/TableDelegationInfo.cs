@@ -24,16 +24,19 @@ namespace Microsoft.PowerFx.Core.Entities
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
-        // Filter functions supported by all columns
+        // Filter functions supported by all columns of the table
+        // Those entries cumulate with the onee defined at column level
+        // Possible strings are defined in DelegationMetadataOperatorConstants
+        // Values not in this list are ignored
         public IEnumerable<string> FilterFunctions { get; init; }
 
-        // Filter functions supported by table
+        // Filter functions supported by the table
         public IEnumerable<string> FilterSupportedFunctions { get; init; }
 
         // Defines paging capabilities
         internal PagingCapabilities PagingCapabilities { get; init; }
 
-        // Defined per column capabilities
+        // Defining per column capabilities
         public IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
 
         // Used for offline DV tables
@@ -42,10 +45,10 @@ namespace Microsoft.PowerFx.Core.Entities
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
 
-        // Name of table
+        // Logical name of table
         public string TableName { get; init; }
 
-        // Read-Only
+        // Read-Only table
         public bool IsReadOnly { get; init; }
 
         // Dataset name
@@ -71,6 +74,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);        
 
+        // Not recommended for production use, only good for tests
         public static TableDelegationInfo Default(string tableName, bool isReadOnly, string datasetName)
         {
             return new CdpTableDelegationInfo()
@@ -128,6 +132,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public ColumnCapabilitiesDefinition Capabilities;
 
+        // Those are default CDS filter supported functions 
         public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
 
         public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
@@ -170,10 +175,11 @@ namespace Microsoft.PowerFx.Core.Entities
             set => _filterFunctions = value;
         }
         
-        // used in PowerApps-Client/src/AppMagic/js/Core/Core.Data/ConnectedDataDeserialization/TabularDataDeserialization.ts
+        // Used in PowerApps-Client/src/AppMagic/js/Core/Core.Data/ConnectedDataDeserialization/TabularDataDeserialization.ts
+        // Used by SP connector only to rename column logical names in OData queries
         internal string QueryAlias { get; init; }
 
-        // sharepoint delegation specific
+        // Sharepoint delegation specific
         internal bool? IsChoice { get; init; }
 
         private IEnumerable<string> _filterFunctions;
@@ -209,8 +215,13 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class PagingCapabilities
     {
+        // Defines is the tabular connector is supporting client or server paging
+        // If true, @odata.nextlink URL is used instead of $skip and $top query parameters
+        // If false, $top and $skip will be used
         public bool IsOnlyServerPagable { get; init; }
 
+        // Only supported values "top" and "skiptoken"
+        // Used to define paging options to use 
         public IEnumerable<string> ServerPagingOptions { get; init; }
 
         public PagingCapabilities()
@@ -234,6 +245,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class GroupRestrictions
     {
+        // Defines properties can cannot be grouped
         public IList<string> UngroupableProperties { get; init; }
 
         public GroupRestrictions()
@@ -243,7 +255,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class SelectionRestrictions
     {
-        // Indicates whether this table has selectable columns
+        // Indicates whether this table has selectable columns ($select)
+        // Columns with an Attachment will be excluded
         // Used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/Document/Document/InfoTypes/CdsDataSourceInfo.cs&_a=contents&version=GBmaster
         public bool IsSelectable { get; init; }
 
@@ -257,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // List of required properties
         public IList<string> RequiredProperties { get; init; }
 
-        // List of non filterable properties
+        // List of non filterable properties (like images)
         public IList<string> NonFilterableProperties { get; init; }
 
         public FilterRestrictions()
@@ -267,8 +280,10 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class SortRestrictions
     {
+        // Columns only supported ASC ordering
         public IList<string> AscendingOnlyProperties { get; init; }
 
+        // Columns that don't support ordering
         public IList<string> UnsortableProperties { get; init; }
 
         public SortRestrictions()
