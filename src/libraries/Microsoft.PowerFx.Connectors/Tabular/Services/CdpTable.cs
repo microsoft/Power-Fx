@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool IsDelegable => (TableParameters?.SortRestriction != null) || (TableParameters?.FilterRestriction != null) || (TableParameters?.FilterFunctions != null);
 
-        internal TableParameters TableParameters => ((InternalTableParameters)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).TableParameters;
+        internal TableDelegationInfo TableParameters => ((InternalTableParameters)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).TableParameters;
 
         internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 

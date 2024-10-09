@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.CdpService",
               "Microsoft.PowerFx.Connectors.CdpServiceBase",
               "Microsoft.PowerFx.Connectors.CdpTable",
-              "Microsoft.PowerFx.Connectors.CdpTableValue",              
+              "Microsoft.PowerFx.Connectors.CdpTableValue",
               "Microsoft.PowerFx.Connectors.ConnectorCompatibility",
               "Microsoft.PowerFx.Connectors.ConnectorEnhancedSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",

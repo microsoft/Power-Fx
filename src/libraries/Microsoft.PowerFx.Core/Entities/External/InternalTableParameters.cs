@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(AggregateType recordType, DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        public InternalTableParameters(AggregateType recordType, DisplayNameProvider displayNameProvider, TableDelegationInfo tableParameters)
         {
             string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
 
@@ -35,8 +35,8 @@ namespace Microsoft.PowerFx.Core.Entities
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
-            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));            
-            _externalTableMetadata = new InternalTableMetadata(recordType, Name, Name, tableParameters.IsReadOnly);
+            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));
+            _externalTableMetadata = new InternalTableMetadata(RecordType, Name, Name, tableParameters.IsReadOnly);
             _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(recordType, tableParameters)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
@@ -44,9 +44,9 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = tableParameters.ColumnsWithRelationships;
         }
 
-        public TableParameters TableParameters => _tableParameters;
+        public TableDelegationInfo TableParameters => _tableParameters;
 
-        private readonly TableParameters _tableParameters;
+        private readonly TableDelegationInfo _tableParameters;
 
         private readonly DType _type;
 
@@ -70,10 +70,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public bool IsSelectable => _tableParameters.SelectionRestriction == null ? false : _tableParameters.SelectionRestriction.IsSelectable;
 
-        public bool IsDelegatable => (_tableParameters.SortRestriction != null) ||
-                                     (_tableParameters.FilterRestriction != null) ||
-                                     (_tableParameters.FilterFunctions != null) ||
-                                     (_tableParameters.GetType().BaseType == typeof(TableParameters));
+        public bool IsDelegatable => _tableParameters.IsDelegable;
 
         public bool IsRefreshable => true;
 
@@ -129,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Entities
             throw new System.NotImplementedException();
         }
 
-        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableParameters tableParameters)
+        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableDelegationInfo tableParameters)
         {
             DType type = recordType._type;
 
@@ -147,34 +144,6 @@ namespace Microsoft.PowerFx.Core.Entities
                 {
                     dic[dPath] = new DelegationCapability(existingCapability.Capabilities | capability.Capabilities);
                 }
-            }            
-            
-            DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
-
-            if (tableParameters?.FilterFunctions != null)
-            {
-                foreach (string globalFilterFunction in tableParameters.FilterFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalFilterFunction, out DelegationCapability globalFilterFunctionCapability))
-                    {
-                        filterFunctionSupportedByAllColumns |= globalFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            DelegationCapability? filterFunctionsSupportedByTable = null;
-
-            if (tableParameters?.FilterSupportedFunctions != null)
-            {
-                filterFunctionsSupportedByTable = DelegationCapability.None;
-
-                foreach (string globalSupportedFilterFunction in tableParameters.FilterSupportedFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalSupportedFilterFunction, out DelegationCapability globalSupportedFilterFunctionCapability))
-                    {
-                        filterFunctionsSupportedByTable |= globalSupportedFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
             }
 
             Dictionary<DPath, DelegationCapability> groupByRestrictions = new Dictionary<DPath, DelegationCapability>();
@@ -185,7 +154,7 @@ namespace Microsoft.PowerFx.Core.Entities
                 {
                     AddOrUpdate(groupByRestrictions, ungroupableProperty, DelegationCapability.Group);
                 }
-            }            
+            }
 
             Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
 
@@ -206,8 +175,8 @@ namespace Microsoft.PowerFx.Core.Entities
             }
 
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
-            
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, filterFunctionSupportedByAllColumns, filterFunctionsSupportedByTable, tableParameters);
+
+            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, tableParameters);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
@@ -218,7 +187,7 @@ namespace Microsoft.PowerFx.Core.Entities
                 groupOpMetadata,
                 oDataOpMetadata,
                 sortOpMetadata
-            };            
+            };
         }
 
         internal static DPath GetReplacementPath(string alias, DPath currentColumnPath)

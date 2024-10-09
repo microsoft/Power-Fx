@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         // If no capability at column level specified then this would be the default filter functionality supported by column.
         private readonly DelegationCapability _defaultCapabilities;
 
-        private readonly TableParameters _tableParameters;
+        private readonly TableDelegationInfo _tableParameters;
 
         public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions, Dictionary<DPath, DelegationCapability> columnCapabilities, DelegationCapability filterFunctionsSupportedByAllColumns, DelegationCapability? filterFunctionsSupportedByTable)
             : base(tableSchema)
@@ -42,19 +42,47 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             }
         }
 
-        public FilterOpMetadata(AggregateType schema, DelegationCapability filterFunctionsSupportedByAllColumns, DelegationCapability? filterFunctionsSupportedByTable, TableParameters tableParameters)
-            : base(schema)
+        public FilterOpMetadata(AggregateType schema, TableDelegationInfo tableParameters)
+            : base(schema._type)
         {
             _columnCapabilities = null;
             _columnRestrictions = null;
             _tableParameters = tableParameters;
 
+            DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
+
+            if (tableParameters?.FilterFunctions != null)
+            {
+                foreach (string globalFilterFunction in tableParameters.FilterFunctions)
+                {
+                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalFilterFunction, out DelegationCapability globalFilterFunctionCapability))
+                    {
+                        filterFunctionSupportedByAllColumns |= globalFilterFunctionCapability | DelegationCapability.Filter;
+                    }
+                }
+            }
+
+            DelegationCapability? filterFunctionsSupportedByTable = null;
+
+            if (tableParameters?.FilterSupportedFunctions != null)
+            {
+                filterFunctionsSupportedByTable = DelegationCapability.None;
+
+                foreach (string globalSupportedFilterFunction in tableParameters.FilterSupportedFunctions)
+                {
+                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalSupportedFilterFunction, out DelegationCapability globalSupportedFilterFunctionCapability))
+                    {
+                        filterFunctionsSupportedByTable |= globalSupportedFilterFunctionCapability | DelegationCapability.Filter;
+                    }
+                }
+            }
+
             _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
-            _defaultCapabilities = filterFunctionsSupportedByAllColumns;
+            _defaultCapabilities = filterFunctionSupportedByAllColumns;
 
             if (_filterFunctionsSupportedByTable != null)
             {
-                _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
+                _defaultCapabilities = filterFunctionSupportedByAllColumns | DelegationCapability.Filter;
             }
         }
 

@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return DisplayNameProvider.New(recordType.FieldNames.Select(f => new KeyValuePair<DName, DName>(new DName(f), new DName(f))));
         }
 
-        private static TableParameters GetTableParameters(string tableName, RecordType recordType)
+        private static TableDelegationInfo GetTableParameters(string tableName, RecordType recordType)
         {
             return new TestTableParameters(recordType)
             {
@@ -81,10 +81,12 @@ namespace Microsoft.PowerFx.Core.Tests
             return _recordType == other2._recordType;
         }
 
-        public override int GetHashCode() => throw new NotImplementedException();        
+#pragma warning disable CA1065 // Exceptions should not be raised in this type of method.
+        public override int GetHashCode() => throw new NotImplementedException();
+#pragma warning restore CA1065
     }
 
-    public class TestTableParameters : TableParameters
+    public class TestTableParameters : TableDelegationInfo
     {
         private readonly RecordType _recordType;
 

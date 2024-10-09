@@ -50,12 +50,12 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/> and <see cref="TableParameters"/>.
+        /// Initializes a new instance of the <see cref="RecordType"/> class with <see cref="DisplayNameProvider"/> and <see cref="TableDelegationInfo"/>.
         /// Derived classes calling this must override <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
         /// </summary>
         /// <param name="displayNameProvider">Provide DisplayNameProvider to be used.</param>
         /// <param name="tableParameters">Table provider to be used.</param>
-        public RecordType(DisplayNameProvider displayNameProvider, TableParameters tableParameters)
+        public RecordType(DisplayNameProvider displayNameProvider, TableDelegationInfo tableParameters)
             : base(false, displayNameProvider)
         {
             _type = DType.AttachDataSourceInfo(_type, new InternalTableParameters(this, displayNameProvider, tableParameters));            

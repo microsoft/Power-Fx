@@ -114,9 +114,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _recordType = recordType;
         }
 
-        private static TableParameters GetTableParameters()
+        private static TableDelegationInfo GetTableParameters()
         {
-            return new TableParameters()
+            return new CdpTableDelegationInfo()
             {
                 TableName = "FileTabular"
             };

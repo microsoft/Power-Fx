@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    public class TableParameters
+    public abstract class TableDelegationInfo
     {
         // Defines unsortable columns or columns only supporting ascending ordering
         public SortRestrictions SortRestriction { get; init; }
@@ -52,9 +52,12 @@ namespace Microsoft.PowerFx.Core.Entities
         public string DatasetName { get; init; }
 
         // Defines columns with relationships
+        // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
-        public TableParameters()
+        public virtual bool IsDelegable => (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+
+        public TableDelegationInfo()
         {
             PagingCapabilities = new PagingCapabilities()
             {
@@ -66,15 +69,11 @@ namespace Microsoft.PowerFx.Core.Entities
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public virtual ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
-        {
-            // We should never reach that point
-            throw new NotImplementedException();
-        }
+        public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);        
 
-        public static TableParameters Default(string tableName, bool isReadOnly, string datasetName)
+        public static TableDelegationInfo Default(string tableName, bool isReadOnly, string datasetName)
         {
-            return new TableParameters()
+            return new CdpTableDelegationInfo()
             {
                 TableName = tableName,
                 IsReadOnly = isReadOnly,                

@@ -16,19 +16,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         {
             Contracts.AssertValid(schema);
 
-            Schema = schema;
-            _type = null;
-        }
-
-        public OperationCapabilityMetadata(AggregateType schema)
-        {
-            Contracts.Assert(schema is RecordType);
-
-            _type = (RecordType)schema;
-            Schema = schema._type;
-        }
-
-        public readonly RecordType _type;
+            Schema = schema;            
+        }        
 
         protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions => new Dictionary<DPath, DelegationCapability>();
 
