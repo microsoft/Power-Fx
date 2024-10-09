@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private static TableDelegationInfo GetTableParameters(string tableName, RecordType recordType)
         {
-            return new TestTableParameters(recordType)
+            return new TestTableDelegationInfo(recordType)
             {
                 TableName = tableName
             };
@@ -86,15 +86,17 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning restore CA1065
     }
 
-    public class TestTableParameters : TableDelegationInfo
+    public class TestTableDelegationInfo : TableDelegationInfo
     {
         private readonly RecordType _recordType;
 
-        public TestTableParameters(RecordType recordType)
+        public TestTableDelegationInfo(RecordType recordType)
             : base()
         {
             _recordType = recordType;
         }
+
+        public override bool IsDelegable => true;
 
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {
