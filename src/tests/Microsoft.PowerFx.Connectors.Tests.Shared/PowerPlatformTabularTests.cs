@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Single(ads);
 
             DataSourceInfo dataSourceInfo = Assert.IsType<DataSourceInfo>(ads.First());
-            Assert.NotNull(dataSourceInfo);            
+            Assert.NotNull(dataSourceInfo);
 
             Assert.Equal("Customers", dataSourceInfo.EntityName.Value);
             Assert.True(dataSourceInfo.IsDelegatable);
@@ -114,10 +114,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(dataSourceInfo.IsRefreshable);
             Assert.True(dataSourceInfo.IsSelectable);
             Assert.True(dataSourceInfo.IsWritable);
-            
+
             Assert.Equal("Customers", dataSourceInfo.Name);
             Assert.True(dataSourceInfo.RequiresAsync);
-            
+
             Assert.Null(sqlTable.Relationships);
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
-            
+
             Assert.Null(sqlTable.Relationships); // TO BE CHANGED, x-ms-relationships only for now
 
             SymbolValues symbolValues = new SymbolValues().Add(fxTableName, sqlTable);
@@ -446,7 +446,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Documents", tds.Name);
             Assert.True(tds.RequiresAsync);
             Assert.NotNull(tds.ServiceCapabilities);
-#endif          
+#endif
             Assert.NotNull(spTable.Relationships);
             Assert.Equal(3, spTable.Relationships.Count);
             Assert.Equal("Editor, Author, CheckoutUser", string.Join(", ", spTable.Relationships.Select(kvp => kvp.Key)));
@@ -658,15 +658,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "Modified By ID'[User]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:~Account:s, " +
                 "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
                 "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
-                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]", 
+                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]",
                 ((CdpRecordType)sfTable.RecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.RecordType.TableSymbolName);
 
-            RecordType rt = sfTable.RecordType;            
+            RecordType rt = sfTable.RecordType;
 
             Assert.True(rt.TryGetUnderlyingFieldType("AccountSource", out FormulaType ft));
-            
+
             HashSet<IExternalTabularDataSource> ads = sfTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
 
@@ -696,7 +696,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(tds.RequiresAsync);
             Assert.NotNull(tds.ServiceCapabilities);
 #endif
-            
+
             // SF doesn't use x-ms-releationships extension
             Assert.Null(sfTable.Relationships);
 
