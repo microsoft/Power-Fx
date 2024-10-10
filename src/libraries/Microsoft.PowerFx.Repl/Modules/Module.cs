@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Repl
 
         /// <summary>
         /// Optional Full path that this module was loaded from. Null if not loaded from a file.
-        /// Primarily useful for helping makers debugging ("where did this module come from")
+        /// Primarily useful for helping makers debugging ("where did this module come from").
         /// </summary>
         public string FullPath { get; init; }
 
