@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
 
-        // Map from Module identity to Module.
+        // Map from Module full path to Module.
         private readonly Dictionary<string, Module> _loadedModules = new Dictionary<string, Module>(StringComparer.OrdinalIgnoreCase);
 
         internal IEnumerable<Module> Modules => _loadedModules.Values;

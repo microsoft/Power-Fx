@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx.Repl
         /// </summary>
         public string Src_Filename { get; set; }
 
+        public ModuleIdentity GetIdentity()
+        {
+            return ModuleIdentity.FromFile(Src_Filename);
+        }
+
         /// <summary>
         /// Contain Power Fx UDF declarations. 
         /// </summary>
