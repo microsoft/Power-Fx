@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             
             Assert.Equal("Customers", dataSourceInfo.Name);
             Assert.True(dataSourceInfo.RequiresAsync);
-            
+             
             Assert.Null(sqlTable.Relationships);
 
             SymbolValues symbolValues = new SymbolValues().Add("Customers", sqlTable);
