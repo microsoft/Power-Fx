@@ -3,16 +3,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
+using System.Text;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
     // This lightweight wrapper around DelegationCababilityConstants is used to enforce valid values for capabilities.
+    [DebuggerDisplay("Delegation={DebugString}")]
     internal struct DelegationCapability
     {
         private BigInteger _capabilities;
+
         private static readonly Lazy<Dictionary<BinaryOp, DelegationCapability>> _binaryOpToDelegationCapabilityMap =
             new Lazy<Dictionary<BinaryOp, DelegationCapability>>(
                 () => new Dictionary<BinaryOp, DelegationCapability>
@@ -179,6 +183,305 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         }
 
         public BigInteger Capabilities => _capabilities;
+
+        internal string DebugString
+        {
+            get
+            {
+                if (_capabilities.IsZero)
+                {
+                    return nameof(None);
+                }
+
+                StringBuilder sb = new StringBuilder();
+
+                if (HasCapability(Sort))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Sort));
+                }
+
+                if (HasCapability(Filter))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Filter));
+                }
+
+                if (HasCapability(GreaterThan))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(GreaterThan));
+                }
+
+                if (HasCapability(GreaterThanOrEqual))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(GreaterThanOrEqual));
+                }
+
+                if (HasCapability(LessThan))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(LessThan));
+                }
+
+                if (HasCapability(LessThanOrEqual))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(LessThanOrEqual));
+                }
+
+                if (HasCapability(And))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(And));
+                }
+
+                if (HasCapability(Or))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Or));
+                }
+
+                if (HasCapability(In))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(In));
+                }
+
+                if (HasCapability(Exactin))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Exactin));
+                }
+
+                if (HasCapability(Not))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Not));
+                }
+
+                if (HasCapability(Equal))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Equal));
+                }
+
+                if (HasCapability(NotEqual))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(NotEqual));
+                }
+
+                if (HasCapability(SortAscendingOnly))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(SortAscendingOnly));
+                }
+
+                if (HasCapability(Contains))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Contains));
+                }
+
+                if (HasCapability(IndexOf))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(IndexOf));
+                }
+
+                if (HasCapability(SubStringOf))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(SubStringOf));
+                }
+
+                if (HasCapability(Year))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Year));
+                }
+
+                if (HasCapability(Month))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Month));
+                }
+
+                if (HasCapability(Day))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Day));
+                }
+
+                if (HasCapability(Hour))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Hour));
+                }
+
+                if (HasCapability(Minute))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Minute));
+                }
+
+                if (HasCapability(Second))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Second));
+                }
+
+                if (HasCapability(Lower))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Lower));
+                }
+
+                if (HasCapability(Upper))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Upper));
+                }
+
+                if (HasCapability(Trim))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Trim));
+                }
+
+                if (HasCapability(Null))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Null));
+                }
+
+                if (HasCapability(Date))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Date));
+                }
+
+                if (HasCapability(Length))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Length));
+                }
+
+                if (HasCapability(Sum))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Sum));
+                }
+
+                if (HasCapability(Min))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Min));
+                }
+
+                if (HasCapability(Max))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Max));
+                }
+
+                if (HasCapability(Average))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Average));
+                }
+                
+                if (HasCapability(Count))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Count));
+                }
+                
+                if (HasCapability(Add))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Add));
+                }
+                
+                if (HasCapability(Sub))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Sub));
+                }
+                
+                if (HasCapability(StartsWith))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(StartsWith));
+                }
+                
+                if (HasCapability(Mul))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Mul));
+                }
+                
+                if (HasCapability(Div))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Div));
+                }
+
+                if (HasCapability(EndsWith))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(EndsWith));
+                }
+                
+                if (HasCapability(CountDistinct))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(CountDistinct));
+                }
+                
+                if (HasCapability(CdsIn))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(CdsIn));
+                }
+                
+                if (HasCapability(Top))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Top));
+                }
+                
+                if (HasCapability(Group))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Group));
+                }
+                
+                if (HasCapability(AsType))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(AsType));
+                }
+
+                if (HasCapability(ArrayLookup))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(ArrayLookup));
+                }
+
+                return sb.ToString();
+            }
+        }
+
+        private static void AddCommaIfNeeded(StringBuilder sb)
+        {
+            if (sb.Length != 0)
+            {
+                sb.Append(", ");
+            }
+        }
 
         public static bool IsValid(BigInteger capabilityConstant)
         {

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -56,6 +55,13 @@ namespace Microsoft.PowerFx.Types
 
             type = Build(dType);
             return true;
+        }
+
+        // When a relationship is used in connected types, this returns the 'base' type of the field 
+        // without retrieving the type issued from the relationship
+        public virtual bool TryGetUnderlyingFieldType(string name, out FormulaType type)
+        {
+            return TryGetFieldType(name, out type);
         }
 
         internal bool TryGetBackingDType(string fieldName, out DType type)

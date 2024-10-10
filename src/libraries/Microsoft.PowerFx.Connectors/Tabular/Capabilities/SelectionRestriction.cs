@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public SelectionRestriction(bool isSelectable)
         {
+            // Indicates whether this table has selectable columns
+            // Used in https://msazure.visualstudio.com/OneAgile/_git/PowerApps-Client?path=/src/Cloud/DocumentServer.Core/Document/Document/InfoTypes/CdsDataSourceInfo.cs&_a=contents&version=GBmaster
             IsSelectable = isSelectable;
         }
     }

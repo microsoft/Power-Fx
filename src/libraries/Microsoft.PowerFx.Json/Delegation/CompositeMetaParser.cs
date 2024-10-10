@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -13,9 +11,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     internal sealed partial class DelegationMetadata : DelegationMetadataBase
     {
         public DelegationMetadata(DType schema, string delegationMetadataJson)
-            : base(
-                  schema: schema, 
-                  compositeMetadata: new DelegationMetadataParser().Parse(delegationMetadataJson, schema))
+            : base(schema, new DelegationMetadataParser().Parse(delegationMetadataJson, schema))
+        {
+        }
+
+        public DelegationMetadata(DType schema, List<OperationCapabilityMetadata> metadata)
+            : base(schema, new CompositeCapabilityMetadata(schema, metadata))
         {
         }
 

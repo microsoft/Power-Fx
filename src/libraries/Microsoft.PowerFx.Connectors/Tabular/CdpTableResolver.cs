@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -24,9 +25,6 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly bool _doubleEncoding;
 
-        // Temporary hack to generate ADS
-        public bool GenerateADS { get; init; }
-
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
@@ -37,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors
             Logger = logger;
         }
 
-        public async Task<CdpTableDescriptor> ResolveTableAsync(string tableName, CancellationToken cancellationToken)
+        public async Task<ConnectorType> ResolveTableAsync(string tableName, CancellationToken cancellationToken)
         {
             // out string name, out string displayName, out ServiceCapabilities tableCapabilities
             cancellationToken.ThrowIfCancellationRequested();
@@ -56,41 +54,40 @@ namespace Microsoft.PowerFx.Connectors
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
-            if (!string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text))
             {
-                List<SqlRelationship> sqlRelationships = null;
-
-                // for SQL need to get relationships separately as they aren't included by CDP connector
-                if (IsSql())
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
-                    string body =
-                        @"{""query"":""SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column" +
-                          @" FROM sys.foreign_keys fk" +
-                          @" INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id" +
-                          @" INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id" +
-                          @" INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id" +
-                          @" INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id" +
-                          @" INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id" +
-                          @" INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id" +
-                          @" INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id" +
-                          @" WHERE '[' + sp.name + '].[' + tp.name + ']' = '" + tableName + "'" + @"""}";
-
-                    string text2 = await CdpServiceBase.GetObject(_httpClient, $"Get SQL relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false);
-
-                    // Result should be cached
-                    sqlRelationships = GetSqlRelationships(text2);
-                }
-
-                string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                ConnectorType ct = ConnectorFunction.GetConnectorTypeAndTableCapabilities(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities);
-
-                return new CdpTableDescriptor() { ConnectorType = ct, Name = name, DisplayName = displayName, TableCapabilities = tableCapabilities };
+                return null;
             }
 
-            return new CdpTableDescriptor();
+            List<SqlRelationship> sqlRelationships = null;
+
+            // for SQL need to get relationships separately as they aren't included by CDP connector
+            if (IsSql())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                uri = (_uriPrefix ?? string.Empty) + $"/v2/datasets/{dataset}/query/sql";
+                string body =
+                    @"{""query"":""SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column" +
+                      @" FROM sys.foreign_keys fk" +
+                      @" INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id" +
+                      @" INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id" +
+                      @" INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id" +
+                      @" INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id" +
+                      @" INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id" +
+                      @" INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id" +
+                      @" INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id" +
+                      @" WHERE '[' + sp.name + '].[' + tp.name + ']' = '" + tableName + "'" + @"""}";
+
+                string text2 = await CdpServiceBase.GetObject(_httpClient, $"Get SQL relationships", uri, body, cancellationToken, Logger).ConfigureAwait(false);
+
+                // Result should be cached
+                sqlRelationships = GetSqlRelationships(text2);
+            }
+
+            string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
+
+            return ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo);
         }
 
         private bool IsSql() => _uriPrefix.Contains("/sql/");

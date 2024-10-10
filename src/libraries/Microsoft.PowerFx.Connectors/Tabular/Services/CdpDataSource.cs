@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors
             return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
         }
 
-        public async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task<IEnumerable<CdpTable>> GetTablesAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             if (DatasetMetadata == null)
             {
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Connectors
                 + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
-            return tables?.Value?.Select(rt => new CdpTable(DatasetName, rt.Name, DatasetMetadata, tables?.Value) { DisplayName = rt.DisplayName });
+            return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value) { DisplayName = rawTable.DisplayName });
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="logger">Logger.</param>
         /// <returns>CdpTable class.</returns>
         /// <exception cref="InvalidOperationException">When no or more than one tables are identified.</exception>
-        public async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string tableName, bool? logicalOrDisplay, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        public virtual async Task<CdpTable> GetTableAsync(HttpClient httpClient, string uriPrefix, string tableName, bool? logicalOrDisplay, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
             IEnumerable<CdpTable> tables = await GetTablesAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);

@@ -15,19 +15,22 @@ namespace Microsoft.PowerFx.Connectors
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterRequiredProperties)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly List<string> RequiredProperties;
+        public readonly IList<string> RequiredProperties;
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.NonFilterableProperties)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly List<string> NonFilterableProperties;
+        public readonly IList<string> NonFilterableProperties;
 
-        public FilterRestriction(List<string> requiredProperties, List<string> nonFilterableProperties)
+        public FilterRestriction(IList<string> requiredProperties, IList<string> nonFilterableProperties)
         {
             Contracts.AssertValueOrNull(requiredProperties);
             Contracts.AssertValueOrNull(nonFilterableProperties);
 
+            // List of required properties
             RequiredProperties = requiredProperties;
+
+            // List of non filterable properties
             NonFilterableProperties = nonFilterableProperties;
         }
     }

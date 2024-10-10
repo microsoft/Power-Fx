@@ -19,12 +19,22 @@ namespace Microsoft.PowerFx.Connectors
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, ColumnCapabilitiesBase> Properties => _childColumnsCapabilities.Any() ? _childColumnsCapabilities : null;
 
-        private readonly Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
+        private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
         [JsonInclude]
         [JsonPropertyName(Constants.XMsCapabilities)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly ColumnCapabilitiesDefinition Capabilities;
+        public ColumnCapabilitiesDefinition Capabilities;
+        
+        public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
+        {
+            Capabilities = new ColumnCapabilitiesDefinition(null),
+            _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>()
+        };
+
+        private ColumnCapabilities()
+        {
+        }
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)
         {
@@ -56,7 +66,11 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            return new ColumnCapabilities(new ColumnCapabilitiesDefinition(filterFunctions, propertyAlias, isChoice));
+            return new ColumnCapabilities(new ColumnCapabilitiesDefinition(filterFunctions)
+            {
+                QueryAlias = propertyAlias,
+                IsChoice = isChoice
+            });
         }
     }
 }

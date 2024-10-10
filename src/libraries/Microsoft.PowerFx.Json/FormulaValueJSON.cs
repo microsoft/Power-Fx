@@ -246,9 +246,9 @@ namespace Microsoft.PowerFx.Types
             {
                 var name = pair.Name;
                 var value = pair.Value;
-                FormulaType fieldType = null;
+                FormulaType fieldType = null;                
 
-                if (recordType?.TryGetFieldType(name, out fieldType) == false)
+                if (recordType?.TryGetUnderlyingFieldType(name, out fieldType) == false)
                 {
                     if (!settings.AllowUnknownRecordFields)
                     {

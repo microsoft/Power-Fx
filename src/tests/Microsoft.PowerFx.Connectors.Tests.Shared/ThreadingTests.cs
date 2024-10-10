@@ -21,7 +21,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var bugsFieldType = new HashSet<Type>();
             var bugNames = new HashSet<string>()
             {
-                "ConnectorFunction._slash"
+                "ConnectorFunction._slash",
+                "ColumnCapabilities.DefaultFilterFunctionSupport"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

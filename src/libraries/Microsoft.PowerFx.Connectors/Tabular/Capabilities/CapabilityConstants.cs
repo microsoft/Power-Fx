@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string FilterRequiredProperties = "requiredProperties";
         public const string FilterRestrictions = "filterRestrictions";
         public const string GroupRestriction = "groupRestriction";
+        public const string IsChoiceValue = "Value";
         public const string IsDelegable = "isDelegable";
         public const string IsOnlyServerPagable = "isOnlyServerPagable";
         public const string IsPageable = "isPageable";
@@ -36,6 +37,6 @@ namespace Microsoft.PowerFx.Connectors
         public const string SPQueryName = "OdataQueryName";
         public const string SupportsRecordPermission = "supportsRecordPermission";
         public const string UngroupableProperties = "ungroupableProperties";
-        public const string UnsortableProperties = "unsortableProperties";
+        public const string UnsortableProperties = "unsortableProperties";        
     }
 }

@@ -14,28 +14,23 @@ namespace Microsoft.PowerFx.Connectors
     {
         private const string NotInitialized = "Tabular service is not initialized.";
 
-        public TableType TableType => TabularRecordType?.ToTable();
+        public TableType TableType => RecordType?.ToTable();
 
-        public RecordType TabularRecordType { get; private set; } = null;
+        public RecordType RecordType { get; protected internal set; } = null;
 
         public bool IsInitialized => TableType != null;
 
         public abstract bool IsDelegable { get; }
 
-        public abstract ConnectorType ConnectorType { get; }
+        internal abstract IReadOnlyDictionary<string, Relationship> Relationships { get; }
 
         public abstract HttpClient HttpClient { get; }
 
         public virtual CdpTableValue GetTableValue()
         {
             return IsInitialized
-                ? new CdpTableValue(this, ConnectorType)
+                ? new CdpTableValue(this, Relationships)
                 : throw new InvalidOperationException(NotInitialized);
-        }
-
-        protected void SetRecordType(RecordType recordType)
-        {
-            TabularRecordType = recordType;
         }
 
         // TABLE METADATA SERVICE
