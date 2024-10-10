@@ -868,7 +868,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("table", dm.Tabular.TableDisplayName);
             Assert.Equal("tables", dm.Tabular.TablePluralName);
             Assert.Equal("double", dm.Tabular.UrlEncoding);
-
+             
             CdpDataSource cds = new CdpDataSource("default");
 
             // only one network call as we already read metadata
