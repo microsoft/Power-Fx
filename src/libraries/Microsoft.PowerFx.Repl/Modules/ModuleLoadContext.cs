@@ -45,8 +45,10 @@ namespace Microsoft.PowerFx.Repl
         private readonly ReadOnlySymbolTable _commonIncomingSymbols;
 
         // Set of modules we visited - used to detect cycles. 
-        // String is the module's full path.
-        private readonly HashSet<string> _visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        // Key String is the module's full path.
+        // Value is null if module is in-progress of being loaded (this detects cycles). 
+        // We still allow diamond dependencies. 
+        private readonly Dictionary<string, Module> _alreadyLoaded = new Dictionary<string, Module>();
 
         public ModuleLoadContext(ReadOnlySymbolTable commonIncomingSymbols)
         {
@@ -65,11 +67,19 @@ namespace Microsoft.PowerFx.Repl
             (var poco, var loader2) = await loader.LoadAsync(name).ConfigureAwait(false);
 
             string fullPathIdentity = poco.Src_Filename.ToLowerInvariant();
-            if (!_visited.Add(fullPathIdentity))
+            if (_alreadyLoaded.TryGetValue(fullPathIdentity, out var existing))
             {
-                // Already loaded
-                throw new InvalidOperationException($"Circular reference: {name}");
+                if (existing != null)
+                {
+                    // If we fully loaded the module, then it's not circular. 
+                    return existing;
+                }                
+                
+                // Circular reference. 
+                throw new InvalidOperationException($"Circular reference: {name}");                
             }
+
+            _alreadyLoaded.Add(fullPathIdentity, null); // In-progress
 
             // Load all imports first. 
 
@@ -114,6 +124,8 @@ namespace Microsoft.PowerFx.Repl
             {
                  FullPath = fullPathIdentity
             };
+
+            _alreadyLoaded[fullPathIdentity] = module; // done loading. 
 
             return module;
         }

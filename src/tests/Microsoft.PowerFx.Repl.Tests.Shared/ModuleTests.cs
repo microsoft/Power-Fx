@@ -64,7 +64,8 @@ namespace Microsoft.PowerFx.Repl.Tests
 
         private void AssertNoErrors()
         {
-            Assert.Empty(_output.Get(OutputKind.Error));
+            var errors = _output.Get(OutputKind.Error);
+            Assert.Empty(errors);
         }
 
         private string GetModuleFullPath(string path)
@@ -191,6 +192,18 @@ namespace Microsoft.PowerFx.Repl.Tests
             Assert.Equal("-2", log);
 
             log = HandleLine("Abs(-7)"); // calls new one from module
+        }
+
+        // Diamond inheritence.
+        // 1 --> {2a, 2b}. 2a-->3. 2b-->3.
+        // This is interesting since module 3 gets used multiple times, but it's not a cycle. 
+        [Fact]
+        public void Diamond()
+        {
+            Import("diamond_1.fx.yml");
+
+            var log = HandleLine("Func1(5)");
+            Assert.Equal("\"2A(3(5)),2B(3(5))\"", log);
         }
 
         // Conflict if we import 2 modules that define the same symbols. 

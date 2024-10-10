@@ -47,11 +47,11 @@ namespace Microsoft.PowerFx.Repl
             var deserializer = new DeserializerBuilder()                
                 .WithTypeConverter(new StringWithSourceConverter(fullPath, txt))
                 .Build();
-            var poco = deserializer.Deserialize<ModulePoco>(txt);
+            var modulePoco = deserializer.Deserialize<ModulePoco>(txt);
 
-            poco.Src_Filename = fullPath;
+            modulePoco.Src_Filename = fullPath;
 
-            return (poco, this);
+            return (modulePoco, this);
         }
     }
 }

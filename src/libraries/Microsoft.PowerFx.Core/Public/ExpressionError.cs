@@ -229,7 +229,7 @@ namespace Microsoft.PowerFx
                     var error = ExpressionError.New(x, null);
                     error.FragmentLocation = fragmentLocation.Apply(originalText, error.Span);
                     return error;
-                }).ToArray();
+                });
             }
         }
     }

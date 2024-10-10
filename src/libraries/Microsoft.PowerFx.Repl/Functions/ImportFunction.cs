@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Repl.Functions
                     .ConfigureAwait(false);
             }
 
-            var hasErrors = errors.Where(errors => !errors.IsWarning).Any();
+            var hasErrors = errors.Where(error => !error.IsWarning).Any();
 
             if (!hasErrors)
             {

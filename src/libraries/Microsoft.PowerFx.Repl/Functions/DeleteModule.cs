@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Repl.Functions
         {
             if (!_repl.TryResolveModule(value.Value, out var module))
             {
-                await output.WriteLineAsync("Can't resolve module. Try ListModules() to see loaded modules.", OutputKind.Error, cancel)
+                await output.WriteLineAsync($"Can't resolve module '{value.Value}'. Try ListModules() to see loaded modules.", OutputKind.Error, cancel)
                 .ConfigureAwait(false);
             }
             else

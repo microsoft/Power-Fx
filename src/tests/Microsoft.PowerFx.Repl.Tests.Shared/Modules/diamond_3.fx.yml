@@ -1,0 +1,3 @@
+
+Formulas: |
+  Func3(x: Text) : Text = $"3({x})";
