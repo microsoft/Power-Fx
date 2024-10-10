@@ -1,0 +1,4 @@
+# Define a basic recursive function. 
+Formulas: |
+    Fib(n: Number) : Number = 
+        If(n <= 1, n, Fib(n - 1) + Fib(n - 2));
