@@ -102,6 +102,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageEditWithMask.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\OpenAI CreateImageVariation2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Oracle GetRelationships SampleDB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_00.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_01.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\Response_DVReturnType_02.json" />
@@ -293,6 +294,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Office_365_Outlook.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Office_365_Users.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\OpenAI.yaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Oracle.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PetStore.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
