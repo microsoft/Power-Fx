@@ -869,7 +869,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("tables", dm.Tabular.TablePluralName);
             Assert.Equal("double", dm.Tabular.UrlEncoding);
 
-            CdpDataSource cds = new CdpDataSource("default");
+            CdpDataSource cds = new CdpDataSource("default"); 
 
             // only one network call as we already read metadata
             testConnector.SetResponseFromFiles(@"Responses\ZD GetDatasetsMetadata.json", @"Responses\ZD GetTables.json");
