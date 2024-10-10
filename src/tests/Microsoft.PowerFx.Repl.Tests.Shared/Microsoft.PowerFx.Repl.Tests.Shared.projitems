@@ -10,8 +10,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyProperties2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\TempFileHolder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModuleIdentityTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ModuleTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultilineProcessorTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReplTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mocks\TestReplOutput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringWithSourceTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Modules\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)modules\*.fx.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

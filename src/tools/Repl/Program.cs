@@ -18,6 +18,8 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+#pragma warning disable CS0618 // Type or member is obsolete
+
     public static class ConsoleRepl
     { 
         private const string OptionFormatTable = "FormatTable";
@@ -84,9 +86,9 @@ namespace Microsoft.PowerFx
 
             config.EnableSetFunction();
             config.EnableJsonFunctions();
-#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableOptionSetInfo();
-#pragma warning restore CS0618 // Type or member is obsolete
+
+            config.AddFunction(new AssertFunction());
 
             config.AddFunction(new ResetFunction());
             config.AddFunction(new Option0Function());
@@ -97,9 +99,7 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
-#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
-#pragma warning restore CS0618 // Type or member is obsolete
 
             config.AddOptionSet(optionsSet);
 
@@ -124,9 +124,7 @@ namespace Microsoft.PowerFx
         }
 
         // Hook repl engine with customizations.
-#pragma warning disable CS0618 // Type or member is obsolete
         private class MyRepl : PowerFxREPL
-#pragma warning restore CS0618 // Type or member is obsolete
         {
             public MyRepl()
             {
@@ -138,6 +136,8 @@ namespace Microsoft.PowerFx
 
                 this.AllowSetDefinitions = true;
                 this.AllowUserDefinedFunctions = _enableUDFs;
+                this.AllowImport = true;
+
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
@@ -427,9 +427,7 @@ namespace Microsoft.PowerFx
 
         private class MyHelpProvider : HelpProvider
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             public override async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
-#pragma warning restore CS0618 // Type or member is obsolete
             {
                 if (context?.ToLowerInvariant() == "options" || context?.ToLowerInvariant() == "option")
                 {

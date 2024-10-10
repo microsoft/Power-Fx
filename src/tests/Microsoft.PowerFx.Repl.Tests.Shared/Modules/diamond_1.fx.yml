@@ -1,0 +1,7 @@
+Imports:
+- File: diamond_2a.fx.yml
+- File: diamond_2b.fx.yml
+
+# Depends on 2a,2b. Both depend on 3. 
+Formulas: |
+  Func1(x: Text) : Text = Func2a(x) & "," & Func2b(x);

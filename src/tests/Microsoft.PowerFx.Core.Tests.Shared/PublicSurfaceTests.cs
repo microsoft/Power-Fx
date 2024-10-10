@@ -68,6 +68,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.IdentToken",
                 "Microsoft.PowerFx.Syntax.NumLitToken",
                 "Microsoft.PowerFx.Syntax.Span",
+                "Microsoft.PowerFx.Syntax.FileLocation",
                 "Microsoft.PowerFx.Syntax.StrLitToken",
                 "Microsoft.PowerFx.Syntax.Token",
                 "Microsoft.PowerFx.Syntax.TokKind",
