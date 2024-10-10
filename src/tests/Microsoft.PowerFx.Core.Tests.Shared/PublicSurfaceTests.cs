@@ -46,8 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
-                "Microsoft.PowerFx.IPostCheckErrorHandler",
-
+                "Microsoft.PowerFx.IPostCheckErrorHandler",                
                 "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols
@@ -129,11 +128,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DecimalValue",
                 "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.DelegationParameters",
-                "Microsoft.PowerFx.Types.DelegationParameterFeatures",                
+                "Microsoft.PowerFx.Types.DelegationParameterFeatures",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
-                "Microsoft.PowerFx.Types.ExternalTypeKind",                                
+                "Microsoft.PowerFx.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Types.FormulaType",
                 "Microsoft.PowerFx.Types.FormulaValue",
                 "Microsoft.PowerFx.Types.GuidType",
@@ -143,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
                 "Microsoft.PowerFx.Types.UntypedObjectBase",
-                "Microsoft.PowerFx.Types.IValueVisitor",              
+                "Microsoft.PowerFx.Types.IValueVisitor",
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NamedValue",
                 "Microsoft.PowerFx.Types.NumberType",
@@ -158,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.StringType",
                 "Microsoft.PowerFx.Types.StringValue",
                 "Microsoft.PowerFx.Types.TableType",
-                "Microsoft.PowerFx.Types.TableValue",
+                "Microsoft.PowerFx.Types.TableValue",                
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
@@ -192,18 +191,27 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // TBD ...
                 "Microsoft.PowerFx.BasicUserInfo",
-                "Microsoft.PowerFx.PowerFxFileInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Entities.IRefreshable",                               
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilities",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesBase",
+                "Microsoft.PowerFx.Core.Entities.ColumnCapabilitiesDefinition",
+                "Microsoft.PowerFx.Core.Entities.FilterRestrictions",
+                "Microsoft.PowerFx.Core.Entities.GroupRestrictions",
+                "Microsoft.PowerFx.Core.Entities.IRefreshable",
+                "Microsoft.PowerFx.Core.Entities.PagingCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
+                "Microsoft.PowerFx.Core.Entities.SortRestrictions",
+                "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.UserInfo",
                 "Microsoft.PowerFx.Logging.ITracer",
-                "Microsoft.PowerFx.Logging.TraceSeverity"
+                "Microsoft.PowerFx.Logging.TraceSeverity",
+                "Microsoft.PowerFx.PowerFxFileInfo",
+                "Microsoft.PowerFx.UserInfo"
             };
 
             var sb = new StringBuilder();
