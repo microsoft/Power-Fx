@@ -890,7 +890,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(zdTable._tabularService.IsInitialized);
             Assert.True(zdTable.IsDelegable);
 
-            Assert.Equal(
+            Assert.Equal( 
                 "r![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
