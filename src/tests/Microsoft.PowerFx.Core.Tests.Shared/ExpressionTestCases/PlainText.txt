@@ -105,5 +105,5 @@ Error({Kind:ErrorKind.Div0})
 >> PlainText("More character references: &#X1f970; - &#x1F948;")
 "More character references: 🥰 - 🥈"
 
->> PlainText("<para>Not a <br>line break.</para><para>Also not a line break.</para>")
+>> PlainText("<para>Not a <break>line break.</para><para>Also not a line break.</para>")
 "Not a line break.Also not a line break."
