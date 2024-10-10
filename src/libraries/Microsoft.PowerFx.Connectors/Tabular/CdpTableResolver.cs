@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors
 
             string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
 
-            return ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableDelegationInfo tableParameters);
+            return ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo);
         }
 
         private bool IsSql() => _uriPrefix.Contains("/sql/");

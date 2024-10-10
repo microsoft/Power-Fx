@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal class CdpTableDelegationInfo : TableDelegationInfo
+    internal class CdpDelegationInfo : TableDelegationInfo
     {
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {

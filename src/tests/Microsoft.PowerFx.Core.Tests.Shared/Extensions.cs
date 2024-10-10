@@ -151,21 +151,21 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append(":");
 
                 IExternalTabularDataSource ads = fType._type.AssociatedDataSources.FirstOrDefault();
-                InternalTableParameters internalTableParameters = ads as InternalTableParameters;
+                DataSourceInfo dataSourceInfo = ads as DataSourceInfo;
 
-                if (internalTableParameters == null && fType._type.TryGetType(new DName(fieldName), out DType type))
+                if (dataSourceInfo == null && fType._type.TryGetType(new DName(fieldName), out DType type))
                 {
                     sb.Append(type.ToString());
                 }
-                else if (internalTableParameters != null)
+                else if (dataSourceInfo != null)
                 {
-                    if (internalTableParameters.ColumnsWithRelationships.TryGetValue(fieldName, out string remoteTable))
+                    if (dataSourceInfo.ColumnsWithRelationships.TryGetValue(fieldName, out string remoteTable))
                     {
                         sb.Append('~');
                         sb.Append(remoteTable);
                         sb.Append(':');
 
-                        if (!internalTableParameters.RecordType.TryGetUnderlyingFieldType(fieldName, out FormulaType backingFieldType))
+                        if (!dataSourceInfo.RecordType.TryGetUnderlyingFieldType(fieldName, out FormulaType backingFieldType))
                         {
                             throw new InvalidOperationException();
                         }

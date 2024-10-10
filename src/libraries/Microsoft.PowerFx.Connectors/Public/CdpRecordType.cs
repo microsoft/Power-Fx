@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ICdpTableResolver TableResolver { get; }
 
-        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo tableParameters)
-            : base(connectorType.DisplayNameProvider, tableParameters)
+        internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
+            : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;

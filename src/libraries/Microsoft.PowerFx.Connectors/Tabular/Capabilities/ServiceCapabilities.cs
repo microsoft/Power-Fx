@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Connectors
             SupportsRecordPermission = recordPermissionCapabilities;
         }
 
-        public static TableDelegationInfo ToTableParameters(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
+        public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
         {            
             SortRestrictions sortRestriction = new SortRestrictions()
             {
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors
 
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
 
-            return new CdpTableDelegationInfo()
+            return new CdpDelegationInfo()
             {
                 TableName = tableName,
                 IsReadOnly = isReadOnly,               

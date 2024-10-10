@@ -105,18 +105,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(ads);
             Assert.Single(ads);
 
-            InternalTableParameters tableParameters = Assert.IsType<InternalTableParameters>(ads.First());
-            Assert.NotNull(tableParameters);            
+            DataSourceInfo dataSourceInfo = Assert.IsType<DataSourceInfo>(ads.First());
+            Assert.NotNull(dataSourceInfo);            
 
-            Assert.Equal("Customers", tableParameters.EntityName.Value);
-            Assert.True(tableParameters.IsDelegatable);
-            Assert.True(tableParameters.IsPageable);
-            Assert.True(tableParameters.IsRefreshable);
-            Assert.True(tableParameters.IsSelectable);
-            Assert.True(tableParameters.IsWritable);
+            Assert.Equal("Customers", dataSourceInfo.EntityName.Value);
+            Assert.True(dataSourceInfo.IsDelegatable);
+            Assert.True(dataSourceInfo.IsPageable);
+            Assert.True(dataSourceInfo.IsRefreshable);
+            Assert.True(dataSourceInfo.IsSelectable);
+            Assert.True(dataSourceInfo.IsWritable);
             
-            Assert.Equal("Customers", tableParameters.Name);
-            Assert.True(tableParameters.RequiresAsync);
+            Assert.Equal("Customers", dataSourceInfo.Name);
+            Assert.True(dataSourceInfo.RequiresAsync);
             
             Assert.Null(sqlTable.Relationships);
 

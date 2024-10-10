@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx.Connectors
                 serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
             }                           
 
-            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToTableParameters(serviceCapabilities, name, isTableReadOnly, this, datasetName));
+            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName));
         }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)

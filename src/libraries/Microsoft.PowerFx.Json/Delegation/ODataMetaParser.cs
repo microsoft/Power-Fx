@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                             if (propertyCapabilityJsonObject.TryGetProperty(CapabilitiesConstants.PropertyQueryAlias, out var alias))
                             {
-                                oDataReplacement.Add(propertyPath, Entities.InternalTableParameters.GetReplacementPath(alias.GetString(), columnPath));
+                                oDataReplacement.Add(propertyPath, Entities.DataSourceInfo.GetReplacementPath(alias.GetString(), columnPath));
                             }
                         }
                     }

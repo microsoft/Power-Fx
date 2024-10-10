@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly List<string> _allowedFilters;
 
         public TestRecordType(string tableName, RecordType recordType, List<string> allowedFilters)
-            : base(GetDisplayNameProvider(recordType), GetTableParameters(tableName, recordType))
+            : base(GetDisplayNameProvider(recordType), GetDelegationInfo(tableName, recordType))
         {
             _recordType = recordType;
             _allowedFilters = allowedFilters;
@@ -63,9 +63,9 @@ namespace Microsoft.PowerFx.Core.Tests
             return DisplayNameProvider.New(recordType.FieldNames.Select(f => new KeyValuePair<DName, DName>(new DName(f), new DName(f))));
         }
 
-        private static TableDelegationInfo GetTableParameters(string tableName, RecordType recordType)
+        private static TableDelegationInfo GetDelegationInfo(string tableName, RecordType recordType)
         {
-            return new TestTableDelegationInfo(recordType)
+            return new TestDelegationInfo(recordType)
             {
                 TableName = tableName
             };
@@ -86,11 +86,11 @@ namespace Microsoft.PowerFx.Core.Tests
 #pragma warning restore CA1065
     }
 
-    public class TestTableDelegationInfo : TableDelegationInfo
+    public class TestDelegationInfo : TableDelegationInfo
     {
         private readonly RecordType _recordType;
 
-        public TestTableDelegationInfo(RecordType recordType)
+        public TestDelegationInfo(RecordType recordType)
             : base()
         {
             _recordType = recordType;

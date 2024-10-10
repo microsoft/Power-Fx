@@ -15,19 +15,20 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal class InternalTableParameters : IExternalTabularDataSource
+    // Implements a base data source, used in DType.AssociatedDataSources, itself in RecordType constructor to host a CDP record type
+    internal class DataSourceInfo : IExternalTabularDataSource
     {
         public const string IsChoiceValue = "Value";
 
         public readonly Dictionary<string, string> ColumnsWithRelationships;
 
-        public InternalTableParameters(AggregateType recordType, DisplayNameProvider displayNameProvider, TableDelegationInfo tableParameters)
+        public DataSourceInfo(AggregateType recordType, DisplayNameProvider displayNameProvider, TableDelegationInfo delegationInfo)
         {
             string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
 
-            EntityName = new DName(tableParameters.TableName);
-            IsWritable = !tableParameters.IsReadOnly;
-            _tableParameters = tableParameters;
+            EntityName = new DName(delegationInfo.TableName);
+            IsWritable = !delegationInfo.IsReadOnly;
+            _delegationInfo = delegationInfo;
             _type = recordType._type;
             RecordType = (RecordType)recordType;
 
@@ -35,18 +36,18 @@ namespace Microsoft.PowerFx.Core.Entities
 
             _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
-            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(tableParameters.TableName, tableParameters.DatasetName, _displayNameMapping));
-            _externalTableMetadata = new InternalTableMetadata(RecordType, Name, Name, tableParameters.IsReadOnly);
-            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(recordType, tableParameters)));
+            _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(delegationInfo.TableName, delegationInfo.DatasetName, _displayNameMapping));
+            _externalTableMetadata = new InternalTableMetadata(RecordType, Name, Name, delegationInfo.IsReadOnly);
+            _delegationMetadata = new DelegationMetadataBase(_type, new CompositeCapabilityMetadata(_type, GetCapabilityMetadata(recordType, delegationInfo)));
             _tabularDataQueryOptions = new TabularDataQueryOptions(this);
             _previousDisplayNameMapping = null;
 
-            ColumnsWithRelationships = tableParameters.ColumnsWithRelationships;
+            ColumnsWithRelationships = delegationInfo.ColumnsWithRelationships;
         }
 
-        public TableDelegationInfo TableParameters => _tableParameters;
+        public TableDelegationInfo DelegationInfo => _delegationInfo;
 
-        private readonly TableDelegationInfo _tableParameters;
+        private readonly TableDelegationInfo _delegationInfo;
 
         private readonly DType _type;
 
@@ -68,9 +69,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public DName EntityName { get; }
 
-        public bool IsSelectable => _tableParameters.SelectionRestriction == null ? false : _tableParameters.SelectionRestriction.IsSelectable;
+        public bool IsSelectable => _delegationInfo.SelectionRestriction == null ? false : _delegationInfo.SelectionRestriction.IsSelectable;
 
-        public bool IsDelegatable => _tableParameters.IsDelegable;
+        public bool IsDelegatable => _delegationInfo.IsDelegable;
 
         public bool IsRefreshable => true;
 
@@ -92,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public RecordType RecordType { get; }
 
-        public bool IsPageable => _tableParameters.PagingCapabilities.IsOnlyServerPagable || IsDelegatable;
+        public bool IsPageable => _delegationInfo.PagingCapabilities.IsOnlyServerPagable || IsDelegatable;
 
         public bool IsConvertingDisplayNameMapping => false;
 
@@ -126,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Entities
             throw new System.NotImplementedException();
         }
 
-        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableDelegationInfo tableParameters)
+        private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableDelegationInfo delegationInfo)
         {
             DType type = recordType._type;
 
@@ -148,9 +149,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DelegationCapability> groupByRestrictions = new Dictionary<DPath, DelegationCapability>();
 
-            if (tableParameters?.GroupRestriction?.UngroupableProperties != null)
+            if (delegationInfo?.GroupRestriction?.UngroupableProperties != null)
             {
-                foreach (string ungroupableProperty in tableParameters.GroupRestriction.UngroupableProperties)
+                foreach (string ungroupableProperty in delegationInfo.GroupRestriction.UngroupableProperties)
                 {
                     AddOrUpdate(groupByRestrictions, ungroupableProperty, DelegationCapability.Group);
                 }
@@ -158,17 +159,17 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
 
-            if (tableParameters?.SortRestriction?.UnsortableProperties != null)
+            if (delegationInfo?.SortRestriction?.UnsortableProperties != null)
             {
-                foreach (string unsortableProperty in tableParameters.SortRestriction.UnsortableProperties)
+                foreach (string unsortableProperty in delegationInfo.SortRestriction.UnsortableProperties)
                 {
                     AddOrUpdate(sortRestrictions, unsortableProperty, DelegationCapability.Sort);
                 }
             }
 
-            if (tableParameters?.SortRestriction?.AscendingOnlyProperties != null)
+            if (delegationInfo?.SortRestriction?.AscendingOnlyProperties != null)
             {
-                foreach (string ascendingOnlyProperty in tableParameters.SortRestriction.AscendingOnlyProperties)
+                foreach (string ascendingOnlyProperty in delegationInfo.SortRestriction.AscendingOnlyProperties)
                 {
                     AddOrUpdate(sortRestrictions, ascendingOnlyProperty, DelegationCapability.SortAscendingOnly);
                 }
@@ -176,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
 
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, tableParameters);
+            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, delegationInfo);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);

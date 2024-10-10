@@ -109,14 +109,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
         internal readonly RecordType _recordType;
 
         public FileTabularRecordType(RecordType recordType)
-            : base(GetDisplayNameProvider(recordType), GetTableParameters())
+            : base(GetDisplayNameProvider(recordType), GetDelegationInfo())
         {
             _recordType = recordType;
         }
 
-        private static TableDelegationInfo GetTableParameters()
+        private static TableDelegationInfo GetDelegationInfo()
         {
-            return new CdpTableDelegationInfo()
+            return new CdpDelegationInfo()
             {
                 TableName = "FileTabular"
             };

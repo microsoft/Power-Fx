@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public override HttpClient HttpClient => _httpClient;
 
-        public override bool IsDelegable => (TableParameters?.SortRestriction != null) || (TableParameters?.FilterRestriction != null) || (TableParameters?.FilterFunctions != null);
+        public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterFunctions != null);
 
-        internal TableDelegationInfo TableParameters => ((InternalTableParameters)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).TableParameters;
+        internal TableDelegationInfo DelegationInfo => ((DataSourceInfo)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
 
         internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
 

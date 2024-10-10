@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
+    // Supports delegation information for CDP connectors
     public abstract class TableDelegationInfo
     {
         // Defines unsortable columns or columns only supporting ascending ordering
@@ -75,9 +76,9 @@ namespace Microsoft.PowerFx.Core.Entities
         public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);        
 
         // Not recommended for production use, only good for tests
-        public static TableDelegationInfo Default(string tableName, bool isReadOnly, string datasetName)
+        internal static TableDelegationInfo Default(string tableName, bool isReadOnly, string datasetName)
         {
-            return new CdpTableDelegationInfo()
+            return new CdpDelegationInfo()
             {
                 TableName = tableName,
                 IsReadOnly = isReadOnly,                
