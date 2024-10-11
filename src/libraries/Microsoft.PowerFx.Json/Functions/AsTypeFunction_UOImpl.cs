@@ -6,9 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -18,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public async Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType ft, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Contracts.Assert(args.Length == 2);
+            cancellationToken.ThrowIfCancellationRequested();
 
             var irContext = IRContext.NotInSource(ft);
             var typeString = (StringValue)args[1];

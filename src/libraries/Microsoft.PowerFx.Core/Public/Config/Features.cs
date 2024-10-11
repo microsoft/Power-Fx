@@ -92,6 +92,11 @@ namespace Microsoft.PowerFx
         internal bool IsLookUpReductionDelegationEnabled { get; set; }
 
         /// <summary>
+        /// Enables User-defined types functionality.
+        /// </summary>
+        internal bool IsUserDefinedTypesEnabled { get; set; } = false;
+
+        /// <summary>
         /// Enables Remove All delegation.
         /// </summary>
         internal bool IsRemoveAllDelegationEnabled { get; set; }
@@ -110,7 +115,8 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = true,
             PrimaryOutputPropertyCoercionDeprecated = true,
             AsTypeLegacyCheck = false,
-            JsonFunctionAcceptsLazyTypes = true
+            JsonFunctionAcceptsLazyTypes = true,
+            IsUserDefinedTypesEnabled = true
         };
 
         internal Features()
@@ -128,6 +134,7 @@ namespace Microsoft.PowerFx
             FirstLastNRequiresSecondArguments = other.FirstLastNRequiresSecondArguments;
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
+            IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
         }
     }
 }

@@ -983,6 +983,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsEmpty)
             },
             {
+                BuiltinFunctionsCore.IsEmpty_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    BuiltinFunctionsCore.IsEmpty_UO.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectArrayChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: IsEmpty_UO)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 NoErrorHandling(IsError)
             },
@@ -2797,7 +2808,7 @@ namespace Microsoft.PowerFx.Functions
                 throw new CustomFunctionErrorException(ex.Message);
             }
 
-            return FormulaValue.New(true);
+            return irContext.ResultType._type.Kind == DKind.Boolean ? FormulaValue.New(true) : FormulaValue.NewVoid();
         }
     }
 }

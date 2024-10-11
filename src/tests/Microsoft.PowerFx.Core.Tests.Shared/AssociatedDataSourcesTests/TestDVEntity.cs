@@ -15,6 +15,13 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 {
     public class AccountsEntity : IExternalEntity, IExternalDataSource
     {
+        private readonly bool _hasCachedCountRows;
+
+        public AccountsEntity(bool hasCachedCountRows = false)
+        {
+            this._hasCachedCountRows = hasCachedCountRows;
+        }
+
         public DName EntityName => new DName("Accounts");
 
         public string Name => "Accounts";
@@ -33,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
         public bool IsClearable => true;
 
-        DType IExternalEntity.Type => AccountsTypeHelper.GetDType();
+        DType IExternalEntity.Type => AccountsTypeHelper.GetDType(this._hasCachedCountRows);
 
         IExternalDataEntityMetadataProvider IExternalDataSource.DataEntityMetadataProvider => throw new NotImplementedException();
 
@@ -54,14 +61,15 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
                                                          "name`Account Name`:s, numberofemployees:n, primarytwitterid:s, stockexchange:s, telephone1:s, telephone2:s, telephone3:s, tickersymbol:s, versionnumber:n, " +
                                                          "websiteurl:h, nonsearchablestringcol`Non-searchable string column`:s, nonsortablestringcolumn`Non-sortable string column`:s]";
 
-        public static DType GetDType()
+        public static DType GetDType(bool hasCachedCountRows = false)
         {
             DType accountsType = TestUtils.DT2(SimplifiedAccountsSchema);
             var dataSource = new TestDataSource(
                 "Accounts", 
                 accountsType, 
                 keyColumns: new[] { "accountid" },
-                selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" });
+                selectableColumns: new[] { "name", "address1_city", "accountid", "address1_country", "address1_line1" },
+                hasCachedCountRows: hasCachedCountRows);
             var displayNameMapping = dataSource.DisplayNameMapping;            
             displayNameMapping.Add("name", "Account Name");
             displayNameMapping.Add("address1_city", "Address 1: City");

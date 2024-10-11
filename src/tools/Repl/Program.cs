@@ -18,6 +18,8 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+#pragma warning disable CS0618 // Type or member is obsolete
+
     public static class ConsoleRepl
     { 
         private const string OptionFormatTable = "FormatTable";
@@ -39,6 +41,9 @@ namespace Microsoft.PowerFx
 
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
+
+        private const string OptionUDF = "UserDefinedFunctions";
+        private static bool _enableUDFs = true;
 
         private static readonly Features _features = Features.PowerFxV1;
 
@@ -64,7 +69,8 @@ namespace Microsoft.PowerFx
                 { OptionPowerFxV1, OptionPowerFxV1 },
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
-                { OptionTextFirst, OptionTextFirst }
+                { OptionTextFirst, OptionTextFirst },
+                { OptionUDF, OptionUDF },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -80,9 +86,9 @@ namespace Microsoft.PowerFx
 
             config.EnableSetFunction();
             config.EnableJsonFunctions();
-#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableOptionSetInfo();
-#pragma warning restore CS0618 // Type or member is obsolete
+
+            config.AddFunction(new AssertFunction());
 
             config.AddFunction(new ResetFunction());
             config.AddFunction(new Option0Function());
@@ -93,9 +99,7 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
-#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
-#pragma warning restore CS0618 // Type or member is obsolete
 
             config.AddOptionSet(optionsSet);
 
@@ -120,9 +124,7 @@ namespace Microsoft.PowerFx
         }
 
         // Hook repl engine with customizations.
-#pragma warning disable CS0618 // Type or member is obsolete
         private class MyRepl : PowerFxREPL
-#pragma warning restore CS0618 // Type or member is obsolete
         {
             public MyRepl()
             {
@@ -133,6 +135,9 @@ namespace Microsoft.PowerFx
                 this.HelpProvider = new MyHelpProvider();
 
                 this.AllowSetDefinitions = true;
+                this.AllowUserDefinedFunctions = _enableUDFs;
+                this.AllowImport = true;
+
                 this.EnableSampleUserObject();
                 this.AddPseudoFunction(new IRPseudoFunction());
                 this.AddPseudoFunction(new SuggestionsPseudoFunction());
@@ -255,6 +260,7 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"LargeCallDepth:",-42}{_largeCallDepth}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
+                sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -303,6 +309,11 @@ namespace Microsoft.PowerFx
                     return BooleanValue.New(_stackTrace);
                 }
 
+                if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
+                {
+                    return BooleanValue.New(_enableUDFs);
+                }
+
                 return FormulaValue.NewError(new ExpressionError()
                 {
                     Kind = ErrorKind.InvalidArgument,
@@ -339,6 +350,13 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionTextFirst, StringComparison.OrdinalIgnoreCase))
                 {
                     _textFirst = value.Value;
+                    _reset = true;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionUDF, StringComparison.OrdinalIgnoreCase))
+                {
+                    _enableUDFs = value.Value;
                     _reset = true;
                     return value;
                 }
@@ -409,9 +427,7 @@ namespace Microsoft.PowerFx
 
         private class MyHelpProvider : HelpProvider
         {
-#pragma warning disable CS0618 // Type or member is obsolete
             public override async Task Execute(PowerFxREPL repl, CancellationToken cancel, string context = null)
-#pragma warning restore CS0618 // Type or member is obsolete
             {
                 if (context?.ToLowerInvariant() == "options" || context?.ToLowerInvariant() == "option")
                 {
@@ -440,6 +456,9 @@ Options.PowerFxV1
 
 Options.None
     Removed all the feature flags, which is even less than Canvas uses.
+
+Options.EnableUDFs
+    Enables UserDefinedFunctions to be added.
 
 ";
 

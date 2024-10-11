@@ -39,10 +39,15 @@ namespace Microsoft.PowerFx
 
             // If this is set directly, it will skip localization. 
             set => _message = value;
-        }        
+        }
 
         /// <summary>
-        /// Source location for this error.
+        /// Optional - provide file context for where this expression is from. 
+        /// </summary>
+        public FileLocation FragmentLocation { get; set; }
+
+        /// <summary>
+        /// Source location for this error within a single expression.
         /// </summary>
         public Span Span { get; set; }
 
@@ -207,6 +212,24 @@ namespace Microsoft.PowerFx
             else
             {
                 return errors.Select(x => ExpressionError.New(x, locale)).ToArray();
+            }
+        }
+
+        // Translate Span in original text (start,end)  to something more useful for a file. 
+        internal static IEnumerable<ExpressionError> NewFragment(IEnumerable<IDocumentError> errors, string originalText, FileLocation fragmentLocation)
+        {
+            if (errors == null)
+            {
+                return Array.Empty<ExpressionError>();
+            }
+            else
+            {
+                return errors.Select(x =>
+                {
+                    var error = ExpressionError.New(x, null);
+                    error.FragmentLocation = fragmentLocation.Apply(originalText, error.Span);
+                    return error;
+                });
             }
         }
     }

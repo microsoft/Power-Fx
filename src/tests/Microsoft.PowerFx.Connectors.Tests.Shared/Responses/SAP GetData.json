@@ -1,0 +1,57 @@
+{
+    "@odata.context": "https://066d5714-1ffc-e316-90bd-affc61d8e6fd.18.common.tip2.azure-apihub.net/apim/sapodata/1e702ce4f10c482684cee1465e686764/datasets/http%253A%252F%252Fsapecckerb.roomsofthehouse.com%253A8080%252Fsap%252Fopu%252Fodata%252Fsap%252FHRESS_TEAM_CALENDAR_SERVICE%252F/tables/TeamCalendarCollection/items?%24select=END_DATE&%24top=1",
+    "value": [
+        {
+            "GetMessages": {
+                "IsCollection": true,
+                "Name": "GetMessages",
+                "Url": "http://sapecckerb.roomsofthehouse.com:8080/sap/opu/odata/sap/HRESS_TEAM_CALENDAR_SERVICE/TeamCalendarCollection('00000000')/GetMessages",
+                "AssociationLinkUrl": null
+            },
+            "PERNR": "00000000",
+            "EVENT_NAME": "",
+            "BEGIN_DATE": null,
+            "END_DATE": null,
+            "DESCRIPTION": "",
+            "LEGENDID": "",
+            "LEGEND": "RGB(246,243,135)",
+            "LEGEND_TEXT": "Holiday",
+            "FLAG": "04",
+            "TYPE": "",
+            "APP_MODE": "",
+            "ALL_EMPLOYEES": "",
+            "COMMAND": "",
+            "EMP_PERNR": "00000000",
+            "HIDE_PEERS": "",
+            "PERNR_MEM_ID": "",
+            "BEGIN_DATE_CHAR": "00000000",
+            "END_DATE_CHAR": "00000000"
+        },
+        {
+            "GetMessages": {
+                "IsCollection": true,
+                "Name": "GetMessages",
+                "Url": "http://sapecckerb.roomsofthehouse.com:8080/sap/opu/odata/sap/HRESS_TEAM_CALENDAR_SERVICE/TeamCalendarCollection('00000000')/GetMessages",
+                "AssociationLinkUrl": null
+            },
+            "PERNR": "00000000",
+            "EVENT_NAME": "",
+            "BEGIN_DATE": null,
+            "END_DATE": null,
+            "DESCRIPTION": "",
+            "LEGENDID": "",
+            "LEGEND": "RGB(220,220,220)",
+            "LEGEND_TEXT": "Non-Working Day",
+            "FLAG": "04",
+            "TYPE": "",
+            "APP_MODE": "",
+            "ALL_EMPLOYEES": "",
+            "COMMAND": "",
+            "EMP_PERNR": "00000000",
+            "HIDE_PEERS": "",
+            "PERNR_MEM_ID": "",
+            "BEGIN_DATE_CHAR": "00000000",
+            "END_DATE_CHAR": "00000000"
+        }
+    ]
+}

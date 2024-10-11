@@ -4115,6 +4115,10 @@
     <value>命名公式必須是運算式。</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>使用者定義的函式必須有主體。</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows 可能會回傳快取值。使用 CountIf(DataSource, true) 取得最新的計數。</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>引數中有不支援的 untyped/JSON 轉換類型『{0}』。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>遍歷 JSON 承載時達到的最大深度。</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>在 JSON 函式中達到的最大長度。</value>
     
   </data>
 </root>

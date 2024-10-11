@@ -26,10 +26,11 @@ namespace Microsoft.PowerFx.Json.Tests
             AllowParseAsTypeLiteral = true,
         };
 
-        private RecalcEngine SetupEngine()
+        private RecalcEngine SetupEngine(bool udtFeaturedEnabled = true)
         {
             var config = new PowerFxConfig();
             config.EnableJsonFunctions();
+            config.Features.IsUserDefinedTypesEnabled = udtFeaturedEnabled;
             return new RecalcEngine(config);
         }
 
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Json.Tests
             var engine = SetupEngine();
 
             // custom-type type alias
-            engine.AddUserDefinitions("T = Type(Number);");
+            engine.AddUserDefinitions("T := Type(Number);");
 
             // Positive tests
             CheckIsTypeAsTypeParseJSON(engine, "\"42\"", "Number", 42D);
@@ -74,7 +75,7 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T = Type({a: Number});");
+            engine.AddUserDefinitions("T := Type({a: Number});");
 
             dynamic obj1 = new ExpandoObject();
             obj1.a = 5D;
@@ -103,7 +104,7 @@ namespace Microsoft.PowerFx.Json.Tests
         {
             var engine = SetupEngine();
 
-            engine.AddUserDefinitions("T = Type([{a: Number}]);");
+            engine.AddUserDefinitions("T := Type([{a: Number}]);");
 
             var t1 = new object[] { 5D };
             var t2 = new object[] { 1m, 2m, 3m, 4m };
@@ -146,6 +147,18 @@ namespace Microsoft.PowerFx.Json.Tests
                 Assert.False(result.IsSuccess);
                 Assert.Contains(result.Errors, e => e.MessageKey == expectedError);
             }
+        }
+
+        [Theory]
+        [InlineData("AsType(ParseJSON(\"123\"), Number)")]
+        [InlineData("IsType(ParseJSON(\"123\"), Type(Number))")]
+        [InlineData("ParseJSON(\"\"\"Hello\"\"\", Type(Text))")]
+        public void TestCompileErrorsWithUDTFeatureDisabled(string expression)
+        {
+            var engine = SetupEngine(udtFeaturedEnabled: false);
+            var result = engine.Check(expression);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == "ErrUserDefinedTypesDisabled");
         }
 
         [Fact]

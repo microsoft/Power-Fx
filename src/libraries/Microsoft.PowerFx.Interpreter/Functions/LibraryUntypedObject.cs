@@ -69,6 +69,19 @@ namespace Microsoft.PowerFx.Functions
             return new UntypedObjectValue(irContext, result);
         }
 
+        public static FormulaValue IsEmpty_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var element = args[0].Impl;
+            var len = element.GetArrayLength();
+
+            if (len == 0)
+            {
+                return FormulaValue.New(true);
+            }
+
+            return FormulaValue.New(false);
+        }
+
         public static FormulaValue Last_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
@@ -423,7 +436,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Array || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 return new NumberValue(irContext, impl.GetArrayLength());
             }
@@ -452,7 +465,7 @@ namespace Microsoft.PowerFx.Functions
             var impl = (args[0] as UntypedObjectValue).Impl;
             var propertyName = (args[1] as StringValue).Value;
 
-            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Object)
+            if (impl.Type is ExternalType externalType && (externalType.Kind == ExternalTypeKind.Object || externalType.Kind == ExternalTypeKind.ArrayAndObject))
             {
                 if (impl.TryGetProperty(propertyName, out var propertyValue))
                 {

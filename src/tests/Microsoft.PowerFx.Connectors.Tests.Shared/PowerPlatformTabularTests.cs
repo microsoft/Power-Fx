@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             bool b = sqlTable.TabularRecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.True(b);
-            Assert.Equal("ProductModel", externalTableName); // Display Name
+            Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
             Assert.Equal("ProductModelID", foreignKey);
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");
@@ -274,9 +274,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConsoleLogger logger = new ConsoleLogger(_output);
             using var httpClient = new HttpClient(testConnector);
-            string connectionId = "66108f1684944d4994ea38b13d1ee70f";
+            string connectionId = "1e702ce4f10c482684cee1465e686764";
             string jwt = "eyJ0eXAi...";
-            using var client = new PowerPlatformConnectorClient("f5de196a-41e6-ee09-92cf-664b4f31a6b2.06.common.tip1002.azure-apihub.net", "f5de196a-41e6-ee09-92cf-664b4f31a6b2", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            using var client = new PowerPlatformConnectorClient("066d5714-1ffc-e316-90bd-affc61d8e6fd.18.common.tip2.azure-apihub.net", "066d5714-1ffc-e316-90bd-affc61d8e6fd", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             testConnector.SetResponseFromFile(@"Responses\SAP GetDataSetMetadata.json");
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, $"/apim/sapodata/{connectionId}", CancellationToken.None, logger);
@@ -292,6 +292,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             CdpTableValue sapTableValue = sapTable.GetTableValue();
             Assert.Equal<object>("*[ALL_EMPLOYEES:s, APP_MODE:s, BEGIN_DATE:s, BEGIN_DATE_CHAR:s, COMMAND:s, DESCRIPTION:s, EMP_PERNR:s, END_DATE:s, END_DATE_CHAR:s, EVENT_NAME:s, FLAG:s, GetMessages:*[MESSAGE:s, PERNR:s], HIDE_PEERS:s, LEGEND:s, LEGENDID:s, LEGEND_TEXT:s, PERNR:s, PERNR_MEM_ID:s, TYPE:s]", sapTableValue.Type._type.ToString());
+
+            string expr = "First(TeamCalendarCollection).LEGEND_TEXT";
+
+            SymbolValues symbolValues = new SymbolValues().Add("TeamCalendarCollection", sapTableValue);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            testConnector.SetResponseFromFile(@"Responses\SAP GetData.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            StringValue sv = Assert.IsType<StringValue>(result);
+            Assert.Equal("Holiday", sv.Value);
         }
 
         [Fact]
@@ -901,6 +915,78 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue userName = Assert.IsType<StringValue>(result);
             Assert.Equal("Ram Sitwat", userName.Value);
+        }
+
+        [Fact]
+        public async Task ZD_CdpTabular_GetTables2()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "ca06d34f4b684e38b7cf4c0f517a7e99";
+            string uriPrefix = $"/apim/zendesk/{connectionId}";
+            string jwt = "eyJ0eXA...";
+            using var client = new PowerPlatformConnectorClient("4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f.08.common.tip1.azure-apihub.net", "4d4a8e81-17a4-4a92-9bfe-8d12e607fb7f", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            testConnector.SetResponseFromFile(@"Responses\ZD GetDatasetsMetadata.json");
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(dm);
+            Assert.Null(dm.Blob);
+            Assert.Null(dm.DatasetFormat);
+            Assert.Null(dm.Parameters);
+
+            Assert.NotNull(dm.Tabular);
+            Assert.Equal("dataset", dm.Tabular.DisplayName);
+            Assert.Equal("singleton", dm.Tabular.Source);
+            Assert.Equal("table", dm.Tabular.TableDisplayName);
+            Assert.Equal("tables", dm.Tabular.TablePluralName);
+            Assert.Equal("double", dm.Tabular.UrlEncoding);
+
+            CdpDataSource cds = new CdpDataSource("default");
+
+            // only one network call as we already read metadata
+            testConnector.SetResponseFromFiles(@"Responses\ZD GetDatasetsMetadata.json", @"Responses\ZD GetTables.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, uriPrefix, CancellationToken.None, logger);
+
+            Assert.NotNull(tables);
+            Assert.Equal(18, tables.Count());
+
+            CdpTable connectorTable = tables.First(t => t.DisplayName == "Tickets");
+            Assert.Equal("tickets", connectorTable.TableName);
+            Assert.False(connectorTable.IsInitialized);
+
+            testConnector.SetResponseFromFile(@"Responses\ZD Tickets GetSchema.json");
+            await connectorTable.InitAsync(client, uriPrefix, CancellationToken.None, logger);
+            Assert.True(connectorTable.IsInitialized);
+
+            CdpTableValue zdTable = connectorTable.GetTableValue();
+            Assert.True(zdTable._tabularService.IsInitialized);
+            Assert.True(zdTable.IsDelegable);
+
+            Assert.Equal(
+                "![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
+                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
+                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.TabularRecordType).ToStringWithDisplayNames());
+
+            SymbolValues symbolValues = new SymbolValues().Add("Tickets", zdTable);
+            RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
+
+            // Expression with tabular connector
+            string expr = @"First(Tickets).priority";
+            CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
+            Assert.True(check.IsSuccess);
+
+            // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
+            testConnector.SetResponseFromFile(@"Responses\ZD Tickets GetRows.json");
+            FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+
+            OptionSetValue priority = Assert.IsType<OptionSetValue>(result);
+            Assert.Equal("normal", priority.Option);
+            Assert.Equal("normal", priority.DisplayName);
         }
     }
 
