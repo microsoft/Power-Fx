@@ -8,10 +8,8 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
@@ -205,6 +203,19 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
+        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
+        {
+            Name = name;
+
+            foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
+            {                
+                serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
+            }                           
+
+            FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName));
+        }
+
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, ConnectorType connectorType)
             : this(schema, openApiParameter, connectorType.FormulaType)
         {
@@ -263,33 +274,24 @@ namespace Microsoft.PowerFx.Connectors
             _warnings = connectorType._warnings;
         }
 
+        internal DisplayNameProvider DisplayNameProvider
+        {
+            get
+            {
+                _displayNameProvider ??= new SingleSourceDisplayNameProvider(Fields.Select(field => new KeyValuePair<DName, DName>(new DName(field.Name), new DName(field.DisplayName ?? field.Name))));
+                return _displayNameProvider;
+            }
+        }
+
+        private DisplayNameProvider _displayNameProvider;
+
         internal void SetRelationship(SqlRelationship relationship)
         {
             ExternalTables ??= new List<string>();
             ExternalTables.Add(relationship.ReferencedTable);
             RelationshipName = relationship.RelationshipName;
             ForeignKey = relationship.ReferencedColumnName;
-        }
-
-        internal void AddTabularDataSource(ICdpTableResolver tableResolver, IList<ReferencedEntity> referencedEntities, List<SqlRelationship> sqlRelationships, DName name, string datasetName, ConnectorType connectorType, ServiceCapabilities serviceCapabilities, bool isReadOnly, BidirectionalDictionary<string, string> displayNameMapping = null)
-        {
-            if (FormulaType is not RecordType)
-            {
-                throw new PowerFxConnectorException("Invalid FormulaType");
-            }
-
-            // $$$ Hack to enable IExternalTabularDataSource, will be removed later
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (tableResolver.GenerateADS)
-            {
-                HashSet<IExternalTabularDataSource> dataSource = new HashSet<IExternalTabularDataSource>() { new ExternalCdpDataSource(name, datasetName, serviceCapabilities, isReadOnly, displayNameMapping) };
-                DType newDType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(FormulaType._type, dataSource, null);
-                FormulaType = new KnownRecordType(newDType);
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            FormulaType = new CdpRecordType(connectorType, FormulaType._type, tableResolver, referencedEntities, sqlRelationships);
-        }
+        }          
 
         private void AggregateErrors(ConnectorType[] types)
         {
