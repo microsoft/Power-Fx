@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funktionsmåde i en ikke-adfærdsmæssig brugerdefineret funktion (UDF). Pak den brugerdefinerede funktionstekst ind med krøllede klammeparenteser ({...}) for at erklære en UDF for funktionsmåde.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funktionsmåder ændrer den aktuelle sessionstilstand. 'Clear', 'Collect', 'Patch' og 'Refresh' er almindelige funktionsmåder.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediger det brugerdefinerede funktionsudtryk, så det er inden i klammeparenteser ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test funktion i en egenskab, som ikke er en test. Du kan ikke bruge denne egenskab til at indlede test-kun-funktioner.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Den navngivne type skal være af typen bogstavelig værdi.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Ikke-understøttet, ikke-indtastet/JSON-konverteringstype '{0}' i argument.</value>
+    <value>Ikke-understøttet type '{0}' i typeargument.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Maksimal længde nået i JSON-funktion.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Den eksperimentelle funktion 'Brugerdefinerede typer' er ikke aktiveret.</value>
     
   </data>
 </root>

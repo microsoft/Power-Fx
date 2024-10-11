@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Әрекетсіз пайдаланушы анықтаған функциядағы (UDF) әрекет функциясы. Әрекетті UDF жариялау үшін пайдаланушы анықтаған функцияның негізгі мәтінін бұйра жақшалармен ({...}) ораңыз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Әрекет функциялары ағымдағы сеанс күйін өзгертеді. "Clear", "Collect", "Patch" және "Refresh" жалпы әрекет функциялары болып табылады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Пайдаланушы анықтаған функция өрнегін бұйра жақшалардың ({...}) ішінде болатындай өңдеңіз.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тексеру функциясы – сынаққа жатпайтын сипат. Тек сынаққа жататын функцияларды шақыру үшін осы сипатты пайдалана алмайсыз.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Атаулы түр литерал түрі болуы қажет.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Аргументтегі '{0}' терілмеген/JSON түрлендіру түріне қолдау көрсетілмейді.</value>
+    <value>Аргумент түріндегі "{0}" қолдау көрсетілмейтін түрі.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON функциясында максималды ұзындыққа жетті.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Пайдаланушы анықтайтын түр" эксперименттік мүмкіндігі іске қосылмаған.</value>
     
   </data>
 </root>

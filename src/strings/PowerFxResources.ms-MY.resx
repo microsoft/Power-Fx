@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Fungsi kelakuan dalam fungsi takrifan pengguna bukan kelakuan (UDF). Sila balut isi kandungan fungsi takrifan pengguna dengan tanda kurung dakap ({...}) untuk mengisytiharkan UDF kelakuan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Fungsi tingkah laku mengubah keadaan sesi semasa. 'Clear', 'Collect', 'Patch' dan 'Refresh' ialah fungsi kelakuan yang lazim.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit ungkapan fungsi takrifan pengguna supaya ia berada dalam tanda kurung dakap ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi ujian dalam sifat bukan ujian. Anda tidak boleh menggunakan sifat ini untuk menjalankan fungsi ujian sahaja.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Jenis yang dinamakan hendaklah literal jenis.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tanpa jenis/jenis penukaran JSON yang tidak disokong '{0}' dalam argumen.</value>
+    <value>Jenis yang tidak disokong '{0}' dalam argumen jenis.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Panjang maksimum dicapai dalam fungsi JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Ciri eksperimen 'Jenis takrifan pengguna' tidak didayakan.</value>
     
   </data>
 </root>

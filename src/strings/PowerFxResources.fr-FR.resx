@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Fonction de comportement dans une fonction définie par l’utilisateur (UDF) non-comportementale. Veuillez clôturer le corps de la fonction défini par l’utilisateur par des accolades ({...}) pour définir une UDF de comportement.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Les fonctions de comportement modifient l’état de la session actuelle. « Clear », « Collect », « Patch » et « Refresh » sont des fonctions de comportement courantes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Modifiez l’expression de la fonction définie par l’utilisateur de manière à ce qu’elle se trouve à l’intérieur des accolades ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fonction de test dans une propriété qui n’est pas un test. Vous ne pouvez pas utiliser cette propriété pour appeler des fonctions de test uniquement.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Le type nommé doit être un littéral de type.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Type de conversion sans type/JSON non pris en charge « {0} » dans l’argument.</value>
+    <value>Type non pris en charge « {0} » dans l’argument de type.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Longueur maximale atteinte dans la fonction JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>La fonctionnalité expérimentale « Types définis par l’utilisateur » n’est pas activée.</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Virkemåtefunksjon i en brukerdefinert ikke-virkemåtefunksjon. Sett den brukerdefinerte funksjonsteksten i krøllparenteser ({...}) for å erklære en brukerdefinert virkemåtefunksjon.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Virkemåtefunksjoner endrer gjeldende økttilstand. Clear, Collect, Patch og Refresh er vanlige virkemåtefunksjoner.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediger det brukerdefinerte funksjonsuttrykket slik at det står i krøllparenteser ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testfunksjon i en egenskap som ikke er en test. Du kan ikke bruke denne egenskapen til å starte testfunksjoner.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Navngitt type må være en type litteral.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Det er ikke støtte for typeløs/JSON-konverteringstype {0} i argumentet.</value>
+    <value>Det er ikke støtte for typen {0} i typeargumentet.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Maksimal lengde nådd i JSON-funksjon.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Den eksperimentelle funksjonen Brukerdefinerte typer er ikke aktivert.</value>
     
   </data>
 </root>

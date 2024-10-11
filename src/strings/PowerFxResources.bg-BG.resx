@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Функция за поведение в дефинирана от потребителя функция (UDF), несвързана с поведение. Моля, поставете тялото на дефинираната от потребителя функция във фигурни скоби ({...}), за да декларирате функция за поведение.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Функциите за поведение променят текущото състояние на сесията. Често срещани такива функции са Clear, Collect, Patch и Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Редактирайте израза на дефинираната от потребителя функция, така че да е във фигурни скоби ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тестова функция в нетестово свойство. Не можете да използвате това свойство, за да извиквате функции само за тестване.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Именуваният тип трябва да е литерал за тип.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Неподдържан нетипизиран тип/тип преобразуване JSON „{0}“ в аргумента.</value>
+    <value>Неподдържан тип „{0}“ в аргумента за тип.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Във функцията в JSON бе достигната максималната дължина.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Експерименталната функция за дефинирани от потребителя типове не е активирана.</value>
     
   </data>
 </root>

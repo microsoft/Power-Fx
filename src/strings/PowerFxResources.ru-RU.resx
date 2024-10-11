@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Функция поведения в пользовательской функции, не являющейся функцией поведения. Заключите тело пользовательской функции в фигурные скобки ({...}), чтобы объявить пользовательскую функцию поведения.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Функции поведения изменяют текущее состояние сеанса. Типичные функции поведения — это Clear, Collect, Patch и Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Отредактируйте выражение пользовательской функции так, чтобы оно находилось внутри фигурных скобок ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Функция теста в свойстве, не являющемся тестом. Это свойство не может использоваться для вызова функций только для тестирования.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Именованный тип должен быть литералом типа.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Неподдерживаемый тип преобразования между нетипизированным значением и JSON "{0}" в аргументе.</value>
+    <value>Неподдерживаемый тип "{0}" в аргументе типа.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Достигнута максимальная глубина в функции JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Экспериментальная функция "Пользовательские типы" не включена.</value>
     
   </data>
 </root>

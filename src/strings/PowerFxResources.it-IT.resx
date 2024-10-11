@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funzione di comportamento in una funzione definita dall'utente non di comportamento. Racchiudi il corpo della funzione definita dall'utente tra parentesi graffe ({...}) per dichiarare una funzione definita dall'utente di comportamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Le funzioni di comportamento modificano lo stato della sessione corrente. "Clear", "Collect", "Patch" e "Refresh" sono funzioni di comportamento comuni.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Modifica l'espressione della funzione definita dall'utente in modo da includerla tra parentesi graffe ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funzione di test in una proprietà non di test. Non è possibile usare questa proprietà per richiamare funzioni di solo test.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Il tipo denominato deve essere un tipo di valore letterale.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tipo di conversione JSON/non tipizzata non supportato "{0}" nell'argomento.</value>
+    <value>Il tipo "{0}" non è supportato nell'argomento.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Lunghezza massima raggiunta nella funzione JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>La funzionalità sperimentale "Tipi definiti dall'utente" non è abilitata.</value>
     
   </data>
 </root>

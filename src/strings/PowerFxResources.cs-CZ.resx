@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkce chování v uživatelem definované funkci (UDF), která není chováním. Zabalte tělo uživatelem definované funkce do složených závorek ({...}), abyste deklarovali UDF chování.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkce chování mění aktuální stav relace. Mezi běžné funkce chování patří „Clear“, „Collect“, „Patch“ a „Refresh“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Upravte výraz uživatelem definované funkce tak, aby byl ve složených závorkách ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testovací funkce ve vlastnosti, která není testovací. Pomocí této vlastnosti není možné vyvolávat funkce určené jen pro testování.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Pojmenovaný typ musí být literál typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nepodporovaný typ konverze bez definovaného typu / JSON „{0}“ v argumentu.</value>
+    <value>Nepodporovaný typ „{0}“ v argumentu typu.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Ve funkci JSON byla dosažena maximální délka.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Experimentální funkce „Uživatelsky definované typy“ není povolena.</value>
     
   </data>
 </root>
