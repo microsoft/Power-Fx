@@ -1,9 +1,12 @@
-﻿#OVERRIDE: BasicCoercion_V1CompatDisabled.txt
+﻿#OVERRIDE: BasicCoercion.txt
 #SETUP: disable:PowerFxV1CompatibilityRules
 
 // Bug in pre-V1, fixed in V1
 >> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
 #skip
+
+>> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
+"11111111-2222-3333-4444-555566666666"
 
 // Bug in pre-V1, fixed in V1
 >> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
