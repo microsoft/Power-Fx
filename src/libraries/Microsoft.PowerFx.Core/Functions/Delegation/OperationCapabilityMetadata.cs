@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
@@ -16,8 +15,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         {
             Contracts.AssertValid(schema);
 
-            Schema = schema;            
-        }        
+            Schema = schema;
+        }
 
         protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions => new Dictionary<DPath, DelegationCapability>();
 

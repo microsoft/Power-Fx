@@ -24,10 +24,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
-        // Filter functions supported by all columns of the table
-        // Those entries cumulate with the onee defined at column level
-        // Possible strings are defined in DelegationMetadataOperatorConstants
-        // Values not in this list are ignored
+        // Filter functions supported by all columns of the table        
         public IEnumerable<DelegationOperator> FilterFunctions { get; init; }
 
         // Filter functions supported by the table
