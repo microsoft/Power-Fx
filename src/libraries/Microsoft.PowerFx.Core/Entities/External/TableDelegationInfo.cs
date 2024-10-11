@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Entities
             {
                 IsOnlyServerPagable = false,
                 ServerPagingOptions = new string[0]
-            };            
+            };
             SupportsRecordPermission = true;
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
@@ -98,7 +98,33 @@ namespace Microsoft.PowerFx.Core.Entities
         private ColumnCapabilitiesDefinition _capabilities;
 
         // Those are default CDS filter supported functions 
-        public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
+        // From // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
+        public static readonly IEnumerable<DelegationOperator> DefaultFilterFunctionSupport = new DelegationOperator[]
+        {
+            DelegationOperator.And,
+            DelegationOperator.Arraylookup,
+            DelegationOperator.Astype,
+            DelegationOperator.Average,
+            DelegationOperator.Cdsin,
+            DelegationOperator.Contains,
+            DelegationOperator.Count,
+            DelegationOperator.Countdistinct,
+            DelegationOperator.Endswith,
+            DelegationOperator.Eq,
+            DelegationOperator.Ge,
+            DelegationOperator.Gt,
+            DelegationOperator.Le,
+            DelegationOperator.Lt,
+            DelegationOperator.Max,
+            DelegationOperator.Min,
+            DelegationOperator.Ne,
+            DelegationOperator.Not,
+            DelegationOperator.Null,
+            DelegationOperator.Or,
+            DelegationOperator.Startswith,
+            DelegationOperator.Sum,
+            DelegationOperator.Top
+        };
 
         public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
         {
@@ -134,9 +160,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class ColumnCapabilitiesDefinition
     {
-        public IEnumerable<string> FilterFunctions
+        public IEnumerable<DelegationOperator> FilterFunctions
         {
-            get => _filterFunctions ?? DefaultFilterFunctionSupport;
+            get => _filterFunctions ?? ColumnCapabilities.DefaultFilterFunctionSupport;
             init => _filterFunctions = value;
         }
 
@@ -147,11 +173,8 @@ namespace Microsoft.PowerFx.Core.Entities
         // Sharepoint delegation specific
         internal bool? IsChoice { get; init; }
 
-        private IEnumerable<string> _filterFunctions;
-
-        // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
-        public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
-
+        private IEnumerable<DelegationOperator> _filterFunctions;
+                
         public ColumnCapabilitiesDefinition()
         {
         }
@@ -160,8 +183,10 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             DelegationCapability columnDelegationCapability = DelegationCapability.None;
 
-            foreach (string columnFilterFunction in FilterFunctions)
+            foreach (DelegationOperator columnFilterFunctionEnum in FilterFunctions)
             {
+                string columnFilterFunction = columnFilterFunctionEnum.ToString().ToLowerInvariant();
+
                 if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(columnFilterFunction, out DelegationCapability filterFunctionCapability))
                 {
                     columnDelegationCapability |= filterFunctionCapability;

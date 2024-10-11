@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 return new ColumnCapabilitiesDefinition()
                 {
-                    FilterFunctions = new List<string>() { "eq" }
+                    FilterFunctions = new List<DelegationOperator>() { DelegationOperator.Eq }
                 };
             }
 

@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     ColumnCapabilities cc => new Core.Entities.ColumnCapabilities(new Core.Entities.ColumnCapabilitiesDefinition()
                     {
-                        FilterFunctions = cc.Capabilities.FilterFunctions,
+                        FilterFunctions = GetDelegationOperatorEnumList(cc.Capabilities.FilterFunctions),
                         QueryAlias = cc.Capabilities.QueryAlias,
                         IsChoice = cc.Capabilities.IsChoice
                     }) as Core.Entities.ColumnCapabilitiesBase,
