@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class CapabilityTests
+    public class DelegationTests
     {
         [Fact]
         public void CapabilityTest()
@@ -38,6 +38,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(neq);
             Assert.False(eq2);
             Assert.False(neq2);
+        }
+
+        [Fact]
+        public void DelegationOperatorTest()
+        {
+            string enums = string.Join(", ", Enum.GetNames(typeof(DelegationOperator)).Select(name => name.ToLowerInvariant()).OrderBy(x => x));
+            string constants = string.Join(", ", typeof(DelegationMetadataOperatorConstants).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Select(fi => (string)fi.GetValue(null)).OrderBy(x => x));
+            Assert.Equal<object>(enums, constants);
         }
     }
 
