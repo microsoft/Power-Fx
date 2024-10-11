@@ -2,15 +2,13 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 {
     // Defines filter operation metadata.
-    internal sealed class FilterOpMetadata : OperationCapabilityMetadata
+    internal class FilterOpMetadata : OperationCapabilityMetadata
     {
         private readonly Dictionary<DPath, DelegationCapability> _columnCapabilities;
 
@@ -20,19 +18,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
         // Filter functions supported at the table level.
         // If no capability at column level specified then this would be the default filter functionality supported by column.
-        private readonly DelegationCapability _defaultCapabilities;
-
-        private readonly TableDelegationInfo _delegationInfo;
+        private readonly DelegationCapability _defaultCapabilities;        
 
         public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions, Dictionary<DPath, DelegationCapability> columnCapabilities, DelegationCapability filterFunctionsSupportedByAllColumns, DelegationCapability? filterFunctionsSupportedByTable)
             : base(tableSchema)
-        {
-            Contracts.AssertValue(columnRestrictions);
-            Contracts.AssertValue(columnCapabilities);
-
+        {           
             _columnCapabilities = columnCapabilities;
             _columnRestrictions = columnRestrictions;
-            _delegationInfo = null;
+            
             _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
             _defaultCapabilities = filterFunctionsSupportedByAllColumns;
 
@@ -40,51 +33,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
             }
-        }
-
-        public FilterOpMetadata(AggregateType schema, TableDelegationInfo delegationInfo)
-            : base(schema._type)
-        {
-            _columnCapabilities = null;
-            _columnRestrictions = null;
-            _delegationInfo = delegationInfo;
-
-            DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
-
-            if (delegationInfo?.FilterFunctions != null)
-            {
-                foreach (string globalFilterFunction in delegationInfo.FilterFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalFilterFunction, out DelegationCapability globalFilterFunctionCapability))
-                    {
-                        filterFunctionSupportedByAllColumns |= globalFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            DelegationCapability? filterFunctionsSupportedByTable = null;
-
-            if (delegationInfo?.FilterSupportedFunctions != null)
-            {
-                filterFunctionsSupportedByTable = DelegationCapability.None;
-
-                foreach (string globalSupportedFilterFunction in delegationInfo.FilterSupportedFunctions)
-                {
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalSupportedFilterFunction, out DelegationCapability globalSupportedFilterFunctionCapability))
-                    {
-                        filterFunctionsSupportedByTable |= globalSupportedFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
-            _defaultCapabilities = filterFunctionSupportedByAllColumns;
-
-            if (_filterFunctionsSupportedByTable != null)
-            {
-                _defaultCapabilities = filterFunctionSupportedByAllColumns | DelegationCapability.Filter;
-            }
-        }
+        }       
 
         protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
@@ -118,21 +67,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public override bool TryGetColumnCapabilities(DPath columnPath, out DelegationCapability capabilities)
         {
             Contracts.AssertValid(columnPath);
-
-            if (_delegationInfo != null)
-            {
-                ColumnCapabilitiesDefinition columnCapabilityDefinition = _delegationInfo.GetColumnCapability(columnPath.Name.Value);
-
-                if (columnCapabilityDefinition != null)
-                { 
-                    capabilities = columnCapabilityDefinition.ToDelegationCapability();
-                    return true;
-                }
-
-                capabilities = default;
-                return false;
-            }
-
+           
             // See if there is a specific capability defined for column.
             // If not then just return default one.
             if (!_columnCapabilities.TryGetValue(columnPath, out capabilities))

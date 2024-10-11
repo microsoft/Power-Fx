@@ -3,6 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Entities
 {
+    // Used by ServiceCapabilities.ToDelegationInfo for managing CDP x-ms-capabilities
     internal class CdpDelegationInfo : TableDelegationInfo
     {
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)

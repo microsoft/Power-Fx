@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
                 "Microsoft.PowerFx.ParserOptions",
-                "Microsoft.PowerFx.IPostCheckErrorHandler",                
+                "Microsoft.PowerFx.IPostCheckErrorHandler",
                 "Microsoft.PowerFx.EngineDocumentation",
 
                 // Config & Symbols
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.StringType",
                 "Microsoft.PowerFx.Types.StringValue",
                 "Microsoft.PowerFx.Types.TableType",
-                "Microsoft.PowerFx.Types.TableValue",                
+                "Microsoft.PowerFx.Types.TableValue",
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
@@ -203,6 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
                 "Microsoft.PowerFx.Core.Entities.SortRestrictions",
                 "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
+                "Microsoft.PowerFx.Core.Functions.Delegation.DelegationOperator",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",

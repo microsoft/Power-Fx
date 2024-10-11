@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Utils;
 
 // DO NOT INCLUDE Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata ASSEMBLY
@@ -57,10 +58,14 @@ namespace Microsoft.PowerFx.Connectors
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly IEnumerable<string> FilterFunctions;
 
+        public IEnumerable<DelegationOperator> FilterFunctionsEnum => GetDelegationOperatorEnumList(FilterFunctions);
+
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctionSupport)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly IEnumerable<string> FilterSupportedFunctions;
+
+        public IEnumerable<DelegationOperator> FilterSupportedFunctionsEnum => GetDelegationOperatorEnumList(FilterSupportedFunctions);
 
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ServerPagingOptions)]
@@ -126,7 +131,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
-        {            
+        {
             SortRestrictions sortRestriction = new SortRestrictions()
             {
                 AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
@@ -138,17 +143,17 @@ namespace Microsoft.PowerFx.Connectors
                 RequiredProperties = serviceCapabilities?.FilterRestriction?.RequiredProperties,
                 NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
             };
-            
+
             SelectionRestrictions selectionRestriction = new SelectionRestrictions()
             {
                 IsSelectable = serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false
             };
-            
+
             GroupRestrictions groupRestriction = new GroupRestrictions()
             {
                 UngroupableProperties = serviceCapabilities?.GroupRestriction?.UngroupableProperties
             };
-            
+
             Core.Entities.PagingCapabilities pagingCapabilities = new Core.Entities.PagingCapabilities()
             {
                 IsOnlyServerPagable = serviceCapabilities?.PagingCapabilities?.IsOnlyServerPagable ?? false,
@@ -159,10 +164,10 @@ namespace Microsoft.PowerFx.Connectors
                 kvp => kvp.Key,
                 kvp => kvp.Value switch
                 {
-                    ColumnCapabilities cc => new Core.Entities.ColumnCapabilities(new Core.Entities.ColumnCapabilitiesDefinition() 
+                    ColumnCapabilities cc => new Core.Entities.ColumnCapabilities(new Core.Entities.ColumnCapabilitiesDefinition()
                     {
                         FilterFunctions = cc.Capabilities.FilterFunctions,
-                        QueryAlias = cc.Capabilities.QueryAlias, 
+                        QueryAlias = cc.Capabilities.QueryAlias,
                         IsChoice = cc.Capabilities.IsChoice
                     }) as Core.Entities.ColumnCapabilitiesBase,
                     ComplexColumnCapabilities ccc => new Core.Entities.ComplexColumnCapabilities() as Core.Entities.ColumnCapabilitiesBase,
@@ -174,20 +179,39 @@ namespace Microsoft.PowerFx.Connectors
             return new CdpDelegationInfo()
             {
                 TableName = tableName,
-                IsReadOnly = isReadOnly,               
+                IsReadOnly = isReadOnly,
                 DatasetName = datasetName,
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,
                 SelectionRestriction = selectionRestriction,
                 GroupRestriction = groupRestriction,
-                FilterFunctions = serviceCapabilities?.FilterFunctions,
-                FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctions,
+                FilterFunctions = serviceCapabilities?.FilterFunctionsEnum,
+                FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
-                SupportsDataverseOffline = serviceCapabilities?.SupportsDataverseOffline ?? false,
                 ColumnsCapabilities = columnCapabilities,
                 ColumnsWithRelationships = columnWithRelationships
             };
+        }
+
+        private static IEnumerable<DelegationOperator> GetDelegationOperatorEnumList(IEnumerable<string> filterFunctionList)
+        {
+            if (filterFunctionList == null)
+            {
+                return null;
+            }
+
+            List<DelegationOperator> list = new List<DelegationOperator>();
+
+            foreach (string str in filterFunctionList)
+            {
+                if (Enum.TryParse(str, true, out DelegationOperator op))
+                {
+                    list.Add(op);
+                }
+            }
+
+            return list;
         }
 
         public void AddColumnCapability(string name, ColumnCapabilitiesBase capability)

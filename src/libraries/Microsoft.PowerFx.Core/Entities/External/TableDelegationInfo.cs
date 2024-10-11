@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -29,19 +28,16 @@ namespace Microsoft.PowerFx.Core.Entities
         // Those entries cumulate with the onee defined at column level
         // Possible strings are defined in DelegationMetadataOperatorConstants
         // Values not in this list are ignored
-        public IEnumerable<string> FilterFunctions { get; init; }
+        public IEnumerable<DelegationOperator> FilterFunctions { get; init; }
 
         // Filter functions supported by the table
-        public IEnumerable<string> FilterSupportedFunctions { get; init; }
+        public IEnumerable<DelegationOperator> FilterSupportedFunctions { get; init; }
 
         // Defines paging capabilities
         internal PagingCapabilities PagingCapabilities { get; init; }
 
         // Defining per column capabilities
-        public IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
-
-        // Used for offline DV tables
-        internal bool SupportsDataverseOffline { get; init; }
+        internal IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
@@ -67,44 +63,12 @@ namespace Microsoft.PowerFx.Core.Entities
             {
                 IsOnlyServerPagable = false,
                 ServerPagingOptions = new string[0]
-            };
-            SupportsDataverseOffline = false;
+            };            
             SupportsRecordPermission = true;
             ColumnsWithRelationships = new Dictionary<string, string>();
         }
 
-        public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);        
-
-        // Not recommended for production use, only good for tests
-        internal static TableDelegationInfo Default(string tableName, bool isReadOnly, string datasetName)
-        {
-            return new CdpDelegationInfo()
-            {
-                TableName = tableName,
-                IsReadOnly = isReadOnly,                
-                DatasetName = datasetName,
-                SortRestriction = new SortRestrictions()
-                {
-                    AscendingOnlyProperties = new List<string>(),
-                    UnsortableProperties = new List<string>()
-                },
-                FilterRestriction = new FilterRestrictions()
-                {
-                    RequiredProperties = new List<string>(),
-                    NonFilterableProperties = new List<string>()
-                },
-                SelectionRestriction = new SelectionRestrictions()
-                {
-                    IsSelectable = true
-                },
-                GroupRestriction = new GroupRestrictions()
-                {
-                    UngroupableProperties = new List<string>()
-                },
-                FilterFunctions = ColumnCapabilities.DefaultFilterFunctionSupport,
-                FilterSupportedFunctions = ColumnCapabilities.DefaultFilterFunctionSupport                
-            };
-        }
+        public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);
     }
 
     internal sealed class ComplexColumnCapabilities : ColumnCapabilitiesBase
@@ -127,18 +91,18 @@ namespace Microsoft.PowerFx.Core.Entities
 
     public sealed class ColumnCapabilities : ColumnCapabilitiesBase
     {
-        public Dictionary<string, ColumnCapabilitiesBase> Properties => _childColumnsCapabilities.Any() ? _childColumnsCapabilities : null;
+        public IReadOnlyDictionary<string, ColumnCapabilitiesBase> Properties => _childColumnsCapabilities.Any() ? _childColumnsCapabilities : null;
 
         private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
-        public ColumnCapabilitiesDefinition Capabilities;
+        private ColumnCapabilitiesDefinition _capabilities;
 
         // Those are default CDS filter supported functions 
         public static readonly IEnumerable<string> DefaultFilterFunctionSupport = new string[] { "eq", "ne", "gt", "ge", "lt", "le", "and", "or", "cdsin", "contains", "startswith", "endswith", "not", "null", "sum", "average", "min", "max", "count", "countdistinct", "top", "astype", "arraylookup" };
 
         public static ColumnCapabilities DefaultColumnCapabilities => new ColumnCapabilities()
         {
-            Capabilities = new ColumnCapabilitiesDefinition()
+            _capabilities = new ColumnCapabilitiesDefinition()
             {
                 FilterFunctions = DefaultFilterFunctionSupport,
                 QueryAlias = null,
@@ -163,19 +127,19 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             Contracts.AssertValueOrNull(capability);
 
-            Capabilities = capability;
+            _capabilities = capability;
             _childColumnsCapabilities = new Dictionary<string, ColumnCapabilitiesBase>();
         }
     }
 
     public sealed class ColumnCapabilitiesDefinition
-    {        
+    {
         public IEnumerable<string> FilterFunctions
         {
             get => _filterFunctions ?? DefaultFilterFunctionSupport;
-            set => _filterFunctions = value;
+            init => _filterFunctions = value;
         }
-        
+
         // Used in PowerApps-Client/src/AppMagic/js/Core/Core.Data/ConnectedDataDeserialization/TabularDataDeserialization.ts
         // Used by SP connector only to rename column logical names in OData queries
         internal string QueryAlias { get; init; }
@@ -214,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Entities
     {
     }
 
-    public sealed class PagingCapabilities
+    internal sealed class PagingCapabilities
     {
         // Defines is the tabular connector is supporting client or server paging
         // If true, @odata.nextlink URL is used instead of $skip and $top query parameters

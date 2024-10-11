@@ -18,23 +18,18 @@ namespace Microsoft.PowerFx.Core.Entities
     // Implements a base data source, used in DType.AssociatedDataSources, itself in RecordType constructor to host a CDP record type
     internal class DataSourceInfo : IExternalTabularDataSource
     {
-        public const string IsChoiceValue = "Value";
-
-        public readonly Dictionary<string, string> ColumnsWithRelationships;
+        // Key = field logical name, Value = foreign table logical name
+        public readonly IReadOnlyDictionary<string, string> ColumnsWithRelationships;
 
         public DataSourceInfo(AggregateType recordType, DisplayNameProvider displayNameProvider, TableDelegationInfo delegationInfo)
         {
-            string GetDisplayName(string fieldName) => displayNameProvider == null || !displayNameProvider.TryGetDisplayName(new DName(fieldName), out DName displayName) ? fieldName : displayName.Value;
-
             EntityName = new DName(delegationInfo.TableName);
             IsWritable = !delegationInfo.IsReadOnly;
             _delegationInfo = delegationInfo;
             _type = recordType._type;
             RecordType = (RecordType)recordType;
 
-            IEnumerable<string> fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value);
-
-            _displayNameMapping = new BidirectionalDictionary<string, string>(fieldNames.Select(f => new KeyValuePair<string, string>(f, GetDisplayName(f))).ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+            _displayNameMapping = new BidirectionalDictionary<string, string>(displayNameProvider.LogicalToDisplayPairs.ToDictionary(kvp => kvp.Key.Value, kvp => kvp.Value.Value ?? kvp.Key.Value));
             _externalDataEntityMetadataProvider = new InternalDataEntityMetadataProvider();
             _externalDataEntityMetadataProvider.AddSource(Name, new InternalDataEntityMetadata(delegationInfo.TableName, delegationInfo.DatasetName, _displayNameMapping));
             _externalTableMetadata = new InternalTableMetadata(RecordType, Name, Name, delegationInfo.IsReadOnly);
@@ -177,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
 
-            FilterOpMetadata filterOpMetadata = new FilterOpMetadata(recordType, delegationInfo);
+            FilterOpMetadata filterOpMetadata = new CdpFilterOpMetadata(recordType, delegationInfo);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
             SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
