@@ -52,4 +52,48 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
     }
+
+    public enum DelegationOperator
+    {
+        Eq,
+        Ne,
+        Lt,
+        Le,
+        Gt,
+        Ge,
+        And,
+        Or,
+        Contains,
+        Indexof,
+        Substringof,
+        Not,
+        Year,
+        Month,
+        Day,
+        Hour,
+        Minute,
+        Second,
+        Tolower,
+        Toupper,
+        Trim,
+        Null,
+        Date,
+        Length,
+        Sum,
+        Min,
+        Max,
+        Average,
+        Count,
+        Add,
+        Sub,
+        Startswith,
+        Mul,
+        Div,
+        Endswith,
+        Countdistinct,
+        Cdsin,
+        Top,
+        Astype,
+        Arraylookup
+    }
 }
