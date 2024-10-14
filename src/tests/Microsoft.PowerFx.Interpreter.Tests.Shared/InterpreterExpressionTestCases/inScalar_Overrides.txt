@@ -6,6 +6,10 @@
 #skip
 
 // Bug in pre-V1, fixed in V1
+>> "a" exactin Blank()
+#skip
+
+// Bug in pre-V1, fixed in V1
 >> "" in Blank()
 #skip
 
@@ -23,8 +27,8 @@
 
 // Bug in pre-V1, fixed in V1
 >> Blank() in "hello"
-true
+#skip
 
 // Bug in pre-V1, fixed in V1
 >> Blank() exactin "hello"
-true
+#skip
