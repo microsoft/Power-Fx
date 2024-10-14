@@ -1,4 +1,4 @@
-﻿#OVERRIDE: inScalar_V1CompatDisabled.txt
+﻿#OVERRIDE: inScalar.txt
 #SETUP: disable:PowerFxV1CompatibilityRules
 
 // Bug in pre-V1, fixed in V1
@@ -10,5 +10,21 @@
 #skip
 
 // Bug in pre-V1, fixed in V1
+>> "" exactin Blank()
+#skip
+
+// Bug in pre-V1, fixed in V1
 >> Blank() in Blank()
 #skip
+
+// Bug in pre-V1, fixed in V1
+>> Blank() exactin Blank()
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> Blank() in "hello"
+true
+
+// Bug in pre-V1, fixed in V1
+>> Blank() exactin "hello"
+true
