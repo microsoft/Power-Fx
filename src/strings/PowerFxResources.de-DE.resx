@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Verhaltensfunktion in einer nicht verhaltensbasierten benutzerdefinierten Funktion (User-Defined Function, UDF). Schließen Sie den benutzerdefinierten Funktionskörper in geschweiften Klammern ({...}) ein, um eine verhaltensbasierte UDF zu deklarieren.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Verhaltensfunktionen ändern den aktuellen Sitzungsstatus. „Clear“, „Collect“, „Patch“ und „Refresh“ sind allgemeine Verhaltensfunktionen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Bearbeiten Sie den benutzerdefinierten Funktionsausdruck, indem Sie ihn in geschweiften Klammern einschließen ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testfunktion in einer Nicht-Testeigenschaft. Sie können diese Eigenschaft nicht zum Aufrufen reiner Testfunktionen verwenden.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Der benannte Typ muss ein Typliteral sein.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nicht unterstützter nicht typisierter/JSON-Konvertierungstyp „{0}“ im Argument.</value>
+    <value>Nicht unterstützter Typ „{0}“ im Typargument.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Die maximale Länge in der JSON-Funktion wurde erreicht.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Das experimentelle Feature „Benutzerdefinierte Typen“ ist nicht aktiviert.</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Função de comportamento em uma função definida pelo usuário (UDF) não comportamental. Coloque o corpo da função definida pelo usuário entre chaves ({...}) para declarar uma UDF de comportamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>As funções de comportamento alteram o estado atual da sessão. 'Clear', 'Collect', 'Patch' e 'Refresh' são funções de comportamento comuns.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edite a expressão da função definida pelo usuário para que ela fique entre chaves ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Função de teste em uma propriedade não teste. Você não pode usar essa propriedade para invocar funções somente teste.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>O tipo nomeado tem de ser um tipo literal.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Não há suporte ao tipo de conversão sem tipo/JSON '{0}' no argumento.</value>
+    <value>Não há suporte ao tipo '{0}' no argumento de tipo.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Tamanho máximo atingido na função JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>O recurso experimental 'Tipos definidos pelo usuário' não está habilitado.</value>
     
   </data>
 </root>

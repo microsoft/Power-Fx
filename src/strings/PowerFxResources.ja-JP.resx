@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>非動作ユーザー定義関数 (UDF) に含まれる動作関数。動作 UDF を宣言する際は、ユーザー定義関数の本文を中括弧 ({...}) で囲んでください。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>動作関数は現在のセッション状態を変更します。一般的な動作関数には 'Clear'、'Collect'、'Patch'、'Refresh' があります。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>ユーザー定義関数の式を編集し、中括弧内 ({...}) に含めてください。</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>非テスト プロパティにテスト関数があります。このプロパティを使用してテストのみの関数を呼び出すことはできません。</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>名前付き型は型リテラルである必要があります。</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>引数に存在する型指定されていない/JSON 変換型 '{0}' には対応していません。</value>
+    <value>型引数に対応していない型 '{0}' があります。</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON 関数で長さの上限に達しました。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>試験段階の機能 'ユーザー定義型' が有効ではありません。</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>非行为用户定义函数(UDF)中的行为函数。请用大括号({...})将用户定义函数正文括在内，以声明行为 UDF。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>行为函数会更改当前会话状态。常见行为函数包括“Clear”、“Collect”、“Patch”和“Refresh”。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>编辑用户定义的函数表达式，使其位于大括号({...})内。</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>非测试属性中的测试函数。无法使用此属性来调用仅用于测试的函数。</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>命名类型必须为类型文字。</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>参数中不支持非类型化/JSON 转换类型“{0}”。</value>
+    <value>类型参数中不支持类型 '{0}'。</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>在 JSON 函数中达到最大长度。</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>未启用“用户定义类型”实验功能。</value>
     
   </data>
 </root>

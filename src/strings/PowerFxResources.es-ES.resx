@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Función de comportamiento en una función definida por el usuario (UDF) que no es de comportamiento. Introduzca el cuerpo de la función definida por el usuario entre llaves ({...}) para declarar una UDF de comportamiento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Las funciones de comportamiento cambian el estado actual de la sesión. Acciones de comportamiento como "Clear", "Collect", "Patch" y "Refresh" son comunes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edite la expresión de la función definida por el usuario de modo que quede entre llaves ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Pruebe la función en una propiedad que no sea de prueba. No puede usar esta propiedad para invocar funciones que sean solo de prueba.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>El tipo con nombre debe ser un literal de tipo.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tipo de conversión de sin tipo / JSON "{0}" en el argumento.</value>
+    <value>Tipo "{0}" no admitido en el argumento de tipo.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Longitud máxima alcanzada en una función JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>La característica experimental "Tipos definidos por el usuario" no está habilitada.</value>
     
   </data>
 </root>

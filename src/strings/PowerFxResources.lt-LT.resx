@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Veiksenos funkcija ne veiksenos vartotojo apibrėžtoje funkcijoje (UDF). Apskliauskite vartotojo apibrėžtą funkcijos tekstą riestiniais skliaustais ({...}), kad nurodytumėte elgsenos UDF.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Veiksenos funkcijos keičia dabartinę seanso būseną. Įprastos veiksenos funkcijos yra „Clear“, „Collect“, „Patch“ ir „Refresh“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Redaguokite vartotojo apibrėžtą funkcijos išraišką taip, kad ji būtų riestiniuose skliaustuose ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Tikrinimo funkcija yra ne tikrinimo ypatybė. Negalite naudoti šios ypatybės norėdami iškviesti tik tikrinimo funkcijos.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Pavadinimo tipas turi būti literalas.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Argumente yra nepalaikomas neapibrėžtas / JSON konvertavimo tipas {0}.</value>
+    <value>Tipo argumente yra nepalaikomas tipas „{0}“.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Didžiausias ilgis pasiektas JSON funkcijoje.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Eksperimentinė funkcija „Vartotojo apibrėžiamas tipas“ neįjungta.</value>
     
   </data>
 </root>

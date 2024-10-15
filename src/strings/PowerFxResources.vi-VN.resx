@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Hàm hành vi trong hàm do người dùng xác định (UDF) không phải là hành vi. Vui lòng đặt nội dung hàm do người dùng xác định trong dấu ngoặc nhọn ({...}) để khai báo UDF hành vi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Các hàm hành vi thay đổi trạng thái phiên hiện tại. "Clear", "Collect", "Patch" và "Refresh" là các hàm hành vi phổ biến.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Chỉnh sửa biểu thức hàm do người dùng xác định sao cho biểu thức nằm trong dấu ngoặc nhọn ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Hàm thử nghiệm trong thuộc tính phi thử nghiệm. Bạn không thể sử dụng thuộc tính này để gọi các hàm chỉ thử nghiệm.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Kiểu được đặt tên phải là kiểu ký tự.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Loại chuyển đổi JSON/chưa được phân loại '{0}' không được hỗ trợ trong đối số.</value>
+    <value>Loại không được hỗ trợ "{0}" trong đối số loại.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Đã đạt đến độ dài tối đa trong hàm JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Tính năng thử nghiệm "loại do người dùng xác định" không được bật.</value>
     
   </data>
 </root>

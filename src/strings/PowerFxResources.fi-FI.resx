@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Toimintafunktio on muu kuin toiminnallinen käyttäjän määrittämä funktio (UDF). Paketoi käyttäjän määrittämän funktion tekstiosa aaltosulkeilla ({...}) toiminnallisen UFD:n merkiksi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Toimintafunktiot muuttavat nykyisen istunnon tilaa. Clear, Collect, Patch ja Refresh ovat yleisiä toimintafunktioita.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Muokkaa käyttäjän määrittämän funktion lauseketta niin, että se on aaltosulkeiden sisällä ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testaa toimintoa muussa kuin testiominaisuudessa. Tämän ominaisuuden avulla ei voi käynnistää vain testi -funktioita.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nimetyn tyypin on oltava literaali.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tukematon tyypittämätön/JSON-muunnoksen tyyppi {0} argumentissa.</value>
+    <value>Tyyppiargumentissa on tyyppi {0}, jota ei tueta.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Enimmäispituus saavutettiin JSON-funktiossa.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Kokeellista Käyttäjän määrittämät tyypit -ominaisuutta ei ole otettu käyttöön.</value>
     
   </data>
 </root>

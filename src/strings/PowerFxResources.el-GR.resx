@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Συνάρτηση συμπεριφοράς σε μια συνάρτηση που δεν έχει συμπεριφορά και ορίζεται από τον χρήστη (UDF). Για να δηλώσετε μια UDF συμπεριφοράς, τυλίξτε το σώμα της συνάρτησης που ορίζεται από τον χρήστη με αγκύλες ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Οι συναρτήσεις συμπεριφοράς αλλάζουν την τρέχουσα κατάσταση περιόδου λειτουργίας. Οι συναρτήσεις "Clear", "Collect", "Patch" και "Refresh" είναι κοινές λειτουργίες συμπεριφοράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Επεξεργαστείτε την παράσταση συνάρτησης που ορίζεται από τον χρήστη έτσι ώστε να βρίσκεται μέσα σε αγκύλες ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Συνάρτησης δοκιμής σε μη δοκιμαστική ιδιότητα. Δεν μπορείτε να χρησιμοποιήσετε αυτή την ιδιότητα για να καλέσετε συναρτήσεις μόνο για δοκιμή.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Ο κατονομαζόμενος τύπος πρέπει να είναι κυριολεκτικός τύπος.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Μη υποστηριζόμενος μη τυπολογημένος/JSON τύπος μετατροπής '{0}' στο όρισμα.</value>
+    <value>Μη υποστηριζόμενος τύπος '{0}' σε όρισμα τύπου.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Το μέγιστο μήκος που επιτεύχθηκε σε συνάρτηση JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Δεν είναι ενεργοποιημένη η πειραματική δυνατότητα 'Τύποι καθορισμένοι από τον χρήστη'.</value>
     
   </data>
 </root>

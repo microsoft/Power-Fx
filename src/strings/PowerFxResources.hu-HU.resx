@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Viselkedési függvény egy nem viselkedési, felhasználó által meghatározott függvényben (UDF). Az UDF-viselkedés deklarálása érdekében tegye kapcsos zárójel ({...}) közé a felhasználó által meghatározott függvénytörzset.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>A viselkedési függvények módosítják az aktuális munkamenet állapotát. A „Clear”, „Collect”, „Patch” és „Refresh” gyakori viselkedési függvények.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Szerkessze a felhasználó által meghatározott függvénykifejezést, hogy az kapcsos zárójelben legyen ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Tesztfüggvény egy nem tesztelési tulajdonságban. A tulajdonság nem tesztelési függvények meghívásához nem használható.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>A megnevezett típusnak literális típusúnak kell lennie.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nem támogatott típus nélküli/JSON átalakítási típus a(z) „{0}” argumentumban.</value>
+    <value>Nem támogatott „{0}” típus a típusargumentumban.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Elérte a JSON függvény maximális hosszát.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Nincs engedélyezve a „Felhasználói típus” kísérleti funkció.</value>
     
   </data>
 </root>

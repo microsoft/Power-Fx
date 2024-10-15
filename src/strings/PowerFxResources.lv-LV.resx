@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Uzvedības funkcija lietotāja definētā funkcijā (UDF), kas nav uzvedības funkcija. Lūdzu, iekļaujiet lietotāja definēto funkcijas pamattekstu ar figūriekavām ({...}), lai deklarētu uzvedības lietotāja definēto funkciju.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Uzvedības funkcijas maina pašreizējās sesijas statusu. Bieži lietotas uzvedības funkcijas ir "Clear", "Collect", "Patch" un "Refresh".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediģējiet lietotāja definēto funkcijas izteiksmi tā, lai tā atrastos figūriekavās ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Pārbaudiet funkciju rekvizītā, kas nav testa rekvizīts. Šo rekvizītu nevar lietot, lai izsauktu tikai testa funkcijas.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nosauktajam tipam ir jābūt tipa literālim.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Argumentā ir neatbalstīts netipizēts/JSON pārvēršanas tips “{0}”.</value>
+    <value>Tipa argumentā neatbalstīts tips {0}.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Sasniegts JSON funkcijas maksimālais garums.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Eksperimentālais līdzeklis “Lietotāja definēti tipi” nav iespējots.</value>
     
   </data>
 </root>

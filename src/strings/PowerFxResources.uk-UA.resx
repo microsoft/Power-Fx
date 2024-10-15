@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Поведінкова функція оформлена як неповедінкова користувацька функція (UDF). Помістіть текст користувацької функції у фігурні дужки ({...}), щоб оголосити поведінкову UDF.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Поведінкові функції змінюють поточний стан сеансу. До типових поведінкових функцій належать 'Clear', 'Collect', 'Patch' і 'Refresh'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Відредагуйте користувацький вираз функції, помістивши його у фігурні дужки ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тестова функція в нетестовій властивості. Цю властивість не можна використовувати, щоб викликати лише тестові функції.</value>
     
@@ -4116,7 +4128,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Іменований тип має бути літералом типу.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4769,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Непідтримуваний тип перетворення нетипізованих/JSON-даних '{0}' в аргументі.</value>
+    <value>Непідтримуваний тип '{0}' в аргументі типу.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4778,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Досягнуто максимальної довжини функції JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Експериментальну функцію "Користувацькі типи" не ввімкнуто.</value>
     
   </data>
 </root>
