@@ -2941,6 +2941,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (lookupInfo.Data is IExternalNamedFormula formula)
                     {
                         isConstantNamedFormula = formula.IsConstant;
+
+                        // If the definition of the named formula has a delegation warning, every use should also inherit this warning
+                        if (formula.HasDelegationWarning)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_NF, node.Ident.Name);
+                        }
                     }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
@@ -4871,6 +4877,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(node, errorKey, badAncestor.Head.Name);
                     }
+                }
+
+                // If the definition of the user-defined function has a delegation warning, every usage should also inherit this warning
+                if (func is UserDefinedFunction udf && udf.HasDelegationWarning)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_UDF, udf.Name);
                 }
 
                 _txb.CheckAndMarkAsDelegatable(node);
