@@ -1,8 +1,35 @@
-﻿#OVERRIDE: BasicCoercion_V1CompatDisabled.txt
+﻿#OVERRIDE: BasicCoercion.txt
 #SETUP: disable:PowerFxV1CompatibilityRules
 
 // Bug in pre-V1, fixed in V1
 >> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
+#skip
+
+>> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
+"11111111-2222-3333-4444-555566666666"
+
+// Before V1, mixing Time/Date would result in DateTime
+>> If(1<0, Time(1,2,3), DateTime(2000,1,1,12,34,56,789))
+DateTime(2000,1,1,12,34,56,789)
+
+// Before V1, mixing Time/Date would result in DateTime
+>> If(1<0, Date(2000,1,1), DateTime(2134,5,6,12,0,0))
+DateTime(2134,5,6,12,0,0,0)
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,Date(2000,1,1)))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, Time(1,2,3), If(1<0,Date(2000,1,1)))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, DateTime(2023,1,1,3,4,5), If(1<0,Time(1,2,3)))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, Date(2023,1,1), If(1<0,Time(1,2,3)))
 #skip
 
 // Bug in pre-V1, fixed in V1
