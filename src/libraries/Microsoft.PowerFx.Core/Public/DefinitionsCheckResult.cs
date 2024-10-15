@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx
 
                     List<TexlError> bindErrors = new List<TexlError>();
 
-                    if (binding.ErrorContainer.HasErrors())
+                    if (binding.ErrorContainer.GetErrors().Any(error => error.Severity > DocumentErrorSeverity.Warning))
                     {
                         _errors.AddRange(ExpressionError.New(binding.ErrorContainer.GetErrors(), _defaultErrorCulture));
                     }
