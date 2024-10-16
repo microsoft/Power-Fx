@@ -4822,6 +4822,10 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>The source to clear.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Retrieves data that spans across multiple tables with relationships.</value>
+    <comment>Description of 'Clear' function.</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
