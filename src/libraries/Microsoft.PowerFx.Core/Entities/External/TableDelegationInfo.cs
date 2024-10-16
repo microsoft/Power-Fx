@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Entities
         internal PagingCapabilities PagingCapabilities { get; init; }
 
         // Defining per column capabilities
-        internal IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
+        internal IReadOnlyDictionary<string, ColumnCapabilitiesBase> ColumnsCapabilities { get; init; }
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
@@ -93,6 +93,8 @@ namespace Microsoft.PowerFx.Core.Entities
         private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
         private ColumnCapabilitiesDefinition _capabilities;
+
+        public ColumnCapabilitiesDefinition Definition => _capabilities;
 
         // Those are default CDS filter supported functions 
         // From // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
