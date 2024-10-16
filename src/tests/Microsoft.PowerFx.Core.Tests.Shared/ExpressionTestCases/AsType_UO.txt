@@ -1,4 +1,4 @@
-#SETUP: AllowTypeLiteral, TimeZoneInfo("Pacific Standard Time")
+#SETUP: TimeZoneInfo("Pacific Standard Time")
 
 // Primitives
 >> AsType(ParseJSON("987654321"), Number)

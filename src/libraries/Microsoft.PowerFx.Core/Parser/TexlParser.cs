@@ -34,9 +34,6 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
 
-            // When specified, allows type literals to be parsed.
-            AllowTypeLiteral = 1 << 4,
-
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
 
@@ -90,16 +87,16 @@ namespace Microsoft.PowerFx.Core.Parser
         /// </summary>
         /// <param name="script">Script to be parsed.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="features">Power Fx feature flags.</param>
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
-        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions, Features features = null)
         {
             Contracts.AssertValue(parserOptions);
             var flags = Flags.NamedFormulas |
                 (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0) |
-                (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0) |
                 (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
-            var parser = new TexlParser(formulaTokens, flags);
+            var parser = new TexlParser(formulaTokens, flags, features);
 
             return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
@@ -300,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.ColonEqual && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
+                if (_curs.TidCur == TokKind.ColonEqual && _features.IsUserDefinedTypesEnabled)
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
@@ -1268,7 +1265,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName && _features.IsUserDefinedTypesEnabled)
                         {
                             var typeLiteralNode = ParseTypeLiteral();
 
@@ -2064,11 +2061,12 @@ namespace Microsoft.PowerFx.Core.Parser
             return PrettyPrintVisitor.Format(result.Root, result.Before, result.After, text);
         }
 
-        public static string FormatUserDefinitions(string text, ParserOptions options)
+        public static string FormatUserDefinitions(string text, ParserOptions options, Features features = null)
         {
             var result = ParseUserDefinitionScript(
                 text,
-                options);
+                options,
+                features ?? Features.None);
 
             // Can't pretty print a script with errors.
             if (result.HasErrors)
