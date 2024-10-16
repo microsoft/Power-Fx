@@ -837,6 +837,80 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(func.HasDelegationWarning);
         }
 
+        [Fact]
+        public void TestInheritanceOfDelegationWarningsInUDFs2()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            var engine = new RecalcEngine(config);
+
+            var result = engine.AddUserDefinedFunction("NonDelegatableUDF(Value: Number):Boolean = Value > 5;", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            var func = engine.Functions.WithName("NonDelegatableUDF").First() as UserDefinedFunction;
+            Assert.False(func.HasDelegationWarning);
+
+            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = Filter(MyDataSource, NonDelegatableUDF(Value));", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            func = engine.Functions.WithName("NonDelegatableUDF2").First() as UserDefinedFunction;
+            Assert.True(!func.HasDelegationWarning);
+        }
+
+        [Fact]
+        public void TestInheritanceOfDelegationWarningsInUDFs3()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            var engine = new RecalcEngine(config);
+
+            var result = engine.AddUserDefinedFunction("NonDelegatableUDF(Value: Number):Boolean = Sqrt(Value) > 5;", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            var func = engine.Functions.WithName("NonDelegatableUDF").First() as UserDefinedFunction;
+            Assert.False(func.HasDelegationWarning);
+
+            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = Filter(MyDataSource, NonDelegatableUDF(Value));", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            func = engine.Functions.WithName("NonDelegatableUDF2").First() as UserDefinedFunction;
+            Assert.True(func.HasDelegationWarning);
+        }
+
         // Binding to inner functions does not impact outer functions. 
         [Fact]
         public async Task FunctionInner()

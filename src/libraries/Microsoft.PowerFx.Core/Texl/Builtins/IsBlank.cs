@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.IsBlankArg1 };
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (binding.IsFullRecordRowScopeAccess(args[0]))
             {
-                return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[0] as DottedNameNode, binding, metadata, opStrategy);
+                return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[0] as DottedNameNode, binding, metadata, opStrategy, nodeInheritsRowScope: nodeInheritsRowScope);
             }
 
             if (args[0] is not FirstNameNode node)
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var firstNameNodeValidationStrategy = GetFirstNameNodeDelegationStrategy();
-            return firstNameNodeValidationStrategy.IsValidFirstNameNode(node, binding, opStrategy);
+            return firstNameNodeValidationStrategy.IsValidFirstNameNode(node, binding, opStrategy, nodeInheritsRowScope: nodeInheritsRowScope);
         }
     }
 

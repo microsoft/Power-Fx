@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.StringFuncArg1 };
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 case NodeKind.FirstName:
                     {
                         var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                        return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, null);
+                        return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, null, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.Call:
@@ -71,13 +71,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
 
                         var cNodeStrategy = GetCallNodeDelegationStrategy();
-                        return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
+                        return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.DottedName:
                     {
                         var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                        return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, null);
+                        return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, null, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 default:
