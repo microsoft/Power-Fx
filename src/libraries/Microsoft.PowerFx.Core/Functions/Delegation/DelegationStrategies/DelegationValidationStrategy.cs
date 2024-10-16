@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Authentication.ExtendedProtection;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -18,17 +20,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal interface ICallNodeDelegatableNodeValidationStrategy
     {
-        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null);
+        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null, bool nodeInheritsRowScope = false);
     }
 
     internal interface IDottedNameNodeDelegatableNodeValidationStrategy
     {
-        bool IsValidDottedNameNode(DottedNameNode node, TexlBinding binding, OperationCapabilityMetadata metadata, IOpDelegationStrategy opDelStrategy);
+        bool IsValidDottedNameNode(DottedNameNode node, TexlBinding binding, OperationCapabilityMetadata metadata, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope = false);
     }
 
     internal interface IFirstNameNodeDelegatableNodeValidationStrategy
     {
-        bool IsValidFirstNameNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy);
+        bool IsValidFirstNameNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope = false);
     }
 
     internal class DelegationValidationStrategy
@@ -175,13 +177,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return delegationMetadata.FilterDelegationMetadata;
         }
 
-        public bool IsValidDottedNameNode(DottedNameNode node, TexlBinding binding, OperationCapabilityMetadata metadata, IOpDelegationStrategy opDelStrategy)
+        public bool IsValidDottedNameNode(DottedNameNode node, TexlBinding binding, OperationCapabilityMetadata metadata, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValueOrNull(opDelStrategy);
 
-            var isRowScoped = binding.IsRowScope(node);
+            var isRowScoped = binding.IsRowScope(node) || nodeInheritsRowScope;
             if (!isRowScoped)
             {
                 return IsValidNonRowScopedDottedNameNode(node, binding, metadata, opDelStrategy);
@@ -262,13 +264,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return opDelStrategy?.IsOpSupportedByColumn(entityCapabilityMetadata, node, entityColumnPath, binding) ?? true;
         }
 
-        public bool IsValidFirstNameNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy)
+        public bool IsValidFirstNameNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValueOrNull(opDelStrategy);
 
-            var isRowScoped = binding.IsRowScope(node);
+            var isRowScoped = binding.IsRowScope(node) || nodeInheritsRowScope;
             var isValid = IsValidAsyncOrImpureNode(node, binding);
             if (isValid && !isRowScoped)
             {
@@ -312,12 +314,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Verifies if provided column node supports delegation.
-        protected bool IsDelegatableColumnNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy, DelegationCapability capability)
+        protected bool IsDelegatableColumnNode(FirstNameNode node, TexlBinding binding, IOpDelegationStrategy opDelStrategy, DelegationCapability capability, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValueOrNull(opDelStrategy);
-            Contracts.Assert(binding.IsRowScope(node));
+            Contracts.Assert(binding.IsRowScope(node) || nodeInheritsRowScope);
 
             var firstNameInfo = binding.GetInfo(node.AsFirstName());
             if (firstNameInfo == null)
@@ -359,7 +361,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        public virtual bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        public virtual bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null, bool nodeInheritsRowScope = false)
         {
             // Functions may have their specific CallNodeDelegationStrategies (i.e. AsType, User)
             // so, if available, we need to ensure we use their specific delegation strategy.
@@ -370,13 +372,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (function != null && function != Function)
             {
                 // We need to keep track of the tracking function for delegation tracking telemetry to be consistent.
-                return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
+                return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata, trackingFunction ?? Function, nodeInheritsRowScope: nodeInheritsRowScope);
             }
 
-            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function);
+            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function, nodeInheritsRowScope: nodeInheritsRowScope);
         }
 
-        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -393,7 +395,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             // If the node is not row scoped and it's valid then it can be delegated.
-            var isRowScoped = binding.IsRowScope(node);
+            var isRowScoped = binding.IsRowScope(node) || nodeInheritsRowScope;
             if (!isRowScoped)
             {
                 return true;
@@ -405,8 +407,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
             }
 
-            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata))
+            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope))
             {
+                return true;
+            }
+
+            if (callInfo?.Function is UserDefinedFunction udf &&
+                ((FilterFunction)trackingFunction).IsValidDelegatableFilterPredicateNode(udf.Binding.Top, udf.Binding, metadata as FilterOpMetadata, nodeInheritsRowScope: isRowScoped))
+            {
+                udf.SetSupportRowScopedServerDelegation(true);
                 return true;
             }
 

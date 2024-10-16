@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Determine whether a node can be delegated as part of a filter predicate.
         // The enforceBoolean flag determines whether to enforce the return type of the node.  If the node is part of a filter predicate directly, it must return a boolean type.
         // If the node is used in other places inside a filter, such as in a nested LookUp reduction formula, it can return any type.
-        protected bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true, bool enforceBoolean = true)
+        internal bool IsValidDelegatableFilterPredicateNode(TexlNode dsNode, TexlBinding binding, FilterOpMetadata filterMetadata, bool generateHints = true, bool enforceBoolean = true, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(dsNode);
             Contracts.AssertValue(binding);
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
                             Contracts.AssertValue(opNode);
 
-                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding, nodeInheritsRowScope))
                             {
                                 return false;
                             }
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
                             Contracts.AssertValue(opNode);
 
-                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding, nodeInheritsRowScope))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.Call:
                         {
-                            if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata))
+                            if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 return false;
                             }

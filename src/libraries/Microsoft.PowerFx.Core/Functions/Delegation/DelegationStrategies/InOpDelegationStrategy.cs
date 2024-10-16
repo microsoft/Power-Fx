@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             _binaryOpNode = node;
         }
 
-        public override bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding)
+        public override bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
+            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata) || nodeInheritsRowScope;
             if (!isRowScopedOrLambda)
             {
                 return false;

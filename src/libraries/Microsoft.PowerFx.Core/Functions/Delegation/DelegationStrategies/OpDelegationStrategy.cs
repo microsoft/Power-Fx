@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Verifies if given kind of node is supported by function delegation.
-        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool isRHSNode)
+        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool isRHSNode, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             // Non row-scope, non async, pure nodes should always be valid because we can calculate value in runtime before delegation.
-            if (!binding.IsRowScope(node) && !binding.IsAsync(node) && binding.IsPure(node))
+            if (!binding.IsRowScope(node) && !binding.IsAsync(node) && binding.IsPure(node) && !nodeInheritsRowScope)
             {
                 return true;
             }
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.FirstName:
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
                         var unaryopNode = node.AsUnaryOpLit();
                         var unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
-                        return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding);
+                        return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.BinaryOp:
@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
                         Contracts.Assert(binaryOpNode.Op == binaryOpDelStrategy.Op);
 
-                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope))
                         {
                             SuggestDelegationHint(binaryOpNode, binding);
                             return false;
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding)
+        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -298,13 +298,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            if (!IsSupportedNode(binaryOpNode.Left, metadata, binding, opDelStrategy, false))
+            if (!IsSupportedNode(binaryOpNode.Left, metadata, binding, opDelStrategy, false, nodeInheritsRowScope))
             {
                 SuggestDelegationHint(node, binding);
                 return false;
             }
 
-            if (!IsSupportedNode(binaryOpNode.Right, metadata, binding, opDelStrategy, true))
+            if (!IsSupportedNode(binaryOpNode.Right, metadata, binding, opDelStrategy, true, nodeInheritsRowScope))
             {
                 SuggestDelegationHint(node, binding);
                 return false;

@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null, bool nodeInheritsRowScope = false)
         {
             var function = binding.GetInfo(node)?.Function;
             var args = node.Args.Children.VerifyValue();          
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            return base.IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
+            return base.IsValidCallNode(node, binding, metadata, trackingFunction ?? Function, nodeInheritsRowScope: nodeInheritsRowScope);
         }
     }
 }
