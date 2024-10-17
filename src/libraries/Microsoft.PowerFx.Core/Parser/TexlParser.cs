@@ -2045,11 +2045,13 @@ namespace Microsoft.PowerFx.Core.Parser
         /// </summary>
         /// <param name="text">Expression text to format.</param>
         /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <param name="features">Power Fx features.</param>
         /// <returns>Formatted expression text.</returns>
-        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining, Features features = null)
         {
             var result = ParseScript(
                 text,
+                features ?? Features.None,
                 flags: flags);
 
             // Can't pretty print a script with errors.
