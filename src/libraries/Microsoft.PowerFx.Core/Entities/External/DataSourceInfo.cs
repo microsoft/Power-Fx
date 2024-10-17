@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public DName EntityName { get; }
 
-        public bool IsSelectable => _delegationInfo.SelectionRestriction == null ? false : _delegationInfo.SelectionRestriction.IsSelectable;
+        public bool IsSelectable => _delegationInfo.IsSelectable;
 
         public bool IsDelegatable => _delegationInfo.IsDelegable;
 
@@ -109,17 +109,17 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool IExternalTabularDataSource.CanIncludeSelect(IExpandInfo expandInfo, string selectColumnName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         bool IExternalTabularDataSource.CanIncludeExpand(IExpandInfo expandToAdd)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         bool IExternalTabularDataSource.CanIncludeExpand(IExpandInfo parentExpandInfo, IExpandInfo expandToAdd)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private static List<OperationCapabilityMetadata> GetCapabilityMetadata(AggregateType recordType, TableDelegationInfo delegationInfo)
@@ -152,38 +152,45 @@ namespace Microsoft.PowerFx.Core.Entities
                 }
             }
 
-            Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
-
-            if (delegationInfo?.SortRestriction?.UnsortableProperties != null)
-            {
-                foreach (string unsortableProperty in delegationInfo.SortRestriction.UnsortableProperties)
-                {
-                    AddOrUpdate(sortRestrictions, unsortableProperty, DelegationCapability.Sort);
-                }
-            }
-
-            if (delegationInfo?.SortRestriction?.AscendingOnlyProperties != null)
-            {
-                foreach (string ascendingOnlyProperty in delegationInfo.SortRestriction.AscendingOnlyProperties)
-                {
-                    AddOrUpdate(sortRestrictions, ascendingOnlyProperty, DelegationCapability.SortAscendingOnly);
-                }
-            }
-
             Dictionary<DPath, DPath> oDataReplacements = new Dictionary<DPath, DPath>();
 
             FilterOpMetadata filterOpMetadata = new CdpFilterOpMetadata(recordType, delegationInfo);
             GroupOpMetadata groupOpMetadata = new GroupOpMetadata(type, groupByRestrictions);
             ODataOpMetadata oDataOpMetadata = new ODataOpMetadata(type, oDataReplacements);
-            SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
 
-            return new List<OperationCapabilityMetadata>()
+            List<OperationCapabilityMetadata> metadataList = new List<OperationCapabilityMetadata>()
             {
                 filterOpMetadata,
                 groupOpMetadata,
-                oDataOpMetadata,
-                sortOpMetadata
+                oDataOpMetadata
             };
+
+            if (delegationInfo?.SortRestriction != null)
+            {
+                Dictionary<DPath, DelegationCapability> sortRestrictions = new Dictionary<DPath, DelegationCapability>();
+
+                if (delegationInfo?.SortRestriction?.UnsortableProperties != null)
+                {
+                    foreach (string unsortableProperty in delegationInfo.SortRestriction.UnsortableProperties)
+                    {
+                        AddOrUpdate(sortRestrictions, unsortableProperty, DelegationCapability.Sort);
+                    }
+                }
+
+                if (delegationInfo?.SortRestriction?.AscendingOnlyProperties != null)
+                {
+                    foreach (string ascendingOnlyProperty in delegationInfo.SortRestriction.AscendingOnlyProperties)
+                    {
+                        AddOrUpdate(sortRestrictions, ascendingOnlyProperty, DelegationCapability.SortAscendingOnly);
+                    }
+                }
+
+                SortOpMetadata sortOpMetadata = new SortOpMetadata(type, sortRestrictions);
+
+                metadataList.Add(sortOpMetadata);
+            }
+
+            return metadataList;
         }
 
         internal static DPath GetReplacementPath(string alias, DPath currentColumnPath)
