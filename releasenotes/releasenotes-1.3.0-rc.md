@@ -25,6 +25,11 @@
 `Patch(DS, table_of_rows_with_updates)`\
 `Patch(Record, Updates1, Updates2,…)`
 
+  - ParseJSON, IsType, AsType (https://github.com/microsoft/Power-Fx/pull/2569): ParseJSON, IsType, AsType functions now supports in-lined and user-defined types as argument.\
+  `ParseJSON(Text, Type)`\
+  `IsType(UntypedObject, Type)`\
+  `AsType(UntypedObject, Type)`\ 
+
 ## Other:  
   - Untyped object
     - Read a field from an untyped object by index (https://github.com/microsoft/Power-Fx/pull/2555):  

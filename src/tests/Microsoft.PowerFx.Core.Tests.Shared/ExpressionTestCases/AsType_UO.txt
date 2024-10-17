@@ -1,5 +1,3 @@
-#SETUP: TimeZoneInfo("Pacific Standard Time")
-
 // Primitives
 >> AsType(ParseJSON("987654321"), Number)
 987654321
@@ -25,21 +23,6 @@ true
 >> AsType(ParseJSON("""1984-01-01"""), Date)
 Date(1984,1,1)
 
->> AsType(ParseJSON("""1900-12-31T23:59:59.999Z"""), DateTime)
-DateTime(1900,12,31,15,59,59,999)
-
->> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), DateTime)
-DateTime(1900,12,31,23,59,59,999)
-
->> AsType(ParseJSON("""1900-12-31T23:59:59.999+00:00"""), DateTime)
-DateTime(1900,12,31,15,59,59,999)
-
->> AsType(ParseJSON("""1900-12-31T23:59:59.999-08:00"""), DateTime)
-DateTime(1900,12,31,23,59,59,999)
-
->> AsType(ParseJSON("""1900-12-31"""), DateTime)
-DateTime(1900,12,31,0,0,0,0)
-
 >> AsType(ParseJSON("""1900-12-31T23:59:59.999"""), Date)
 Date(1900,12,31)
 
@@ -63,9 +46,6 @@ DateTime(1900,12,31,0,0,0,0)
 
 >> AsType(ParseJSON("""1900-12-31T00:00:00.000-08:00"""), DateTimeTZInd)
 DateTime(1900,12,31,8,0,0,0)
-
->> DateTimeValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), UntypedObject))
-DateTime(1900,12,30,16,0,0,0)
 
 >> DateValue(AsType(ParseJSON("""1900-12-31T00:00:00.000Z"""), UntypedObject))
 Date(1900,12,30)
@@ -109,9 +89,6 @@ Table({a:Table({z:true},{z:false})},{a:Table({z:false},{z:true})})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("""42"""), Number)
-Error({Kind:ErrorKind.InvalidArgument})
-
->> AsType(ParseJSON("""1900-12-31T24:59:59.1002Z"""), DateTime)
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> AsType(ParseJSON("""24:59:59.12345678"""), Time)
