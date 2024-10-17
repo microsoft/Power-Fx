@@ -14,3 +14,6 @@ DateTime(1900,12,31,0,0,0,0)
 
 >> DateTimeValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
 DateTime(1900,12,30,16,0,0,0)
+
+>> DateValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
+Date(1900,12,30)
