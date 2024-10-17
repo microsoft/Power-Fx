@@ -28,7 +28,7 @@
   - ParseJSON, IsType, AsType (https://github.com/microsoft/Power-Fx/pull/2569): ParseJSON, IsType, AsType functions now supports in-lined and user-defined types as argument.\
   `ParseJSON(Text, Type)`\
   `IsType(UntypedObject, Type)`\
-  `AsType(UntypedObject, Type)`\ 
+  `AsType(UntypedObject, Type)` 
 
 ## Other:  
   - Untyped object
