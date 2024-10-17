@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx
 
         private ParseUserDefinitionResult _parse;
 
+        private readonly Features _features;
+
         // Local symboltable to store new symbols in a given script and use in binding.
         private readonly SymbolTable _localSymbolTable;
 
@@ -49,9 +51,10 @@ namespace Microsoft.PowerFx
         // All errors accumulated. 
         private readonly List<ExpressionError> _errors = new List<ExpressionError>();
 
-        public DefinitionsCheckResult()
+        public DefinitionsCheckResult(Features features = null)
         {
             _localSymbolTable = new SymbolTable { DebugName = "LocalUserDefinitions" };
+            _features = features ?? Features.None;
         }
 
         internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
@@ -93,7 +96,7 @@ namespace Microsoft.PowerFx
 
             if (_parse == null)
             {
-                _parse = UserDefinitions.Parse(_definitions, _parserOptions);
+                _parse = UserDefinitions.Parse(_definitions, _parserOptions, _features);
 
                 if (_parse.HasErrors)
                 {

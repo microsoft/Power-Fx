@@ -42,13 +42,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A := Type({})", "", false)]
         public void TestUserDefinedType(string typeDefinition, string expectedDefinedTypeString, bool isValid)
         {
-            var parseOptions = new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true
-            };
-
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition, parseOptions)
+            var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition)
                                             .SetBindingInfo(_primitiveTypes);
             checkResult.ApplyResolveTypes();
 
@@ -100,13 +95,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(UntypedObject)", 2)]
         public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {
-            var parseOptions = new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true
-            };
-
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition, parseOptions)
+            var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition)
                                             .SetBindingInfo(_primitiveTypes);
             checkResult.ApplyResolveTypes();
 
@@ -127,13 +117,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeLiteral")]
         public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
         {
-            var parseOptions = new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true
-            };
-
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition, parseOptions)
+            var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition)
                                             .SetBindingInfo(_primitiveTypes);
             var errors = checkResult.ApplyErrors();
 
@@ -159,13 +144,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("T := Type([{a: {b: {c: [{d: 10e+4}]}}}]);", 1)]
         public void TestUDTParseErrors(string typeDefinition, int expectedErrorCount)
         {
-            var parseOptions = new ParserOptions
-            {
-                AllowParseAsTypeLiteral = true
-            };
-
-            var checkResult = new DefinitionsCheckResult()
-                                            .SetText(typeDefinition, parseOptions);
+            var checkResult = new DefinitionsCheckResult(Features.PowerFxV1)
+                                            .SetText(typeDefinition);
 
             var parseResult = checkResult.ApplyParse();
             Assert.True(parseResult.HasErrors);
