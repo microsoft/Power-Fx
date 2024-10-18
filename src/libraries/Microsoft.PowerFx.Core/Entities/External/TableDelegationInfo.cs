@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Entities
     public abstract class TableDelegationInfo
     {
         // Defines unsortable columns or columns only supporting ascending ordering
+        // If set to null, the table is not sortable
         public SortRestrictions SortRestriction { get; init; }
 
         // Defines columns that cannot be sorted and required properties
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Entities
         internal PagingCapabilities PagingCapabilities { get; init; }
 
         // Defining per column capabilities
-        internal IReadOnlyCollection<KeyValuePair<string, ColumnCapabilitiesBase>> ColumnsCapabilities { get; init; }
+        internal IReadOnlyDictionary<string, ColumnCapabilitiesBase> ColumnsCapabilities { get; init; }
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
@@ -45,6 +46,12 @@ namespace Microsoft.PowerFx.Core.Entities
         // Read-Only table
         public bool IsReadOnly { get; init; }
 
+        // Defines when the table is sortable
+        public bool IsSortable => SortRestriction != null;
+
+        // Defines when columns can be selected
+        public bool IsSelectable => SelectionRestriction != null && SelectionRestriction.IsSelectable;
+
         // Dataset name
         public string DatasetName { get; init; }
 
@@ -52,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
-        public virtual bool IsDelegable => (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+        public virtual bool IsDelegable => IsSortable || (FilterRestriction != null) || (FilterFunctions != null);
 
         public TableDelegationInfo()
         {
@@ -93,6 +100,8 @@ namespace Microsoft.PowerFx.Core.Entities
         private Dictionary<string, ColumnCapabilitiesBase> _childColumnsCapabilities;
 
         private ColumnCapabilitiesDefinition _capabilities;
+
+        public ColumnCapabilitiesDefinition Definition => _capabilities;
 
         // Those are default CDS filter supported functions 
         // From // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs

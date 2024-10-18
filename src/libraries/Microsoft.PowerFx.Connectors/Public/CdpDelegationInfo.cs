@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+
 namespace Microsoft.PowerFx.Core.Entities
 {
     // Used by ServiceCapabilities.ToDelegationInfo for managing CDP x-ms-capabilities
@@ -8,8 +10,16 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {
-            // We should never reach that point in CDP case
-            throw new System.NotImplementedException();
+            if (ColumnsCapabilities.TryGetValue(fieldName, out ColumnCapabilitiesBase columnCapabilitiesBase))
+            {               
+                return columnCapabilitiesBase switch
+                {
+                    ColumnCapabilities columnCapabilities => columnCapabilities.Definition,
+                    _ => throw new NotImplementedException($"{columnCapabilitiesBase.GetType().Name} not supported yet")
+                };
+            }
+
+            return null;
         }
     }
 }
