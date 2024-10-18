@@ -51,10 +51,15 @@ namespace Microsoft.PowerFx
         // All errors accumulated. 
         private readonly List<ExpressionError> _errors = new List<ExpressionError>();
 
+        public DefinitionsCheckResult() 
+            : this(Features.PowerFxV1) 
+        { 
+        }
+
         public DefinitionsCheckResult(Features features = null)
         {
             _localSymbolTable = new SymbolTable { DebugName = "LocalUserDefinitions" };
-            _features = features ?? Features.None;
+            _features = features ?? Features.PowerFxV1;
         }
 
         internal DefinitionsCheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
