@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core
 
             var formula = new Formula(expressionText, toDisplay ? CultureInfo.InvariantCulture : options?.Culture ?? CultureInfo.InvariantCulture);
 
-            formula.EnsureParsed(options.GetParserFlags());
+            formula.EnsureParsed(options.GetParserFlags(), flags);
 
             var binding = TexlBinding.Run(
                 binderGlue,
