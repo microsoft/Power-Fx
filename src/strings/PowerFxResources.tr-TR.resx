@@ -4115,6 +4115,10 @@
     <value>Adlandırılmış formül bir ifade olmalı.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Kullanıcı tanımlı işlevin gövdesi olmalıdır.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} atanamıyor: '{1}' davranış işlevini içeriyor.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows, önbelleğe alınmış bir değer geri döndürülebilir. En son sayımı almak için CountIf(DataSource, true) kullanın.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Bağımsız değişkende desteklenmeyen belirsiz tür/JSON dönüştürme türü '{0}'.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>JSON yükünde dolaşırken maksimum derinliğe ulaşıldı.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>JSON işlevinde maksimum uzunluğa ulaşıldı.</value>
     
   </data>
 </root>

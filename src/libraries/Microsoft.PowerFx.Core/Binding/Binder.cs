@@ -1002,7 +1002,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return Enumerable.Empty<string>();
                 }
 
-                var ruleQueryOptions = Rule.Binding.QueryOptions.GetQueryOptions(ds);
+                var ruleQueryOptions = Rule.Binding?.QueryOptions.GetQueryOptions(ds);
                 if (ruleQueryOptions != null)
                 {
                     foreach (var nodeQO in Rule.TexlNodeQueryOptions)
@@ -2941,6 +2941,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (lookupInfo.Data is IExternalNamedFormula formula)
                     {
                         isConstantNamedFormula = formula.IsConstant;
+
+                        // If the definition of the named formula has a delegation warning, every use should also inherit this warning
+                        if (formula.HasDelegationWarning)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_NF, node.Ident.Name);
+                        }
                     }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
@@ -3612,7 +3618,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If the reference is to Control.Property and the rule for that Property is a constant,
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
-                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding.IsConstant(rule.Binding.Top))
+                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding != null && rule.Binding.IsConstant(rule.Binding.Top))
                     {
                         value = controlInfo;
                         isConstant = true;
@@ -4158,14 +4164,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                     {
-                        // We only have to check the property's rule and the calling arguments for purity as scoped variables
-                        // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
-                            ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
-                        {
-                            hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);
-                            isStateFul |= rule.Binding.IsStateful(rule.Binding.Top);
-                        }
+                        // Behavior only component properties should be treated as stateful.
+                        hasSideEffects |= infoTexlFunction.IsBehaviorOnly;
+
+                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful. 
+                        // This ensures that we don't lift these function invocations in loops, and that they are re-evaluated every time they are called,
+                        // which is always correct, although less efficient in some cases. 
+                        isStateFul |= true;
                     }
                     else
                     {
@@ -4828,7 +4833,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    if (_txb.BindingConfig.UserDefinitionsMode)
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorFunctionInDataUDF);
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
+                    }
                 }
 
                 // Test-only functions can only be used within test cases.
@@ -4865,6 +4877,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(node, errorKey, badAncestor.Head.Name);
                     }
+                }
+
+                // If the definition of the user-defined function has a delegation warning, every usage should also inherit this warning
+                if (func is UserDefinedFunction udf && udf.HasDelegationWarning)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_UDF, udf.Name);
                 }
 
                 _txb.CheckAndMarkAsDelegatable(node);
@@ -5136,6 +5154,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (argCount < func.MinArity || argCount > func.MaxArity)
                 {
                     ArityError(func.MinArity, func.MaxArity, node, argCount, _txb.ErrorContainer);
+                    _txb.SetInfo(node, new CallInfo(func, node));
+                    _txb.SetType(node, DType.Error);
+                    return;
+                }
+
+                if (!_features.IsUserDefinedTypesEnabled)
+                {
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUserDefinedTypesDisabled);
                     _txb.SetInfo(node, new CallInfo(func, node));
                     _txb.SetType(node, DType.Error);
                     return;

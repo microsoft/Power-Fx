@@ -677,6 +677,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrColonExpected = new ErrorResourceKey("ErrColonExpected");
         public static ErrorResourceKey ErrExpectedDataSourceRestriction = new ErrorResourceKey("ErrExpectedDataSourceRestriction");
         public static ErrorResourceKey ErrBehaviorPropertyExpected = new ErrorResourceKey("ErrBehaviorPropertyExpected");
+        public static ErrorResourceKey ErrBehaviorFunctionInDataUDF = new ErrorResourceKey("ErrBehaviorFunctionInDataUDF");
         public static ErrorResourceKey ErrTestPropertyExpected = new ErrorResourceKey("ErrTestPropertyExpected");
         public static ErrorResourceKey ErrStringExpected = new ErrorResourceKey("ErrStringExpected");
         public static ErrorResourceKey ErrDateExpected = new ErrorResourceKey("ErrDateExpected");
@@ -794,12 +795,15 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey SuggestRemoteExecutionHint_InOpRhs = new ErrorResourceKey("SuggestRemoteExecutionHint_InOpRhs");
         public static ErrorResourceKey SuggestRemoteExecutionHint_StringMatchSecondParam = new ErrorResourceKey("SuggestRemoteExecutionHint_StringMatchSecondParam");
         public static ErrorResourceKey SuggestRemoteExecutionHint_InOpInvalidColumn = new ErrorResourceKey("SuggestRemoteExecutionHint_InOpInvalidColumn");
+        public static ErrorResourceKey SuggestRemoteExecutionHint_NF = new ErrorResourceKey("SuggestRemoteExecutionHint_NF");
+        public static ErrorResourceKey SuggestRemoteExecutionHint_UDF = new ErrorResourceKey("SuggestRemoteExecutionHint_UDF");
         public static ErrorResourceKey OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByColumn");
         public static ErrorResourceKey OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByService");
         public static ErrorResourceKey OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByClient");
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
+        public static ErrorResourceKey ErrNamedType_MissingTypeLiteral = new ErrorResourceKey("ErrNamedType_MissingTypeLiteral");
         public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
@@ -884,5 +888,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUnsupportedTypeInTypeArgument = new ErrorResourceKey("ErrUnsupportedTypeInTypeArgument");
         public static ErrorResourceKey ErrReachedMaxJsonDepth = new ErrorResourceKey("ErrReachedMaxJsonDepth");
         public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
+
+        public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
     }
 }

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Behavior function in a non-behavior user-defined function (UDF). Please wrap the user-defined function body with curly braces ({...}) to declare a behavior UDF.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Behavior functions change the current session state. 'Clear', 'Collect', 'Patch', and 'Refresh' are common behavior functions.</value>
+    <comment>{Locked=Clear}{Locked=Collect}{Locked=Patch}{Locked=Refresh}</comment>
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit the user-defined function expression so that it is inside curly braces ({...}).</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test function in a non-test property. You can't use this property to invoke test-only functions.</value>
     <comment>Error Message. The term 'Test' is an adjective ('Test function' = 'function for testing').</comment>
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     <comment>{Locked}</comment>
   </data>
+    <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The named formula {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the named formula.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegation warning. The user-defined function {0} is not delegable so its usage in this formula might not work correctly on large data sets. </value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Try simplifying the definition for the user-defined function.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Article: Understand delegation in a canvas app</value>
+    <comment>Article on delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation</value>
+    <comment>Blog: Data row limits for delegation</comment>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    <comment>{Locked}</comment>
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegation warning. The highlighted part of this formula might not work correctly on large data sets. The "{0}" operation is not supported by this connector.</value>
     <comment>Error Message.</comment>
@@ -4114,6 +4180,14 @@
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
+  </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    <comment>
+      This error message shows up when Named type is not a type literal. A valid type literal expression is of syntax "Type(Expression)". 
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+      Some examples for invalid named type declarations - "T1 := 5;" , "T2 := ;" , "T3 := [1, 2, 3];".
+    </comment>
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>User-defined function must have a body.</value>
@@ -4901,7 +4975,7 @@
     <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Unsupported untyped/JSON conversion type '{0}' in argument.</value>
+    <value>Unsupported type '{0}' in type argument.</value>
     <comment>Error Message shown to user when a unsupported type is passed in type argument of AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4911,5 +4985,9 @@
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Maximum length reached in JSON function.</value>
     <comment>Error message returned by the {Locked=JSON} function when the result generated by this function would be too long.</comment>
-  </data>  
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>The 'User-defined types' experimental feature is not enabled.</value>
+    <comment>Error message returned when user uses User-defined types with the User-defined types feature flag turned off.</comment>
+  </data>
 </root>

@@ -4115,6 +4115,10 @@
     <value>Ο τύπος με όνομα πρέπει να είναι παράσταση.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Η συνάρτηση που ορίζεται από τον χρήστη πρέπει να έχει σώμα.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Το CountRows μπορεί να επιστρέψει μια τιμή στο cache. Χρησιμοποιήστε το CountIf(DataSource, true) για να λάβετε το πιο πρόσφατο πλήθος.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Μη υποστηριζόμενος μη τυπολογημένος/JSON τύπος μετατροπής '{0}' στο όρισμα.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Το μέγιστο βάθος που επιτεύχθηκε κατά τη διέλευση ωφέλιμου φορτίου JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Το μέγιστο μήκος που επιτεύχθηκε σε συνάρτηση JSON.</value>
     
   </data>
 </root>

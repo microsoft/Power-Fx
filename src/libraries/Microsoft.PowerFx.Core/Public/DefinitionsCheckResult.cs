@@ -168,12 +168,12 @@ namespace Microsoft.PowerFx
                 var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
                 foreach (var udf in partialUDFs)
                 {
-                    var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false);
+                    var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
                     var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
 
                     List<TexlError> bindErrors = new List<TexlError>();
 
-                    if (binding.ErrorContainer.HasErrors())
+                    if (binding.ErrorContainer.GetErrors().Any(error => error.Severity > DocumentErrorSeverity.Warning))
                     {
                         _errors.AddRange(ExpressionError.New(binding.ErrorContainer.GetErrors(), _defaultErrorCulture));
                     }

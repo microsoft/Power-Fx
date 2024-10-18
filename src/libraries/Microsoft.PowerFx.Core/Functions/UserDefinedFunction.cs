@@ -75,6 +75,8 @@ namespace Microsoft.PowerFx.Core.Functions
             return TryGetExternalDataSource(out dsInfo);
         }
 
+        public bool HasDelegationWarning => _binding?.ErrorContainer.GetErrors().Any(error => error.MessageKey.Contains("SuggestRemoteExecutionHint")) ?? false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>
@@ -147,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new InvalidOperationException($"Body should only get bound once: {this.Name}");
             }
 
-            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
+            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative, userDefinitionsMode: true);
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
@@ -172,7 +174,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                    var node = UdfBody is VariadicOpNode variadicOpNode ? variadicOpNode.Children.Last() : UdfBody;
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
         }

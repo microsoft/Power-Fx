@@ -14,5 +14,7 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsConstant { get; }
 
         bool ContainsReferenceToView { get; }
+
+        bool HasDelegationWarning { get; }
     }
 }

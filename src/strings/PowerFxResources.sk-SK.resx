@@ -4115,6 +4115,10 @@
     <value>Pomenovaný vzorec musí byť výraz.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Funkcia definovaná používateľom musí mať telo.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>Funkcia CountRows môže vrátiť hodnotu uloženú vo vyrovnávacej pamäti. Na získanie najnovšieho počtu použite funkciu CountIf(DataSource, true).</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Nepodporovaný typ konverzie netypový/JSON {0} v argumente.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Pri prechádzaní údajovej časti JSON bola dosiahnutá maximálna hĺbka.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Vo funkcii JSON bola dosiahnutá maximálna dĺžka.</value>
     
   </data>
 </root>

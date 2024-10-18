@@ -43,7 +43,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
-                ConsistentOneColumnTableResult = true
+                ConsistentOneColumnTableResult = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
             RunExpressionTestCase(t, features, numberIsFloat: true, Console);
@@ -60,6 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true,
                 PowerFxV1CompatibilityRules = true,
+                IsUserDefinedTypesEnabled = true,
             };
 
             RunExpressionTestCase(t, features, numberIsFloat: true, Console);

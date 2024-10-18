@@ -31,13 +31,13 @@ The easiest and most powerful ​system to express business logic for ​everyon
 
 | Name                                     | Released Package |
 |------------------------------------------|------------------|
-| Microsoft.PowerFx.Core                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/) |
-| Microsoft.PowerFx.Connectors             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Connectors?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Connectors/) |
-| Microsoft.PowerFx.Json                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Json?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Json/) |
-| Microsoft.PowerFx.Core.Tests             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core.Tests?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Tests/) |
-| Microsoft.PowerFx.Interpreter            | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/) |
-| Microsoft.PowerFx.LanguageServerProtocol | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.LanguageServerProtocol?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.LanguageServerProtocol/) |
-| Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Transport.Attributes?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/) |
+| Microsoft.PowerFx.Core                   | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Core?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/) |
+| Microsoft.PowerFx.Connectors             | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Connectors?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Connectors/) |
+| Microsoft.PowerFx.Json                   | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Json?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Json/) |
+| Microsoft.PowerFx.Core.Tests             | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Core.Tests?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Tests/) |
+| Microsoft.PowerFx.Interpreter            | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Interpreter?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/) |
+| Microsoft.PowerFx.LanguageServerProtocol | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.LanguageServerProtocol?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.LanguageServerProtocol/) |
+| Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://img.shields.io/nuget/vpre/Microsoft.PowerFx.Transport.Attributes?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/) |
 
 ## Daily Builds
 Daily builds of the Power Fx packages are published to Azure Artifacts. 

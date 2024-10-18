@@ -4115,6 +4115,10 @@
     <value>Nosauktajai formulai ir jābūt izteiksmei.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Lietotāja definētai funkcijai ir jābūt pamattekstam.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows var atgriezt kešatmiņā saglabāto vērtību. Izmantojiet CountIf(DataSource, true), lai iegūtu jaunāko skaitu.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Argumentā ir neatbalstīts netipizēts/JSON pārvēršanas tips “{0}”.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maksimālais dziļums, kas sasniegts, pārvietojot JSON vērtumu.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Sasniegts JSON funkcijas maksimālais garums.</value>
     
   </data>
 </root>

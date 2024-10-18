@@ -4115,6 +4115,10 @@
     <value>Įvardytoji formulė turi būti reiškinys.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Vartotojo apibrėžtoje funkcijoje turi būti teksto.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Negalima perduoti {0}: yra veikimo funkcija „{1}“.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows gali pateikti talpykloje saugomą reikšmę. Naudokite CountIf(DataSource, true), kad gautumėte naujausią skaičių.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Argumente yra nepalaikomas neapibrėžtas / JSON konvertavimo tipas {0}.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Didžiausias gylis pasiektas perskiriant JSON paketo turinį.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Didžiausias ilgis pasiektas JSON funkcijoje.</value>
     
   </data>
 </root>

@@ -114,6 +114,16 @@ true
    ),a > 10))
 true
 
+// Untyped object
+>> IsEmpty(ParseJSON("[{""a"":1}]"))
+false
+
+>> IsEmpty(ParseJSON("[]"))
+true
+
+>> IsEmpty(ParseJSON("1"))
+Error({Kind:ErrorKind.InvalidArgument})
+
 // INVALID ARGUMENTS
 >> IsEmpty("")
 Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.
