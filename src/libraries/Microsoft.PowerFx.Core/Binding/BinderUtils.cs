@@ -1564,17 +1564,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
-                        // Strongly-typed enums
-                        if (context.NameResolver.Lookup(dottedNameNode.Left.AsFirstName().Ident.Name, out NameLookupInfo nameInfo) && nameInfo.Kind == BindKind.Enum)
-                        {
-                            if (nameInfo.Data is EnumSymbol enumSymbol && enumSymbol.TryGetValue(dottedNameNode.Right.Name, out OptionSetValue osv))
-                            {
-                                nodeValue = osv.ToObject().ToString();
-                                return true;
-                            }
-                        }
-
-                        // With strongly-typed enums disabled
+                        // If the entity scope exists, look up from there.
+                        // Once PA Client impls Strongly Typed enums, this may need to update.
                         DType enumType = DType.Invalid;
                         if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) ?? false)
                         {
@@ -1585,6 +1576,16 @@ namespace Microsoft.PowerFx.Core.Binding
                                     nodeValue = strValue;
                                     return true;
                                 }
+                            }
+                        }
+
+                        // Strongly-typed enums
+                        if (context.NameResolver.Lookup(dottedNameNode.Left.AsFirstName().Ident.Name, out NameLookupInfo nameInfo, NameLookupPreferences.GlobalsOnly) && nameInfo.Kind == BindKind.Enum)
+                        {
+                            if (nameInfo.Data is EnumSymbol enumSymbol && enumSymbol.TryGetValue(dottedNameNode.Right.Name, out OptionSetValue osv))
+                            {
+                                nodeValue = osv.ToObject().ToString();
+                                return true;
                             }
                         }
                     }
