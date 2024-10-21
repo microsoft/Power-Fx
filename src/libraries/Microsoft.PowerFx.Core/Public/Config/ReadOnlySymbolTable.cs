@@ -347,6 +347,9 @@ namespace Microsoft.PowerFx
 
         public IEnumerable<string> FunctionNames => this.Functions.FunctionNames;
 
+        public IEnumerable<KeyValuePair<string, OptionSet>> OptionSets => _variables.Where(kvp => kvp.Value.Kind == BindKind.OptionSet)
+                                                                                    .Select(kvp => new KeyValuePair<string, OptionSet>(kvp.Key, (OptionSet)kvp.Value.Data));
+
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
