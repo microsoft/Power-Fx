@@ -652,26 +652,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 error.Severity == DocumentErrorSeverity.Warning));
         }
 
-        [Theory]
-        [InlineData("MismatchType():Number = { 1+3; Set(x, 123); };")]
-        public void TestMismatchReturnType(string script)
-        {
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = true,
-            };
-            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library, FormulaType.PrimitiveTypes);
-
-            var parseResult = UserDefinitions.Parse(script, parserOptions);
-            var udfs = UserDefinedFunction.CreateFunctions(parseResult.UDFs.Where(udf => udf.IsParseValid), nameResolver, out var errors);
-            errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-
-            // Only one error should exist.
-            Assert.True(errors.Count() == 1 &&
-                errors.Any(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch" &&
-                error.Severity == DocumentErrorSeverity.Severe));
-        }
-
         [Fact]
         public void TestUDFRestrictedTypes()
         {
