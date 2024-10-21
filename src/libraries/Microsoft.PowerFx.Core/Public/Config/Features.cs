@@ -96,6 +96,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; set; } = false;
 
+        /// <summary>
+        /// Enables Remove All delegation.
+        /// </summary>
+        internal bool IsRemoveAllDelegationEnabled { get; set; }
+
         internal static Features None => new Features();
 
         public static Features PowerFxV1 => new Features
