@@ -132,11 +132,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
         {
-            SortRestrictions sortRestriction = new SortRestrictions()
-            {
-                AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
-                UnsortableProperties = serviceCapabilities?.SortRestriction?.UnsortableProperties
-            };
+            // sortRestriction == null means sortable = false
+            SortRestrictions sortRestriction = serviceCapabilities?.SortRestriction != null
+                ? new SortRestrictions()
+                {
+                    AscendingOnlyProperties = serviceCapabilities.SortRestriction.AscendingOnlyProperties,
+                    UnsortableProperties = serviceCapabilities.SortRestriction.UnsortableProperties
+                }
+                : null;
 
             FilterRestrictions filterRestriction = new FilterRestrictions()
             {
@@ -144,10 +147,13 @@ namespace Microsoft.PowerFx.Connectors
                 NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
             };
 
-            SelectionRestrictions selectionRestriction = new SelectionRestrictions()
-            {
-                IsSelectable = serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false
-            };
+            // selectionRestriction == null means selectable = false
+            SelectionRestrictions selectionRestriction = serviceCapabilities?.SelectionRestriction != null
+                ? new SelectionRestrictions()
+                {
+                    IsSelectable = serviceCapabilities.SelectionRestriction.IsSelectable
+                }
+                : null;
 
             GroupRestrictions groupRestriction = new GroupRestrictions()
             {
@@ -255,6 +261,8 @@ namespace Microsoft.PowerFx.Connectors
         private static SortRestriction ParseSortRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             IDictionary<string, IOpenApiAny> sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
+
+            // When "sortable" = false (or not defined), SortRestriction is null
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
                     ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
                     : null;

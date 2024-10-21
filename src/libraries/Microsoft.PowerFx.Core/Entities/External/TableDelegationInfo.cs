@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Entities
     public abstract class TableDelegationInfo
     {
         // Defines unsortable columns or columns only supporting ascending ordering
+        // If set to null, the table is not sortable
         public SortRestrictions SortRestriction { get; init; }
 
         // Defines columns that cannot be sorted and required properties
@@ -45,6 +46,12 @@ namespace Microsoft.PowerFx.Core.Entities
         // Read-Only table
         public bool IsReadOnly { get; init; }
 
+        // Defines when the table is sortable
+        public bool IsSortable => SortRestriction != null;
+
+        // Defines when columns can be selected
+        public bool IsSelectable => SelectionRestriction != null && SelectionRestriction.IsSelectable;
+
         // Dataset name
         public string DatasetName { get; init; }
 
@@ -52,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
-        public virtual bool IsDelegable => (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+        public virtual bool IsDelegable => IsSortable || (FilterRestriction != null) || (FilterFunctions != null);
 
         public TableDelegationInfo()
         {

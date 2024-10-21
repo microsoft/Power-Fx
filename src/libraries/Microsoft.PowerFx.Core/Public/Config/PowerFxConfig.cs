@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx
 
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
         {
-            AddEntity(optionSet, optionalDisplayName);
+            SymbolTable.AddOptionSet(optionSet, optionalDisplayName);
         }
 
         internal bool TryGetVariable(DName name, out DName displayName)
