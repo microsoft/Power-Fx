@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Localization;
@@ -519,6 +520,18 @@ namespace Microsoft.PowerFx.Functions
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
+        }
+
+        // Filter ([1,2,3,4,5], Value > 5)
+        public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            // Streaming 
+            var leftTable = (TableValue)args[0];
+            var rightTable = (TableValue)args[1];
+
+            var unionType = DType.Union(leftTable.Type._type, rightTable.Type._type, false, Features.PowerFxV1);
+
+            return new InMemoryTableValue(irContext, null);
         }
 
         public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)

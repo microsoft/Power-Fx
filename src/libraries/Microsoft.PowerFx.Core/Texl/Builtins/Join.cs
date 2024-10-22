@@ -13,9 +13,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal class JoinFunction : FilterFunctionBase
     {
         public JoinFunction()
-            : base("Join", TexlStrings.AboutJoin, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable, DType.EmptyTable)
+            : base("Join", TexlStrings.AboutJoin, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

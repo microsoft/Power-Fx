@@ -1020,6 +1020,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsToday)
             },
             {
+                BuiltinFunctionsCore.Join,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Join.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<TableValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: JoinTables)
+            },
+            {
                 BuiltinFunctionsCore.Language,
                 NoErrorHandling(Language)
             },

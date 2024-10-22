@@ -389,6 +389,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Contains(checkEnabled.Symbols.Functions.FunctionNames, f => f == "Collect");
         }
 
+        [Fact]
+        public void ASdasdasdasdasdaTest()
+        {
+            var expr = "Join(Table({a:1}), Table({b:2,c:2}))";
+            var engine = new RecalcEngine();
+
+            var symbolTable = new SymbolTable();
+            var symbolTableEnabled = new SymbolTable();
+
+            symbolTableEnabled.EnableMutationFunctions();
+
+            // Mutation functions not listed.
+            var check = engine.Check(expr, symbolTable: symbolTable);
+            var result = check.GetEvaluator().Eval();
+            Assert.True(check.IsSuccess);
+        }
+
         [Theory]
         [InlineData("Patch(t, First(t), {Value:1})")]
         public async Task MutationPFxV1Disabled(string expression)
