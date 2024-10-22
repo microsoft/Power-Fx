@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope = false)
+        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
-                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
+                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.Call:
@@ -102,13 +102,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata, nodeInheritsRowScope);
                     }
 
                 case NodeKind.FirstName:
                     {
                         var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
-                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
+                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.UnaryOp:

@@ -945,7 +945,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Returns true if function is row scoped and supports delegation.
         // Needs to be overriden by functions (For example, IsBlank) which are not server delegatable themselves but can become one when scoped inside a delegatable function.
-        public virtual bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
+        public virtual bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);

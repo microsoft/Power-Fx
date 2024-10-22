@@ -89,11 +89,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (binding.IsFullRecordRowScopeAccess(args[1]))
             {
-                return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[1].AsDottedName(), binding, null, null);
+                return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[1].AsDottedName(), binding, null, null, false);
             }
 
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy().VerifyValue();
-            return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);
+            return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null, false);
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

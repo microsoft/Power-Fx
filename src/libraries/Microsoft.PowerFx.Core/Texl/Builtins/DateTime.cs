@@ -53,15 +53,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-            Contracts.AssertValue(metadata);
-
-            return base.IsRowScopedServerDelegatable(callNode, binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope);
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);

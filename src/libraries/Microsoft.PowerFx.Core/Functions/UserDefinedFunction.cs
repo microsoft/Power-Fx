@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
 
-        public bool SupportsRowScopedServerDelegation;
+        private bool _supportsRowScopedServerDelegation;
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
@@ -58,9 +58,9 @@ namespace Microsoft.PowerFx.Core.Functions
             return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope)
         {
-            return SupportsRowScopedServerDelegation;
+            return _supportsRowScopedServerDelegation;
         }
 
         public override bool SupportsParamCoercion => true;
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Functions
             this._isImperative = isImperative;
 
             this.UdfBody = body;
-            this.SupportsRowScopedServerDelegation = false;
+            this._supportsRowScopedServerDelegation = false;
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void SetSupportRowScopedServerDelegation(bool value)
         {
-            SupportsRowScopedServerDelegation = value;
+            _supportsRowScopedServerDelegation = value;
         }
 
         /// <summary>
