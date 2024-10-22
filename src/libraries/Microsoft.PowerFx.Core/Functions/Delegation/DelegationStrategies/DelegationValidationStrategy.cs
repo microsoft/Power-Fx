@@ -407,7 +407,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
             }
 
-            if (callInfo?.Function is UserDefinedFunction udf && trackingFunction is FilterFunctionBase filterFunc)
+            if (callInfo?.Function is UserDefinedFunction udf &&
+                node.Parent?.Parent is CallNode parentNode && binding.GetInfo(parentNode).Function is FilterFunctionBase filterFunc)
             {
                 if (filterFunc.IsValidDelegatableFilterPredicateNode(udf.Binding.Top, udf.Binding, metadata as FilterOpMetadata, generateHints: false, nodeInheritsRowScope: isRowScoped))
                 {
