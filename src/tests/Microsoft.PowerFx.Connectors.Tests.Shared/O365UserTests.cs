@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Users.MyProfileV2({'$select': ""id, mySite, mail, mailNickName, userPrincipalName""}).mail",
             "aurorauser09@capintegration01.onmicrosoft.com",
-            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/me?$select=id%2c+mySite%2c+mail%2c+mailNickName%2c+userPrincipalName",
+            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/me?$select=id%2D%20mySite%2c+mail%2c+mailNickName%2c+userPrincipalName",
             "",
             "Response_O365Users_MyProfileV2A.json")]
 
@@ -193,7 +193,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Users.UserProfileV2(""dae277a8-343d-42ff-bd17-16dd634092c9"", {'$select': ""displayName, UserPrincipalName""}).userPrincipalName",
             "accountmanager@capintegration01.onmicrosoft.com",
-            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/users/dae277a8-343d-42ff-bd17-16dd634092c9?$select=displayName%2c+UserPrincipalName",
+            "GET:/apim/office365users/1870991d56b04959a52f6704949eccad/codeless/v1.0/users/dae277a8-343d-42ff-bd17-16dd634092c9?$select=displayName%2C%20UserPrincipalName",
             "",
             "Response_O365Users_UserProfileV2A.json")]        
 
