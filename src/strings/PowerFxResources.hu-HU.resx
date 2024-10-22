@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Viselkedési függvény egy nem viselkedési, felhasználó által meghatározott függvényben (UDF). Az UDF-viselkedés deklarálása érdekében tegye kapcsos zárójel ({...}) közé a felhasználó által meghatározott függvénytörzset.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>A viselkedési függvények módosítják az aktuális munkamenet állapotát. A „Clear”, „Collect”, „Patch” és „Refresh” gyakori viselkedési függvények.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Szerkessze a felhasználó által meghatározott függvénykifejezést, hogy az kapcsos zárójelben legyen ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Tesztfüggvény egy nem tesztelési tulajdonságban. A tulajdonság nem tesztelési függvények meghívásához nem használható.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegálással kapcsolatos figyelmeztetés. A megnevezett {0} receptúra nem delegálható, így előfordulhat, hogy ezen a receptúrán való használata nem működik megfelelően nagy adathalmazokon. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Próbálja meg leegyszerűsíteni a megnevezett receptúra definícióját.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegálással kapcsolatos figyelmeztetés. A felhasználó által meghatározott {0} funkció nem delegálható, így előfordulhat, hogy ezen a receptúrán való használata nem működik megfelelően nagy adathalmazokon. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Próbálja meg leegyszerűsíteni a felhasználó által meghatározott funkció definícióját.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Adatsor-korlátozások delegálás esetén</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegálással kapcsolatos figyelmeztetés. Előfordulhat, hogy a képlet kiemelt része nagy méretű adathalmazok esetén nem fog megfelelően működni. Ez az összekötő nem támogatja a(z) {0} műveletet.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>A megnevezett típusnak literális típusúnak kell lennie.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nem támogatott típus nélküli/JSON átalakítási típus a(z) „{0}” argumentumban.</value>
+    <value>Nem támogatott „{0}” típus a típusargumentumban.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Elérte a JSON függvény maximális hosszát.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Nincs engedélyezve a „Felhasználói típus” kísérleti funkció.</value>
     
   </data>
 </root>

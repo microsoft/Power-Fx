@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Toimintafunktio on muu kuin toiminnallinen käyttäjän määrittämä funktio (UDF). Paketoi käyttäjän määrittämän funktion tekstiosa aaltosulkeilla ({...}) toiminnallisen UFD:n merkiksi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Toimintafunktiot muuttavat nykyisen istunnon tilaa. Clear, Collect, Patch ja Refresh ovat yleisiä toimintafunktioita.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Muokkaa käyttäjän määrittämän funktion lauseketta niin, että se on aaltosulkeiden sisällä ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testaa toimintoa muussa kuin testiominaisuudessa. Tämän ominaisuuden avulla ei voi käynnistää vain testi -funktioita.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegointivaroitus. Nimetty kaava {0} ei ole delegoitavissa, joten sen käyttö tässä kaavassa voi epäonnistua suurissa tietojoukoissa. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Kokeile yksinkertaistaa nimetyn kaavan määritystä.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikkeli: Delegoinnin toiminta pohjaan perustuvassa sovelluksessa</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blogi: Delegoinnin tietorivirajoitukset</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegointivaroitus. Käyttäjän määrittämä kaava {0} ei ole delegoitavissa, joten sen käyttö tässä kaavassa voi epäonnistua suurissa tietojoukoissa. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Kokeile yksinkertaistaa käyttäjän määrittämän kaavan määritystä.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikkeli: Delegoinnin toiminta pohjaan perustuvassa sovelluksessa</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blogi: Delegoinnin tietorivirajoitukset</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegointivaroitus. Tämän kaavan korostettu osa ei ehkä toimi oikein suurille tietojoukoille. Tämä liitin ei tue toimintoa {0}.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nimetyn tyypin on oltava literaali.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tukematon tyypittämätön/JSON-muunnoksen tyyppi {0} argumentissa.</value>
+    <value>Tyyppiargumentissa on tyyppi {0}, jota ei tueta.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Enimmäispituus saavutettiin JSON-funktiossa.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Kokeellista Käyttäjän määrittämät tyypit -ominaisuutta ei ole otettu käyttöön.</value>
     
   </data>
 </root>

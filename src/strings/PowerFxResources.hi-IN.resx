@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>गैर-व्यवहार उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन (UDF) में व्यवहार फ़ंक्शन. कृपया व्यवहार UDF घोषित करने के लिए उपयोगकर्ता-परिभाषित फ़ंक्शन बॉडी को घुमावदार कोष्ठकों ({...}) के साथ रैप करें.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>व्यवहार फ़ंक्शन, वर्तमान सत्र स्थिति को परिवर्तित करते हैं. 'Clear', 'Collect', 'Patch' और 'Refresh' सामान्य व्यवहार फ़ंक्शन हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>उपयोगकर्ता द्वारा परिभाषित फ़ंक्शन व्यंजक को संपादित करें ताकि वह घुमावदार कोष्ठकों ({...}) के अंदर हो.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>एक गैर-परीक्षण गुण में टेस्ट फ़ंक्शन. आप परीक्षण-केवल फ़ंक्शन को लागू करने के लिए इस गुण का उपयोग नहीं कर सकते.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>प्रत्यायोजन चेतावनी. नामित सूत्र {0} प्रत्यायोजन योग्य नहीं है, इसलिए इस सूत्र में इसका उपयोग बड़े डेटा सेट पर सही ढंग से काम नहीं कर सकता है. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>नामित सूत्र की परिभाषा को सरल बनाने का प्रयास करें.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>प्रत्यायोजन चेतावनी. उपयोगकर्ता-परिभाषित सूत्र {0} प्रत्यायोजन योग्य नहीं है, इसलिए इस सूत्र में इसका उपयोग बड़े डेटा सेट पर सही ढंग से काम नहीं कर सकता है. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>उपयोगकर्ता-परिभाषित फ़ंक्शन की परिभाषा को सरल बनाने का प्रयास करें.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>आलेख: कैनवास ऐप में प्रत्यायोजन को समझें</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>ब्लॉग: प्रत्यायोजन के लिए डेटा पंक्ति की सीमा</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>प्रत्यायोजन संबंधी चेतावनी. हो सकता है कि इस सूत्र का हाइलाइट किया गया भाग बड़े डेटा सेट पर ठीक से कार्य नहीं करे. "{0}" ऑपरेशन इस कनेक्टर द्वारा समर्थित नहीं है.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>नामित प्रकार एक प्रकार लिटरल होना चाहिए.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>तर्क में असमर्थित अनटाइप्ड/JSON रूपांतरण प्रकार '{0}'.</value>
+    <value>टाइप तर्क में असमर्थित प्रकार '{0}'.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON फ़ंक्शन में अधिकतम लंबाई पहुँच गई.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>'उपयोगकर्ता द्वारा परिभाषित प्रकार' प्रयोगात्मक विशेषता सक्षम नहीं है.</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcja zachowania w zdefiniowanej przez użytkownika funkcji (UDF) innej niż funkcja zachowania. Umieść treść zdefiniowanej przez użytkownika funkcji w nawiasach klamrowych ({...}), aby zadeklarować zdefiniowaną przez użytkownika funkcję zachowania.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcje zachowania zmieniają bieżący stan aplikacji. „Clear”, „Collect”, „Patch” i „Refresh” to często używane funkcje zachowania.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edytuj wyrażenie funkcji zdefiniowane przez użytkownika w taki sposób, aby znajdowało się ono wewnątrz nawiasów klamrowych ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funkcja testowa w ramach właściwości nieprzeznaczonej do testów. Nie można użyć tej właściwości do wywołania funkcji przeznaczonych tylko do testów.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Ostrzeżenie dotyczące delegowania. Nazwana formuła {0} jest niedelegowalna, w związku z czym jej użycie w tej formule może skutkować niepoprawnym działaniem w dużych zestawach danych. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Spróbuj uprościć definicję nazwanej formuły.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Ostrzeżenie dotyczące delegowania. Zdefiniowana przez użytkownika funkcja {0} jest niedelegowalna, w związku z czym jej użycie w tej formule może skutkować niepoprawnym działaniem w dużych zestawach danych. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Źródło danych może nie być w stanie przetworzyć formuły i może zwrócić niekompletny zestaw danych. Twoja aplikacja może nie zwrócić prawidłowych wyników lub zachowywać się nieprawidłowo, jeśli zestaw danych będzie niekompletny.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Spróbuj uprościć definicję funkcji zdefiniowanej przez użytkownika.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artykuł: Informacje o delegowaniu w aplikacji kanwy</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Limity liczby wierszy danych w przypadku delegowania</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Ostrzeżenie dotyczące delegowania. Wyróżniona część tej formuły może nie działać poprawnie w przypadku dużych zestawów danych. Operacja „{0}” nie jest obsługiwana przez ten łącznik.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nazwany typ musi być typem literał.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nieobsługiwany typ konwersji beztypowy/JSON „{0}” w argumencie.</value>
+    <value>Nieobsługiwany typ „{0}” w argumencie typu.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Osiągnięto maksymalną długość w funkcji JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Funkcja eksperymentalna „Typy zdefiniowane przez użytkownika” nie jest włączona.</value>
     
   </data>
 </root>

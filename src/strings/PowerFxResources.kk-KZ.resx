@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Әрекетсіз пайдаланушы анықтаған функциядағы (UDF) әрекет функциясы. Әрекетті UDF жариялау үшін пайдаланушы анықтаған функцияның негізгі мәтінін бұйра жақшалармен ({...}) ораңыз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Әрекет функциялары ағымдағы сеанс күйін өзгертеді. "Clear", "Collect", "Patch" және "Refresh" жалпы әрекет функциялары болып табылады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Пайдаланушы анықтаған функция өрнегін бұйра жақшалардың ({...}) ішінде болатындай өңдеңіз.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тексеру функциясы – сынаққа жатпайтын сипат. Тек сынаққа жататын функцияларды шақыру үшін осы сипатты пайдалана алмайсыз.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Өкілге ескерту. {0} аталған формуласы өкілетті емес, сондықтан оны осы формулада пайдалану үлкен деректер жиындарында дұрыс жұмыс істемеуі мүмкін. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Аталған формуланың анықтамасын жеңілдетіп көріңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Өкілге ескерту. {0} пайдаланушы анықтайтын функциясы өкілетті емес, сондықтан оны осы формулада пайдалану үлкен деректер жиындарында дұрыс жұмыс істемеуі мүмкін. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Пайдаланушы анықтайтын функцияның анықтамасын жеңілдетіп көріңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Мақала: кенеп бағдарламасындағы өкілеттік беруді түсіну</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Блог: өкілеттік беру үшін деректер жолы шектеулері</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Өкілеттік беру туралы ескерту. Бұл формуланың белгіленген бөлігі үлкен деректер жиынтықтарында дұрыс жұмыс істемеуі мүмкін. Бұл қосқыш "{0}" әрекетіне қолдау көрсетпейді.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Атаулы түр литерал түрі болуы қажет.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Аргументтегі '{0}' терілмеген/JSON түрлендіру түріне қолдау көрсетілмейді.</value>
+    <value>Аргумент түріндегі "{0}" қолдау көрсетілмейтін түрі.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON функциясында максималды ұзындыққа жетті.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Пайдаланушы анықтайтын түр" эксперименттік мүмкіндігі іске қосылмаған.</value>
     
   </data>
 </root>
