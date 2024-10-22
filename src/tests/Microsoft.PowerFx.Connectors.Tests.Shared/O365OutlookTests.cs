@@ -298,28 +298,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarView(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").Values).Subject",
             "564654",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarView.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarView(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2017-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").Values).Subject",
             "ERR:Office365Outlook.GetEventsCalendarView failed: The server returned an HTTP error with code 400 (Bad Request).|Your request can't be completed. The range between the start and end dates is greater than the allowed range. Maximum number of days: 1825",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2017-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2017-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "400:Response_O365Outlook_GetEventsCalendarView_Error.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarViewV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").value).TimeZone",
             "Pacific Standard Time",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarViewV2.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarViewV3(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").value).webLink",
             "https://outlook.office365.com/owa/?itemid=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABrZtyeAAA%3D&exvsurl=1&path=/calendar/item",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeUtc=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeUtc=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeUtc=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeUtc=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarViewV3.json")]
 
@@ -662,7 +662,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.ReplyTo(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA="", ""This is my reply."", { replyAll: false })",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3D?comment=This+is+my+reply.&replyAll=False",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3D?comment=This%20is%20my%20reply.&replyAll=False",
             "",
             "200:")]
 
