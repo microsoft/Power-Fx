@@ -407,11 +407,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
             }
 
-            if (callInfo?.Function is UserDefinedFunction udf && node.Parent?.Parent is CallNode callNode &&
-                (binding.GetInfo(callNode).Function is FilterFunction || binding.GetInfo(callNode).Function is LookUpFunction))
+            if (callInfo?.Function is UserDefinedFunction udf && node.Parent?.Parent is CallNode parentNode &&
+                (binding.GetInfo(parentNode).Function is FilterFunction || binding.GetInfo(parentNode).Function is LookUpFunction))
             {
                 if ((trackingFunction is FilterFunction filterFunc && filterFunc.IsValidDelegatableFilterPredicateNode(udf.Binding.Top, udf.Binding, metadata as FilterOpMetadata, nodeInheritsRowScope: isRowScoped)) ||
-                    (trackingFunction is LookUpFunction lookUpFunc && lookUpFunc.IsValidDelegatableReductionNode(callNode, udf.Binding.Top, udf.Binding, nodeInheritsRowScope: isRowScoped)))
+                    (trackingFunction is LookUpFunction lookUpFunc && lookUpFunc.IsValidDelegatableReductionNode(parentNode, udf.Binding.Top, binding, nodeInheritsRowScope: isRowScoped, udfBinding: udf.Binding)))
                 {
                     udf.SetSupportRowScopedServerDelegation(true);
                     return true;

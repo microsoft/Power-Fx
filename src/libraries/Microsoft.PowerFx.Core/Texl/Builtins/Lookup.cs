@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new LookUpCallNodeDelegationStrategy(this);
         }
 
-        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode reductionNode, TexlBinding binding, bool nodeInheritsRowScope = false)
+        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode reductionNode, TexlBinding binding, bool nodeInheritsRowScope = false, TexlBinding udfBinding = null)
         {
             if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
             {
@@ -150,7 +150,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // use a variation of the filter predicate logic to determine if the reduction formula is delegatable, without enforcing the return type must be boolean
-            return IsValidDelegatableFilterPredicateNode(reductionNode, binding, metadata, generateHints: false, enforceBoolean: false, nodeInheritsRowScope: nodeInheritsRowScope);
+            // if reduction node is a user defined function call node, we will need to provide the udf binding instead
+            return IsValidDelegatableFilterPredicateNode(reductionNode, udfBinding ?? binding, metadata, generateHints: false, enforceBoolean: false, nodeInheritsRowScope: nodeInheritsRowScope);
         }
     }
 
