@@ -407,15 +407,19 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
             }
 
-            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope))
+            if (callInfo?.Function is UserDefinedFunction udf && node.Parent?.Parent is CallNode callNode &&
+                (binding.GetInfo(callNode).Function is FilterFunction || binding.GetInfo(callNode).Function is LookUpFunction))
             {
-                return true;
+                if ((trackingFunction is FilterFunction filterFunc && filterFunc.IsValidDelegatableFilterPredicateNode(udf.Binding.Top, udf.Binding, metadata as FilterOpMetadata, nodeInheritsRowScope: isRowScoped)) ||
+                    (trackingFunction is LookUpFunction lookUpFunc && lookUpFunc.IsValidDelegatableReductionNode(callNode, udf.Binding.Top, udf.Binding, nodeInheritsRowScope: isRowScoped)))
+                {
+                    udf.SetSupportRowScopedServerDelegation(true);
+                    return true;
+                }
             }
 
-            if (callInfo?.Function is UserDefinedFunction udf &&
-                ((FilterFunction)trackingFunction).IsValidDelegatableFilterPredicateNode(udf.Binding.Top, udf.Binding, metadata as FilterOpMetadata, nodeInheritsRowScope: isRowScoped))
+            if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope))
             {
-                udf.SetSupportRowScopedServerDelegation(true);
                 return true;
             }
 
