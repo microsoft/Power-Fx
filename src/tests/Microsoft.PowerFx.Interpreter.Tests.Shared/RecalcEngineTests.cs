@@ -1922,7 +1922,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
             if (isValid)
@@ -1967,7 +1966,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
-                AllowParseAsTypeLiteral = true
             };
 
             var extraSymbols = new SymbolTable();
