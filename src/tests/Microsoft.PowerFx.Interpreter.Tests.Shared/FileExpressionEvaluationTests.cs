@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Console = output;
         }
 
-        // ab File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // abcde File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
@@ -93,10 +93,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
-#if false
+#if true
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
-        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.ababceeefeeerwee
+        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport", "RegEx")]
         [InterpreterTheory]
         public void RegExCompare(ExpressionTestCase t)

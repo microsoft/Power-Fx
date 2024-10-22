@@ -513,19 +513,31 @@ Errors: Error 15-19: Invalid regular expression: Invalid escape code, found "\_"
 Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\b]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\B]test" )  
-Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\B]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\B]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test123bed", "[\D]+" )
-Errors: Error 21-28: Invalid regular expression: Escape character not permitted within character class, found "[\D]+".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"test",StartMatch:1}
+
+>> Match( "test123bed", "[^\D]+" )
+Errors: Error 21-29: Invalid regular expression: Negative escape character not permitted within negated character class, found "\D]+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\W]test" )  
-Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "[\W]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"$test",StartMatch:1}
+
+>> Match( "$test" & Char(8) & "test", "[^\W]test" )  
+Errors: Error 35-46: Invalid regular expression: Negative escape character not permitted within negated character class, found "\W]te...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\S]test" )  
-Errors: Error 35-45: Invalid regular expression: Escape character not permitted within character class, found "\S]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"$test",StartMatch:1}
 
->> Match( "foo123test456", "[\P{L}]+" )  // would be problematic if we wanted to implement MatchOptions.LocaleAware in the future
-Errors: Error 24-34: Invalid regular expression: Escape character not permitted within character class, found "\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "$test" & Char(8) & "test", "[^\S]test" )  
+Errors: Error 35-46: Invalid regular expression: Negative escape character not permitted within negated character class, found "\S]te...".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "foo123test456", "[\P{L}]+" )  
+{FullMatch:"123",StartMatch:4}
+
+>> Match( "foo123test456", "[^\P{L}]+")  // would be problematic if we wanted to implement MatchOptions.LocaleAware in the future
+Errors: Error 24-34: Invalid regular expression: Negative escape character not permitted within negated character class, found "\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\w]test" )  // \w is OK
 Blank()
@@ -588,7 +600,7 @@ Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\&"
 Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\=".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "!@#%&=-`~><';:,""", "\-" )
-Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\-".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 28-32: Invalid regular expression: Escape character not permitted outside a character class, found "\-".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "!@#%&=-`~><';:,""", "\`" )
 Errors: Error 28-32: Invalid regular expression: Invalid escape code, found "\`".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -786,6 +798,112 @@ Errors: Error 17-26: Invalid regular expression.|Error 0-5: The function 'Match'
 
 >> Match( "abcdef", "\w{2,4}+" ).FullMatch
 Errors: Error 17-27: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
+
+//
+// UNICODE
+//
+
+// Unicode letters as word characters are matched
+
+>> Match( "the whole world", "\b(\w+\s*)+" )
+{FullMatch:"the whole world",StartMatch:1}
+
+>> Match( "целый мир", "\b(\w+\s*)+" )
+{FullMatch:"целый мир",StartMatch:1}
+
+>> Match( "el niño", "\b(\w+\s*)+" )
+{FullMatch:"el niño",StartMatch:1}
+
+>> Match( "Müller", "^\w+$" )
+{FullMatch:"Müller",StartMatch:1}
+
+// Unicode numbers as digits are matched
+
+>> Match( "12345", "^\d+$" )
+{FullMatch:"12345",StartMatch:1}
+
+>> Match( "12٤45", "^\d+$" )
+{FullMatch:"12٤45",StartMatch:1}
+
+>> Match( "123४5", "^\d+$" )
+{FullMatch:"123४5",StartMatch:1}
+
+>> Match( "abc3d", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc٤45", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+>> Match( "abc४5", "^\D+" )
+{FullMatch:"abc",StartMatch:1}
+
+// See Match_Unicode for character class consistency tests
+
+>> Match( "1aBc2+", "\p{L}")
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1Abc2+", "\p{L}")
+{FullMatch:"A",StartMatch:2}
+
+>> Match( "aBc2+", "\P{L}")
+{FullMatch:"2",StartMatch:4}
+
+>> Match( "1aBc2+", "\p{Ll}")
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "aBc2+", "\P{Ll}")
+{FullMatch:"B",StartMatch:2}
+
+>> Match( "1aBc2+", "\p{Lu}")
+{FullMatch:"B",StartMatch:3}
+
+>> Match( "Bc2+", "\P{Lu}")
+{FullMatch:"c",StartMatch:2}
+
+>> Match( "1ῼa", "\p{Lt}" ) // Unicode Character “ῼ” (U+1FFC), Greek Capital Letter Omega with Prosgegrammeni
+{FullMatch:"ῼ",StartMatch:2}
+
+>> Match( "ῼa", "\P{Lt}" ) // Unicode Character “ῼ” (U+1FFC), Greek Capital Letter Omega with Prosgegrammeni
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1ˁa", "\p{Lm}" ) // Unicode Character “ˁ” (U+02C1), Modifier Letter Reversed Glottal Stop
+{FullMatch:"ˁ",StartMatch:2}
+
+>> Match( "ˁa1", "\P{Lm}" ) // Unicode Character “ˁ” (U+02C1), Modifier Letter Reversed Glottal Stop
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1ǂa1", "\p{Lo}" ) // Unicode Character “ǂ” (U+01C2), Latin Letter Alveolar Click
+{FullMatch:"ǂ",StartMatch:2}
+
+>> Match( "ǂa1", "\P{Lo}" ) // Unicode Character “ǂ” (U+01C2), Latin Letter Alveolar Click
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1҉a1", "\p{Me}" ) // Unicode Character “҉” (U+0489), Combining Cyrillic Millions Sign
+{FullMatch:"҉",StartMatch:2}
+
+>> Match( "҉a1", "\P{Me}" ) // Unicode Character “҉” (U+0489), Combining Cyrillic Millions Sign
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1◌̃a1", "\p{Mn}" ) // Unicode Character “◌̃” (U+0303), Combining Tilde
+{FullMatch:"̃",StartMatch:3}
+
+>> Match( "◌̃a1", "\P{Mn}" ) // Unicode Character “◌̃” (U+0303), Combining Tilde
+{FullMatch:"◌",StartMatch:1}
+
+>> Match( "1ைa1", "\p{Mc}" ) // Unicode Character “ை” (U+0BC8), Tamil Vowel Sign Ai
+{FullMatch:"ை",StartMatch:2}
+
+>> Match( "ைa1", "\P{Mc}" ) // Unicode Character “ை” (U+0BC8), Tamil Vowel Sign Ai
+{FullMatch:"a",StartMatch:2}
+
+>> Match( "1aBc2+", "\P{Cs}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Cs}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Co}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Co}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "1aBc2+", "\P{Cn}")
+Errors: Error 17-25: Invalid regular expression: Invalid Unicode category name, found "\P{Cn}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 //
 // OTHER

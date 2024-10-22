@@ -38,20 +38,30 @@ namespace Microsoft.PowerFx.Functions
                 var openCharacterClass = false;       // are we defining a character class?
                 var altered = '';
                 var spaceWaiting = false;
+                var mainCharacterClass = '';
+                var orCharacterClass = '';
 
                 for ( ; index < regex.length; index++)
                 {
+                    var alteredToken = '';
+
                     switch (regex.charAt(index) )
                     {
                         case '[':
                             openCharacterClass = true;
-                            altered = altered.concat('[');
+                            mainCharacterClass = '';
+                            orCharacterClass = '';
                             spaceWaiting = false;
                             break;
 
                         case ']':
                             openCharacterClass = false;
-                            altered = altered.concat(']');
+                            if (mainCharacterClass != '' && orCharacterClass != '')
+                                altered = altered.concat('(?:[', mainCharacterClass, ']', orCharacterClass, ')');
+                            else if(mainCharacterClass != '')
+                                altered = altered.concat('[', mainCharacterClass, ']');
+                            else
+                                altered = altered.concat(orCharacterClass.substring(1));   // strip leading '|' deliniator
                             spaceWaiting = false;
                             break;
 
@@ -65,63 +75,72 @@ namespace Microsoft.PowerFx.Functions
                                 switch (regex.charAt(index))
                                 { 
                                     case 'w':
-                                        altered = altered.concat((openCharacterClass ? '' : '['), wordChar, (openCharacterClass ? '' : ']'));
+                                        alteredToken = ''.concat(openCharacterClass ? '' : '[', wordChar, openCharacterClass ? '' : ']');
                                         break;
                                     case 'W':
-                                        altered = altered.concat('[^', wordChar, ']');
+                                        if (openCharacterClass)
+                                            orCharacterClass = orCharacterClass.concat( '|[^', wordChar, ']' );
+                                        else
+                                            alteredToken = ''.concat('[^', wordChar, ']');
                                         break;
 
                                     case 'b':
-                                        altered = altered.concat(`(?:(?<=[${wordChar}])(?![${wordChar}])|(?<![${wordChar}])(?=[${wordChar}]))`);
+                                        alteredToken = `(?:(?<=[${wordChar}])(?![${wordChar}])|(?<![${wordChar}])(?=[${wordChar}]))`;
                                         break;
                                     case 'B':
-                                        altered = altered.concat(`(?:(?<=[${wordChar}])(?=[${wordChar}])|(?<![${wordChar}])(?![${wordChar}]))`);
+                                        alteredToken = `(?:(?<=[${wordChar}])(?=[${wordChar}])|(?<![${wordChar}])(?![${wordChar}]))`;
                                         break;
 
                                     case 's':
-                                        altered = altered.concat((openCharacterClass ? '' : '['), spaceChar, (openCharacterClass ? '' : ']'));
+                                        alteredToken = ''.concat(openCharacterClass ? '' : '[', spaceChar, openCharacterClass ? '' : ']');
                                         break;
                                     case 'S':
-                                        altered = altered.concat('[^', spaceChar, ']');
+                                        if (openCharacterClass)
+                                            orCharacterClass = orCharacterClass.concat( '|[^', spaceChar, ']' );
+                                        else
+                                            alteredToken = ''.concat('[^', spaceChar, ']');
                                         break;
 
                                     case 'd':
-                                        altered = altered.concat(digitChar);
+                                        alteredToken = digitChar;
                                         break;
                                     case 'D':
-                                        altered = altered.concat('[^', digitChar, ']');
+                                        if (openCharacterClass)
+                                            orCharacterClass = orCharacterClass.concat( '|[^', digitChar, ']' );
+                                        else
+                                            alteredToken = ''.concat('[^', digitChar, ']');
                                         break;
 
                                     // needed for free spacing, needs to be unescaped to avoid /v error
                                     case '#': case ' ':
-                                        altered = altered.concat(regex.charAt(index));
+                                        alteredToken = regex.charAt(index);
                                         break;
 
                                     default:
-                                        altered = altered.concat('\\', regex.charAt(index));
+                                        alteredToken = '\\'.concat(regex.charAt(index));
                                         break;
                                 }
                             }
                             else
                             {
                                 // backslash at end of regex
-                                altered = altered.concat( '\\' );
+                                alteredToken = '\\';
                             }
                             spaceWaiting = false;
                             break;
 
                         case '.':
-                            altered = altered.concat(!openCharacterClass && !dotAll ? '[^\\r\\n]' : '.');
+                            alteredToken = !openCharacterClass && !dotAll ? '[^\\r\\n]' : '.';
                             spaceWaiting = false;
                             break;
 
                         case '^':
-                            altered = altered.concat(!openCharacterClass && multiline ? '(?<=^|\\r\\n|\\r|\\n)' : '^');
+                            alteredToken = !openCharacterClass && multiline ? '(?<=^|\\r\\n|\\r|\\n)' : '^';
                             spaceWaiting = false;
                             break;
 
                         case '$':
-                            altered = altered.concat(openCharacterClass ? '$' : (multiline ? '(?=$|\\r\\n|\\r|\\n)' : '(?=$|\\r\\n$|\\r$|\\n$)'));
+                            alteredToken = openCharacterClass ? '$' : (multiline ? '(?=$|\\r\\n|\\r|\\n)' : '(?=$|\\r\\n$|\\r$|\\n$)');
                             spaceWaiting = false;
                             break;
 
@@ -138,7 +157,7 @@ namespace Microsoft.PowerFx.Functions
                             }
                             else
                             {
-                                altered = altered.concat('(');
+                                alteredToken = '(';
                                 spaceWaiting = false;
                             }
 
@@ -151,7 +170,7 @@ namespace Microsoft.PowerFx.Functions
                             }
                             else
                             {
-                                altered = altered.concat(regex.charAt(index));
+                                alteredToken = regex.charAt(index);
                                 spaceWaiting = false;
                             }
 
@@ -170,7 +189,7 @@ namespace Microsoft.PowerFx.Functions
                             }
                             else
                             {
-                                altered = altered.concat('#');
+                                alteredToken = '#';
                                 spaceWaiting = false;
                             }
 
@@ -179,22 +198,27 @@ namespace Microsoft.PowerFx.Functions
                         case '*': case '+': case '?': case '{':
                             if (spaceWaiting && altered.length > 0 && altered.charAt(altered.length-1) == '(')
                             {
-                                altered = altered.concat( '(?:)' );
+                                alteredToken = '(?:)';
                                 spaceWaiting = false;
                             }
-                            altered = altered.concat(regex.charAt(index));
+                            alteredToken = alteredToken.concat(regex.charAt(index));
                             spaceWaiting = false;
                             break;
 
                         default:
                             if (spaceWaiting)
                             {
-                                altered = altered.concat( '(?:)' );
+                                alteredToken = '(?:)';
                                 spaceWaiting = false;
                             }
-                            altered = altered.concat(regex.charAt(index));
+                            alteredToken = alteredToken.concat(regex.charAt(index));
                             break;
                     }
+
+                    if (openCharacterClass)
+                        mainCharacterClass = mainCharacterClass.concat(alteredToken);
+                    else
+                        altered = altered.concat(alteredToken);
                 }
 
                 if (flags.includes('^'))

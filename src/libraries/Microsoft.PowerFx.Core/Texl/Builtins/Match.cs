@@ -146,7 +146,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
             "S", "Sm", "Sc", "Sk", "So",
             "Z", "Zs", "Zl", "Zp", 
-            "C", "Cc", "Cf", "Cs", "Co", "Cn",
+            "Cc", "Cf", 
+
+            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario for them, as they differ between implementations
         };
 
         // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
@@ -200,7 +202,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
                     \\[pP]\{(?<goodUnicodeCategory>[\w=:-]+)\}         | # Unicode chaeracter classes, extra characters here for a better error message
-                    (?<goodEscapeOutside>\\[bBWDS])                    | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
+                    (?<goodEscapeInsidePositive>\\[DWS])            |
+                    (?<goodEscapeOutside>\\[bB])                    | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeInside>\\[\-])                        | # needed for /v compatibility with ECMAScript
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                                                                     
@@ -248,6 +251,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             bool openPoundComment = false;                           // there is an open end-of-line pound comment, only in freeFormMode
             bool openInlineComment = false;                          // there is an open inline comment
             bool openCharacterClass = false;                         // are we defining a character class?
+            bool openCharacterClassNegative = false;
             int openCharacterClassStart = -1; 
 
             foreach (Match token in tokenRE.Matches(regexPattern))
@@ -276,6 +280,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
                     }
+                    else if (token.Groups["goodEscapeInsidePositive"].Success)
+                    {
+                        if (openCharacterClass && openCharacterClassNegative)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
+                            return false;
+                        }
+                    }
                     else if (token.Groups["goodEscapeInside"].Success)
                     {
                         if (!openCharacterClass)
@@ -286,6 +298,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodUnicodeCategory"].Success)
                     {
+                        if (openCharacterClass && openCharacterClassNegative)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
+                            return false;
+                        }
+
                         if (!UnicodeCategories.Contains(token.Groups["goodUnicodeCategory"].Value))
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadUnicodeCategory, token.Value);
@@ -311,6 +329,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             openCharacterClassStart = token.Index;
                             openCharacterClass = true;
+                            openCharacterClassNegative = token.Index + 1 < regexPattern.Length && regexPattern[token.Index + 1] == '^';
                         }
                     }
                     else if (token.Groups["closeCharClass"].Success)

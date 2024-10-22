@@ -4531,6 +4531,10 @@
     <value>Invalid regular expression: Escape character not permitted within character class, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character within a character class.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadEscapeInsideNegativeCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Negative escape character not permitted within negated character class, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has an escape character within a negated character class.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscapeOutsideCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Escape character not permitted outside a character class, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an escape character outside a character class.</comment>

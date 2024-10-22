@@ -739,6 +739,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadSquare = new ErrorResourceKey("ErrInvalidRegExBadSquare");
         public static ErrorResourceKey ErrInvalidRegExBadParen = new ErrorResourceKey("ErrInvalidRegExBadParen");
         public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExBadEscapeInsideNegativeCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeInsideNegativeCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExBadEscapeOutsideCharacterClass = new ErrorResourceKey("ErrInvalidRegExBadEscapeOutsideCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExRepeatInCharClass = new ErrorResourceKey("ErrInvalidRegExRepeatInCharClass");
         public static ErrorResourceKey ErrInvalidRegExRepeatedInlineOption = new ErrorResourceKey("ErrInvalidRegExRepeatedInlineOption");

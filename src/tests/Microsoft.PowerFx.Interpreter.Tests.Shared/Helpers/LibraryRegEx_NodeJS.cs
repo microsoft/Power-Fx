@@ -90,6 +90,7 @@ namespace Microsoft.PowerFx.Functions
                             const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
+                            // console.log(alteredPattern);  // useful to debug AlterRegex_JavaScript
                             console.log('%%begin%%');
                             if (matches.length != 0 && matches[0] != null)
                             {

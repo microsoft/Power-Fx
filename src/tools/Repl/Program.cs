@@ -42,8 +42,8 @@ namespace Microsoft.PowerFx
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
 
-        private const string OptionRegExCompare = "RegExCompare";
-        private static bool _regExCompare = false;
+        private const string OptionMatchCompare = "MatchCompare";
+        private static bool _matchCompare = false;
 
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
-                { OptionRegExCompare, OptionRegExCompare },
+                { OptionMatchCompare, OptionMatchCompare },
                 { OptionUDF, OptionUDF },
             };
 
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
-            if (_regExCompare)
+            if (_matchCompare)
             {
                 // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
                 // can also use RegEx_PCRE2 and RegEx_NodeJS directly too
@@ -140,6 +140,8 @@ namespace Microsoft.PowerFx
 
             REPL(Console.In, prompt: true, echo: false, printResult: true, lineNumber: null);
         }
+
+#pragma warning disable CS0618
 
         // Hook repl engine with customizations.
         private class MyRepl : PowerFxREPL
@@ -402,9 +404,9 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (string.Equals(option.Value, OptionRegExCompare, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(option.Value, OptionMatchCompare, StringComparison.OrdinalIgnoreCase))
                 {
-                    _regExCompare = value.Value;
+                    _matchCompare = value.Value;
                     _reset = true;
                     return value;
                 }
