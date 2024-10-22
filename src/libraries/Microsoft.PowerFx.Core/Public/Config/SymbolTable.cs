@@ -340,6 +340,11 @@ namespace Microsoft.PowerFx
             }
         }
 
+        public void AddOptionSet(OptionSet optionSet, DName displayName = default)
+        {
+            AddEntity(optionSet, displayName);
+        }        
+
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
         {
             Inc();

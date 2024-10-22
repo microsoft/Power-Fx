@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -158,6 +159,20 @@ namespace Microsoft.PowerFx
                         {
                             yield return item;
                         }
+                    }
+                }
+            }
+        }
+
+        public override IEnumerable<KeyValuePair<string, OptionSet>> OptionSets
+        {
+            get
+            {
+                foreach (ReadOnlySymbolTable st in _symbolTables)
+                {
+                    foreach (KeyValuePair<string, OptionSet> kvp in st.OptionSets)
+                    {
+                        yield return kvp;
                     }
                 }
             }
