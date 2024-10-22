@@ -272,3 +272,18 @@ DateTime(2022,8,7,12,34,56,0)
 // This may not work in different locales
 >> Coalesce("",DateTime(2022,1,2,6,30,0))
 "1/2/2022 6:30 AM"
+
+>> Coalesce(If(1<0,1), IfError(If(1<0,2),22), 3)
+3
+
+>> Coalesce("", Blank(), If(1<0,IfError("c","c")), IfError("d","d"))
+"d"
+
+>> Coalesce(1, 2, 3, 4)
+1
+
+>> Coalesce(If(1<0,false), If(1<0,true), false, true)
+false
+
+>> Coalesce(If(1<0,false), If(1<0,true), true)
+true
