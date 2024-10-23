@@ -503,7 +503,7 @@ namespace Microsoft.PowerFx
             var errors = check.ApplyErrors();
             if (!check.IsSuccess)
             {
-                var definitionsCheckResult = new DefinitionsCheckResult();
+                var definitionsCheckResult = new DefinitionsCheckResult(this.Engine.Config.Features);
 
                 definitionsCheckResult.SetText(expression, this.ParserOptions)
                     .ApplyParseErrors();

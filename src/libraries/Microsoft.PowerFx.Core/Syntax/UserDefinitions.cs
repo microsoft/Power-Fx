@@ -44,14 +44,15 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         /// <param name="script">Script with named formulas, user-defined functions and user-defined types.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="features">Power Fx feature flags.</param>
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
-        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
+        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions, Features features = null)
         {
-            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            var parseResult = TexlParser.ParseUserDefinitionScript(script, parserOptions, features);
 
             if (parserOptions.AllowAttributes)
             {
-                var userDefinitions = new UserDefinitions(script, parserOptions);
+                var userDefinitions = new UserDefinitions(script, parserOptions, features);
                 parseResult = userDefinitions.ProcessPartialAttributes(parseResult);
             }
 
