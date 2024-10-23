@@ -1837,6 +1837,30 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, testConnector._log.ToString());
         }
 
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, 4, "poster, location, notificationUrl, body")]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, 4, "poster, location, notificationUrl, body")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, 3, "poster, location, body")]
+        public void ExposeInternalParamsWithoutDefaultValueTest(ConnectorCompatibility compatibility, bool exposeInternalParamsWithoutDefaultValue, int expectedCount, string expectedParamaeters)
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("teams")
+            {
+                Compatibility = compatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true, 
+                IncludeWebhookFunctions = true,
+                ExposeInternalParamsWithoutDefaultValue = exposeInternalParamsWithoutDefaultValue
+            };
+
+            ConnectorFunction function = OpenApiParser.GetFunctions(connectorSettings, apiDoc).First(f => f.Name == "PostCardAndWaitForResponse");
+
+            Assert.Equal(expectedCount, function.RequiredParameters.Length);
+            Assert.Equal(expectedParamaeters, string.Join(", ", function.RequiredParameters.Select(rp => rp.Name)));
+        }
+
         [Fact]
         public async Task EdenAITest()
         {
