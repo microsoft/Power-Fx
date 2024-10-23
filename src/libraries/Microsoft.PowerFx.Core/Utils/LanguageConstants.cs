@@ -75,5 +75,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// The string value representing the JSON format.
         /// </summary>
         internal const string JSONFormatEnumString = "JSONFormat";
+
+        /// <summary>
+        /// The string value representing the Type literal keyword.
+        /// </summary>
+        public const string TypeLiteralInvariantName = "Type";
     }
 }

@@ -758,6 +758,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey SuggestRemoteExecutionHint_InOpRhs = new ErrorResourceKey("SuggestRemoteExecutionHint_InOpRhs");
         public static ErrorResourceKey SuggestRemoteExecutionHint_StringMatchSecondParam = new ErrorResourceKey("SuggestRemoteExecutionHint_StringMatchSecondParam");
         public static ErrorResourceKey SuggestRemoteExecutionHint_InOpInvalidColumn = new ErrorResourceKey("SuggestRemoteExecutionHint_InOpInvalidColumn");
+        public static ErrorResourceKey SuggestRemoteExecutionHint_NF = new ErrorResourceKey("SuggestRemoteExecutionHint_NF");
+        public static ErrorResourceKey SuggestRemoteExecutionHint_UDF = new ErrorResourceKey("SuggestRemoteExecutionHint_UDF");
         public static ErrorResourceKey OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByColumn");
         public static ErrorResourceKey OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByService");
         public static ErrorResourceKey OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByClient");

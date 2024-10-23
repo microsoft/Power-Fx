@@ -82,13 +82,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     return false;
                 }
-
-                TexlNode optionsNode = args[1];
-                if (!IsConstant(context, argTypes, optionsNode, out string nodeValue))
-                {
-                    errors.EnsureError(optionsNode, TexlStrings.ErrFunctionArg2ParamMustBeConstant, "JSON", TexlStrings.JSONArg2.Invoke());
-                    return false;
-                }
             }
 
             return true;
@@ -123,6 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 TexlNode optionsNode = args[1];
                 if (!IsConstant(binding.CheckTypesContext, argTypes, optionsNode, out string nodeValue))
                 {
+                    errors.EnsureError(optionsNode, TexlStrings.ErrFunctionArg2ParamMustBeConstant, "JSON", TexlStrings.JSONArg2.Invoke());
                     return;
                 }
 

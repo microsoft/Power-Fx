@@ -27,7 +27,7 @@
           "x-ms-visibility": "important"
         },
         "priority": {
-          "title": "priority",
+          "title": "Priority",
           "type": "string",
           "enum": [
             "low",
@@ -37,7 +37,7 @@
           ]
         },
         "priority2": {
-          "title": "priority",
+          "title": "Priority 2",
           "type": "string",
           "format":  "enum",
           "enum": [
