@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
                     string d2 = string.Empty;
                     foreach (var item in strList)
                     {
-                        string encodedItem = HttpUtility.UrlEncode(item);
+                        string encodedItem = Uri.EscapeDataString(item);
 
                         sb.Append(d2);
                         sb.Append(encodedItem);
@@ -116,7 +117,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
-                    encoded = HttpUtility.UrlEncode(value.ToString());
+                    encoded = Uri.EscapeDataString(value.ToString());
                     sb.Append(encoded);
                 }
 

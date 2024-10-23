@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
  x-ms-client-session-id: MySessionId
  x-ms-request-method: GET
- x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%c3%a9ans?units=C
+ x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%C3%A9ans?units=C
  x-ms-user-agent: PowerFx/{version}
 ";
             AssertEqual(expected, actual);
@@ -953,7 +953,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""subject"":""Subject"",""start"":""2023-06-02T{(id == 1 ? "00" : "11")}:00:00.000"",""end"":""2023-06-02T{(id == 1 ? "00:00" : "11:30")}:00.000"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+ [body] {{""subject"":""Subject"",""start"":""2023-06-02T{(id == 1 ? "00" : "11")}:00:00.000"",""end"":""2023-06-02T{(id == 1 ? "00:00" : "11:30")}:00.000"",""timeZone"":""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris""}}
 ";
 
             AssertEqual(expected, actual);
@@ -997,7 +997,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: GET
- x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3d/$value
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3D/$value
  x-ms-user-agent: PowerFx/{version}
 ";
 
@@ -1089,7 +1089,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: PATCH
- x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3d/flag
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3D/flag
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""flag"":{{""flagStatus"":""flagged""}}}}
@@ -1319,7 +1319,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: GET
- x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2c396846%2c+-0%2c499967&wp.1=47%2c395142%2c+-0%2c480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
+ x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2C396846%2C%20-0%2C499967&wp.1=47%2C395142%2C%20-0%2C480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
  x-ms-user-agent: PowerFx/{version}
 ";
 
@@ -1441,7 +1441,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/sql/53f515b50c3e4925803ec1f0945e799f/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""query"":""SELECT fk.name AS FK_Name, \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 AS Parent_Table, cp.name AS Parent_Column, \u0027[\u0027 \u002B sr.name \u002B \u0027].[\u0027 \u002B tr.name \u002B \u0027]\u0027 AS Referenced_Table, cr.name AS Referenced_Column FROM sys.foreign_keys fk INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id WHERE \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 = \u0027[SalesLT].[Product]\u0027""}}
+ [body] {{""query"":""SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column FROM sys.foreign_keys fk INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id WHERE '[' + sp.name + '].[' + tp.name + ']' = '[SalesLT].[Product]'""}}
 ";
             Assert.Equal(expected, testConnector._log.ToString());
         }
@@ -1751,7 +1751,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/alltables
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/alltables
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1761,7 +1761,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1771,11 +1771,35 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
  x-ms-user-agent: PowerFx/{version}
 ";
 
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, 4, "poster, location, notificationUrl, body")]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, 4, "poster, location, notificationUrl, body")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, 3, "poster, location, body")]
+        public void ExposeInternalParamsWithoutDefaultValueTest(ConnectorCompatibility compatibility, bool exposeInternalParamsWithoutDefaultValue, int expectedCount, string expectedParamaeters)
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("teams")
+            {
+                Compatibility = compatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true, 
+                IncludeWebhookFunctions = true,
+                ExposeInternalParamsWithoutDefaultValue = exposeInternalParamsWithoutDefaultValue
+            };
+
+            ConnectorFunction function = OpenApiParser.GetFunctions(connectorSettings, apiDoc).First(f => f.Name == "PostCardAndWaitForResponse");
+
+            Assert.Equal(expectedCount, function.RequiredParameters.Length);
+            Assert.Equal(expectedParamaeters, string.Join(", ", function.RequiredParameters.Select(rp => rp.Name)));
         }
 
         [Fact]
