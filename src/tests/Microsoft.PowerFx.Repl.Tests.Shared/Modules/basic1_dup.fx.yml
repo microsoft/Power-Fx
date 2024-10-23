@@ -1,0 +1,4 @@
+# test symbol conflicts. 
+# Same symbols as base1.fx.yml 
+Formulas: |
+  DoubleIt(x: Number) : Number = x * 200;

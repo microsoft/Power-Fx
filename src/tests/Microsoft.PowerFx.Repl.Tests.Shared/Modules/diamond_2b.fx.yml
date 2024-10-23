@@ -1,0 +1,8 @@
+Imports:
+- File: diamond_3.fx.yml
+
+
+# Depends on Basic1
+Formulas: |
+  Func2b(x: Text) : Text = $"2B({Func3(x)})";
+

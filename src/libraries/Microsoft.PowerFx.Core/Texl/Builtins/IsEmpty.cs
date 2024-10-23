@@ -68,4 +68,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
     }
+
+    internal sealed class IsEmptyFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public IsEmptyFunction_UO()
+            : base("IsEmpty", TexlStrings.AboutIsEmpty, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.IsEmptyArg1 };
+        }
+    }
 }

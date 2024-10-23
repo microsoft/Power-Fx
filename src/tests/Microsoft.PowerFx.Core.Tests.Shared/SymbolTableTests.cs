@@ -307,6 +307,25 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void OptionSetTests()
+        {
+            var os1 = new OptionSet("os1", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("ln1"), new DName("dn1") } }));
+            var os2 = new OptionSet("os2", DisplayNameProvider.New(new Dictionary<DName, DName>() { { new DName("ln2"), new DName("dn2") }, { new DName("ln3"), new DName("dn3") } }));
+            
+            var st1 = new SymbolTable();
+            st1.AddOptionSet(os1);
+
+            Assert.Single(st1.OptionSets);
+
+            var st2 = new SymbolTable();
+            st2.AddOptionSet(os2);
+
+            var st3 = SymbolTable.Compose(st1, st2);
+
+            Assert.Equal(2, st3.OptionSets.Count());            
+        }
+
+        [Fact]
         public void VoidIsNotAllowed()
         {
             var symbol = new SymbolTable();

@@ -34,6 +34,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }));
 
             config.AddOptionSet(optionSet, string.IsNullOrEmpty(optionSetDisplayName) ? default : new DName(optionSetDisplayName));
+
+            IEnumerable<KeyValuePair<string, OptionSet>> optionSets = config.SymbolTable.OptionSets;
+
+            Assert.Single(optionSets);
+            Assert.Equal("OptionSet", optionSets.First().Key);
+            Assert.Equal(optionSet, optionSets.First().Value);
             
             var engine = new Engine(config);
 

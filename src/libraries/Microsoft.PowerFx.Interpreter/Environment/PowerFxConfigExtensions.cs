@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -20,6 +21,12 @@ namespace Microsoft.PowerFx
         public static void AddFunction(this SymbolTable symbolTable, ReflectionFunction function)
         {
             symbolTable.AddFunction(function.GetTexlFunction());
+        }
+
+        public static void AddEnvironmentVariables(this SymbolValues symbolValues, RecordValue recordValue)
+        {
+            var variablesRecordValue = FormulaValue.NewRecordFromFields(new NamedValue("Variables", recordValue));
+            symbolValues.Add("Environment", variablesRecordValue);
         }
 
         /// <summary>
