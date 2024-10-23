@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var columnType = typedName.Type;
                 var columnName = typedName.Name.Value;
 
-                Contracts.Assert(dsType.Contains(new DName(columnName)));
+                Contracts.Assert(dsType.Kind == DKind.LazyTable || dsType.Contains(new DName(columnName)));
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }

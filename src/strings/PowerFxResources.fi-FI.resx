@@ -4115,6 +4115,10 @@
     <value>Nimetyn kaavan on oltava lauseke.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Käyttäjän määrittämässä funktiossa on oltava teksti.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows voi palauttaa välimuistiin tallennetun arvon. Ota käyttöön CountIf(DataSource, true), jos haluat saada uusimman arvon.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Tukematon tyypittämätön/JSON-muunnoksen tyyppi {0} argumentissa.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Enimmäissyvyys saavutettiin kuljettaessa JSON-tietojen läpi.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Enimmäispituus saavutettiin JSON-funktiossa.</value>
     
   </data>
 </root>

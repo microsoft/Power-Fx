@@ -1,0 +1,7 @@
+# Error - we can't call Import() within a function.
+# must be a top-level yaml construct. 
+
+Formulas: |
+  Func2(x: Number) : Void = { 
+    Import("Basic1.fx.yml")
+  };
