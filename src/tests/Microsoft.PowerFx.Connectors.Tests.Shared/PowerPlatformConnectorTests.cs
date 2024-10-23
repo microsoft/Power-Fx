@@ -1375,7 +1375,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected2, actual);
         }
 
-        [Fact(Skip = "Random failure on build server")]
+        [Fact]
         public async Task SQL_GetRelationships()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json", _output);
