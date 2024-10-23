@@ -1779,10 +1779,10 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Theory]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, 4, "poster, location, notificationUrl, body")]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, 4, "poster, location, notificationUrl, body")]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, 3, "poster, location, body")]
-        public void ExposeInternalParamsWithoutDefaultValueTest(ConnectorCompatibility compatibility, bool exposeInternalParamsWithoutDefaultValue, int expectedCount, string expectedParamaeters)
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, 4, "poster, location, notificationUrl, body", "<null>, <null>, True, <null>")]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, 4, "poster, location, notificationUrl, body", "<null>, <null>, True, <null>")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, 3, "poster, location, body", "<null>, <null>, <null>")]
+        public void ExposeInternalParamsWithoutDefaultValueTest(ConnectorCompatibility compatibility, bool exposeInternalParamsWithoutDefaultValue, int expectedCount, string expectedParameters, string expectedNotificationUrls)
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
@@ -1799,7 +1799,8 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             ConnectorFunction function = OpenApiParser.GetFunctions(connectorSettings, apiDoc).First(f => f.Name == "PostCardAndWaitForResponse");
 
             Assert.Equal(expectedCount, function.RequiredParameters.Length);
-            Assert.Equal(expectedParamaeters, string.Join(", ", function.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(expectedParameters, string.Join(", ", function.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(expectedNotificationUrls, string.Join(", ", function.RequiredParameters.Select(rp => rp.NotificationUrl.HasValue ? rp.NotificationUrl.ToString() : "<null>")));
         }
 
         [Fact]

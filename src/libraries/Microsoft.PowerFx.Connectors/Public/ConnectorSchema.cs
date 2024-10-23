@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Connectors
         public string Summary => ConnectorExtensions.Summary;
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
+
+        public bool? NotificationUrl => ConnectorType.NotificationUrl;
         
         internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
