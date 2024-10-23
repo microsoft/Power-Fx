@@ -152,6 +152,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private static BlobValue GetBlobFromFile(string file, bool base64)
         {
+            if (!Path.IsPathRooted(file))
+            {
+                string root = Directory.GetCurrentDirectory();
+                file = Path.Combine(root, file);
+            }
+
             byte[] bytes = File.ReadAllBytes(file);
             return new BlobValue(new ByteArrayBlob(bytes));
         }

@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string XMsDynamicProperties = "x-ms-dynamic-properties";
         public const string XMsDynamicSchema = "x-ms-dynamic-schema";
         public const string XMsDynamicValues = "x-ms-dynamic-values";
+        public const string XMsEnum = "x-ms-enum";
         public const string XMsEnumDisplayName = "x-ms-enum-display-name";
         public const string XMsEnumValues = "x-ms-enum-values";
         public const string XMsExplicitInput = "x-ms-explicit-input";

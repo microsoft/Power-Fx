@@ -41,6 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Asin = _library.Add(new AsinFunction());
         public static readonly TexlFunction AsinT = _library.Add(new AsinTableFunction());
         public static readonly TexlFunction AsType = _library.Add(new AsTypeFunction());
+        public static readonly TexlFunction AsType_UO = _library.Add(new AsTypeFunction_UO());
         public static readonly TexlFunction Atan = _library.Add(new AtanFunction());
         public static readonly TexlFunction Atan2 = _library.Add(new Atan2Function());
         public static readonly TexlFunction AtanT = _library.Add(new AtanTableFunction());
@@ -128,10 +129,12 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsBlankOrError = _library.Add(new IsBlankOrErrorFunction());
         public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
         public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
+        public static readonly TexlFunction IsEmpty_UO = _library.Add(new IsEmptyFunction_UO());
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
         public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
+        public static readonly TexlFunction IsType_UO = _library.Add(new IsTypeFunction_UO());
         public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
@@ -230,6 +233,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
+        public static readonly TexlFunction TypedParseJSON = _library.Add(new TypedParseJSONFunction());
         public static readonly TexlFunction UniChar = _library.Add(new UniCharFunction());
         public static readonly TexlFunction UniCharT = _library.Add(new UniCharTFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
@@ -260,9 +264,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
         public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
-        public static readonly TexlFunction AsType_UO = _featureGateFunctions.Add(new AsTypeFunction_UO());
-        public static readonly TexlFunction IsType_UO = _featureGateFunctions.Add(new IsTypeFunction_UO());
-        public static readonly TexlFunction TypedParseJSON = _featureGateFunctions.Add(new TypedParseJSONFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

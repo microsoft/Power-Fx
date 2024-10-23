@@ -4115,6 +4115,10 @@
     <value>Rumus bernama harus merupakan ekspresi.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Fungsi yang ditentukan pengguna harus memiliki isi.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows dapat mengembalikan nilai cache. Gunakan CountIf(DataSource, true) untuk mendapatkan hitungan terbaru.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Jenis konversi '{0}' tidak berjenis/JSON yang tidak didukung dalam argumen.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Kedalaman maksimum yang dicapai saat mengunjungi payload JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Panjang maksimum yang dicapai dalam fungsi JSON.</value>
     
   </data>
 </root>

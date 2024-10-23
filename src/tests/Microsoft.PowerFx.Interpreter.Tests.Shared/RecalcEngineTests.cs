@@ -617,7 +617,7 @@ namespace Microsoft.PowerFx.Tests
             result = check.GetEvaluator().Eval();
             Assert.Equal(11111, result.AsDouble());
 
-            engine.AddUserDefinitions("Test = Type({A: Number}); TestTable = Type([{A: Number}]);" +
+            engine.AddUserDefinitions("Test := Type({A: Number}); TestTable := Type([{A: Number}]);" +
                 "Filter(X: TestTable):Test = First(X); ShowColumns(X: TestTable):TestTable = FirstN(X, 3);");
 
             check = engine.Check("Filter([{A: 123}]).A");
@@ -633,6 +633,38 @@ namespace Microsoft.PowerFx.Tests
 
             result = check.GetEvaluator().Eval();
             Assert.Equal(3, result.AsDouble());
+        }
+
+        [Theory]
+
+        // Behavior function in non-imperative udf
+        [InlineData(
+            "TestFunc():Void = Set(a, 123);",
+            true,
+            "Behavior function in a non-behavior user-defined function",
+            false)]
+
+        // Behavior function in imperative udf
+        [InlineData(
+            "TestFunc():Void = { Set(a, 123); };",
+            false,
+            null,
+            true)]
+
+        public void BehaviorFunctionInImperativeUDF(string udfExpression, bool expectedError, string expectedErrorKey, bool allowSideEffects)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("a", 1m);
+
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
+            {
+                result.Errors.Any(error => error.MessageKey == expectedErrorKey);
+            }
         }
 
         [Theory]
@@ -676,6 +708,39 @@ namespace Microsoft.PowerFx.Tests
                 Assert.False(definitionsCheckResult.IsSuccess);
                 Assert.Single(definitionsCheckResult.Errors);
                 Assert.Contains(definitionsCheckResult.Errors, err => err.MessageKey == errorKey);
+            }
+        }
+
+        [Theory]
+
+        [InlineData(
+            "MismatchType():Number = { 1+3; Color.Blue; };",
+            true,
+            true,
+            36,
+            41)]
+        [InlineData(
+            "MatchType():Text = { 4; 3 };",
+            false,
+            true,
+            0,
+            0)]
+        public void TestMismatchReturnType(string udfExpression, bool expectedError, bool allowSideEffects, int min, int lim)
+        {
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", 1m);
+
+            var result = engine.AddUserDefinedFunction(udfExpression, CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: allowSideEffects);
+            Assert.True(expectedError ? result.Errors.Count() > 0 : result.Errors.Count() == 0);
+
+            if (expectedError)
+            {
+                var error = result.Errors.First(error => error.MessageKey == "ErrUDF_ReturnTypeDoesNotMatch");
+                Assert.NotNull(error);
+                var span = error.Span;
+                Assert.True(span.Min == min && span.Lim == lim);
             }
         }
 
@@ -733,6 +798,43 @@ namespace Microsoft.PowerFx.Tests
 
             // Binding fails for recursive definitions and hence function is not added.
             Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
+        }
+
+        [Fact]
+        public void TestInheritanceOfDelegationWarningsInUDFs()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            var engine = new RecalcEngine(config);
+
+            var result = engine.AddUserDefinedFunction("NonDelegatableUDF():MyDataSourceTableType = Filter(MyDataSource, Sqrt(Value) > 5);", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            var func = engine.Functions.WithName("NonDelegatableUDF").First() as UserDefinedFunction;
+            Assert.True(func.HasDelegationWarning);
+
+            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = NonDelegatableUDF();", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            func = engine.Functions.WithName("NonDelegatableUDF2").First() as UserDefinedFunction;
+            Assert.True(func.HasDelegationWarning);
         }
 
         // Binding to inner functions does not impact outer functions. 
@@ -1651,57 +1753,57 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
         [InlineData(
-            "Point = Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
+            "Point := Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
             "distance({x: 0, y: 0}, {x: 0, y: 5})",
             true,
             5.0)]
 
         // Table types are accepted
         [InlineData(
-            "People = Type([{Id:Number, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "People := Type([{Id:Number, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
             "countMinors([{Id: 1, Age: 17}, {Id: 2, Age: 21}])",
             true,
             1.0)]
         [InlineData(
-            "Numbers = Type([Number]); countEven(nums: Numbers): Number = CountRows(Filter(nums, Mod(Value, 2) = 0));",
+            "Numbers := Type([Number]); countEven(nums: Numbers): Number = CountRows(Filter(nums, Mod(Value, 2) = 0));",
             "countEven([1,2,3,4,5,6,7,8,9,10])",
             true,
             5.0)]
 
         // Type Aliases are allowed
         [InlineData(
-            "CarYear = Type(Number); Car = Type({Model: Text, ModelYear: CarYear}); createCar(model:Number, year: Number): Car = {Model:model, ModelYear: year};",
+            "CarYear := Type(Number); Car := Type({Model: Text, ModelYear: CarYear}); createCar(model:Number, year: Number): Car = {Model:model, ModelYear: year};",
             "createCar(\"Model Y\", 2024).ModelYear",
             true,
             2024.0)]
 
         // Type definitions order shouldn't matter
         [InlineData(
-            "Person = Type({Id: IdType, Age: Number}); IdType = Type(Number); createUser(id:Number, a: Number): Person = {Id:id, Age: a};",
+            "Person := Type({Id: IdType, Age: Number}); IdType := Type(Number); createUser(id:Number, a: Number): Person = {Id:id, Age: a};",
             "createUser(1, 42).Age",
             true,
             42.0)]
 
         // Functions accept record with more/less fields
         [InlineData(
-            "People = Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
             "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
             true,
             0.0)]
         [InlineData(
-            "Employee = Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
+            "Employee := Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
             "getAge({Name: \"Bob\", Age: 21})",
             true,
             21.0)]
         [InlineData(
-            @"Employee = Type({Name: Text, Age: Number, Title: Text}); Employees = Type([Employee]);  EmployeeNames = Type([{Name: Text}]); 
+            @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
               getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
               getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
             "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
             true,
             2.0)]
         [InlineData(
-            @"Employee = Type({Name: Text, Age: Number, Title: Text}); 
+            @"Employee := Type({Name: Text, Age: Number, Title: Text}); 
               getAge(e: Employee): Number = e.Age;
               hasNoAge(e: Employee): Number = IsBlank(getAge(e));",
             "hasNoAge({Name: \"Bob\", Title: \"CEO\"})",
@@ -1710,8 +1812,8 @@ namespace Microsoft.PowerFx.Tests
 
         // Types with UDF restricted primitive types resolve successfully 
         [InlineData(
-            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
-              Patients = Type([Patient]);
+            @"Patient := Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients := Type([Patient]);
               Dummy():Number = CountRows([]);",
             "Dummy()",
             true,
@@ -1719,45 +1821,45 @@ namespace Microsoft.PowerFx.Tests
 
         // Aggregate types with restricted types are not allowed in UDF
         [InlineData(
-            @"Patient = Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
-              Patients = Type([Patient]);
+            @"Patient := Type({DOB: DateTimeTZInd, Weight: Decimal, Dummy: None}); 
+              Patients := Type([Patient]);
               getAnomaly(p: Patients): Patients = Filter(p, Weight < 0);",
             "",
             false)]
 
         [InlineData(
-            @"Patient = Type({Name: Text, Details: {h: Number, w:Decimal}}); 
+            @"Patient := Type({Name: Text, Details: {h: Number, w:Decimal}}); 
               getPatient(): Patient = {Name:""Alice"", Details: {h: 1, w: 2}};",
             "",
             false)]
 
         // Cycles not allowed
         [InlineData(
-            "Z = Type([{a: {b: Z}}]);",
+            "Z := Type([{a: {b: Z}}]);",
             "",
             false)]
         [InlineData(
-            "X = Type(Y); Y = Type(X);",
+            "X := Type(Y); Y := Type(X);",
             "",
             false)]
         [InlineData(
-            "C = Type({x: Boolean, y: Date, f: B});B = Type({ x: A }); A = Type([C]);",
+            "C := Type({x: Boolean, y: Date, f: B});B := Type({ x: A }); A := Type([C]);",
             "",
             false)]
 
         // Redeclaration not allowed
         [InlineData(
-            "Number = Type(Text);",
+            "Number := Type(Text);",
             "",
             false)]
         [InlineData(
-            "Point = Type({x : Number, y : Number}); Point = Type({x : Number, y : Number, z: Number})",
+            "Point := Type({x : Number, y : Number}); Point := Type({x : Number, y : Number, z: Number})",
             "",
             false)]
 
         // UDFs with body errors should fail
         [InlineData(
-            "S = Type({x:Text}); f():S = ({);",
+            "S := Type({x:Text}); f():S = ({);",
             "",
             false)]
 
@@ -1776,7 +1878,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true
             };
 
             if (isValid)
@@ -1821,7 +1922,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
-                AllowParseAsTypeLiteral = true
             };
 
             var extraSymbols = new SymbolTable();

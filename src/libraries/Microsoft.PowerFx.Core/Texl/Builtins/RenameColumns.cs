@@ -239,7 +239,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 1; i < args.Count - 1; i += 2)
             {
                 base.TryGetColumnLogicalName(dsType, binding.Features.SupportColumnNamesAsIdentifiers, args[i], DefaultErrorContainer, out var columnName, out var columnType).Verify();
-                Contracts.Assert(dsType.Contains(columnName));
+                Contracts.Assert(dsType.Kind == DKind.LazyTable || dsType.Contains(columnName));
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }

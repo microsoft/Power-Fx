@@ -1,0 +1,7 @@
+Imports:
+- File: Basic1.fx.yml
+- File: Basic2.fx.yml
+
+# Depends on Basic1
+Formulas: |
+  Func2(x: Number) : Number = DoubleIt(Add1(x));

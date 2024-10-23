@@ -4115,6 +4115,10 @@
     <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Door de gebruiker gedefinieerde functie moet een hoofdtekst hebben.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows kan een waarde in cache retourneren. Gebruik CountIf(DataSource, true) om het meest recente aantal op te halen.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Niet-ondersteund niet-getypeerd/JSON-conversietype '{0}' in argument.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Maximumdiepte bereikt tijdens doorlopen van JSON-nettolading.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Maximale lengte bereikt in JSON-functie.</value>
     
   </data>
 </root>

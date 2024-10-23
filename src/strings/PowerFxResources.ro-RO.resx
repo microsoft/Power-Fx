@@ -4115,6 +4115,10 @@
     <value>Formula denumită trebuie să fie o expresie.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Funcția definită de utilizator trebuie să includă un corp.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nu se poate delega {0}: conține o funcție de comportament „{1}”.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows poate returna o valoare memorată în cache. Utilizați CountIf(DataSource, true) pentru a obține cea mai recentă contorizare.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>În argument există tipul de conversie fără tip/JSON „{0}” neacceptat.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Adâncimea maximă a fost atinsă la traversarea sarcinii JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Lungimea maximă a fost atinsă în funcția JSON.</value>
     
   </data>
 </root>
