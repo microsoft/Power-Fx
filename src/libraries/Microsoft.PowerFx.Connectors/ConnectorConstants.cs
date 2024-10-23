@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string XMsKeyOrder = "x-ms-keyOrder";
         public const string XMsKeyType = "x-ms-keyType";
         public const string XMsMediaKind = "x-ms-media-kind";
+        public const string XMsNotificationUrl = "x-ms-notification-url";
         public const string XMsNotificationContent = "x-ms-notification-content";
         public const string XMsPageable = "x-ms-pageable";
         public const string XMsPermission = "x-ms-permission";

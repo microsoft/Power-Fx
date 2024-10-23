@@ -75,6 +75,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public ConnectorPermission Permission { get; }
 
+        // Supports x-ms-notification-url
+        public bool? NotificationUrl { get; }
+
         internal RecordType HiddenRecordType { get; }
 
         // Supports x-ms-dynamic-values or -list locally
@@ -126,6 +129,7 @@ namespace Microsoft.PowerFx.Connectors
             Schema = schema;
             Binary = schema.Format == "binary" || schema.Format == "no_format";
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
+            NotificationUrl = openApiParameter?.GetNotificationUrl();
 
             if (schema != null)
             {
