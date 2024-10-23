@@ -464,10 +464,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // RespondToEventV2
 
         [InlineData(
-            @"Office365Outlook.CalendarPostItem(""Calendar"", DateTime(2023, 12, 20, 17, 05, 0), DateTime(2023, 12, 20, 15, 15, 0), ""Event 17"", { ShowAs: ""Some Event"" }).Subject",
+            @"Office365Outlook.CalendarPostItem(""Calendar"", DateTime(2023, 12, 20, 17, 05, 0), DateTime(2023, 12, 20, 15, 15, 0), ""Event """"419"""" 😊"", { ShowAs: ""Some Event"" }).Subject",
             "Event 17",
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items",
-            @"{""End"":""2023-12-20T17:05:00.000Z"",""ShowAs"":""Some Event"",""Start"":""2023-12-20T15:15:00.000Z"",""Subject"":""Event 17""}",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items",            
+            @"{""End"":""2023-12-20T17:05:00.000Z"",""ShowAs"":""Some Event"",""Start"":""2023-12-20T15:15:00.000Z"",""Subject"":""Event \""419\"" \uD83D\uDE0A""}",
             "201:Response_O365Outlook_CalendarPostItem.json")]
 
         [InlineData(
@@ -502,28 +502,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.ContactPostItem(""Contacts"", ""John Smith"", [""+1 (555) 457-987-1174""], { DisplayName: ""John II"", EmailAddresses: [ { Name: ""email1"", Address: ""john2@nowhere.com"" }, { Name: ""email2"", Address: ""john117zz@hotmail.se"" } ], CompanyName: ""Bank of Sweden""}).DisplayName",
             "John II",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items",
-            @"{""DisplayName"":""John II"",""GivenName"":""John Smith"",""EmailAddresses"":[{""Name"":""email1"",""Address"":""john2@nowhere.com""},{""Name"":""email2"",""Address"":""john117zz@hotmail.se""}],""CompanyName"":""Bank of Sweden"",""HomePhones"":[""\u002B1 (555) 457-987-1174""]}",
+            @"{""DisplayName"":""John II"",""GivenName"":""John Smith"",""EmailAddresses"":[{""Name"":""email1"",""Address"":""john2@nowhere.com""},{""Name"":""email2"",""Address"":""john117zz@hotmail.se""}],""CompanyName"":""Bank of Sweden"",""HomePhones"":[""+1 (555) 457-987-1174""]}",
             "201:Response_O365Outlook_ContactPostItem.json")]
 
         [InlineData(
             @"Office365Outlook.ContactPostItemV2(""Contacts"", ""John Smith 3"", [""+1 (555) 457-987-1174""], { displayName: ""John III"", emailAddresses: [ { name: ""email1"", address: ""john2@nowhere.com"" }, { name: ""email2"", address: ""john117zz@hotmail.se"" } ], companyName: ""Bank of Sweden""}).displayName",
             "John III",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts",
-            @"{""displayName"":""John III"",""givenName"":""John Smith 3"",""emailAddresses"":[{""name"":""email1"",""address"":""john2@nowhere.com""},{""name"":""email2"",""address"":""john117zz@hotmail.se""}],""companyName"":""Bank of Sweden"",""homePhones"":[""\u002B1 (555) 457-987-1174""]}",
+            @"{""displayName"":""John III"",""givenName"":""John Smith 3"",""emailAddresses"":[{""name"":""email1"",""address"":""john2@nowhere.com""},{""name"":""email2"",""address"":""john117zz@hotmail.se""}],""companyName"":""Bank of Sweden"",""homePhones"":[""+1 (555) 457-987-1174""]}",
             "201:Response_O365Outlook_ContactPostItemV2.json")]
 
         [InlineData(
             @"Office365Outlook.ContactPatchItem(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA="", ""John Smith 2"", [""+1 (555) 457-987-1175""]).DisplayName",
             "John Smith 2",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253D",
-            @"{""GivenName"":""John Smith 2"",""HomePhones"":[""\u002B1 (555) 457-987-1175""]}",
+            @"{""GivenName"":""John Smith 2"",""HomePhones"":[""+1 (555) 457-987-1175""]}",
             "200:Response_O365Outlook_ContactPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.ContactPatchItemV2(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA="", ""John Smith IIIa"",[""+1 (555) 457-987-1177""]).displayName",
             "John Smith IIIa",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253D",
-            @"{""givenName"":""John Smith IIIa"",""homePhones"":[""\u002B1 (555) 457-987-1177""]}",
+            @"{""givenName"":""John Smith IIIa"",""homePhones"":[""+1 (555) 457-987-1177""]}",
             "201:Response_O365Outlook_ContactPatchItemV2.json")]
 
         [InlineData(
@@ -750,7 +750,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.V4CalendarPostItem(""Calendar"", ""Event 32"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111),""(UTC+09:30) Darwin"").startWithTimeZone",
             "DATETIME:2023-12-27T15:10:59.117+09:30",
             "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v4/tables/Calendar/items",
-            @"{""subject"":""Event 32"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC\u002B09:30) Darwin""}",
+            @"{""subject"":""Event 32"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC+09:30) Darwin""}",
             "201:Response_O365Outlook_V4CalendarPostItem.json")]
 
         [InlineData(
@@ -771,7 +771,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             @"Office365Outlook.V4CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBMAAA="", ""Event 32a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111),""(UTC+09:30) Darwin"").subject",
             "Event 32a",
             "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v4/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBMAAA%253D",
-            @"{""subject"":""Event 32a"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC\u002B09:30) Darwin""}",
+            @"{""subject"":""Event 32a"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC+09:30) Darwin""}",
             "Response_O365Outlook_V4CalendarPatchItem.json")]
         public async Task Office365Outlook_Functions(string expr, string expectedResult, string xUrls, string xBodies, string expectedFiles, string extra = null)
         {

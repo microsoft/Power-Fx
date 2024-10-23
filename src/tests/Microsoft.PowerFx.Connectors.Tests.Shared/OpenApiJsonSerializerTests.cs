@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
                 ["a\\b\"c\""] = (SchemaInteger, FormulaValue.New(1))
             });
 
-            Assert.Equal(@"{""a\\b\u0022c\u0022"":1}", str);
+            Assert.Equal(@"{""a\\b\""c\"""":1}", str);
         }
 
         [Fact]
