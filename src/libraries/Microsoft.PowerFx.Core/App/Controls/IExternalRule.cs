@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool HasErrorsOrWarnings { get; }
 
+        // Returns true when Binding is non-null, otherwise false.
         bool HasValidBinding { get; }
     }
 }
