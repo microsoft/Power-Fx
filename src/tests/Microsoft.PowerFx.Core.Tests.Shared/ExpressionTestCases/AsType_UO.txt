@@ -130,7 +130,7 @@ Errors: Error 26-33: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-34: I
 Error({Kind:ErrorKind.InvalidJSON})
 
 >> AsType(ParseJSON("true"), Void)
-Errors: Error 26-30: Unsupported untyped/JSON conversion type 'Void' in argument.
+Errors: Error 26-30: Unsupported type 'Void' in type argument.
 
 >> AsType(ParseJSON("{""a"": 5, ""b"":true}"), Type({a: Number}))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -139,13 +139,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 Errors: Error 0-59: Invalid number of arguments: received 3, expected 2.
 
 >> AsType(ParseJSON("true"), None)
-Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 26-30: Unsupported type 'ObjNull' in type argument.
 
 >> AsType(ParseJSON("null"), None)
-Errors: Error 26-30: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 26-30: Unsupported type 'ObjNull' in type argument.
 
 >> AsType(ParseJSON("{}"), Type({a: Text, b: [Color]}))
-Errors: Error 28-29: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 28-29: Unsupported type 'Color' in type argument.
 
 >> AsType(If(1/0 > 1, ParseJSON("42")), Number)
 Error({Kind:ErrorKind.Div0})

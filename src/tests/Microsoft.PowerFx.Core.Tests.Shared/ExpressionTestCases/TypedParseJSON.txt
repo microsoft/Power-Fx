@@ -121,7 +121,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Errors: Error 15-16: Invalid argument '1'. Expected valid type name or type literal.
 
 >> ParseJSON("""RED""", Color)
-Errors: Error 21-26: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 21-26: Unsupported type 'Color' in type argument.
 
 >> ParseJSON("5", Type(5))
 Errors: Error 20-21: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 19-20: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
@@ -133,7 +133,7 @@ Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: I
 Error({Kind:ErrorKind.InvalidJSON})
 
 >> ParseJSON("true", Void)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'Void' in argument.
+Errors: Error 18-22: Unsupported type 'Void' in type argument.
 
 >> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -142,13 +142,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.
 
 >> ParseJSON("true", None)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 18-22: Unsupported type 'ObjNull' in type argument.
 
 >> ParseJSON("null", None)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 18-22: Unsupported type 'ObjNull' in type argument.
 
 >> ParseJSON("{}", Type({a: Text, b: [Color]}))
-Errors: Error 20-21: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 20-21: Unsupported type 'Color' in type argument.
 
 >> ParseJSON(If(1/0 > 1, "42"), Number)
 Error({Kind:ErrorKind.Div0})

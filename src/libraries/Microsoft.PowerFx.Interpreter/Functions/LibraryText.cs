@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
         private static readonly Regex _tdTagRegex = new Regex("<\\s*(td)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
-        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
-        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)((\\s+[\\s\\S]*?)|(\\s*\\/\\s*))?>", RegExFlags_IgnoreCase);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)((\\s+[\\s\\S]*?)|(\\s*\\/\\s*))?>", RegExFlags_IgnoreCase);
         private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags_IgnoreCase);
         private static readonly Regex _headerTagRegex = new Regex("<\\s*(header)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(header)\\s*>", RegExFlags_IgnoreCase);
         private static readonly Regex _scriptTagRegex = new Regex("<\\s*(script)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(script)\\s*>", RegExFlags_IgnoreCase);

@@ -1,0 +1,3 @@
+# Most basic Power Fx module. 
+Formulas: |
+  Add1(x: Number) : Number = x +1;

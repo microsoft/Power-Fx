@@ -4115,6 +4115,10 @@
     <value>Именована формула мора да буде израз.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
+    <value>Named type must be a type literal.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
     <value>Кориснички дефинисана функција мора да има тело.</value>
     
@@ -4330,6 +4334,10 @@
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Није могуће делегирати {0}: садржи функцију понашања „{1}“.</value>
+    
+  </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows може да врати кеширану вредност. Користите CountIf(DataSource, true) да бисте добили најновији број.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4750,6 +4758,14 @@
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Неподржани нетипизирани/JSON тип конверзије ' {0}' у аргументу.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Достигнута је максимална дубина приликом детаљног проласка JSON корисних података.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Достигнута је максимална дужина у JSON функцији.</value>
     
   </data>
 </root>

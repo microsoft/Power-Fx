@@ -1,0 +1,8 @@
+
+Formulas: |
+    // Redefine a builtin. 
+    // Give a different (wrong) implementation so we know which is called. 
+    Abs(x: Number) : Number = x  *2;
+
+    // Binds to the one in this scope.
+    Foo() : Number = Abs(-1);
