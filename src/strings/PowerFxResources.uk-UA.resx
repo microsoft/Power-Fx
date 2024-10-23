@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Поведінкова функція оформлена як неповедінкова користувацька функція (UDF). Помістіть текст користувацької функції у фігурні дужки ({...}), щоб оголосити поведінкову UDF.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Поведінкові функції змінюють поточний стан сеансу. До типових поведінкових функцій належать 'Clear', 'Collect', 'Patch' і 'Refresh'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Відредагуйте користувацький вираз функції, помістивши його у фігурні дужки ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Тестова функція в нетестовій властивості. Цю властивість не можна використовувати, щоб викликати лише тестові функції.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Попередження про делегування. Іменовану формулу {0} не можна делегувати, тому її використання у цій формулі може неправильно працювати з великими наборами даних. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Спробуйте спростити визначення іменованої формули.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Стаття: делегування в компонованій програмі</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Блоґ: обмеження на рядки даних під час делегування</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Попередження про делегування. Користувацьку функцію {0} не можна делегувати, тому її використання у цій формулі може неправильно працювати з великими наборами даних. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Якщо формулу не вдасться обробити, джерело даних може повернути їх неповний набір, а тому програма не зможе повернути правильні результати або належно працювати.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Спробуйте спростити визначення користувацької функції.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Стаття: делегування в компонованій програмі</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Блоґ: обмеження на рядки даних під час делегування</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Попередження про делегування. Виділена частина цієї формули може неправильно працювати з великими наборами даних. Операція "{0}" не підтримується цим з’єднувачем.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Іменований тип має бути літералом типу.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Непідтримуваний тип перетворення нетипізованих/JSON-даних '{0}' в аргументі.</value>
+    <value>Непідтримуваний тип '{0}' в аргументі типу.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Досягнуто максимальної довжини функції JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Експериментальну функцію "Користувацькі типи" не ввімкнуто.</value>
     
   </data>
 </root>

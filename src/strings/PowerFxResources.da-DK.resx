@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funktionsmåde i en ikke-adfærdsmæssig brugerdefineret funktion (UDF). Pak den brugerdefinerede funktionstekst ind med krøllede klammeparenteser ({...}) for at erklære en UDF for funktionsmåde.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funktionsmåder ændrer den aktuelle sessionstilstand. 'Clear', 'Collect', 'Patch' og 'Refresh' er almindelige funktionsmåder.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediger det brugerdefinerede funktionsudtryk, så det er inden i klammeparenteser ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test funktion i en egenskab, som ikke er en test. Du kan ikke bruge denne egenskab til at indlede test-kun-funktioner.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsadvarsel. Den navngivne formel {0} kan ikke delegeres, så dens anvendelse i denne formel fungerer muligvis ikke korrekt på store datasæt. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Prøv at forenkle definitionen for den navngivne formel.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Forstå delegering i en lærredapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegeringsadvarsel. Den brugerdefinerede funktion {0} kan ikke delegeres, så dens anvendelse i denne formel fungerer muligvis ikke korrekt på store datasæt. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Prøv at forenkle definitionen af den brugerdefinerede funktion.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Forstå delegering i en lærredapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Datarækkegrænser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegeringsadvarsel. Den fremhævede del af denne formel fungerer måske ikke korrekt på store datasæt. Handlingen "{0}" understøttes ikke af denne connector.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Den navngivne type skal være af typen bogstavelig værdi.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Ikke-understøttet, ikke-indtastet/JSON-konverteringstype '{0}' i argument.</value>
+    <value>Ikke-understøttet type '{0}' i typeargument.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Maksimal længde nået i JSON-funktion.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Den eksperimentelle funktion 'Brugerdefinerede typer' er ikke aktiveret.</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funció de comportament en una funció definida per l'usuari (UDF) que no és de no comportament. Per declarar un comportament UDF, incloeu la funció definida per l'usuari entre claus ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Les funcions de comportament canvien l'estat de la sessió actual. "Clear", "Collect", "Patch" i "Refresh" són funcions de comportament comunes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Editeu l'expressió de la funció definida per l'usuari de tal manera que quedi entre les claus ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funció de prova en una propietat que no és de prova. No podeu utilitzar aquesta propietat només per invocar funcions de prova.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Advertiment de delegació. La fórmula amb nom {0} no es pot delegar i, per tant, és possible que el seu ús en aquesta fórmula no funcioni correctament en conjunts de dades grans. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Proveu de simplificar la definició de la fórmula amb nom.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Advertiment de delegació. La funció definida per l'usuari {0} no es pot delegar i, per tant, és possible que el seu ús en aquesta fórmula no funcioni correctament en conjunts de dades grans. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Proveu de simplificar la definició de la funció definida per l'usuari.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Article: Comprensió de la delegació en una aplicació de llenç</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Data row limits for delegation (Límits de les files de dades per a la delegació)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Advertiment de delegació. És possible que la part ressaltada d'aquesta fórmula no funcioni correctament en conjunts grans de dades. Aquest connector no admet l'operació "{0}".</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>El tipus de nom ha de ser un tipus literal.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tipus de conversió sense tipus/JSON no admès "{0}" a l'argument.</value>
+    <value>Tipus no admès "{0}" a l'argument del tipus.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>S'ha assolit la longitud màxima a la funció JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>La característica experimental "Tipus definits per l'usuari" no està habilitada.</value>
     
   </data>
 </root>

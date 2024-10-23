@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcia správania v používateľom definovanej funkcii (UDF) inej ako funkcii správania. Ak chcete deklarovať funkciu UDF správania, zabaľte telo používateľom definovanej funkcie do zložených zátvoriek ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcie správania menia aktuálny stav relácie. Bežné funkcie správania sú Clear, Collect, Patch a Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Upravte výraz používateľom definovanej funkcie tak, aby bol v zložených zátvorkách ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testovacia funkcia vo vlastnosti, ktorá nie je testovaná. Túto vlastnosť nemôžete použiť na vyvolanie funkcií, ktoré sú iba na testovanie.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Upozornenie na delegovanie. Pomenovaný vzorec {0} nie je delegovateľný, takže jeho použitie v tomto vzorci nemusí vo veľkých množinách údajov fungovať správne. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Skúste zjednodušiť definíciu pomenovaného vzorca.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Upozornenie na delegovanie. Používateľom definovaná funkcia {0} nie je delegovateľná, takže jej použitie v tomto vzorci nemusí vo veľkých množinách údajov fungovať správne. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Skúste zjednodušiť definíciu používateľom definovanej funkcie.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Článok: Informácie o delegovaní v aplikácii plátna</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Obmedzenia riadkov údajov pre delegovanie</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Upozornenie delegovania. Zvýraznená časť tohto vzorca nemusí na veľkých množinách údajov fungovať správne. Tento konektor nepodporuje operáciu {0}.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Pomenovaný typ musí byť explicitná hodnota premennej typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nepodporovaný typ konverzie netypový/JSON {0} v argumente.</value>
+    <value>Nepodporovaný typ {0} v argumente typu.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Vo funkcii JSON bola dosiahnutá maximálna dĺžka.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Experimentálna funkcia Typy definované používateľom nie je povolená.</value>
     
   </data>
 </root>

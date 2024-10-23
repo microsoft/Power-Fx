@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Fungsi perilaku dalam fungsi yang ditentukan pengguna (UDF) non-perilaku. Masukkan isi fungsi yang ditentukan pengguna ke dalam tanda kurung kurawal ({...}) untuk menyatakan UDF perilaku.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Fungsi perilaku akan mengubah status sesi saat ini. 'Clear', 'Collect', 'Patch', dan 'Refresh' adalah fungsi perilaku umum.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit ekspresi fungsi yang ditentukan pengguna sehingga berada di dalam tanda kurung kurawal ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi uji dalam properti non-uji. Anda tidak dapat menggunakan properti ini untuk menjalankan fungsi uji saja.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Peringatan delegasi. Formula yang diberi nama {0} tidak dapat didelegasikan sehingga penggunaannya dalam formula ini pada himpunan data besar mungkin tidak sesuai. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Coba sederhanakan definisi formula yang diberi nama.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Peringatan delegasi. Fungsi yang ditentukan pengguna {0} tidak dapat didelegasikan sehingga penggunaannya dalam formula ini pada himpunan data besar mungkin tidak sesuai. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Coba sederhanakan definisi fungsi yang ditentukan pengguna.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami delegasi dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Batas baris data untuk delegasi</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Peringatan delegasi. Bagian yang disorot pada rumus ini mungkin tidak berfungsi dengan benar pada himpunan data besar. Operasi "{0}" tidak didukung oleh konektor ini.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Jenis yang diberi nama harus berupa jenis harfiah.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Jenis konversi '{0}' tidak berjenis/JSON yang tidak didukung dalam argumen.</value>
+    <value>Jenis yang tidak didukung '{0}' dalam argumen jenis.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Panjang maksimum yang dicapai dalam fungsi JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Fitur eksperimental 'Jenis yang ditentukan pengguna' tidak diaktifkan.</value>
     
   </data>
 </root>

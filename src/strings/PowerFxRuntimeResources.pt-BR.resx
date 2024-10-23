@@ -119,10 +119,318 @@
   </resheader>
   <data name="ErrDivByZero" xml:space="preserve">
     <value>Operação inválida: divisão por zero.</value>
-    <comment>Error Message.</comment>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>Incompatibilidade de tipo de runtime.</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>Argumento fora do intervalo.</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>Valor numérico inválido, tem de estar no intervalo 1...255.</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>Código de idioma '{0}' sem suporte.</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>Os argumentos para a função '{0}' devem ser finitos.</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>A função '{0}' retornou um número não finito.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>Não é possível analisar o valor de data ou de hora.</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>Valor de data ou de hora inválido.</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>O valor não pôde ser interpretado como um booliano.</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>O valor não pôde ser interpretado como uma cor.</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>Erro desconhecido.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>Função ainda não implementada: {0}.</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>Operador unário ainda não implementado: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>Cadeia inválida: {0}.</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>Profundidade máxima da chamada excedida.</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>Não foi possível encontrar o registro</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>São permitidos somente valores primitivos para a operação.</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>O valor '{0}' não pode ser convertido em um número.</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>Esperado um valor da enumeração StartOfWeek para indicar como numerar os dias da semana.</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>Uma exceção foi gerada: {0}</value>
+    
   </data>
   <data name="ErrNameIsNotValid" xml:space="preserve">
-    <value>Nome inválido. '{0}' não é reconhecido.</value>
-    <comment>Error Message.</comment>
+    <value>O nome não é válido. '{0}' não é reconhecido.</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>Não há suporte para o valor MondayZero, da enumeração StartOfWeek, na função WeekNum.</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>Ambos os argumentos agregados devem ter o mesmo número de registros.</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>Argumento inválido</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>A classe '{0}' não implementa 'SetProperty'.</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>O valor mais baixo não pode ser maior que o valor mais alto.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>O UntypedObject não representa uma matriz.</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>Não aplicável</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>O acesso a um campo não é válido neste valor.</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>Nenhum erro do sistema</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>Erro do sistema</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>Campo obrigatório ausente</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>Permissão negada para criar registro</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>Permissão negada para atualizar registro</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>Permissão negada para excluir registro</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>A coluna é gerada pelo servidor e não pode ser modificada</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>Conflito de atualização de registro. Atualize o registro e reaplique sua alteração</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>Erro de validação</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>A coluna é somente leitura</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>O registro é inválido</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>Divisão por zero</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>Código de idioma incorreto ou valor inválido</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>Erro de sintaxe na expressão regular</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>Uso de função inválido</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>Arquivo não encontrado</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>Erro na análise do sistema</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>Permissão negada para leitura de registro</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>Operação sem suporte para este player ou dispositivo</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>Memória ou armazenamento de dispositivo insuficiente</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>Cota de armazenamento excedida</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>Erro de rede</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>Erro numérico</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>Erro de tempo limite</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>Conexão do serviço online não disponível</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>Formato JSON inválido</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>Erro personalizado</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>Erro personalizado ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>Erro reservado ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>Estouro.</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() oferece suporte somente a um predicado.</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>O argumento de objeto sem tipo para a função '{0}' tem um tipo incorreto. Esperado: {1}, Real: {0}.</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>O argumento places deve ser grande o suficiente para conter o resultado.</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>A coluna especificada '{0}' não existe ou é um tipo de coluna de classificação inválida.</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>A tabela de ordens não pode ter valores duplicados</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>Somente conexões gerenciadas podem ser atualizadas.</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>O número sem tipo não é um valor Decimal válido, possível estouro.</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>O acesso a tabelas de coluna única ainda não foi implementado.</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>O tipo de retorno deveria ter sido '{0}', encontrado '{1}'.</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>O terceiro argumento para a função {0} é inválido.</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>A expressão retornou um número não finito.</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>A expressão retornou um número que está além do intervalo de valores decimais.</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>Places deve ser entre 1 e 10.</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>O operador é inválido para estes tipos.</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>Tempo limite de expressão regular (acima de {0} ms) – {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>Expressão regular inválida – {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>O valor da entrada {0} está fora do intervalo permitido.</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>O valor da entrada {0} é uma entrada inválida.</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>Símbolo {0} não reconhecido.</value>
+    
   </data>
 </root>

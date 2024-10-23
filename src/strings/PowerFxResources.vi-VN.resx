@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Hàm hành vi trong hàm do người dùng xác định (UDF) không phải là hành vi. Vui lòng đặt nội dung hàm do người dùng xác định trong dấu ngoặc nhọn ({...}) để khai báo UDF hành vi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Các hàm hành vi thay đổi trạng thái phiên hiện tại. "Clear", "Collect", "Patch" và "Refresh" là các hàm hành vi phổ biến.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Chỉnh sửa biểu thức hàm do người dùng xác định sao cho biểu thức nằm trong dấu ngoặc nhọn ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Hàm thử nghiệm trong thuộc tính phi thử nghiệm. Bạn không thể sử dụng thuộc tính này để gọi các hàm chỉ thử nghiệm.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Cảnh báo về việc ủy quyền. Không ủy quyền được công thức được đặt tên {0}. Vì vậy, việc sử dụng công thức đó trong công thức này có thể không hoạt động chính xác trên các tập hợp dữ liệu lớn. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả chính xác hoặc hoạt động đúng cách nếu tập hợp dữ liệu không đầy đủ.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Thử đơn giản hóa định nghĩa cho công thức được đặt tên.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Cảnh báo về việc ủy quyền. Không thể ủy quyền hàm do người dùng xác định {0}. Vì vậy, việc sử dụng hàm đó trong công thức này có thể không hoạt động chính xác trên các tập hợp dữ liệu lớn. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả chính xác hoặc hoạt động đúng cách nếu tập hợp dữ liệu không đầy đủ.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Hãy thử đơn giản hóa định nghĩa cho hàm do người dùng xác định.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Bài viết: Hiểu rõ về ủy quyền trong ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Giới hạn hàng dữ liệu đối với ủy quyền</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Cảnh báo về ủy quyền. Phần được tô sáng của công thức này có thể không hoạt động đúng cách trên tập hợp dữ liệu lớn. Hoạt động "{0}" không được trình kết nối này hỗ trợ.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Kiểu được đặt tên phải là kiểu ký tự.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Loại chuyển đổi JSON/chưa được phân loại '{0}' không được hỗ trợ trong đối số.</value>
+    <value>Loại không được hỗ trợ "{0}" trong đối số loại.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Đã đạt đến độ dài tối đa trong hàm JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Tính năng thử nghiệm "loại do người dùng xác định" không được bật.</value>
     
   </data>
 </root>

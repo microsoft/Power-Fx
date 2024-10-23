@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>ฟังก์ชันลักษณะการทำงานในฟังก์ชันที่ผู้ใช้กำหนดซึ่งไม่ใช่ลักษณะการทำงาน (UDF) โปรดใส่เครื่องหมายวงเล็บปีกกา ({...}) ในเนื้อหาของฟังก์ชันที่ผู้ใช้กำหนด เพื่อประกาศ UDF ลักษณะการทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>ฟังก์ชันลักษณะการทำงานจะเปลี่ยนสถานะเซสชันปัจจุบัน 'Clear', 'Collect', 'Patch' และ 'Refresh' เป็นฟังก์ชันลักษณะการทำงานทั่วไป</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>แก้ไขนิพจน์ฟังก์ชันที่ผู้ใช้กำหนดเพื่อให้อยู่ภายในวงเล็บปีกกา ({...})</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>ฟังก์ชันการทดสอบในคุณสมบัติที่ไม่ใช่การทดสอบ คุณไม่สามารถใช้คุณสมบัตินี้เพื่อเรียกฟังก์ชันการทดสอบอย่างเดียวได้</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>คำเตือนการมอบหมาย สูตรที่มีชื่อ {0} ไม่สามารถมอบหมายได้ ดังนั้นการใช้งานในสูตรนี้อาจใช้ไม่ได้อย่างถูกต้องกับชุดข้อมูลขนาดใหญ่ </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>ลองลดความซับซ้อนของคำจำกัดความของสูตรที่มีชื่อ</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>คำเตือนการมอบหมาย ฟังก์ชันที่ผู้ใช้กำหนด {0} ไม่สามารถมอบหมายได้ ดังนั้นการใช้งานในสูตรนี้อาจใช้ไม่ได้อย่างถูกต้องกับชุดข้อมูลขนาดใหญ่ </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>ลองลดความซับซ้อนของคำจำกัดความของฟังก์ชันที่ผู้ใช้กำหนด</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>บทความ: เข้าใจการรับมอบสิทธิ์ในแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>บล็อก: ขีดจำกัดแถวข้อมูลสำหรับการรับมอบสิทธิ์</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>คำเตือนเกี่ยวกับการรับมอบสิทธิ์ ส่วนที่ถูกเน้นของสูตรนี้อาจทำงานไม่ถูกต้องในชุดข้อมูลขนาดใหญ่ การดำเนินการ "{0}" ไม่ได้รับการสนับสนุนจากตัวเชื่อมต่อนี้</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>ชนิดที่มีชื่อจะต้องเป็นชนิดสัญพจน์</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>ชนิดการแปลงที่ไม่ได้ระบุชนิด/JSON '{0}' ที่ไม่รองรับในอาร์กิวเมนต์</value>
+    <value>ไม่รองรับชนิด '{0}' ในอาร์กิวเมนต์ชนิด</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,10 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>ถึงความยาวสูงสุดในฟังก์ชัน JSON แล้ว</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>ไม่ได้เปิดใช้งานคุณลักษณะแบบทดลอง 'ชนิดที่ผู้ใช้กำหนด'</value>
     
   </data>
 </root>
