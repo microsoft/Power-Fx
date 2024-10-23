@@ -1390,14 +1390,17 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (parameter.Required)
                     {
-                        if (parameter.Schema.Default == null)
+                        if (parameter.Schema.Default == null && (parameter.Name == "connectionId" || !ConnectorSettings.ExposeInternalParamsWithoutDefaultValue))
                         {
                             // Ex: connectionId
                             continue;
                         }
 
-                        // Ex: Api-Version
-                        hiddenRequired = true;
+                        if (parameter.Schema.Default != null)
+                        {
+                            // Ex: Api-Version
+                            hiddenRequired = true;
+                        } 
                     }
                     else if (ConnectorSettings.Compatibility.ExcludeInternals())
                     {
@@ -1462,12 +1465,15 @@ namespace Microsoft.PowerFx.Connectors
                                     {
                                         if (bodyPropertyRequired)
                                         {
-                                            if (bodyPropertySchema.Default == null)
+                                            if (bodyPropertySchema.Default == null && !ConnectorSettings.ExposeInternalParamsWithoutDefaultValue)
                                             {
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
+                                            if (bodyPropertySchema.Default != null)
+                                            {
+                                                bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
+                                            }
                                         }
                                         else if (ConnectorSettings.Compatibility.ExcludeInternals())
                                         {
