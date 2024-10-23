@@ -169,35 +169,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.GetEmail(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="").Subject",
             "Your scheduled refresh has been paused.",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d?includeAttachments=False",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3D?includeAttachments=False",
             "",
             "Response_O365Outlook_GetEmail.json")]
 
         [InlineData(
             @"Office365Outlook.GetEmailV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="").subject",
             "Your scheduled refresh has been paused.",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d?includeAttachments=False",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3D?includeAttachments=False",
             "",
             "Response_O365Outlook_GetEmailV2.json")]
 
         [InlineData(
             @"Office365Outlook.GetAttachment(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA="", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE="")",
             "RAW", // PNG file - Later we'll have to use "IMAGE" and verify we get an Fx ImageValue
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3d/Attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3D/Attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3D",
             "",
             "Response_O365Outlook_GetAttachment.png")]
 
         [InlineData(
             @"Office365Outlook.GetAttachmentV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA="", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE="").name",
             "Outlook-rwoti1ve.png",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3d/attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3D/attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3D",
             "",
             "Response_O365Outlook_GetAttachmentV2.json")]
 
         [InlineData(
             @"Office365Outlook.GetAttachmentV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA="", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE="").contentBytes",
             "BLOB:iVBORw0KGgoAAAANSUhEUgAA", /* Base64 */ 
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3d/attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3D/attachments/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAABEgAQAAaOrCiujABLpFlM9d390HE%3D",
             "",
             "Response_O365Outlook_GetAttachmentV2.json")]
 
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"First(Office365Outlook.V2CalendarGetItems(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="").value).Location",
             "United Kingdom",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d/items",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D/items",
             "",
             "Response_O365Outlook_V2CalendarGetItems2.json")]
 
@@ -263,63 +263,63 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.CalendarGetTable(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="").title",
             "United Kingdom holidays",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/$metadata.json/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/$metadata.json/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D",
             "",
             "Response_O365Outlook_CalendarGetTable.json")]
 
         [InlineData(
             @"First(Office365Outlook.CalendarGetItems(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="").value).Subject",
             "Boxing Day Bank Holiday",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d/items",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D/items",
             "",
             "Response_O365Outlook_CalendarGetItems.json")]
 
         [InlineData(
             @"Office365Outlook.CalendarGetItem(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="",""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA="").Subject",
             "Late Summer Holiday",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253D",
             "",
             "Response_O365Outlook_CalendarGetItem.json")]
 
         [InlineData(
             @"Office365Outlook.V2CalendarGetItem(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="",""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA="").Subject",
             "Late Summer Holiday",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253D",
             "",
             "Response_O365Outlook_V2CalendarGetItem.json")]
 
         [InlineData(
             @"Office365Outlook.V3CalendarGetItem(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA="",""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA="").subject",
             "Late Summer Holiday",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253d/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbIAAA%253D/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAABNUGGhAADr1A2S1MsmTIW9552ybeHbAABNUI7rAAA%253D",
             "",
             "Response_O365Outlook_V3CalendarGetItem.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarView(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").Values).Subject",
             "564654",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3d&startDateTimeOffset=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarView.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarView(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2017-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").Values).Subject",
             "ERR:Office365Outlook.GetEventsCalendarView failed: The server returned an HTTP error with code 400 (Bad Request).|Your request can't be completed. The range between the start and end dates is greater than the allowed range. Maximum number of days: 1825",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3d&startDateTimeOffset=2017-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Events/CalendarView?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2017-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "400:Response_O365Outlook_GetEventsCalendarView_Error.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarViewV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").value).TimeZone",
             "Pacific Standard Time",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3d&startDateTimeOffset=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeOffset=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeOffset=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeOffset=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarViewV2.json")]
 
         [InlineData(
             @"First(Office365Outlook.GetEventsCalendarViewV3(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA="", ""2020-01-01T08:00:00-07:00"", ""2024-01-01T08:00:00-07:00"").value).webLink",
             "https://outlook.office365.com/owa/?itemid=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABrZtyeAAA%3D&exvsurl=1&path=/calendar/item",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3d&startDateTimeUtc=2020-01-01T08%3a00%3a00-07%3a00&endDateTimeUtc=2024-01-01T08%3a00%3a00-07%3a00",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/items/calendarview?calendarId=AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEGAADr1A2S1MsmTIW9552ybeHbAABNUIbHAAA%3D&startDateTimeUtc=2020-01-01T08%3A00%3A00-07%3A00&endDateTimeUtc=2024-01-01T08%3A00%3A00-07%3A00",
             "",
             "Response_O365Outlook_GetEventsCalendarViewV3.json")]
 
@@ -434,14 +434,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.ContactGetItem(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA="").DisplayName",
             "John Doe",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA%253D",
             "",
             "Response_O365Outlook_ContactGetItem.json")]
 
         [InlineData(
             @"Office365Outlook.ContactGetItemV2(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA="").displayName",
             "John Doe",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA%253d",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LYAAA%253D",
             "",
             "Response_O365Outlook_ContactGetItemV2.json")]
 
@@ -473,28 +473,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA="", DateTime(2023, 12, 20, 17, 05, 0), DateTime(2023, 12, 20, 15, 15, 0), ""Event 18"").Subject",
             "Event 18",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253D",
             @"{""End"":""2023-12-20T17:05:00.000Z"",""Start"":""2023-12-20T15:15:00.000Z"",""Subject"":""Event 18""}",
             "200:Response_O365Outlook_CalendarPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.CalendarDeleteItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA="")",
             "ERR:Office365Outlook.CalendarDeleteItem failed: The server returned an HTTP error with code 404 (Not Found).|The specified object was not found in the store.",
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A1AAA%253D",
             "",
             "404:Response_O365Outlook_CalendarDeleteItem_NotFound.json")]
 
         [InlineData(
             @"Office365Outlook.CalendarDeleteItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A4AAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A4AAA%253d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A4AAA%253D",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.CalendarDeleteItemV2(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A7AAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/calendars/Calendar/events/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A7AAA%253d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/calendars/Calendar/events/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAABxF7A7AAA%253D",
             "",
             "204:")]
 
@@ -515,56 +515,56 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.ContactPatchItem(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA="", ""John Smith 2"", [""+1 (555) 457-987-1175""]).DisplayName",
             "John Smith 2",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253D",
             @"{""GivenName"":""John Smith 2"",""HomePhones"":[""\u002B1 (555) 457-987-1175""]}",
             "200:Response_O365Outlook_ContactPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.ContactPatchItemV2(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA="", ""John Smith IIIa"",[""+1 (555) 457-987-1177""]).displayName",
             "John Smith IIIa",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LaAAA%253D",
             @"{""givenName"":""John Smith IIIa"",""homePhones"":[""\u002B1 (555) 457-987-1177""]}",
             "201:Response_O365Outlook_ContactPatchItemV2.json")]
 
         [InlineData(
             @"Office365Outlook.ContactDeleteItem(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LnAAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LnAAA%253d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/contacts/tables/Contacts/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LnAAA%253D",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.ContactDeleteItemV2(""Contacts"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LpAAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LpAAA%253d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/contactFolders/Contacts/contacts/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEOAADr1A2S1MsmTIW9552ybeHbAABxF5LpAAA%253D",
             "",
             "204:")]
 
         [InlineData(
             @"Office365Outlook.DeleteEmail(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZiAAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZiAAA%3d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZiAAA%3D",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.DeleteEmailV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA="")",
             null,
-            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3d",
+            "DELETE:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZgAAA%3D",
             "",
             "204:")]
 
         [InlineData(
             @"Office365Outlook.ExportEmail(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="")",
             "BLOBSTR:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/api/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d/$value",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/api/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3D/$value",
             "",
             "Response_O365Outlook_ExportEmail.eml")]
 
         [InlineData(
             @"Office365Outlook.ExportEmailV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA="")",
             "BLOBSTR:Received: from LV3P223MB0915.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:1dd::10)",
-            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3d/$value",
+            "GET:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/beta/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABwN-WMAAA%3D/$value",
             "",
             "Response_O365Outlook_ExportEmail.eml")]
 
@@ -585,28 +585,28 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.Flag(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABvkNaQAAA="")",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/Flag/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABvkNaQAAA%3d",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/Flag/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABvkNaQAAA%3D",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.FlagV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABtn17OAAA="", { flag: { flagStatus: ""complete"" } })",
             "STARTSWITH:{\r\n  \"@odata.context\": \"https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/messages/$entity\",\r\n  \"@odata.etag\": \"W/\\\"CQAAABYAAADr",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABtn17OAAA%3d/flag",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABtn17OAAA%3D/flag",
             @"{""flag"":{""flagStatus"":""complete""}}",
             "Response_O365Outlook_FlagV2.json")]
 
         [InlineData(
             @"Office365Outlook.ForwardEmail(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA="", ""testuser4@aurorafinanceintegration02.onmicrosoft.com"", {Comment: ""FYI""})",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/api/v2.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3d/forward",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/api/v2.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3D/forward",
             @"{""Comment"":""FYI"",""ToRecipients"":""testuser4@aurorafinanceintegration02.onmicrosoft.com""}",
             "202:")]
 
         [InlineData(
             @"Office365Outlook.ForwardEmailV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA="", ""testuser4@aurorafinanceintegration02.onmicrosoft.com"", {Comment: ""FYI""})",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3d/forward",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3D/forward",
             @"{""Comment"":""FYI"",""ToRecipients"":""testuser4@aurorafinanceintegration02.onmicrosoft.com""}",
             "202:")]
 
@@ -621,35 +621,35 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.MarkAsRead(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA="")",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/MarkAsRead/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3d",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/MarkAsRead/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3D",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.MarkAsReadV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA="", { isRead: false })",
             "STARTSWITH:{\r\n  \"@odata.context\": \"https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/messages/$entity\",\r\n  \"@odata.etag\": \"W/\\\"CQAAABYAAADr1A2S1MsmT",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3d/markAsRead",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3D/markAsRead",
             @"{""isRead"":false}",
             "Response_O365Outlook_MarkAsReadV2.json")]
 
         [InlineData(
             @"Office365Outlook.MarkAsReadV3(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA="", true)",
             "STARTSWITH:{\r\n  \"@odata.context\": \"https://graph.microsoft.com/v1.0/$metadata#users('d8e90db6-d09c-4a90-bc1e-86512a797fd3')/messages/$entity\",\r\n  \"@odata.etag\": \"W/\\\"CQAAABYAAADr1A2S1MsmT",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v3/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3d/markAsRead",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/codeless/v3/v1.0/me/messages/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABs3xsZAAA%3D/markAsRead",
             @"{""isRead"":true}",
             "Response_O365Outlook_MarkAsReadV3.json")]
 
         [InlineData(
             @"Office365Outlook.Move(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZnAAA="", ""Archive"").Id",
             "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAETAADr1A2S1MsmTIW9552ybeHbAABxF_ZdAAA=",
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/Move/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZnAAA%3d?folderPath=Archive",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/Move/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZnAAA%3D?folderPath=Archive",
             "",
             "Response_O365Outlook_Move.json")]
 
         [InlineData(
             @"Office365Outlook.MoveV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAETAADr1A2S1MsmTIW9552ybeHbAABxF_ZdAAA="", ""Inbox"").id",
             "AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZpAAA=",
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/Move/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAETAADr1A2S1MsmTIW9552ybeHbAABxF_ZdAAA%3d?folderPath=Inbox",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/Move/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAETAADr1A2S1MsmTIW9552ybeHbAABxF_ZdAAA%3D?folderPath=Inbox",
             "",
             "Response_O365Outlook_MoveV2.json")]
 
@@ -662,21 +662,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.ReplyTo(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA="", ""This is my reply."", { replyAll: false })",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3d?comment=This+is+my+reply.&replyAll=False",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3D?comment=This%20is%20my%20reply.&replyAll=False",
             "",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.ReplyToV2(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA="", {Body: ""Hello!""})",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3d",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v2/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3D",
             @"{""Body"":""Hello!""}",
             "200:")]
 
         [InlineData(
             @"Office365Outlook.ReplyToV3(""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA="", {Body: ""Hello2!""})",
             null,
-            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v3/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3d",
+            "POST:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/v3/Mail/ReplyTo/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAEMAADr1A2S1MsmTIW9552ybeHbAABxFrZqAAA%3D",
             @"{""Body"":""Hello2!""}",
             "200:")]
 
@@ -756,21 +756,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(
             @"Office365Outlook.V2CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBHAAA="", ""Event 30a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 30a",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBHAAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v2/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBHAAA%253D",
             @"{""Subject"":""Event 30a"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "Response_O365Outlook_V2CalendarPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.V3CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBGAAA="", ""Event 31a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111)).Subject",
             "Event 31a",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBGAAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v3/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBGAAA%253D",
             @"{""Subject"":""Event 31a"",""Start"":""2023-12-27T15:10:59.117Z"",""End"":""2023-12-27T16:22:03.902Z""}",
             "Response_O365Outlook_V3CalendarPatchItem.json")]
 
         [InlineData(
             @"Office365Outlook.V4CalendarPatchItem(""Calendar"", ""AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBMAAA="", ""Event 32a"", DateTime(2023, 12, 27, 15, 10, 59, 117.594), DateTime(2023, 12, 27, 16, 22, 3, 902.111),""(UTC+09:30) Darwin"").subject",
             "Event 32a",
-            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v4/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBMAAA%253d",
+            "PATCH:/apim/office365/3ea3b1e7f28d4c54a23a4dcbcae7de69/datasets/calendars/v4/tables/Calendar/items/AAMkADZiMmZiZGEwLTIyZDYtNDA3ZC1hZjJkLTljYjgxNjQ5YjFkNwBGAAAAAAC1gTSkmbm5QLpPwj9qarJqBwDr1A2S1MsmTIW9552ybeHbAAAAAAENAADr1A2S1MsmTIW9552ybeHbAAB1rhBMAAA%253D",
             @"{""subject"":""Event 32a"",""start"":""2023-12-27T15:10:59.117"",""end"":""2023-12-27T16:22:03.902"",""timeZone"":""(UTC\u002B09:30) Darwin""}",
             "Response_O365Outlook_V4CalendarPatchItem.json")]
         public async Task Office365Outlook_Functions(string expr, string expectedResult, string xUrls, string xBodies, string expectedFiles, string extra = null)
