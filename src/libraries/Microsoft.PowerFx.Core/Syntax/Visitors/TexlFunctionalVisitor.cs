@@ -16,10 +16,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="node">The visited node.</param>
         /// <param name="context">The context passed to the node.</param>
         /// <returns>The node visit result.</returns>
-        public virtual TResult Visit(TypeLiteralNode node, TContext context)
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract TResult Visit(TypeLiteralNode node, TContext context);
 
         /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.

@@ -27,16 +27,20 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "$\"Hello {5}\"",
             "$\"#$string$#{#$decimal$#}\"")]
+        [InlineData(
+            "ParseJSON(\"[{ \"\"Age\"\": 5}]\", Type([{Age: Number}]))",
+            "ParseJSON(#$string$#, Type([ { #$fieldname$#:#$firstname$# } ]))")]
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
                 script,
-                flags: Flags.EnableExpressionChaining);
+                flags: Flags.EnableExpressionChaining,
+                features: Features.PowerFxV1);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root));
 
             // Test same cases via CheckResult
-            var check = new CheckResult(new Engine());
+            var check = new CheckResult(new Engine(new PowerFxConfig()));
             check.SetText(script, new ParserOptions { AllowsSideEffects = true });
             var result2 = check.ApplyGetLogging();
             Assert.Equal(expected, result2);
@@ -275,6 +279,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;", "F(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;")]
         [InlineData("X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "X():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
         [InlineData("x= /* test */ 1; y =3 /* test */; F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "x = /* test */1;\ny = 3/* test */;\nF(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;\nX():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        [InlineData("T := Type(Number);", "T := Type(Number);")]
+        [InlineData("N = 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N = 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
+        [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
@@ -283,12 +290,12 @@ namespace Microsoft.PowerFx.Tests
             };
 
             // Act & Assert
-            var result = FormatUserDefinitions(script, parserOptions);
+            var result = FormatUserDefinitions(script, parserOptions, Features.PowerFxV1);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
             // Act & Assert: Ensure idempotence
-            result = FormatUserDefinitions(result, parserOptions);
+            result = FormatUserDefinitions(result, parserOptions, Features.PowerFxV1);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
         }
