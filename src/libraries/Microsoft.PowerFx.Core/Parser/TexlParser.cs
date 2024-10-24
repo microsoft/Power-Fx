@@ -197,20 +197,30 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private TypeLiteralNode ParseTypeLiteral()
+        private TypeLiteralNode ParseTypeLiteral(Identifier typeLiteralIdentifier)
         {
             var lefterTrivia = ParseTrivia();
             var parenOpen = TokEat(TokKind.ParenOpen);
             var leftTrivia = ParseTrivia();
             var sourceList = new List<ITexlSource>
             {
+                new IdentifierSource(typeLiteralIdentifier),
                 lefterTrivia,
+                new TokenSource(parenOpen),
                 leftTrivia
             };
 
             var expr = ParseExpr(Precedence.None);
+            sourceList.Add(new NodeSource(expr));
             sourceList.Add(ParseTrivia());
-            TokEat(TokKind.ParenClose);
+
+            var parenClose = TokEat(TokKind.ParenClose);
+
+            if (parenClose != null)
+            {
+                sourceList.Add(new TokenSource(parenClose));
+            }
+
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
@@ -1267,7 +1277,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName && _features.IsUserDefinedTypesEnabled)
                         {
-                            var typeLiteralNode = ParseTypeLiteral();
+                            var typeLiteralNode = ParseTypeLiteral(ident);
 
                             if (!typeLiteralNode.IsValid(out var err))
                             {

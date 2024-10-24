@@ -35,7 +35,13 @@ namespace Microsoft.PowerFx.Syntax
 
         internal override TexlNode Clone(ref int idNext, Span ts)
         {
-            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), TypeRoot, this.SourceList.Clone(ts, new Dictionary<TexlNode, TexlNode>()));
+            var typeRoot = TypeRoot.Clone(ref idNext, ts);
+            var newNodes = new Dictionary<TexlNode, TexlNode>
+            {
+                { TypeRoot, typeRoot }
+            };
+
+            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), TypeRoot, this.SourceList.Clone(ts, newNodes));
         }
 
         /// <inheritdoc />

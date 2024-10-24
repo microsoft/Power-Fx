@@ -64,6 +64,11 @@ namespace Microsoft.PowerFx.Syntax
             return node.Left.Accept(this, context);
         }
 
+        public override TResult Visit(TypeLiteralNode node, TContext context)
+        {
+            return node.TypeRoot.Accept(this, context);
+        }
+
         private IEnumerable<TResult> Lazily(params Func<TResult>[] actions)
         {
             foreach (var action in actions)
