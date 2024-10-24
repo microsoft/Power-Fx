@@ -69,14 +69,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy)
+        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(opDelStrategy);
 
-            if (!binding.IsRowScope(node))
+            if (!binding.IsRowScope(node) && nodeInheritsRowScope)
             {
                 return true;
             }
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
-                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
+                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.Call:
@@ -102,13 +102,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata, nodeInheritsRowScope);
                     }
 
                 case NodeKind.FirstName:
                     {
                         var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
-                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
+                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.UnaryOp:
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return false;
         }
 
-        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding)
+        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            return IsSupportedNode(unaryOpNode.Child, metadata, binding, opDelStrategy);
+            return IsSupportedNode(unaryOpNode.Child, metadata, binding, opDelStrategy, nodeInheritsRowScope);
         }
     }
 }

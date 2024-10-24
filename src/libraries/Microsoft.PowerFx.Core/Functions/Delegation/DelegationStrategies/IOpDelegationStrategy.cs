@@ -13,6 +13,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
         bool IsOpSupportedByTable(OperationCapabilityMetadata metadata, TexlNode node, TexlBinding binder);
 
-        bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding);
+        bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope = false);
     }
 }

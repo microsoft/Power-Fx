@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new DefaultBinaryOpDelegationStrategy(op, BuiltinFunctionsCore.Filter);
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             switch (argKind)
             {
                 case NodeKind.FirstName:
-                    return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, opStrategy);
+                    return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, opStrategy, nodeInheritsRowScope: nodeInheritsRowScope);
 
                 case NodeKind.Call:
                     {
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
+                        return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.BinaryOp:
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         var opNode = args[0].AsBinaryOp();
                         var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                        return binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
+                        return binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.UnaryOp:
@@ -105,11 +105,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         var opNode = args[0].AsUnaryOpLit();
                         var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                        return unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
+                        return unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope);
                     }
 
                 case NodeKind.DottedName:
-                    return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, opStrategy);
+                    return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, opStrategy, nodeInheritsRowScope: nodeInheritsRowScope);
 
                 default:
                     return argKind == NodeKind.BoolLit;
