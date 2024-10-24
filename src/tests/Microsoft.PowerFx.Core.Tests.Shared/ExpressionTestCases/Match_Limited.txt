@@ -537,7 +537,7 @@ Errors: Error 35-46: Invalid regular expression: Negative escape character not p
 {FullMatch:"123",StartMatch:4}
 
 >> Match( "foo123test456", "[^\P{L}]+")  // would be problematic if we wanted to implement MatchOptions.LocaleAware in the future
-Errors: Error 24-34: Invalid regular expression: Negative escape character not permitted within negated character class, found "\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-35: Invalid regular expression: Negative escape character not permitted within negated character class, found "\P{L}...".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "$test" & Char(8) & "test", "[\w]test" )  // \w is OK
 Blank()

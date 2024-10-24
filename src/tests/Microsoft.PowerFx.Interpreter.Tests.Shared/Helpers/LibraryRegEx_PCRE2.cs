@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -78,6 +79,8 @@ namespace Microsoft.PowerFx.Functions
                 NO_AUTO_CAPTURE = 0x00002000,
             }
 
+            private static readonly Mutex PCRE2Mutex = new Mutex();  // protect concurrent access to the node process
+
             internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
                 int errorNumber = 0;
@@ -139,12 +142,17 @@ namespace Microsoft.PowerFx.Functions
                     pattern = pattern + "$";
                 }
 
+                PCRE2Mutex.WaitOne();
+
                 var patternPCRE2 = Regex.Replace(pattern, @"\\u(?<hex>\w\w\w\w)", @"\x{${hex}}");
                 var code = NativeMethods.pcre2_compile_16(patternPCRE2, -1, (uint)pcreOptions, ref errorNumber, ref errorOffset, context);
                 var md = NativeMethods.pcre2_match_data_create_from_pattern_16(code, generalContext);
 
                 var startMatch = 0;
                 List<RecordValue> allMatches = new ();
+
+                // PCRE2 uses an older definition of Unicode where 180e is a space character, moving it to something else (used defined cahracter) here for category comparisons tests
+                subject = subject.Replace('\u180e', '\uf8ff');
 
                 while (startMatch >= 0 && NativeMethods.pcre2_match_16(code, subject, -1, startMatch, 0, md, matchContext) > 0)
                 {
@@ -156,7 +164,7 @@ namespace Microsoft.PowerFx.Functions
                     IntPtr op = NativeMethods.pcre2_get_ovector_pointer_16(md);
                     var start0 = Marshal.ReadInt32(op, 0);
                     var end0 = Marshal.ReadInt32(op, Marshal.SizeOf(typeof(long)));
-                    fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(subject.Substring(start0, end0 - start0))));
+                    fields.Add(FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(subject.Replace('\uf8ff', '\u180e').Substring(start0, end0 - start0))));
                     startMatch = matchAll ? end0 : -1;  // for next iteration
 
                     List<FormulaValue> subMatches = new List<FormulaValue>();
@@ -167,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
                         var end = Marshal.ReadInt32(op, ((i * 2) + 1) * Marshal.SizeOf(typeof(long)));
                         if (start >= 0 && end >= 0)
                         {
-                            subMatches.Add(StringValue.New(subject.Substring(start, end - start)));
+                            subMatches.Add(StringValue.New(subject.Replace('\uf8ff', '\u180e').Substring(start, end - start)));
                         }
                         else
                         {
@@ -200,6 +208,8 @@ namespace Microsoft.PowerFx.Functions
 
                 NativeMethods.pcre2_match_data_free_16(md);
                 NativeMethods.pcre2_code_free_16(code);
+
+                PCRE2Mutex.ReleaseMutex();
 
                 if (allMatches.Count == 0)
                 {

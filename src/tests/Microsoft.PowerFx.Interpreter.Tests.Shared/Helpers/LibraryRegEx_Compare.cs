@@ -64,6 +64,26 @@ namespace Microsoft.PowerFx.Functions
             protected Library.RegexCommonImplementation node_alt;
             protected Library.RegexCommonImplementation pcre2_alt;
 
+            private string CharCodes(string text)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (char c in text)
+                {
+                    sb.Append(Convert.ToInt32(c).ToString("X4"));
+                    sb.Append(" ");
+                }
+
+                if (sb.Length > 0)
+                {
+                    return sb.ToString().Substring(0, sb.Length - 1);
+                }
+                else
+                {
+                    return string.Empty;
+                }    
+            }
+
             private FormulaValue InvokeRegexFunctionOne(string input, string regex, string options, Library.RegexCommonImplementation dotnet, Library.RegexCommonImplementation node, Library.RegexCommonImplementation pcre2, string kind)
             {
                 var nodeMatch = node.InvokeRegexFunction(input, regex, options);
@@ -77,12 +97,12 @@ namespace Microsoft.PowerFx.Functions
 
                 if (nodeExpr != dotnetExpr)
                 {
-                    throw new Exception($"{kind}: node != net on input='{input}', re='{regex}', options='{options}',\n  net='{dotnetExpr}',\n  node='{nodeExpr}',\n  pcre2='{pcre2Expr}'");
+                    throw new Exception($"{kind}: node != net on re='{regex}' options='{options}'\n  input='{input}' ({CharCodes(input)})\n  net='{dotnetExpr}'\n  node='{nodeExpr}'\n  pcre2='{pcre2Expr}'\n");
                 }
 
                 if (pcre2Expr != dotnetExpr)
                 {
-                    throw new Exception($"{kind}: pcre2 != net on input='{input}', re='{regex}', options='{options}',\n  net='{dotnetExpr}',\n  node='{nodeExpr}',\n  pcre2='{pcre2Expr}'");
+                    throw new Exception($"{kind}: pcre2 != net on re='{regex}' options='{options}'\n  input='{input}' ({CharCodes(input)})\n  net='{dotnetExpr}'\n  node='{nodeExpr}'\n  pcre2='{pcre2Expr}'\n");
                 }
 
                 return dotnetMatch;

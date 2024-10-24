@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Core.Functions;
@@ -26,23 +27,32 @@ namespace Microsoft.PowerFx.Functions
     public class RegEx_NodeJS
     {
         private static Process node;
+        private static readonly Mutex NodeMutex = new Mutex();  // protect concurrent access to the node process
 
-        private static readonly StringBuilder OutputSB = new StringBuilder();
-        private static readonly StringBuilder ErrorSB = new StringBuilder();
+        private static StringBuilder outputSB;
+        private static StringBuilder errorSB;
         private static TaskCompletionSource<bool> readTask = null;
+        private static string output;
+        private static string error;
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            OutputSB.Append(outLine.Data);
+            outputSB.Append(outLine.Data);
             if (outLine.Data.Contains("%%end%%"))
             {
+                output = outputSB.ToString();
+                error = errorSB.ToString();
                 readTask.TrySetResult(true);
             }
         }
 
         private static void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            ErrorSB.Append(outLine.Data);
+            errorSB.Append(outLine.Data);
+
+            output = outputSB.ToString();
+            error = errorSB.ToString();
+
             readTask.TrySetResult(true);
         }
 
@@ -59,7 +69,9 @@ namespace Microsoft.PowerFx.Functions
         {
             internal static FormulaValue Match(string subject, string pattern, string flags, bool matchAll = false)
             {
+                NodeMutex.WaitOne();
                 Task<FormulaValue> task = Task.Run<FormulaValue>(async () => await MatchAsync(subject, pattern, flags, matchAll));
+                NodeMutex.ReleaseMutex();
                 return task.Result;
             }
 
@@ -67,10 +79,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 var js = new StringBuilder();
 
-                js.Append($"MatchTest('{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
-                js.Append($"'{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
-                js.Append($"'{flags}',");
-                js.Append($"{(matchAll ? "true" : "false")});");
+                outputSB = new StringBuilder();
+                errorSB = new StringBuilder();
+                readTask = new TaskCompletionSource<bool>();
+
+                try
+                {
+                    js.Append($"MatchTest('{subject.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                    js.Append($"'{pattern.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("'", "\\'")}',");
+                    js.Append($"'{flags}',");
+                    js.Append($"{(matchAll ? "true" : "false")});");
 
 #if false
                 // for debugging unicode passing of strings to Node, output ignored by deserializer but visible in the debugger
@@ -82,9 +100,9 @@ namespace Microsoft.PowerFx.Functions
                 ");
 #endif
 
-                if (node == null)
-                {
-                    string js2 = @"
+                    if (node == null)
+                    {
+                        string js2 = @"
                         function MatchTest( subject, pattern, flags, matchAll )
                         {
                             const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
@@ -109,104 +127,103 @@ namespace Microsoft.PowerFx.Functions
                         }
                         ";
 
-                    node = new Process();
-                    node.StartInfo.FileName = "node.exe";
-                    node.StartInfo.Arguments = "-i";
-                    node.StartInfo.RedirectStandardInput = true;
-                    node.StartInfo.RedirectStandardOutput = true;
-                    node.StartInfo.RedirectStandardError = true;
-                    node.StartInfo.CreateNoWindow = true;
-                    node.StartInfo.UseShellExecute = false;
-                    node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+                        node = new Process();
+                        node.StartInfo.FileName = "node.exe";
+                        node.StartInfo.Arguments = "-i";
+                        node.StartInfo.RedirectStandardInput = true;
+                        node.StartInfo.RedirectStandardOutput = true;
+                        node.StartInfo.RedirectStandardError = true;
+                        node.StartInfo.CreateNoWindow = true;
+                        node.StartInfo.UseShellExecute = false;
+                        node.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 
-                    // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
-                    // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
+                        // Not supported by .NET framework 4.6.2, we need to use the manual GetBytes method below
+                        // node.StartInfo.StandardInputEncoding = System.Text.Encoding.UTF8;
 
-                    node.OutputDataReceived += OutputHandler;
-                    node.ErrorDataReceived += ErrorHandler;
+                        node.OutputDataReceived += OutputHandler;
+                        node.ErrorDataReceived += ErrorHandler;
 
-                    node.Start();
+                        node.Start();
 
-                    node.BeginOutputReadLine();
-                    node.BeginErrorReadLine();
+                        node.BeginOutputReadLine();
+                        node.BeginErrorReadLine();
 
-                    await node.StandardInput.WriteLineAsync(RegEx_JavaScript.AlterRegex_JavaScript);
-                    await node.StandardInput.WriteLineAsync(js2);
-                }
+                        await node.StandardInput.WriteLineAsync(RegEx_JavaScript.AlterRegex_JavaScript);
+                        await node.StandardInput.WriteLineAsync(js2);
+                    }
 
-                OutputSB.Clear();
-                ErrorSB.Clear();
-                readTask = new TaskCompletionSource<bool>();
+                    var jsString = js.ToString();
+                    var bytes = Encoding.UTF8.GetBytes(jsString);
+                    await node.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+                    await node.StandardInput.WriteLineAsync();
 
-                var jsString = js.ToString();
-                var bytes = Encoding.UTF8.GetBytes(jsString);
-                await node.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
-                await node.StandardInput.WriteLineAsync();
+                    await node.StandardInput.FlushAsync();
 
-                await node.StandardInput.FlushAsync();
+                    await readTask.Task;
 
-                await readTask.Task;
+                    if (error.Length > 0)
+                    {
+                        throw new InvalidOperationException(error);
+                    }
 
-                string output = OutputSB.ToString();
-                string error = ErrorSB.ToString();
+                    int begin = output.IndexOf("%%begin%%");
+                    int end = output.IndexOf("%%end%%");
 
-                if (error.Length > 0)
-                {
-                    throw new InvalidOperationException(error);
-                }
+                    var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, (flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture) | (flags.Contains('x') ? RegexOptions.IgnorePatternWhitespace : RegexOptions.None)));
 
-                int begin = output.IndexOf("%%begin%%");
-                int end = output.IndexOf("%%end%%");
+                    if (end == begin + 9)
+                    {
+                        return matchAll ? FormulaValue.NewTable(type) : new BlankValue(IRContext.NotInSource(type));
+                    }
 
-                var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture));
+                    string json = output.Substring(begin + 9, end - begin - 9);
+                    var result = JsonSerializer.Deserialize<JSMatch[]>(json);
 
-                if (end == begin + 9)
-                {
-                    return matchAll ? FormulaValue.NewTable(type) : new BlankValue(IRContext.NotInSource(type));
-                }
+                    List<RecordValue> allMatches = new ();
 
-                string json = output.Substring(begin + 9, end - begin - 9);
-                var result = JsonSerializer.Deserialize<JSMatch[]>(json);
-
-                List<RecordValue> allMatches = new ();
-
-                foreach (JSMatch match in result)
-                {
-                    Dictionary<string, NamedValue> fields = new Dictionary<string, NamedValue>()
+                    foreach (JSMatch match in result)
+                    {
+                        Dictionary<string, NamedValue> fields = new Dictionary<string, NamedValue>()
                     {
                         { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(match.Index) + 1)) },
                         { FULLMATCH, new NamedValue(FULLMATCH, match.Numbered[0] == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(match.Numbered[0])) },
                     };
 
-                    if (match.Named != null)
-                    {
-                        foreach (var name in type.FieldNames)
+                        if (match.Named != null)
                         {
-                            if (name != STARTMATCH && name != FULLMATCH && name != SUBMATCHES)
+                            foreach (var name in type.FieldNames)
                             {
-                                fields.Add(name, new NamedValue(name, match.Named.ContainsKey(name) ? StringValue.New(match.Named[name]) : BlankValue.NewBlank(FormulaType.String)));
+                                if (name != STARTMATCH && name != FULLMATCH && name != SUBMATCHES)
+                                {
+                                    fields.Add(name, new NamedValue(name, match.Named.ContainsKey(name) ? StringValue.New(match.Named[name]) : BlankValue.NewBlank(FormulaType.String)));
+                                }
                             }
                         }
-                    }
 
-                    if (flags.Contains('N'))
-                    {
-                        List<RecordValue> subMatches = new List<RecordValue>();
-
-                        for (int i = 1; i < match.Numbered.Count(); i++)
+                        if (flags.Contains('N'))
                         {
-                            var n = match.Numbered[i];
-                            subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, n == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(n))));
+                            List<RecordValue> subMatches = new List<RecordValue>();
+
+                            for (int i = 1; i < match.Numbered.Count(); i++)
+                            {
+                                var n = match.Numbered[i];
+                                subMatches.Add(FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, n == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(n))));
+                            }
+
+                            var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                            fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
                         }
 
-                        var recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
-                        fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewTable(recordType, subMatches)));
+                        allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
                     }
 
-                    allMatches.Add(RecordValue.NewRecordFromFields(fields.Values));
+                    return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches) : allMatches.First();
                 }
-
-                return matchAll ? FormulaValue.NewTable(allMatches.First().Type, allMatches) : allMatches.First();
+                catch (Exception e)
+                {
+                    // rethrow here just so we can debug the exception in the task
+                    throw e;
+                }
             }
         }
 
