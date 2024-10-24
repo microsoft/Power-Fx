@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : _tabularTable.DatasetName;
-            string uri = (_uriPrefix ?? string.Empty) + (IsSql() ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
+            string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Connectors
             List<SqlRelationship> sqlRelationships = null;
 
             // for SQL need to get relationships separately as they aren't included by CDP connector
-            if (IsSql())
+            if (IsSql(_uriPrefix))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -90,7 +90,10 @@ namespace Microsoft.PowerFx.Connectors
             return ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo);
         }
 
-        private bool IsSql() => _uriPrefix.Contains("/sql/");
+        internal static bool IsSql(string uriPrefix) => uriPrefix.Contains("/sql/");
+
+        internal static bool UseV2(string uriPrefix) => uriPrefix.Contains("/sql/") || 
+                                                        uriPrefix.Contains("/zendesk/");
 
         private List<SqlRelationship> GetSqlRelationships(string text)
         {
