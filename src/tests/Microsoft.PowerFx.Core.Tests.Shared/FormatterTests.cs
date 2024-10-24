@@ -260,6 +260,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Set(str, $\"{{}}\")", "Set(\n    str,\n    $\"{{}}\"\n)")]
         [InlineData("Set(additionText, $\"The sum of 1 and 3 is {{{1 + 3}}})\")", "Set(\n    additionText,\n    $\"The sum of 1 and 3 is {{{1 + 3}}})\"\n)")]
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
+        [InlineData("ParseJSON(\"[]\", Type([{Age: Number}]))", "ParseJSON(\n    \"[]\",\n    Type([{Age: Number}])\n)")]
+        [InlineData("Type([{Age: Number, Name: Text}])", "Type(\n    [\n        {\n            Age: Number,\n            Name: Text\n        }\n    ]\n)")]
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert
