@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
         }
 
-        private static readonly string[] UnicodeCategories = 
+        private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
         {
             "L", "Lu", "Ll", "Lt", "Lm", "Lo",
             "M", "Mn", "Mc", "Me",
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             "Z", "Zs", "Zl", "Zp", 
             "Cc", "Cf", 
 
-            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario for them, as they differ between implementations
+            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
         };
 
         // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
@@ -201,9 +201,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             c[a-zA-Z]                              |     # Ctrl character classes
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
-                    \\[pP]\{(?<goodUnicodeCategory>[\w=:-]+)\}         | # Unicode chaeracter classes, extra characters here for a better error message
-                    (?<goodEscapeInsidePositive>\\[DWS])            |
-                    (?<goodEscapeOutside>\\[bB])                    | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
+                    \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
+                    (?<goodEscapeInsidePositive>\\[DWS])               |
+                    (?<goodEscapeOutside>\\[bB])                       | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeInside>\\[\-])                        | # needed for /v compatibility with ECMAScript
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                                                                     
@@ -296,15 +296,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
                     }
-                    else if (token.Groups["goodUnicodeCategory"].Success)
+                    else if (token.Groups["goodUEscape"].Success)
                     {
-                        if (token.Value.Substring(1, 1) == "P" && openCharacterClass && openCharacterClassNegative)
+                        if (token.Groups["goodUEscape"].Value == "P" && openCharacterClass && openCharacterClassNegative)
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
                             return false;
                         }
 
-                        if (!UnicodeCategories.Contains(token.Groups["goodUnicodeCategory"].Value))
+                        if (!UnicodeCategories.Contains(token.Groups["UCategory"].Value))
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadUnicodeCategory, token.Value);
                             return false;
