@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodUnicodeCategory"].Success)
                     {
-                        if (openCharacterClass && openCharacterClassNegative)
+                        if (token.Value.Substring(1, 1) == "P" && openCharacterClass && openCharacterClassNegative)
                         {
                             errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass, token.Index >= regexPattern.Length - 5 ? regexPattern.Substring(token.Index) : regexPattern.Substring(token.Index, 5) + "...");
                             return false;
