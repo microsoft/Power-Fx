@@ -27,43 +27,43 @@ namespace Microsoft.PowerFx.Functions
         {
             internal static class NativeMethods
             {
-                [DllImport("pcre2-16d.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_compile_16(string pattern, int patternLength, uint patternOptions, ref int errorNumber, ref int errorOffset, IntPtr context);
 
-                [DllImport("pcre2-16d.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_match_16(IntPtr code, string subject, int subjectLength, int subjectOffset, uint subjectOptions, IntPtr matchData, IntPtr matchContext);
 
-                [DllImport("pcre2-16d.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_match_data_create_16(int ovecSize, IntPtr generalContext);
 
-                [DllImport("pcre2-16d.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_match_data_create_from_pattern_16(IntPtr code, IntPtr generalContext);
 
-                [DllImport("pcre2-16d.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_get_startchar_16(IntPtr matchData);
 
-                [DllImport("pcre2-16d.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_get_ovector_count_16(IntPtr matchData);
 
-                [DllImport("pcre2-16d.dll")]
+                [DllImport("pcre2-16.dll")]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_get_ovector_pointer_16(IntPtr matchData);
 
-                [DllImport("pcre2-16d.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern int pcre2_substring_number_from_name_16(IntPtr code, string name);
 
-                [DllImport("pcre2-16d.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern void pcre2_match_data_free_16(IntPtr data);
 
-                [DllImport("pcre2-16d.dll", CharSet = CharSet.Unicode)]
+                [DllImport("pcre2-16.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern void pcre2_code_free_16(IntPtr code);
             }

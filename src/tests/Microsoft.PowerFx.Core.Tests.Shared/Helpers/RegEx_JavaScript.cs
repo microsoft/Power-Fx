@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Functions
                         case '\\':
                             if (++index < regex.length)
                             {
-                                const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Nd}\\p{Pc}';
+                                const wordChar = '\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Lm}\\p{Mn}\\p{Nd}\\p{Pc}';
                                 const spaceChar = '\\f\\n\\r\\t\\v\\x85\\p{Z}';
                                 const digitChar = '\\p{Nd}';
 

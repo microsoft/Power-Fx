@@ -169,6 +169,8 @@ namespace Microsoft.PowerFx.Functions
                     int begin = output.IndexOf("%%begin%%");
                     int end = output.IndexOf("%%end%%");
 
+                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
+                    pattern = pattern.Replace('\r', '\n');
                     var type = new KnownRecordType(GetRecordTypeFromRegularExpression(pattern, (flags.Contains('N') ? RegexOptions.None : RegexOptions.ExplicitCapture) | (flags.Contains('x') ? RegexOptions.IgnorePatternWhitespace : RegexOptions.None)));
 
                     if (end == begin + 9)
@@ -193,7 +195,7 @@ namespace Microsoft.PowerFx.Functions
                         {
                             foreach (var name in type.FieldNames)
                             {
-                                if (name != STARTMATCH && name != FULLMATCH && name != SUBMATCHES)
+                                if (name != STARTMATCH && name != FULLMATCH && !(name == SUBMATCHES && type.GetFieldType(SUBMATCHES) != FormulaType.String))
                                 {
                                     fields.Add(name, new NamedValue(name, match.Named.ContainsKey(name) ? StringValue.New(match.Named[name]) : BlankValue.NewBlank(FormulaType.String)));
                                 }

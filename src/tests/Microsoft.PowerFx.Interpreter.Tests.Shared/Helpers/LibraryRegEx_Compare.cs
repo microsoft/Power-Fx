@@ -18,11 +18,11 @@ namespace Microsoft.PowerFx.Functions
 {
     public class RegEx_Compare
     {
-        public static void EnableRegExFunctions(PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
+        public static void EnableRegExFunctions(PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1, bool includeNode = true, bool includePCRE2 = true)
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in RegexFunctions(regExTimeout, regexTypeCache))
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in RegexFunctions(regExTimeout, regexTypeCache, includeNode, includePCRE2))
             {
                 if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
                 {
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
+        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache, bool includeNode, bool includePCRE2)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -48,9 +48,9 @@ namespace Microsoft.PowerFx.Functions
 
             return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                { new IsMatchFunction(), new Compare_IsMatchImplementation(regexTimeout) },
-                { new MatchFunction(regexCache), new Compare_MatchImplementation(regexTimeout) },
-                { new MatchAllFunction(regexCache), new Compare_MatchAllImplementation(regexTimeout) }
+                { new IsMatchFunction(), new Compare_IsMatchImplementation(regexTimeout, includeNode, includePCRE2) },
+                { new MatchFunction(regexCache), new Compare_MatchImplementation(regexTimeout, includeNode, includePCRE2) },
+                { new MatchAllFunction(regexCache), new Compare_MatchAllImplementation(regexTimeout, includeNode, includePCRE2) }
             };
         }
 
@@ -86,23 +86,46 @@ namespace Microsoft.PowerFx.Functions
 
             private FormulaValue InvokeRegexFunctionOne(string input, string regex, string options, Library.RegexCommonImplementation dotnet, Library.RegexCommonImplementation node, Library.RegexCommonImplementation pcre2, string kind)
             {
-                var nodeMatch = node.InvokeRegexFunction(input, regex, options);
-                var nodeExpr = nodeMatch.ToExpression();
-
-                var pcre2Match = pcre2.InvokeRegexFunction(input, regex, options);
-                var pcre2Expr = pcre2Match.ToExpression();
-
                 var dotnetMatch = dotnet.InvokeRegexFunction(input, regex, options);
                 var dotnetExpr = dotnetMatch.ToExpression();
 
-                if (nodeExpr != dotnetExpr)
+                string nodeExpr = null;
+                string pcre2Expr = null;
+
+                if (node != null)
                 {
-                    throw new Exception($"{kind}: node != net on re='{regex}' options='{options}'\n  input='{input}' ({CharCodes(input)})\n  net='{dotnetExpr}'\n  node='{nodeExpr}'\n  pcre2='{pcre2Expr}'\n");
+                    var nodeMatch = node.InvokeRegexFunction(input, regex, options);
+                    nodeExpr = nodeMatch.ToExpression();
                 }
 
-                if (pcre2Expr != dotnetExpr)
+                if (pcre2 != null)
                 {
-                    throw new Exception($"{kind}: pcre2 != net on re='{regex}' options='{options}'\n  input='{input}' ({CharCodes(input)})\n  net='{dotnetExpr}'\n  node='{nodeExpr}'\n  pcre2='{pcre2Expr}'\n");
+                    var pcre2Match = pcre2.InvokeRegexFunction(input, regex, options);
+                    pcre2Expr = pcre2Match.ToExpression();
+                }
+
+                string prefix = null;
+
+                if (nodeExpr != null && nodeExpr != dotnetExpr)
+                {
+                    prefix = $"{kind}: node != net";        
+                }
+
+                if (pcre2Expr != null && pcre2Expr != dotnetExpr)
+                {
+                    prefix = $"{kind}: node != net";
+                }
+
+                if (prefix != null)
+                {
+                    var report =
+                        $"  re='{regex}' options='{options}'\n" +
+                        $"  input='{input}' ({CharCodes(input)})\n" +
+                        $"  net={dotnetExpr}\n" +
+                        (nodeExpr != null ? $"  node={nodeExpr}\n" : string.Empty) +
+                        (pcre2Expr != null ? $"  pcre2={pcre2Expr}\n" : string.Empty);
+
+                    throw new Exception($"{prefix}\n{report}");
                 }
 
                 return dotnetMatch;
@@ -125,15 +148,22 @@ namespace Microsoft.PowerFx.Functions
         {
             protected override string DefaultRegexOptions => DefaultIsMatchOptions;
 
-            internal Compare_IsMatchImplementation(TimeSpan regexTimeout) 
+            internal Compare_IsMatchImplementation(TimeSpan regexTimeout, bool includeNode, bool includePCRE2) 
             {
-                node = new NodeJS_IsMatchImplementation(regexTimeout);
-                pcre2 = new PCRE2_IsMatchImplementation(regexTimeout);
                 dotnet = new Library.IsMatchImplementation(regexTimeout);
-
-                node_alt = new NodeJS_MatchImplementation(regexTimeout);
-                pcre2_alt = new PCRE2_MatchImplementation(regexTimeout);
                 dotnet_alt = new Library.MatchImplementation(regexTimeout);
+
+                if (includeNode)
+                {
+                    node = new NodeJS_IsMatchImplementation(regexTimeout);
+                    node_alt = new NodeJS_MatchImplementation(regexTimeout);
+                }
+
+                if (includePCRE2)
+                {
+                    pcre2 = new PCRE2_IsMatchImplementation(regexTimeout);
+                    pcre2_alt = new PCRE2_MatchImplementation(regexTimeout);
+                }
             }
         }
 
@@ -141,10 +171,18 @@ namespace Microsoft.PowerFx.Functions
         {
             protected override string DefaultRegexOptions => DefaultMatchOptions;
 
-            internal Compare_MatchImplementation(TimeSpan regexTimeout)
+            internal Compare_MatchImplementation(TimeSpan regexTimeout, bool includeNode, bool includePCRE2)
             {
-                node = new NodeJS_MatchImplementation(regexTimeout);
-                pcre2 = new PCRE2_MatchImplementation(regexTimeout);
+                if (includeNode)
+                {
+                    node = new NodeJS_MatchImplementation(regexTimeout);
+                }
+
+                if (includePCRE2)
+                {
+                    pcre2 = new PCRE2_MatchImplementation(regexTimeout);
+                }
+
                 dotnet = new Library.MatchImplementation(regexTimeout);
             }
         }
@@ -153,10 +191,18 @@ namespace Microsoft.PowerFx.Functions
         {
             protected override string DefaultRegexOptions => DefaultMatchAllOptions;
 
-            internal Compare_MatchAllImplementation(TimeSpan regexTimeout)
+            internal Compare_MatchAllImplementation(TimeSpan regexTimeout, bool includeNode, bool includePCRE2)
             {
-                node = new NodeJS_MatchAllImplementation(regexTimeout);
-                pcre2 = new PCRE2_MatchAllImplementation(regexTimeout);
+                if (includeNode)
+                {
+                    node = new NodeJS_MatchAllImplementation(regexTimeout);
+                }
+
+                if (includePCRE2)
+                {
+                    pcre2 = new PCRE2_MatchAllImplementation(regexTimeout);
+                }
+
                 dotnet = new Library.MatchAllImplementation(regexTimeout);
             }
         }

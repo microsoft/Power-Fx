@@ -72,7 +72,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             if (RegExCompareEnabled)
             {
-                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
+                // PCRE2 has scalability probleems running all the tests, not included here but is enabled with the REPL
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), includePCRE2: false);
             }
             else
             {
