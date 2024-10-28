@@ -168,14 +168,35 @@ namespace Microsoft.PowerFx
         {
             get
             {
+                HashSet<string> osNames = new HashSet<string>();
+
                 foreach (ReadOnlySymbolTable st in _symbolTables)
                 {
                     foreach (KeyValuePair<string, OptionSet> kvp in st.OptionSets)
                     {
-                        yield return kvp;
+                        if (!osNames.Contains(kvp.Key))
+                        {
+                            osNames.Add(kvp.Key);
+                            yield return kvp;
+                        }
                     }
                 }
             }
+        }
+
+        internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        {
+            foreach (ReadOnlySymbolTable st in _symbolTables)
+            {
+                if (st.TryGetVariable(name, out symbol, out displayName))
+                {
+                    return true;
+                }
+            }
+
+            symbol = default;
+            displayName = default;
+            return false;
         }
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
