@@ -1014,5 +1014,17 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectErrors, parseResult.HasErrors);
             Assert.Equal(isImperative, parseResult.UDFs.First().IsImperative);
         }
+
+        [Theory]
+        [InlineData("A = Type(Number);", 0)]
+        [InlineData("A = \"hello\";B = Type([Boolean]); C = 5;", 2)]
+        public void TestTypeLiteralInNamedFormula(string script, int namedFormulaCount)
+        {
+            var parserOptions = new ParserOptions();
+            var parseResult = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
+            Assert.True(parseResult.HasErrors);
+            Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
+            Assert.Contains(parseResult.Errors, e => e.ShortMessage == StringResources.Get(TexlStrings.ErrUserDefinedTypeIncorrectSyntax));
+        }
     }
 }

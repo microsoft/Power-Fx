@@ -385,6 +385,12 @@ namespace Microsoft.PowerFx.Core.Parser
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
 
+                        if (result is TypeLiteralNode typeLiteralNode)
+                        {
+                            CreateError(result.Token, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
+                            continue;
+                        }
+
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
                         definitionBeforeTrivia = new List<ITexlSource>();
