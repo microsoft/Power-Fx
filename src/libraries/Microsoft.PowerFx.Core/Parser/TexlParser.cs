@@ -385,7 +385,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
 
-                        if (result is TypeLiteralNode typeLiteralNode)
+                        if (result is TypeLiteralNode _)
                         {
                             CreateError(result.Token, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
                             continue;

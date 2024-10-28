@@ -1024,7 +1024,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.True(parseResult.HasErrors);
             Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
-            Assert.Contains(parseResult.Errors, e => e.ShortMessage == StringResources.Get(TexlStrings.ErrUserDefinedTypeIncorrectSyntax));
+            Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
         }
     }
 }
