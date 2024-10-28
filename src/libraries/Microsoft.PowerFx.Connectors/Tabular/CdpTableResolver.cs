@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static bool IsSql(string uriPrefix) => uriPrefix.Contains("/sql/");
 
-        internal static bool UseV2(string uriPrefix) => uriPrefix.Contains("/sql/") || 
+        internal static bool UseV2(string uriPrefix) => uriPrefix.Contains("/sql/") ||
                                                         uriPrefix.Contains("/zendesk/");
 
         private List<SqlRelationship> GetSqlRelationships(string text)
