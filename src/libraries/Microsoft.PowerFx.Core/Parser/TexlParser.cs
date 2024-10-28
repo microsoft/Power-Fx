@@ -362,6 +362,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
                 else if (_curs.TidCur == TokKind.Equ)
                 {
+                    var equalToken = _curs.TokCur;
+                    
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
@@ -387,7 +389,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         if (result is TypeLiteralNode _)
                         {
-                            CreateError(result.Token, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
+                            CreateError(equalToken, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
                             continue;
                         }
 
