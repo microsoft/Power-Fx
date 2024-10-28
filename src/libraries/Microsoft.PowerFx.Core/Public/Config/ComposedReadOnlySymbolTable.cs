@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
     {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
-        // In priority order. 
+        // In priority order.
         public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
             _symbolTables = symbolTables.Where(x => x != null);
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx
         {
             if (slot.Owner == this)
             {
-                // A slot's owner must be a "leaf node" symbol table and note 
+                // A slot's owner must be a "leaf node" symbol table and note
                 // a composed type.
                 // Check to avoid recursion.
                 throw new InvalidOperationException("Slot has illegal owner.");
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx
         // To keep _cachedVersionHash and _nameResolverFunctions in sync.
         private readonly object _lock = new object();
 
-        // Expose the list to aide in intellisense suggestions. 
+        // Expose the list to aide in intellisense suggestions.
         // Multiple readers ok. But not writing while we read.
         TexlFunctionSet INameResolver.Functions
         {
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx
                         _cachedVersionHash = current;
                     }
 
-                    // Check that it didn't mutate. 
+                    // Check that it didn't mutate.
                     var newHash = this.VersionHash;
                     if (newHash != current)
                     {
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                return _nameResolverFunctions;                
+                return _nameResolverFunctions;
             }
         }
 
