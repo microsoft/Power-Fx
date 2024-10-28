@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -22,7 +21,7 @@ namespace Microsoft.PowerFx
     {
         private readonly IEnumerable<ReadOnlySymbolTable> _symbolTables;
 
-        // In priority order. 
+        // In priority order.
         public ComposedReadOnlySymbolTable(params ReadOnlySymbolTable[] symbolTables)
         {
             _symbolTables = symbolTables.Where(x => x != null);
@@ -50,7 +49,7 @@ namespace Microsoft.PowerFx
         {
             if (slot.Owner == this)
             {
-                // A slot's owner must be a "leaf node" symbol table and note 
+                // A slot's owner must be a "leaf node" symbol table and note
                 // a composed type.
                 // Check to avoid recursion.
                 throw new InvalidOperationException("Slot has illegal owner.");
@@ -65,7 +64,7 @@ namespace Microsoft.PowerFx
         // To keep _cachedVersionHash and _nameResolverFunctions in sync.
         private readonly object _lock = new object();
 
-        // Expose the list to aide in intellisense suggestions. 
+        // Expose the list to aide in intellisense suggestions.
         // Multiple readers ok. But not writing while we read.
         TexlFunctionSet INameResolver.Functions
         {
@@ -85,7 +84,7 @@ namespace Microsoft.PowerFx
                         _cachedVersionHash = current;
                     }
 
-                    // Check that it didn't mutate. 
+                    // Check that it didn't mutate.
                     var newHash = this.VersionHash;
                     if (newHash != current)
                     {
@@ -93,7 +92,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                return _nameResolverFunctions;                
+                return _nameResolverFunctions;
             }
         }
 
@@ -168,14 +167,35 @@ namespace Microsoft.PowerFx
         {
             get
             {
+                HashSet<string> osNames = new HashSet<string>();
+
                 foreach (ReadOnlySymbolTable st in _symbolTables)
                 {
                     foreach (KeyValuePair<string, OptionSet> kvp in st.OptionSets)
                     {
-                        yield return kvp;
+                        if (!osNames.Contains(kvp.Key))
+                        {
+                            osNames.Add(kvp.Key);
+                            yield return kvp;
+                        }
                     }
                 }
             }
+        }
+
+        internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
+        {
+            foreach (ReadOnlySymbolTable st in _symbolTables)
+            {
+                if (st.TryGetVariable(name, out symbol, out displayName))
+                {
+                    return true;
+                }
+            }
+
+            symbol = default;
+            displayName = default;
+            return false;
         }
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
