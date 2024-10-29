@@ -400,13 +400,21 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void BasicEval()
+        public void BuiltInEnumConfigCheck()
         {
-            var engine = new RecalcEngine();
-            engine.UpdateVariable("M", 10.0);
-            engine.UpdateVariable("M2", -4);
-            var result = engine.Eval("M + Abs(M2)");
-            Assert.Equal(14.0, ((NumberValue)result).Value);
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = null
+            };
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableRegExFunctions();
+#pragma warning restore CS0618 // Type or member is obsolete
+            var expression = "Match(\"test\", \"t\", MatchOptions.Contains)";
+
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
         }
 
         [Fact]
