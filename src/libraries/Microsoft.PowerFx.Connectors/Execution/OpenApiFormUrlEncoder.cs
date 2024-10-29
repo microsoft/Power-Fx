@@ -73,17 +73,17 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(UtcDateTimeFormat, CultureInfo.InvariantCulture)));
+            _writer.Append(Uri.EscapeDataString(dateTimeValue.ToString(UtcDateTimeFormat, CultureInfo.InvariantCulture)));
         }
 
         protected override void WriteDateTimeValueNoTimeZone(DateTime dateTimeValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture)));
+            _writer.Append(Uri.EscapeDataString(dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture)));
         }
 
         protected override void WriteDateValue(DateTime dateValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
+            _writer.Append(Uri.EscapeDataString(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
         }
 
         protected override void WriteNullValue()
@@ -108,17 +108,17 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
             if (!string.IsNullOrEmpty(prefix))
             {
-                _writer.Append(HttpUtility.UrlEncode(prefix));
+                _writer.Append(Uri.EscapeDataString(prefix));
                 _writer.Append('.');
             }
 
-            _writer.Append(HttpUtility.UrlEncode(name));
+            _writer.Append(Uri.EscapeDataString(name));
             _writer.Append('=');
         }
 
         protected override void WriteStringValue(string stringValue)
         {
-            _writer.Append(HttpUtility.UrlEncode(stringValue));
+            _writer.Append(Uri.EscapeDataString(stringValue));
         }
 
         private void AddSeparator()

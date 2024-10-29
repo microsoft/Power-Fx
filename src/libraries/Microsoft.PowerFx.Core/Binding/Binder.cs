@@ -1002,7 +1002,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return Enumerable.Empty<string>();
                 }
 
-                var ruleQueryOptions = Rule.Binding?.QueryOptions.GetQueryOptions(ds);
+                var ruleQueryOptions = Rule.HasValidBinding ? Rule.Binding.QueryOptions.GetQueryOptions(ds) : null;
                 if (ruleQueryOptions != null)
                 {
                     foreach (var nodeQO in Rule.TexlNodeQueryOptions)
@@ -3618,7 +3618,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If the reference is to Control.Property and the rule for that Property is a constant,
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
-                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding != null && rule.Binding.IsConstant(rule.Binding.Top))
+                    if (controlInfo?.GetRule(property.InvariantName) is IExternalRule rule &&
+                        rule.HasValidBinding &&
+                        !rule.HasErrorsOrWarnings &&
+                        rule.Binding.IsConstant(rule.Binding.Top))
                     {
                         value = controlInfo;
                         isConstant = true;

@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx.Syntax
 
             result = result
                 .With(
-                    "Type",
+                    LanguageConstants.TypeLiteralInvariantName,
                     TexlLexer.PunctuatorParenOpen)
                 .With(node.TypeRoot.Accept(this, Precedence.Atomic))
                 .With(TexlLexer.PunctuatorParenClose);
@@ -467,8 +467,6 @@ namespace Microsoft.PowerFx.Syntax
     internal sealed class PrettyPrintVisitor : TexlFunctionalVisitor<LazyList<string>, PrettyPrintVisitor.Context>
     {
         private readonly string _script;
-
-        public const string TypeInvariantFunctionName = "Type";
 
         private static readonly Dictionary<BinaryOp, Precedence> BinaryPrecedence =
             new Dictionary<BinaryOp, Precedence>()
@@ -528,7 +526,7 @@ namespace Microsoft.PowerFx.Syntax
                     case UserDefinitionType.NamedFormula:
                         var nf = result.NamedFormulas.First(nf => nf.Ident == name);
 
-                        definitions.Add(declaration + " = " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
+                        definitions.Add(declaration + $" {TexlLexer.PunctuatorEqual} " + string.Concat(visitor.CommentsOf(before).With(nf.Formula.ParseTree.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))));
                         break;
                     case UserDefinitionType.UDF:
                         var udf = result.UDFs.First(udf => udf.Ident == name);
@@ -537,12 +535,12 @@ namespace Microsoft.PowerFx.Syntax
                             $"\n{{\n\t{string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(1)).With(visitor.CommentsOf(after)))).Trim()}\n}}" :
                             string.Concat(visitor.CommentsOf(before).With(udf.Body.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after))));
 
-                        definitions.Add(declaration + " = " + udfBody);
+                        definitions.Add(declaration + $" {TexlLexer.PunctuatorEqual} " + udfBody);
                         break;
                     case UserDefinitionType.DefinedType:
                         var type = result.DefinedTypes.First(type => type.Ident == name);
 
-                        definitions.Add(declaration + $" = {TypeInvariantFunctionName}(" + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0)).With(visitor.CommentsOf(after)))) + ")");
+                        definitions.Add(declaration + $" {TexlLexer.PunctuatorColonEqual} " + string.Concat(visitor.CommentsOf(before).With(type.Type.Accept(visitor, new Context(0))).With(visitor.CommentsOf(after))));
                         break;
                     default:
                         continue;
@@ -993,6 +991,13 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         public override LazyList<string> Visit(AsNode node, Context context)
+        {
+            Contracts.AssertValue(node);
+
+            return Basic(node, context);
+        }
+
+        public override LazyList<string> Visit(TypeLiteralNode node, Context context)
         {
             Contracts.AssertValue(node);
 

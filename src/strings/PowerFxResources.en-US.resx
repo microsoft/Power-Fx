@@ -4994,4 +4994,11 @@
     <value>The 'User-defined types' experimental feature is not enabled.</value>
     <comment>Error message returned when user uses User-defined types with the User-defined types feature flag turned off.</comment>
   </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Incorrect syntax: '=' cannot be used to declare user-defined types. Use ':=' instead.</value>
+    <comment>
+      Error message returned when user uses '=' syntax to define User-defined type.
+      Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
+    </comment>
+  </data>
 </root>
