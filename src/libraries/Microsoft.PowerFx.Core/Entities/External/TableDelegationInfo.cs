@@ -26,9 +26,6 @@ namespace Microsoft.PowerFx.Core.Entities
         public GroupRestrictions GroupRestriction { get; init; }
 
         // Filter functions supported by all columns of the table        
-        public IEnumerable<DelegationOperator> FilterFunctions { get; init; }
-
-        // Filter functions supported by the table
         public IEnumerable<DelegationOperator> FilterSupportedFunctions { get; init; }
 
         // Defines paging capabilities
@@ -59,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
 
-        public virtual bool IsDelegable => IsSortable || (FilterRestriction != null) || (FilterFunctions != null);
+        public virtual bool IsDelegable => IsSortable || (FilterRestriction != null) || (FilterSupportedFunctions != null);
 
         public TableDelegationInfo()
         {
