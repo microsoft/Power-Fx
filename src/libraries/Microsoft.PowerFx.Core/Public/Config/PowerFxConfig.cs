@@ -23,13 +23,31 @@ namespace Microsoft.PowerFx
         internal static readonly int DefaultMaxCallDepth = 20;
         internal static readonly int DefaultMaximumExpressionLength = 1000;
 
-        /// <summary>
-        /// Global symbols. Additional symbols beyond default function set and primitive types. 
-        /// </summary>
-        public SymbolTable SymbolTable { get; set; } = new SymbolTable
+        private SymbolTable _symbolTable = new SymbolTable
         {
             DebugName = "DefaultConfig"
         };
+
+        private static EnumStoreBuilder BuiltInEnumStoreBuilder => new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library);
+
+        /// <summary>
+        /// Global symbols. Additional symbols beyond default function set and primitive types. 
+        /// </summary>
+        /// 
+        public SymbolTable SymbolTable
+        {
+            get => _symbolTable;
+            set
+            {
+                if (value == null)
+                {
+                    value = new SymbolTable();
+                }
+
+                value.EnumStoreBuilder = BuiltInEnumStoreBuilder;
+                _symbolTable = value;
+            }
+        }
 
         internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
 
@@ -74,7 +92,7 @@ namespace Microsoft.PowerFx
         /// </summary>        
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(Features features)
-            : this(new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library), features)
+            : this(BuiltInEnumStoreBuilder, features)
         {
         }
 
