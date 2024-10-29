@@ -339,6 +339,22 @@ namespace Microsoft.PowerFx.Core.Logging
             return ApplyPrecedence(parentPrecedence, Precedence.Primary, result);
         }
 
+        public override LazyList<string> Visit(TypeLiteralNode node, Precedence context)
+        {
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty;
+
+            result = result
+                .With(
+                    LanguageConstants.TypeLiteralInvariantName,
+                    TexlLexer.PunctuatorParenOpen)
+                .With(node.TypeRoot.Accept(this, Precedence.None))
+                .With(TexlLexer.PunctuatorParenClose);
+
+            return result;
+        }
+
         public override LazyList<string> Visit(ListNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
