@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Davranış dışı bir kullanıcı tarafından tanımlanan işlevde (UDF) davranış işlevi. Bir davranış UDF'si bildirmek için lütfen kullanıcı tarafından tanımlanan işlev gövdesini büyük ayraçlar ({...}) içine alın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Davranış işlevleri, mevcut oturum durumunu değiştirir. "Clear", "Collect", "Patch" ve "Refresh" yaygın kullanılan davranış işlevleridir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Kullanıcı tarafından tanımlanan işlev ifadesini, büyük ayraçlar içinde ({...}) olacak şekilde düzenleyin.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Test olmayan bir özellikte test işlevi. Bu özelliği yalnızca test işlevlerini çağırmak için kullanamazsınız.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. {0} adlandırılmış formülü temsil edilemez ve bu nedenle bu formülde kullanılması, büyük veri kümelerinde doğru şekilde çalışmayabilir. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Adlandırılmış formülün tanımını basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Kullanıcı tarafından tanımlanan {0} işlevi temsil edilemez ve bu nedenle bu formülde kullanılması, büyük veri kümelerinde doğru şekilde çalışmayabilir. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Kullanıcı tarafından belirlenen işlev tanımını basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Temsilci uyarısı. Bu formülün vurgulanan bölümü, büyük veri kümelerinde düzgün çalışmayabilir. "{0}" işlemi bu bağlayıcı tarafından desteklenmiyor.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Adlandırılmış türü, değişmez türde olmalıdır.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Bağımsız değişkende desteklenmeyen belirsiz tür/JSON dönüştürme türü '{0}'.</value>
+    <value>Bağımsız değişkende desteklenmeyen "{0}" türü.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON işlevinde maksimum uzunluğa ulaşıldı.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Kullanıcı tanımlı türler" adlı deneysel özellik etkin değil.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Yanlış söz dizimi: '=' kullanıcı tarafından tanımlanan türleri bildirmek için kullanılamaz. Bunun yerine ':=' kullanın.</value>
     
   </data>
 </root>

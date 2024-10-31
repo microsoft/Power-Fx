@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrDivByZero" xml:space="preserve">
+    <value>การดำเนินการไม่ถูกต้อง: หารด้วยศูนย์</value>
+    
+  </data>
+  <data name="ErrRuntimeTypeMismatch" xml:space="preserve">
+    <value>ชนิดรันไทม์ไม่ตรงกัน</value>
+    
+  </data>
+  <data name="ErrArgumentOutOfRange" xml:space="preserve">
+    <value>อาร์กิวเมนต์อยู่นอกช่วง</value>
+    
+  </data>
+  <data name="ErrInvalidCharValue" xml:space="preserve">
+    <value>ค่าตัวเลขไม่ถูกต้อง ต้องอยู่ในช่วง 1...255</value>
+    
+  </data>
+  <data name="ErrBadLanguageCode" xml:space="preserve">
+    <value>ไม่สนับสนุนรหัสภาษา '{0}'</value>
+    
+  </data>
+  <data name="ErrNonFiniteArgument" xml:space="preserve">
+    <value>อาร์กิวเมนต์สำหรับฟังก์ชัน '{0}' ต้องเป็นจำนวนจำกัด</value>
+    
+  </data>
+  <data name="ErrNonFiniteResult" xml:space="preserve">
+    <value>ฟังก์ชัน '{0}' ส่งกลับตัวเลขที่ไม่ใช่จำนวนจำกัด</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeParsingError" xml:space="preserve">
+    <value>ไม่สามารถแยกวิเคราะห์ค่าวันที่หรือเวลาได้</value>
+    
+  </data>
+  <data name="ErrInvalidDateTimeError" xml:space="preserve">
+    <value>ค่าวันที่หรือเวลาไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrInvalidBooleanFormatError" xml:space="preserve">
+    <value>ไม่สามารถตีความค่านี้ให้เป็นค่าบูลีนได้</value>
+    
+  </data>
+  <data name="ErrInvalidColorFormatError" xml:space="preserve">
+    <value>ไม่สามารถตีความค่านี้ให้เป็นสีได้</value>
+    
+  </data>
+  <data name="ErrUnreachableCodeError" xml:space="preserve">
+    <value>ข้อผิดพลาดที่ไม่รู้จัก</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedFunctionError" xml:space="preserve">
+    <value>ฟังก์ชันที่ยังไม่ได้ใช้งาน: {0}</value>
+    
+  </data>
+  <data name="ErrNotYetImplementedUnaryOperatorError" xml:space="preserve">
+    <value>ตัวดำเนินการเอกภาพที่ยังไม่ได้ใช้งาน: {0}</value>
+    
+  </data>
+  <data name="ErrInvalidChain" xml:space="preserve">
+    <value>ห่วงโซ่ไม่ถูกต้อง: {0}</value>
+    
+  </data>
+  <data name="ErrMaxCallDepth" xml:space="preserve">
+    <value>เกินความลึกของการเรียกสูงสุด</value>
+    
+  </data>
+  <data name="ErrRecordNotFound" xml:space="preserve">
+    <value>ไม่พบเรกคอร์ด</value>
+    
+  </data>
+  <data name="ErrOnlyPrimitiveValuesAllowed" xml:space="preserve">
+    <value>อนุญาตให้ใช้เฉพาะค่าดั้งเดิมในการดำเนินการเท่านั้น</value>
+    
+  </data>
+  <data name="ErrCanNotConvertToNumber" xml:space="preserve">
+    <value>ค่า '{0}' ไม่สามารถแปลงเป็นตัวเลขได้</value>
+    
+  </data>
+  <data name="ErrStartOfWeekInvalid" xml:space="preserve">
+    <value>ต้องการค่าจากการแจกแจง StartOfWeek เพื่อแสดงวิธีการนับวันในสัปดาห์</value>
+    
+  </data>
+  <data name="ErrRuntimeExceptionError" xml:space="preserve">
+    <value>เกิดข้อยกเว้น: {0}</value>
+    
+  </data>
+  <data name="ErrNameIsNotValid" xml:space="preserve">
+    <value>ชื่อไม่ถูกต้อง ไม่รู้จัก '{0}'</value>
+    
+  </data>
+  <data name="ErrMondayZeroValueNotSupported" xml:space="preserve">
+    <value>ค่า MondayZero จากการแจงนับ StartOfWeek ไม่ได้รับการสนับสนุนในฟังก์ชัน WeekNum</value>
+    
+  </data>
+  <data name="ErrAggregateArgsSameNumberOfRecords" xml:space="preserve">
+    <value>อาร์กิวเมนต์ผลรวมทั้งสองจะต้องมีจำนวนเรกคอร์ดเท่ากัน</value>
+    
+  </data>
+  <data name="ErrInvalidArgument" xml:space="preserve">
+    <value>อาร์กิวเมนต์ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrUntypedObjectDoesNotImplementSetProperty" xml:space="preserve">
+    <value>คลาส '{0}' ไม่ได้ใช้ 'SetProperty'</value>
+    
+  </data>
+  <data name="ErrLowerValueGreaterThanUpperValue" xml:space="preserve">
+    <value>ค่าที่ต่ำกว่าต้องไม่มากกว่าค่าบน</value>
+    
+  </data>
+  <data name="ErrUntypedObjectNotArray" xml:space="preserve">
+    <value>UntypedObject ไม่ได้แสดงถึงอาร์เรย์</value>
+    
+  </data>
+  <data name="ErrNotApplicable" xml:space="preserve">
+    <value>ไม่สามารถใช้งานได้</value>
+    
+  </data>
+  <data name="ErrAccessingFieldNotValidValue" xml:space="preserve">
+    <value>การเข้าถึงฟิลด์ไม่ถูกต้องสำหรับค่านี้</value>
+    
+  </data>
+  <data name="ErrSystemNoError" xml:space="preserve">
+    <value>ไม่มีข้อผิดพลาดของระบบ</value>
+    
+  </data>
+  <data name="ErrSystemError" xml:space="preserve">
+    <value>ข้อผิดพลาดของระบบ</value>
+    
+  </data>
+  <data name="ErrMissingRequiredField" xml:space="preserve">
+    <value>ขาดฟิลด์ที่ต้องระบุ</value>
+    
+  </data>
+  <data name="ErrCreateRecordPermissionDenied" xml:space="preserve">
+    <value>สิทธิ์การสร้างเรกคอร์ดถูกปฏิเสธ</value>
+    
+  </data>
+  <data name="ErrUpdateRecordPermissionDenied" xml:space="preserve">
+    <value>สิทธิ์การอัปเดตเรกคอร์ดถูกปฏิเสธ</value>
+    
+  </data>
+  <data name="ErrDeleteRecordPermissionDenied" xml:space="preserve">
+    <value>สิทธิ์การลบเรกคอร์ดถูกปฏิเสธ</value>
+    
+  </data>
+  <data name="ErrColumnServerGenerated" xml:space="preserve">
+    <value>คอลัมน์ถูกสร้างโดยเซิร์ฟเวอร์และไม่สามารถปรับเปลี่ยนได้</value>
+    
+  </data>
+  <data name="ErrRecordUpdateConflict" xml:space="preserve">
+    <value>เกิดความขัดแย้งในการอัปเดตเรกคอร์ด รีเฟรชเรกคอร์ดและทำการเปลี่ยนแปลงอีกครั้ง</value>
+    
+  </data>
+  <data name="ErrValidationError" xml:space="preserve">
+    <value>ข้อผิดพลาดการตรวจสอบความถูกต้อง</value>
+    
+  </data>
+  <data name="ErrColumnReadOnly" xml:space="preserve">
+    <value>คอลัมน์เป็นแบบอ่านอย่างเดียว</value>
+    
+  </data>
+  <data name="ErrInvalidRecord" xml:space="preserve">
+    <value>เรกคอร์ดไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="DivisionByZero" xml:space="preserve">
+    <value>การหารด้วยศูนย์</value>
+    
+  </data>
+  <data name="ErrBadLanguage" xml:space="preserve">
+    <value>รหัสภาษาไม่ถูกต้องหรือค่าไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrRegexSyntaxError" xml:space="preserve">
+    <value>ข้อผิดพลาดทางไวยากรณ์ในนิพจน์ทั่วไป</value>
+    
+  </data>
+  <data name="ErrInvalidFunctionUsage" xml:space="preserve">
+    <value>การใช้ฟังก์ชันไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrFileNotFound" xml:space="preserve">
+    <value>ไม่พบไฟล์</value>
+    
+  </data>
+  <data name="ErrSystemAnalysisError" xml:space="preserve">
+    <value>ข้อผิดพลาดในการวิเคราะห์ระบบ</value>
+    
+  </data>
+  <data name="ErrReadRecordPermissionDenied" xml:space="preserve">
+    <value>สิทธิ์การอ่านเรกคอร์ดถูกปฏิเสธ</value>
+    
+  </data>
+  <data name="ErrOperationNotSupportedByPlayerDevice" xml:space="preserve">
+    <value>การดำเนินการไม่ได้รับการสนับสนุนโดยเครื่องเล่นหรืออุปกรณ์นี้</value>
+    
+  </data>
+  <data name="ErrInsufficientMemoryStorage" xml:space="preserve">
+    <value>หน่วยความจำหรือที่เก็บข้อมูลในอุปกรณ์ไม่เพียงพอ</value>
+    
+  </data>
+  <data name="ErrStorageQuotaExceeded" xml:space="preserve">
+    <value>เกินโควตาที่เก็บข้อมูล</value>
+    
+  </data>
+  <data name="ErrNetworkError" xml:space="preserve">
+    <value>ข้อผิดพลาดของเครือข่าย</value>
+    
+  </data>
+  <data name="ErrNumericError" xml:space="preserve">
+    <value>ข้อผิดพลาดเชิงตัวเลข</value>
+    
+  </data>
+  <data name="ErrTimeoutError" xml:space="preserve">
+    <value>ข้อผิดพลาดการหมดเวลา</value>
+    
+  </data>
+  <data name="ErrOnlineServiceNotAvailable" xml:space="preserve">
+    <value>ไม่สามารถเชื่อมต่อบริการออนไลน์ได้</value>
+    
+  </data>
+  <data name="ErrInvalidJsonFormat" xml:space="preserve">
+    <value>รูปแบบ JSON ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrCustomError" xml:space="preserve">
+    <value>ข้อผิดพลาดแบบกำหนดเอง</value>
+    
+  </data>
+  <data name="ErrCustomErrorArg" xml:space="preserve">
+    <value>ข้อผิดพลาดแบบกำหนดเอง ({0})</value>
+    
+  </data>
+  <data name="ErrReservedErrorArg" xml:space="preserve">
+    <value>ข้อผิดพลาดที่สงวนไว้ ({0})</value>
+    
+  </data>
+  <data name="ErrOverflow" xml:space="preserve">
+    <value>เกินขนาด</value>
+    
+  </data>
+  <data name="ErrFilterPredicate" xml:space="preserve">
+    <value>Filter() รองรับเพรดิเคตเพียงค่าเดียวเท่านั้น</value>
+    
+  </data>
+  <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
+    <value>อาร์กิวเมนต์ออบเจ็กต์ที่ไม่ได้ระบุชนิดของฟังก์ชัน '{0}' มีชนิดที่ไม่ถูกต้อง ค่าที่ต้องการ: {1}, ค่าจริง: {0}</value>
+    
+  </data>
+  <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
+    <value>อาร์กิวเมนต์สถานที่ต้องมีขนาดใหญ่เพียงพอที่จะรองรับผลลัพธ์ได้</value>
+    
+  </data>
+  <data name="ErrInvalidSortColumn" xml:space="preserve">
+    <value>คอลัมน์ '{0}' ที่ระบุไม่มีอยู่ หรือเป็นชนิดคอลัมน์จัดเรียงที่ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrOrderTableDuplicateValues" xml:space="preserve">
+    <value>ตารางลำดับไม่สามารถมีค่าซ้ำกันได้</value>
+    
+  </data>
+  <data name="ErrManagedConnRefreshOnly" xml:space="preserve">
+    <value>สามารถรีเฟรชได้เฉพาะการเชื่อมต่อที่จัดการเท่านั้น</value>
+    
+  </data>
+  <data name="ErrUntypedNumberNotValidDecimal" xml:space="preserve">
+    <value>ตัวเลขที่ไม่ได้ระบุชนิดไม่ใช่ค่าทศนิยมที่ถูกต้อง อาจเกิดโอเวอร์โฟลว์ได้</value>
+    
+  </data>
+  <data name="ErrSingleColumnTableAccessNodeNotYetImplemented" xml:space="preserve">
+    <value>การเข้าถึงตารางแบบคอลัมน์เดี่ยวยังไม่ได้ใช้งาน</value>
+    
+  </data>
+  <data name="ErrReturnTypeDifference" xml:space="preserve">
+    <value>ชนิดการส่งคืนควรเป็น '{0}' พบ '{1}'</value>
+    
+  </data>
+  <data name="ErrThirdArgumentIsInvalid" xml:space="preserve">
+    <value>อาร์กิวเมนต์ที่สามของฟังก์ชัน {0} ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrReturnedNonFiniteNumber" xml:space="preserve">
+    <value>นิพจน์ส่งกลับตัวเลขที่ไม่ใช่จำนวนจำกัด</value>
+    
+  </data>
+  <data name="ErrReturnedNumberBeyondDecimalValues" xml:space="preserve">
+    <value>นิพจน์ส่งคืนตัวเลขที่เกินช่วงของค่าทศนิยม</value>
+    
+  </data>
+  <data name="ErrPlacesBetweenRange" xml:space="preserve">
+    <value>ตำแหน่งควรอยู่ระหว่าง 1 ถึง 10</value>
+    
+  </data>
+  <data name="ErrInvalidOperatorForTypes" xml:space="preserve">
+    <value>ตัวดำเนินการไม่ถูกต้องสำหรับชนิดเหล่านี้</value>
+    
+  </data>
+  <data name="ErrRegexTimeoutException" xml:space="preserve">
+    <value>หมดเวลาของนิพจน์ปกติ (มากกว่า {0} มิลลิวินาที) - {1}</value>
+    
+  </data>
+  <data name="ErrInvalidRegexException" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง {rexParseEx.Message}</value>
+    
+  </data>
+  <data name="ErrInputOutsideRange" xml:space="preserve">
+    <value>ค่าอินพุต {0} อยู่นอกช่วงที่อนุญาต</value>
+    
+  </data>
+  <data name="ErrInvalidNumberInput" xml:space="preserve">
+    <value>ค่าอินพุต {0} เป็นอินพุตที่ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrUnrecognizedSymbol" xml:space="preserve">
+    <value>สัญลักษณ์ที่ไม่รู้จัก {0}</value>
+    
+  </data>
+</root>

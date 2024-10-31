@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>비동작 사용자 정의 함수(UDF)의 동작 함수입니다. 동작 UDF를 선언하려면 사용자 정의 함수 본문을 중괄호({...})로 묶으세요.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>동작 함수는 현재 세션 상태를 변경합니다. 'Clear', 'Collect', 'Patch' 및 'Refresh'는 일반적인 동작 함수입니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>사용자 정의 함수 식이 중괄호({...}) 안에 오도록 편집하세요.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>테스트가 아닌 속성의 테스트 함수입니다. 이 속성을 사용하여 테스트 전용 함수를 호출할 수 없습니다.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>위임 경고. 명명된 수식 {0}은(는) 위임할 수 없으므로 이 수식에서 사용하면 큰 데이터 집합에서 제대로 작동하지 않을 수 있습니다. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>이름이 지정된 수식의 정의를 단순화해보세요.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>문서: 캔버스 앱의 위임 이해</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>블로그: 위임에 대한 데이터 행 제한</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>위임 경고. 사용자 정의 함수 {0}은(는) 위임할 수 없으므로 이 수식에서 사용하면 큰 데이터 집합에서 제대로 작동하지 않을 수 있습니다. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>사용자 지정 함수의 정의를 단순화해보세요.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>문서: 캔버스 앱의 위임 이해</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>블로그: 위임에 대한 데이터 행 제한</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>위임 경고입니다. 대규모 데이터 세트에서는 이 수식의 강조 표시된 부분이 제대로 작동하지 않을 수 있습니다. "{0}" 작업은 이 커넥터에서 지원되지 않습니다.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>명명된 유형은 유형 리터럴이어야 합니다.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>인수에 미지원 형식화되지 않은/JSON 변환 유형 '{0}'이(가) 있습니다.</value>
+    <value>유형 인수에 지원되지 않는 유형 '{0}'이(가) 있습니다.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON 함수의 최대 길이에 도달했습니다.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>'사용자 정의 형식' 실험 기능이 사용 설정되지 않았습니다.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>잘못된 구문: '='는 사용자 지정 유형을 선언하는 데 사용할 수 없습니다. 대신 ':='를 사용하세요.</value>
     
   </data>
 </root>
