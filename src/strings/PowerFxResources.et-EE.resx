@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Käitumisfunktsioon mittekäituva kasutaja määratletud funktsioonis (UDF). Käitumise UDF-i deklareerimiseks ümbritsege kasutaja määratletud funktsiooni sisu looksulgudega ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Käitumisfunktsioonid muudavad praeguse seansi olekut. Tavalised käitumisfunktsioonid on Clear, Collect, Patch ja Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige kasutaja määratletud funktsiooniavaldist nii, et see oleks looksulgude sees ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testimisfunktsioon mittetesti atribuudis. Te ei saa seda atribuuti kasutada ainult testi jaoks mõeldud funktsioonide käivitamiseks.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegeerimishoiatus. Kuna nimega valemit {0} ei saa delegeerida, ei pruugi selle kasutamine selles valemis suurte andmehulkade korral õigesti töötada. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Proovige nimega valemi määratlust lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikkel: Lõuendirakenduse delegeerimise selgitus</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Ajaveeb: Delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegeerimishoiatus. Kuna kasutaja määratletud funktsiooni {0} ei saa delegeerida, ei pruugi selle kasutamine selles valemis suurte andmehulkade korral õigesti töötada. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Proovige kasutaja määratletud funktsiooni määratlust lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikkel: Lõuendirakenduse delegeerimise selgitus</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Ajaveeb: Delegeerimise andmereapiirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Delegeerimise hoiatus. Valemi esiletõstetud osa ei pruugi suurte andmehulkade puhul õigesti töötada. See konnektor ei toeta toimingut „{0}”.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nimega tüüp peab olema sõnasõnaline.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Toetuseta tüübita/JSON-i teisenduse tüüp „{0}“ argumendis.</value>
+    <value>Toetuseta tüüp „{0}“ tüübiargumendis.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>JSON-i funktsioonis on jõutud pikkuse ülempiirini.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Katsefunktsioon „Kasutaja määratletud tüüp“ pole lubatud.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sobimatut süntaksit '=' ei saa kasutada kasutaja määratletud tüüpide kinnitamiseks. Kasutage selle asemel süntaksit ':='.</value>
     
   </data>
 </root>

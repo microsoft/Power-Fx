@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funcție de comportament într-o funcție definită de utilizator (UDF) necomportamentală. Încadrați corpul funcției definite de utilizator între acolade ({...}), pentru a declara o funcție definită de utilizator comportamentală.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funcțiile de comportament schimbă starea sesiunii curente. „Clear”, „Collect”, „Patch” și „Refresh” sunt funcții de comportament comune.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Editați expresia funcției definite de utilizator, astfel încât să fie între acolade ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Funcție de testare într-o proprietate non-test. Nu puteți utiliza această proprietate pentru a invoca funcții doar pentru testare.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Avertisment referitor la delegare. Formula numită {0} nu poate fi delegată, așa că utilizarea sa în această formulă poate să nu funcționeze corect pe seturi mari de date. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Încercați să simplificați definiția formulei numite.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație creată pe planșă</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Avertisment referitor la delegare. Funcția definită de utilizator {0} nu poate fi delegată, așa că utilizarea sa în această formulă poate să nu funcționeze corect pe seturi mari de date. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Încercați să simplificați definiția funcției definite de utilizator.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație creată pe planșă</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Avertisment de delegare. Partea evidențiată din această formulă ar putea să nu funcționeze corect pe seturi mari de date. Operațiunea „{0}” nu este acceptată de acest conector.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Tipul denumit trebuie să fie o valoare literală de tip.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>În argument există tipul de conversie fără tip/JSON „{0}” neacceptat.</value>
+    <value>Tip neacceptat în argumentul tipului „{0}”.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Lungimea maximă a fost atinsă în funcția JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Caracteristica experimentală „Tipuri definite de utilizator” nu este activată.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaxă incorectă: „=” nu se poate utiliza pentru a declara tipuri definite de utilizator. În locul acestui semn, utilizați „:=”.</value>
     
   </data>
 </root>

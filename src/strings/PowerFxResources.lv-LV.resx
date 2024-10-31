@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Uzvedības funkcija lietotāja definētā funkcijā (UDF), kas nav uzvedības funkcija. Lūdzu, iekļaujiet lietotāja definēto funkcijas pamattekstu ar figūriekavām ({...}), lai deklarētu uzvedības lietotāja definēto funkciju.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Uzvedības funkcijas maina pašreizējās sesijas statusu. Bieži lietotas uzvedības funkcijas ir "Clear", "Collect", "Patch" un "Refresh".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Rediģējiet lietotāja definēto funkcijas izteiksmi tā, lai tā atrastos figūriekavās ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Pārbaudiet funkciju rekvizītā, kas nav testa rekvizīts. Šo rekvizītu nevar lietot, lai izsauktu tikai testa funkcijas.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Nosauktā formula {0} nav deleģējama, tāpēc tās lietošana šajā formulā var nedarboties pareizi lielās datu kopās. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Mēģiniet vienkāršot nosauktās formulas definīciju.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Deleģēšanas brīdinājums. Lietotāja definētā funkcija {0} nav deleģējama, tāpēc tās lietošana šajā formulā var nedarboties pareizi lielās datu kopās. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Mēģiniet vienkāršot lietotāja definētās funkcijas definīciju.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Raksts: Understand delegation in a canvas app (Izpratne par deleģēšanu pamatnes programmās)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Emuāra ieraksts: Data row limits for delegation (Datu rindu ierobežojumi delegācijai)</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Deleģēšanas brīdinājums. Šīs formulas izceltā daļa var nedarboties pareizi lielās datu kopās. Šis savienotājs neatbalsta operāciju {0}.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Nosauktajam tipam ir jābūt tipa literālim.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Argumentā ir neatbalstīts netipizēts/JSON pārvēršanas tips “{0}”.</value>
+    <value>Tipa argumentā neatbalstīts tips {0}.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Sasniegts JSON funkcijas maksimālais garums.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Eksperimentālais līdzeklis “Lietotāja definēti tipi” nav iespējots.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Nepareiza sintakse: '=' nevar lietot, lai deklarētu lietotāja definētus tipus. Tā vietā izmantojiet ':='.</value>
     
   </data>
 </root>
