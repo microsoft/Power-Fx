@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
         // Returns true when Binding is non-null, otherwise false.
         bool HasValidBinding { get; }
 
-        // Returns true when rule is constant.Adds valid null binding when addValidBindingIfNotPresent is true.
-        bool IsInvariantExpression(bool addValidBindingIfNotPresent);
+        // Returns true when rule is constant.
+        bool IsInvariantExpression { get; }
     }
 }

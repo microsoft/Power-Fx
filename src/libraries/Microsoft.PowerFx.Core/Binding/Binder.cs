@@ -3619,7 +3619,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
                     if (controlInfo?.GetRule(property.InvariantName) is IExternalRule rule &&
-                        rule.IsInvariantExpression(addValidBindingIfNotPresent: true))
+                        rule.IsInvariantExpression)
                     {
                         value = controlInfo;
                         isConstant = true;
