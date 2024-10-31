@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("IfError(1/0, FirstError.Message, \"no error\")", "Operação inválida: divisão por zero.")]
-        [InlineData("IfError(myerror,Concat(AllErrors,Message,\", \"))", "Operação inválida: divisão por zero., Nome inválido. 'My invalid name' não é reconhecido.")]
+        [InlineData("IfError(myerror,Concat(AllErrors,Message,\", \"))", "Operação inválida: divisão por zero., O nome não é válido. 'My invalid name' não é reconhecido.")]
         public void RuntimeIfErrorTests(string expression, string expected)
         {
             var error = new ErrorValue(IRContext.NotInSource(FormulaType.String), new List<ExpressionError>()
