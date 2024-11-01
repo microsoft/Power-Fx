@@ -22,5 +22,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         // Returns true when Binding is non-null, otherwise false.
         bool HasValidBinding { get; }
+
+        // Returns true when rule is constant.
+        bool IsInvariantExpression { get; }
     }
 }
