@@ -23,10 +23,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
             Assert.Equal("Number", parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsFirstName().Ident.Name.ToString());
             Assert.Equal("Foo", parsedNamedFormulasAndUDFs.DefinedTypes.First().Ident.Name.ToString());
@@ -39,10 +38,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
             var record = parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsRecord();
             Assert.Equal("Age", record.Ids.First().Name.ToString());
@@ -56,9 +54,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
         }
 
@@ -69,9 +66,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
-            var result = UserDefinitions.Parse(script, parserOptions);
+            var result = UserDefinitions.Parse(script, parserOptions, Features.PowerFxV1);
             Assert.True(result.HasErrors);
             var udf = result.UDFs.First();
             Assert.Equal("Bar", udf.Ident.ToString());

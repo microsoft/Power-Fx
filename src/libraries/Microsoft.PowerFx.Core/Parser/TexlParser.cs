@@ -34,9 +34,6 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
 
-            // When specified, allows type literals to be parsed.
-            AllowTypeLiteral = 1 << 4,
-
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
 
@@ -90,16 +87,16 @@ namespace Microsoft.PowerFx.Core.Parser
         /// </summary>
         /// <param name="script">Script to be parsed.</param>
         /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="features">Power Fx feature flags.</param>
         /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
-        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions, Features features = null)
         {
             Contracts.AssertValue(parserOptions);
             var flags = Flags.NamedFormulas |
                 (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0) |
-                (parserOptions.AllowParseAsTypeLiteral ? Flags.AllowTypeLiteral : 0) |
                 (parserOptions.AllowAttributes ? Flags.AllowAttributes : 0);
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
-            var parser = new TexlParser(formulaTokens, flags);
+            var parser = new TexlParser(formulaTokens, flags, features);
 
             return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
@@ -200,20 +197,30 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private TypeLiteralNode ParseTypeLiteral()
+        private TypeLiteralNode ParseTypeLiteral(Identifier typeLiteralIdentifier)
         {
             var lefterTrivia = ParseTrivia();
             var parenOpen = TokEat(TokKind.ParenOpen);
             var leftTrivia = ParseTrivia();
             var sourceList = new List<ITexlSource>
             {
+                new IdentifierSource(typeLiteralIdentifier),
                 lefterTrivia,
+                new TokenSource(parenOpen),
                 leftTrivia
             };
 
             var expr = ParseExpr(Precedence.None);
+            sourceList.Add(new NodeSource(expr));
             sourceList.Add(ParseTrivia());
-            TokEat(TokKind.ParenClose);
+
+            var parenClose = TokEat(TokKind.ParenClose);
+
+            if (parenClose != null)
+            {
+                sourceList.Add(new TokenSource(parenClose));
+            }
+
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
@@ -300,7 +307,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     continue;
                 }
 
-                if (_curs.TidCur == TokKind.ColonEqual && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
+                if (_curs.TidCur == TokKind.ColonEqual && _features.IsUserDefinedTypesEnabled)
                 {
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
@@ -355,6 +362,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
                 else if (_curs.TidCur == TokKind.Equ)
                 {
+                    var equalToken = _curs.TokCur;
+                    
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
@@ -377,6 +386,12 @@ namespace Microsoft.PowerFx.Core.Parser
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
+
+                        if (result is TypeLiteralNode _)
+                        {
+                            CreateError(equalToken, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
+                            continue;
+                        }
 
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
@@ -1268,9 +1283,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == "Type" && _flagsMode.Peek().HasFlag(Flags.AllowTypeLiteral))
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName && _features.IsUserDefinedTypesEnabled)
                         {
-                            var typeLiteralNode = ParseTypeLiteral();
+                            var typeLiteralNode = ParseTypeLiteral(ident);
 
                             if (!typeLiteralNode.IsValid(out var err))
                             {
@@ -2048,11 +2063,13 @@ namespace Microsoft.PowerFx.Core.Parser
         /// </summary>
         /// <param name="text">Expression text to format.</param>
         /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <param name="features">Power Fx features.</param>
         /// <returns>Formatted expression text.</returns>
-        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining, Features features = null)
         {
             var result = ParseScript(
                 text,
+                features ?? Features.None,
                 flags: flags);
 
             // Can't pretty print a script with errors.
@@ -2064,11 +2081,12 @@ namespace Microsoft.PowerFx.Core.Parser
             return PrettyPrintVisitor.Format(result.Root, result.Before, result.After, text);
         }
 
-        public static string FormatUserDefinitions(string text, ParserOptions options)
+        public static string FormatUserDefinitions(string text, ParserOptions options, Features features = null)
         {
             var result = ParseUserDefinitionScript(
                 text,
-                options);
+                options,
+                features ?? Features.None);
 
             // Can't pretty print a script with errors.
             if (result.HasErrors)

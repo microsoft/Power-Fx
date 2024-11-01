@@ -54,13 +54,6 @@ namespace Microsoft.PowerFx.Connectors
         public readonly GroupRestriction GroupRestriction;
 
         [JsonInclude]
-        [JsonPropertyName(CapabilityConstants.FilterFunctions)]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly IEnumerable<string> FilterFunctions;
-
-        public IEnumerable<DelegationOperator> FilterFunctionsEnum => GetDelegationOperatorEnumList(FilterFunctions);
-
-        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctionSupport)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly IEnumerable<string> FilterSupportedFunctions;
@@ -115,12 +108,11 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertValue(pagingCapabilities);
 
             SortRestriction = sortRestriction;
-            FilterRestriction = filterRestriction;
-            FilterFunctions = filterFunctions;
+            FilterRestriction = filterRestriction;            
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
             GroupRestriction = groupRestriction;
-            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterSupportedFunctions != null);
             IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegable;
             SupportsDataverseOffline = supportsDataverseOffline;
             FilterSupportedFunctions = filterSupportedFunctions;
@@ -132,11 +124,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
         {
-            SortRestrictions sortRestriction = new SortRestrictions()
-            {
-                AscendingOnlyProperties = serviceCapabilities?.SortRestriction?.AscendingOnlyProperties,
-                UnsortableProperties = serviceCapabilities?.SortRestriction?.UnsortableProperties
-            };
+            // sortRestriction == null means sortable = false
+            SortRestrictions sortRestriction = serviceCapabilities?.SortRestriction != null
+                ? new SortRestrictions()
+                {
+                    AscendingOnlyProperties = serviceCapabilities.SortRestriction.AscendingOnlyProperties,
+                    UnsortableProperties = serviceCapabilities.SortRestriction.UnsortableProperties
+                }
+                : null;
 
             FilterRestrictions filterRestriction = new FilterRestrictions()
             {
@@ -144,10 +139,13 @@ namespace Microsoft.PowerFx.Connectors
                 NonFilterableProperties = serviceCapabilities?.FilterRestriction?.NonFilterableProperties
             };
 
-            SelectionRestrictions selectionRestriction = new SelectionRestrictions()
-            {
-                IsSelectable = serviceCapabilities?.SelectionRestriction?.IsSelectable ?? false
-            };
+            // selectionRestriction == null means selectable = false
+            SelectionRestrictions selectionRestriction = serviceCapabilities?.SelectionRestriction != null
+                ? new SelectionRestrictions()
+                {
+                    IsSelectable = serviceCapabilities.SelectionRestriction.IsSelectable
+                }
+                : null;
 
             GroupRestrictions groupRestriction = new GroupRestrictions()
             {
@@ -184,8 +182,7 @@ namespace Microsoft.PowerFx.Connectors
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,
                 SelectionRestriction = selectionRestriction,
-                GroupRestriction = groupRestriction,
-                FilterFunctions = serviceCapabilities?.FilterFunctionsEnum,
+                GroupRestriction = groupRestriction,                
                 FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
@@ -255,6 +252,8 @@ namespace Microsoft.PowerFx.Connectors
         private static SortRestriction ParseSortRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             IDictionary<string, IOpenApiAny> sortRestrictionMetaData = capabilitiesMetaData.GetObject(CapabilityConstants.SortRestrictions);
+
+            // When "sortable" = false (or not defined), SortRestriction is null
             return sortRestrictionMetaData?.GetBool(CapabilityConstants.Sortable) == true
                     ? new SortRestriction(sortRestrictionMetaData.GetList(CapabilityConstants.UnsortableProperties), sortRestrictionMetaData.GetList(CapabilityConstants.AscendingOnlyProperties))
                     : null;

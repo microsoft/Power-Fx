@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Tests
 
             var str = od.ToQueryString();
 
-            Assert.Equal("$filter=x+gt+5&$top=10", str);
+            Assert.Equal("$filter=x%20gt%205&$top=10", str);
         }
 
         private static bool IsSingleBitSet(int i)
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Tests
 
             var str = od.ToQueryString();
 
-            Assert.Equal("$filter=score+gt+5&$top=10", str);
+            Assert.Equal("$filter=score%20gt%205&$top=10", str);
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Tests
 
             var str = od.ToQueryString();
 
-            Assert.Equal("$filter=score+gt+5&$orderby=score&$top=10", str);
+            Assert.Equal("$filter=score%20gt%205&$orderby=score&$top=10", str);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Tests
 
             var str = od.ToQueryString();
 
-            Assert.Equal("$filter=score+gt+5&$orderby=score desc&$top=10", str);
+            Assert.Equal("$filter=score%20gt%205&$orderby=score desc&$top=10", str);
         }
 
         private class TestDelegationParameters : DelegationParameters

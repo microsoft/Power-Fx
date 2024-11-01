@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         private readonly TableDelegationInfo _delegationInfo;
 
         public CdpFilterOpMetadata(AggregateType schema, TableDelegationInfo delegationInfo)
-           : base(schema._type, null, null, GetFilterFunctionsSupportedByAllColumns(delegationInfo), GetFilterFunctionSupportedByTable(delegationInfo))
+           : base(schema._type, null, null, GetFilterFunctionsSupportedByAllColumns(delegationInfo), null)
         {
             _delegationInfo = delegationInfo;
         }
@@ -21,9 +21,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         {
             DelegationCapability filterFunctionSupportedByAllColumns = DelegationCapability.None;
 
-            if (delegationInfo?.FilterFunctions != null)
+            if (delegationInfo?.FilterSupportedFunctions != null)
             {
-                foreach (DelegationOperator globalFilterFunctionEnum in delegationInfo.FilterFunctions)
+                foreach (DelegationOperator globalFilterFunctionEnum in delegationInfo.FilterSupportedFunctions)
                 {
                     string globalFilterFunction = globalFilterFunctionEnum.ToString().ToLowerInvariant();
 
@@ -35,29 +35,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             }
 
             return filterFunctionSupportedByAllColumns;
-        }
-
-        private static DelegationCapability? GetFilterFunctionSupportedByTable(TableDelegationInfo delegationInfo)
-        {
-            DelegationCapability? filterFunctionsSupportedByTable = null;
-
-            if (delegationInfo?.FilterSupportedFunctions != null)
-            {
-                filterFunctionsSupportedByTable = DelegationCapability.None;
-
-                foreach (DelegationOperator globalSupportedFilterFunctionEnum in delegationInfo.FilterSupportedFunctions)
-                {
-                    string globalSupportedFilterFunction = globalSupportedFilterFunctionEnum.ToString().ToLowerInvariant();
-
-                    if (DelegationCapability.OperatorToDelegationCapabilityMap.TryGetValue(globalSupportedFilterFunction, out DelegationCapability globalSupportedFilterFunctionCapability))
-                    {
-                        filterFunctionsSupportedByTable |= globalSupportedFilterFunctionCapability | DelegationCapability.Filter;
-                    }
-                }
-            }
-
-            return filterFunctionsSupportedByTable;
-        }
+        }       
 
         public override bool TryGetColumnCapabilities(DPath columnPath, out DelegationCapability capabilities)
         {

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Verhaltensfunktion in einer nicht verhaltensbasierten benutzerdefinierten Funktion (User-Defined Function, UDF). Schließen Sie den benutzerdefinierten Funktionskörper in geschweiften Klammern ({...}) ein, um eine verhaltensbasierte UDF zu deklarieren.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Verhaltensfunktionen ändern den aktuellen Sitzungsstatus. „Clear“, „Collect“, „Patch“ und „Refresh“ sind allgemeine Verhaltensfunktionen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Bearbeiten Sie den benutzerdefinierten Funktionsausdruck, indem Sie ihn in geschweiften Klammern einschließen ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Testfunktion in einer Nicht-Testeigenschaft. Sie können diese Eigenschaft nicht zum Aufrufen reiner Testfunktionen verwenden.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Delegierungswarnung. Die benannte Formel {0} kann nicht delegiert werden. Daher funktioniert ihre Verwendung in dieser Formel in großen Datasets möglicherweise nicht ordnungsgemäß. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Die Datenquelle kann die Formel möglicherweise nicht verarbeiten und könnte ein unvollständiges Dataset zurückgeben. Ihre Anwendung liefert eventuell keine korrekten Ergebnisse oder verhält sich nicht ordnungsgemäß, wenn das Dataset unvollständig ist.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Vereinfachen Sie die Definition für die benannte Formel.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Delegierungswarnung. Die benutzerdefinierte Funktion {0} kann nicht delegiert werden. Daher funktioniert ihre Verwendung in dieser Formel in großen Datasets möglicherweise nicht ordnungsgemäß. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Die Datenquelle kann die Formel möglicherweise nicht verarbeiten und könnte ein unvollständiges Dataset zurückgeben. Ihre Anwendung liefert eventuell keine korrekten Ergebnisse oder verhält sich nicht ordnungsgemäß, wenn das Dataset unvollständig ist.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Vereinfachen Sie die Definition für die benutzerdefinierte Funktion.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Verstehen der Delegierung in einer Canvas-App</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Datenzeilengrenzwerte für die Delegierung</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Warnung zur Delegierung. Der hervorgehobene Teil dieser Formel funktioniert für große Datasets möglicherweise nicht ordnungsgemäß. Der Vorgang "{0}" wird durch diesen Connector nicht unterstützt.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Der benannte Typ muss ein Typliteral sein.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nicht unterstützter nicht typisierter/JSON-Konvertierungstyp „{0}“ im Argument.</value>
+    <value>Nicht unterstützter Typ „{0}“ im Typargument.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Die maximale Länge in der JSON-Funktion wurde erreicht.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Das experimentelle Feature „Benutzerdefinierte Typen“ ist nicht aktiviert.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Falsche Syntax: „=“ darf nicht zum Deklarieren benutzerdefinierter Typen verwendet werden. Verwenden Sie stattdessen „:=“.</value>
     
   </data>
 </root>
