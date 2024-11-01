@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Gedragsfunctie in een niet-gedrag gebruikersgedefinieerde functie (UDF). Plaats de hoofdtekst van de door de gebruiker gedefinieerde functie tussen accolades ({...}) om een UDF voor gedrag te specificeren.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Gedragsfuncties wijzigen de huidige sessietoestand. 'Clear', 'Collect', 'Patch' en 'Refresh' zijn algemene gedragsfuncties.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Bewerk de door de gebruiker gedefinieerde functie-uitdrukking zodat deze binnen accolades ({...}) staat.</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Een testfunctie in een niet-testeigenschap. U kunt deze eigenschap niet gebruiken om functies aan te roepen die uitsluitend zijn bedoeld voor testen.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Waarschuwing bij delegering. De benoemde formule {0} is niet delegeerbaar, zodat het gebruik ervan in deze formule mogelijk niet correct werkt bij grote gegevenssets. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Probeer de definitie van de benoemde formule te vereenvoudigen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Waarschuwing bij delegering. De door de gebruiker gedefinieerde functie {0} is niet delegeerbaar, zodat het gebruik ervan in deze formule mogelijk niet correct werkt bij grote gegevenssets. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Probeer de definitie van de door de gebruiker gedefinieerde functie te vereenvoudigen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Overdracht in een canvas-app begrijpen</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Gegevensrijlimieten voor overdracht</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Overdrachtswaarschuwing. Het gemarkeerde deel van deze formule werkt mogelijk niet correct bij grote gegevenssets. De bewerking {0} wordt niet door de connector ondersteunt.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Benoemd type moet van het type letterlijke waarde zijn.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Niet-ondersteund niet-getypeerd/JSON-conversietype '{0}' in argument.</value>
+    <value>Niet-ondersteund type '{0}' in typeargument.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Maximale lengte bereikt in JSON-functie.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>De experimentele functie 'Door gebruiker gedefinieerd type' is niet ingeschakeld.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Onjuiste syntaxis: = kan niet worden gebruikt voor het declareren van door de gebruiker gedefinieerde typen. Gebruik in plaats daarvan :=.</value>
     
   </data>
 </root>

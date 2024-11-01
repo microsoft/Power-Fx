@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Функција понашања у функцији која није кориснички дефинисана (UDF). Ставите тело кориснички дефинисане функције у витичасте заграде ({...}) да бисте декларисали понашање UDF-а.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Функције понашања мењају статус тренутне сесије. „Clear“, „Collect“, „Patch“ и „Refresh“ представљају уобичајене функције понашања.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Уредите кориснички дефинисани израз функције тако да се налази унутар витичастих заграда ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Функција за тестирање у својству које није за тестирање. Не можете да користите ово својство за позивање функција које су само за тестирање.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Упозорење делегирања. Именована формула {0} се не може делегирати, тако да њена употреба у овој формули можда неће исправно радити на великим скуповима података. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Покушајте да поједноставите дефиницију за именовану формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Упозорење делегирања. Кориснички дефинисана функција {0} се не може делегирати, тако да њена употреба у овој формули можда неће исправно радити на великим скуповима података. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Покушајте да поједноставите дефиницију за кориснички дефинисану функцију.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Упозорење о делегирању. Истакнути део ове формуле можда неће исправно функционисати на великим скуповима података. Овај конектор не подржава операцију „{0}“.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Именовани тип мора бити тип литерал.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Неподржани нетипизирани/JSON тип конверзије ' {0}' у аргументу.</value>
+    <value>Неподржани тип „{0}“ у аргументу типа.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Достигнута је максимална дужина у JSON функцији.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Експериментална функција „Кориснички дефинисани типови“ није омогућена.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Нетачна синтакса: „=“ не може да се користи за означавање кориснички дефинисаних типова. Уместо тога користите „:=“.</value>
     
   </data>
 </root>
