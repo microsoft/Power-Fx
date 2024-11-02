@@ -70,12 +70,12 @@ namespace Microsoft.PowerFx
 
             foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
-                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
+                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.SymbolTable.AddFunction(func.Key);
+                config.InternalConfigSymbols.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
         }

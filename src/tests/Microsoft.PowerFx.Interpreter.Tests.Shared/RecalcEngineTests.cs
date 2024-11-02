@@ -400,6 +400,16 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void BasicEval()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("M", 10.0);
+            engine.UpdateVariable("M2", -4);
+            var result = engine.Eval("M + Abs(M2)");
+            Assert.Equal(14.0, ((NumberValue)result).Value);
+        }
+
+        [Fact]
         public void BuiltInEnumConfigCheck()
         {
             var config = new PowerFxConfig()
