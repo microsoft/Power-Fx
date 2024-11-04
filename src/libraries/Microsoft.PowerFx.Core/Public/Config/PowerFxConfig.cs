@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
@@ -51,7 +49,7 @@ namespace Microsoft.PowerFx
         public SymbolTable SymbolTable
         {
             get => _symbolTable;
-            set => _symbolTable = value ?? new SymbolTable();
+            set => _symbolTable = value;
         }
 
         internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
@@ -184,6 +182,11 @@ namespace Microsoft.PowerFx
             InternalConfigSymbols.AddFunctions(functionSet);
         }
 
+        /// <summary>
+        /// Adds optionset to <see cref="SymbolTable"/>.
+        /// </summary>
+        /// <param name="optionSet"></param>
+        /// <param name="optionalDisplayName"></param>
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
         {
             SymbolTable.AddOptionSet(optionSet, optionalDisplayName);
