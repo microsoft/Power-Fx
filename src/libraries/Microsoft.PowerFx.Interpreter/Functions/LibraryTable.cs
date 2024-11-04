@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -567,8 +568,9 @@ namespace Microsoft.PowerFx.Functions
             bool outerLeft = false,
             bool outerRight = false)
         {
-            var rows = new List<DValue<RecordValue>>();
-            var excludeSet = new HashSet<DValue<RecordValue>>();
+            var innerRows = new List<DValue<RecordValue>>();
+            var innerDict = new Dictionary<DValue<RecordValue>, bool>();
+            var outerDict = new Dictionary<DValue<RecordValue>, bool>();
 
             foreach (var leftRow in leftSource)
             {
@@ -582,39 +584,56 @@ namespace Microsoft.PowerFx.Functions
                     {
                         if (result.IsValue)
                         {
-                            rows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRow.Value.Fields.Concat(rightRow.Value.Fields).ToArray())));
+                            // Both left and right records are a match. Join them!
+                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRow.Value.Fields.Concat(rightRow.Value.Fields).ToArray())));
                         }
                         else if (result.IsError)
                         {
-                            rows.Add(result);
+                            // Lambda evaluation resulted in an error. Include the error.
+                            innerRows.Add(result);
                         }
 
-                        excludeSet.Add(leftRow);
-                        excludeSet.Add(rightRow);
+                        innerDict[leftRow] = true;
+                        innerDict[rightRow] = true;
+
+                        if (outerLeft)
+                        {
+                            if (outerDict.ContainsKey(leftRow))
+                            {
+                                outerDict.Remove(leftRow);
+                            }
+                        }
+
+                        if (outerRight)
+                        {
+                            if (outerDict.ContainsKey(rightRow))
+                            {
+                                outerDict.Remove(rightRow);
+                            }
+                        }
+
                         continue;
+                    }
+
+                    if (outerLeft)
+                    {
+                        if (!innerDict.ContainsKey(leftRow))
+                        {
+                            outerDict[leftRow] = true;
+                        }
                     }
 
                     if (outerRight)
                     {
-                        if (!excludeSet.Contains(rightRow))
+                        if (!innerDict.ContainsKey(rightRow))
                         {
-                            rows.Add(rightRow);
-                            excludeSet.Add(rightRow);
+                            outerDict[rightRow] = true;
                         }
-                    }
-                }
-
-                if (outerLeft)
-                {
-                    if (!excludeSet.Contains(leftRow))
-                    {
-                        rows.Add(leftRow);
-                        excludeSet.Add(leftRow);
                     }
                 }
             }
 
-            return rows.ToArray();
+            return innerRows.Concat(outerDict.Keys).ToArray();
         }
 
         private static async Task<DValue<RecordValue>> LazyCheckDenominatorRowAsync(
