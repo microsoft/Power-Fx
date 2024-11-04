@@ -54,13 +54,6 @@ namespace Microsoft.PowerFx.Connectors
         public readonly GroupRestriction GroupRestriction;
 
         [JsonInclude]
-        [JsonPropertyName(CapabilityConstants.FilterFunctions)]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public readonly IEnumerable<string> FilterFunctions;
-
-        public IEnumerable<DelegationOperator> FilterFunctionsEnum => GetDelegationOperatorEnumList(FilterFunctions);
-
-        [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctionSupport)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public readonly IEnumerable<string> FilterSupportedFunctions;
@@ -115,12 +108,11 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertValue(pagingCapabilities);
 
             SortRestriction = sortRestriction;
-            FilterRestriction = filterRestriction;
-            FilterFunctions = filterFunctions;
+            FilterRestriction = filterRestriction;            
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
             GroupRestriction = groupRestriction;
-            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterFunctions != null);
+            IsDelegable = (SortRestriction != null) || (FilterRestriction != null) || (FilterSupportedFunctions != null);
             IsPagable = PagingCapabilities.IsOnlyServerPagable || IsDelegable;
             SupportsDataverseOffline = supportsDataverseOffline;
             FilterSupportedFunctions = filterSupportedFunctions;
@@ -190,8 +182,7 @@ namespace Microsoft.PowerFx.Connectors
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,
                 SelectionRestriction = selectionRestriction,
-                GroupRestriction = groupRestriction,
-                FilterFunctions = serviceCapabilities?.FilterFunctionsEnum,
+                GroupRestriction = groupRestriction,                
                 FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,

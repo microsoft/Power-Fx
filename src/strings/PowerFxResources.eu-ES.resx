@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Portaera-funtzioa erabiltzaileak definitutako portaera ez den funtzio batean (UDF). Inguratu erabiltzaileak definitutako funtzioaren gorputza giltzekin ({...}) UDF portaera bat adierazteko.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Portaera-funtzioek uneko saioaren egoera aldatzen dute. "Clear", "Collect", "Patch" eta "Refresh" izan ohi dira portaera-funtzio batzuk.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Editatu erabiltzaileak definitutako funtzioaren adierazpena giltzen barruan egon dadin ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Probatu funtzio probakoa ez den propietate bat da. Ezin duzu erabili propietate hori proba funtzioak soilik deitzeko.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Ordezkaritzaren abisua. Izena duen {0} formula ezin da ordeztu; ondorioz, formula honen erabilerak ez du funtzionatuko datu multzo handietan. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Erraztu izena duen formularen definizioa.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Ordezkaritzaren abisua. Erabiltzaileak azaldutako {0} funtzioa ezin da ordeztu; ondorioz, formula honen erabilerak ez du funtzionatuko datu multzo handietan. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Erraztu erabiltzaileak azaldutako funtzioaren definizioa.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikulua: Mihise-aplikazio batean ordezkaritza erabiltzeko aukeraren azalpena</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Bloga: Ordezkaritzan erabil daitezkeen datu-errenkaden mugak</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Ordezkaritzari buruzko abisua. Baliteke formulan nabarmendutako zatiak ez funtzionatzea datu multzo handietan. Konektoreak ez du onartzen "{0}" eragiketa.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Izendatutako motak mota literala izan behar du.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Argumentuan "{0}" motako onartu gabeko motarik gabeko/JSON bihurketa</value>
+    <value>Argumentu motan "{0}" mota bateraezina dago.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Gehieneko luzerara iritsi da JSON funtzioan.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>"Erabiltzaileak definitutako motak" eginbide esperimentala ez dago gaituta.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaxi okerra: "=" ezin da erabili erabiltzaileak definitutako motak deklaratzeko. Horren ordez, erabili ":=".</value>
     
   </data>
 </root>

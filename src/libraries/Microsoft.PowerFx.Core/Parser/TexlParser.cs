@@ -362,6 +362,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
                 else if (_curs.TidCur == TokKind.Equ)
                 {
+                    var equalToken = _curs.TokCur;
+                    
                     var declaration = script.Substring(declarationStart, _curs.TokCur.Span.Min - declarationStart);
                     _curs.TokMove();
                     definitionBeforeTrivia.Add(ParseTrivia());
@@ -384,6 +386,12 @@ namespace Microsoft.PowerFx.Core.Parser
                         // Parse expression
                         definitionBeforeTrivia.Add(ParseTrivia());
                         var result = ParseExpr(Precedence.None);
+
+                        if (result is TypeLiteralNode _)
+                        {
+                            CreateError(equalToken, TexlStrings.ErrUserDefinedTypeIncorrectSyntax);
+                            continue;
+                        }
 
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex, attribute));
                         userDefinitionSourceInfos.Add(new UserDefinitionSourceInfo(index++, UserDefinitionType.NamedFormula, thisIdentifier.As<IdentToken>(), declaration, new SourceList(definitionBeforeTrivia), GetExtraTriviaSourceList()));
