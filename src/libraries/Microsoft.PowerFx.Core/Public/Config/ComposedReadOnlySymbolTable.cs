@@ -287,20 +287,5 @@ namespace Microsoft.PowerFx
                 return default;
             }
         }
-
-        internal override bool TryGetVariable(DName name, out NameLookupInfo symbol, out DName displayName)
-        {
-            foreach (var symbolTable in _symbolTables)
-            {
-                if (symbolTable.TryGetVariable(name, out symbol, out displayName))
-                {
-                    return true;
-                }
-            }
-
-            symbol = default;
-            displayName = default;
-            return false;
-        }
     }
 }
