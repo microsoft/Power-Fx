@@ -1025,9 +1025,7 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Join.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<TableValue>,
-                        ExactValueTypeOrBlank<TableValue>),
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: JoinTables)

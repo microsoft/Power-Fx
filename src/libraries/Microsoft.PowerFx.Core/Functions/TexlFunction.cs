@@ -169,6 +169,11 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
+        /// Identifies which functions args to use to compose the scope type for subsequent lambda args.
+        /// </summary>
+        public virtual int ScopeArgs => 1;
+
+        /// <summary>
         /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
         /// e.g. Collect(), Remove(), etc.
         /// </summary>

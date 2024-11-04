@@ -87,6 +87,20 @@ namespace Microsoft.PowerFx.Core.Functions
             CanBeCreatedByRecord = canBeCreatedByRecord;
         }
 
+        /// <summary>
+        /// Allows to type check multiple scopes.
+        /// </summary>
+        /// <param name="features"></param>
+        /// <param name="callNode"></param>
+        /// <param name="inputNode"></param>
+        /// <param name="typeScope"></param>
+        /// <param name="inputSchema"></param>
+        /// <returns></returns>
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
+        {
+            return CheckInput(features, inputNode, inputSchema[0], out typeScope);
+        }
+
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
         // arg0 and arg0Type correspond to the input and its type.
         // The cursor type for aggregate functions is generally the type of a row in the input schema (table),
@@ -242,6 +256,42 @@ namespace Microsoft.PowerFx.Core.Functions
             if (!typeScope.Contains(ThisGroup))
             {
                 typeScope = typeScope.Add(new TypedName(inputSchema.ToTable(), ThisGroup));
+            }
+
+            return ret;
+        }
+    }
+
+    internal class FunctionJoinScopeInfo : FunctionScopeInfo
+    {
+        public static DName LeftRecord => new DName("LeftRecord");
+
+        public static DName RightRecord => new DName("RightRecord");
+
+        public FunctionJoinScopeInfo(TexlFunction function)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 1)
+        {
+        }
+
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
+        {
+            var ret = true;
+            var input0 = inputSchema[0];
+            var input1 = inputSchema[1];
+
+            typeScope = DType.EmptyRecord;
+
+            ret &= base.CheckInput(features, callNode, inputNode, input0, out var type0);
+            ret &= base.CheckInput(features, callNode, inputNode, input1, out var type1);
+
+            if (ret && type0.IsAggregate && type1.IsAggregate)
+            {
+                typeScope = typeScope.Add(LeftRecord, input0.ToRecord());
+                typeScope = typeScope.Add(RightRecord, input1.ToRecord());
+            }
+            else
+            {
+                typeScope = DType.Error;
             }
 
             return ret;

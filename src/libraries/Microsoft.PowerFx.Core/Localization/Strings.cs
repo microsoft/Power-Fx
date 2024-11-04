@@ -855,5 +855,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrReachedMaxJsonLength = new ErrorResourceKey("ErrReachedMaxJsonLength");
 
         public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
+
+        public static ErrorResourceKey ErrJoinCantUnion = new ErrorResourceKey("ErrJoinCantUnion");
     }
 }

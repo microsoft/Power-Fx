@@ -264,9 +264,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanL = _featureGateFunctions.Add(new BooleanLFunction());
         public static readonly TexlFunction BooleanL_T = _featureGateFunctions.Add(new BooleanLFunction_T());
         public static readonly TexlFunction Summarize = _featureGateFunctions.Add(new SummarizeFunction());
-        public static readonly TexlFunction AsType_UO = _featureGateFunctions.Add(new AsTypeFunction_UO());
-        public static readonly TexlFunction IsType_UO = _featureGateFunctions.Add(new IsTypeFunction_UO());
-        public static readonly TexlFunction TypedParseJSON = _featureGateFunctions.Add(new TypedParseJSONFunction());
         public static readonly TexlFunction Join = _featureGateFunctions.Add(new JoinFunction());
 
         // Slow API, only use for backward compatibility

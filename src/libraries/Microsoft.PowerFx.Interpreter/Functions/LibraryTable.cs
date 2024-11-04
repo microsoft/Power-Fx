@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Localization;
@@ -525,13 +524,145 @@ namespace Microsoft.PowerFx.Functions
         // Filter ([1,2,3,4,5], Value > 5)
         public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // Streaming 
             var leftTable = (TableValue)args[0];
             var rightTable = (TableValue)args[1];
+            var denominator = (LambdaFormulaValue)args[2];
 
-            var unionType = DType.Union(leftTable.Type._type, rightTable.Type._type, false, Features.PowerFxV1);
+            OptionSetValue joinType = null;
 
-            return new InMemoryTableValue(irContext, null);
+            if (args.Count() == 4)
+            {
+                joinType = (OptionSetValue)args[3];
+            }
+
+            DValue<RecordValue>[] rows;
+            switch (joinType.Option)
+            {
+                case "Full":
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerLeft: true, outerRight: true).ConfigureAwait(false);
+                    break;
+                case "Inner":
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator).ConfigureAwait(false);
+                    break;
+                case "Left":
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerLeft: true).ConfigureAwait(false);
+                    break;
+                case "Right":
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerRight: true).ConfigureAwait(false);
+                    break;
+                default:
+                    // !!!TODO need to properly handle exceptions
+                    throw new Exception();
+            }
+
+            return new InMemoryTableValue(irContext, rows);
+        }
+
+        private static async Task<DValue<RecordValue>[]> LazyJoinAsync(
+            EvalVisitor runner,
+            EvalVisitorContext context,
+            IEnumerable<DValue<RecordValue>> leftSource,
+            IEnumerable<DValue<RecordValue>> rightSource,
+            LambdaFormulaValue denominator,
+            bool outerLeft = false,
+            bool outerRight = false)
+        {
+            var rows = new List<DValue<RecordValue>>();
+            var excludeSet = new HashSet<DValue<RecordValue>>();
+
+            foreach (var leftRow in leftSource)
+            {
+                foreach (var rightRow in rightSource)
+                {
+                    runner.CheckCancel();
+
+                    var result = await LazyCheckDenominatorRowAsync(runner, context, leftRow, rightRow, denominator).ConfigureAwait(false);
+
+                    if (result != null)
+                    {
+                        if (result.IsValue)
+                        {
+                            rows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRow.Value.Fields.Concat(rightRow.Value.Fields).ToArray())));
+                        }
+                        else if (result.IsError)
+                        {
+                            rows.Add(result);
+                        }
+
+                        excludeSet.Add(leftRow);
+                        excludeSet.Add(rightRow);
+                        continue;
+                    }
+
+                    if (outerRight)
+                    {
+                        if (!excludeSet.Contains(rightRow))
+                        {
+                            rows.Add(rightRow);
+                            excludeSet.Add(rightRow);
+                        }
+                    }
+                }
+
+                if (outerLeft)
+                {
+                    if (!excludeSet.Contains(leftRow))
+                    {
+                        rows.Add(leftRow);
+                        excludeSet.Add(leftRow);
+                    }
+                }
+            }
+
+            return rows.ToArray();
+        }
+
+        private static async Task<DValue<RecordValue>> LazyCheckDenominatorRowAsync(
+           EvalVisitor runner,
+           EvalVisitorContext context,
+           DValue<RecordValue> leftRow,
+           DValue<RecordValue> rightRow,
+           LambdaFormulaValue denominator)
+        {
+            // !!!TODO need to deal with error/blank values.
+            var scopeValue = FormulaValue.NewRecordFromFields(
+                new NamedValue("LeftRecord", leftRow.Value), 
+                new NamedValue("RightRecord", rightRow.Value));
+
+            SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeValue);
+
+            if (leftRow.IsError)
+            {
+                return leftRow;
+            }
+
+            if (rightRow.IsError)
+            {
+                return rightRow;
+            }
+
+            var result = await denominator.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+            var include = false;
+            if (result is BooleanValue booleanValue)
+            {
+                include = booleanValue.Value;
+            }
+            else if (result is OptionSetValue optionSetValue)
+            {
+                var boolValue = optionSetValue.ExecutionValue as bool?;
+                include = boolValue ?? false;
+            }
+            else if (result is ErrorValue errorValue)
+            {
+                return DValue<RecordValue>.Of(errorValue);
+            }
+
+            if (include)
+            {
+                return rightRow;
+            }
+
+            return null;
         }
 
         public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)

@@ -4620,13 +4620,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     _currentScopeDsNodeId = dsNode.Id;
                 }
 
-                var typeInput = argTypes[0] = _txb.GetType(nodeInput);
+                argTypes[0] = _txb.GetType(nodeInput);
 
                 // Get the cursor type for this arg. Note we're not adding document errors at this point.
                 DType typeScope;
                 DName scopeIdent = default;
                 var identRequired = false;
                 var fArgsValid = true;
+
+                var typeInputs = new Dictionary<TexlNode, DType>
+                {
+                    { nodeInput, _txb.GetType(nodeInput) },
+                };
+
                 if (scopeInfo.ScopeType != null)
                 {
                     typeScope = scopeInfo.ScopeType;
@@ -4635,7 +4641,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, typeInput, out typeScope);
+                    // Starting from 1 since 0 was visited above.
+                    for (int i = 1; i < maybeFunc.ScopeArgs; i++)
+                    {
+                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                        args[i].Accept(this);
+                        typeInputs[args[i]] = _txb.GetType(args[i]);
+                    }
+
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, out typeScope, typeInputs.Values.ToArray());
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
@@ -4711,9 +4725,16 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
-                        args[i].Accept(this);
-                        _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
-                        argTypes[i] = _txb.GetType(args[i]);
+                        if (typeInputs.TryGetValue(args[i], out var argType))
+                        {
+                            argTypes[i] = _txb.GetType(args[i]);
+                        }
+                        else 
+                        {
+                            args[i].Accept(this);
+                            _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
+                            argTypes[i] = _txb.GetType(args[i]);
+                        }                        
 
                         Contracts.Assert(argTypes[i].IsValid);
                     }
