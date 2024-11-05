@@ -202,13 +202,13 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public static readonly EnumSymbol JoinTypeEnum = new EnumSymbol(
             new DName(LanguageConstants.JoinTypeName),
-            DType.Number,
+            DType.String,
             new Dictionary<string, object>()
             {
-                { "Inner", 0 },
-                { "Left", 1 },
-                { "Right", 2 },
-                { "Full", 3 },
+                { "Inner", "inner" },
+                { "Left", "left" },
+                { "Right", "right" },
+                { "Full", "full" },
             });
     }
 }

@@ -535,6 +535,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 joinType = (OptionSetValue)args[3];
             }
+            else
+            {
+                joinType = new OptionSetValue("Inner", new OptionSetValueType());
+            }
 
             DValue<RecordValue>[] rows;
             switch (joinType.Option)
@@ -569,8 +573,11 @@ namespace Microsoft.PowerFx.Functions
             bool outerRight = false)
         {
             var innerRows = new List<DValue<RecordValue>>();
-            var innerDict = new Dictionary<DValue<RecordValue>, bool>();
             var outerDict = new Dictionary<DValue<RecordValue>, bool>();
+
+            // Keep track of which rows have been included in the inner join.
+            // Using a dictionary to avoid duplicates and to make it easier to check if a row is in the inner join.
+            var innerDict = new Dictionary<DValue<RecordValue>, bool>();
 
             foreach (var leftRow in leftSource)
             {

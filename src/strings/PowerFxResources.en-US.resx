@@ -4826,6 +4826,38 @@
     <value>Retrieves data that spans across multiple tables with relationships.</value>
     <comment>Description of 'Clear' function.</comment>
   </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>source1</value>
+    <comment>function_parameter - First argument to the Join function - the data source (table / collection) to operate as the left source.</comment>
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>source2</value>
+    <comment>function_parameter - Second argument to the Join function - the data source (table / collection) to operate as the right source.</comment>
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominator</value>
+    <comment>function_parameter - Third argument to the Join function - defines the records matching criteria.</comment>
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    <comment>function_parameter - Fourth argument to the Summarize function - the join type between the two tables.</comment>
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>The left table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>The right table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Join criteria between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>The join type between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>

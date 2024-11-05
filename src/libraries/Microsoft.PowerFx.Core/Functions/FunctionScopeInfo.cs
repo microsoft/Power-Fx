@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <returns></returns>
         public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
         {
-            return CheckInput(features, inputNode, inputSchema[0], out typeScope);
+            return CheckInput(features, callNode, inputNode, inputSchema[0], out typeScope);
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.

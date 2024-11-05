@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@In|]", "ErrorKind")]
+        [InlineData("[@In|]", "ErrorKind", "JoinType")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})")]

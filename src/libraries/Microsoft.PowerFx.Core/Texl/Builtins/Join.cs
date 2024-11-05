@@ -29,7 +29,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            throw new NotImplementedException();
+            yield return new[] { TexlStrings.JoinArg1, TexlStrings.JoinArg2 };
+            yield return new[] { TexlStrings.JoinArg1, TexlStrings.JoinArg2, TexlStrings.JoinArg3 };
+            yield return new[] { TexlStrings.JoinArg1, TexlStrings.JoinArg2, TexlStrings.JoinArg3, TexlStrings.JoinArg4 };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

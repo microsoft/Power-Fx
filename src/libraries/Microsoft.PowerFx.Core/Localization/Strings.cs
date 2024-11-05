@@ -609,6 +609,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ClearArg1 = (b) => StringResources.Get("SummarizeArg1", b);
 
         public static StringGetter AboutJoin = (b) => StringResources.Get("AboutJoin", b);
+        public static StringGetter JoinArg1 = (b) => StringResources.Get("JoinArg1", b);
+        public static StringGetter JoinArg2 = (b) => StringResources.Get("JoinArg2", b);
+        public static StringGetter JoinArg3 = (b) => StringResources.Get("JoinArg3", b);
+        public static StringGetter JoinArg4 = (b) => StringResources.Get("JoinArg4", b);
 
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
