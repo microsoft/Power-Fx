@@ -893,63 +893,6 @@ namespace Microsoft.PowerFx.Core.Binding
             return overloads.Any(overload => overload.IsSelfContained) && overloads.Any(overload => !overload.IsSelfContained);
         }
 
-        private bool IsDataComponentDataSource(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Data &&
-                _glue.IsComponentDataSource(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentDefinition(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentDefinition(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentInstance(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentInstance(lookupInfo.Data);
-        }
-
-        private IExternalControl GetDataComponentControl(DottedNameNode dottedNameNode, INameResolver nameResolver, TexlVisitor visitor)
-        {
-            Contracts.AssertValue(dottedNameNode);
-            Contracts.AssertValueOrNull(nameResolver);
-            Contracts.AssertValueOrNull(visitor);
-
-            if (nameResolver == null || !(dottedNameNode.Left is FirstNameNode lhsNode))
-            {
-                return null;
-            }
-
-            if (!nameResolver.LookupGlobalEntity(lhsNode.Ident.Name, out var lookupInfo) ||
-                (!IsDataComponentDataSource(lookupInfo) &&
-                !IsDataComponentDefinition(lookupInfo) &&
-                !IsDataComponentInstance(lookupInfo)))
-            {
-                return null;
-            }
-
-            if (GetInfo(lhsNode) == null)
-            {
-                lhsNode.Accept(visitor);
-            }
-
-            var lhsInfo = GetInfo(lhsNode);
-            if (lhsInfo?.Data is IExternalControl dataCtrlInfo)
-            {
-                return dataCtrlInfo;
-            }
-
-            if (lhsInfo?.Kind == BindKind.Data &&
-                _glue.TryGetCdsDataSourceByBind(lhsInfo.Data, out var info))
-            {
-                return info;
-            }
-
-            return null;
-        }
-
         private DPath GetFunctionNamespace(CallNode node, TexlVisitor visitor)
         {
             Contracts.AssertValue(node);
@@ -960,7 +903,6 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 ParentNode parentNode => GetParentControl(parentNode, NameResolver),
                 SelfNode selfNode => GetSelfControl(selfNode, NameResolver),
-                FirstNameNode firstNameNode => GetDataComponentControl(node.HeadNode.AsDottedName(), NameResolver, visitor),
                 _ => null,
             };
 
@@ -1024,36 +966,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         ds.QueryOptions.AddRelatedColumns();
                         return ds.QueryOptions.Selects;
-                    }
-                }
-            }
-
-            return Enumerable.Empty<string>();
-        }
-
-        internal IEnumerable<string> GetExpandQuerySelects(TexlNode node, string expandEntityLogicalName)
-        {
-            if (Document.Properties.EnabledFeatures.IsProjectionMappingEnabled
-                && TryGetDataQueryOptions(node, true, out var tabularDataQueryOptionsMap))
-            {
-                var currNodeQueryOptions = tabularDataQueryOptionsMap.GetQueryOptions();
-
-                foreach (var qoItem in currNodeQueryOptions)
-                {
-                    foreach (var expandQueryOptions in qoItem.Expands)
-                    {
-                        if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
-                        {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
-                                (!(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false) || expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude))
-                            {
-                                return expandQueryOptions.Value.Selects;
-                            }
-                            else
-                            {
-                                return Enumerable.Empty<string>();
-                            }
-                        }
                     }
                 }
             }
