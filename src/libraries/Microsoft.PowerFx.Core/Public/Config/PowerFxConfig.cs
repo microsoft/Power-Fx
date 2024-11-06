@@ -23,20 +23,41 @@ namespace Microsoft.PowerFx
         internal static readonly int DefaultMaxCallDepth = 20;
         internal static readonly int DefaultMaximumExpressionLength = 1000;
 
-        /// <summary>
-        /// Global symbols. Additional symbols beyond default function set and primitive types. 
-        /// </summary>
-        public SymbolTable SymbolTable { get; set; } = new SymbolTable
+        private SymbolTable _symbolTable = new SymbolTable
         {
-            DebugName = "DefaultConfig"
+            DebugName = "Host Symbols"
         };
+
+        private readonly SymbolTable _internalConfigSymbols = new SymbolTable
+        {
+            DebugName = "InternalConfigSymbols"
+        };
+
+        internal SymbolTable InternalConfigSymbols => _internalConfigSymbols;
+
+        /// <summary>
+        /// We shouldn't cache it as SymbolTable is mutable.
+        /// </summary>
+        internal ReadOnlySymbolTable ComposedConfigSymbols => ReadOnlySymbolTable.Compose(InternalConfigSymbols, SymbolTable);
+
+        private static EnumStoreBuilder BuiltInEnumStoreBuilder => new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library);
+
+        /// <summary>
+        /// Global symbols. Additional symbols beyond default function set and primitive types defined by host.
+        /// </summary>
+        /// 
+        public SymbolTable SymbolTable
+        {
+            get => _symbolTable;
+            set => _symbolTable = value;
+        }
 
         internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
-        internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
+        internal EnumStoreBuilder EnumStoreBuilder => InternalConfigSymbols.EnumStoreBuilder;
 
-        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
+        internal IEnumStore EnumStore => ComposedConfigSymbols;
 
         public Features Features { get; }
 
@@ -47,7 +68,7 @@ namespace Microsoft.PowerFx
         private PowerFxConfig(EnumStoreBuilder enumStoreBuilder, Features features = null)
         {
             Features = features ?? Features.None;
-            SymbolTable.EnumStoreBuilder = enumStoreBuilder;
+            InternalConfigSymbols.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
             MaximumExpressionLength = DefaultMaximumExpressionLength;
         }
@@ -66,7 +87,7 @@ namespace Microsoft.PowerFx
         [Obsolete("Migrate to SymbolTables")]
         public IEnumerable<FunctionInfo> FunctionInfos =>
             new Engine(this).SupportedFunctions.Functions.Functions
-            .Concat(SymbolTable.Functions.Functions)
+            .Concat(ComposedConfigSymbols.Functions.Functions)
             .Select(f => new FunctionInfo(f));
 
         /// <summary>
@@ -74,7 +95,7 @@ namespace Microsoft.PowerFx
         /// </summary>        
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(Features features)
-            : this(new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library), features)
+            : this(BuiltInEnumStoreBuilder, features)
         {
         }
 
@@ -115,12 +136,12 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool GetSymbols(string name, out NameLookupInfo symbol) => SymbolTable._variables.TryGetValue(name, out symbol);
+        internal bool GetSymbols(string name, out NameLookupInfo symbol) => InternalConfigSymbols._variables.TryGetValue(name, out symbol) || SymbolTable._variables.TryGetValue(name, out symbol);
 
-        internal IEnumerable<string> GetSuggestableSymbolName() => SymbolTable._variables.Keys;
+        internal IEnumerable<string> GetSuggestableSymbolName() => InternalConfigSymbols._variables.Keys.Concat(SymbolTable._variables.Keys);
 
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
-            => SymbolTable.AddEntity(entity, displayName);
+        => SymbolTable.AddEntity(entity, displayName);
 
         internal void AddFunction(TexlFunction function)
         {
@@ -137,7 +158,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                var overloads = SymbolTable.Functions.WithName(function.Name).Where(tf => tf.HasLambdas || tf.HasColumnIdentifiers);
+                var overloads = ComposedConfigSymbols.Functions.WithName(function.Name).Where(tf => tf.HasLambdas || tf.HasColumnIdentifiers);
 
                 if (overloads.Any())
                 {
@@ -153,20 +174,25 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            SymbolTable.AddFunction(function);
+            InternalConfigSymbols.AddFunction(function);
         }
 
         internal void AddFunctions(TexlFunctionSet functionSet)
         {
-            SymbolTable.AddFunctions(functionSet);
+            InternalConfigSymbols.AddFunctions(functionSet);
         }
 
+        /// <summary>
+        /// Adds optionset to <see cref="SymbolTable"/>.
+        /// </summary>
+        /// <param name="optionSet"></param>
+        /// <param name="optionalDisplayName"></param>
         public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
         {
             SymbolTable.AddOptionSet(optionSet, optionalDisplayName);
         }
 
         internal bool TryGetVariable(DName name, out DName displayName)
-            => SymbolTable.TryGetVariable(name, out _, out displayName);
+            => ComposedConfigSymbols.TryGetVariable(name, out _, out displayName);
     }
 }
