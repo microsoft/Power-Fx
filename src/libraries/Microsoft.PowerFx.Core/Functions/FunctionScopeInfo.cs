@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
@@ -281,18 +283,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
             typeScope = DType.EmptyRecord;
 
-            ret &= base.CheckInput(features, callNode, inputNode, input0, out var type0);
-            ret &= base.CheckInput(features, callNode, inputNode, input1, out var type1);
+            ret = base.CheckInput(features, callNode, callNode.Args.ChildNodes[0], input0, out var type0);
+            ret &= base.CheckInput(features, callNode, callNode.Args.ChildNodes[1], input1, out var type1);
 
-            if (ret && type0.IsAggregate && type1.IsAggregate)
-            {
-                typeScope = typeScope.Add(LeftRecord, input0.ToRecord());
-                typeScope = typeScope.Add(RightRecord, input1.ToRecord());
-            }
-            else
-            {
-                typeScope = DType.Error;
-            }
+            typeScope = typeScope.Add(LeftRecord, type0).Add(RightRecord, type1);
 
             return ret;
         }

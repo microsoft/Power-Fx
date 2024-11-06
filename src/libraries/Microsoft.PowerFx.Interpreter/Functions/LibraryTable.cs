@@ -522,12 +522,24 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-        // Filter ([1,2,3,4,5], Value > 5)
+        // Join(t1, t2, LeftRecord.Id = RightRecord.RefId, JoinType.Inner)
         public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var leftTable = (TableValue)args[0];
-            var rightTable = (TableValue)args[1];
-            var denominator = (LambdaFormulaValue)args[2];
+            // !!!TODO Handle this from checkRuntimeValues
+            if (args[0] is not TableValue leftTable)
+            {
+                return args[0];
+            }
+
+            if (args[1] is not TableValue rightTable)
+            {
+                return args[1];
+            }
+
+            if (args[2] is not LambdaFormulaValue denominator)
+            {
+                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
+            }
 
             OptionSetValue joinType = null;
 

@@ -4635,7 +4635,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
-                        if (typeInputs.TryGetValue(args[i], out var argType))
+                        if (typeInputs.TryGetValue(args[i], out _))
                         {
                             argTypes[i] = _txb.GetType(args[i]);
                         }
@@ -5020,7 +5020,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        args[i].Accept(this);
+                        if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
+                        {
+                            args[i].Accept(this);
+                        }
                     }
 
                     if (args[i].Kind == NodeKind.As)
@@ -5233,7 +5236,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.AddVolatileVariables(args[i], volatileVariables);
                     }
 
-                    args[i].Accept(this);
+                    if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
+                    {
+                        args[i].Accept(this);
+                    }
 
                     // In case weight was added during visitation
                     _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
