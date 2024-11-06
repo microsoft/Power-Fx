@@ -1,0 +1,52 @@
+﻿>> TimeValue("12:00:00")
+Time(12,0,0,0)
+
+>> TimeValue("27:00:00")
+Time(3,0,0,0)
+
+// TimeValue only returns values between [00:00:00.000, 23:59:59.999)
+>> Value(TimeValue("27:00:00"))
+0.125
+
+>> TimeValue("6:00")
+Time(6,0,0,0)
+
+>> TimeValue("6:00 PM")
+Time(18,0,0,0)
+
+// Date portion is ignored
+>> Value(TimeValue("10/12/2024 6:00:00 AM"))
+0.25
+
+>> TimeValue("29 Feb 2008 9:21:33 AM")
+Time(9,21,33,0)
+
+>> TimeValue("12:34:56.7")
+Time(12,34,56,700)
+
+>> TimeValue("12:34:56.78")
+Time(12,34,56,780)
+
+>> TimeValue("12:34:56.789")
+Time(12,34,56,789)
+
+>> TimeValue("6:01:02")
+Time(6,1,2,0)
+
+>> TimeValue("14:18")
+Time(14,18,0,0)
+
+>> TimeValue("24:11:11")
+Time(0,11,11,0)
+
+>> TimeValue("Not a time")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> TimeValue("One PM")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> TimeValue("1234")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> TimeValue("20241106073000")
+Error({Kind:ErrorKind.InvalidArgument})
