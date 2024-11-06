@@ -354,6 +354,7 @@ namespace Microsoft.PowerFx
         // These do not compose - only bottom one wins. 
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
         private protected EnumStoreBuilder _enumStoreBuilder;
+
         private EnumSymbol[] _enumSymbolCache;
 
         private EnumSymbol[] GetEnumSymbolSnapshot

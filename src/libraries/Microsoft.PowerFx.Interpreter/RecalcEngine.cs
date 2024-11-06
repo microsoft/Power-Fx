@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes, _symbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
 
             if (parseResult.DefinedTypes.Any())
             {

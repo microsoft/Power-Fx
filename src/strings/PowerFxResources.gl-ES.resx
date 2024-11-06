@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Incluíuse unha función de comportamento nunha función definida polo usuario que non é de comportamento. Inclúa o corpo da función definida polo usuario entre chaves ({...}) para declarar unha función de comportamento definida polo usuario.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>As funcións de comportamento cambian o estado da sesión actual. Algunhas das máis habituais son: "Clear", "Collect", "Patch" e "Refresh".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edite a expresión da función definida polo usuario para que vaia entre chaves ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Probe a función nunha propiedade que non sexa de proba. Non pode usar esta propiedade para invocar funcións só de proba.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Aviso da delegación. A fórmula {0} con nome non é delegable, polo que o seu uso nesta fórmula pode non funcionar correctamente en grandes conxuntos de datos. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Tente simplificar a definición para a fórmula con nome.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Aviso da delegación. A función definida polo usuario {0} non é delegable, polo que o seu uso nesta fórmula pode non funcionar correctamente en grandes conxuntos de datos. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Tente simplificar a definición para a función definida polo usuario.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Aviso de delegación. É posible que a parte destacada desta fórmula non funcione correctamente en conxuntos de datos grandes. A operación "{0}" non é compatible con este conector.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>O tipo con nome debe ser un tipo literal.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tipo de conversión sen tipo ou JSON "{0}" non compatible no argumento.</value>
+    <value>Tipo "{0}" non compatible no argumento de tipo.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Alcanzouse a lonxitude máxima na función JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>A funcionalidade experimental "Tipos definidos polo usuario" non está activada.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaxe incorrecta: "=" non se pode usar para declarar tipos definidos polo usuario. Use ":=" no seu lugar.</value>
     
   </data>
 </root>
