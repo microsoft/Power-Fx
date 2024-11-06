@@ -52,6 +52,9 @@ Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchas
   LeftRecord.Id = RightRecord.SupplierId, JoinType.Full)
 Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:"USA",Fruit:Blank(),Id:"FFF666",Name:"Dunder Mifflin",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:"MEX",Fruit:Blank(),Id:"EEE555",Name:"ACME INC.",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:Blank(),Fruit:"Apples",Id:Blank(),Name:Blank(),Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Country:Blank(),Fruit:"Mangos",Id:Blank(),Name:Blank(),Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
 
+>> Join(If(false,Table({a:1})),If(false,Table({b:1})),true)
+Blank()
+
 
 // Errors
 
@@ -71,3 +74,8 @@ Errors: Error 10-11: Invalid argument type.|Error 0-4: The function 'Join' has s
 
 >> Join(Table({a:1},{a:1}),Table({b:1},{b:2}),1/0)
 Table(Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}))
+
+// Untyped blanks are not allowed.
+>> Join(Blank(),Blank(),true)
+Errors: Error 5-12: Invalid argument type.|Error 0-4: The function 'Join' has some invalid arguments.
+

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -525,21 +524,9 @@ namespace Microsoft.PowerFx.Functions
         // Join(t1, t2, LeftRecord.Id = RightRecord.RefId, JoinType.Inner)
         public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            // !!!TODO Handle this from checkRuntimeValues
-            if (args[0] is not TableValue leftTable)
-            {
-                return args[0];
-            }
-
-            if (args[1] is not TableValue rightTable)
-            {
-                return args[1];
-            }
-
-            if (args[2] is not LambdaFormulaValue denominator)
-            {
-                return CommonErrors.InvalidArgumentError(irContext, RuntimeStringResources.ErrInvalidArgument);
-            }
+            var leftTable = (TableValue)args[0];
+            var rightTable = (TableValue)args[1];
+            var predicate = (LambdaFormulaValue)args[2];            
 
             OptionSetValue joinType = null;
 
@@ -556,20 +543,19 @@ namespace Microsoft.PowerFx.Functions
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerLeft: true, outerRight: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerLeft: true, outerRight: true).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerLeft: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerLeft: true).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, denominator, outerRight: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerRight: true).ConfigureAwait(false);
                     break;
                 default:
-                    // !!!TODO need to properly handle exceptions
-                    throw new Exception();
+                    throw new InvalidOperationException();
             }
 
             return new InMemoryTableValue(irContext, rows);
@@ -580,7 +566,7 @@ namespace Microsoft.PowerFx.Functions
             EvalVisitorContext context,
             IEnumerable<DValue<RecordValue>> leftSource,
             IEnumerable<DValue<RecordValue>> rightSource,
-            LambdaFormulaValue denominator,
+            LambdaFormulaValue predicate,
             bool outerLeft = false,
             bool outerRight = false)
         {
@@ -597,7 +583,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     runner.CheckCancel();
 
-                    var result = await LazyCheckDenominatorRowAsync(runner, context, leftRow, rightRow, denominator).ConfigureAwait(false);
+                    var result = await LazyCheckDenominatorRowAsync(runner, context, leftRow, rightRow, predicate).ConfigureAwait(false);
 
                     if (result != null)
                     {
@@ -660,9 +646,8 @@ namespace Microsoft.PowerFx.Functions
            EvalVisitorContext context,
            DValue<RecordValue> leftRow,
            DValue<RecordValue> rightRow,
-           LambdaFormulaValue denominator)
+           LambdaFormulaValue predicate)
         {
-            // !!!TODO need to deal with error/blank values.
             var scopeValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("LeftRecord", leftRow.Value), 
                 new NamedValue("RightRecord", rightRow.Value));
@@ -679,7 +664,7 @@ namespace Microsoft.PowerFx.Functions
                 return rightRow;
             }
 
-            var result = await denominator.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+            var result = await predicate.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
             var include = false;
             if (result is BooleanValue booleanValue)
             {

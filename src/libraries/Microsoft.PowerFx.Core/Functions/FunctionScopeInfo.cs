@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
