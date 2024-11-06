@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -50,7 +48,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (valid)
             {
-                // !!!TODO do I need to combine display providers?
                 returnType = DType.Union(leftTable, rightTable, false, Features.PowerFxV1);
             }
             else
