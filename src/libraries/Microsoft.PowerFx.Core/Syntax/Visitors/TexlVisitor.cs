@@ -17,6 +17,12 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <summary>
+        /// Visit <see cref="RecordOfNode"/> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        public abstract void Visit(RecordOfNode node);
+
+        /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

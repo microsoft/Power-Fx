@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
 
         Error,
         StrInterp,
-        TypeLiteral
+        TypeLiteral,
+        RecordOf
     }
 }

@@ -224,6 +224,35 @@ namespace Microsoft.PowerFx.Core.Parser
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
+        private RecordOfNode ParseRecordOf(Identifier recordOfIdentifier)
+        {
+            var lefterTrivia = ParseTrivia();
+            var parenOpen = TokEat(TokKind.ParenOpen);
+            var leftTrivia = ParseTrivia();
+            var sourceList = new List<ITexlSource>
+            {
+                new IdentifierSource(recordOfIdentifier),
+                lefterTrivia,
+                new TokenSource(parenOpen),
+                leftTrivia
+            };
+
+            var identifier = ParseIdentifier();
+            var fsNode = new FirstNameNode(ref _idNext, identifier.Token, identifier);
+
+            sourceList.Add(new IdentifierSource(identifier));
+            sourceList.Add(ParseTrivia());
+
+            var parenClose = TokEat(TokKind.ParenClose);
+
+            if (parenClose != null)
+            {
+                sourceList.Add(new TokenSource(parenClose));
+            }
+
+            return new RecordOfNode(ref _idNext, parenOpen, fsNode, new SourceList(sourceList));
+        }
+
         private PartialAttribute MaybeParseAttribute()
         {
             if (_curs.TidCur != TokKind.BracketOpen)
@@ -1293,6 +1322,11 @@ namespace Microsoft.PowerFx.Core.Parser
                             }
 
                             return typeLiteralNode;
+                        }
+
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.RecordOfInvariantName && _features.IsUserDefinedTypesEnabled)
+                        {
+                            return ParseRecordOf(ident);
                         }
 
                         trivia = ParseTrivia();
