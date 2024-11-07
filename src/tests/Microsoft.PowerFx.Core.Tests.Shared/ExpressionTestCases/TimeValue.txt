@@ -30,6 +30,10 @@ Time(12,34,56,780)
 >> TimeValue("12:34:56.789")
 Time(12,34,56,789)
 
+// Extra digits on milliseconds are truncated
+>> TimeValue("11:22:33.4449999")
+Time(11,22,33,444)
+
 >> TimeValue("6:01:02")
 Time(6,1,2,0)
 
