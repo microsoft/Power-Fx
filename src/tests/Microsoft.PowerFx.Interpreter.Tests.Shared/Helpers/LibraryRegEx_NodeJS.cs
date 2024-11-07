@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -29,30 +30,22 @@ namespace Microsoft.PowerFx.Functions
         private static Process node;
         private static readonly Mutex NodeMutex = new Mutex();  // protect concurrent access to the node process
 
-        private static StringBuilder outputSB;
-        private static StringBuilder errorSB;
         private static TaskCompletionSource<bool> readTask = null;
         private static string output;
         private static string error;
 
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            outputSB.Append(outLine.Data);
-            if (outLine.Data.Contains("%%end%%") || outLine.Data.Contains("SyntaxError"))
+            output = output + outLine.Data;
+            if (outLine.Data.Contains("%%end%%"))
             {
-                output = outputSB.ToString();
-                error = errorSB.ToString();
                 readTask.TrySetResult(true);
             }
         }
 
         private static void ErrorHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            errorSB.Append(outLine.Data);
-
-            output = outputSB.ToString();
-            error = errorSB.ToString();
-
+            error = error + outLine.Data;
             readTask.TrySetResult(true);
         }
 
@@ -79,8 +72,8 @@ namespace Microsoft.PowerFx.Functions
             {
                 var js = new StringBuilder();
 
-                outputSB = new StringBuilder();
-                errorSB = new StringBuilder();
+                output = string.Empty;
+                error = string.Empty;
                 readTask = new TaskCompletionSource<bool>();
 
                 try
@@ -159,7 +152,14 @@ namespace Microsoft.PowerFx.Functions
 
                     await node.StandardInput.FlushAsync();
 
-                    await readTask.Task;
+                    var complete = await Task.WhenAny(readTask.Task, Task.Delay(TimeSpan.FromSeconds(3)));
+
+                    if (complete != readTask.Task)
+                    {
+                        error = "NodeJS Timeout";
+                        node.Close();
+                        node = null;
+                    }
 
                     if (error.Length > 0)
                     {
