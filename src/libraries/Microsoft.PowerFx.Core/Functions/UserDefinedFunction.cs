@@ -370,6 +370,11 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
+        public INameResolver GetUserDefinitionsNameResolver(INameResolver nameResolver)
+        {
+            return UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes);
+        }
+
         /// <summary>
         /// NameResolver that combines global named resolver and params for user defined function.
         /// </summary>
