@@ -90,11 +90,11 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Allows to type check multiple scopes.
         /// </summary>
-        /// <param name="features"></param>
-        /// <param name="callNode"></param>
-        /// <param name="inputNode"></param>
-        /// <param name="typeScope"></param>
-        /// <param name="inputSchema"></param>
+        /// <param name="features">Features flags.</param>
+        /// <param name="callNode">Caller call node.</param>
+        /// <param name="inputNode">ArgN node.</param>
+        /// <param name="typeScope">Calculated DType type.</param>
+        /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
         public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
         {

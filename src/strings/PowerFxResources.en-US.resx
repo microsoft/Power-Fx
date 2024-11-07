@@ -4824,7 +4824,7 @@
   </data>
   <data name="AboutJoin" xml:space="preserve">
     <value>Retrieves data that spans across multiple tables with relationships.</value>
-    <comment>Description of 'Clear' function.</comment>
+    <comment>Description of 'Join' function.</comment>
   </data>
   <data name="JoinArg1" xml:space="preserve">
     <value>source1</value>
@@ -4890,6 +4890,11 @@
     </comment>
   </data>
   <data name="ErrJoinCantUnion" xml:space="preserve">
-    <value>Data sources can't union. Possibly due to duplicated columns.</value>
+    <value>Data sources can't union due to duplicated columns: '{0}'.</value>
+    <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    <comment>Error message returned when user tries to give anything different than a plain 'JoinType' enum value as argument.</comment>
   </data>
 </root>

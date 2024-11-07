@@ -2481,6 +2481,32 @@ namespace Microsoft.PowerFx.Core.Types
             return !fError;
         }
 
+        public bool CanUnionWithForcedUniqueColumns(DType type, bool useLegacyDateTimeAccepts, Features features, out DType dType)
+        {
+            AssertValid();
+            type.AssertValid();
+
+            var fError = false;
+            Union(ref fError, this, type, useLegacyDateTimeAccepts, features, forceUniqueColumns: true);
+
+            dType = DType.EmptyRecord;
+
+            if (fError)
+            {
+                foreach (var pair in type.GetNames(DPath.Root))
+                {
+                    var field2Name = pair.Name;
+
+                    if (TryGetType(field2Name, out var field1Type))
+                    {
+                        dType = dType.Add(field2Name, field1Type);
+                    }
+                }
+            }
+
+            return !fError;
+        }
+
         private static HashSet<IExternalTabularDataSource> UnionDataSourceInfoMetadata(DType type1, DType type2)
         {
             type1.AssertValid();
@@ -2705,7 +2731,7 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
-        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce = false, bool unionToLeftTypeOnly = false)
+        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce = false, bool unionToLeftTypeOnly = false, bool forceUniqueColumns = false)
         {
             leftType.AssertValid();
             rightType.AssertValid();
@@ -2745,7 +2771,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(
-                    UnionCore(ref fError, leftType, rightType, useLegacyDateTimeAccepts, features, allowCoerce, unionToLeftTypeOnly),
+                    UnionCore(ref fError, leftType, rightType, useLegacyDateTimeAccepts, features, allowCoerce, unionToLeftTypeOnly, forceUniqueColumns: forceUniqueColumns),
                     rightType.AssociatedDataSources,
                     rightType.DisplayNameProvider);
             }
@@ -2801,7 +2827,19 @@ namespace Microsoft.PowerFx.Core.Types
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce, bool unionToLeftTypeOnly)
+        /// <summary>
+        /// Merge two aggregates into an unique DType.
+        /// </summary>
+        /// <param name="fError"></param>
+        /// <param name="leftType"></param>
+        /// <param name="rightType"></param>
+        /// <param name="useLegacyDateTimeAccepts"></param>
+        /// <param name="features"></param>
+        /// <param name="allowCoerce"></param>
+        /// <param name="unionToLeftTypeOnly"></param>
+        /// <param name="forceUniqueColumns">Enforce that only unique columns will be united, even if they have the same type.</param>
+        /// <returns></returns>
+        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce, bool unionToLeftTypeOnly, bool forceUniqueColumns = false)
         {
             leftType.AssertValid();
             Contracts.Assert(leftType.IsAggregate);
@@ -2818,6 +2856,11 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     result = result.Add(pair);
                     continue;
+                }
+
+                if (forceUniqueColumns)
+                {
+                    fError = true;
                 }
 
                 var field2Type = pair.Type;
