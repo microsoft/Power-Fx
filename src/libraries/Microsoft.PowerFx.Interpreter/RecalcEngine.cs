@@ -397,13 +397,12 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
             var sb = new StringBuilder();
 
-            var checkResult = new DefinitionsCheckResult()
+            var checkResult = new DefinitionsCheckResult(this.Config.Features)
                                     .SetText(script, options);
 
             var parseResult = checkResult.ApplyParse();
@@ -421,7 +420,7 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes, _symbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
 
             if (parseResult.DefinedTypes.Any())
             {

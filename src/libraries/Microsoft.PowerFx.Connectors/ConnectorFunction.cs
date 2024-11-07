@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.PowerFx.Connectors.Localization;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -867,7 +868,7 @@ namespace Microsoft.PowerFx.Connectors
                 ExpressionError newError = er is HttpExpressionError her
                     ? new HttpExpressionError(her.StatusCode) { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" }
                     : new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{DPath.Root.Append(new DName(Namespace)).ToDottedSyntax()}.{Name} failed: {er.Message}" };
-                result = FormulaValue.NewError(newError, ev.Type); 
+                result = FormulaValue.NewError(newError, ev.Type);
             }
 
             if (IsPageable && result is RecordValue rv)
@@ -1005,32 +1006,22 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Only called by ConnectorTable.GetSchema
-        internal static ConnectorType GetConnectorTypeAndTableCapabilities(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue sv, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out ServiceCapabilities tableCapabilities)
+        // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
+        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
-            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(sv.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
-            tableCapabilities = tableSchema.GetTableCapabilities();
+            ISwaggerSchema tableSchema = SwaggerSchema.New(new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(stringValue.Value, OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic _));
 
-            JsonElement je = ExtractFromJson(sv, valuePath, out name, out displayName);
-
-            // Json version to be able to read SalesForce unique properties
-            ConnectorType connectorType = GetJsonConnectorTypeInternal(compatibility, je, sqlRelationships);
-            connectorType.Name = name;
-            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, sv);
-
+            ServiceCapabilities serviceCapabilities = tableSchema.GetTableCapabilities();
             ConnectorPermission tablePermission = tableSchema.GetPermission();
+            
+            JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out name, out displayName);
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
-
-            List<ConnectorType> primaryKeyParts = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).ToList();
-
-            if (primaryKeyParts.Count == 0)
-            {
-                // $$$ need to check what triggers RO for SQL
-                //isTableReadOnly = true;
-            }
-
-            connectorType.AddTabularDataSource(tableResolver, referencedEntities, sqlRelationships, new DName(name), datasetName, connectorType, tableCapabilities, isTableReadOnly);
+            IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
+            
+            ConnectorType connectorType = new ConnectorType(jsonElement, compatibility, sqlRelationships, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
 
             return connectorType;
         }
@@ -1399,14 +1390,17 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (parameter.Required)
                     {
-                        if (parameter.Schema.Default == null)
+                        if (parameter.Schema.Default == null && (parameter.Name == "connectionId" || !ConnectorSettings.ExposeInternalParamsWithoutDefaultValue))
                         {
                             // Ex: connectionId
                             continue;
                         }
 
-                        // Ex: Api-Version
-                        hiddenRequired = true;
+                        if (parameter.Schema.Default != null)
+                        {
+                            // Ex: Api-Version
+                            hiddenRequired = true;
+                        } 
                     }
                     else if (ConnectorSettings.Compatibility.ExcludeInternals())
                     {
@@ -1471,12 +1465,15 @@ namespace Microsoft.PowerFx.Connectors
                                     {
                                         if (bodyPropertyRequired)
                                         {
-                                            if (bodyPropertySchema.Default == null)
+                                            if (bodyPropertySchema.Default == null && !ConnectorSettings.ExposeInternalParamsWithoutDefaultValue)
                                             {
                                                 continue;
                                             }
 
-                                            bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
+                                            if (bodyPropertySchema.Default != null)
+                                            {
+                                                bodyPropertyHiddenRequired = !ConnectorSettings.Compatibility.IsPowerAppsCompliant() || !requestBody.Required;
+                                            }
                                         }
                                         else if (ConnectorSettings.Compatibility.ExcludeInternals())
                                         {

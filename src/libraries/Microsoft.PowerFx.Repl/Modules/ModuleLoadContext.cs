@@ -142,11 +142,10 @@ namespace Microsoft.PowerFx.Repl
             bool allowSideEffects = true;
             var options = new ParserOptions
             {
-                AllowParseAsTypeLiteral = true,
                 AllowsSideEffects = true
             };
 
-            var parseResult = UserDefinitions.Parse(str, options);
+            var parseResult = UserDefinitions.Parse(str, options, Features.PowerFxV1);
 
             var fragmentLocation = poco.Formulas.Location;
 

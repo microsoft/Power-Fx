@@ -55,6 +55,19 @@ namespace Microsoft.PowerFx.Connectors
         public bool IncludeInternalFunctions { get; init; } = false;
 
         /// <summary>
+        /// By default, internal parameters without default values are ignored, mandatory or not.
+        /// With this setting turned on, mandatory internal parameters will be exposed.
+        /// When Compatibility is set to PowerAppsCompabiliity, this parameter is always true.
+        /// </summary>
+        public bool ExposeInternalParamsWithoutDefaultValue
+        {
+            get => _exposeInternalParamsWithoutDefaultValue || Compatibility == ConnectorCompatibility.PowerAppsCompatibility;
+            init => _exposeInternalParamsWithoutDefaultValue = value;
+        }
+
+        private bool _exposeInternalParamsWithoutDefaultValue = false;
+
+        /// <summary>
         /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
         /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
         /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or  ConnectorCompatibility.CdpCompatibility.

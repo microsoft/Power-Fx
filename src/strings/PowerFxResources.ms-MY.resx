@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Fungsi kelakuan dalam fungsi takrifan pengguna bukan kelakuan (UDF). Sila balut isi kandungan fungsi takrifan pengguna dengan tanda kurung dakap ({...}) untuk mengisytiharkan UDF kelakuan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Fungsi tingkah laku mengubah keadaan sesi semasa. 'Clear', 'Collect', 'Patch' dan 'Refresh' ialah fungsi kelakuan yang lazim.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Edit ungkapan fungsi takrifan pengguna supaya ia berada dalam tanda kurung dakap ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Fungsi ujian dalam sifat bukan ujian. Anda tidak boleh menggunakan sifat ini untuk menjalankan fungsi ujian sahaja.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Amaran penugasan. Formula yang dinamakan {0} tidak boleh ditugaskan, oleh sebab itu, penggunaan dalam formula ini mungkin tidak berfungsi dengan betul pada set data besar. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Cuba permudahkan takrifan untuk formula yang dinamakan.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami penugasan dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Blog: Had baris data untuk penugasan</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Amaran penugasan. Fungsi takrifan pengguna {0} tidak boleh ditugaskan, oleh sebab itu, penggunaan dalam formula ini mungkin tidak berfungsi dengan betul pada set data besar. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Cuba permudahkan takrifan untuk fungsi takrifan pengguna.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Artikel: Memahami penugasan dalam aplikasi kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Blog: Had baris data untuk penugasan</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Amaran penugasan. Bahagian yang diserlahkan bagi formula ini mungkin tidak berfungsi dengan betul pada set data yang besar. Operasi "{0}" tidak disokong oleh penyambung ini.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Jenis yang dinamakan hendaklah literal jenis.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Tanpa jenis/jenis penukaran JSON yang tidak disokong '{0}' dalam argumen.</value>
+    <value>Jenis yang tidak disokong '{0}' dalam argumen jenis.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Panjang maksimum dicapai dalam fungsi JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Ciri eksperimen 'Jenis takrifan pengguna' tidak didayakan.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Sintaks tidak betul: '=' tidak boleh digunakan untuk mengisytiharkan jenis takrifan pengguna. Gunakan ':=' sebaliknya.</value>
     
   </data>
 </root>

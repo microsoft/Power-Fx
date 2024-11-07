@@ -82,20 +82,20 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (param.GetDoubleEncoding())
                     {
-                        valueStr = HttpUtility.UrlEncode(valueStr);
+                        valueStr = Uri.EscapeDataString(valueStr);
                     }
 
                     switch (param.In.Value)
                     {
                         case ParameterLocation.Path:
-                            path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
+                            path = path.Replace("{" + param.Name + "}", Uri.EscapeDataString(valueStr));
                             break;
 
                         case ParameterLocation.Query:
                             query.Append((query.Length == 0) ? "?" : "&");
                             query.Append(param.Name);
                             query.Append('=');
-                            query.Append(HttpUtility.UrlEncode(valueStr));
+                            query.Append(Uri.EscapeDataString(valueStr));
                             break;
 
                         case ParameterLocation.Header:

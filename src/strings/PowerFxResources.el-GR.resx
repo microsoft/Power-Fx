@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Συνάρτηση συμπεριφοράς σε μια συνάρτηση που δεν έχει συμπεριφορά και ορίζεται από τον χρήστη (UDF). Για να δηλώσετε μια UDF συμπεριφοράς, τυλίξτε το σώμα της συνάρτησης που ορίζεται από τον χρήστη με αγκύλες ({...}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Οι συναρτήσεις συμπεριφοράς αλλάζουν την τρέχουσα κατάσταση περιόδου λειτουργίας. Οι συναρτήσεις "Clear", "Collect", "Patch" και "Refresh" είναι κοινές λειτουργίες συμπεριφοράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Επεξεργαστείτε την παράσταση συνάρτησης που ορίζεται από τον χρήστη έτσι ώστε να βρίσκεται μέσα σε αγκύλες ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Συνάρτησης δοκιμής σε μη δοκιμαστική ιδιότητα. Δεν μπορείτε να χρησιμοποιήσετε αυτή την ιδιότητα για να καλέσετε συναρτήσεις μόνο για δοκιμή.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Προειδοποίηση ανάθεσης. Ο κατονομαζόμενος τύπος {0} δεν έχει δυνατότητα ανάθεσης, επομένως η χρήση του σε αυτόν τον τύπο ενδέχεται να μην λειτουργεί σωστά σε μεγάλα σύνολα δεδομένων. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Δοκιμάστε να απλοποιήσετε τον ορισμό για τον τύπο με όνομα.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Προειδοποίηση ανάθεσης. Η καθορισμένη από τον χρήστη συνάρτηση {0} δεν έχει δυνατότητα ανάθεσης, επομένως η χρήση του σε αυτόν τον τύπο ενδέχεται να μην λειτουργεί σωστά σε μεγάλα σύνολα δεδομένων. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Δοκιμάστε να απλοποιήσετε τον ορισμό για τη λειτουργία που ορίζεται από τον χρήστη.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Άρθρο: Κατανόηση της ανάθεσης σε μια εφαρμογή καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Ιστολόγιο: Όριο γραμμών δεδομένων για ανάθεση</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Προειδοποίηση ανάθεσης. Το επισημασμένο τμήμα αυτού του τύπου ενδέχεται να μην λειτουργεί σωστά σε μεγάλα σύνολα δεδομένων. Η λειτουργία "{0}" δεν υποστηρίζεται από αυτήν τη σύνδεση.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Ο κατονομαζόμενος τύπος πρέπει να είναι κυριολεκτικός τύπος.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Μη υποστηριζόμενος μη τυπολογημένος/JSON τύπος μετατροπής '{0}' στο όρισμα.</value>
+    <value>Μη υποστηριζόμενος τύπος '{0}' σε όρισμα τύπου.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Το μέγιστο μήκος που επιτεύχθηκε σε συνάρτηση JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Δεν είναι ενεργοποιημένη η πειραματική δυνατότητα 'Τύποι καθορισμένοι από τον χρήστη'.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Εσφαλμένη σύνταξη: Το '=' δεν μπορεί να χρησιμοποιηθεί για τη δήλωση τύπων καθορισμένων από τον χρήστη. Χρησιμοποιήστε το ":=" αντ' αυτού.</value>
     
   </data>
 </root>

@@ -3621,6 +3621,18 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
     
   </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Funkcija načina delovanja je v uporabniško določeni funkciji (UDF), pri kateri ne gre za način delovanja. Telo uporabniško določene funkcije dajte v zavite oklepaje ({...}), da deklarirate uporabniško določeno funkcijo načina delovanja.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Funkcije načina delovanja spremenijo trenutno stanje seje. Pogoste funkcije načina delovanja so »Počisti«, »Zberi«, »Popravi« in »Osveži«.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Izraz uporabniško določene funkcije uredite tako, da bo v zavitih oklepajih ({...}).</value>
+    
+  </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Preskusite funkcijo v lastnosti brez preskusa. Te lastnosti ne morete uporabiti za priklic funkcij samo za preskus.</value>
     
@@ -4015,6 +4027,60 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Opozorilo o delegiranju. Imenovane formule {0} ni mogoče dodeliti, zato njena uporaba v tej formuli morda ne bo delovala pravilno na velikih naborih podatkov. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Vir podatkov morda ne bo mogel obdelati formule in bo morda vrnil nepopoln nabor podatkov. Če nabor podatkov ni popoln, vaša aplikacija morda ne bo vrnila pravilnih rezultatov ali ne bo delovala pravilno.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Poskušajte poenostaviti definicijo za imenovano formulo.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Članek: Razumevanje pooblastitve v aplikaciji na osnovi delovnega območja</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Spletni dnevnik: Omejitve vrstice s podatki za pooblastitev</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Opozorilo o delegiranju. Uporabniško določene funkcije {0} ni mogoče dodeliti, zato njena uporaba v tej formuli morda ne bo delovala pravilno na velikih naborih podatkov. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Vir podatkov morda ne bo mogel obdelati formule in bo morda vrnil nepopoln nabor podatkov. Če nabor podatkov ni popoln, vaša aplikacija morda ne bo vrnila pravilnih rezultatov ali ne bo delovala pravilno.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Poskušajte poenostaviti definicijo za uporabniško določeno funkcijo.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Članek: Razumevanje pooblastitve v aplikaciji na osnovi delovnega območja</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Spletni dnevnik: Omejitve vrstice s podatki za pooblastitev</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
     <value>Opozorilo o pooblastitvi. Označeni del te formule morda ne bo deloval pravilno v velikih naborih podatkov. Ta priključek ne podpira operacije »{0}«.</value>
     
@@ -4116,7 +4182,7 @@
     
   </data>
   <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+    <value>Imenovana vrsta mora biti vrsta »niz«.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4757,7 +4823,7 @@
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
-    <value>Nepodprta neopredeljena vrsta/vrsta pretvorbe JSON »{0}« v argumentu.</value>
+    <value>Nepodprta vrsta »{0}« v argumentu vrste.</value>
     
   </data>
   <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
@@ -4766,6 +4832,14 @@
   </data>
   <data name="ErrReachedMaxJsonLength" xml:space="preserve">
     <value>Največja dosežena dolžina v funkciji JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Poskusna funkcija »uporabniško določene vrste« ni omogočena.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Napačna sintaksa: »=« ni mogoče uporabiti za deklariranje določenih vrst. Namesto tega uporabite »:=«.</value>
     
   </data>
 </root>

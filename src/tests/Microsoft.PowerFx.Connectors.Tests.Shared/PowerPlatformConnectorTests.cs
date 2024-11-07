@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
  x-ms-client-session-id: MySessionId
  x-ms-request-method: GET
- x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%c3%a9ans?units=C
+ x-ms-request-url: /apim/msnweather/480a676ab6e64b168cfa41506014e45d/current/Orl%C3%A9ans?units=C
  x-ms-user-agent: PowerFx/{version}
 ";
             AssertEqual(expected, actual);
@@ -953,7 +953,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/datasets/calendars/v4/tables/Calendar/items
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""subject"":""Subject"",""start"":""2023-06-02T{(id == 1 ? "00" : "11")}:00:00.000"",""end"":""2023-06-02T{(id == 1 ? "00:00" : "11:30")}:00.000"",""timeZone"":""(UTC\u002B01:00) Brussels, Copenhagen, Madrid, Paris""}}
+ [body] {{""subject"":""Subject"",""start"":""2023-06-02T{(id == 1 ? "00" : "11")}:00:00.000"",""end"":""2023-06-02T{(id == 1 ? "00:00" : "11:30")}:00.000"",""timeZone"":""(UTC+01:00) Brussels, Copenhagen, Madrid, Paris""}}
 ";
 
             AssertEqual(expected, actual);
@@ -997,7 +997,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: GET
- x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3d/$value
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/beta/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwCDi7i2pr6zRbiq9q8hHM-iAAAFMQAZAABDuyuwiYTvQLeL0nv55lGwAAVHeZkhAAA%3D/$value
  x-ms-user-agent: PowerFx/{version}
 ";
 
@@ -1089,7 +1089,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: PATCH
- x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3d/flag
+ x-ms-request-url: /apim/office365/785da26033fe4f3f8604273d25f209d5/codeless/v1.0/me/messages/AAMkAGJiMDkyY2NkLTg1NGItNDg1ZC04MjMxLTc5NzQ1YTUwYmNkNgBGAAAAAACivZtRsXzPEaP8AIBfULPVBwBBHsoKDHXPEaP6AIBfULPVAAAABp8rAABDuyuwiYTvQLeL0nv55lGwAAVHeWXcAAA%3D/flag
  x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""flag"":{{""flagStatus"":""flagged""}}}}
@@ -1319,7 +1319,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b60ed9ea-c17c-e39a-8682-e33a20d51e14
  x-ms-client-session-id: ce55fe97-6e74-4f56-b8cf-529e275b253f
  x-ms-request-method: GET
- x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2c396846%2c+-0%2c499967&wp.1=47%2c395142%2c+-0%2c480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
+ x-ms-request-url: /apim/bingmaps/9ab2342eaecc4800a5c327290abf4a1f/V3/REST/V1/Routes/Driving?wp.0=47%2C396846%2C%20-0%2C499967&wp.1=47%2C395142%2C%20-0%2C480142&avoid_highways=False&avoid_tolls=False&avoid_ferry=False&avoid_minimizeHighways=False&avoid_minimizeTolls=False&avoid_borderCrossing=False
  x-ms-user-agent: PowerFx/{version}
 ";
 
@@ -1441,7 +1441,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-url: /apim/sql/53f515b50c3e4925803ec1f0945e799f/v2/datasets/pfxdev-sql.database.windows.net,SampleDB/query/sql
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
  [content-header] Content-Type: application/json; charset=utf-8
- [body] {{""query"":""SELECT fk.name AS FK_Name, \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 AS Parent_Table, cp.name AS Parent_Column, \u0027[\u0027 \u002B sr.name \u002B \u0027].[\u0027 \u002B tr.name \u002B \u0027]\u0027 AS Referenced_Table, cr.name AS Referenced_Column FROM sys.foreign_keys fk INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id WHERE \u0027[\u0027 \u002B sp.name \u002B \u0027].[\u0027 \u002B tp.name \u002B \u0027]\u0027 = \u0027[SalesLT].[Product]\u0027""}}
+ [body] {{""query"":""SELECT fk.name AS FK_Name, '[' + sp.name + '].[' + tp.name + ']' AS Parent_Table, cp.name AS Parent_Column, '[' + sr.name + '].[' + tr.name + ']' AS Referenced_Table, cr.name AS Referenced_Column FROM sys.foreign_keys fk INNER JOIN sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN sys.schemas sp on tp.schema_id = sp.schema_id INNER JOIN sys.schemas sr on tr.schema_id = sr.schema_id INNER JOIN sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id WHERE '[' + sp.name + '].[' + tp.name + ']' = '[SalesLT].[Product]'""}}
 ";
             Assert.Equal(expected, testConnector._log.ToString());
         }
@@ -1751,7 +1751,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/alltables
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/alltables
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1761,7 +1761,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
  x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
@@ -1771,11 +1771,36 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
- x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253A%252F%252Fauroraprojopsintegration01.sharepoint.com%252Fsites%252FSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
  x-ms-user-agent: PowerFx/{version}
 ";
 
             Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, 4, "poster, location, notificationUrl, body", "<null>, <null>, True, <null>")]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, 4, "poster, location, notificationUrl, body", "<null>, <null>, True, <null>")]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, 3, "poster, location, body", "<null>, <null>, <null>")]
+        public void ExposeInternalParamsWithoutDefaultValueTest(ConnectorCompatibility compatibility, bool exposeInternalParamsWithoutDefaultValue, int expectedCount, string expectedParameters, string expectedNotificationUrls)
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\Teams.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            ConnectorSettings connectorSettings = new ConnectorSettings("teams")
+            {
+                Compatibility = compatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true, 
+                IncludeWebhookFunctions = true,
+                ExposeInternalParamsWithoutDefaultValue = exposeInternalParamsWithoutDefaultValue
+            };
+
+            ConnectorFunction function = OpenApiParser.GetFunctions(connectorSettings, apiDoc).First(f => f.Name == "PostCardAndWaitForResponse");
+
+            Assert.Equal(expectedCount, function.RequiredParameters.Length);
+            Assert.Equal(expectedParameters, string.Join(", ", function.RequiredParameters.Select(rp => rp.Name)));
+            Assert.Equal(expectedNotificationUrls, string.Join(", ", function.RequiredParameters.Select(rp => rp.NotificationUrl.HasValue ? rp.NotificationUrl.ToString() : "<null>")));
         }
 
         [Fact]
@@ -2000,52 +2025,57 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Type)':s, " +
-                "_createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) (Type)':s, _createdonbehalfby_value`'Created " +
-                "By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogic" +
-                "alname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.looku" +
-                "plogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modified By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External " +
-                "Party) (Type)':s, _modifiedonbehalfby_value`'Modified By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing " +
-                "Partner (Value)':s, '_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'KPI " +
-                "(Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales Acceleration Insights " +
-                "ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, _ownerid_value`'Owner (Value)':s, '_ownerid_value@Microsoft.Dynamics.CRM.lo" +
-                "okuplogicalname'`'Owner (Type)':s, _owningbusinessunit_value`'Owning Business Unit (Value)':s, '_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning Business Unit (Type)':s, _owningteam_value`'Owning " +
-                "Team (Value)':s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning Team (Type)':s, _owninguser_value`'Owning User (Value)':s, '_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning " +
-                "User (Type)':s, _parentaccountid_value`'Parent Account (Value)':s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Parent Account (Type)':s, _preferredequipmentid_value`'Preferred Facility/Equipment " +
-                "(Value)':s, '_preferredequipmentid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred Facility/Equipment (Type)':s, _preferredserviceid_value`'Preferred Service (Value)':s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplogi" +
-                "calname'`'Preferred Service (Type)':s, _preferredsystemuserid_value`'Preferred User (Value)':s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred User (Type)':s, _primarycontactid_value`'Primary " +
-                "Contact (Value)':s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Primary Contact (Type)':s, _slaid_value`'SLA (Value)':s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'SLA " +
-                "(Type)':s, _slainvokedid_value`'Last SLA applied (Value)':s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Last SLA applied (Type)':s, _territoryid_value`'Territory (Value)':s, '_territoryid_value@Microsoft.Dynamics.CRM.loo" +
-                "kuplogicalname'`'Territory (Type)':s, _transactioncurrencyid_value`'Currency (Value)':s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Currency (Type)':s, accountcategorycode`Category:w, " +
-                "accountclassificationcode`Classification:w, accountid`Account:s, accountnumber`'Account Number':s, accountratingcode`'Account Rating':w, address1_addressid`'Address 1: ID':s, address1_addresstypecode`'Address " +
-                "1: Address Type':w, address1_city`'Address 1: City':s, address1_composite`'Address 1':s, address1_country`'Address 1: Country/Region':s, address1_county`'Address 1: County':s, address1_fax`'Address 1: " +
-                "Fax':s, address1_freighttermscode`'Address 1: Freight Terms':w, address1_latitude`'Address 1: Latitude':w, address1_line1`'Address 1: Street 1':s, address1_line2`'Address 1: Street 2':s, address1_line3`'Address " +
-                "1: Street 3':s, address1_longitude`'Address 1: Longitude':w, address1_name`'Address 1: Name':s, address1_postalcode`'Address 1: ZIP/Postal Code':s, address1_postofficebox`'Address 1: Post Office Box':s, " +
-                "address1_primarycontactname`'Address 1: Primary Contact Name':s, address1_shippingmethodcode`'Address 1: Shipping Method':w, address1_stateorprovince`'Address 1: State/Province':s, address1_telephone1`'Address " +
-                "Phone':s, address1_telephone2`'Address 1: Telephone 2':s, address1_telephone3`'Address 1: Telephone 3':s, address1_upszone`'Address 1: UPS Zone':s, address1_utcoffset`'Address 1: UTC Offset':w, address2_addressid`'Address " +
-                "2: ID':s, address2_addresstypecode`'Address 2: Address Type':w, address2_city`'Address 2: City':s, address2_composite`'Address 2':s, address2_country`'Address 2: Country/Region':s, address2_county`'Address " +
-                "2: County':s, address2_fax`'Address 2: Fax':s, address2_freighttermscode`'Address 2: Freight Terms':w, address2_latitude`'Address 2: Latitude':w, address2_line1`'Address 2: Street 1':s, address2_line2`'Address " +
-                "2: Street 2':s, address2_line3`'Address 2: Street 3':s, address2_longitude`'Address 2: Longitude':w, address2_name`'Address 2: Name':s, address2_postalcode`'Address 2: ZIP/Postal Code':s, address2_postofficebox`'Address " +
-                "2: Post Office Box':s, address2_primarycontactname`'Address 2: Primary Contact Name':s, address2_shippingmethodcode`'Address 2: Shipping Method':w, address2_stateorprovince`'Address 2: State/Province':s, " +
-                "address2_telephone1`'Address 2: Telephone 1':s, address2_telephone2`'Address 2: Telephone 2':s, address2_telephone3`'Address 2: Telephone 3':s, address2_upszone`'Address 2: UPS Zone':s, address2_utcoffset`'Address " +
-                "2: UTC Offset':w, adx_createdbyipaddress`'Created By (IP Address)':s, adx_createdbyusername`'Created By (User Name)':s, adx_modifiedbyipaddress`'Modified By (IP Address)':s, adx_modifiedbyusername`'Modified " +
-                "By (User Name)':s, aging30`'Aging 30':w, aging30_base`'Aging 30 (Base)':w, aging60`'Aging 60':w, aging60_base`'Aging 60 (Base)':w, aging90`'Aging 90':w, aging90_base`'Aging 90 (Base)':w, businesstypecode`'Business " +
-                "Type':w, createdon`'Created On':d, creditlimit`'Credit Limit':w, creditlimit_base`'Credit Limit (Base)':w, creditonhold`'Credit Hold':b, customersizecode`'Customer Size':w, customertypecode`'Relationship " +
-                "Type':w, description`Description:s, donotbulkemail`'Do not allow Bulk Emails':b, donotbulkpostalmail`'Do not allow Bulk Mails':b, donotemail`'Do not allow Emails':b, donotfax`'Do not allow Faxes':b, donotphone`'Do " +
-                "not allow Phone Calls':b, donotpostalmail`'Do not allow Mails':b, donotsendmm`'Send Marketing Materials':b, emailaddress1`Email:s, emailaddress2`'Email Address 2':s, emailaddress3`'Email Address 3':s, " +
-                "entityimage`'Default Image':s, entityimageid`'Entity Image Id':s, exchangerate`'Exchange Rate':w, fax`Fax:s, followemail`'Follow Email Activity':b, ftpsiteurl`'FTP Site':s, importsequencenumber`'Import " +
-                "Sequence Number':w, industrycode`Industry:w, lastonholdtime`'Last On Hold Time':d, lastusedincampaign`'Last Date Included in Campaign':d, marketcap`'Market Capitalization':w, marketcap_base`'Market Capitalization " +
-                "(Base)':w, marketingonly`'Marketing Only':b, merged`Merged:b, modifiedon`'Modified On':d, msdyn_gdproptout`'GDPR Optout':b, name`'Account Name':s, numberofemployees`'Number of Employees':w, onholdtime`'On " +
-                "Hold Time (Minutes)':w, opendeals`'Open Deals':w, opendeals_date`'Open Deals (Last Updated On)':d, opendeals_state`'Open Deals (State)':w, openrevenue`'Open Revenue':w, openrevenue_base`'Open Revenue (Base)':w, " +
-                "openrevenue_date`'Open Revenue (Last Updated On)':d, openrevenue_state`'Open Revenue (State)':w, overriddencreatedon`'Record Created On':d, ownershipcode`Ownership:w, participatesinworkflow`'Participates " +
-                "in Workflow':b, paymenttermscode`'Payment Terms':w, preferredappointmentdaycode`'Preferred Day':w, preferredappointmenttimecode`'Preferred Time':w, preferredcontactmethodcode`'Preferred Method of Contact':w, " +
-                "primarysatoriid`'Primary Satori ID':s, primarytwitterid`'Primary Twitter ID':s, processid`Process:s, revenue`'Annual Revenue':w, revenue_base`'Annual Revenue (Base)':w, sharesoutstanding`'Shares Outstanding':w, " +
-                "shippingmethodcode`'Shipping Method':w, sic`'SIC Code':s, stageid`'(Deprecated) Process Stage':s, statecode`Status:w, statuscode`'Status Reason':w, stockexchange`'Stock Exchange':s, teamsfollowed`TeamsFollowed:w, " +
-                "telephone1`'Main Phone':s, telephone2`'Other Phone':s, telephone3`'Telephone 3':s, territorycode`'Territory Code':w, tickersymbol`'Ticker Symbol':s, timespentbymeonemailandmeetings`'Time Spent by me':s, " +
-                "timezoneruleversionnumber`'Time Zone Rule Version Number':w, traversedpath`'(Deprecated) Traversed Path':s, utcconversiontimezonecode`'UTC Conversion Time Zone Code':w, versionnumber`'Version Number':w, " +
-                "websiteurl`Website:s, yominame`'Yomi Account Name':s]]]";
+                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
+                "By (Type)':s, _createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) " +
+                "(Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'" +
+                "Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookup" +
+                "logicalname'`'Master ID (Type)':s, _modifiedby_value`'Modified By (Value)':s, '_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Type)':s, _modifiedbyexternalparty_value`'Modifi" +
+                "ed By (External Party) (Value)':s, '_modifiedbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (External Party) (Type)':s, _modifiedonbehalfby_value`'Modified " +
+                "By (Delegate) (Value)':s, '_modifiedonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Modified By (Delegate) (Type)':s, _msa_managingpartnerid_value`'Managing Partner (Value)':s, " +
+                "'_msa_managingpartnerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Managing Partner (Type)':s, _msdyn_accountkpiid_value`'KPI (Value)':s, '_msdyn_accountkpiid_value@Microsoft.Dynamics.CRM.lookupl" +
+                "ogicalname'`'KPI (Type)':s, _msdyn_salesaccelerationinsightid_value`'Sales Acceleration Insights ID (Value)':s, '_msdyn_salesaccelerationinsightid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Sales" +
+                " Acceleration Insights ID (Type)':s, _originatingleadid_value`'Originating Lead (Value)':s, '_originatingleadid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Originating Lead (Type)':s, " +
+                "_ownerid_value`'Owner (Value)':s, '_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owner (Type)':s, _owningbusinessunit_value`'Owning Business Unit (Value)':s, '_owningbusinessunit_value@Micr" +
+                "osoft.Dynamics.CRM.lookuplogicalname'`'Owning Business Unit (Type)':s, _owningteam_value`'Owning Team (Value)':s, '_owningteam_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning " +
+                "Team (Type)':s, _owninguser_value`'Owning User (Value)':s, '_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Owning User (Type)':s, _parentaccountid_value`'Parent Account " +
+                "(Value)':s, '_parentaccountid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Parent Account (Type)':s, _preferredequipmentid_value`'Preferred Facility/Equipment (Value)':s, '_preferredequipmentid_val" +
+                "ue@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred Facility/Equipment (Type)':s, _preferredserviceid_value`'Preferred Service (Value)':s, '_preferredserviceid_value@Microsoft.Dynamics.CRM.lookuplo" +
+                "gicalname'`'Preferred Service (Type)':s, _preferredsystemuserid_value`'Preferred User (Value)':s, '_preferredsystemuserid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Preferred " +
+                "User (Type)':s, _primarycontactid_value`'Primary Contact (Value)':s, '_primarycontactid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Primary Contact (Type)':s, _slaid_value`'SLA " +
+                "(Value)':s, '_slaid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'SLA (Type)':s, _slainvokedid_value`'Last SLA applied (Value)':s, '_slainvokedid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Las" +
+                "t SLA applied (Type)':s, _territoryid_value`'Territory (Value)':s, '_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Territory (Type)':s, _transactioncurrencyid_value`'Currency " +
+                "(Value)':s, '_transactioncurrencyid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Currency (Type)':s, accountcategorycode`Category:w, accountclassificationcode`Classification:w, " +
+                "accountid`Account:s, accountnumber`'Account Number':s, accountratingcode`'Account Rating':w, address1_addressid`'Address 1: ID':s, address1_addresstypecode`'Address 1: Address Type':w, " +
+                "address1_city`'Address 1: City':s, address1_composite`'Address 1':s, address1_country`'Address 1: Country/Region':s, address1_county`'Address 1: County':s, address1_fax`'Address 1: " +
+                "Fax':s, address1_freighttermscode`'Address 1: Freight Terms':w, address1_latitude`'Address 1: Latitude':w, address1_line1`'Address 1: Street 1':s, address1_line2`'Address 1: Street " +
+                "2':s, address1_line3`'Address 1: Street 3':s, address1_longitude`'Address 1: Longitude':w, address1_name`'Address 1: Name':s, address1_postalcode`'Address 1: ZIP/Postal Code':s, address1_postofficebox`" +
+                "'Address 1: Post Office Box':s, address1_primarycontactname`'Address 1: Primary Contact Name':s, address1_shippingmethodcode`'Address 1: Shipping Method':w, address1_stateorprovince`'Address " +
+                "1: State/Province':s, address1_telephone1`'Address Phone':s, address1_telephone2`'Address 1: Telephone 2':s, address1_telephone3`'Address 1: Telephone 3':s, address1_upszone`'Address " +
+                "1: UPS Zone':s, address1_utcoffset`'Address 1: UTC Offset':w, address2_addressid`'Address 2: ID':s, address2_addresstypecode`'Address 2: Address Type':w, address2_city`'Address 2: City':s, " +
+                "address2_composite`'Address 2':s, address2_country`'Address 2: Country/Region':s, address2_county`'Address 2: County':s, address2_fax`'Address 2: Fax':s, address2_freighttermscode`'Address " +
+                "2: Freight Terms':w, address2_latitude`'Address 2: Latitude':w, address2_line1`'Address 2: Street 1':s, address2_line2`'Address 2: Street 2':s, address2_line3`'Address 2: Street 3':s, " +
+                "address2_longitude`'Address 2: Longitude':w, address2_name`'Address 2: Name':s, address2_postalcode`'Address 2: ZIP/Postal Code':s, address2_postofficebox`'Address 2: Post Office Box':s, " +
+                "address2_primarycontactname`'Address 2: Primary Contact Name':s, address2_shippingmethodcode`'Address 2: Shipping Method':w, address2_stateorprovince`'Address 2: State/Province':s, " +
+                "address2_telephone1`'Address 2: Telephone 1':s, address2_telephone2`'Address 2: Telephone 2':s, address2_telephone3`'Address 2: Telephone 3':s, address2_upszone`'Address 2: UPS Zone':s, " +
+                "address2_utcoffset`'Address 2: UTC Offset':w, adx_createdbyipaddress`'Created By (IP Address)':s, adx_createdbyusername`'Created By (User Name)':s, adx_modifiedbyipaddress`'Modified " +
+                "By (IP Address)':s, adx_modifiedbyusername`'Modified By (User Name)':s, aging30`'Aging 30':w, aging30_base`'Aging 30 (Base)':w, aging60`'Aging 60':w, aging60_base`'Aging 60 (Base)':w, " +
+                "aging90`'Aging 90':w, aging90_base`'Aging 90 (Base)':w, businesstypecode`'Business Type':w, createdon`'Created On':d, creditlimit`'Credit Limit':w, creditlimit_base`'Credit Limit (Base)':w, " +
+                "creditonhold`'Credit Hold':b, customersizecode`'Customer Size':w, customertypecode`'Relationship Type':w, description`Description:s, donotbulkemail`'Do not allow Bulk Emails':b, donotbulkpostalmail`'Do" +
+                " not allow Bulk Mails':b, donotemail`'Do not allow Emails':b, donotfax`'Do not allow Faxes':b, donotphone`'Do not allow Phone Calls':b, donotpostalmail`'Do not allow Mails':b, donotsendmm`'Send " +
+                "Marketing Materials':b, emailaddress1`Email:s, emailaddress2`'Email Address 2':s, emailaddress3`'Email Address 3':s, entityimage`'Default Image':s, entityimageid`'Entity Image Id':s, " +
+                "exchangerate`'Exchange Rate':w, fax`Fax:s, followemail`'Follow Email Activity':b, ftpsiteurl`'FTP Site':s, importsequencenumber`'Import Sequence Number':w, industrycode`Industry:w, " +
+                "lastonholdtime`'Last On Hold Time':d, lastusedincampaign`'Last Date Included in Campaign':d, marketcap`'Market Capitalization':w, marketcap_base`'Market Capitalization (Base)':w, marketingonly`'Marketi" +
+                "ng Only':b, merged`Merged:b, modifiedon`'Modified On':d, msdyn_gdproptout`'GDPR Optout':b, name`'Account Name':s, numberofemployees`'Number of Employees':w, onholdtime`'On Hold Time " +
+                "(Minutes)':w, opendeals`'Open Deals':w, opendeals_date`'Open Deals (Last Updated On)':d, opendeals_state`'Open Deals (State)':w, openrevenue`'Open Revenue':w, openrevenue_base`'Open " +
+                "Revenue (Base)':w, openrevenue_date`'Open Revenue (Last Updated On)':d, openrevenue_state`'Open Revenue (State)':w, overriddencreatedon`'Record Created On':d, ownershipcode`Ownership:w, " +
+                "participatesinworkflow`'Participates in Workflow':b, paymenttermscode`'Payment Terms':w, preferredappointmentdaycode`'Preferred Day':w, preferredappointmenttimecode`'Preferred Time':w, " +
+                "preferredcontactmethodcode`'Preferred Method of Contact':w, primarysatoriid`'Primary Satori ID':s, primarytwitterid`'Primary Twitter ID':s, processid`Process:s, revenue`'Annual Revenue':w, " +
+                "revenue_base`'Annual Revenue (Base)':w, sharesoutstanding`'Shares Outstanding':w, shippingmethodcode`'Shipping Method':w, sic`'SIC Code':s, stageid`'(Deprecated) Process Stage':s, statecode`Status:w, " +
+                "statuscode`'Status Reason':w, stockexchange`'Stock Exchange':s, teamsfollowed`TeamsFollowed:w, telephone1`'Main Phone':s, telephone2`'Other Phone':s, telephone3`'Telephone 3':s, territorycode`'Territor" +
+                "y Code':w, tickersymbol`'Ticker Symbol':s, timespentbymeonemailandmeetings`'Time Spent by me':s, timezoneruleversionnumber`'Time Zone Rule Version Number':w, traversedpath`'(Deprecated) " +
+                "Traversed Path':s, utcconversiontimezonecode`'UTC Conversion Time Zone Code':w, versionnumber`'Version Number':w, websiteurl`Website:s, yominame`'Yomi Account Name':s]]]";
 
-            Assert.Equal(expected, ft);
+            Assert.Equal<object>(expected, ft);
             Assert.Equal("address1_addresstypecode", returnType.Fields[0].Fields[0].Fields[7].Name);
             Assert.Equal("w", returnType.Fields[0].Fields[0].Fields[7].FormulaType.ToStringWithDisplayNames());
             Assert.True(returnType.Fields[0].Fields[0].Fields[7].IsEnum);

@@ -10,12 +10,14 @@ namespace Microsoft.PowerFx.Connectors
         public const string XMsDynamicProperties = "x-ms-dynamic-properties";
         public const string XMsDynamicSchema = "x-ms-dynamic-schema";
         public const string XMsDynamicValues = "x-ms-dynamic-values";
+        public const string XMsEnum = "x-ms-enum";
         public const string XMsEnumDisplayName = "x-ms-enum-display-name";
         public const string XMsEnumValues = "x-ms-enum-values";
         public const string XMsExplicitInput = "x-ms-explicit-input";
         public const string XMsKeyOrder = "x-ms-keyOrder";
         public const string XMsKeyType = "x-ms-keyType";
         public const string XMsMediaKind = "x-ms-media-kind";
+        public const string XMsNotificationUrl = "x-ms-notification-url";
         public const string XMsNotificationContent = "x-ms-notification-content";
         public const string XMsPageable = "x-ms-pageable";
         public const string XMsPermission = "x-ms-permission";

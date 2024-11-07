@@ -893,63 +893,6 @@ namespace Microsoft.PowerFx.Core.Binding
             return overloads.Any(overload => overload.IsSelfContained) && overloads.Any(overload => !overload.IsSelfContained);
         }
 
-        private bool IsDataComponentDataSource(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Data &&
-                _glue.IsComponentDataSource(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentDefinition(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentDefinition(lookupInfo.Data);
-        }
-
-        private bool IsDataComponentInstance(NameLookupInfo lookupInfo)
-        {
-            return lookupInfo.Kind == BindKind.Control &&
-                   _glue.IsDataComponentInstance(lookupInfo.Data);
-        }
-
-        private IExternalControl GetDataComponentControl(DottedNameNode dottedNameNode, INameResolver nameResolver, TexlVisitor visitor)
-        {
-            Contracts.AssertValue(dottedNameNode);
-            Contracts.AssertValueOrNull(nameResolver);
-            Contracts.AssertValueOrNull(visitor);
-
-            if (nameResolver == null || !(dottedNameNode.Left is FirstNameNode lhsNode))
-            {
-                return null;
-            }
-
-            if (!nameResolver.LookupGlobalEntity(lhsNode.Ident.Name, out var lookupInfo) ||
-                (!IsDataComponentDataSource(lookupInfo) &&
-                !IsDataComponentDefinition(lookupInfo) &&
-                !IsDataComponentInstance(lookupInfo)))
-            {
-                return null;
-            }
-
-            if (GetInfo(lhsNode) == null)
-            {
-                lhsNode.Accept(visitor);
-            }
-
-            var lhsInfo = GetInfo(lhsNode);
-            if (lhsInfo?.Data is IExternalControl dataCtrlInfo)
-            {
-                return dataCtrlInfo;
-            }
-
-            if (lhsInfo?.Kind == BindKind.Data &&
-                _glue.TryGetCdsDataSourceByBind(lhsInfo.Data, out var info))
-            {
-                return info;
-            }
-
-            return null;
-        }
-
         private DPath GetFunctionNamespace(CallNode node, TexlVisitor visitor)
         {
             Contracts.AssertValue(node);
@@ -960,7 +903,6 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 ParentNode parentNode => GetParentControl(parentNode, NameResolver),
                 SelfNode selfNode => GetSelfControl(selfNode, NameResolver),
-                FirstNameNode firstNameNode => GetDataComponentControl(node.HeadNode.AsDottedName(), NameResolver, visitor),
                 _ => null,
             };
 
@@ -1002,7 +944,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return Enumerable.Empty<string>();
                 }
 
-                var ruleQueryOptions = Rule.Binding.QueryOptions.GetQueryOptions(ds);
+                var ruleQueryOptions = Rule.HasValidBinding ? Rule.Binding.QueryOptions.GetQueryOptions(ds) : null;
                 if (ruleQueryOptions != null)
                 {
                     foreach (var nodeQO in Rule.TexlNodeQueryOptions)
@@ -1024,36 +966,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         ds.QueryOptions.AddRelatedColumns();
                         return ds.QueryOptions.Selects;
-                    }
-                }
-            }
-
-            return Enumerable.Empty<string>();
-        }
-
-        internal IEnumerable<string> GetExpandQuerySelects(TexlNode node, string expandEntityLogicalName)
-        {
-            if (Document.Properties.EnabledFeatures.IsProjectionMappingEnabled
-                && TryGetDataQueryOptions(node, true, out var tabularDataQueryOptionsMap))
-            {
-                var currNodeQueryOptions = tabularDataQueryOptionsMap.GetQueryOptions();
-
-                foreach (var qoItem in currNodeQueryOptions)
-                {
-                    foreach (var expandQueryOptions in qoItem.Expands)
-                    {
-                        if (expandQueryOptions.Value.ExpandInfo.Identity == expandEntityLogicalName)
-                        {
-                            if (!expandQueryOptions.Value.SelectsEqualKeyColumns() &&
-                                (!(Document?.Properties?.UserFlags?.EnforceSelectPropagationLimit ?? false) || expandQueryOptions.Value.Selects.Count() <= MaxSelectsToInclude))
-                            {
-                                return expandQueryOptions.Value.Selects;
-                            }
-                            else
-                            {
-                                return Enumerable.Empty<string>();
-                            }
-                        }
                     }
                 }
             }
@@ -2941,6 +2853,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (lookupInfo.Data is IExternalNamedFormula formula)
                     {
                         isConstantNamedFormula = formula.IsConstant;
+
+                        // If the definition of the named formula has a delegation warning, every use should also inherit this warning
+                        if (formula.HasDelegationWarning)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_NF, node.Ident.Name);
+                        }
                     }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
@@ -3612,7 +3530,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If the reference is to Control.Property and the rule for that Property is a constant,
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
-                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding.IsConstant(rule.Binding.Top))
+                    if (controlInfo?.GetRule(property.InvariantName) is IExternalRule rule &&
+                        rule.IsInvariantExpression)
                     {
                         value = controlInfo;
                         isConstant = true;
@@ -4158,14 +4077,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                     {
-                        // We only have to check the property's rule and the calling arguments for purity as scoped variables
-                        // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
-                            ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
-                        {
-                            hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);
-                            isStateFul |= rule.Binding.IsStateful(rule.Binding.Top);
-                        }
+                        // Behavior only component properties should be treated as stateful.
+                        hasSideEffects |= infoTexlFunction.IsBehaviorOnly;
+
+                        // At the moment, we're going to treat all invocations of component scoped property functions as stateful. 
+                        // This ensures that we don't lift these function invocations in loops, and that they are re-evaluated every time they are called,
+                        // which is always correct, although less efficient in some cases. 
+                        isStateFul |= true;
                     }
                     else
                     {
@@ -4872,6 +4790,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(node, errorKey, badAncestor.Head.Name);
                     }
+                }
+
+                // If the definition of the user-defined function has a delegation warning, every usage should also inherit this warning
+                if (func is UserDefinedFunction udf && udf.HasDelegationWarning)
+                {
+                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.SuggestRemoteExecutionHint_UDF, udf.Name);
                 }
 
                 _txb.CheckAndMarkAsDelegatable(node);
