@@ -487,12 +487,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             PowerFxConfig config = new PowerFxConfig();
 
-            bool fOk = config.SymbolTable.TryGetSymbolType("os1", out var type);
+            bool fOk = config.ComposedConfigSymbols.TryGetSymbolType("os1", out var type);
             Assert.False(fOk);
 
             config.AddOptionSet(os);
 
-            fOk = config.SymbolTable.TryGetSymbolType("os1", out type);
+            fOk = config.ComposedConfigSymbols.TryGetSymbolType("os1", out type);
             Assert.True(fOk);
 
             AssertOptionSetType(type, os);
