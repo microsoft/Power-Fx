@@ -4647,6 +4647,10 @@
     <value>Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class.</value>
     <comment>Error message indicating that the regular expression has an unescaped paren within a character class.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class.</value>
+    <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
     <comment>Error Message.</comment>

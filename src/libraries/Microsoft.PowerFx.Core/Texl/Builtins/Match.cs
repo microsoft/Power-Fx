@@ -204,7 +204,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
                     (?<goodEscapeInsidePositive>\\[DWS])               |
                     (?<goodEscapeOutside>\\[bB])                       | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
-                    (?<goodEscapeInside>\\[\-])                        | # needed for /v compatibility with ECMAScript
+                    (?<goodEscapeInside>\\[\-\|])                      | # needed for /v compatibility with ECMAScript
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                                                                     
                     # leading (?<, named captures
@@ -234,6 +234,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     (?<badHyphen>\[\-|\-\])                            | # literal not allowed within character class, needs to be escaped (ECMAScript v)
+                    (?<badCharacterClass>\|)                           |
 
                     # open and close regions
                     (?<openParen>\()                                   |
@@ -521,6 +522,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (!openCharacterClass)
                         {
                             openPoundComment = freeSpacing;
+                        }
+                    }
+                    else if (token.Groups["badCharacterClass"].Success)
+                    {
+                        if (openCharacterClass)
+                        {
+                            errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnescapedCharInCharacterClass, token.Value);
+                            return false;
                         }
                     }
                     else if (token.Groups["badBackRefNum"].Success)

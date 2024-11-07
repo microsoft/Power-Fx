@@ -24,12 +24,12 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in RegexFunctions(regExTimeout, regexTypeCache, includeNode, includePCRE2))
             {
-                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
+                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
 
-                config.SymbolTable.AddFunction(func.Key);
+                config.InternalConfigSymbols.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }
         }

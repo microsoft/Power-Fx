@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Functions
         private static void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             outputSB.Append(outLine.Data);
-            if (outLine.Data.Contains("%%end%%"))
+            if (outLine.Data.Contains("%%end%%") || outLine.Data.Contains("SyntaxError"))
             {
                 output = outputSB.ToString();
                 error = errorSB.ToString();
