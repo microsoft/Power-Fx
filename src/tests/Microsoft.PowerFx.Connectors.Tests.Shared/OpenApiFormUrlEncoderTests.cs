@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 ["a\\b\"c"] = (SchemaInteger, FormulaValue.New(1))
             });
 
-            Assert.Equal("a%5cb%22c=1", str);
+            Assert.Equal("a%5Cb%22c=1", str);
         }
 
         [Fact]

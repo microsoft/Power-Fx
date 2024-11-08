@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx
             // Compose all the symbol tables most likely to have functions into a single 
             // symbol table and then cache that. 
             // That will cache unifying into a single TexlFunctionSet - which is the most expensive part. 
-            var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.SymbolTable);
+            var functionList = _functionListCache.GetComposedCached(SupportedFunctions, Config.ComposedConfigSymbols);
 
             var symbols = ReadOnlySymbolTable.Compose(EngineSymbols, functionList, PrimitiveTypes);
 
@@ -548,7 +548,7 @@ namespace Microsoft.PowerFx
 
         public DefinitionsCheckResult AddUserDefinedFunction(string script, CultureInfo parseCulture = null, ReadOnlySymbolTable symbolTable = null, bool allowSideEffects = false)
         {
-            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions);
+            var engineTypesAndFunctions = ReadOnlySymbolTable.Compose(PrimitiveTypes, SupportedFunctions, Config.InternalConfigSymbols);
             return Config.SymbolTable.AddUserDefinedFunction(script, parseCulture, engineTypesAndFunctions, symbolTable, allowSideEffects);
         }
     }

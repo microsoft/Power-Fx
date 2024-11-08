@@ -48,11 +48,6 @@ namespace Microsoft.PowerFx
         public int MaxExpressionLength { get; set; }
 
         /// <summary>
-        /// Flag for parse type literals.
-        /// </summary>
-        internal bool AllowParseAsTypeLiteral { get; set; }
-
-        /// <summary>
         /// Allow parsing of attributes on user definitions
         /// This is an early prototype, and so is internal.
         /// </summary>
@@ -88,7 +83,6 @@ namespace Microsoft.PowerFx
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
                         (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0) |
                         (TextFirst ? TexlParser.Flags.TextFirst : 0) |
-                        (AllowParseAsTypeLiteral ? TexlParser.Flags.AllowTypeLiteral : 0) |
                         (features.PowerFxV1CompatibilityRules ? TexlParser.Flags.PFxV1 : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);

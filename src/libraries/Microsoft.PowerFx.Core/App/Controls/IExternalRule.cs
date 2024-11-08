@@ -19,5 +19,11 @@ namespace Microsoft.PowerFx.Core.App.Controls
         TexlBinding Binding { get; }
 
         bool HasErrorsOrWarnings { get; }
+
+        // Returns true when Binding is non-null, otherwise false.
+        bool HasValidBinding { get; }
+
+        // Returns true when rule is constant.
+        bool IsInvariantExpression { get; }
     }
 }

@@ -278,11 +278,11 @@ Date(2000,1,10)
 Time(0,0,0,0)
 
 //Time-String
->> Switch("Case1","Case2",Time(6,30,30),"Case1","1")
-Time(0,0,0,0)
+>> Switch("Case1","Case2",Time(6,30,30),"Case1","12:34:56")
+Time(12,34,56,0)
 
->> Switch("Case1","Case2",Time(6,30,30),"Case1","200")
-Time(0,0,0,0)
+>> Switch("Case1","Case2",Time(6,30,30),"Case1","6:00")
+Time(6,0,0,0)
 
 >> Switch("Case1","Case2",Time(6,30,30),"Case1","AB$%^")
 Error({Kind:ErrorKind.InvalidArgument})

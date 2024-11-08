@@ -70,13 +70,13 @@ namespace Microsoft.PowerFx.Syntax
         // True if the formula has already been parsed.
         public bool IsParsed => ParseTree != null;
 
-        public bool EnsureParsed(TexlParser.Flags flags)
+        public bool EnsureParsed(TexlParser.Flags flags, Features features = null)
         {
             AssertValid();
 
             if (ParseTree == null)
             {
-                var result = TexlParser.ParseScript(Script, loc: Loc, flags: flags);
+                var result = TexlParser.ParseScript(Script, features ?? Features.None, culture: Loc, flags: flags);
                 ApplyParse(result);
             }
 

@@ -75,6 +75,8 @@ namespace Microsoft.PowerFx.Core.Functions
             return TryGetExternalDataSource(out dsInfo);
         }
 
+        public bool HasDelegationWarning => _binding?.ErrorContainer.GetErrors().Any(error => error.MessageKey.Contains("SuggestRemoteExecutionHint")) ?? false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
         /// </summary>

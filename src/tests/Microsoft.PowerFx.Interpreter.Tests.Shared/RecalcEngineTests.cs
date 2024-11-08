@@ -410,6 +410,24 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void BuiltInEnumConfigCheck()
+        {
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = null
+            };
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableRegExFunctions();
+#pragma warning restore CS0618 // Type or member is obsolete
+            var expression = "Match(\"test\", \"t\", MatchOptions.Contains)";
+
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression);
+            Assert.True(check.IsSuccess);
+        }
+
+        [Fact]
         public void FormulaErrorUndefined()
         {
             var engine = new RecalcEngine();
@@ -798,6 +816,43 @@ namespace Microsoft.PowerFx.Tests
 
             // Binding fails for recursive definitions and hence function is not added.
             Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
+        }
+
+        [Fact]
+        public void TestInheritanceOfDelegationWarningsInUDFs()
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            var schema = DType.CreateTable(
+                new TypedName(DType.Number, new DName("Value")));
+            symbolTable.AddEntity(new TestDelegableDataSource(
+                "MyDataSource",
+                schema,
+                new TestDelegationMetadata(
+                        new DelegationCapability(DelegationCapability.Filter),
+                        schema,
+                        new FilterOpMetadata(
+                            schema,
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new Dictionary<DPath, DelegationCapability>(),
+                            new DelegationCapability(DelegationCapability.GreaterThan),
+                            null)),
+                true));
+            symbolTable.AddType(new DName("MyDataSourceTableType"), FormulaType.Build(schema));
+            var config = new PowerFxConfig()
+            {
+                SymbolTable = symbolTable
+            };
+            var engine = new RecalcEngine(config);
+
+            var result = engine.AddUserDefinedFunction("NonDelegatableUDF():MyDataSourceTableType = Filter(MyDataSource, Sqrt(Value) > 5);", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            var func = engine.Functions.WithName("NonDelegatableUDF").First() as UserDefinedFunction;
+            Assert.True(func.HasDelegationWarning);
+
+            result = engine.AddUserDefinedFunction("NonDelegatableUDF2():MyDataSourceTableType = NonDelegatableUDF();", CultureInfo.InvariantCulture, symbolTable: engine.EngineSymbols, allowSideEffects: true);
+            Assert.True(result.IsSuccess);
+            func = engine.Functions.WithName("NonDelegatableUDF2").First() as UserDefinedFunction;
+            Assert.True(func.HasDelegationWarning);
         }
 
         // Binding to inner functions does not impact outer functions. 
@@ -1841,7 +1896,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
             };
 
             if (isValid)
@@ -1886,7 +1940,6 @@ namespace Microsoft.PowerFx.Tests
             var parserOptions = new ParserOptions()
             {
                 AllowsSideEffects = true,
-                AllowParseAsTypeLiteral = true
             };
 
             var extraSymbols = new SymbolTable();
