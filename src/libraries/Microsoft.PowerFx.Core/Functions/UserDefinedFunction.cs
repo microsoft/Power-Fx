@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="features">PowerFx features.</param>
         /// <param name="rule"></param>
         /// <returns>Returns binding for the function body.</returns>
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null, bool updateDisplayNames = false)
         {
             if (nameResolver is null)
             {
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative, userDefinitionsMode: true);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes), bindingConfig, features: features, rule: rule, updateDisplayNames: updateDisplayNames);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// Clones and binds a user defined function.
         /// </summary>
         /// <returns>Returns a new functions.</returns>
-        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
+        public UserDefinedFunction WithBinding(INameResolver nameResolver, IBinderGlue binderGlue, out TexlBinding binding, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null, bool updateDisplayNames = false)
         {
             if (nameResolver is null)
             {
@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             var func = new UserDefinedFunction(Name, ReturnType, UdfBody, _isImperative, new HashSet<UDFArg>(_args), ParamTypes);
-            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule);
+            binding = func.BindBody(nameResolver, binderGlue, bindingConfig, features, rule, updateDisplayNames);
 
             return func;
         }
@@ -368,11 +368,6 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return false;
-        }
-
-        public INameResolver GetUserDefinitionsNameResolver(INameResolver nameResolver)
-        {
-            return UserDefinitionsNameResolver.Create(nameResolver, _args, ParamTypes);
         }
 
         /// <summary>
