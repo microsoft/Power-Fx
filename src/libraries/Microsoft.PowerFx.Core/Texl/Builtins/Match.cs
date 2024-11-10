@@ -234,7 +234,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     (?<badHyphen>\[\-|\-\])                            | # literal not allowed within character class, needs to be escaped (ECMAScript v)
-                    (?<badCharacterClass>\|)                           |
+                    (?<badInCharacterClass>\{|\}|\/|\||\\|               # does not include \- as that is needed for ranges
+                        \*|\+|\.|\#|\^|\$|\?|                            # Power Fx specific, block all special characters
+                        &&|!!|\#\#|\$\$|%%|\*\*|\+\+|,,|\.\.|::|;;|
+                        <<|==|>>|\?\?|@@|``|~~|\^\^\^|_\^\^|\-\-)      | # ECMAScript v restrictions, including set subtraction double hyphen
 
                     # open and close regions
                     (?<openParen>\()                                   |
@@ -524,7 +527,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             openPoundComment = freeSpacing;
                         }
                     }
-                    else if (token.Groups["badCharacterClass"].Success)
+                    else if (token.Groups["badInCharacterClass"].Success)
                     {
                         if (openCharacterClass)
                         {
