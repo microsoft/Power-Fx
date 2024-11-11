@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Texl
     /// <summary>
     /// This visitor is used to walkthrough the tree to check the existence of a view.
     /// </summary>
-    internal sealed class ViewFinderVisitor : TexlVisitor
+    internal sealed class ViewFinderVisitor : IdentityTexlVisitor
     {
         private readonly TexlBinding _txb;
 

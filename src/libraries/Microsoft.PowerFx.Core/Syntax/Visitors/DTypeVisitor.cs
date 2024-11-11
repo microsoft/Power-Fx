@@ -107,5 +107,20 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
             return rowType.ToTable();
         }
+
+        public override DType Visit(RecordOfNode node, INameResolver context)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(context);
+
+            var inputType = node.TableName.Accept(this, context);
+
+            if (!inputType.IsTable)
+            {
+                return DType.Invalid;
+            }
+
+            return inputType.ToRecord();
+        }
     }
 }

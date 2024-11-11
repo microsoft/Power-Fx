@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl
     /// This visitor is used to walkthrough the first node of a filter to get the datasource name and
     /// whether or not there is any other filter sub expression that uses a view.
     /// </summary>
-    internal sealed class ViewFilterDataSourceVisitor : TexlVisitor
+    internal sealed class ViewFilterDataSourceVisitor : IdentityTexlVisitor
     {
         private const string FilterFunctionName = "Filter";
         private readonly TexlBinding _txb;

@@ -420,6 +420,23 @@ namespace Microsoft.PowerFx.Syntax
             return result;
         }
 
+        public override LazyList<string> Visit(RecordOfNode node, Precedence parentPrecedence)
+        {
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty;
+            var sb = new StringBuilder();
+
+            result = result
+                .With(
+                    LanguageConstants.TypeLiteralInvariantName,
+                    TexlLexer.PunctuatorParenOpen)
+                .With(node.TableName.Accept(this, Precedence.None))
+                .With(TexlLexer.PunctuatorParenClose);
+
+            return result;
+        }
+
         public virtual string GetRightToken(TexlNode leftNode, Identifier right)
         {
             return right.Token.ToString();
@@ -998,6 +1015,13 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         public override LazyList<string> Visit(TypeLiteralNode node, Context context)
+        {
+            Contracts.AssertValue(node);
+
+            return Basic(node, context);
+        }
+
+        public override LazyList<string> Visit(RecordOfNode node, Context context)
         {
             Contracts.AssertValue(node);
 

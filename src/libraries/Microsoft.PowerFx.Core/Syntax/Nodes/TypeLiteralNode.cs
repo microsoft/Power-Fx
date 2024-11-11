@@ -89,6 +89,10 @@ namespace Microsoft.PowerFx.Syntax
             {
             }
 
+            public override void Visit(RecordOfNode node)
+            {
+            }
+
             public override bool PreVisit(RecordNode node)
             {
                 return true;
