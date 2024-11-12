@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="bindingConfig">Configuration for an invocation of the binder.</param>
         /// <param name="features">PowerFx features.</param>
         /// <param name="rule"></param>
-        /// <param name="updateDisplayNames">If true, the binder will update the display names of the nodes in the parse tree</param>
+        /// <param name="updateDisplayNames">If true, the binder will update the display names of the nodes in the parse tree.</param>
         /// <returns>Returns binding for the function body.</returns>
         public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null, bool updateDisplayNames = false)
         {
