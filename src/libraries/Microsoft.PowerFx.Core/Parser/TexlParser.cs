@@ -34,6 +34,9 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
 
+            // Parse as RecordOf node
+            ParseAsRecordOf = 1 << 4,
+
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
 
@@ -210,7 +213,10 @@ namespace Microsoft.PowerFx.Core.Parser
                 leftTrivia
             };
 
+            _flagsMode.Push(_flagsMode.Peek() | Flags.ParseAsRecordOf);
             var expr = ParseExpr(Precedence.None);
+            _flagsMode.Pop();
+
             sourceList.Add(new NodeSource(expr));
             sourceList.Add(ParseTrivia());
 
@@ -1312,7 +1318,8 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName && _features.IsUserDefinedTypesEnabled)
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName 
+                            && _features.IsUserDefinedTypesEnabled)
                         {
                             var typeLiteralNode = ParseTypeLiteral(ident);
 
@@ -1324,7 +1331,9 @@ namespace Microsoft.PowerFx.Core.Parser
                             return typeLiteralNode;
                         }
 
-                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.RecordOfInvariantName && _features.IsUserDefinedTypesEnabled)
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.RecordOfInvariantName
+                            && _flagsMode.Peek().HasFlag(Flags.ParseAsRecordOf)
+                            && _features.IsUserDefinedTypesEnabled)
                         {
                             return ParseRecordOf(ident);
                         }

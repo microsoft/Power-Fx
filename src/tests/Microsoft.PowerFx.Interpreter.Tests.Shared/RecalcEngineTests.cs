@@ -1956,6 +1956,32 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points)); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
+            "distance({x: 0, y: 0}, {x: 0, y: 5})",
+            true,
+            5.0)]
+        public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+
+            if (isValid)
+            {
+                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+            }
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

@@ -93,6 +93,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Have named formulas and udf in the script
         [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(UntypedObject)", 2)]
+
+        // Have RecordOf with/ without errors
+        [InlineData("Numbers := Type([Number]);T1 := Type(RecordOf([Number])); Num := Type(RecordOf(Numbers)); T2 := Type(Num);", 3)]
+
+        // Cannot do RecordOf on a Record type
+        [InlineData("Point := Type({x: Number, y: Number});PointR := Type(RecordOf(Point));", 1)]
         public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {
             var checkResult = new DefinitionsCheckResult()
