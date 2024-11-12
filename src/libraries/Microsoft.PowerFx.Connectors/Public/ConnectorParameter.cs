@@ -22,30 +22,31 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, false, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, OptionSetList optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, null, false, optionSets, compatibility)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, useHiddenTypes, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, OptionSetList optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, null, useHiddenTypes, optionSets, compatibility)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, ConnectorCompatibility compatibility)
-            : this(openApiParameter, bodyExtensions, false, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, OptionSetList optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, bodyExtensions, false, optionSets, compatibility)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
-            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, OptionSetList optionSets, ConnectorCompatibility compatibility)
+            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, optionSets, compatibility)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
             Location = openApiParameter.In;
         }
 
+        // Intellisense only
         internal ConnectorParameter(ConnectorParameter connectorParameter, ConnectorType connectorType)
             : base(connectorParameter, connectorType)
         {

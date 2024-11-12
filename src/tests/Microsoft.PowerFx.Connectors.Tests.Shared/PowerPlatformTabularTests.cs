@@ -962,8 +962,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(
                 "r![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
-                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
-                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
+                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:l, subject:s, submitter_id:w, " +
+                "tags:s, ticket_form_id:w, type:l, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Tickets", zdTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -979,7 +979,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OptionSetValue priority = Assert.IsType<OptionSetValue>(result);
             Assert.Equal("normal", priority.Option);
-            Assert.Equal("normal", priority.DisplayName);
+            Assert.Equal("Normal", priority.DisplayName);
+
+            Assert.NotNull(connectorTable.OptionSets);
+            Assert.Equal("priority, status, type", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
         }
     }
 

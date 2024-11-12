@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string RelationshipName { get; set; }
 
-        internal string ForeignKey { get; set; }
+        internal string ForeignKey { get; set; }        
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -197,20 +197,20 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = DefaultType;
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ConnectorCompatibility compatibility)
-            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(compatibility))
-        {
+        internal ConnectorType(ISwaggerSchema schema, OptionSetList optionSets, ConnectorCompatibility compatibility)
+            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(optionSets, compatibility))
+        {           
         }
 
-        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
-        {
+        internal ConnectorType(JsonElement schema, OptionSetList optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(optionSets, compatibility, sqlRelationships))
+        {            
         }
 
-        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
+        internal ConnectorType(JsonElement schema, OptionSetList optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(optionSets, compatibility, sqlRelationships))
         {
-            Name = name;
+            Name = name;            
 
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
             {                

@@ -11,11 +11,15 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Types;
 
+#pragma warning disable SA1117
+
 namespace Microsoft.PowerFx.Connectors
 {
     internal class CdpTableResolver : ICdpTableResolver
     {
         public ConnectorLogger Logger { get; }
+
+        public IEnumerable<OptionSet> OptionSets { get; private set; }
 
         private readonly CdpTable _tabularTable;
 
@@ -87,7 +91,12 @@ namespace Microsoft.PowerFx.Connectors
 
             string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
 
-            return ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo);
+            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, 
+                                                                            out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
+
+            OptionSets = optionSets;
+
+            return connectorType;
         }
 
         private bool IsSql() => _uriPrefix.Contains("/sql/");

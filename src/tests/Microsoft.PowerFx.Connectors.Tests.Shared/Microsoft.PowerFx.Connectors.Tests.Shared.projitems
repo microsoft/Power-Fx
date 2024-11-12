@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiHelperFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiJsonSerializerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiParserTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OptionSetListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerAppsForMakersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformBlobTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClientTests.cs" />
