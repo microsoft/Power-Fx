@@ -169,11 +169,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if true
-        // Helper to run a single .txt deefee
+        // Helper to run a single .txt deefeeee
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\out.txt";
+            var path = @"D:\repos\regex-min-9\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

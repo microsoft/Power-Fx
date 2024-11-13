@@ -213,7 +213,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
-                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split('|');
+                        // regex used to support error messages that contain a |
+                        string[] expectedStrArr = Regex.Matches(expected.Replace("Errors: ", string.Empty), "(\".*\"|[^\\|])+").Select(exp => exp.ToString()).ToArray();
                         string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
                         bool isValid = true;
 

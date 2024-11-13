@@ -4520,7 +4520,7 @@
     <comment>Error message indicating that the regular expression has literal curly braces.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadSquare_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found "{0}".</value>
+    <value>Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has literal square braces.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadParen_ShortMessage" xml:space="preserve">
@@ -4604,8 +4604,12 @@
     <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadCharacterClassLiteralSquareBracket_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Square bracket character classes cannot be empty and cannot include unescaped literal open or close square brackets, escape with "\[" or "\]".</value>
+    <value>Invalid regular expression: Square bracket character classes cannot include unescaped literal open or close square brackets, escape with "\[" or "\]", found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Square bracket character classes cannot be empty, found "{0}".</value>
+    <comment>Error message indicating that the regular expression character class is empty.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Balancing capture groups is not supported, found "{0}".</value>
@@ -4628,7 +4632,7 @@
     <comment>Error message indicating that the regular expression is not enabled for numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadUnsupportedCharacterClassSubtraction_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character class subtraction is not supported, found "{0}".</value>
+    <value>Invalid regular expression: Character class subtraction is not supported, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression is using character class subtraction and it is not supported.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExOpenParenInComment_ShortMessage" xml:space="preserve">
@@ -4636,7 +4640,7 @@
     <comment>Error message indicating that the regular expression has an open paren in an inline comment.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, found "{0}".</value>
+    <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "{0}".</value>
     <comment>Error message indicating that the regular expression has a hyphen in a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBackRefInCharacterClass_ShortMessage" xml:space="preserve">
@@ -4644,12 +4648,16 @@
     <comment>Error message indicating that the regular expression has a backref in a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnescapedParensInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class.</value>
+    <value>Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an unescaped paren within a character class.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class.</value>
+    <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExInvalidInCharacterClass_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Illegal characters in character class, found at the end of "{0}".</value>
+    <comment>Error message indicating that the regular expression has an illegal character in character class.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
