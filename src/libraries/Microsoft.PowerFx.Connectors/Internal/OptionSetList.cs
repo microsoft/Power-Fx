@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // if the option set doesn't exist, it will be added to the list and we return optionSet
         // if the option set exists with same name and options, it is not added, we return the existing optionSet
-        // if the option set exists with same name but different options, we rename it and return that new optionSet
+        // if the option set exists with same name but different options, we throw an exception (conflicts not allowed)
         public OptionSet TryAdd(OptionSet optionSet)
         {
             if (optionSet == null)
