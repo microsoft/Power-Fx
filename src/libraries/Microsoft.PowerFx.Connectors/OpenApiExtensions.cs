@@ -7,7 +7,6 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -419,6 +418,8 @@ namespace Microsoft.PowerFx.Connectors
                 Level--;
             }
 
+            // by default, optionset names will be 'propertyName (tableName)' in CDP case, where propertyName is replaced by x-ms-enum content, when provided
+            // in non-CDP case, tableName is null and will only be 'propertyName' (or x-ms-enum content)
             internal string GetOptionSetName(string optionSetNameBase)
             {
                 string optionSetName = optionSetNameBase;
