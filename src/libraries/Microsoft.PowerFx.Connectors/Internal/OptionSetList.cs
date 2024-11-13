@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.PowerFx.Core;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -43,32 +41,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return Get(optionSet.EntityName);
             }
-            
-            int i = 1;
-            SingleSourceDisplayNameProvider dnp = new SingleSourceDisplayNameProvider(optionSet.Options);
-
-            while (oss == OptionSetStatus.Conflict && i < 20)
-            {
-                string name = $"{optionSet.EntityName}_{i++}";
-
-                OptionSet newOptionSet = new OptionSet(name, dnp);
-                oss = GetStatus(newOptionSet);
-
-                // no conflict now, let's add it
-                if (oss == OptionSetStatus.New)
-                {
-                    Add(newOptionSet);
-                    return newOptionSet;
-                }
-
-                // we found an existing one that matches
-                if (oss == OptionSetStatus.Same)
-                {
-                    return Get(name);
-                }
-            }
-
-            throw new InvalidOperationException("Too many option set conflicts");           
+                        
+            throw new InvalidOperationException($"Optionset name conflict ({optionSet.EntityName})");           
         }
 
         private void Add(OptionSet optionSet)

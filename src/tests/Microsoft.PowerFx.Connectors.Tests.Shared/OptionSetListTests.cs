@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Connectors.Tests.Shared
@@ -46,21 +46,9 @@ namespace Microsoft.PowerFx.Connectors.Tests.Shared
 
             // try a name conflict now
             OptionSet os4 = new OptionSet("os1", dnp);
-            OptionSet newOs = list.TryAdd(os4);
 
-            Assert.Equal("os1_1", newOs.EntityName);
-
-            OptionSet os5 = new OptionSet("os1", dnp);
-            os = list.TryAdd(os5);
-
-            Assert.Same(newOs, os);
-
-            // Once more
-            dnp = dnp.AddField(new DName("logical4"), new DName("display4"));
-            OptionSet os6 = new OptionSet("os1", dnp);
-            OptionSet newOs2 = list.TryAdd(os6);
-
-            Assert.Equal("os1_2", newOs2.EntityName);
+            InvalidOperationException ioe = Assert.Throws<InvalidOperationException>(() => list.TryAdd(os4));
+            Assert.Equal("Optionset name conflict (os1)", ioe.Message);           
         }
     }
 }

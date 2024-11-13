@@ -1374,7 +1374,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             StringBuilder sb = new StringBuilder();
             OptionSetList optionSets = new OptionSetList();
-            schema.GetStringInternal(new ConnectorTypeGetterSettings(0, optionSets), sb);
+            schema.GetStringInternal(new ConnectorTypeGetterSettings(0, null, optionSets), sb);
             return sb.ToString();
         }
 

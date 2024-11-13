@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -394,11 +395,15 @@ namespace Microsoft.PowerFx.Connectors
             internal int Level = 0;
             internal readonly OptionSetList OptionSets;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, OptionSetList optionSets, IList<SqlRelationship> sqlRelationships = null)
+            private readonly string _tableName;
+
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, OptionSetList optionSets, IList<SqlRelationship> sqlRelationships = null)
             {
                 Compatibility = connectorCompatibility;
                 OptionSets = optionSets;
                 SqlRelationships = sqlRelationships;
+
+                _tableName = tableName;
             }
 
             internal ConnectorTypeGetterSettings Stack(string identifier)
@@ -413,11 +418,23 @@ namespace Microsoft.PowerFx.Connectors
                 Chain.Pop();
                 Level--;
             }
+
+            internal string GetOptionSetName(string optionSetNameBase)
+            {
+                string optionSetName = optionSetNameBase;
+                
+                if (!string.IsNullOrEmpty(_tableName))
+                {
+                    optionSetName += $" ({_tableName})";
+                }
+
+                return optionSetName;
+            }
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, OptionSetList optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
         {
-            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, optionSets, sqlRelationships);
+            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
             ConnectorType connectorType = openApiParameter.GetConnectorType(settings);
             
             return connectorType;
@@ -469,8 +486,8 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (optionSetDisplayNameProvider != null && (settings.Compatibility.IsCDP() || schema.Format == "enum"))
                     {
-                        string enumName = schema.GetEnumName() ?? openApiParameter.Name;
-                        OptionSet optionSet = new OptionSet(enumName, optionSetDisplayNameProvider);
+                        string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
+                        OptionSet optionSet = new OptionSet(optionSetName, optionSetDisplayNameProvider);
                         optionSet = settings.OptionSets.TryAdd(optionSet);
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
@@ -480,8 +497,8 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         if (schema.Enum.All(e => e is OpenApiString))
                         {
-                            string enumName = schema.GetEnumName() ?? openApiParameter.Name;
-                            OptionSet optionSet = new OptionSet(enumName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                            string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
+                            OptionSet optionSet = new OptionSet(optionSetName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
                             optionSet = settings.OptionSets.TryAdd(optionSet);
                             return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                         }
@@ -767,7 +784,7 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
         {
             OptionSetList optionSetList = new OptionSetList();
-            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(optionSetList, compatibility);
+            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(null, optionSetList, compatibility);
             FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();            
             return ft;
         }
@@ -777,7 +794,7 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, OptionSetList optionSets, ConnectorCompatibility compatibility)
+        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
@@ -801,7 +818,7 @@ namespace Microsoft.PowerFx.Connectors
             if (response.Content.Count == 0)
             {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
-                return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(optionSets, compatibility);
+                return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(tableName, optionSets, compatibility);
             }
 
             // Responses is a list by content-type. Find "application/json"
@@ -820,10 +837,10 @@ namespace Microsoft.PowerFx.Connectors
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void.
-                        return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(optionSets, compatibility);
+                        return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(tableName, optionSets, compatibility);
                     }
 
-                    return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(optionSets, compatibility);
+                    return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(tableName, optionSets, compatibility);
                 }
             }
             

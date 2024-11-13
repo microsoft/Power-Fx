@@ -982,7 +982,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Normal", priority.DisplayName);
 
             Assert.NotNull(connectorTable.OptionSets);
-            Assert.Equal("priority, status, type", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
+            Assert.Equal("priority (tickets), status (tickets), type (tickets)", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
         }
     }
 
