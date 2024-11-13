@@ -96,9 +96,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool IsUserDefinedTypesEnabled { get; set; } = false;
 
-        internal static Features None => new Features();
+        internal static readonly Features None = new Features();
 
-        public static Features PowerFxV1 => new Features
+        public static readonly Features PowerFxV1 = new Features
         {
             TableSyntaxDoesntWrapRecords = true,
             ConsistentOneColumnTableResult = true,
