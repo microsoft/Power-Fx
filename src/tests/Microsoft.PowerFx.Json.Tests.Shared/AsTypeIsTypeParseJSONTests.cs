@@ -23,9 +23,12 @@ namespace Microsoft.PowerFx.Json.Tests
     {
         private RecalcEngine SetupEngine(bool udtFeaturedEnabled = true)
         {
-            var config = new PowerFxConfig();
+            var features = new Features(Features.PowerFxV1)
+            {
+                IsUserDefinedTypesEnabled = udtFeaturedEnabled,
+            };
+            var config = new PowerFxConfig(features);
             config.EnableJsonFunctions();
-            config.Features.IsUserDefinedTypesEnabled = udtFeaturedEnabled;
             return new RecalcEngine(config);
         }
 

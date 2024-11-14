@@ -9,18 +9,19 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
+    [ThreadSafeImmutable]
     public sealed class Features
     {
         /// <summary>
         /// Enable Table syntax to not add "Value:" extra layer.
         /// </summary>
-        internal bool TableSyntaxDoesntWrapRecords { get; set; }
+        internal bool TableSyntaxDoesntWrapRecords { get; init; }
 
         /// <summary>
         /// Enable functions to consistently return one dimension tables with
         /// a "Value" column rather than some other name like "Result".
         /// </summary>
-        internal bool ConsistentOneColumnTableResult { get; set; }
+        internal bool ConsistentOneColumnTableResult { get; init; }
 
         /// <summary>
         /// Disables support for row-scope disambiguation syntax.
@@ -28,77 +29,72 @@ namespace Microsoft.PowerFx
         /// instead of
         /// Filter(A, A[@Value] = 2).
         /// </summary>
-        internal bool DisableRowScopeDisambiguationSyntax { get; set; }
+        internal bool DisableRowScopeDisambiguationSyntax { get; init; }
 
         /// <summary>
         /// Enable Identifier support for describing column names.
         /// </summary>
-        internal bool SupportColumnNamesAsIdentifiers { get; set; }
+        internal bool SupportColumnNamesAsIdentifiers { get; init; }
 
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
         /// them as aliases for values of string/number/boolean types.
         /// </summary>
-        internal bool StronglyTypedBuiltinEnums { get; set; }
+        internal bool StronglyTypedBuiltinEnums { get; init; }
 
         /// <summary>
         /// Updates the IsEmpty function to only allow table arguments, since it
         /// does not work properly with other types of arguments.
         /// </summary>
-        internal bool RestrictedIsEmptyArguments { get; set; }
+        internal bool RestrictedIsEmptyArguments { get; init; }
 
         /// <summary>
         /// Allow delegation for async calls (delegate using awaited call result).
         /// </summary>
-        internal bool AllowAsyncDelegation { get; set; }
+        internal bool AllowAsyncDelegation { get; init; }
 
         /// <summary>
         /// Allow delegation for impure nodes.
         /// </summary>
-        internal bool AllowImpureNodeDelegation { get; set; }
+        internal bool AllowImpureNodeDelegation { get; init; }
 
         /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
         /// defaulting to 1.
         /// </summary>
-        internal bool FirstLastNRequiresSecondArguments { get; set; }
+        internal bool FirstLastNRequiresSecondArguments { get; init; }
 
-        internal bool PowerFxV1CompatibilityRules { get; set; }
+        internal bool PowerFxV1CompatibilityRules { get; init; }
 
         /// <summary>
         /// This is required by AsType() in PA delegation analysis.
         /// </summary>
-        internal bool AsTypeLegacyCheck { get; set; }
-
-        /// <summary>
-        /// This is required by AsType() in Legacy Analysis.
-        /// </summary>
-        internal bool IsLegacyAnalysis { get; set; }
+        internal bool AsTypeLegacyCheck { get; init; }
 
         /// <summary>
         /// Removes support for coercing a control to it's primary output property. 
         /// This only impacts PA Client scenarios, but some code still lives in PFx. 
         /// </summary>
-        internal bool PrimaryOutputPropertyCoercionDeprecated { get; set; }
+        internal bool PrimaryOutputPropertyCoercionDeprecated { get; init; }
 
         /// <summary>
         /// This is specific for PVA team and it is a temporary feature.
         /// </summary>
-        internal bool JsonFunctionAcceptsLazyTypes { get; set; }
+        internal bool JsonFunctionAcceptsLazyTypes { get; init; }
 
         /// <summary>
         /// Enables more robust lookup reduction delegation.
         /// </summary>
-        internal bool IsLookUpReductionDelegationEnabled { get; set; }
+        internal bool IsLookUpReductionDelegationEnabled { get; init; }
 
         /// <summary>
         /// Enables User-defined types functionality.
         /// </summary>
-        internal bool IsUserDefinedTypesEnabled { get; set; } = false;
+        internal bool IsUserDefinedTypesEnabled { get; init; } = false;
 
-        internal static Features None => new Features();
+        internal static readonly Features None = new Features();
 
-        public static Features PowerFxV1 => new Features
+        public static readonly Features PowerFxV1 = new Features
         {
             TableSyntaxDoesntWrapRecords = true,
             ConsistentOneColumnTableResult = true,
@@ -130,6 +126,11 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
+            AllowImpureNodeDelegation = other.AllowImpureNodeDelegation;
+            AllowAsyncDelegation = other.AllowAsyncDelegation;
+            AsTypeLegacyCheck = other.AsTypeLegacyCheck;
+            JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
+            IsLookUpReductionDelegationEnabled = other.IsLookUpReductionDelegationEnabled;
         }
     }
 }
