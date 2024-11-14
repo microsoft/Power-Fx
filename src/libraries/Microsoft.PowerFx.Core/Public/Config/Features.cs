@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
+    [ThreadSafeImmutable]
     public sealed class Features
     {
         /// <summary>
