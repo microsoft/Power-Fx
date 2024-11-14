@@ -115,9 +115,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node.Args);
             Contracts.AssertAllValues(node.Args.ChildNodes);
 
-            if (node.Head.Name != LanguageConstants.RecordOfInvariantName ||
-                node.Args.Count != 1 || 
-                node.Args.ChildNodes.Single().AsFirstName() == null)
+            if (!TypeLiteralNode.ValidRecordOfNode(node))
             {
                 return DType.Invalid;
             }

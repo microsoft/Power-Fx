@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Syntax
                 { TypeRoot, typeRoot }
             };
 
-            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), TypeRoot, this.SourceList.Clone(ts, newNodes));
+            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), typeRoot, this.SourceList.Clone(ts, newNodes));
         }
 
         /// <inheritdoc />
@@ -192,10 +192,7 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(CallNode node)
             {
-                if (node.Parent is TypeLiteralNode &&
-                    node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
-                    node.Args.Count == 1 &&
-                    node.Args.ChildNodes.Single().AsFirstName() != null)
+                if (ValidRecordOfNode(node))
                 {
                     return true;
                 }
@@ -206,10 +203,7 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(ListNode node)
             {
-                if (node.Parent is CallNode cn &&
-                    cn.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
-                    node.ChildNodes.Count == 1 &&
-                    node.ChildNodes.Single().AsFirstName() != null)
+                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
                 {
                     return true;
                 }
@@ -256,6 +250,14 @@ namespace Microsoft.PowerFx.Syntax
             public override void PostVisit(AsNode node)
             {
             }
+        }
+
+        internal static bool ValidRecordOfNode(CallNode node)
+        {
+            return node.Parent is TypeLiteralNode &&
+                   node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
+                   node.Args.Count == 1 &&
+                   node.Args.ChildNodes.Single().AsFirstName() != null;
         }
     }
 }
