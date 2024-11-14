@@ -72,11 +72,6 @@ namespace Microsoft.PowerFx
         internal bool AsTypeLegacyCheck { get; init; }
 
         /// <summary>
-        /// This is required by AsType() in Legacy Analysis.
-        /// </summary>
-        internal bool IsLegacyAnalysis { get; init; }
-
-        /// <summary>
         /// Removes support for coercing a control to it's primary output property. 
         /// This only impacts PA Client scenarios, but some code still lives in PFx. 
         /// </summary>
@@ -131,6 +126,11 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
+            AllowImpureNodeDelegation = other.AllowImpureNodeDelegation;
+            AllowAsyncDelegation = other.AllowAsyncDelegation;
+            AsTypeLegacyCheck = other.AsTypeLegacyCheck;
+            JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
+            IsLookUpReductionDelegationEnabled = other.IsLookUpReductionDelegationEnabled;
         }
     }
 }
