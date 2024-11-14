@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
 #if true
-        // Helper to run a single .txt deefeeee
+        // Helper to run a single .txt deefeeeee
         [Fact]
         public void RunOne()
         {

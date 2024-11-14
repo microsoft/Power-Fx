@@ -152,28 +152,73 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
         };
 
-        // Limit regular expressions to common features that are supported, with consistent semantics, by both canonical .NET and XRegExp.
-        // It is better to disallow now and bring back with customer demand or as platforms add more support.
+        // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
+        // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
+        // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
         //
-        // Features that are disallowed:
-        //     Capture groups
-        //         Numbered capture groups, use named capture groups instead (.NET different from XRegExp).
-        //         Self-referncing groups, such as "(a\1)" (.NET different from XRegExp).
-        //         Single quoted "(?'name'..." and "\k'name'" (.NET only).
-        //         Balancing capture groups (.NET only).
-        //     Octal character codes, use \x or \u instead (.NET different from XRegExp)
-        //         "\o" could be added in the future, but we should avoid "\0" which causes backreference confusion.
-        //     Inline options
-        //         Anywhere in the expression except the beginning (.NET only).
-        //         For subexpressions (.NET only).
+        // In short, we use the insersection of canonical .NET regular expressions and ECMAScript 2024's "v" flag for escaping rules. 
+        // Someday when "v" is more widely avaialble, we can support more of its features such as set subtraction.
+        // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words. See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior
+        //
+        // In addition, Power Fx regular expressions are opinionated and try to eliminate some of the ambiguity in the common regular expression language:
+        //     Numbered capture groups are disabled by default, and cannot be mixed with named capture groups.
+        //     Octal character codes are not supported, use \x or \u instead.
+        //     Literal ^, -, [, ], {, and } must be escaped when used in a character class.
+        //     Escaping is only supported for special characters and unknown alphanumeric escape sequences are not supported.
+        //     Unicode characters are used throughout.
+        //     Newlines support Windows friendly \r\n as well as \r and \n.
+        //
+        // Features that are supported:
+        //     Literal characters. Any character except the special characters [ ] \ ^ $ . | ? * + ( ) can be inserted directly.
+        //     Escaped special characters. \ (backslash) followed by a special character to insert it directly, includes \- when in a character class.
+        //     Operators
+        //         Dot (.), matches everything except [\r\n] unless MatchOptions.DotAll is used.
+        //         Anchors, ^ and $, matches the beginning and end of the string, or of a line if MatchOptions.Multiline is used.
+        //     Quanitfiers
+        //         Greedy quantifiers. ? matches 0 or 1 times, + matches 1 or more times, * matches 0 or more times, {3} matches exactly 3 times, {1,} matches at least 1 time, {1,3} matches between 1 and 3 times. By default, matching is "greedy" and the match will be as large as possible.
+        //         Lazy quantifiers. Same as the greedy quantifiers followed by ?, for example *? or {1,3}?. With the lazy modifier, the match will be as small as possible.
+        //     Alternation. a|b matches "a" or "b".
         //     Character classes
-        //         Character class subtraction "[a-z-[m-n]]" (.NET only).
-        //     Conditional alternation (.NET only).
+        //         Custom character class. [abc] list of characters, [a-fA-f0-9] range of characters, [^a-z] everything but these characters. Character classes cannot be nested, subtracted, or intersected, and the same character cannot appear twice in the character class (except for a hyphen).
+        //         Word characters and breaks. \w, \W, \b, \B, using the Unicode definition of letters [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}].
+        //         Digit characters. \d includes the digits 0-9 and \p{Nd}, \D matches everything except characters matched by \d.
+        //         Space characters. \s includes spacing characters [ \r\n\t\f\x0B\x85\p{Z}], \S which matches everything except characters matched by \s, \r carriage return, \n newline, \t tab, \f form feed.
+        //         Control characters. \cA, where the control characters is [A-Za-z].
+        //         Hexadecimal and Unicode character codes. \x20 with two hexadecimal digits, \u2028 with four hexadecimal digits.
+        //         Unicode character class and property. \p{Ll} matches all Unicode lowercase letters, while \P{Ll} matches everything that is not a Unicode lowercase letter.
+        //     Capture groups
+        //         Non capture group. (?:a), group without capturing the result as a named or numbered sub-match.
+        //         Named group and back reference. (?<name>chars) captures a sub-match with the name name, referenced with \k<name>. Cannot be used if MatchOptions.NumberedSubMatches is enabled.
+        //         Numbered group and back referencs. (a|b) captures a sub-match, referenced with \1. MatchOptions.NumberedSubMatches must be enabled.
+        //     Lookahead and lookbehind. (?=a), (?!a), (?<=b), (?<!b).
+        //     Free spacing mode. Whitepsace within the regular expression is ignored and # starts an end of line comment.
+        //     Inline comments. (?# comment here), which is ignored as a comment. See MatchOptions.FreeSpacing for an alternative to formatting and commenting regular expressions.
+        //     Inline mode modifiers. (?im) is the same as using MatchOptions.IgnoreCase and MatchOptions.Multiline. Must be used at the beginning of the regular expression. Supported inline modes are [imsx], corresponding to MatchOptions.IgnoreCase, MatchOptions.Multiline, MatchOptions.DotAll, and MatchOptions.FreeSpacing, respectively.
         //
-        // Features that aren't supported by canonical .NET will be blocked automatically when the regular expression is instantiated in TryCreateReturnType.
+        // Significant features that are not supported:
+        //     Capture groups
+        //         Numbered capture groups are disable by default, use named captures or MatchOptions.NumberedSubMatches
+        //         Self-referncing groups, such as "(a\1)"
+        //         Single quoted named capture groups "(?'name'..." and "\k'name'"
+        //         Balancing capture groups
+        //         Recursion
+        //     Character classes
+        //         \W, \D, \P, \S are not supported inside character classes if the character class is negated (starts with [^...])
+        //         Use of ^, -, [, or ] without an escape inside a character class is not supported
+        //         Character class set operations, such as subraction or intersection
+        //         Empty character classes
+        //     Inline options
+        //         Turning options on or off
+        //         Changing options later in the expression
+        //         Setting options for a subexpression
+        //     Conditionals
+        //     Octal characters
+        //     \x{...} and \u{...} notation
+        //     Subroutines
+        //     Possessive quantifiers
         //
-        // We chose to use canonical .NET instead of RegexOptions.ECMAScript because we wanted the unicode definitions for words.
-        // See https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-options#ecmascript-matching-behavior for more details
+        // In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
+        // So, any regular expression that does not compile with .NET is also automatically disallowed.
         private bool IsSupportedRegularExpression(TexlNode regExNode, string regexPattern, string regexOptions, out string alteredOptions, IErrorContainer errors)
         {
             bool freeSpacing = regexOptions.Contains("x");          // can also be set with inline mode modifier
@@ -211,7 +256,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
                     (?<goodEscapeOutsideCC>\\[bB])                     | # acceptable outside a character class, includes negative classes until we have character class subtraction, include \P for future MatchOptions.LocaleAware
                     (?<goodEscapeOutsideAndInsideCCIfPositive>\\[DWS]) |
-                    (?<goodEscapeInsideCCOnly>\\[\-%!,:;<=>@`~])       | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
+                    (?<goodEscapeInsideCCOnly>\\[&\-!#%,;:<=>@`~\^])   | # https://262.ecma-international.org/#prod-ClassSetReservedPunctuator, others covered with goodEscape above
                     (?<badEscape>\\.)                                  | # all other escaped characters are invalid and reserved for future use
                 ";
 
@@ -245,9 +290,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # character class
+                    (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
                     \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
-                    (?<badEmptyCharacterClass>\[\])                    |
-                    (?<badSquareBrackets>[\[\]])                       |
+                    (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
 
                     # open and close regions
                     (?<openParen>\()                                   |
@@ -259,9 +304,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var characterClassRE = new Regex(
                 escapeRE +
                 @"
-                    (?<badHyphen>^-|-$)                                | # literal not allowed within character class, needs to be escaped (ECMAScript v)
+                    (?<badHyphen>^-|-$)                                | # begin/end literal hyphen not allowed within character class, needs to be escaped (ECMAScript v)
                     (?<badInCharClass>  \/ | \| | \\             |       # https://262.ecma-international.org/#prod-ClassSetSyntaxCharacter
-                        \{ | \} | \( | \) | \[ | \])                   |
+                        \{ | \} | \( | \) | \[ | \] | \^)              | # adding ^ for Power Fx, making it clear that the carets in [^^] have different meanings
                     (?<badDoubleInCharClass> << | == | >> | ::   |       # reserved pairs, see https://262.ecma-international.org/#prod-ClassSetReservedDoublePunctuator 
                         @@ | `` | ~~ | %% | && | ;; | ,, | !!    |       # and https://www.unicode.org/reports/tr18/#Subtraction_and_Intersection
                         \|\| | \#\# | \$\$ | \*\* | \+\+ | \.\.  |       # includes set subtraction 
