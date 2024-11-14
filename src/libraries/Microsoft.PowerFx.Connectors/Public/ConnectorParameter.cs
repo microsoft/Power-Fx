@@ -22,24 +22,24 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, false, tableName, optionSets, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, SymbolTable optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, null, false, optionSets, compatibility)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
-            : this(openApiParameter, null, useHiddenTypes, tableName, optionSets, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, SymbolTable optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, null, useHiddenTypes, optionSets, compatibility)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
-            : this(openApiParameter, bodyExtensions, false, tableName, optionSets, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, SymbolTable optionSets, ConnectorCompatibility compatibility)
+            : this(openApiParameter, bodyExtensions, false, optionSets, compatibility)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
-            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, tableName, optionSets, compatibility)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, SymbolTable optionSets, ConnectorCompatibility compatibility)
+            : base(SwaggerParameter.New(openApiParameter), SwaggerExtensions.New(bodyExtensions), useHiddenTypes, optionSets, compatibility)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;

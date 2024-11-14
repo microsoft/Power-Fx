@@ -9,12 +9,12 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Connectors.Tests.Shared
 {
-    public class OptionSetListTests
+    public class SymbolTableTryAddOptionSetTests
     {
         [Fact]
-        public void AddOptionSetToList()
+        public void TryAddOptionSet()
         {
-            OptionSetList list = new OptionSetList();
+            SymbolTable symbolTable = new SymbolTable();
 
             SingleSourceDisplayNameProvider dnp = new SingleSourceDisplayNameProvider();
             dnp = dnp.AddField(new DName("logical1"), new DName("display1"));
@@ -23,31 +23,31 @@ namespace Microsoft.PowerFx.Connectors.Tests.Shared
             OptionSet os1 = new OptionSet("os1", dnp);
             OptionSet os2 = new OptionSet("os1", dnp);
 
-            OptionSet os = list.TryAdd(os1);
+            OptionSet os = symbolTable.TryAddOptionSet(os1);
             Assert.Same(os1, os);
 
             // twice the same, nothing added
-            os = list.TryAdd(os1);
+            os = symbolTable.TryAddOptionSet(os1);
             Assert.Same(os1, os);
-            Assert.Single(list.OptionSets);
+            Assert.Single(symbolTable.OptionSets);
 
             // still the same, nothing added
-            os = list.TryAdd(os2);
+            os = symbolTable.TryAddOptionSet(os2);
             Assert.Same(os1, os);
-            Assert.Single(list.OptionSets);
+            Assert.Single(symbolTable.OptionSets);
 
             dnp = dnp.AddField(new DName("logical3"), new DName("display3"));
             OptionSet os3 = new OptionSet("os3", dnp);
 
             // new optionSet
-            os = list.TryAdd(os3);
+            os = symbolTable.TryAddOptionSet(os3);
             Assert.NotSame(os, os1);
-            Assert.Equal(2, list.OptionSets.Count());
+            Assert.Equal(2, symbolTable.OptionSets.Count());
 
             // try a name conflict now
             OptionSet os4 = new OptionSet("os1", dnp);
 
-            InvalidOperationException ioe = Assert.Throws<InvalidOperationException>(() => list.TryAdd(os4));
+            InvalidOperationException ioe = Assert.Throws<InvalidOperationException>(() => symbolTable.TryAddOptionSet(os4));
             Assert.Equal("Optionset name conflict (os1)", ioe.Message);           
         }
     }

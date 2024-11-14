@@ -29,13 +29,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
 
-        public bool? NotificationUrl => ConnectorType.NotificationUrl;        
-        
-        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
+        public bool? NotificationUrl => ConnectorType.NotificationUrl;
+
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, SymbolTable optionSets, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
-            UseHiddenTypes = useHiddenTypes;            
-            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(tableName, optionSets, compatibility));
+            UseHiddenTypes = useHiddenTypes;
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(null, optionSets, compatibility));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }

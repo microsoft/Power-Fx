@@ -31,7 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiHelperFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiJsonSerializerTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OpenApiParserTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)OptionSetListTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerAppsForMakersTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformBlobTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PowerPlatformConnectorClientTests.cs" />
@@ -43,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SymbolTableTryAddTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThreadingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Helpers.cs" />

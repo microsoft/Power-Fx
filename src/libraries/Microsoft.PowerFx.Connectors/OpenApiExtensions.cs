@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -392,11 +394,11 @@ namespace Microsoft.PowerFx.Connectors
             internal readonly IList<SqlRelationship> SqlRelationships;
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
-            internal readonly OptionSetList OptionSets;
+            internal readonly SymbolTable OptionSets;
 
             private readonly string _tableName;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, OptionSetList optionSets, IList<SqlRelationship> sqlRelationships = null)
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets, IList<SqlRelationship> sqlRelationships = null)
             {
                 Compatibility = connectorCompatibility;
                 OptionSets = optionSets;
@@ -423,7 +425,7 @@ namespace Microsoft.PowerFx.Connectors
             internal string GetOptionSetName(string optionSetNameBase)
             {
                 string optionSetName = optionSetNameBase;
-                
+
                 if (!string.IsNullOrEmpty(_tableName))
                 {
                     optionSetName += $" ({_tableName})";
@@ -433,11 +435,11 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
         {
             ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
             ConnectorType connectorType = openApiParameter.GetConnectorType(settings);
-            
+
             return connectorType;
         }
 
@@ -489,7 +491,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
                         OptionSet optionSet = new OptionSet(optionSetName, optionSetDisplayNameProvider);
-                        optionSet = settings.OptionSets.TryAdd(optionSet);
+                        optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
 
@@ -500,7 +502,7 @@ namespace Microsoft.PowerFx.Connectors
                         {
                             string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
                             OptionSet optionSet = new OptionSet(optionSetName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                            optionSet = settings.OptionSets.TryAdd(optionSet);
+                            optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
                             return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                         }
                         else
@@ -715,6 +717,34 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        // If an OptionSet doesn't exist, we add it (and return it)
+        // If an identical OptionSet exists (same name & list of options), we return it
+        // Otherwise we throw in case of conflict
+        internal static OptionSet TryAddOptionSet(this SymbolTable symbolTable, OptionSet optionSet)
+        {
+            if (optionSet == null)
+            {
+                throw new ArgumentNullException("optionSet");
+            }
+
+            string name = optionSet.EntityName;
+
+            // No existing symbols with that name
+            if (!((INameResolver)symbolTable).Lookup(new DName(name), out NameLookupInfo info, NameLookupPreferences.None))
+            {
+                symbolTable.AddOptionSet(optionSet);
+                return optionSet;
+            }
+
+            // Same optionset already present in table
+            if (info.Kind == BindKind.OptionSet && info.Data is OptionSet existingOptionSet && existingOptionSet.Equals(optionSet))
+            {
+                return existingOptionSet;
+            }
+
+            throw new InvalidOperationException($"Optionset name conflict ({name})");
+        }
+
         internal static RecordType ToRecordType(this List<(string logicalName, string displayName, FormulaType type)> fields)
         {
             if (fields == null)
@@ -784,9 +814,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
         {
-            OptionSetList optionSetList = new OptionSetList();
-            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(null, optionSetList, compatibility);
-            FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();            
+            SymbolTable optionSets = new SymbolTable();
+            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(null, optionSets, compatibility);
+            FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();
             return ft;
         }
 
@@ -795,7 +825,7 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, string tableName, OptionSetList optionSets, ConnectorCompatibility compatibility)
+        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
@@ -811,7 +841,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (response == null)
-            {                
+            {
                 // Returns UntypedObject by default, without error
                 return new ConnectorType(null);
             }
@@ -844,7 +874,7 @@ namespace Microsoft.PowerFx.Connectors
                     return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(tableName, optionSets, compatibility);
                 }
             }
-            
+
             return new ConnectorType(error: $"Unsupported return type - found {string.Join(", ", response.Content.Select(kv4 => kv4.Key))}");
         }
 
