@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl
     /// This visitor is used to walkthrough the first node of a filter to get the datasource name and
     /// whether or not there is any other filter sub expression that uses a view.
     /// </summary>
-    internal sealed class ViewFilterDataSourceVisitor : TexlVisitor
+    internal sealed class ViewFilterDataSourceVisitor : IdentityTexlVisitor
     {
         private const string FilterFunctionName = "Filter";
         private readonly TexlBinding _txb;
@@ -51,74 +51,6 @@ namespace Microsoft.PowerFx.Core.Texl
                     }
                 }
             }
-        }
-
-        public override void PostVisit(DottedNameNode node)
-        {
-        }
-
-        public override void PostVisit(VariadicOpNode node)
-        {
-        }
-
-        public override void PostVisit(StrInterpNode node)
-        {
-        }
-
-        public override void PostVisit(RecordNode node)
-        {
-        }
-
-        public override void PostVisit(ListNode node)
-        {
-        }
-
-        public override void PostVisit(BinaryOpNode node)
-        {
-        }
-
-        public override void PostVisit(UnaryOpNode node)
-        {
-        }
-
-        public override void PostVisit(TableNode node)
-        {
-        }
-
-        public override void PostVisit(AsNode node)
-        {
-        }
-
-        public override void Visit(ParentNode node)
-        {
-        }
-
-        public override void Visit(NumLitNode node)
-        {
-        }
-
-        public override void Visit(DecLitNode node)
-        {
-        }
-
-        public override void Visit(StrLitNode node)
-        {
-        }
-
-        public override void Visit(BoolLitNode node)
-        {
-        }
-
-        public override void Visit(BlankNode node)
-        {
-        }
-
-        public override void Visit(ErrorNode node)
-        {
-        }
-
-        public override void Visit(SelfNode node)
-        {
         }
     }
 }
