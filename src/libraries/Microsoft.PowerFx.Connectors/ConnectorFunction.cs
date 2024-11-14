@@ -294,19 +294,16 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        private readonly ConnectorLogger _configurationLogger = null;
-
-        internal readonly SymbolTable OptionSets;
+        private readonly ConnectorLogger _configurationLogger = null;        
 
         internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList,
-                                   ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues, SymbolTable optionSets)
+                                   ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues, SymbolTable optionSets /* to be removed */)
         {
             Operation = openApiOperation;
             Name = name;
             OperationPath = operationPath;
             HttpMethod = httpMethod;
-            ConnectorSettings = connectorSettings;
-            OptionSets = optionSets;
+            ConnectorSettings = connectorSettings;            
             GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), globalValues);
 
             _configurationLogger = configurationLogger;
@@ -991,7 +988,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, null, new SymbolTable(), ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cds.ValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -1005,10 +1002,10 @@ namespace Microsoft.PowerFx.Connectors
             return connectorType;
         }
 
-        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility)
+        internal static ConnectorType GetConnectorType(string valuePath, StringValue sv, ConnectorCompatibility compatibility)
         {
             JsonElement je = ExtractFromJson(sv, valuePath);
-            return GetConnectorTypeInternal(tableName, optionSets, compatibility, je);
+            return GetConnectorTypeInternal(compatibility, je);
         }
 
         // Only called by ConnectorTable.GetSchema
@@ -1084,17 +1081,17 @@ namespace Microsoft.PowerFx.Connectors
             public bool RestrictedDelete { get; set; }
         }
 
-        private static ConnectorType GetConnectorTypeInternal(string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, JsonElement je)
+        private static ConnectorType GetConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je)
         {
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
             OpenApiSchema schema = new OpenApiStringReader(oars).ReadFragment<OpenApiSchema>(je.ToString(), OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new ConnectorType(SwaggerSchema.New(schema), tableName, optionSets, compatibility);
+            return new ConnectorType(SwaggerSchema.New(schema), compatibility);
         }
 
-        private static ConnectorType GetJsonConnectorTypeInternal(string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, JsonElement je, IList<SqlRelationship> sqlRelationships)
+        private static ConnectorType GetJsonConnectorTypeInternal(ConnectorCompatibility compatibility, JsonElement je, IList<SqlRelationship> sqlRelationships)
         {
-            return new ConnectorType(je, tableName, optionSets, compatibility, sqlRelationships);
+            return new ConnectorType(je, compatibility, sqlRelationships);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -1115,7 +1112,7 @@ namespace Microsoft.PowerFx.Connectors
                 return null;
             }
 
-            ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, null, new SymbolTable(), ConnectorSettings.Compatibility);
+            ConnectorType connectorType = GetConnectorType(cdp.ItemValuePath, sv, ConnectorSettings.Compatibility);
 
             if (connectorType.HasErrors)
             {
@@ -1422,7 +1419,7 @@ namespace Microsoft.PowerFx.Connectors
                     return null;
                 }
 
-                ConnectorParameter connectorParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(parameter, OptionSets, ConnectorSettings.Compatibility));
+                ConnectorParameter connectorParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(parameter, ConnectorSettings.Compatibility));
 
                 if (connectorParameter.HiddenRecordType != null)
                 {
@@ -1491,12 +1488,12 @@ namespace Microsoft.PowerFx.Connectors
                                     }
 
                                     OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
-                                    ConnectorParameter bodyConnectorParameter2 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, requestBody, OptionSets, ConnectorSettings.Compatibility));
+                                    ConnectorParameter bodyConnectorParameter2 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, requestBody, ConnectorSettings.Compatibility));
                                     openApiBodyParameters.Add(bodyConnectorParameter2, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter2.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                                     if (bodyConnectorParameter2.HiddenRecordType != null)
                                     {
-                                        hiddenRequiredParameters.Add(errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, true, OptionSets, ConnectorSettings.Compatibility)));
+                                        hiddenRequiredParameters.Add(errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter, true, ConnectorSettings.Compatibility)));
                                     }
 
                                     List<ConnectorParameter> parameterList = !bodyPropertyRequired ? optionalParameters : bodyPropertyHiddenRequired ? hiddenRequiredParameters : requiredParameters;
@@ -1515,7 +1512,7 @@ namespace Microsoft.PowerFx.Connectors
                                 }
 
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
-                                ConnectorParameter bodyConnectorParameter3 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter2, requestBody, OptionSets, ConnectorSettings.Compatibility));
+                                ConnectorParameter bodyConnectorParameter3 = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter2, requestBody, ConnectorSettings.Compatibility));
                                 openApiBodyParameters.Add(bodyConnectorParameter3, OpenApiExtensions.TryGetOpenApiValue(bodyConnectorParameter3.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                                 if (bodyConnectorParameter3.HiddenRecordType != null)
@@ -1535,7 +1532,7 @@ namespace Microsoft.PowerFx.Connectors
                         OpenApiSchema bodyParameterSchema = new OpenApiSchema() { Type = "string" };
 
                         OpenApiParameter bodyParameter3 = new OpenApiParameter() { Name = bodyName, Schema = bodyParameterSchema, Description = "Body", Required = requestBody.Required };
-                        ConnectorParameter bodyParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter3, requestBody, OptionSets, ConnectorSettings.Compatibility));
+                        ConnectorParameter bodyParameter = errorsAndWarnings.AggregateErrorsAndWarnings(new ConnectorParameter(bodyParameter3, requestBody, ConnectorSettings.Compatibility));
                         openApiBodyParameters.Add(bodyParameter, OpenApiExtensions.TryGetOpenApiValue(bodyParameter.Schema.Default, null, out FormulaValue defaultValue, errorsAndWarnings) ? defaultValue : null);
 
                         List<ConnectorParameter> parameterList = requestBody.Required ? requiredParameters : optionalParameters;
@@ -1578,7 +1575,7 @@ namespace Microsoft.PowerFx.Connectors
             _arityMax = _arityMin + (_optionalParameters.Length == 0 ? 0 : 1);
             _warnings = new List<ErrorResourceKey>();
 
-            _returnType = errorsAndWarnings.AggregateErrorsAndWarnings(Operation.GetConnectorReturnType(null, OptionSets, ConnectorSettings.Compatibility));
+            _returnType = errorsAndWarnings.AggregateErrorsAndWarnings(Operation.GetConnectorReturnType(ConnectorSettings.Compatibility));
 
             if (IsDeprecated)
             {

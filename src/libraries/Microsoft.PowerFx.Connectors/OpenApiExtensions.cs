@@ -435,6 +435,11 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        {
+            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility, sqlRelationships);
+        }
+
         internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
         {
             ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
@@ -813,9 +818,8 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
-        {
-            SymbolTable optionSets = new SymbolTable();
-            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(null, optionSets, compatibility);
+        {            
+            ConnectorType connectorType = openApiOperation.GetConnectorReturnType(compatibility);
             FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();
             return ft;
         }
@@ -825,7 +829,7 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue(XMsRequireUserConfirmation, out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;
         }
 
-        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility)
+        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
         {
             OpenApiResponses responses = openApiOperation.Responses;
             OpenApiResponse response = responses.Where(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).OrderBy(kvp => kvp.Key).FirstOrDefault().Value;
@@ -849,7 +853,7 @@ namespace Microsoft.PowerFx.Connectors
             if (response.Content.Count == 0)
             {
                 OpenApiSchema schema = new OpenApiSchema() { Type = "string", Format = "no_format" };
-                return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(tableName, optionSets, compatibility);
+                return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(compatibility);
             }
 
             // Responses is a list by content-type. Find "application/json"
@@ -868,10 +872,10 @@ namespace Microsoft.PowerFx.Connectors
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void.
-                        return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(tableName, optionSets, compatibility);
+                        return new SwaggerParameter("response", true, new SwaggerSchema("string", "no_format"), response.Extensions).GetConnectorType(compatibility);
                     }
 
-                    return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(tableName, optionSets, compatibility);
+                    return new SwaggerParameter("response", true, SwaggerSchema.New(openApiMediaType.Schema), openApiMediaType.Schema.Extensions).GetConnectorType(compatibility);
                 }
             }
 

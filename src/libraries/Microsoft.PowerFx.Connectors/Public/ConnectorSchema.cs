@@ -31,11 +31,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool? NotificationUrl => ConnectorType.NotificationUrl;
 
-        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, SymbolTable optionSets, ConnectorCompatibility compatibility)
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(null, optionSets, compatibility));
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(compatibility));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
