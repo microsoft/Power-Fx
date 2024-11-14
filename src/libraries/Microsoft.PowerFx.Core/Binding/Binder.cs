@@ -2561,6 +2561,15 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 AssertValid();
                 Contracts.AssertValue(node);
+                
+                _txb.SetType(node, DType.Error);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_UnsupportedUsage);
+            }
+
+            private void VisitType(TypeLiteralNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
 
                 if (_nameResolver == null)
                 {
@@ -2570,7 +2579,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var type = DTypeVisitor.Run(node.TypeRoot, _nameResolver);
 
-                if (type.IsValid) 
+                if (type.IsValid)
                 {
                     _txb.SetType(node, type);
                 }
@@ -5103,7 +5112,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (args[1] is TypeLiteralNode typeLiteral)
                 {
-                    typeLiteral.Accept(this);
+                    VisitType(typeLiteral);
                 }
                 else
                 {

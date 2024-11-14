@@ -234,3 +234,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Numeric enums and numbers
 >> If(1<0, 1, ErrorKind.Validation)
 11
+
+// Type literal should cause error
+>> If(Type(Boolean), 1, 2)
+Errors: Error 7-8: Unsupported usage: Type literals can only be used in type arguments and type definitions.|Error 0-2: The function 'If' has some invalid arguments.
