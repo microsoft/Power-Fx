@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SymbolTableTryAddTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThreadingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Helpers.cs" />
