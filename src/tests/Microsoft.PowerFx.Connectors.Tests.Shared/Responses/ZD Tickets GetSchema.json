@@ -18,254 +18,308 @@
     "type": "array",
     "items": {
       "type": "object",
-      "required": [],
       "properties": {
         "id": {
+          "type": "integer",
           "title": "id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-keyOrder": 1,
           "x-ms-keyType": "primary",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "url": {
+          "type": "string",
           "title": "url",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "external_id": {
+          "type": "string",
           "title": "external_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "type": {
+          "type": "string",
+          "x-ms-enum-values": [
+            {
+              "value": "problem",
+              "displayName": "Problem"
+            },
+            {
+              "value": "incident",
+              "displayName": "Incident"
+            },
+            {
+              "value": "question",
+              "displayName": "Question"
+            },
+            {
+              "value": "task",
+              "displayName": "Task"
+            }
+          ],
           "title": "type",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "subject": {
+          "type": "string",
           "title": "subject",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "raw_subject": {
+          "type": "string",
           "title": "raw_subject",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "description": {
+          "type": "string",
           "title": "description",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "priority": {
+          "type": "string",
+          "x-ms-enum-values": [
+            {
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "value": "normal",
+              "displayName": "Normal"
+            },
+            {
+              "value": "high",
+              "displayName": "High"
+            },
+            {
+              "value": "urgent",
+              "displayName": "Urgent"
+            }
+          ],
           "title": "priority",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
-          "enum": [
-            "low",
-            "normal",
-            "high",
-            "urgent"
-          ],
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "status": {
+          "type": "string",
+          "x-ms-enum-values": [
+            {
+              "value": "new",
+              "displayName": "New"
+            },
+            {
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "value": "pending",
+              "displayName": "Pending"
+            },
+            {
+              "value": "hold",
+              "displayName": "Hold"
+            },
+            {
+              "value": "solved",
+              "displayName": "Solved"
+            },
+            {
+              "value": "closed",
+              "displayName": "Closed"
+            }
+          ],
           "title": "status",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "recipient": {
+          "type": "string",
           "title": "recipient",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "contains", "startswith", "endswith", "length", "indexof", "replace", "substring", "substringof", "tolower", "toupper", "trim", "concat" ] },
-          "type": "string",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "requester_id": {
+          "type": "integer",
           "title": "requester_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "submitter_id": {
+          "type": "integer",
           "title": "submitter_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "assignee_id": {
+          "type": "integer",
           "title": "assignee_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "organization_id": {
+          "type": "integer",
           "title": "organization_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "group_id": {
+          "type": "integer",
           "title": "group_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "collaborator_ids": {
-          "title": "collaborator_ids",
           "type": "string",
+          "title": "collaborator_ids",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "forum_topic_id": {
+          "type": "integer",
           "title": "forum_topic_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "problem_id": {
+          "type": "integer",
           "title": "problem_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "has_incidents": {
+          "type": "boolean",
           "title": "has_incidents",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "not", "and", "or" ] },
-          "type": "boolean",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "due_at": {
+          "type": "string",
           "title": "due_at",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
-          "type": "string",
           "format": "date-time",
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "tags": {
-          "title": "tags",
           "type": "string",
+          "title": "tags",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "via": {
-          "title": "via",
           "type": "string",
+          "title": "via",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "custom_fields": {
-          "title": "custom_fields",
           "type": "string",
+          "title": "custom_fields",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "satisfaction_rating": {
-          "title": "satisfaction_rating",
           "type": "string",
+          "title": "satisfaction_rating",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "sharing_agreement_ids": {
-          "title": "sharing_agreement_ids",
           "type": "string",
+          "title": "sharing_agreement_ids",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "followup_ids": {
-          "title": "followup_ids",
           "type": "string",
+          "title": "followup_ids",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "ticket_form_id": {
+          "type": "integer",
           "title": "ticket_form_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "brand_id": {
+          "type": "integer",
           "title": "brand_id",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "add", "sub", "mul", "div", "mod", "negate", "sum", "average" ] },
-          "type": "integer",
           "format": "int64",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
+          "minimum": -9223372036854776000,
+          "maximum": 9223372036854776000,
           "x-ms-permission": "read-write",
           "x-ms-sort": "none"
         },
         "created_at": {
+          "type": "string",
           "title": "created_at",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
-          "type": "string",
           "format": "date-time",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         },
         "updated_at": {
+          "type": "string",
           "title": "updated_at",
           "x-ms-capabilities": { "filterFunctions": [ "lt", "le", "eq", "ne", "gt", "ge", "min", "max", "countdistinct", "day", "month", "year", "hour", "minute", "second", "date", "time", "totaloffsetminutes" ] },
-          "type": "string",
           "format": "date-time",
           "x-ms-permission": "read-only",
           "x-ms-sort": "none"
         }
       }
-    },
-    "x-ms-permission": "read-write"
+    }
   }
 }
