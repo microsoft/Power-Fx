@@ -49,12 +49,12 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override void Visit(RecordOfNode node)
+        public override void Visit(SelfNode node)
         {
         }
 
         /// <inheritdoc />
-        public override void Visit(SelfNode node)
+        public override void Visit(TypeLiteralNode node)
         {
         }
 

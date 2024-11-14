@@ -34,9 +34,6 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, allows reserved keywords to be used as identifiers.
             DisableReservedKeywords = 1 << 3,
 
-            // Parse as RecordOf node
-            ParseAsRecordOf = 1 << 4,
-
             // Text first.  Implemented entirely in the Lexer.
             TextFirst = 1 << 5,
 
@@ -213,10 +210,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 leftTrivia
             };
 
-            _flagsMode.Push(_flagsMode.Peek() | Flags.ParseAsRecordOf);
             var expr = ParseExpr(Precedence.None);
-            _flagsMode.Pop();
-
             sourceList.Add(new NodeSource(expr));
             sourceList.Add(ParseTrivia());
 
@@ -228,35 +222,6 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
-        }
-
-        private RecordOfNode ParseRecordOf(Identifier recordOfIdentifier)
-        {
-            var lefterTrivia = ParseTrivia();
-            var parenOpen = TokEat(TokKind.ParenOpen);
-            var leftTrivia = ParseTrivia();
-            var sourceList = new List<ITexlSource>
-            {
-                new IdentifierSource(recordOfIdentifier),
-                lefterTrivia,
-                new TokenSource(parenOpen),
-                leftTrivia
-            };
-
-            var identifier = ParseIdentifier();
-            var fsNode = new FirstNameNode(ref _idNext, identifier.Token, identifier);
-
-            sourceList.Add(new IdentifierSource(identifier));
-            sourceList.Add(ParseTrivia());
-
-            var parenClose = TokEat(TokKind.ParenClose);
-
-            if (parenClose != null)
-            {
-                sourceList.Add(new TokenSource(parenClose));
-            }
-
-            return new RecordOfNode(ref _idNext, parenOpen, fsNode, new SourceList(sourceList));
         }
 
         private PartialAttribute MaybeParseAttribute()
@@ -1318,8 +1283,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName 
-                            && _features.IsUserDefinedTypesEnabled)
+                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.TypeLiteralInvariantName && _features.IsUserDefinedTypesEnabled)
                         {
                             var typeLiteralNode = ParseTypeLiteral(ident);
 
@@ -1329,13 +1293,6 @@ namespace Microsoft.PowerFx.Core.Parser
                             }
 
                             return typeLiteralNode;
-                        }
-
-                        if (ident.Token.As<IdentToken>().Name.Value == LanguageConstants.RecordOfInvariantName
-                            && _flagsMode.Peek().HasFlag(Flags.ParseAsRecordOf)
-                            && _features.IsUserDefinedTypesEnabled)
-                        {
-                            return ParseRecordOf(ident);
                         }
 
                         trivia = ParseTrivia();

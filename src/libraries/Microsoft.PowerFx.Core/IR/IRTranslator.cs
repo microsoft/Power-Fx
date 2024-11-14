@@ -90,14 +90,6 @@ namespace Microsoft.PowerFx.Core.IR
                 return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), context.Binding.GetType(node).ToString());
             }
 
-            public override IntermediateNode Visit(RecordOfNode node, IRTranslatorContext context)
-            {
-                Contracts.AssertValue(node);
-                Contracts.AssertValue(context);
-
-                return new ErrorNode(context.GetIRContext(node), node.ToString());
-            }
-
             public override IntermediateNode Visit(NumLitNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);

@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
             : base(ref idNext, firstToken, sources)
         {
             TypeRoot = type;
+            TypeRoot.Parent = this;
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
@@ -86,10 +87,6 @@ namespace Microsoft.PowerFx.Syntax
 
             // Valid Nodes
             public override void Visit(FirstNameNode node)
-            {
-            }
-
-            public override void Visit(RecordOfNode node)
             {
             }
 
@@ -195,12 +192,28 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(CallNode node)
             {
+                if (node.Parent is TypeLiteralNode &&
+                    node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
+                    node.Args.Count == 1 &&
+                    node.Args.ChildNodes.Single().AsFirstName() != null)
+                {
+                    return true;
+                }
+
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
                 return false;
             }
 
             public override bool PreVisit(ListNode node)
             {
+                if (node.Parent is CallNode cn &&
+                    cn.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
+                    node.ChildNodes.Count == 1 &&
+                    node.ChildNodes.Single().AsFirstName() != null)
+                {
+                    return true;
+                }
+
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
                 return false;
             }

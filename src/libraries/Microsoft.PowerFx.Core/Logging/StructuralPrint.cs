@@ -355,22 +355,6 @@ namespace Microsoft.PowerFx.Core.Logging
             return result;
         }
 
-        public override LazyList<string> Visit(RecordOfNode node, Precedence context)
-        {
-            Contracts.AssertValue(node);
-
-            var result = LazyList<string>.Empty;
-
-            result = result
-                .With(
-                    LanguageConstants.RecordOfInvariantName,
-                    TexlLexer.PunctuatorParenOpen)
-                .With(node.TableName.Accept(this, Precedence.None))
-                .With(TexlLexer.PunctuatorParenClose);
-
-            return result;
-        }
-
         public override LazyList<string> Visit(ListNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);

@@ -19,14 +19,6 @@ namespace Microsoft.PowerFx.Syntax
         public abstract TResult Visit(TypeLiteralNode node, TContext context);
 
         /// <summary>
-        /// Visit <see cref="RecordOfNode"/> leaf node.
-        /// </summary>
-        /// <param name="node">The visited node.</param>
-        /// <param name="context">The context passed to the node.</param>
-        /// <returns>The node visit result.</returns>
-        public abstract TResult Visit(RecordOfNode node, TContext context);
-
-        /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

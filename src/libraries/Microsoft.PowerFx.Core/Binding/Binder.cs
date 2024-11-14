@@ -2581,15 +2581,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            public override void Visit(RecordOfNode node)
-            {
-                AssertValid();
-                Contracts.AssertValue(node);
-                
-                _txb.SetType(node, DType.Error);
-                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
-            }
-
             public override void Visit(BoolLitNode node)
             {
                 AssertValid();

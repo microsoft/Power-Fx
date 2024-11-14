@@ -108,19 +108,28 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return rowType.ToTable();
         }
 
-        public override DType Visit(RecordOfNode node, INameResolver context)
+        public override DType Visit(CallNode node, INameResolver context)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
+            Contracts.AssertValue(node.Args);
+            Contracts.AssertAllValues(node.Args.ChildNodes);
 
-            var inputType = node.TableName.Accept(this, context);
-
-            if (!inputType.IsTable)
+            if (node.Head.Name != LanguageConstants.RecordOfInvariantName ||
+                node.Args.Count != 1 || 
+                node.Args.ChildNodes.Single().AsFirstName() == null)
             {
                 return DType.Invalid;
             }
 
-            return inputType.ToRecord();
+            var childType = node.Args.ChildNodes.Single().Accept(this, context);
+
+            if (!childType.IsTable)
+            {
+                return DType.Invalid;
+            }
+
+            return childType.ToRecord();
         }
     }
 }
