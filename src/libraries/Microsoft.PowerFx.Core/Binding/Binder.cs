@@ -2557,6 +2557,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, DType.ObjNull);
             }
 
+            // Binding TypeLiteralNode from anywhere other than valid type context should be an error.
+            // This ensures that binding of unintended use of TypeLiteralNode eg: "If(Type(Boolean), 1, 2)" will result in an error.
+            // VisitType method is used to resolve the type of TypeLiteralNode from valid context. 
             public override void Visit(TypeLiteralNode node)
             {
                 AssertValid();
@@ -2566,6 +2569,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_UnsupportedUsage);
             }
 
+            // Method to bind TypeLiteralNode from valid context where a type is expected.
+            // Binding TypeLiteralNode in an expression where a type is not expected invokes the Visit method
+            // from normal visitor pattern and results in error.
             private void VisitType(TypeLiteralNode node)
             {
                 AssertValid();
