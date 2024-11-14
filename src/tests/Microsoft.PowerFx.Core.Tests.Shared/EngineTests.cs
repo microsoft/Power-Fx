@@ -138,6 +138,11 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 throw new NotImplementedException();
             }
+
+            public override void Visit(TypeLiteralNode node)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
