@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
-            List<ConnectorFunction> functions = new();
+            List<ConnectorFunction> functions = new ();
 
             if (connectorSettings == null)
             {
