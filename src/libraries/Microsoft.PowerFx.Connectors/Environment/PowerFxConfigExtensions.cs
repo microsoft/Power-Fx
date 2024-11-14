@@ -68,15 +68,10 @@ namespace Microsoft.PowerFx
                 return null;
             }
 
-            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions, SymbolTable optionSets) = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);
             foreach (TexlFunction function in texlFunctions)
             {
                 config.AddFunction(function);
-            }
-
-            foreach (KeyValuePair<string, OptionSet> kvp in optionSets.OptionSets)
-            {
-                config.AddOptionSet(kvp.Value);
             }
 
             return connectorFunctions;

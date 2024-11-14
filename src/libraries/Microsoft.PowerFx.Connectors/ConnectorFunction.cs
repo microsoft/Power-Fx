@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ConnectorLogger _configurationLogger = null;        
 
         internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList,
-                                   ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues, SymbolTable optionSets /* to be removed */)
+                                   ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
         {
             Operation = openApiOperation;
             Name = name;

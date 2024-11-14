@@ -24,17 +24,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
-            return GetFunctions(@namespace, openApiDocument, globalValues, out var _, configurationLogger);
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, out IEnumerable<OptionSet> optionSets, ConnectorLogger configurationLogger = null)
-        {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
-                SymbolTable symbolTable = new SymbolTable();
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, null, symbolTable, configurationLogger, globalValues);
-                optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f));
             }
@@ -52,17 +45,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
-            return GetFunctions(connectorSettings, openApiDocument, globalValues, out var _, configurationLogger);
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, out IEnumerable<OptionSet> optionSets, ConnectorLogger configurationLogger = null)
-        {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
-                SymbolTable symbolTable = new SymbolTable();
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, null, symbolTable, configurationLogger, globalValues);
-                optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetFunctions)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
             }
@@ -80,17 +66,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
-            return GetTriggers(@namespace, openApiDocument, globalValues, out var _, configurationLogger);
-        }
-
-        public static IEnumerable<ConnectorFunction> GetTriggers(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, out IEnumerable<OptionSet> optionSets, ConnectorLogger configurationLogger = null)
-        {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");
-                SymbolTable symbolTable = new SymbolTable();
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, null, symbolTable, configurationLogger, globalValues, FunctionType.Trigger);
-                optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(new ConnectorSettings(@namespace), openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} Namespace {@namespace}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f));
             }
@@ -108,17 +87,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, ConnectorLogger configurationLogger = null)
         {
-            return GetTriggers(connectorSettings, openApiDocument, globalValues, out var _, configurationLogger);
-        }
-
-        public static IEnumerable<ConnectorFunction> GetTriggers(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues, out IEnumerable<OptionSet> optionSets, ConnectorLogger configurationLogger = null)
-        {
             try
             {
-                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");
-                SymbolTable symbolTable = new SymbolTable();
-                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, null, symbolTable, configurationLogger, globalValues, FunctionType.Trigger);
-                optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
+                configurationLogger?.LogInformation($"Entering in {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}");                
+                IEnumerable<ConnectorFunction> functions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues, FunctionType.Trigger);                
                 configurationLogger?.LogInformation($"Exiting {nameof(OpenApiParser)}.{nameof(GetTriggers)}, with {nameof(ConnectorSettings)} {LogConnectorSettings(connectorSettings)}, returning {functions.Count()} functions");
                 return functions.Where(f => ShouldIncludeFunction(f, connectorSettings));
             }
@@ -137,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors
                    (function.IsSupported || settings?.AllowUnsupportedFunctions == true);
         }
 
-        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, string tableName, SymbolTable optionSets, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null, FunctionType functionType = FunctionType.Function)
+        internal static IEnumerable<ConnectorFunction> GetFunctionsInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null, FunctionType functionType = FunctionType.Function)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
@@ -243,7 +215,7 @@ namespace Microsoft.PowerFx.Connectors
                                               ? notSupportedReasonForPath
                                               : notSupportedReasonForOperation;
 
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger, globalValues, optionSets)
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, configurationLogger, globalValues)
                     {
                         Servers = openApiDocument.Servers
                     };
@@ -520,13 +492,12 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions.
-        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions, SymbolTable optionSets) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
-        {
-            SymbolTable optionSets = new SymbolTable();
-            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, null, optionSets, configurationLogger, globalValues).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) ParseInternal(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, ConnectorLogger configurationLogger = null, IReadOnlyDictionary<string, FormulaValue> globalValues = null)
+        {            
+            List<ConnectorFunction> cFunctions = GetFunctionsInternal(connectorSettings, openApiDocument, configurationLogger, globalValues).Where(f => ShouldIncludeFunction(f, connectorSettings)).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
-            return (cFunctions, tFunctions, optionSets);
+            return (cFunctions, tFunctions);
         }
 
         internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)

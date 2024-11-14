@@ -625,7 +625,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                 // Step 2: Get TexlFunctions to be exported
                 // Notice that TexlFunction is internal and requires InternalVisibleTo
-                (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions, SymbolTable optionSets) = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger);
+                (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.ParseInternal(connectorSettings, connector.Value.document, logger);
 
                 // Step 3: Export TexlFunctions to Yaml
                 ExportTexlFunctionsToYaml(reference, outFolderPath, connector.Key, texlFunctions.Cast<TexlFunction>().ToList(), false);
