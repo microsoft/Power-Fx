@@ -66,14 +66,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         // This "global" turns on regex comparison. Yes, it is a hack, but it is only used for manual testing (no automated testing).
-        public static bool RegExCompareEnabled = false;
+        public static bool RegExCompareNode = false;
+        public static bool RegExComparePCRE2 = false;
 
         private static object RegExSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
-            if (RegExCompareEnabled)
+            if (RegExCompareNode || RegExComparePCRE2)
             {
-                // PCRE2 has scalability probleems running all the tests, not included here but is enabled with the REPL
-                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), includePCRE2: false);
+                Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), includeNode: RegExCompareNode, includePCRE2: RegExComparePCRE2);
             }
             else
             {
