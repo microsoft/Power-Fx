@@ -99,12 +99,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DType dataArgType = argTypes[0];
             TexlNode dataNode = args[0];
 
-            supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;
+            supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;            
 
             if (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind))
             {
-                errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
-                return;
+                // don't generate an error for lazy types when we allow them
+                if (!(supportsLazyTypes && (dataArgType.Kind == DKind.LazyRecord || dataArgType.Kind == DKind.LazyTable)))
+                {
+                    errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
+                    return;
+                }
             }
 
             bool includeBinaryData = false;

@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
+using static Microsoft.PowerFx.Core.Tests.LazyTypeTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -1767,6 +1768,68 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(ok);
 
             // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
+        }
+
+        [Fact]
+        public void LazyJsonTest()
+        {
+            bool LazyGetField1(string name, out FormulaType type)
+            {
+                type = name switch
+                {
+                    "field1" => FormulaType.Decimal,
+                    "field2" => FormulaType.String,                    
+                    _ => FormulaType.Blank,
+                };
+
+                return type != FormulaType.Blank;
+            }
+
+            PowerFxConfig config = new PowerFxConfig();
+            config.EnableJsonFunctions();
+
+            RecalcEngine engine = new RecalcEngine(config);            
+            SymbolTable symbolTable = new SymbolTable();            
+            TestLazyRecordType lazyRecordType = new TestLazyRecordType("test", new List<string>() { "field1", "field2" }, LazyGetField1);
+
+            ISymbolSlot slot = symbolTable.AddVariable("var1", lazyRecordType);
+
+            CheckResult checkResult = engine.Check("JSON(var1, JSONFormat.IgnoreUnsupportedTypes)", symbolTable: symbolTable);
+            Assert.True(checkResult.IsSuccess, string.Join(", ", checkResult.Errors.Select(err => err.Message)));
+
+            SymbolValues symbolValues = new SymbolValues(symbolTable);
+            symbolValues.Set(slot, new LazyRecordValue(lazyRecordType));
+
+            FormulaValue formulaValue = checkResult.GetEvaluator().Eval(symbolValues);
+            StringValue stringValue = Assert.IsType<StringValue>(formulaValue);
+
+            Assert.Equal<object>(@"{""field1"":10,""field2"":""Str""}", stringValue.Value);
+        }
+
+        public class LazyRecordValue : RecordValue
+        {
+            public LazyRecordValue(RecordType type) 
+                : base(type)
+            {
+            }
+
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                if (fieldName == "field1")
+                {
+                    result = FormulaValue.New(10);
+                    return true;
+                }
+
+                if (fieldName == "field2")
+                {
+                    result = FormulaValue.New("Str");
+                    return true;
+                }
+
+                result = null;
+                return false;
+            }
         }
 
         [Theory]
