@@ -1882,13 +1882,11 @@ namespace Microsoft.PowerFx.Tests
             false)]
 
         // UDFs with Enitity Types should work in parameter and return types
-
         [InlineData(
             "f():TestEntity = Entity; g(e: TestEntity):Number = 1;",
             "g(f())",
             true,
             1.0)]
-
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1962,14 +1960,85 @@ namespace Microsoft.PowerFx.Tests
             "distance({x: 0, y: 0}, {x: 0, y: 5})",
             true,
             5.0)]
+        [InlineData(
+            "Account := Type(RecordOf(Accounts)); getAccountId(a: Account): Number = a.id;",
+            "getAccountId({id: 42, name: \"T-Rex\", address: \"Museum\"})",
+            true,
+            42.0)]
+        [InlineData(
+            "Account := Type(RecordOf(Accounts)); FirstAccount(a: Accounts): Account = First(a); getAccountId(a: Account): Number = a.id;",
+            "getAccountId(FirstAccount([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}]))",
+            true,
+            1729.0)]
+        [InlineData(
+            "NewAccounts := Type([RecordOf(Accounts)]); getFirstAccountId(a: NewAccounts): Number = First(a).id;",
+            "getFirstAccountId([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}])",
+            true,
+            1729.0)]
+        [InlineData(
+            "AccountWithAge := Type({age: Number, acc: RecordOf(Accounts)}); getAccountAge(a: AccountWithAge): Number = a.age;",
+            "getAccountAge({age : 25, acc:First([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}])})",
+            true,
+            25.0)]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); ComplexType := Type({p: RecordOf(Points), a: RecordOf(Accounts), s: SomeRecord}); getX(c: ComplexType): Number = c.p.x;",
+            "getX({s: {id: 1729, name: \"Bob\"}, p : {x: 1, y: 2}, a: {id: 42, name: \"Alice\", address: \"internet\"}})",
+            true,
+            1.0)]
+
+        // Fails for anyother type other than table
+        [InlineData(
+            "Account := Type(RecordOf(SomeRecord));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(RecordOf(Void));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(RecordOf(UntypedObject));",
+            "",
+            false)]
+
+        // invalid helper name
+        [InlineData(
+            "Account := Type(Recordof(Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(recordOf(Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(First(Accounts));",
+            "",
+            false)]
+
+        // Does not allow anything other firstname
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points As P));",
+            "",
+            false)]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points, Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type((Accounts, SomeRecord));",
+            "",
+            false)]
+        [InlineData(
+            "Point := Type(RecordOf([{x : Number, y : Number}]));",
+            "",
+            false)]
         public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(config);
-            var parserOptions = new ParserOptions()
-            {
-                AllowsSideEffects = false,
-            };
+            var parserOptions = new ParserOptions();
+
+            recalcEngine.Config.SymbolTable.AddType(new DName("Accounts"), FormulaType.Build(TestUtils.DT("*[id: n, name:s, address:s]")));
+            recalcEngine.Config.SymbolTable.AddType(new DName("SomeRecord"), FormulaType.Build(TestUtils.DT("![id: n, name:s]")));
 
             if (isValid)
             {

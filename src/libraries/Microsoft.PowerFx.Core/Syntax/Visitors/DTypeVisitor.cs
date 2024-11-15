@@ -120,6 +120,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return DType.Invalid;
             }
 
+            Contracts.Assert(node.Args.ChildNodes.Count == 1);
+
             var childType = node.Args.ChildNodes.Single().Accept(this, context);
 
             if (!childType.IsTable)

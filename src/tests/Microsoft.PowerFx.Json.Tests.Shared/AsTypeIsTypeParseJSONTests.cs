@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false);
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Void})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type(RecordOf(T))", TexlStrings.ErrTypeLiteral_InvalidTypeDefinition.Key);
         }
 
         [Fact]
@@ -106,8 +107,13 @@ namespace Microsoft.PowerFx.Json.Tests
             var t3a = new object[] { true, true, false, true };
             var t3 = new object[] { t3a };
 
+            dynamic obj1 = new ExpandoObject();
+            obj1.a = 5D;
+
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "T", t1);
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([RecordOf(T)])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type(RecordOf(T))", obj1);
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": [true, true, false, true]}]\"", "Type([{a: [Boolean]}])", t3);
             CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Decimal])", t2);
 

@@ -114,6 +114,28 @@ namespace Microsoft.PowerFx.Syntax
             {
             }
 
+            public override bool PreVisit(CallNode node)
+            {
+                if (ValidRecordOfNode(node))
+                {
+                    return true;
+                }
+
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                return false;
+            }
+
+            public override bool PreVisit(ListNode node)
+            {
+                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
+                {
+                    return true;
+                }
+
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                return false;
+            }
+
             // Invalid nodes
             public override void Visit(ErrorNode node)
             {
@@ -190,28 +212,6 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
 
-            public override bool PreVisit(CallNode node)
-            {
-                if (ValidRecordOfNode(node))
-                {
-                    return true;
-                }
-
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
-                return false;
-            }
-
-            public override bool PreVisit(ListNode node)
-            {
-                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
-                {
-                    return true;
-                }
-
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
-                return false;
-            }
-
             public override bool PreVisit(AsNode node)
             {
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
@@ -254,8 +254,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal static bool ValidRecordOfNode(CallNode node)
         {
-            return node.Parent is TypeLiteralNode &&
-                   node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
+            return node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
                    node.Args.Count == 1 &&
                    node.Args.ChildNodes.Single().AsFirstName() != null;
         }
