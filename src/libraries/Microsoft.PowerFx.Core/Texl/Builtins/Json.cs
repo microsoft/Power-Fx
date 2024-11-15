@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             DType dataArgType = argTypes[0];
             TexlNode dataNode = args[0];
 
-            supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;            
+            supportsLazyTypes = binding.Features.JsonFunctionAcceptsLazyTypes;
 
             if (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind))
             {
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!ignoreUnsupportedTypes)
-            {                
+            {
                 if (HasUnsupportedType(dataArgType, supportsLazyTypes, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());
