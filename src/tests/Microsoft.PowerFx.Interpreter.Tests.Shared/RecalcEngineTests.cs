@@ -1794,7 +1794,7 @@ namespace Microsoft.PowerFx.Tests
 
             ISymbolSlot slot = symbolTable.AddVariable("var1", lazyRecordType);
 
-            CheckResult checkResult = engine.Check("JSON(var1, JSONFormat.IgnoreUnsupportedTypes)", symbolTable: symbolTable);
+            CheckResult checkResult = engine.Check("JSON(var1)", symbolTable: symbolTable);
             Assert.True(checkResult.IsSuccess, string.Join(", ", checkResult.Errors.Select(err => err.Message)));
 
             SymbolValues symbolValues = new SymbolValues(symbolTable);
