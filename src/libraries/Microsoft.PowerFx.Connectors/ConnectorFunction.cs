@@ -28,6 +28,8 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
+#pragma warning disable SA1117
+
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
@@ -292,15 +294,16 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        private readonly ConnectorLogger _configurationLogger = null;
+        private readonly ConnectorLogger _configurationLogger = null;        
 
-        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
+        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList,
+                                   ConnectorLogger configurationLogger, IReadOnlyDictionary<string, FormulaValue> globalValues)
         {
             Operation = openApiOperation;
             Name = name;
             OperationPath = operationPath;
             HttpMethod = httpMethod;
-            ConnectorSettings = connectorSettings;
+            ConnectorSettings = connectorSettings;            
             GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), globalValues);
 
             _configurationLogger = configurationLogger;
@@ -1007,7 +1010,8 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only called by ConnectorTable.GetSchema
         // Returns a FormulaType with AssociatedDataSources set (done in AddTabularDataSource)
-        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName, out string name, out string displayName, out TableDelegationInfo delegationInfo)
+        internal static ConnectorType GetCdpTableType(ICdpTableResolver tableResolver, string connectorName, string tableName, string valuePath, StringValue stringValue, List<SqlRelationship> sqlRelationships, ConnectorCompatibility compatibility, string datasetName,
+                                                      out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets)
         {
             // There are some errors when parsing this Json payload but that's not a problem here as we only need x-ms-capabilities parsing to work
             OpenApiReaderSettings oars = new OpenApiReaderSettings() { RuleSet = DefaultValidationRuleSet };
@@ -1015,13 +1019,15 @@ namespace Microsoft.PowerFx.Connectors
 
             ServiceCapabilities serviceCapabilities = tableSchema.GetTableCapabilities();
             ConnectorPermission tablePermission = tableSchema.GetPermission();
-            
+
             JsonElement jsonElement = ExtractFromJson(stringValue, valuePath, out name, out displayName);
             bool isTableReadOnly = tablePermission == ConnectorPermission.PermissionReadOnly;
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
-            
-            ConnectorType connectorType = new ConnectorType(jsonElement, compatibility, sqlRelationships, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+
+            SymbolTable symbolTable = new SymbolTable();
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, compatibility, sqlRelationships, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
+            optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 
             return connectorType;
         }
@@ -1400,7 +1406,7 @@ namespace Microsoft.PowerFx.Connectors
                         {
                             // Ex: Api-Version
                             hiddenRequired = true;
-                        } 
+                        }
                     }
                     else if (ConnectorSettings.Compatibility.ExcludeInternals())
                     {

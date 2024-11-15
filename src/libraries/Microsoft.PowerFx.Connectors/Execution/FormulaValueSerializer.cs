@@ -283,6 +283,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         await WriteBlobValueAsync(bv).ConfigureAwait(false);
                     }
+                    else if (fv is OptionSetValue optionSetValue)
+                    {
+                        WriteStringValue(optionSetValue.Option);
+                    }
                     else
                     {
                         throw new PowerFxConnectorException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");

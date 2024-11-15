@@ -10,6 +10,9 @@ using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -82,45 +85,58 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Get suggested options values.  Returns null if none.
-        internal static (string[] options, ConnectorErrors errors) GetOptions(this OpenApiParameter openApiParameter)
+        internal static DisplayNameProvider GetEnumValues(this ISwaggerParameter openApiParameter)
         {
-            ConnectorErrors errors = new ConnectorErrors();
-
-            // x-ms-enum-values is: array of { value :string, displayName:string}.
+            // x-ms-enum-values is: array of { value: string, displayName: string}.
             if (openApiParameter.Extensions.TryGetValue(XMsEnumValues, out var enumValues))
             {
                 if (enumValues is IList<IOpenApiAny> array)
                 {
-                    var list = new List<string>(array.Count);
+                    SingleSourceDisplayNameProvider displayNameProvider = new SingleSourceDisplayNameProvider();
 
                     foreach (var item in array)
                     {
+                        string logical = null;
+                        string display = null;
+
                         if (item is IDictionary<string, IOpenApiAny> obj)
                         {
-                            // has keys, "value", and "displayName"
-                            if (obj.TryGetValue("value", out IOpenApiAny value))
+                            if (obj.TryGetValue("value", out IOpenApiAny openApiLogical))
                             {
-                                if (value is OpenApiString str)
+                                if (openApiLogical is OpenApiString logicalStr)
                                 {
-                                    list.Add(str.Value);
-                                    continue;
+                                    logical = logicalStr.Value;
                                 }
-                                else if (value is OpenApiInteger i)
+                                else if (openApiLogical is OpenApiInteger logicalInt)
                                 {
-                                    list.Add(i.Value.ToString(CultureInfo.InvariantCulture));
-                                    continue;
+                                    logical = logicalInt.Value.ToString(CultureInfo.InvariantCulture);
                                 }
                             }
-                        }
 
-                        errors.AddError($"Unrecognized {XMsEnumValues} schema ({item.GetType().Name})");
+                            if (obj.TryGetValue("displayName", out IOpenApiAny openApiDisplay))
+                            {
+                                if (openApiDisplay is OpenApiString displayStr)
+                                {
+                                    display = displayStr.Value;
+                                }
+                                else if (openApiDisplay is OpenApiInteger displayInt)
+                                {
+                                    display = displayInt.Value.ToString(CultureInfo.InvariantCulture);
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(logical) && !string.IsNullOrEmpty(display))
+                            {
+                                displayNameProvider = displayNameProvider.AddField(new DName(logical), new DName(display));
+                            }
+                        }
                     }
 
-                    return (list.ToArray(), errors);
+                    return displayNameProvider.LogicalToDisplayPairs.Any() ? displayNameProvider : null;
                 }
             }
 
-            return (null, null);
+            return null;
         }
 
         public static bool IsTrigger(this OpenApiOperation op)
@@ -342,11 +358,11 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
-        internal static string GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) && 
+        internal static string GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
                                                                               openApiExt is SwaggerJsonObject jsonObject &&
                                                                               jsonObject.TryGetValue("name", out IOpenApiAny enumName) &&
-                                                                              enumName is OpenApiString enumNameStr 
-                                                                            ? enumNameStr.Value 
+                                                                              enumName is OpenApiString enumNameStr
+                                                                            ? enumNameStr.Value
                                                                             : null;
 
         internal static string GetMediaKind(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
@@ -378,11 +394,17 @@ namespace Microsoft.PowerFx.Connectors
             internal readonly IList<SqlRelationship> SqlRelationships;
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
+            internal readonly SymbolTable OptionSets;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, IList<SqlRelationship> sqlRelationships = null)
+            private readonly string _tableName;
+
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets, IList<SqlRelationship> sqlRelationships = null)
             {
                 Compatibility = connectorCompatibility;
+                OptionSets = optionSets;
                 SqlRelationships = sqlRelationships;
+
+                _tableName = tableName;
             }
 
             internal ConnectorTypeGetterSettings Stack(string identifier)
@@ -397,11 +419,33 @@ namespace Microsoft.PowerFx.Connectors
                 Chain.Pop();
                 Level--;
             }
+
+            // by default, optionset names will be 'propertyName (tableName)' in CDP case, where propertyName is replaced by x-ms-enum content, when provided
+            // in non-CDP case, tableName is null and will only be 'propertyName' (or x-ms-enum content)
+            internal string GetOptionSetName(string optionSetNameBase)
+            {
+                string optionSetName = optionSetNameBase;
+
+                if (!string.IsNullOrEmpty(_tableName))
+                {
+                    optionSetName += $" ({_tableName})";
+                }
+
+                return optionSetName;
+            }
         }
 
         internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
         {
-            return openApiParameter.GetConnectorType(new ConnectorTypeGetterSettings(compatibility, sqlRelationships));
+            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility, sqlRelationships);
+        }
+
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        {
+            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
+            ConnectorType connectorType = openApiParameter.GetConnectorType(settings);
+
+            return connectorType;
         }
 
         // See https://swagger.io/docs/specification/data-models/data-types/
@@ -445,12 +489,25 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
                     }
 
+                    // Try getting enum from 'x-ms-enum-values'
+                    DisplayNameProvider optionSetDisplayNameProvider = openApiParameter.GetEnumValues();
+
+                    if (optionSetDisplayNameProvider != null && (settings.Compatibility.IsCDP() || schema.Format == "enum"))
+                    {
+                        string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
+                        OptionSet optionSet = new OptionSet(optionSetName, optionSetDisplayNameProvider);
+                        optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
+                        return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
+                    }
+
+                    // Try getting enum from 'enum'
                     if (schema.Enum != null && (settings.Compatibility.IsCDP() || schema.Format == "enum"))
                     {
                         if (schema.Enum.All(e => e is OpenApiString))
                         {
-                            string enumName = schema.GetEnumName() ?? "enum";
-                            OptionSet optionSet = new OptionSet(enumName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                            string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
+                            OptionSet optionSet = new OptionSet(optionSetName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                            optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
                             return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                         }
                         else
@@ -478,7 +535,7 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);                       
+                            return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of number: {schema.Format}");
@@ -489,7 +546,7 @@ namespace Microsoft.PowerFx.Connectors
                     return new ConnectorType(schema, openApiParameter, FormulaType.Number);
 
                 // Always a boolean (Format not used)
-                case "boolean": 
+                case "boolean":
                     return new ConnectorType(schema, openApiParameter, FormulaType.Boolean);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
@@ -665,6 +722,34 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        // If an OptionSet doesn't exist, we add it (and return it)
+        // If an identical OptionSet exists (same name & list of options), we return it
+        // Otherwise we throw in case of conflict
+        internal static OptionSet TryAddOptionSet(this SymbolTable symbolTable, OptionSet optionSet)
+        {
+            if (optionSet == null)
+            {
+                throw new ArgumentNullException("optionSet");
+            }
+
+            string name = optionSet.EntityName;
+
+            // No existing symbols with that name
+            if (!((INameResolver)symbolTable).Lookup(new DName(name), out NameLookupInfo info, NameLookupPreferences.None))
+            {
+                symbolTable.AddOptionSet(optionSet);
+                return optionSet;
+            }
+
+            // Same optionset already present in table
+            if (info.Kind == BindKind.OptionSet && info.Data is OptionSet existingOptionSet && existingOptionSet.Equals(optionSet))
+            {
+                return existingOptionSet;
+            }
+
+            throw new InvalidOperationException($"Optionset name conflict ({name})");
+        }
+
         internal static RecordType ToRecordType(this List<(string logicalName, string displayName, FormulaType type)> fields)
         {
             if (fields == null)
@@ -733,7 +818,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
-        {
+        {            
             ConnectorType connectorType = openApiOperation.GetConnectorReturnType(compatibility);
             FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();
             return ft;

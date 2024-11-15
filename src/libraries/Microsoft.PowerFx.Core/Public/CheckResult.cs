@@ -707,7 +707,7 @@ namespace Microsoft.PowerFx
             var summary = new CheckContextSummary
             {
                 AllowsSideEffects = allowSideEffects,
-                IsPreV1Semantics = isV1,
+                IsPreV1Semantics = !isV1,
                 ExpectedReturnType = this._expectedReturnTypes,
                 SuggestedSymbols = symbolEntries
             };
