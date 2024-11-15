@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(ListNode node)
             {
-                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
+                if (node.Parent != null && node.Parent is CallNode cn && ValidRecordOfNode(cn))
                 {
                     return true;
                 }
@@ -254,6 +254,10 @@ namespace Microsoft.PowerFx.Syntax
 
         internal static bool ValidRecordOfNode(CallNode node)
         {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(node.Args);
+            Contracts.AssertAllValues(node.Args.ChildNodes);
+
             return node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
                    node.Args.Count == 1 &&
                    node.Args.ChildNodes.Single().AsFirstName() != null;
