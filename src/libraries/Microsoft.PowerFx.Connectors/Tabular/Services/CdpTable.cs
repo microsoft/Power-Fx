@@ -112,14 +112,12 @@ namespace Microsoft.PowerFx.Connectors
 
             Uri uri = new Uri(
                    (_uriPrefix ?? string.Empty) +
-                   (IsSql() ? "/v2" : string.Empty) +
+                   (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
-        }
-
-        private bool IsSql() => _uriPrefix.Contains("/sql/");
+        }        
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {
