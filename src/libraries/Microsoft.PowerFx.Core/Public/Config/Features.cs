@@ -94,7 +94,12 @@ namespace Microsoft.PowerFx
 
         internal static readonly Features None = new Features();
 
-        public static readonly Features PowerFxV1 = new Features
+        /// <summary>
+        /// The default V1 Power Fx feature set. 
+        /// </summary>
+        public static Features PowerFxV1 => _powerFxV1;
+
+        private static readonly Features _powerFxV1 = new Features
         {
             TableSyntaxDoesntWrapRecords = true,
             ConsistentOneColumnTableResult = true,
