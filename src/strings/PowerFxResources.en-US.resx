@@ -1917,6 +1917,10 @@
     <value>'{0}' is an unknown or unsupported function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrknownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' is recognized as type helper function and it can only be used within a type literal.</value>
+    <comment>Error message shown when a type helper is used outside of type literal expression. Example of valid usage: "Type(RecordOf(Accounts))"</comment>
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
     <comment>Error Message.</comment>
