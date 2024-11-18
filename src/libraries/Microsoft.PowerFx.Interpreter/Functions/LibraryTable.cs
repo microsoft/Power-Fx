@@ -526,33 +526,25 @@ namespace Microsoft.PowerFx.Functions
         {
             var leftTable = (TableValue)args[0];
             var rightTable = (TableValue)args[1];
-            var predicate = (LambdaFormulaValue)args[2];            
-
-            OptionSetValue joinType = null;
-
-            if (args.Count() == 4)
-            {
-                joinType = (OptionSetValue)args[3];
-            }
-            else
-            {
-                joinType = new OptionSetValue("Inner", new OptionSetValueType());
-            }
+            var predicate = (LambdaFormulaValue)args[2];
+            var joinType = (OptionSetValue)args[3];
+            var leftRenaming = (RecordValue)args[4];
+            var rightRenaming = (RecordValue)args[5];
 
             DValue<RecordValue>[] rows;
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerLeft: true, outerRight: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerLeft: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, leftTable.Rows, rightTable.Rows, predicate, outerRight: true).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -564,11 +556,14 @@ namespace Microsoft.PowerFx.Functions
         private static async Task<DValue<RecordValue>[]> LazyJoinAsync(
             EvalVisitor runner,
             EvalVisitorContext context,
-            IEnumerable<DValue<RecordValue>> leftSource,
-            IEnumerable<DValue<RecordValue>> rightSource,
+            IRContext irContext,
+            TableValue leftSource,
+            TableValue rightSource,
             LambdaFormulaValue predicate,
-            bool outerLeft = false,
-            bool outerRight = false)
+            bool outerLeft,
+            bool outerRight,
+            RecordValue leftRenaming,
+            RecordValue rightRenaming)
         {
             var innerRows = new List<DValue<RecordValue>>();
             var outerDict = new Dictionary<DValue<RecordValue>, bool>();
@@ -577,20 +572,22 @@ namespace Microsoft.PowerFx.Functions
             // Using a dictionary to avoid duplicates and to make it easier to check if a row is in the inner join.
             var innerDict = new Dictionary<DValue<RecordValue>, bool>();
 
-            foreach (var leftRow in leftSource)
+            foreach (var leftRow in leftSource.Rows)
             {
-                foreach (var rightRow in rightSource)
+                foreach (var rightRow in rightSource.Rows)
                 {
                     runner.CheckCancel();
 
-                    var result = await LazyCheckDenominatorRowAsync(runner, context, leftRow, rightRow, predicate).ConfigureAwait(false);
+                    var result = await LazyCheckPredicateAsync(runner, context, leftRow, rightRow, predicate).ConfigureAwait(false);
 
                     if (result != null)
                     {
                         if (result.IsValue)
                         {
-                            // Both left and right records are a match. Join them!
-                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRow.Value.Fields.Concat(rightRow.Value.Fields).ToArray())));
+                            var leftRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(leftRow.Value.Type), BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                            var rightRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(rightRow.Value.Type), BuildRenamingArgs(rightRow.Value, rightRenaming)).ConfigureAwait(false);
+
+                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRenamed.OriginalFields.Concat(rightRenamed.OriginalFields).ToArray())));
                         }
                         else if (result.IsError)
                         {
@@ -641,7 +638,20 @@ namespace Microsoft.PowerFx.Functions
             return innerRows.Concat(outerDict.Keys).ToArray();
         }
 
-        private static async Task<DValue<RecordValue>> LazyCheckDenominatorRowAsync(
+        private static FormulaValue[] BuildRenamingArgs(RecordValue row, RecordValue renaming)
+        {
+            var ret = new List<FormulaValue>() { row };
+
+            foreach (var field in renaming.OriginalFields)
+            {
+                ret.Add(FormulaValue.New(field.Name));
+                ret.Add((StringValue)field.Value);
+            }
+
+            return ret.ToArray();
+        }
+
+        private static async Task<DValue<RecordValue>> LazyCheckPredicateAsync(
            EvalVisitor runner,
            EvalVisitorContext context,
            DValue<RecordValue> leftRow,
@@ -686,6 +696,27 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return null;
+        }
+
+        private static IEnumerable<NamedValue> GetRenamedFields(RecordValue recordValue, RecordValue renaming)
+        {
+            var ret = new List<NamedValue>();
+
+            foreach (NamedValue field in recordValue.Fields)
+            {
+                var rename = renaming.GetField(field.Name);
+
+                if (rename is StringValue stringValue)
+                {
+                    ret.Add(new NamedValue(stringValue.Value, field.Value));
+                }
+                else
+                {
+                    ret.Add(field);
+                }
+            }
+
+            return ret;
         }
 
         public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)

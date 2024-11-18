@@ -4897,4 +4897,8 @@
     <value>Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
     <comment>Error message returned when user tries to give anything different than a plain 'JoinType' enum value as argument.</comment>
   </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.</value>
+    <comment>{Locked='As'}{Locked='LeftRecord.Name As NewName'}</comment>
+  </data>
 </root>

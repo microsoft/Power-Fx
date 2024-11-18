@@ -862,5 +862,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUserDefinedTypeIncorrectSyntax = new ErrorResourceKey("ErrUserDefinedTypeIncorrectSyntax");
         public static ErrorResourceKey ErrJoinCantUnion = new ErrorResourceKey("ErrJoinCantUnion");
         public static ErrorResourceKey ErrJoinNotPlainJoinTypeEnum = new ErrorResourceKey("ErrJoinNotPlainJoinTypeEnum");
+        public static ErrorResourceKey ErrJoinArgIsNotAsNode = new ErrorResourceKey("ErrJoinArgIsNotAsNode");
     }
 }
