@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Connectors
         public static async Task<DatasetMetadata> GetDatasetsMetadataAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             string uri = (uriPrefix ?? string.Empty)
-                + (uriPrefix.Contains("/sql/") ? "/v2" : string.Empty)
+                + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
                 + $"/$metadata.json/datasets";
 
             return await GetObject<DatasetMetadata>(httpClient, "Get datasets metadata", uri, null, cancellationToken, logger).ConfigureAwait(false);            
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors
             _uriPrefix = uriPrefix;
 
             string uri = (_uriPrefix ?? string.Empty)
-                + (uriPrefix.Contains("/sql/") ? "/v2" : string.Empty)
+                + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
                 + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}"
                 + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
