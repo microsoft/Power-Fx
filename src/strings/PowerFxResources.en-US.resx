@@ -4844,7 +4844,11 @@
   </data>
   <data name="JoinArg4" xml:space="preserve">
     <value>join_type</value>
-    <comment>function_parameter - Fourth argument to the Summarize function - the join type between the two tables.</comment>
+    <comment>function_parameter - Fourth argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    <comment>function_parameter - Fifth and on argument to the Join function - the join type between the two tables.</comment>
   </data>
   <data name="AboutJoin_source1" xml:space="preserve">
     <value>The left table or collection.</value>
@@ -4860,6 +4864,10 @@
   </data>
   <data name="AboutJoin_join_type" xml:space="preserve">
     <value>The join type between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>The arguments to rename an existing column in one of the sources.</value>
     <comment>Description for this parameter</comment>
   </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
