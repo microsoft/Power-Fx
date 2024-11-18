@@ -27,6 +27,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool IsDelegable => (DelegationInfo?.SortRestriction != null) || (DelegationInfo?.FilterRestriction != null) || (DelegationInfo?.FilterSupportedFunctions != null);
 
+        public IEnumerable<OptionSet> OptionSets { get; private set; }
+
         internal TableDelegationInfo DelegationInfo => ((DataSourceInfo)TabularTableDescriptor.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
 
         internal override IReadOnlyDictionary<string, Relationship> Relationships => _relationships;
@@ -80,6 +82,7 @@ namespace Microsoft.PowerFx.Connectors
             TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
 
             _relationships = TabularTableDescriptor.Relationships;
+            OptionSets = tableResolver.OptionSets;
 
             RecordType = (RecordType)TabularTableDescriptor.FormulaType;
         }
@@ -87,8 +90,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            CdpDataSource cds = new CdpDataSource(DatasetName);
+            
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
             DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
@@ -110,14 +112,12 @@ namespace Microsoft.PowerFx.Connectors
 
             Uri uri = new Uri(
                    (_uriPrefix ?? string.Empty) +
-                   (IsSql() ? "/v2" : string.Empty) +
+                   (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
                    $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
-        }
-
-        private bool IsSql() => _uriPrefix.Contains("/sql/");
+        }        
 
         private IReadOnlyCollection<DValue<RecordValue>> GetResult(string text)
         {

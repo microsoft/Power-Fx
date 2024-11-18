@@ -4560,6 +4560,10 @@
     <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
     <comment>Error message when validation of type literal fails.</comment>
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Unsupported usage: type literals can only be used in type arguments and type definitions.</value>
+    <comment>Error message shown when a type literal is used in an unsupported expression.</comment>
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definition of type {0} is invalid.</value>
     <comment>Error message when type binding is invalid.</comment>

@@ -207,15 +207,16 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
+        // Called by ConnectorFunction.GetCdpTableType
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, compatibility, sqlRelationships))
         {
             Name = name;
 
             foreach (ConnectorType field in Fields.Where(f => f.Capabilities != null))
-            {                
+            {
                 serviceCapabilities.AddColumnCapability(field.Name, field.Capabilities);
-            }                           
+            }
 
             FormulaType = new CdpRecordType(this, resolver, ServiceCapabilities.ToDelegationInfo(serviceCapabilities, name, isTableReadOnly, this, datasetName));
         }
@@ -295,7 +296,7 @@ namespace Microsoft.PowerFx.Connectors
             ExternalTables.Add(relationship.ReferencedTable);
             RelationshipName = relationship.RelationshipName;
             ForeignKey = relationship.ReferencedColumnName;
-        }          
+        }
 
         private void AggregateErrors(ConnectorType[] types)
         {

@@ -103,8 +103,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (_unsupportedTopLevelTypes.Contains(dataArgType.Kind) || _unsupportedTypes.Contains(dataArgType.Kind))
             {
-                errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
-                return;
+                // don't generate an error for lazy types when we allow them
+                if (!(supportsLazyTypes && (dataArgType.Kind == DKind.LazyRecord || dataArgType.Kind == DKind.LazyTable)))
+                {
+                    errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedType, dataArgType.GetKindString());
+                    return;
+                }
             }
 
             bool includeBinaryData = false;
@@ -173,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!ignoreUnsupportedTypes)
-            {                
+            {
                 if (HasUnsupportedType(dataArgType, supportsLazyTypes, out DType unsupportedNestedType, out var unsupportedColumnName))
                 {
                     errors.EnsureError(dataNode, TexlStrings.ErrJSONArg1UnsupportedNestedType, unsupportedColumnName, unsupportedNestedType.GetKindString());

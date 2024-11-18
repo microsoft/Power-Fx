@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Connectors
             Location = openApiParameter.In;
         }
 
+        // Intellisense only
         internal ConnectorParameter(ConnectorParameter connectorParameter, ConnectorType connectorType)
             : base(connectorParameter, connectorType)
         {

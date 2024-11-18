@@ -4411,6 +4411,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 features: Features.PowerFxV1);
         }
 
+        [Theory]
+        [InlineData("Type(Number)", "e")]
+        [InlineData("Abs(Type(Number))", "n")]
+        [InlineData("If(Type(Boolean), 1, 2)", "n")]
+        [InlineData("Concatenate(Type(Text))", "s")]
+        public void TestTypeLiteralsNegative(string script, string expectedSchema)
+        {
+            TestBindingErrors(
+                script,
+                TestUtils.DT(expectedSchema),
+                features: Features.PowerFxV1);
+        }
+
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
