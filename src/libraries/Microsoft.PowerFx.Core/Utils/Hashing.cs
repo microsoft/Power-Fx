@@ -20,6 +20,11 @@ namespace Microsoft.PowerFx.Core.Utils
             return (((u1 << 7) | (u1 >> 25)) ^ u2) ^ (((u3 << 15) | (u3 >> 17)) ^ u4) ^ (u5 << 5);
         }
 
+        public static uint CombineHash(uint u1, uint u2, uint u3, uint u4, uint u5, uint u6)
+        {
+            return CombineHash(CombineHash(u1, u2, u3, u4, u5), u6);
+        }
+
         public static int CombineHash(int n1, int n2, int n3, int n4)
         {
             return (int)CombineHash(CombineHash((uint)n1, (uint)n2), CombineHash((uint)n3, (uint)n4));
@@ -28,6 +33,11 @@ namespace Microsoft.PowerFx.Core.Utils
         public static int CombineHash(int n1, int n2, int n3, int n4, int n5)
         {
             return (int)CombineHash((uint)n1, (uint)n2, (uint)n3, (uint)n4, (uint)n5);
+        }
+
+        public static int CombineHash(int n1, int n2, int n3, int n4, int n5, int n6)
+        {
+            return (int)CombineHash((uint)n1, (uint)n2, (uint)n3, (uint)n4, (uint)n5, (uint)n6);
         }
 
         public static uint CombineHash(uint u1, uint u2, uint u3, uint u4, uint u5, uint u6, uint u7)

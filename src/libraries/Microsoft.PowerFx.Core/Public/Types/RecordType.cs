@@ -54,11 +54,11 @@ namespace Microsoft.PowerFx.Types
         /// Derived classes calling this must override <see cref="AggregateType.TryGetFieldType(string, out FormulaType)"/>.
         /// </summary>
         /// <param name="displayNameProvider">Provide DisplayNameProvider to be used.</param>
-        /// <param name="delegationInfo">Table provider to be used.</param>
+        /// <param name="delegationInfo">Table provider to be used.</param>        
         public RecordType(DisplayNameProvider displayNameProvider, TableDelegationInfo delegationInfo)
             : base(false, displayNameProvider)
         {
-            _type = DType.AttachDataSourceInfo(_type, new DataSourceInfo(this, displayNameProvider, delegationInfo));            
+            _type = DType.AttachDataSourceInfo(_type, new DataSourceInfo(this, displayNameProvider, delegationInfo));
             _fieldNames = displayNameProvider.LogicalToDisplayPairs.Select(pair => pair.Key.Value).ToList();
         }
 

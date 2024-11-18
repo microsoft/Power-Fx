@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Types
         // This is a "placeholder" field that can expand to another entity (ala a TypeRef). 
         // Can also provide Display Names.
         // Should eventually be subsumed by LazyTypeProvider
-        public IExpandInfo ExpandInfo { get; }
+        public IExpandInfo ExpandInfo { get; private set; }
 
         // This is very similar interface to OptionSets, could potentially unify. 
         internal IExternalViewInfo ViewInfo { get; }
@@ -553,7 +553,12 @@ namespace Microsoft.PowerFx.Core.Types
 #if DEBUG
             if (ExpandInfo != null)
             {
-                Contracts.Assert((Kind == DKind.Table) || (Kind == DKind.Record) || (Kind == DKind.DataEntity) || (Kind == DKind.Metadata));
+                Contracts.Assert((Kind == DKind.Table) || 
+                                 (Kind == DKind.Record) || 
+                                 (Kind == DKind.LazyTable) ||
+                                 (Kind == DKind.LazyRecord) ||
+                                 (Kind == DKind.DataEntity) || 
+                                 (Kind == DKind.Metadata));
             }
 
             if (ValueTree.Count > 1)
@@ -589,7 +594,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsControl => Kind == DKind.Control;
 
-        public bool IsExpandEntity => Kind == DKind.DataEntity;
+        public bool IsExpandEntity => Kind == DKind.DataEntity;        
 
         public bool IsMetadata => Kind == DKind.Metadata;
 
@@ -705,7 +710,12 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(dsInfo);
 
             var returnType = type.Clone();
-            returnType.AssociatedDataSources.Add(dsInfo);
+            returnType.AssociatedDataSources.Add(dsInfo);    
+            
+            //if (dsInfo is DataSourceInfo dInfo)
+            //{
+            //    returnType.ExpandInfo = new ExpandInfo("x", "x", false);                
+            //}
 
             if (!attachToNestedType || type.IsLazyType)
             {

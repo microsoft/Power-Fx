@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Connectors
                     _ => throw new NotImplementedException()
                 });
 
-            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
+            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.Keys.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
 
             return new CdpDelegationInfo()
             {

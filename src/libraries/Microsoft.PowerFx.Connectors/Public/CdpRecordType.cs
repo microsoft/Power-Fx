@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            tableName = connectorType.ExternalTables.First();
+            tableName = connectorType.ExternalTables.First().Key;
             foreignKey = connectorType.ForeignKey;
             return true;
         }
@@ -60,18 +60,25 @@ namespace Microsoft.PowerFx.Connectors
                 return true;
             }
 
-            string tableName = field.ExternalTables.First();
+            KeyValuePair<string, ConnectorType> foreignTable = field.ExternalTables.First();
+
+            if (foreignTable.Value != null)
+            {
+                type = foreignTable.Value.FormulaType;
+                return true;
+            }
 
             try
             {
-                ConnectorType connectorType = TableResolver.ResolveTableAsync(tableName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                ConnectorType connectorType = TableResolver.ResolveTableAsync(foreignTable.Key, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
+                field.ExternalTables[foreignTable.Key] = connectorType;
                 type = connectorType.FormulaType;
                 return true;
             }
             catch (Exception ex)
             {
-                TableResolver?.Logger.LogException(ex, $"Cannot resolve external table {tableName}");
+                TableResolver?.Logger.LogException(ex, $"Cannot resolve external table {foreignTable.Key}");
                 throw;
             }
         }

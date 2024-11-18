@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ISwaggerSchema Schema { get; private set; } = null;
 
         // Relationships to external tables
-        internal List<string> ExternalTables { get; set; }
+        internal Dictionary<string, ConnectorType> ExternalTables { get; set; }
 
         internal string RelationshipName { get; set; }
 
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Connectors
                 // SalesForce only
                 if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
                 {
-                    ExternalTables = new List<string>(schema.ReferenceTo);
+                    ExternalTables = new Dictionary<string, ConnectorType>() { { schema.ReferenceTo.First(), null } };
                     RelationshipName = schema.RelationshipName;
                     ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
                 }
@@ -292,8 +292,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal void SetRelationship(SqlRelationship relationship)
         {
-            ExternalTables ??= new List<string>();
-            ExternalTables.Add(relationship.ReferencedTable);
+            ExternalTables ??= new Dictionary<string, ConnectorType>();
+            ExternalTables.Add(relationship.ReferencedTable, null);
             RelationshipName = relationship.RelationshipName;
             ForeignKey = relationship.ReferencedColumnName;
         }
