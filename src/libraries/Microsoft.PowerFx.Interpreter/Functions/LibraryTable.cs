@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Localization;
@@ -525,8 +527,16 @@ namespace Microsoft.PowerFx.Functions
         // Join(t1, t2, LeftRecord.Id = RightRecord.RefId, JoinType.Inner)
         public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var leftTable = (TableValue)args[0];
-            var rightTable = (TableValue)args[1];
+            if (args[0] is not TableValue leftTable)
+            {
+                return args[0];
+            }
+
+            if (args[1] is not TableValue rightTable)
+            {
+                return args[1];
+            }
+
             var predicate = (LambdaFormulaValue)args[2];
             var joinType = (OptionSetValue)args[3];
             var leftRenaming = (RecordValue)args[4]; // Built by IR. Arg0 (left) mapping of old column names and new columns name e.f. {OldName:"NewName"}
@@ -1540,6 +1550,21 @@ namespace Microsoft.PowerFx.Functions
 
                 return l.ToArray();
             }
+        }
+    }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+    internal class JoinImpl : JoinFunction, IAsyncTexlFunctionJoin
+#pragma warning restore CS0618 // Type or member is obsolete
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return await Library.JoinTables(runner, context, irContext, args).ConfigureAwait(false);
         }
     }
 }

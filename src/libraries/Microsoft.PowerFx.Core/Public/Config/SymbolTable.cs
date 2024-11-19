@@ -66,6 +66,11 @@ namespace Microsoft.PowerFx
             return new DName(name);
         }
 
+        public SymbolTable()
+        {
+            EnumStoreBuilder = new EnumStoreBuilder();
+        }            
+
         TexlFunctionSet INameResolver.Functions => _guard.VerifyNoWriters(_functions);
 
         public override FormulaType GetTypeFromSlot(ISymbolSlot slot)
