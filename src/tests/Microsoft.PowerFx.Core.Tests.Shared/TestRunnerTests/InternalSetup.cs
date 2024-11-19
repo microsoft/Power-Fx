@@ -16,7 +16,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TexlParser.Flags Flags { get; set; }
 
-        internal Features Features { get; set; }
+        private Features _features;
+
+        internal Features Features
+        {
+            get => _features;
+
+            // Clone since we'll use reflection to mutate it. 
+            init => _features = new Features(value);
+        }
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
