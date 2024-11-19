@@ -99,6 +99,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Cannot do RecordOf on a Record type
         [InlineData("Point := Type({x: Number, y: Number});PointR := Type(RecordOf(Point));", 1)]
+
+        // Cannot use RecordOf outside of type literal
+        [InlineData("Point := Type({x: Number, y: Number});PointR = RecordOf(Point);", 1)]
         public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -130,6 +133,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(expectedErrorCount, errors.Count());
             Assert.All(errors, e => Assert.Contains(expectedMessageKey, e.MessageKey));
+        }
+
+        [Theory]
+
+        // not in Type literal expression;
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Points = RecordOf(Points); ", "ErrknownTypeHelperFunction")]
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Number = RecordOf(Points).x; ", "ErrknownTypeHelperFunction")]
+
+        // RecordOf record type
+        [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDefinition")]
+        public void TestRecordOfErrors(string typeDefinition, string expectedMessageKey)
+        {
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(typeDefinition)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errors = checkResult.ApplyErrors();
+            Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
         }
 
         [Theory]

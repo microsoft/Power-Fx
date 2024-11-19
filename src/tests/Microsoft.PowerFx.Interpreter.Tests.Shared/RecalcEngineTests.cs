@@ -2094,6 +2094,16 @@ namespace Microsoft.PowerFx.Tests
             "Point := Type(RecordOf([{x : Number, y : Number}]));",
             "",
             false)]
+
+        // RecordOf not in type literal
+        [InlineData(
+            "Account = RecordOf(Accounts);",
+            "",
+            false)]
+        [InlineData(
+            "F():Accounts = RecordOf(Accounts);",
+            "",
+            false)]
         public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
