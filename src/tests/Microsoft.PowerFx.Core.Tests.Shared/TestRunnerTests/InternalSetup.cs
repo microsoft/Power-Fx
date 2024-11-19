@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
@@ -16,15 +15,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TexlParser.Flags Flags { get; set; }
 
-        private Features _features;
-
-        internal Features Features
-        {
-            get => _features;
-
-            // Clone since we'll use reflection to mutate it. 
-            init => _features = new Features(value);
-        }
+        internal Features Features { get; set; }
 
         internal TimeZoneInfo TimeZoneInfo { get; set; }
 
@@ -34,10 +25,59 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        private static bool TryGetFeaturesProperty(string featureName, out PropertyInfo propertyInfo)
+        private bool TryUpdateFeatures(string featureName, bool featureValue)
         {
-            propertyInfo = typeof(Features).GetProperty(featureName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            return propertyInfo?.CanWrite == true;
+            switch (featureName)
+            {
+                // When we move to C# 12 we can use nameof(Features.AllowAsyncDelegation):
+                case "AllowAsyncDelegation":
+                    this.Features = new Features(this.Features) { AllowAsyncDelegation = featureValue };
+                    return true;
+                case "AllowImpureNodeDelegation":
+                    this.Features = new Features(this.Features) { AllowImpureNodeDelegation = featureValue };
+                    return true;
+                case "AsTypeLegacyCheck":
+                    this.Features = new Features(this.Features) { AsTypeLegacyCheck = featureValue };
+                    return true;
+                case "ConsistentOneColumnTableResult":
+                    this.Features = new Features(this.Features) { ConsistentOneColumnTableResult = featureValue };
+                    return true;
+                case "DisableRowScopeDisambiguationSyntax":
+                    this.Features = new Features(this.Features) { DisableRowScopeDisambiguationSyntax = featureValue };
+                    return true;
+                case "FirstLastNRequiresSecondArguments":
+                    this.Features = new Features(this.Features) { FirstLastNRequiresSecondArguments = featureValue };
+                    return true;
+                case "IsLookUpReductionDelegationEnabled":
+                    this.Features = new Features(this.Features) { IsLookUpReductionDelegationEnabled = featureValue };
+                    return true;
+                case "IsUserDefinedTypesEnabled":
+                    this.Features = new Features(this.Features) { IsUserDefinedTypesEnabled = featureValue };
+                    return true;
+                case "JsonFunctionAcceptsLazyTypes":
+                    this.Features = new Features(this.Features) { JsonFunctionAcceptsLazyTypes = featureValue };
+                    return true;
+                case "PowerFxV1CompatibilityRules":
+                    this.Features = new Features(this.Features) { PowerFxV1CompatibilityRules = featureValue };
+                    return true;
+                case "PrimaryOutputPropertyCoercionDeprecated":
+                    this.Features = new Features(this.Features) { PrimaryOutputPropertyCoercionDeprecated = featureValue };
+                    return true;
+                case "RestrictedIsEmptyArguments":
+                    this.Features = new Features(this.Features) { RestrictedIsEmptyArguments = featureValue };
+                    return true;
+                case "StronglyTypedBuiltinEnums":
+                    this.Features = new Features(this.Features) { StronglyTypedBuiltinEnums = featureValue };
+                    return true;
+                case "SupportColumnNamesAsIdentifiers":
+                    this.Features = new Features(this.Features) { SupportColumnNamesAsIdentifiers = featureValue };
+                    return true;
+                case "TableSyntaxDoesntWrapRecords":
+                    this.Features = new Features(this.Features) { TableSyntaxDoesntWrapRecords = featureValue };
+                    return true;
+            }
+
+            return false;
         }
 
         internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
@@ -89,17 +129,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     parts.Remove(part);
                 }
-                else if (TryGetFeaturesProperty(partName, out var prop))
+                else if (iSetup.TryUpdateFeatures(partName, !isDisable))
                 {
-                    if (isDisable)
-                    {
-                        prop.SetValue(iSetup.Features, false);
-                    }
-                    else
-                    {
-                        prop.SetValue(iSetup.Features, true);
-                    }
-
                     parts.Remove(part);
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))
