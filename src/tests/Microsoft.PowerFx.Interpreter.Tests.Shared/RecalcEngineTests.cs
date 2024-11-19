@@ -2049,6 +2049,13 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
+        // No error on a UDF named RecordOf
+        [InlineData(
+            @"RecordOf(x:Number): Number = x + 1;",
+            "RecordOf(41)",
+            true,
+            42.0)]
+
         // Fails for anyother type other than table
         [InlineData(
             "Account := Type(RecordOf(SomeRecord));",
