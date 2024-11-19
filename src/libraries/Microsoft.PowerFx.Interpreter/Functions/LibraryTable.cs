@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
@@ -528,8 +529,8 @@ namespace Microsoft.PowerFx.Functions
             var rightTable = (TableValue)args[1];
             var predicate = (LambdaFormulaValue)args[2];
             var joinType = (OptionSetValue)args[3];
-            var leftRenaming = (RecordValue)args[4];
-            var rightRenaming = (RecordValue)args[5];
+            var leftRenaming = (RecordValue)args[4]; // Built by IR. Arg0 (left) mapping of old column names and new columns name e.f. {OldName:"NewName"}
+            var rightRenaming = (RecordValue)args[5]; // Built by IR. Arg1 (right) mapping of old column names and new columns name e.f. {OldName:"NewName"}
 
             DValue<RecordValue>[] rows;
             switch (joinType.Option)
@@ -659,8 +660,8 @@ namespace Microsoft.PowerFx.Functions
            LambdaFormulaValue predicate)
         {
             var scopeValue = FormulaValue.NewRecordFromFields(
-                new NamedValue("LeftRecord", leftRow.Value), 
-                new NamedValue("RightRecord", rightRow.Value));
+                new NamedValue(FunctionJoinScopeInfo.LeftRecord.Value, leftRow.Value), 
+                new NamedValue(FunctionJoinScopeInfo.RightRecord.Value, rightRow.Value));
 
             SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeValue);
 

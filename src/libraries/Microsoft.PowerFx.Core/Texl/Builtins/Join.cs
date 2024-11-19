@@ -164,21 +164,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var recordValueMap = new Dictionary<DName, Dictionary<DName, IntermediateNode>>();
             var sourceNameProvider = new Dictionary<DName, DName>();
 
-            for (int i = 0; i < carg; i++)
+            if (node.Args.Children[0] is AsNode asNodeLeft)
+            {
+                sourceNameProvider[asNodeLeft.Left.AsDottedName().Left.AsFirstName().Ident.Name] = FunctionJoinScopeInfo.LeftRecord;
+            }
+            else
+            {
+                sourceNameProvider[FunctionJoinScopeInfo.LeftRecord] = FunctionJoinScopeInfo.LeftRecord;
+            }
+
+            newArgs.Add(args[0]);
+
+            if (node.Args.Children[1] is AsNode asNodeRight)
+            {
+                sourceNameProvider[asNodeRight.Left.AsDottedName().Left.AsFirstName().Ident.Name] = FunctionJoinScopeInfo.RightRecord;
+            }
+            else
+            {
+                sourceNameProvider[FunctionJoinScopeInfo.RightRecord] = FunctionJoinScopeInfo.RightRecord;
+            }
+
+            newArgs.Add(args[1]);
+
+            for (int i = 2; i < carg; i++)
             {
                 var arg = node.Args.Children[i];
-
-                // Left
-                if (i == 0)
-                {
-                    sourceNameProvider[arg is AsNode asNode ? asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name : FunctionJoinScopeInfo.LeftRecord] = FunctionJoinScopeInfo.LeftRecord;
-                }
-
-                // Right
-                if (i == 1)
-                {
-                    sourceNameProvider[arg is AsNode asNode ? asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name : FunctionJoinScopeInfo.RightRecord] = FunctionJoinScopeInfo.RightRecord;
-                }
 
                 if (i > 3 && IsLambdaParam(arg, i))
                 {
@@ -205,6 +215,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            // If JoinType arg is not present, add JoinType.Inner arg as default.
             if (carg == 3)
             {
                 newArgs.Add(

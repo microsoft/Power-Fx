@@ -1,177 +1,18 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums, SupportColumnNamesAsIdentifiers
 
-// Inner
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner)
-Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"})
-
-// Left
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Left)
-Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:"MEX",Fruit:Blank(),Id:"EEE555",Name:"ACME INC.",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:"USA",Fruit:Blank(),Id:"FFF666",Name:"Dunder Mifflin",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()})
-
-// Right
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Right)
-Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:Blank(),Fruit:"Apples",Id:Blank(),Name:Blank(),Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Country:Blank(),Fruit:"Mangos",Id:Blank(),Name:Blank(),Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
-
-// Full
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Full)
-Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:"USA",Fruit:Blank(),Id:"FFF666",Name:"Dunder Mifflin",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:"MEX",Fruit:Blank(),Id:"EEE555",Name:"ACME INC.",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:Blank(),Fruit:"Apples",Id:Blank(),Name:Blank(),Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Country:Blank(),Fruit:"Mangos",Id:Blank(),Name:Blank(),Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
-
 // Blank args
 >> Join(If(false,Table({a:1})),If(false,Table({b:1})),true)
 Blank()
 
-// Renaming columns with 'As' keyword
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)
-Table({Country:"USA",FruitName:"Grapes",Price:220,Purchase:Date(2015,10,1),RowId:1,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Lemons",Price:29,Purchase:Date(2015,10,2),RowId:3,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Grapes",Price:210,Purchase:Date(2015,10,2),RowId:4,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Bananas",Price:12,Purchase:Date(2015,10,3),RowId:6,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"CAN",FruitName:"Lemons",Price:31,Purchase:Date(2015,10,1),RowId:2,SupId:"BBB222",SupName:"Fabrikam",SupplierId:"BBB222"},{Country:"CAN",FruitName:"Lemons",Price:30,Purchase:Date(2015,10,3),RowId:5,SupId:"BBB222",SupName:"Fabrikam",SupplierId:"BBB222"})
-
-// Renaming first, then joining
->> First(Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)).SupId
-"AAA111"
-
-// Renaming first, with duplicated column names
->> Join(
-  RenameColumns(Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}), Id, SupplierId, Name, SupName),
-  RenameColumns(Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}), Fruit, FruitName),
-  LeftRecord.SupplierId = RightRecord.SupplierId)
-Errors: Errors: Error 9-255: Data sources can't union due to duplicated columns: 'SupplierId'.|Error 0-4: The function 'Join' has some invalid arguments.
-
-
-// Duplicated column names
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), Id:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), Id:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), Id:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), Id:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), Id:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), Id:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), Id:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), Id:8}),
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner)
-Errors: Error 9-209: Data sources can't union due to duplicated columns: 'Id'.|Error 0-4: The function 'Join' has some invalid arguments.
-
 // Invalid arguments
->> Join( 
-  1/0,
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1}, 
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2}, 
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3}, 
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4}, 
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5}, 
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6}, 
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7}, 
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}), 
-  LeftRecord.Id = RightRecord.SupplierId, JoinType.Full)
-Errors: Error 10-11: Invalid argument type.|Error 0-4: The function 'Join' has some invalid arguments.|Error 731-741: Name isn't valid. 'LeftRecord' isn't recognized.|Error 741-744: The '.' operator cannot be used on Error values.|Error 747-758: Name isn't valid. 'RightRecord' isn't recognized.|Error 758-769: The '.' operator cannot be used on Error values.|Error 745-746: Incompatible types for comparison. These types can't be compared: Error, Error.
+>> Join(1/0, Table({SupplierId:"AAA111"}), LeftRecord.Id = RightRecord.SupplierId, JoinType.Full)
+Errors: Error 6-7: Invalid argument type.|Error 0-4: The function 'Join' has some invalid arguments.|Error 40-50: Name isn't valid. 'LeftRecord' isn't recognized.|Error 50-53: The '.' operator cannot be used on Error values.|Error 56-67: Name isn't valid. 'RightRecord' isn't recognized.|Error 67-78: The '.' operator cannot be used on Error values.|Error 54-55: Incompatible types for comparison. These types can't be compared: Error, Error.
 
 // 'JoinType' arg must be a plain enum value. Passing it through another function is not allowed.
->> Join(
-  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
-  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
-  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
-  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}),
-  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
-  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
-  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
-  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
-  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
-  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
-  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}),
-  LeftRecord.Id = RightRecord.SupplierId, If(true,JoinType.Inner))
-Errors: Error 960-983: Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).|Error 0-4: The function 'Join' has some invalid arguments.
+>> Join(Table({Id:"AAA111"}),  Table({SupplierId:"AAA111"}), LeftRecord.Id = RightRecord.SupplierId, If(true,JoinType.Inner))
+Errors: Error 98-121: Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).|Error 0-4: The function 'Join' has some invalid arguments.
 
+// Testing error when evaluating the predicate
 >> Join(Table({a:1},{a:1}),Table({b:1},{b:2}),1/0)
 Table(Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}))
 
@@ -187,3 +28,6 @@ Errors: Error 87-92: Name isn't valid. 'Void' isn't recognized.|Error 93-95: Inv
 
 >> Join(Table({a:1}),Table({b:1}),LeftRecord.a = RightRecord.b, JoinType.Inner, Test.Void As Abc)
 Errors: Error 77-81: Name isn't valid. 'Test' isn't recognized.|Error 81-86: The '.' operator cannot be used on Error values.|Error 87-89: Invalid argument type.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join(Table({a:1}),Table({b:1}),LeftRecord.a = RightRecord.b, JoinType.Inner, LeftRecord.a As A1, RightRecord.b As A1)
+Errors: Error 5-17: Data sources can't union due to duplicated columns: 'A1'.|Error 0-4: The function 'Join' has some invalid arguments.

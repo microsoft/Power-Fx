@@ -1,0 +1,55 @@
+﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums, SupportColumnNamesAsIdentifiers
+
+>> Set(t1, 
+  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
+  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
+  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
+  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}))
+Table({Country:"USA",Id:"AAA111",Name:"Contoso"},{Country:"CAN",Id:"BBB222",Name:"Fabrikam"},{Country:"MEX",Id:"EEE555",Name:"ACME INC."},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin"})
+
+>> Set(t2, 
+  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
+  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
+  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
+  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
+  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
+  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
+  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
+  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}))
+Table({Fruit:"Grapes",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Fruit:"Lemons",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Fruit:"Lemons",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Fruit:"Grapes",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Fruit:"Lemons",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Fruit:"Bananas",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Fruit:"Apples",Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Fruit:"Mangos",Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
+
+// Inner
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner)
+Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"})
+
+// Left
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Left)
+Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:"MEX",Fruit:Blank(),Id:"EEE555",Name:"ACME INC.",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:"USA",Fruit:Blank(),Id:"FFF666",Name:"Dunder Mifflin",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()})
+
+// Right
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Right)
+Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:Blank(),Fruit:"Apples",Id:Blank(),Name:Blank(),Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Country:Blank(),Fruit:"Mangos",Id:Blank(),Name:Blank(),Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
+
+// Full
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Full)
+Table({Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Country:"USA",Fruit:"Lemons",Id:"AAA111",Name:"Contoso",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Country:"USA",Fruit:"Grapes",Id:"AAA111",Name:"Contoso",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Country:"USA",Fruit:"Bananas",Id:"AAA111",Name:"Contoso",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Country:"CAN",Fruit:"Lemons",Id:"BBB222",Name:"Fabrikam",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Country:"USA",Fruit:Blank(),Id:"FFF666",Name:"Dunder Mifflin",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:"MEX",Fruit:Blank(),Id:"EEE555",Name:"ACME INC.",Price:Blank(),Purchase:Blank(),RowId:Blank(),SupplierId:Blank()},{Country:Blank(),Fruit:"Apples",Id:Blank(),Name:Blank(),Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Country:Blank(),Fruit:"Mangos",Id:Blank(),Name:Blank(),Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
+
+// Renaming columns with 'As' keyword
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)
+Table({Country:"USA",FruitName:"Grapes",Price:220,Purchase:Date(2015,10,1),RowId:1,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Lemons",Price:29,Purchase:Date(2015,10,2),RowId:3,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Grapes",Price:210,Purchase:Date(2015,10,2),RowId:4,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"USA",FruitName:"Bananas",Price:12,Purchase:Date(2015,10,3),RowId:6,SupId:"AAA111",SupName:"Contoso",SupplierId:"AAA111"},{Country:"CAN",FruitName:"Lemons",Price:31,Purchase:Date(2015,10,1),RowId:2,SupId:"BBB222",SupName:"Fabrikam",SupplierId:"BBB222"},{Country:"CAN",FruitName:"Lemons",Price:30,Purchase:Date(2015,10,3),RowId:5,SupId:"BBB222",SupName:"Fabrikam",SupplierId:"BBB222"})
+
+// Renaming first, then joining
+>> First(Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)).SupId
+"AAA111"
+
+// Renaming first, with duplicated column names
+>> Join(RenameColumns(t1, Id, SupplierId, Name, SupName), RenameColumns(t2, Fruit, FruitName), LeftRecord.SupplierId = RightRecord.SupplierId)
+Errors: Errors: Error 5-53: Data sources can't union due to duplicated columns: 'SupplierId'.|Error 0-4: The function 'Join' has some invalid arguments.
+
+
+// Duplicated column names
+>> Set(dupT1, Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), Id:1}))
+Table({Fruit:"Grapes",Id:1,Price:220,Purchase:Date(2015,10,1),SupplierId:"AAA111"})
+
+>> Join(t1, dupT1, LeftRecord.Id = RightRecord.SupplierId)
+Errors: Error 5-7: Data sources can't union due to duplicated columns: 'Id'.|Error 0-4: The function 'Join' has some invalid arguments.
