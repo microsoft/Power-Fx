@@ -1026,5 +1026,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
             Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
         }
+
+        [Theory]
+        [InlineData("\"static text\"", "static text", false, true)]
+        [InlineData("$\"not static {\"text\"}\"", null, false, false)]
+        [InlineData("\"not\" & \"static\" & \"text\"", null, false, false)]
+
+        // TextFirst
+        [InlineData("static text", "static text", true, true)]
+        [InlineData("not static ${\"text\"}", null, true, false)]
+        public void TryGetStaticTextExpressionTest(string expression, string result, bool textFirst, bool isStaticText)
+        {
+            var opt = new ParserOptions() { TextFirst = textFirst };
+            var parseResult = Engine.Parse(expression, options: opt);
+            Assert.Equal(isStaticText, parseResult.TryGetStaticTextExpression(out var outResult));
+            Assert.Equal(result, outResult);
+        }
     }
 }

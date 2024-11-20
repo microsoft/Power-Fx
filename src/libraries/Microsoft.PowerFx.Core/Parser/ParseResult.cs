@@ -118,5 +118,34 @@ namespace Microsoft.PowerFx
         {
             return StructuralPrint.Print(Root);
         }
+
+        /// <summary>
+        /// Checks if the expression does not depend on extra evaluations.
+        /// Examples: 
+        /// "Lorem ipsum" // is a static expression since there is no extra evaluation needed.
+        /// "Today is " & Today() // is not a static expression since the function call 'Today()' needs to be evaluated.
+        /// $"Today is {""some text""}" // is not a static expression since the interpolation needs to be evaluated.
+        /// </summary>
+        /// <returns>True if no extra evaluation is needed. False otherwise.</returns>
+        public bool TryGetStaticTextExpression(out string staticExpression)
+        { 
+            if (Options.TextFirst &&
+                Root is StrInterpNode strInterpNode &&
+                strInterpNode.ChildNodes.Count == 1 &&
+                strInterpNode.ChildNodes.First() is StrLitNode strLitNode)
+            {
+                staticExpression = strLitNode.Value;
+                return true;
+            }
+
+            if (Root is StrLitNode strLitNode1)
+            {
+                staticExpression = strLitNode1.Value;
+                return true;
+            }
+
+            staticExpression = null;
+            return false;
+        }
     }
 }
