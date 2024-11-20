@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             _binaryOpNode = node;
         }
 
-        public override bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding)
+        public override bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isRHSDelegableTable = IsRHSDelegableTable(binding, binaryOpNode, metadata);
             if (isRHSDelegableTable && binaryOpNode.Left is DottedNameNode dottedField && binding.GetType(dottedField.Left).HasExpandInfo)
             {
-                return base.IsSupportedOpNode(node, metadata, binding);
+                return base.IsSupportedOpNode(node, metadata, binding, nodeInheritsRowScope);
             }
 
             DName columnName = default;
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
+            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata) || nodeInheritsRowScope;
             if (!isRowScopedOrLambda)
             {
                 return false;
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            return base.IsSupportedOpNode(node, metadata, binding);
+            return base.IsSupportedOpNode(node, metadata, binding, nodeInheritsRowScope);
         }
 
         public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata)

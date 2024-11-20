@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
+            return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata, false);
         }
 
         private bool TryGetFilterOpDelegationMetadata(CallNode callNode, TexlBinding binding, out FilterOpMetadata metadata)
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new LookUpCallNodeDelegationStrategy(this);
         }
 
-        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode reductionNode, TexlBinding binding)
+        public bool IsValidDelegatableReductionNode(CallNode callNode, TexlNode reductionNode, TexlBinding binding, bool nodeInheritsRowScope = false, TexlBinding udfBinding = null)
         {
             if (!TryGetFilterOpDelegationMetadata(callNode, binding, out var metadata))
             {
@@ -150,7 +150,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // use a variation of the filter predicate logic to determine if the reduction formula is delegatable, without enforcing the return type must be boolean
-            return IsValidDelegatableFilterPredicateNode(reductionNode, binding, metadata, generateHints: false, enforceBoolean: false);
+            // if reduction node is a user defined function call node, we will need to provide the udf binding instead
+            return IsValidDelegatableFilterPredicateNode(reductionNode, udfBinding ?? binding, metadata, nodeInheritsRowScope, generateHints: false, enforceBoolean: false);
         }
     }
 
@@ -161,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        public override bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope, TexlFunction trackingFunction = null)
         {
             var function = binding.GetInfo(node)?.Function;
             var args = node.Args.Children.VerifyValue();          
@@ -175,7 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            return base.IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
+            return base.IsValidCallNode(node, binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope, trackingFunction ?? Function);
         }
     }
 }
