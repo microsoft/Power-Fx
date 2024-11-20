@@ -546,16 +546,16 @@ namespace Microsoft.PowerFx.Functions
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -567,7 +567,6 @@ namespace Microsoft.PowerFx.Functions
         private static async Task<DValue<RecordValue>[]> LazyJoinAsync(
             EvalVisitor runner,
             EvalVisitorContext context,
-            IRContext irContext,
             TableValue leftSource,
             TableValue rightSource,
             LambdaFormulaValue predicate,

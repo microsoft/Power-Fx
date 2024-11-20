@@ -31,3 +31,9 @@ Errors: Error 77-81: Name isn't valid. 'Test' isn't recognized.|Error 81-86: The
 
 >> Join(Table({a:1}),Table({b:1}),LeftRecord.a = RightRecord.b, JoinType.Inner, LeftRecord.a As A1, RightRecord.b As A1)
 Errors: Error 5-17: Data sources can't union due to duplicated columns: 'A1'.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join(If(1/0, Table({a:1})), Table({b:1}), LeftRecord.a = RightRecord.b)
+Error({Kind:ErrorKind.Div0})
+
+>> Join(Table({a:1}), If(1/0, Table({b:1})), LeftRecord.a = RightRecord.b)
+Error({Kind:ErrorKind.Div0})
