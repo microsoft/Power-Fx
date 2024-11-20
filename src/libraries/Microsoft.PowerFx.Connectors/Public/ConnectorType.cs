@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors
     // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
     // ConnectorType contains more details information coming from the swagger file and extensions
     [DebuggerDisplay("{FormulaType._type}")]
-    public class ConnectorType : SupportsConnectorErrors
+    public class ConnectorType : SupportsConnectorErrors, IEquatable<ConnectorType>
     {
         // "name"
         public string Name { get; internal set; }
@@ -112,11 +112,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ISwaggerSchema Schema { get; private set; } = null;
 
         // Relationships to external tables
-        internal List<string> ExternalTables { get; set; }
-
-        internal string RelationshipName { get; set; }
-
-        internal string ForeignKey { get; set; }
+        internal List<(string foreignTable, string foreignKey)> ExternalTables { get; set; }
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -148,9 +144,7 @@ namespace Microsoft.PowerFx.Connectors
                 // SalesForce only
                 if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
                 {
-                    ExternalTables = new List<string>(schema.ReferenceTo);
-                    RelationshipName = schema.RelationshipName;
-                    ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
+                    ExternalTables = new List<(string, string)>(schema.ReferenceTo.Select(r => (r, null as string /* Seems to always be Id */)));
                 }
 
                 Fields = Array.Empty<ConnectorType>();
@@ -290,12 +284,14 @@ namespace Microsoft.PowerFx.Connectors
 
         private DisplayNameProvider _displayNameProvider;
 
-        internal void SetRelationship(SqlRelationship relationship)
+        internal void SetRelationships(IEnumerable<SqlRelationship> relationships)
         {
-            ExternalTables ??= new List<string>();
-            ExternalTables.Add(relationship.ReferencedTable);
-            RelationshipName = relationship.RelationshipName;
-            ForeignKey = relationship.ReferencedColumnName;
+            ExternalTables ??= new List<(string, string)>();
+
+            foreach (SqlRelationship relationship in relationships)
+            {
+                ExternalTables.Add((relationship.ReferencedTable, relationship.ReferencedColumnName));
+            }
         }
 
         private void AggregateErrors(ConnectorType[] types)
@@ -335,6 +331,89 @@ namespace Microsoft.PowerFx.Connectors
             string[] enumDisplayNames = EnumDisplayNames ?? enumValues.Select(ev => ev.ToObject().ToString()).ToArray();
 
             return enumDisplayNames.Zip(enumValues, (dn, ev) => new KeyValuePair<string, FormulaValue>(dn, ev)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        public bool Equals(ConnectorType other)
+        {
+            return this.Name == other.Name &&
+                   this.DisplayName == other.DisplayName &&
+                   this.Description == other.Description &&
+                   this.IsRequired == other.IsRequired &&
+                   Enumerable.SequenceEqual((IList<ConnectorType>)this.Fields ?? Array.Empty<ConnectorType>(), (IList<ConnectorType>)other.Fields ?? Array.Empty<ConnectorType>()) &&
+                   Enumerable.SequenceEqual((IList<ConnectorType>)this.HiddenFields ?? Array.Empty<ConnectorType>(), (IList<ConnectorType>)other.HiddenFields ?? Array.Empty<ConnectorType>()) &&
+                   this.ExplicitInput == other.ExplicitInput &&
+                   this.IsEnum == other.IsEnum &&
+                   Enumerable.SequenceEqual((IList<FormulaValue>)this.EnumValues ?? Array.Empty<FormulaValue>(), (IList<FormulaValue>)other.EnumValues ?? Array.Empty<FormulaValue>()) &&
+                   Enumerable.SequenceEqual((IList<string>)this.EnumDisplayNames ?? Array.Empty<string>(), (IList<string>)other.EnumDisplayNames ?? Array.Empty<string>()) &&
+                   this.Visibility == other.Visibility &&
+                   ((this.Capabilities == null && other.Capabilities == null) || this.Capabilities.Equals(other.Capabilities)) &&
+                   this.KeyType == other.KeyType &&
+                   this.KeyOrder == other.KeyOrder &&
+                   this.Permission == other.Permission &&
+                   this.NotificationUrl == other.NotificationUrl &&
+                   ((this.HiddenRecordType == null && other.HiddenRecordType == null) || this.HiddenRecordType.Equals(other.HiddenRecordType)) &&
+                   this.Binary == other.Binary &&
+                   this.MediaKind == other.MediaKind &&
+                   Enumerable.SequenceEqual((IList<string>)this.ExternalTables ?? Array.Empty<string>(), (IList<string>)other.ExternalTables ?? Array.Empty<string>());
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ConnectorType);
+        }
+
+        public override int GetHashCode()
+        {
+            int h = Hashing.CombineHash(Name.GetHashCode(), DisplayName?.GetHashCode() ?? 0, Description?.GetHashCode() ?? 0, IsRequired.GetHashCode());
+
+            if (Fields != null)
+            {
+                foreach (ConnectorType field in Fields)
+                {
+                    h = Hashing.CombineHash(h, field.GetHashCode());
+                }
+            }
+
+            if (HiddenFields != null)
+            {
+                foreach (ConnectorType hiddenField in HiddenFields)
+                {
+                    h = Hashing.CombineHash(h, hiddenField.GetHashCode());
+                }
+            }            
+
+            h = Hashing.CombineHash(h, ExplicitInput.GetHashCode(), IsEnum.GetHashCode(), Visibility.GetHashCode());
+
+            if (EnumValues != null)
+            {
+                foreach (FormulaValue enumValue in EnumValues)
+                {
+                    h = Hashing.CombineHash(h, enumValue.GetHashCode());
+                }
+            }
+
+            if (EnumDisplayNames != null)
+            {
+                foreach (string enumDisplayName in EnumDisplayNames)
+                {
+                    h = Hashing.CombineHash(h, enumDisplayName.GetHashCode());
+                }
+            }            
+
+            h = Hashing.CombineHash(h, Capabilities.GetHashCode(), KeyType.GetHashCode(), KeyOrder.GetHashCode(), Permission.GetHashCode(), NotificationUrl?.GetHashCode() ?? 0, HiddenRecordType.GetHashCode());
+            h = Hashing.CombineHash(h, Binary.GetHashCode());
+            h = Hashing.CombineHash(h, MediaKind.GetHashCode());
+
+            if (ExternalTables != null)
+            {
+                foreach ((string externalTable, string foreignKey) in ExternalTables)
+                {
+                    h = Hashing.CombineHash(h, externalTable.GetHashCode());
+                    h = Hashing.CombineHash(h, foreignKey.GetHashCode());
+                }
+            }
+
+            return h;
         }
     }
 }

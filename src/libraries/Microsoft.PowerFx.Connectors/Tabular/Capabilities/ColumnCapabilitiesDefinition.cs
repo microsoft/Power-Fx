@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -10,7 +12,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ColumnCapabilitiesDefinition
+    internal sealed class ColumnCapabilitiesDefinition : IEquatable<ColumnCapabilitiesDefinition>
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.FilterFunctions)]
@@ -32,6 +34,33 @@ namespace Microsoft.PowerFx.Connectors
         {                   
             // ex: lt, le, eq, ne, gt, ge, and, or, not, contains, startswith, endswith, countdistinct, day, month, year, time
             FilterFunctions = filterFunction;           
+        }
+
+        public bool Equals(ColumnCapabilitiesDefinition other)
+        {
+            return Enumerable.SequenceEqual(this.FilterFunctions ?? Array.Empty<string>(), other.FilterFunctions ?? Array.Empty<string>()) &&
+                   this.QueryAlias == other.QueryAlias &&
+                   this.IsChoice == other.IsChoice;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ColumnCapabilitiesDefinition);
+        }
+
+        public override int GetHashCode()
+        {
+            int h = Hashing.CombineHash(QueryAlias.GetHashCode(), IsChoice?.GetHashCode() ?? 0);
+
+            if (FilterFunctions != null)
+            {
+                foreach (var filterFunction in FilterFunctions)
+                {
+                    h = Hashing.CombineHash(h, filterFunction.GetHashCode());
+                }
+            }
+
+            return h;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -12,7 +13,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities
+    internal sealed class ColumnCapabilities : ColumnCapabilitiesBase, IColumnsCapabilities, IEquatable<ColumnCapabilities>
     {
         [JsonInclude]
         [JsonPropertyName(CapabilityConstants.ColumnProperties)]
@@ -71,6 +72,33 @@ namespace Microsoft.PowerFx.Connectors
                 QueryAlias = propertyAlias,
                 IsChoice = isChoice
             });
+        }
+
+        public bool Equals(ColumnCapabilities other)
+        {
+            return Enumerable.SequenceEqual((IEnumerable<KeyValuePair<string, ColumnCapabilitiesBase>>)this._childColumnsCapabilities ?? Array.Empty<KeyValuePair<string, ColumnCapabilitiesBase>>(), (IEnumerable<KeyValuePair<string, ColumnCapabilitiesBase>>)other._childColumnsCapabilities ?? Array.Empty<KeyValuePair<string, ColumnCapabilitiesBase>>()) &&
+                   this.Capabilities.Equals(other.Capabilities);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ColumnCapabilities);
+        }        
+
+        public override int GetHashCode()
+        {
+            int h = Capabilities.GetHashCode();
+
+            if (_childColumnsCapabilities != null)
+            {
+                foreach (KeyValuePair<string, ColumnCapabilitiesBase> kvp in _childColumnsCapabilities)
+                {
+                    h = Hashing.CombineHash(h, kvp.Key.GetHashCode());
+                    h = Hashing.CombineHash(h, kvp.Value.GetHashCode());                    
+                }
+            }
+
+            return h;
         }
     }
 }

@@ -25,5 +25,10 @@ namespace Microsoft.PowerFx.Connectors
 
             _childColumnsCapabilities.Add(name, capability);
         }
+
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

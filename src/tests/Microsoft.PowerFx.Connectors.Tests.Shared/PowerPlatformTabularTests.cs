@@ -643,22 +643,24 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sfTable._tabularService.IsInitialized);
             Assert.True(sfTable.IsDelegable);
 
-            // Note relationships with external tables (logicalName`displayName[externalTable]:type)
-            //   CreatedById`'Created By ID'[User]:s
-            //   LastModifiedById`'Last Modified By ID'[User]:s
-            //   Modified By ID'[User]:s
-            //   MasterRecordId`'Master Record ID'[Account]:s
-            //   OwnerId`'Owner ID'[User]:s
-            //   ParentId`'Parent Account ID'[Account]:s
+            // Note relationships with external tables (logicalName`displayName[(externalTable, foreignKey)]:type)
+            // In this particular case, foreignKey is always null with SalesForce
+            //   CreatedById`'Created By ID'[(User, )]:s
+            //   LastModifiedById`'Last Modified By ID'[(User, )]:s
+            //   Modified By ID'[(User, )]:s
+            //   MasterRecordId`'Master Record ID'[(Account, )]:s
+            //   OwnerId`'Owner ID'[(User, )]:s
+            //   ParentId`'Parent Account ID'[(Account, )]:s
             // Note 2: ~ notation denotes a relationship. Ex: fieldname`displayname:~externaltable:type
             Assert.Equal<object>(
-                "r![AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing Latitude':w, BillingLongitude`'Billing " +
-                "Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created By ID'[User]:~User:s, CreatedDate`'Created Date':d, " +
-                "Description`'Account Description':s, Id`'Account ID':s, Industry:l, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last " +
-                "Modified By ID'[User]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[Account]:~Account:s, " +
-                "Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[User]:~User:s, ParentId`'Parent Account ID'[Account]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping " +
-                "City':s, ShippingCountry`'Shipping Country':s, ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping " +
-                "Zip/Postal Code':s, ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]",
+                "r![AccountSource`'Account Source':l, BillingCity`'Billing City':s, BillingCountry`'Billing Country':s, BillingGeocodeAccuracy`'Billing Geocode Accuracy':l, BillingLatitude`'Billing " +
+                "Latitude':w, BillingLongitude`'Billing Longitude':w, BillingPostalCode`'Billing Zip/Postal Code':s, BillingState`'Billing State/Province':s, BillingStreet`'Billing Street':s, CreatedById`'Created " +
+                "By ID'[(User, )]:~User:s, CreatedDate`'Created Date':d, Description`'Account Description':s, Id`'Account ID':s, Industry:l, IsDeleted`Deleted:b, Jigsaw`'Data.com Key':s, JigsawCompanyId`'Jigsaw " +
+                "Company ID':s, LastActivityDate`'Last Activity':D, LastModifiedById`'Last Modified By ID'[(User, )]:~User:s, LastModifiedDate`'Last Modified Date':d, LastReferencedDate`'Last Referenced " +
+                "Date':d, LastViewedDate`'Last Viewed Date':d, MasterRecordId`'Master Record ID'[(Account, )]:~Account:s, Name`'Account Name':s, NumberOfEmployees`Employees:w, OwnerId`'Owner ID'[(User, " +
+                ")]:~User:s, ParentId`'Parent Account ID'[(Account, )]:~Account:s, Phone`'Account Phone':s, PhotoUrl`'Photo URL':s, ShippingCity`'Shipping City':s, ShippingCountry`'Shipping Country':s, " +
+                "ShippingGeocodeAccuracy`'Shipping Geocode Accuracy':l, ShippingLatitude`'Shipping Latitude':w, ShippingLongitude`'Shipping Longitude':w, ShippingPostalCode`'Shipping Zip/Postal Code':s, " +
+                "ShippingState`'Shipping State/Province':s, ShippingStreet`'Shipping Street':s, SicDesc`'SIC Description':s, SystemModstamp`'System Modstamp':d, Type`'Account Type':l, Website:s]",
                 ((CdpRecordType)sfTable.RecordType).ToStringWithDisplayNames());
 
             Assert.Equal("Account", sfTable.RecordType.TableSymbolName);
@@ -705,7 +707,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             bool b = sfTable.RecordType.TryGetFieldExternalTableName("OwnerId", out string externalTableName, out string foreignKey);
             Assert.True(b);
             Assert.Equal("User", externalTableName);
-            Assert.Null(foreignKey); // Always the case with SalesForce
+            Assert.Null(foreignKey); // Always the case with SalesForce          
 
             testConnector.SetResponseFromFile(@"Responses\SF GetSchema Users.json");
             b = sfTable.RecordType.TryGetFieldType("OwnerId", out FormulaType ownerIdType);
@@ -720,24 +722,24 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("User", userTable.TableSymbolName);
 
             Assert.Equal<object>(
-                "r![AboutMe`'About Me':s, AccountId`'Account ID'[Account]:~Account:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call " +
-                "Center ID':s, City:s, CommunityNickname`Nickname:s, CompanyName`'Company Name':s, ContactId`'Contact ID'[Contact]:~Contact:s, Country:s, CreatedById`'Created By ID'[User]:~User:s, CreatedDate`'Created " +
-                "Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency when Joining Groups':l, DelegatedApproverId`'Delegated Approver ID':s, Department:s, DigestFrequency`'Chatter " +
-                "Email Highlights Frequency':l, Division:s, Email:s, EmailEncodingKey`'Email Encoding':l, EmailPreferencesAutoBcc`AutoBcc:b, EmailPreferencesAutoBccStayInTouch`AutoBccStayInTouch:b, " +
-                "EmailPreferencesStayInTouchReminder`StayInTouchReminder:b, EmployeeNumber`'Employee Number':s, Extension:s, Fax:s, FederationIdentifier`'SAML Federation ID':s, FirstName`'First Name':s, " +
-                "ForecastEnabled`'Allow Forecasting':b, FullPhotoUrl`'Url for full-sized Photo':s, GeocodeAccuracy`'Geocode Accuracy':l, Id`'User ID':s, IsActive`Active:b, IsExtIndicatorVisible`'Show " +
-                "external indicator':b, IsProfilePhotoActive`'Has Profile Photo':b, LanguageLocaleKey`Language:l, LastLoginDate`'Last Login':d, LastModifiedById`'Last Modified By ID'[User]:~User:s, " +
+                "r![AboutMe`'About Me':s, AccountId`'Account ID'[(Account, )]:~Account:s, Alias:s, BadgeText`'User Photo badge text overlay':s, BannerPhotoUrl`'Url for banner photo':s, CallCenterId`'Call " +
+                "Center ID':s, City:s, CommunityNickname`Nickname:s, CompanyName`'Company Name':s, ContactId`'Contact ID'[(Contact, )]:~Contact:s, Country:s, CreatedById`'Created By ID'[(User, )]:~User:s, " +
+                "CreatedDate`'Created Date':d, DefaultGroupNotificationFrequency`'Default Notification Frequency when Joining Groups':l, DelegatedApproverId`'Delegated Approver ID':s, Department:s, " +
+                "DigestFrequency`'Chatter Email Highlights Frequency':l, Division:s, Email:s, EmailEncodingKey`'Email Encoding':l, EmailPreferencesAutoBcc`AutoBcc:b, EmailPreferencesAutoBccStayInTouch`AutoBccStayInTouc" +
+                "h:b, EmailPreferencesStayInTouchReminder`StayInTouchReminder:b, EmployeeNumber`'Employee Number':s, Extension:s, Fax:s, FederationIdentifier`'SAML Federation ID':s, FirstName`'First " +
+                "Name':s, ForecastEnabled`'Allow Forecasting':b, FullPhotoUrl`'Url for full-sized Photo':s, GeocodeAccuracy`'Geocode Accuracy':l, Id`'User ID':s, IsActive`Active:b, IsExtIndicatorVisible`'Show " +
+                "external indicator':b, IsProfilePhotoActive`'Has Profile Photo':b, LanguageLocaleKey`Language:l, LastLoginDate`'Last Login':d, LastModifiedById`'Last Modified By ID'[(User, )]:~User:s, " +
                 "LastModifiedDate`'Last Modified Date':d, LastName`'Last Name':s, LastPasswordChangeDate`'Last Password Change or Reset':d, LastReferencedDate`'Last Referenced Date':d, LastViewedDate`'Last " +
-                "Viewed Date':d, Latitude:w, LocaleSidKey`Locale:l, Longitude:w, ManagerId`'Manager ID'[User]:~User:s, MediumBannerPhotoUrl`'Url for Android banner photo':s, MediumPhotoUrl`'Url for " +
-                "medium profile photo':s, MiddleName`'Middle Name':s, MobilePhone`Mobile:s, Name`'Full Name':s, OfflinePdaTrialExpirationDate`'Sales Anywhere Trial Expiration Date':d, OfflineTrialExpirationDate`'Offlin" +
-                "e Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[Profile]:~Profile:s, ReceivesAdminInfoEmails`'Admin " +
-                "Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url for " +
-                "IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch Email Signature':s, StayInTouchSubject`'Stay-in-T" +
-                "ouch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, UserPermissionsAvantgoUser`'AvantGo User':b, UserPermissionsCallCenterAutoLogin`'Au" +
-                "to-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat User':b, UserPermissionsMarketingUser`'Mark" +
-                "eting User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content User':b, UserPermissionsSupportUser`'Ser" +
-                "vice Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDiagnostics`CacheDiagnostics:b, " +
-                "UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b, " +
+                "Viewed Date':d, Latitude:w, LocaleSidKey`Locale:l, Longitude:w, ManagerId`'Manager ID'[(User, )]:~User:s, MediumBannerPhotoUrl`'Url for Android banner photo':s, MediumPhotoUrl`'Url " +
+                "for medium profile photo':s, MiddleName`'Middle Name':s, MobilePhone`Mobile:s, Name`'Full Name':s, OfflinePdaTrialExpirationDate`'Sales Anywhere Trial Expiration Date':d, OfflineTrialExpirationDate`'Of" +
+                "fline Edition Trial Expiration Date':d, OutOfOfficeMessage`'Out of office message':s, Phone:s, PostalCode`'Zip/Postal Code':s, ProfileId`'Profile ID'[(Profile, )]:~Profile:s, ReceivesAdminInfoEmails`'A" +
+                "dmin Info Emails':b, ReceivesInfoEmails`'Info Emails':b, SenderEmail`'Email Sender Address':s, SenderName`'Email Sender Name':s, Signature`'Email Signature':s, SmallBannerPhotoUrl`'Url " +
+                "for IOS banner photo':s, SmallPhotoUrl`Photo:s, State`'State/Province':s, StayInTouchNote`'Stay-in-Touch Email Note':s, StayInTouchSignature`'Stay-in-Touch Email Signature':s, StayInTouchSubject`'Stay-" +
+                "in-Touch Email Subject':s, Street:s, Suffix:s, SystemModstamp`'System Modstamp':d, TimeZoneSidKey`'Time Zone':l, Title:s, UserPermissionsAvantgoUser`'AvantGo User':b, UserPermissionsCallCenterAutoLogin" +
+                "`'Auto-login To Call Center':b, UserPermissionsInteractionUser`'Flow User':b, UserPermissionsKnowledgeUser`'Knowledge User':b, UserPermissionsLiveAgentUser`'Chat User':b, UserPermissionsMarketingUser`'" +
+                "Marketing User':b, UserPermissionsMobileUser`'Apex Mobile User':b, UserPermissionsOfflineUser`'Offline User':b, UserPermissionsSFContentUser`'Salesforce CRM Content User':b, UserPermissionsSupportUser`" +
+                "'Service Cloud User':b, UserPreferencesActivityRemindersPopup`ActivityRemindersPopup:b, UserPreferencesApexPagesDeveloperMode`ApexPagesDeveloperMode:b, UserPreferencesCacheDiagnostics`CacheDiagnostics:" +
+                "b, UserPreferencesCreateLEXAppsWTShown`CreateLEXAppsWTShown:b, UserPreferencesDisCommentAfterLikeEmail`DisCommentAfterLikeEmail:b, UserPreferencesDisMentionsCommentEmail`DisMentionsCommentEmail:b, " +
                 "UserPreferencesDisProfPostCommentEmail`DisProfPostCommentEmail:b, UserPreferencesDisableAllFeedsEmail`DisableAllFeedsEmail:b, UserPreferencesDisableBookmarkEmail`DisableBookmarkEmail:b, " +
                 "UserPreferencesDisableChangeCommentEmail`DisableChangeCommentEmail:b, UserPreferencesDisableEndorsementEmail`DisableEndorsementEmail:b, UserPreferencesDisableFileShareNotificationsForApi`DisableFileSha" +
                 "reNotificationsForApi:b, UserPreferencesDisableFollowersEmail`DisableFollowersEmail:b, UserPreferencesDisableLaterCommentEmail`DisableLaterCommentEmail:b, UserPreferencesDisableLikeEmail`DisableLikeEma" +
@@ -758,7 +760,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 "ToExternalUsers`ShowStateToExternalUsers:b, UserPreferencesShowStateToGuestUsers`ShowStateToGuestUsers:b, UserPreferencesShowStreetAddressToExternalUsers`ShowStreetAddressToExternalUsers:b, " +
                 "UserPreferencesShowStreetAddressToGuestUsers`ShowStreetAddressToGuestUsers:b, UserPreferencesShowTitleToExternalUsers`ShowTitleToExternalUsers:b, UserPreferencesShowTitleToGuestUsers`ShowTitleToGuestUs" +
                 "ers:b, UserPreferencesShowWorkPhoneToExternalUsers`ShowWorkPhoneToExternalUsers:b, UserPreferencesShowWorkPhoneToGuestUsers`ShowWorkPhoneToGuestUsers:b, UserPreferencesSortFeedByComment`SortFeedByComme" +
-                "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[UserRole]:~UserRole:s, UserType`'User Type':l, Username:s]", userTable.ToStringWithDisplayNames());
+                "nt:b, UserPreferencesTaskRemindersCheckboxDefault`TaskRemindersCheckboxDefault:b, UserRoleId`'Role ID'[(UserRole, )]:~UserRole:s, UserType`'User Type':l, Username:s]", userTable.ToStringWithDisplayNames());
 
             // Missing field
             b = sfTable.RecordType.TryGetFieldType("XYZ", out FormulaType xyzType);

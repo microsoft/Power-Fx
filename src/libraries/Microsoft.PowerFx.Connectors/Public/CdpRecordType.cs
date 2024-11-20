@@ -35,8 +35,8 @@ namespace Microsoft.PowerFx.Connectors
                 return false;
             }
 
-            tableName = connectorType.ExternalTables.First();
-            foreignKey = connectorType.ForeignKey;
+            // $$$ We should NOT call First() here but consider all possible foreign tables
+            (tableName, foreignKey) = connectorType.ExternalTables.First();
             return true;
         }
 
@@ -60,7 +60,8 @@ namespace Microsoft.PowerFx.Connectors
                 return true;
             }
 
-            string tableName = field.ExternalTables.First();
+            // $$$ We should NOT call First() here but consider all possible foreign tables
+            string tableName = field.ExternalTables.First().foreignTable;
 
             try
             {

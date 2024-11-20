@@ -44,10 +44,10 @@ namespace Microsoft.PowerFx.Types
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             if (Type.TryGetFieldType(fieldName, out var compileTimeType))
-            {
+            {                                
                 // Only return field which were specified via the expectedType (IE RecordType),
                 // because inner record value may have more fields than the expected type.
-                if (compileTimeType == fieldType && _fields.TryGetValue(fieldName, out result))
+                if (compileTimeType.Equals(fieldType) && _fields.TryGetValue(fieldName, out result))
                 {
                     return true;
                 }

@@ -675,17 +675,16 @@ namespace Microsoft.PowerFx.Connectors
                                 // Here, we have a circular reference and default to a string
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
-
-                            //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
+                            
                             ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
                             if (settings.SqlRelationships != null)
                             {
-                                SqlRelationship relationship = settings.SqlRelationships.FirstOrDefault(sr => sr.ColumnName == propLogicalName);
+                                IEnumerable<SqlRelationship> relationships = settings.SqlRelationships.Where(sr => sr.ColumnName == propLogicalName);
 
-                                if (relationship != null)
+                                if (relationships.Any())
                                 {
-                                    propertyType.SetRelationship(relationship);
+                                    propertyType.SetRelationships(relationships);
                                 }
                             }
 
