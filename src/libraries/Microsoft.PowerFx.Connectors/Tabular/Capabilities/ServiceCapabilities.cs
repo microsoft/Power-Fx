@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Connectors
                 });
 
             // $$$ We should not use ExternalTables.First() but consider all relationships here
-            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First().foreignTable)).ToDictionary(tpl => tpl.Name, tpl => tpl.foreignTable);
+            Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First().ForeignTable)).ToDictionary(tpl => tpl.Name, tpl => tpl.ForeignTable);
 
             return new CdpDelegationInfo()
             {

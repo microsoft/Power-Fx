@@ -23,20 +23,17 @@ namespace Microsoft.PowerFx.Connectors
             TableResolver = tableResolver;
         }
 
-        public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
+        public bool TryGetFieldRelationships(string fieldName, out IEnumerable<ConnectorRelationship> relationships)
         {
-            tableName = null;
-            foreignKey = null;
-
             ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);
 
             if (connectorType == null || connectorType.ExternalTables?.Any() != true)
             {
+                relationships = null;
                 return false;
             }
 
-            // $$$ We should NOT call First() here but consider all possible foreign tables
-            (tableName, foreignKey) = connectorType.ExternalTables.First();
+            relationships = connectorType.ExternalTables;
             return true;
         }
 
@@ -61,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // $$$ We should NOT call First() here but consider all possible foreign tables
-            string tableName = field.ExternalTables.First().foreignTable;
+            string tableName = field.ExternalTables.First().ForeignTable;
 
             try
             {

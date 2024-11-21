@@ -38,6 +38,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool Equals(ColumnCapabilitiesDefinition other)
         {
+            if (other == null)
+            {
+                return false;
+            }
+
             return Enumerable.SequenceEqual(this.FilterFunctions ?? Array.Empty<string>(), other.FilterFunctions ?? Array.Empty<string>()) &&
                    this.QueryAlias == other.QueryAlias &&
                    this.IsChoice == other.IsChoice;

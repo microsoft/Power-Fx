@@ -112,7 +112,9 @@ namespace Microsoft.PowerFx.Connectors
         internal ISwaggerSchema Schema { get; private set; } = null;
 
         // Relationships to external tables
-        internal List<(string foreignTable, string foreignKey)> ExternalTables { get; set; }
+        internal IEnumerable<ConnectorRelationship> ExternalTables => _externalTables;
+
+        private List<ConnectorRelationship> _externalTables;
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -144,7 +146,11 @@ namespace Microsoft.PowerFx.Connectors
                 // SalesForce only
                 if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
                 {
-                    ExternalTables = new List<(string, string)>(schema.ReferenceTo.Select(r => (r, null as string /* Seems to always be Id */)));
+                    _externalTables = schema.ReferenceTo.Select(r => new ConnectorRelationship()
+                    {
+                        ForeignTable = r,
+                        ForeignKey = null // Seems to always be Id 
+                    }).ToList();
                 }
 
                 Fields = Array.Empty<ConnectorType>();
@@ -286,11 +292,15 @@ namespace Microsoft.PowerFx.Connectors
 
         internal void SetRelationships(IEnumerable<SqlRelationship> relationships)
         {
-            ExternalTables ??= new List<(string, string)>();
+            _externalTables ??= new List<ConnectorRelationship>();
 
             foreach (SqlRelationship relationship in relationships)
             {
-                ExternalTables.Add((relationship.ReferencedTable, relationship.ReferencedColumnName));
+                _externalTables.Add(new ConnectorRelationship()
+                {
+                    ForeignTable = relationship.ReferencedTable,
+                    ForeignKey = relationship.ReferencedColumnName
+                });
             }
         }
 
@@ -335,6 +345,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool Equals(ConnectorType other)
         {
+            if (other == null)
+            {
+                return false;
+            }
+
             return this.Name == other.Name &&
                    this.DisplayName == other.DisplayName &&
                    this.Description == other.Description &&
@@ -406,10 +421,9 @@ namespace Microsoft.PowerFx.Connectors
 
             if (ExternalTables != null)
             {
-                foreach ((string externalTable, string foreignKey) in ExternalTables)
+                foreach (ConnectorRelationship relationship in ExternalTables)
                 {
-                    h = Hashing.CombineHash(h, externalTable.GetHashCode());
-                    h = Hashing.CombineHash(h, foreignKey.GetHashCode());
+                    h = Hashing.CombineHash(h, relationship.GetHashCode());                   
                 }
             }
 
