@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // IsMatch(text:s, format:s)
     // Checks if the input text is of the correct format.
-    internal sealed class IsMatchFunction : BuiltinFunction
+    internal class IsMatchFunction : BuiltinFunction
     {
         public override bool UseParentScopeForArgumentSuggestions => true;
 

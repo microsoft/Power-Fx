@@ -56,6 +56,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public bool NeedsValues => !_slots.IsEmpty;
 
+        public SymbolTable()
+        {
+            EnumStoreBuilder = new EnumStoreBuilder();
+        }
+
         private DName ValidateName(string name)
         {
             if (!DName.IsValidDName(name))

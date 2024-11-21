@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -29,44 +30,23 @@ namespace Microsoft.PowerFx.Functions
         private const string DefaultMatchOptions = "c";
         private const string DefaultMatchAllOptions = "c";
 
-        /// <summary>
-        /// Creates instances of the [Is]Match[All] functions and returns them so they can be added to the runtime.
-        /// </summary>        
-        /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
-        /// <param name="regexCache">Regular expression type cache.</param>        
-        /// <returns></returns>
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
-        {
-            if (regexTimeout == TimeSpan.Zero)
-            {
-                regexTimeout = new TimeSpan(0, 0, 1);
-            }
-
-            if (regexTimeout.TotalMilliseconds < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
-            }
-
-            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
-            {
-                { new IsMatchFunction(), new IsMatchImplementation(regexTimeout) },
-                { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
-                { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
-            };
-        }
-
-        internal class IsMatchImplementation : RegexCommonImplementation
+        internal class IsMatchImplementation : IsMatchFunction, IAsyncTexlFunction, IRegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultIsMatchOptions;
+            string IRegexCommonImplementation.RegexOptions => DefaultIsMatchOptions;
 
             public IsMatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+            {
+                return RegexCommonHelper.InvokeAsync(runner, context, irContext, args, this);
+            }
+
+            FormulaValue IRegexCommonImplementation.InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
                 Regex rex = new Regex(regex, options, _regexTimeout);
                 bool b = rex.IsMatch(input);
@@ -75,18 +55,19 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        internal class MatchImplementation : RegexCommonImplementation
+        internal class MatchImplementation : MatchFunction, IAsyncTexlFunction, IRegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultMatchOptions;
+            string IRegexCommonImplementation.RegexOptions => DefaultMatchOptions;
 
-            public MatchImplementation(TimeSpan regexTimeout)
+            public MatchImplementation(TimeSpan regexTimeout, RegexTypeCache regexCache)
+                : base(regexCache)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            FormulaValue IRegexCommonImplementation.InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
                 Regex rex = new Regex(regex, options, _regexTimeout);
                 Match m = rex.Match(input);
@@ -98,20 +79,31 @@ namespace Microsoft.PowerFx.Functions
 
                 return GetRecordFromMatch(rex, m);
             }
+
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+            {
+                return RegexCommonHelper.InvokeAsync(runner, context, irContext, args, this);
+            }
         }
 
-        internal class MatchAllImplementation : RegexCommonImplementation
+        internal class MatchAllImplementation : MatchAllFunction, IAsyncTexlFunction, IRegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
 
-            protected override string RegexOptions => DefaultMatchAllOptions;
+            string IRegexCommonImplementation.RegexOptions => DefaultMatchAllOptions;
 
-            public MatchAllImplementation(TimeSpan regexTimeout)
+            public MatchAllImplementation(TimeSpan regexTimeout, RegexTypeCache regexCache)
+                : base(regexCache)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+            {
+                return RegexCommonHelper.InvokeAsync(runner, context, irContext, args, this);
+            }
+
+            FormulaValue IRegexCommonImplementation.InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
                 Regex rex = new Regex(regex, options, _regexTimeout);
                 MatchCollection mc = rex.Matches(input);
@@ -194,15 +186,11 @@ namespace Microsoft.PowerFx.Functions
             return DType.CreateRecord(propertyNames.Values);
         }
 
-        internal abstract class RegexCommonImplementation : IAsyncTexlFunction
+        internal static class RegexCommonHelper
         {
-            protected abstract FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options);
-
-            protected abstract string RegexOptions { get; }
-
-            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            public static Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, IRegexCommonImplementation regexImpl)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                runner.CheckCancel();
 
                 if (args[0] is not StringValue && args[0] is not BlankValue)
                 {
@@ -241,7 +229,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    matchOptions = RegexOptions;
+                    matchOptions = regexImpl.RegexOptions;
                 }
 
                 RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;                
@@ -268,7 +256,7 @@ namespace Microsoft.PowerFx.Functions
 
                 try
                 {
-                    return Task.FromResult(InvokeRegexFunction(inputString, regularExpression, regOptions));
+                    return Task.FromResult(regexImpl.InvokeRegexFunction(inputString, regularExpression, regOptions));
                 }
                 catch (RegexMatchTimeoutException rexTimeoutEx)
                 {
@@ -298,6 +286,13 @@ namespace Microsoft.PowerFx.Functions
 
 #pragma warning restore SA1119  // Statement should not use unnecessary parenthesis
             }
+        }
+
+        internal interface IRegexCommonImplementation
+        {
+            FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options);
+
+            string RegexOptions { get; }
         }
     }
 }

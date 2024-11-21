@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Texl;
@@ -35,7 +34,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _allSymbols = symbols,
                 _parameterSymbolTable = symbols,
                 _globals = values,
-                _additionalFunctions = new Dictionary<TexlFunction, IAsyncTexlFunction>(),
             };
 
             // This test 

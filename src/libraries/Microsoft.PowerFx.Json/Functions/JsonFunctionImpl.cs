@@ -22,14 +22,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunction5
+    internal class JsonFunctionImpl : JsonFunction, IAsyncTexlFunctionService
     {
-        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType type, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             TimeZoneInfo timeZoneInfo = runtimeServiceProvider.GetService(typeof(TimeZoneInfo)) as TimeZoneInfo ?? throw new InvalidOperationException("TimeZoneInfo is required");
             Canceller canceller = runtimeServiceProvider.GetService(typeof(Canceller)) as Canceller ?? new Canceller(() => cancellationToken.ThrowIfCancellationRequested());
 
-            return Task.FromResult(new JsonProcessing(timeZoneInfo, type, args, supportsLazyTypes).Process(canceller));
+            return Task.FromResult(new JsonProcessing(timeZoneInfo, irContext.ResultType, args, supportsLazyTypes).Process(canceller));
         }
 
         internal class JsonProcessing

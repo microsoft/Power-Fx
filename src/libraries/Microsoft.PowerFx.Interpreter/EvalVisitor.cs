@@ -308,29 +308,14 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
-
+            
             try
             {
-                if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+                if (func is IAsyncTexlFunction asyncFunc)
                 {
-                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+                    result = await asyncFunc.InvokeAsync(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
                 }
-#pragma warning disable CS0618 // Type or member is obsolete
-                else if (func is IAsyncTexlFunction2 asyncFunc2)
-#pragma warning restore CS0618 // Type or member is obsolete
-                {
-                    result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is IAsyncTexlFunction3 asyncFunc3)
-                {
-                    result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is IAsyncTexlFunction4 asyncFunc4)
-                {
-                    result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is IAsyncTexlFunction5 asyncFunc5)
+                else if (func is IAsyncTexlFunctionService asyncFuncService)
                 {
                     BasicServiceProvider services2 = new BasicServiceProvider(_services);
 
@@ -344,7 +329,7 @@ namespace Microsoft.PowerFx
                         services2.AddService(new Canceller(CheckCancel));
                     }
 
-                    result = await asyncFunc5.InvokeAsync(services2, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
+                    result = await asyncFuncService.InvokeAsync(services2, node.IRContext, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
                 {

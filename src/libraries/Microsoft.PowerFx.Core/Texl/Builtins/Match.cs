@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
-    {
+    {        
         public MatchFunction(RegexTypeCache regexCache)
             : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexCache)
         {

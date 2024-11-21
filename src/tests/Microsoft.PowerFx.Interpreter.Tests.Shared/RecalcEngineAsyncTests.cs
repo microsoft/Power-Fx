@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -295,9 +295,9 @@ namespace Microsoft.PowerFx.Tests
             yield return new[] { SG("Arg 1") };
         }
 
-        public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        public virtual Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return _impl(args, cancel);
+            return _impl(args, runner?.CancellationToken ?? CancellationToken.None);
         }
     }
 }

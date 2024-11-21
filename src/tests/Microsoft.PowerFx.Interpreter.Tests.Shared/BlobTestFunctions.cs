@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -39,11 +40,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    internal class BlobFunctionImpl : BlobFunction, IAsyncTexlFunction5
+    internal class BlobFunctionImpl : BlobFunction, IAsyncTexlFunction
     {
-        public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            cancellationToken.ThrowIfCancellationRequested();                       
+            runner?.CheckCancel();                       
 
             if (args[0] is BlankValue)
             {
@@ -96,11 +97,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    internal class BlobGetStringFunctionImpl : BlobGetStringFunction, IAsyncTexlFunction5
+    internal class BlobGetStringFunctionImpl : BlobGetStringFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            cancellationToken.ThrowIfCancellationRequested();            
+            runner.CheckCancel();           
 
             BlobValue blob = args[0] as BlobValue;
 
@@ -138,15 +139,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    internal class BlobGetBase64StringFunctionImpl : BlobGetBase64StringFunction, IAsyncTexlFunction5
+    internal class BlobGetBase64StringFunctionImpl : BlobGetBase64StringFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            cancellationToken.ThrowIfCancellationRequested();           
+            runner.CheckCancel();           
 
             BlobValue blobValue = args[0] as BlobValue;
 
-            if (args[0] is BlankValue || (blobValue != null && string.IsNullOrEmpty(await blobValue.GetAsBase64Async(cancellationToken))))
+            if (args[0] is BlankValue || (blobValue != null && string.IsNullOrEmpty(await blobValue.GetAsBase64Async(runner.CancellationToken))))
             {
                 return FormulaValue.NewBlank(FormulaType.String);
             }
@@ -156,7 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return CommonErrors.RuntimeTypeMismatch(args[0].IRContext);
             }
 
-            return FormulaValue.New(await blobValue.Content.GetAsBase64Async(cancellationToken));
+            return FormulaValue.New(await blobValue.Content.GetAsBase64Async(runner.CancellationToken));
         }
     }
 }

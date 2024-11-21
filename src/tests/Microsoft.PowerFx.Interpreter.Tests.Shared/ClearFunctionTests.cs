@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Void, new FormulaValue[] { arg }, CancellationToken.None);
+                var result = await function.InvokeAsync(null, new EvalVisitorContext(), IRContext.NotInSource(FormulaType.Void), new FormulaValue[] { arg });
 
                 if (arg is ErrorValue)
                 {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(FormulaType.Boolean, new FormulaValue[] { arg }, CancellationToken.None);
+                var result = await function.InvokeAsync(null, new EvalVisitorContext(), IRContext.NotInSource(FormulaType.Boolean), new FormulaValue[] { arg });
 
                 if (arg is ErrorValue)
                 {

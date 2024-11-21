@@ -426,7 +426,7 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
-        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
+        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction
         {
             public AsBlobFunctionImpl()
                 : base("AsBlob", (loc) => "Converts a string to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.String, DType.Boolean)
@@ -441,9 +441,9 @@ namespace Microsoft.PowerFx.Tests
                 yield return new TexlStrings.StringGetter[] { (loc) => "string", (loc) => "isBase64Encoded" };
             }
 
-            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                runner?.CheckCancel();
 
                 return Task.FromResult<FormulaValue>(
                     args[0] is BlankValue || args[0] is BlobValue
@@ -1588,7 +1588,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal<object>(expected, actual);
         }
 
-        private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction5
+        private sealed class DateTimeNoTZ : BuiltinFunction, IAsyncTexlFunction
         {
             public override ArgPreprocessor GetArgPreprocessor(int index, int argCount) => base.GetGenericArgPreprocessor(index);
 
@@ -1607,7 +1607,7 @@ namespace Microsoft.PowerFx.Tests
                 yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
             }
 
-            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
             {
                 int year = args[0] is NumberValue nv0 ? (int)nv0.Value : args[0] is DecimalValue dv0 ? (int)dv0.Value : throw new InvalidOperationException($"Invalid Type for Arg0 {args[0].GetType().Name}");
                 int month = args[1] is NumberValue nv1 ? (int)nv1.Value : args[1] is DecimalValue dv1 ? (int)dv1.Value : throw new InvalidOperationException($"Invalid Type for Arg1 {args[1].GetType().Name}");

@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -10,6 +11,6 @@ namespace Microsoft.PowerFx.Core.Functions
     // A Texl function capable of async invokes. 
     internal interface IAsyncTexlFunction
     {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken);
+        Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
     }
 }

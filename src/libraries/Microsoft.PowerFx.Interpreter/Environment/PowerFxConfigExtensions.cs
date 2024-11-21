@@ -2,12 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
 {
@@ -68,16 +67,28 @@ namespace Microsoft.PowerFx
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);
 
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
-            {
-                if (config.ComposedConfigSymbols.Functions.AnyWithName(func.Key.Name))
-                {
-                    throw new InvalidOperationException("Cannot add RegEx functions more than once.");
-                }
+            var duplicated = config.ComposedConfigSymbols.Functions.AnyWithName("IsMatch") ||
+                        config.ComposedConfigSymbols.Functions.AnyWithName("Match") ||
+                        config.ComposedConfigSymbols.Functions.AnyWithName("MatchAll");
 
-                config.InternalConfigSymbols.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
+            if (duplicated)
+            {
+                throw new InvalidOperationException("Cannot add RegEx functions more than once.");
             }
+
+            if (regExTimeout == TimeSpan.Zero)
+            {
+                regExTimeout = new TimeSpan(0, 0, 1);
+            }
+
+            if (regExTimeout.TotalMilliseconds < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(regExTimeout), "Timeout duration for regular expression execution must be positive.");
+            }
+
+            config.SymbolTable.AddFunction(new IsMatchImplementation(regExTimeout));
+            config.SymbolTable.AddFunction(new MatchImplementation(regExTimeout, regexTypeCache));
+            config.SymbolTable.AddFunction(new MatchAllImplementation(regExTimeout, regexTypeCache));
         }
 
         [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set backed by a Boolean instead. A new ChoiceInfo function is in the works for access to logical names.")]

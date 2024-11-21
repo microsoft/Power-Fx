@@ -11,14 +11,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class IsTypeFunction_UOImpl : IsTypeFunction_UO, IAsyncTexlFunction4
+    internal class IsTypeFunction_UOImpl : IsTypeFunction_UO, IAsyncTexlFunctionService
     {
-        public async Task<FormulaValue> InvokeAsync(TimeZoneInfo timezoneInfo, FormulaType ft, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
             Contracts.Assert(args.Length == 2);
             cancellationToken.ThrowIfCancellationRequested();
 
-            var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+            TimeZoneInfo timezoneInfo = runtimeServiceProvider.GetService(typeof(TimeZoneInfo)) as TimeZoneInfo ?? throw new InvalidOperationException("TimeZoneInfo is required");
             var typeString = (StringValue)args[1];
 
             try 

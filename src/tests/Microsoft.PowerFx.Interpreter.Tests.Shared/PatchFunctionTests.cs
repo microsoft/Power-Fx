@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Types;
@@ -36,8 +35,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             innerServices.AddService(Features.PowerFxV1);
 
-            var function = Activator.CreateInstance(type) as IAsyncTexlFunction3;
-            var result = await function.InvokeAsync(FormulaType.Unknown, args, CancellationToken.None);
+            var function = Activator.CreateInstance(type) as PatchImpl;
+            var result = await function.InvokeAsync(null, new EvalVisitorContext(), IRContext.NotInSource(FormulaType.Build(function.ReturnType)), args);
 
             Assert.IsType<ErrorValue>(result);
         }

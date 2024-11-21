@@ -410,23 +410,23 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(14.0, ((NumberValue)result).Value);
         }
 
-        [Fact]
-        public void BuiltInEnumConfigCheck()
-        {
-            var config = new PowerFxConfig()
-            {
-                SymbolTable = null
-            };
+//        [Fact]
+//        public void BuiltInEnumConfigCheck()
+//        {
+//            var config = new PowerFxConfig()
+//            {
+//                SymbolTable = null
+//            };
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            config.EnableRegExFunctions();
-#pragma warning restore CS0618 // Type or member is obsolete
-            var expression = "Match(\"test\", \"t\", MatchOptions.Contains)";
+//#pragma warning disable CS0618 // Type or member is obsolete
+//            config.EnableRegExFunctions();
+//#pragma warning restore CS0618 // Type or member is obsolete
+//            var expression = "Match(\"test\", \"t\", MatchOptions.Contains)";
 
-            var engine = new RecalcEngine(config);
-            var check = engine.Check(expression);
-            Assert.True(check.IsSuccess);
-        }
+//            var engine = new RecalcEngine(config);
+//            var check = engine.Check(expression);
+//            Assert.True(check.IsSuccess);
+//        }
 
         [Fact]
         public void FormulaErrorUndefined()

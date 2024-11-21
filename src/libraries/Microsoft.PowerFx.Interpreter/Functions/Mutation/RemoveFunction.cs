@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction3
+    internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
 
@@ -183,7 +184,7 @@ namespace Microsoft.PowerFx.Functions
             base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContextRet, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
 
@@ -219,18 +220,18 @@ namespace Microsoft.PowerFx.Functions
             var datasource = (TableValue)arg0;
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
-            cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
+            runner.CheckCancel();
+            var ret = await datasource.RemoveAsync(recordsToRemove, all, runner.CancellationToken).ConfigureAwait(false);
 
             // If the result is an error, propagate it up. else return blank.
             FormulaValue result;
             if (ret.IsError)
             {
-                result = FormulaValue.NewError(ret.Error.Errors, irContextRet == FormulaType.Void ? FormulaType.Void : FormulaType.Blank);
+                result = FormulaValue.NewError(ret.Error.Errors, irContext.ResultType == FormulaType.Void ? FormulaType.Void : FormulaType.Blank);
             }
             else
             {
-                result = irContextRet == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank();
+                result = irContext.ResultType == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank();
             }
 
             return result;

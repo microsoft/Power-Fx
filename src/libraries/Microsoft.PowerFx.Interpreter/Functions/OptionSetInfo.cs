@@ -31,9 +31,9 @@ namespace Microsoft.PowerFx.Interpreter
             yield return new[] { TexlStrings.AboutOptionSetInfoArg1 };
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            runner.CheckCancel();
 
             switch (args[0])
             {

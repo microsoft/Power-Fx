@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotEmpty(errors);
         }
 
-        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction5
+        internal class AsBlobFunctionImpl : BuiltinFunction, IAsyncTexlFunction
         {
             public AsBlobFunctionImpl()
                 : base("AsBlob", (loc) => "Converts a Table of numbers (byte array) to a Blob.", FunctionCategories.Text, DType.Blob, 0, 1, 2, DType.EmptyTable)
@@ -173,9 +173,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 yield return new TexlStrings.StringGetter[] { (loc) => "table" };
             }
 
-            public Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+            public Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                runner?.CheckCancel();
 
                 return Task.FromResult<FormulaValue>(
                     args[0] is BlankValue || args[0] is BlobValue

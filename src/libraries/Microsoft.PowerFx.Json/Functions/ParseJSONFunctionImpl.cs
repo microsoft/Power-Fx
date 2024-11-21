@@ -16,11 +16,11 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal class ParseJSONFunctionImpl : ParseJSONFunction, IAsyncTexlFunction
+    internal class ParseJSONFunctionImpl : ParseJSONFunction, IAsyncTexlFunctionService
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            var irContext = IRContext.NotInSource(FormulaType.UntypedObject);
+            var irContextUO = IRContext.NotInSource(FormulaType.UntypedObject);
             var arg = args[0];
 
             if (arg is BlankValue || arg is ErrorValue)
@@ -29,10 +29,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (arg is not StringValue)
             {
-                return new ErrorValue(irContext, new ExpressionError()
+                return new ErrorValue(irContextUO, new ExpressionError()
                 {
                     Message = "Runtime type mismatch",
-                    Span = irContext.SourceContext,
+                    Span = irContextUO.SourceContext,
                     Kind = ErrorKind.InvalidArgument
                 });
             }
@@ -53,14 +53,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
 
-                return new UntypedObjectValue(irContext, new JsonUntypedObject(result));
+                return new UntypedObjectValue(irContextUO, new JsonUntypedObject(result));
             }
             catch (JsonException ex)
             {
-                return new ErrorValue(irContext, new ExpressionError()
+                return new ErrorValue(irContextUO, new ExpressionError()
                 {
                     Message = $"The Json could not be parsed: {ex.Message}",
-                    Span = irContext.SourceContext,
+                    Span = irContextUO.SourceContext,
                     Kind = ErrorKind.InvalidJSON
                 });
             }

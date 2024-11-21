@@ -15,9 +15,9 @@ using MutationUtils = Microsoft.PowerFx.Interpreter.MutationUtils;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Patch(dataSource:*[], Record, Updates1, Updates2,…)
-    internal class PatchImpl : PatchFunction, IAsyncTexlFunction3
+    internal class PatchImpl : PatchFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -43,12 +43,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return dvalue.ToFormulaValue();
             }
 
-            var result = await tableValue.PatchAsync(baseRecord, dvalue.Value, cancellationToken).ConfigureAwait(false);
+            var result = await tableValue.PatchAsync(baseRecord, dvalue.Value, runner.CancellationToken).ConfigureAwait(false);
 
             // If the base record is not found, then append update record.
             if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
             {
-                return (await tableValue.AppendAsync(dvalue.Value, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
+                return (await tableValue.AppendAsync(dvalue.Value, runner.CancellationToken).ConfigureAwait(false)).ToFormulaValue();
             }
 
             return result.ToFormulaValue();
@@ -57,9 +57,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // If arg1 is pure PFx record, it will return a runtime not supported error.
     // Patch(DS, record_with_keys_and_updates)
-    internal class PatchSingleRecordImpl : PatchSingleRecordFunction, IAsyncTexlFunction3
+    internal class PatchSingleRecordImpl : PatchSingleRecordFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -80,12 +80,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             DValue<RecordValue> result = null;
 
-            result = await tableValue.PatchAsync(recordValue, cancellationToken).ConfigureAwait(false);
+            result = await tableValue.PatchAsync(recordValue, runner.CancellationToken).ConfigureAwait(false);
 
             // If the base record is not found, then append update record.
             if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
             {
-                return (await tableValue.AppendAsync(recordValue, cancellationToken).ConfigureAwait(false)).ToFormulaValue();
+                return (await tableValue.AppendAsync(recordValue, runner.CancellationToken).ConfigureAwait(false)).ToFormulaValue();
             }
 
             return result.ToFormulaValue();
@@ -93,9 +93,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Patch(DS, table_of_rows, table_of_updates)
-    internal class PatchAggregateImpl : PatchAggregateFunction, IAsyncTexlFunction3
+    internal class PatchAggregateImpl : PatchAggregateFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -114,14 +114,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (arg1Rows.Count() != arg2Rows.Count())
             {
-                return CommonErrors.InvalidArgumentError(IRContext.NotInSource(irContext), RuntimeStringResources.ErrAggregateArgsSameNumberOfRecords);
+                return CommonErrors.InvalidArgumentError(IRContext.NotInSource(irContext.ResultType), RuntimeStringResources.ErrAggregateArgsSameNumberOfRecords);
             }
 
             List<DValue<RecordValue>> resultRows = new List<DValue<RecordValue>>();
 
             for (int i = 0; i < arg1Rows.Count(); i++)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                runner.CheckCancel();
 
                 var baseRecord = arg1Rows.ElementAt(i);
                 var updatesRecord = arg2Rows.ElementAt(i);
@@ -148,12 +148,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 DValue<RecordValue> result = null;
 
-                result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                result = await tableValue.PatchAsync(baseRecord.Value, updatesRecord.Value, runner.CancellationToken).ConfigureAwait(false);
 
                 // If the base record is not found, then append update record.
                 if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
                 {
-                    result = await tableValue.AppendAsync(updatesRecord.Value, cancellationToken).ConfigureAwait(false);
+                    result = await tableValue.AppendAsync(updatesRecord.Value, runner.CancellationToken).ConfigureAwait(false);
                 }
 
                 if (result.IsError)
@@ -170,9 +170,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // If arg1 is pure PFx record, it will return a runtime not supported error.
     // Patch(DS, table_of_rows_with_updates)
-    internal class PatchAggregateSingleTableImpl : PatchAggregateSingleTableFunction, IAsyncTexlFunction3
+    internal class PatchAggregateSingleTableImpl : PatchAggregateSingleTableFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var row in tableUpdates.Rows)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                runner.CheckCancel();
 
                 if (row.IsError)
                 {
@@ -209,12 +209,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 DValue<RecordValue> result = null;
 
-                result = await tableValue.PatchAsync(row.Value, cancellationToken).ConfigureAwait(false);
+                result = await tableValue.PatchAsync(row.Value, runner.CancellationToken).ConfigureAwait(false);
 
                 // If the base record is not found, then append update record.
                 if (result.IsError && result.Error is ErrorValue errorvalue && errorvalue.Errors.Any(err => err.Kind == ErrorKind.NotFound))
                 {
-                    result = await tableValue.AppendAsync(row.Value, cancellationToken).ConfigureAwait(false);
+                    result = await tableValue.AppendAsync(row.Value, runner.CancellationToken).ConfigureAwait(false);
                 }
 
                 if (result.IsError)
@@ -229,19 +229,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal class CollectImpl : CollectFunction, IAsyncTexlFunction3
+    internal class CollectImpl : CollectFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await CollectProcess.Process(irContext.ResultType, args, runner.CancellationToken).ConfigureAwait(false);
         }
     }
 
-    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction3
+    internal class CollectScalarImpl : CollectScalarFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await CollectProcess.Process(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await CollectProcess.Process(irContext.ResultType, args, runner.CancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -341,9 +341,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
   
     // Clear(collection_or_table)
-    internal class ClearImpl : ClearFunction, IAsyncTexlFunction3
+    internal class ClearImpl : ClearFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is ErrorValue errorValue)
             {
@@ -352,13 +352,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args[0] is BlankValue)
             {
-                return irContext == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank(FormulaType.Boolean);
+                return irContext.ResultType == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank(FormulaType.Boolean);
             }
 
             var datasource = (TableValue)args[0];
-            var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
+            var ret = await datasource.ClearAsync(runner?.CancellationToken ?? CancellationToken.None).ConfigureAwait(false);
 
-            if (irContext == FormulaType.Void)
+            if (irContext.ResultType == FormulaType.Void)
             {
                 return ret.IsError ? FormulaValue.NewError(ret.Error.Errors, FormulaType.Void) : FormulaValue.NewVoid();
             }
@@ -370,9 +370,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // ClearCollect(table_or_collection, table|record, ...)
-    internal class ClearCollectImpl : ClearCollectFunction, IAsyncTexlFunction3
+    internal class ClearCollectImpl : ClearCollectFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is LambdaFormulaValue arg0lazy)
             {
@@ -381,7 +381,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var clearFunction = new ClearImpl();
 
-            var cleared = await clearFunction.InvokeAsync(FormulaType.Void, args, cancellationToken).ConfigureAwait(false);
+            var cleared = await clearFunction.InvokeAsync(runner, context, irContext, args).ConfigureAwait(false);
 
             if (cleared is ErrorValue)
             {
@@ -390,16 +390,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var collectFunction = new CollectImpl();
 
-            return await collectFunction.InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await collectFunction.InvokeAsync(runner, context, irContext, args).ConfigureAwait(false);
         }
     }
 
     // ClearCollect(table_or_collection, scalar, ...)
-    internal class ClearCollectScalarImpl : ClearCollectScalarFunction, IAsyncTexlFunction3
+    internal class ClearCollectScalarImpl : ClearCollectScalarFunction, IAsyncTexlFunction
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await new ClearCollectImpl().InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
+            return await new ClearCollectImpl().InvokeAsync(runner, context, irContext, args).ConfigureAwait(false);
         }
     }
 }
