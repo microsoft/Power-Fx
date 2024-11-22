@@ -548,7 +548,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 Contracts.AssertValid(argTypes[i]);
-                var expectedParamType = ParamTypes[i];
+                var expectedParamType = ParamTypes[i]; 
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
                 if (!context.Features.StronglyTypedBuiltinEnums && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)

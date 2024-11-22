@@ -1865,12 +1865,7 @@ namespace Microsoft.PowerFx.Tests
             true,
             42.0)]
 
-        // Functions accept record with more/less fields
-        [InlineData(
-            "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
-            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
-            true,
-            0.0)]
+        // Functions accept record with less fields
         [InlineData(
             "Employee := Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
             "getAge({Name: \"Bob\", Age: 21})",
@@ -1952,6 +1947,15 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
+        // Aggregate types with more than expected fields are not allowed in UDF
+        [InlineData(
+            "f():T = {x: 5, y: 5}; T := Type({x: Number});",
+            "f().x",
+            false)]
+        [InlineData(
+            "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            false)]
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
