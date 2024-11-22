@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
+              "Microsoft.PowerFx.Connectors.AiSensitivity",
               "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
               "Microsoft.PowerFx.Connectors.CdpDataSource",
               "Microsoft.PowerFx.Connectors.CdpExtensions",
