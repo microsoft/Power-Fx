@@ -67,6 +67,11 @@ namespace Microsoft.PowerFx.Core.Functions
         // cause nondeterministic behavior.
         public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
 
+        /// <summary>
+        /// Default name used to access a Lambda scope.
+        /// </summary>
+        public static DName ThisRecord => new DName("ThisRecord");
+
         public FunctionScopeInfo(
             TexlFunction function,
             bool usesAllFieldsInScope = true,
@@ -96,9 +101,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="typeScope">Calculated DType type.</param>
         /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
-        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
-            return CheckInput(features, callNode, inputNode, inputSchema[0], out typeScope);
+            return CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -215,6 +220,18 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
         }
+
+        public virtual bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            scopeIdents = new[] { ThisRecord };
+            if (nodes[0] is AsNode asNode)
+            {
+                scopeIdents = new[] { asNode.Right.Name };
+                return true;
+            }
+
+            return false;
+        }
     }
 
     internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
@@ -273,7 +290,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
         }
 
-        public override bool CheckInput(Features features, CallNode callNode, TexlNode inputNode, out DType typeScope, params DType[] inputSchema)
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
             var ret = true;
             var input0 = inputSchema[0];
@@ -284,7 +301,37 @@ namespace Microsoft.PowerFx.Core.Functions
             ret = base.CheckInput(features, callNode, callNode.Args.ChildNodes[0], input0, out var type0);
             ret &= base.CheckInput(features, callNode, callNode.Args.ChildNodes[1], input1, out var type1);
 
-            typeScope = typeScope.Add(LeftRecord, type0).Add(RightRecord, type1);
+            GetScopeIdent(inputNodes, out DName[] idents);
+
+            typeScope = typeScope.Add(idents[0], type0).Add(idents[1], type1);
+
+            return ret;
+        }
+
+        public override bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            var ret = false;
+            scopeIdents = new DName[2];
+
+            if (nodes[0] is AsNode leftAsNode)
+            {
+                scopeIdents[0] = leftAsNode.Right.Name;
+                ret = true;
+            }
+            else
+            {
+                scopeIdents[0] = LeftRecord;
+            }
+
+            if (nodes[1] is AsNode rightAsNode)
+            {
+                scopeIdents[1] = rightAsNode.Right.Name;
+                ret = true;
+            }
+            else
+            {
+                scopeIdents[1] = RightRecord;
+            }
 
             return ret;
         }

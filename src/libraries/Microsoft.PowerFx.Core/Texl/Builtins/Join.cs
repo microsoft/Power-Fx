@@ -55,8 +55,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var valid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             var leftTable = argTypes[0];
             var rightTable = argTypes[1];
-            var leftTableClone = leftTable.Clone();
-            var rightTableClone = rightTable.Clone();
+            var atLeastOneRigthRecordField = false;
+
+            // We include all arg[0] columns by default. Makers will explicitly declare columns from arg[1].
+            returnType = leftTable.Clone();
 
             // JoinType argument is present?
             if (argTypes.Count() > 3 &&
@@ -67,11 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 valid = false;
             }
 
+            ScopeInfo.GetScopeIdent(args, out var scopeIdent);
+
             if (args.Count() > 4)
-            {
+            {                
                 var fError = false;
 
-                // 5th arg on must be renaming args.
+                // 5th arg on must be renaming/declaration args. It is mandatory for makers to declarer at least 1 RightRecord column.
                 foreach (var node in args.Skip(4))
                 {
                     if (node is not AsNode asNode)
@@ -87,57 +91,54 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         valid = false;
                         break;
                     }
-
-                    switch (dottedNameNode.Left.AsFirstName().Ident.Name.Value)
+                    
+                    if (dottedNameNode.Left.AsFirstName().Ident.Name == scopeIdent[0])
                     {
-                        case "LeftRecord":
-                            if (!leftTable.TryGetType(dottedNameNode.Right.Name, out var leftType))
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
-                                valid = false;
-                                break;
-                            }
-
-                            leftTableClone = leftTableClone.Drop(ref fError, DPath.Root, dottedNameNode.Right.Name);
-                            leftTableClone = leftTableClone.Add(ref fError, DPath.Root, asNode.Right.Name, leftType);
-                            break;
-
-                        case "RightRecord":
-                            if (!rightTable.TryGetType(dottedNameNode.Right.Name, out var rightType))
-                            {
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
-                                valid = false;
-                                break;
-                            }
-
-                            rightTableClone = rightTableClone.Drop(ref fError, DPath.Root, dottedNameNode.Right.Name);
-                            rightTableClone = rightTableClone.Add(ref fError, DPath.Root, asNode.Right.Name, rightType);
-                            break;
-
-                        default:
-                            // No new error message. Binder already added error for unknown scope.
+                        if (!leftTable.TryGetType(dottedNameNode.Right.Name, out var leftType))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
                             valid = false;
                             break;
+                        }
+
+                        returnType = returnType.Drop(ref fError, DPath.Root, dottedNameNode.Right.Name);
+                        returnType = returnType.Add(ref fError, DPath.Root, asNode.Right.Name, leftType);
                     }
+                    else if (dottedNameNode.Left.AsFirstName().Ident.Name == scopeIdent[1])
+                    {
+                        // !!TODO shouldn't the binder have caught this?
+                        if (!rightTable.TryGetType(dottedNameNode.Right.Name, out var rightType))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
+                            valid = false;
+                            break;
+                        }
+
+                        returnType = returnType.Add(ref fError, DPath.Root, asNode.Right.Name, rightType);
+
+                        atLeastOneRigthRecordField = true;
+                    }
+                    else
+                    {
+                        // No new error message. Binder already added error for unknown scope.
+                        valid = false;
+                    }                    
 
                     if (fError)
                     {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinCantAddRename, node);
                         valid = false;
                         break;
                     }
                 }
             }
 
-            if (leftTableClone.CanUnionWithForcedUniqueColumns(rightTableClone, useLegacyDateTimeAccepts: false, features: context.Features, out var duplicatedDType))
+            if (!atLeastOneRigthRecordField)
             {
-                returnType = DType.Union(leftTableClone, rightTableClone, false, Features.PowerFxV1);
-            }
-            else
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinCantUnion, string.Join(", ", duplicatedDType.GetAllNames(DPath.Root).Select(tname => tname.Name.Value)));
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinAtLeastOneRigthRecordField, scopeIdent[1]);
                 valid = false;
             }
-            
+
             return valid;
         }
 
@@ -162,38 +163,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var newArgs = new List<IntermediateNode>();
             var recordTypesMap = new Dictionary<DName, RecordType>();
             var recordValueMap = new Dictionary<DName, Dictionary<DName, IntermediateNode>>();
-            var sourceNameProvider = new Dictionary<DName, DName>();
-
-            if (node.Args.Children[0] is AsNode asNodeLeft)
-            {
-                sourceNameProvider[asNodeLeft.Left.AsDottedName().Left.AsFirstName().Ident.Name] = FunctionJoinScopeInfo.LeftRecord;
-            }
-            else
-            {
-                sourceNameProvider[FunctionJoinScopeInfo.LeftRecord] = FunctionJoinScopeInfo.LeftRecord;
-            }
 
             newArgs.Add(args[0]);
-
-            if (node.Args.Children[1] is AsNode asNodeRight)
-            {
-                sourceNameProvider[asNodeRight.Left.AsDottedName().Left.AsFirstName().Ident.Name] = FunctionJoinScopeInfo.RightRecord;
-            }
-            else
-            {
-                sourceNameProvider[FunctionJoinScopeInfo.RightRecord] = FunctionJoinScopeInfo.RightRecord;
-            }
-
             newArgs.Add(args[1]);
+
+            ScopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out var scopeIdent);
 
             for (int i = 2; i < carg; i++)
             {
                 var arg = node.Args.Children[i];
 
-                if (i > 3 && IsLambdaParam(arg, i))
+                if (i > 3 && IsLambdaParam(arg, i) && arg is AsNode asNode)
                 {
-                    var asNode = (AsNode)arg;
-                    var dName = sourceNameProvider[asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name];
+                    var dName = asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name == scopeIdent[0] ? FunctionJoinScopeInfo.LeftRecord : FunctionJoinScopeInfo.RightRecord;
 
                     if (!recordTypesMap.TryGetValue(dName, out _))
                     {

@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
 
         // ScopeIdentifier will be "" if the function does not support a scope identifier
         // RequiresScopeIdentifier is true if scopeIdentifier is set and there was an As node used
-        public readonly DName ScopeIdentifier;
+        public readonly DName[] ScopeIdentifier;
         public readonly bool RequiresScopeIdentifier;
 
         public readonly object Data;
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Data = data;
         }
 
-        public CallInfo(TexlFunction function, CallNode node, DType cursorType, DName scopeIdentifier, bool requiresScopeIdentifier, int scopeNest)
+        public CallInfo(TexlFunction function, CallNode node, DType cursorType, DName[] scopeIdentifier, bool requiresScopeIdentifier, int scopeNest)
         {
             Contracts.AssertValue(function);
             Contracts.AssertValue(node);

@@ -357,7 +357,10 @@ namespace Microsoft.PowerFx.Intellisense
                     {
                         if (info.ScopeIdentifier != default)
                         {
-                            AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                            foreach (var ident in info.ScopeIdentifier)
+                            {
+                                AddSuggestion(intellisenseData, ident, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                            }
                         }
 
                         if (!info.RequiresScopeIdentifier)

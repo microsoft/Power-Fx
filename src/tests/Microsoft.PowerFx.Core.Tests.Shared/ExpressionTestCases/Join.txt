@@ -1,7 +1,10 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums, SupportColumnNamesAsIdentifiers
 
+>> Join(Table({a:1}),Table({b:1}),LeftRecord.a = RightRecord.b, JoinType.Inner)
+Errors: Error 5-17: At least one 'RightRecord' column must be declared to compose the join result.|Error 0-4: The function 'Join' has some invalid arguments.
+
 // Blank args
->> Join(If(false,Table({a:1})),If(false,Table({b:1})),true)
+>> Join(If(false,Table({a:1})),If(false,Table({b:1})),true,JoinType.Inner,RightRecord.b As b)
 Blank()
 
 // Invalid arguments
@@ -13,7 +16,7 @@ Errors: Error 6-7: Invalid argument type.|Error 0-4: The function 'Join' has som
 Errors: Error 98-121: Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).|Error 0-4: The function 'Join' has some invalid arguments.
 
 // Testing error when evaluating the predicate
->> Join(Table({a:1},{a:1}),Table({b:1},{b:2}),1/0)
+>> Join(Table({a:1},{a:1}),Table({b:1},{b:2}),1/0,JoinType.Inner,RightRecord.b As b)
 Table(Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}),Error({Kind:ErrorKind.Div0}))
 
 // Untyped blanks are not allowed.
@@ -30,10 +33,25 @@ Errors: Error 87-92: Name isn't valid. 'Void' isn't recognized.|Error 93-95: Inv
 Errors: Error 77-81: Name isn't valid. 'Test' isn't recognized.|Error 81-86: The '.' operator cannot be used on Error values.|Error 87-89: Invalid argument type.|Error 0-4: The function 'Join' has some invalid arguments.
 
 >> Join(Table({a:1}),Table({b:1}),LeftRecord.a = RightRecord.b, JoinType.Inner, LeftRecord.a As A1, RightRecord.b As A1)
-Errors: Error 5-17: Data sources can't union due to duplicated columns: 'A1'.|Error 0-4: The function 'Join' has some invalid arguments.
+Errors: Error 5-17: 'RightRecord.b As A1' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
 
->> Join(If(1/0, Table({a:1})), Table({b:1}), LeftRecord.a = RightRecord.b)
+>> Join(If(1/0, Table({a:1})), Table({b:1}), LeftRecord.a = RightRecord.b,JoinType.Inner,RightRecord.b As b)
 Error({Kind:ErrorKind.Div0})
 
->> Join(Table({a:1}), If(1/0, Table({b:1})), LeftRecord.a = RightRecord.b)
+>> Join(Table({a:1}), If(1/0, Table({b:1})), LeftRecord.a = RightRecord.b,JoinType.Inner,RightRecord.b As b)
 Error({Kind:ErrorKind.Div0})
+
+>> Join([{a:1}],[{a:1}], LeftRecord.a=RightRecord.a,JoinType.Inner, RightRecord.a As AA, LeftRecord.a)
+Errors: Error 86-96: Name isn't valid. 'LeftRecord' isn't recognized.|Error 96-98: The '.' operator cannot be used on Error values.|Error 5-12: Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join([{a:1,b:1}] As T1,[{a:1,c:99}] As T2, T1.a=T2.a,JoinType.Inner, T2.c As CC)
+Table({CC:99,a:1,b:1})
+
+>> Join([{a:1,b:1}] As T1,[{a:1,c:99}] As T2, T1.a=T2.a,JoinType.Inner)
+Errors: Error 17-19: At least one 'T2' column must be declared to compose the join result.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join([{a:1,b:1}] As T1,[{a:1,c:99}] As T2, Blank(),JoinType.Inner, T2.c As CC)
+Table()
+
+>> Join([{a:1}] As t1,[{a:1}] As t2, t1.a=t2.a, JoinType.Inner, t2.c As d)
+Errors: Error 63-65: Name isn't valid. 'c' isn't recognized.|Error 66-68: Invalid argument type.|Error 13-15: The specified column 't2.c' does not exist.|Error 0-4: The function 'Join' has some invalid arguments.

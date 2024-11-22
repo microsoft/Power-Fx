@@ -169,7 +169,10 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
-        /// Identifies which functions args to use to compose the scope type for subsequent lambda args.
+        /// Identifies which args to use to compose the scope type for subsequent lambdas.
+        /// Example:
+        ///     Filter(t1, ...) => ScopeArgs is 1.
+        ///     Join(t1, t2, ...) => ScopeArgs is 2.
         /// </summary>
         public virtual int ScopeArgs => 1;
 

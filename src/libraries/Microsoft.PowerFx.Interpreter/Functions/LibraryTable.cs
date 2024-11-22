@@ -594,10 +594,21 @@ namespace Microsoft.PowerFx.Functions
                     {
                         if (result.IsValue)
                         {
+                            var fields = new List<NamedValue>();
                             var leftRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(leftRow.Value.Type), BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
-                            var rightRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(rightRow.Value.Type), BuildRenamingArgs(rightRow.Value, rightRenaming)).ConfigureAwait(false);
 
-                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(leftRenamed.OriginalFields.Concat(rightRenamed.OriginalFields).ToArray())));
+                            foreach (var field in leftRenamed.OriginalFields)
+                            {
+                                fields.Add(new NamedValue(field.Name, field.Value));
+                            }
+
+                            foreach (var field in rightRenaming.OriginalFields)
+                            {
+                                var fieldName = (StringValue)field.Value;
+                                fields.Add(new NamedValue(fieldName.Value, rightRow.Value.GetField(field.Name)));
+                            }
+
+                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields)));
                         }
                         else if (result.IsError)
                         {

@@ -4901,8 +4901,8 @@
       Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
     </comment>
   </data>
-  <data name="ErrJoinCantUnion" xml:space="preserve">
-    <value>Data sources can't union due to duplicated columns: '{0}'.</value>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' can not be added/renamed due to colission with another column with same name.</value>
     <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>
   </data>
   <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
@@ -4912,5 +4912,9 @@
   <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
     <value>Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.</value>
     <comment>{Locked='As'}{Locked='LeftRecord.Name As NewName'}</comment>
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>At least one '{0}' column must be declared to compose the join result.</value>
+    <comment>{Locked='RightRecord'}</comment>
   </data>
 </root>

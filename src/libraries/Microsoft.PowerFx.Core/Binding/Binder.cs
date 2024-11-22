@@ -134,11 +134,6 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         public const int MaxSelectsToInclude = 100;
 
-        /// <summary>
-        /// Default name used to access a Lambda scope.
-        /// </summary>
-        internal static DName ThisRecordDefaultName => new DName("ThisRecord");
-
         public Features Features { get; }
 
         // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
@@ -1348,7 +1343,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns></returns>
         private bool GetScopeIdent(TexlNode node, DType rowType, out DName scopeIdent)
         {
-            scopeIdent = ThisRecordDefaultName;
+            scopeIdent = FunctionScopeInfo.ThisRecord;
             if (node is AsNode asNode)
             {
                 scopeIdent = GetInfo(asNode).AsIdentifier;
@@ -2426,7 +2421,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 public readonly DType Type;
                 public readonly bool CreatesRowScope;
                 public readonly bool SkipForInlineRecords;
-                public readonly DName ScopeIdentifier;
+                public readonly DName[] ScopeIdentifiers;
                 public readonly bool RequireScopeIdentifier;
 
                 // Optional data associated with scope. May be null.
@@ -2438,7 +2433,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Type = type;
                 }
 
-                public Scope(CallNode call, Scope parent, DType type, DName scopeIdentifier = default, bool requireScopeIdentifier = false, object data = null, bool createsRowScope = true, bool skipForInlineRecords = false)
+                public Scope(CallNode call, Scope parent, DType type, DName[] scopeIdentifiers = default, bool requireScopeIdentifier = false, object data = null, bool createsRowScope = true, bool skipForInlineRecords = false)
                 {
                     Contracts.Assert(type.IsValid);
                     Contracts.AssertValueOrNull(data);
@@ -2449,7 +2444,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Data = data;
                     CreatesRowScope = createsRowScope;
                     SkipForInlineRecords = skipForInlineRecords;
-                    ScopeIdentifier = scopeIdentifier;
+                    ScopeIdentifiers = scopeIdentifiers;
                     RequireScopeIdentifier = requireScopeIdentifier;
 
                     Nest = parent?.Nest ?? 0;
@@ -2492,7 +2487,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _nameResolver = resolver;
                 _features = features;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? TexlBinding.ThisRecordDefaultName : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? new[] { FunctionScopeInfo.ThisRecord } : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
@@ -2809,7 +2804,21 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    var nodeType = scope.Type;
+                    DType nodeType = null;
+
+                    if (scope.ScopeIdentifiers == null || scope.ScopeIdentifiers.Length == 1)
+                    {
+                        nodeType = scope.Type;
+                    }
+                    else
+                    {
+                        // If scope.ScopeIdentifier.Length > 1, it meant the function creates more than 1 scope and the scope types are contained within a record.
+                        // Example: Join(t1, t2, LeftRecord.a = RigthRecord.a, ...)
+                        //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![LeftRecord:![...],RigthRecord:![...]]
+                        // Example: Join(t1 As X1, t2 As X2, X1.a = X2.a, ...)
+                        //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![X1:![...],X2:![...]]
+                        Contracts.Assert(scope.Type.TryGetType(node.Ident.Name, out nodeType));
+                    }
 
                     if (!isWholeScope)
                     {
@@ -3162,14 +3171,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                                 var expandedEntityType = GetExpandedEntityType(typeTmp, parentEntityPath);
                                 var type = scope.Type.SetType(ref fError, DPath.Root.Append(nodeName), expandedEntityType);
-                                scope = new Scope(scope.Call, scope.Parent, type, scope.ScopeIdentifier, scope.RequireScopeIdentifier, expandedEntityType.ExpandInfo);
+                                scope = new Scope(scope.Call, scope.Parent, type, scope.ScopeIdentifiers, scope.RequireScopeIdentifier, expandedEntityType.ExpandInfo);
                             }
 
                             return true;
                         }
                     }
 
-                    if (scope.ScopeIdentifier == nodeName)
+                    if (scope.ScopeIdentifiers?.Any(dname => dname.Value == nodeName) ?? false)
                     {
                         isWholeScope = true;
                         return true;
@@ -4448,7 +4457,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         var scope = DType.Invalid;
                         var required = false;
-                        DName scopeIdentifier = default;
+                        DName[] scopeIdentifiers = default;
                         if (scopeInfo.ScopeType != null)
                         {
                             scopeNew = new Scope(node, _currentScope, scopeInfo.ScopeType, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
@@ -4467,18 +4476,18 @@ namespace Microsoft.PowerFx.Core.Binding
                             }
 
                             // Determine the Scope Identifier using the 1st arg
-                            required = _txb.GetScopeIdent(nodeInp, _txb.GetType(nodeInp), out scopeIdentifier);
+                            required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
                             if (scopeInfo.CheckInput(_txb.Features, node, nodeInp, _txb.GetType(nodeInp), out scope))
                             {
                                 if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
                                 {
-                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifier, required, expandInfo, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
+                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifiers, required, expandInfo, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                                 }
                                 else
                                 {
                                     maybeFunc.TryGetDelegationMetadata(node, _txb, out metadata);
-                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifier, required, metadata, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
+                                    scopeNew = new Scope(node, _currentScope, scope, scopeIdentifiers, required, metadata, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                                 }
                             }
 
@@ -4488,7 +4497,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If there is only one function with this name and its arity doesn't match,
                         // that means the invocation is erroneous.
                         ArityError(maybeFunc.MinArity, maybeFunc.MaxArity, node, carg, _txb.ErrorContainer);
-                        _txb.SetInfo(node, new CallInfo(maybeFunc, node, scope, scopeIdentifier, required, _currentScope.Nest));
+                        _txb.SetInfo(node, new CallInfo(maybeFunc, node, scope, scopeIdentifiers, required, _currentScope.Nest));
                         _txb.SetType(node, maybeFunc.ReturnType);
                     }
 
@@ -4549,7 +4558,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Get the cursor type for this arg. Note we're not adding document errors at this point.
                 DType typeScope;
-                DName scopeIdent = default;
+                DName[] scopeIdent = default;
                 var identRequired = false;
                 var fArgsValid = true;
 
@@ -4574,10 +4583,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         typeInputs[args[i]] = _txb.GetType(args[i]);
                     }
 
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, nodeInput, out typeScope, typeInputs.Values.ToArray());
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, typeInputs.Values.ToArray());
 
                     // Determine the scope identifier using the first node for lambda params
-                    identRequired = _txb.GetScopeIdent(nodeInput, typeScope, out scopeIdent);
+                    identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);
                 }
 
                 if (!fArgsValid)
