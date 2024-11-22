@@ -1791,7 +1791,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             {
                 Compatibility = compatibility,
                 AllowUnsupportedFunctions = true,
-                IncludeInternalFunctions = true, 
+                IncludeInternalFunctions = true,
                 IncludeWebhookFunctions = true,
                 ExposeInternalParamsWithoutDefaultValue = exposeInternalParamsWithoutDefaultValue
             };
@@ -1835,6 +1835,36 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             Assert.Single(functions.Where(x => x.Name == "SendEmailV3"));
+        }
+
+        [Fact]
+        public async Task AiSensitivityTest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail.json", _output);
+            OpenApiDocument apiDoc = testConnector._apiDocument;            
+           
+            ConnectorSettings connectorSettings = new ConnectorSettings("exob")
+            {            
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                AllowUnsupportedFunctions = true,
+                IncludeInternalFunctions = true,
+                ReturnUnknownRecordFieldsAsUntypedObjects = true                
+            };
+            
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
+
+            ConnectorFunction sendmail = functions.First(f => f.Name == "SendEmailV3");
+            IEnumerable<ConnectorParameter> parameters = sendmail.RequiredParameters.Union(sendmail.OptionalParameters);
+
+            string unknownAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.Unknown).Select(p => p.Name));
+            string noAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.None).Select(p => p.Name));
+            string lowAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.Low).Select(p => p.Name));
+            string highAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.High).Select(p => p.Name));
+
+            Assert.Equal(string.Empty, unknownAiSensitivity);
+            Assert.Equal("subject, text, toname, ccname, bccname, files, filenames", noAiSensitivity);
+            Assert.Equal(string.Empty, lowAiSensitivity);
+            Assert.Equal("to, cc, bcc", highAiSensitivity);
         }
 
         [Fact]
