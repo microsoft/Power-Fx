@@ -68,6 +68,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
             returnType = ReturnType;
 
+            if (context.Features.PowerFxV1CompatibilityRules && argTypes[0].IsSealed)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrAddToSealed);
+                return false;
+            }
+
             if (argTypes[0].IsTable)
             {
                 fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
