@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         /// <param name="features">Features flags.</param>
         /// <param name="callNode">Caller call node.</param>
-        /// <param name="inputNode">ArgN node.</param>
+        /// <param name="inputNodes">ArgN node.</param>
         /// <param name="typeScope">Calculated DType type.</param>
         /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
