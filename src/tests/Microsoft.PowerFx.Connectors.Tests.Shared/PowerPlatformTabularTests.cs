@@ -237,7 +237,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("HL Road Frame - Black, 58", address.Value);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             bool b = sqlTable.RecordType.TryGetFieldRelationships("ProductModelID", out IEnumerable<ConnectorRelationship> relationships);
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.True(b);
             Assert.Single(relationships);
             Assert.Equal("[SalesLT].[ProductModel]", relationships.First().ForeignTable); // Logical Name
@@ -705,7 +707,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // needs Microsoft.PowerFx.Connectors.CdpExtensions
             // this call does not make any network call
+#pragma warning disable CS0618 // Type or member is obsolete
             bool b = sfTable.RecordType.TryGetFieldRelationships("OwnerId", out IEnumerable<ConnectorRelationship> relationships);
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.True(b);
             Assert.Single(relationships);
             Assert.Equal("User", relationships.First().ForeignTable);

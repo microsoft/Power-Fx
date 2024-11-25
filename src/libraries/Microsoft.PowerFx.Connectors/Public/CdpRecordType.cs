@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Connectors
             TableResolver = tableResolver;
         }
 
+        [Obsolete("We shouldn't be exposing relationships and will remove this class in next iterations.")]
         public bool TryGetFieldRelationships(string fieldName, out IEnumerable<ConnectorRelationship> relationships)
         {
             ConnectorType connectorType = ConnectorType.Fields.First(ct => ct.Name == fieldName);

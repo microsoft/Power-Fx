@@ -114,10 +114,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ISwaggerSchema Schema { get; private set; } = null;
 
-        // Relationships to external tables
+        // Relationships to external tables        
+#pragma warning disable CS0618 // Type or member is obsolete
         internal IEnumerable<ConnectorRelationship> ExternalTables => _externalTables;
 
         private List<ConnectorRelationship> _externalTables;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
         {
@@ -150,11 +152,13 @@ namespace Microsoft.PowerFx.Connectors
                 // SalesForce only
                 if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     _externalTables = schema.ReferenceTo.Select(r => new ConnectorRelationship()
                     {
                         ForeignTable = r,
                         ForeignKey = null // Seems to always be Id 
                     }).ToList();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
 
                 Fields = Array.Empty<ConnectorType>();
@@ -296,6 +300,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal void SetRelationships(IEnumerable<SqlRelationship> relationships)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             _externalTables ??= new List<ConnectorRelationship>();
 
             foreach (SqlRelationship relationship in relationships)
@@ -306,6 +311,7 @@ namespace Microsoft.PowerFx.Connectors
                     ForeignKey = relationship.ReferencedColumnName
                 });
             }
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private void AggregateErrors(ConnectorType[] types)
@@ -349,31 +355,69 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool Equals(ConnectorType other)
         {
-            if (other == null)
+            return Equals(this, other, 0);                  
+        }
+
+        internal static bool Equals(ConnectorType left, ConnectorType right, int depth)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
             {
                 return false;
             }
 
-            return this.Name == other.Name &&
-                   this.DisplayName == other.DisplayName &&
-                   this.Description == other.Description &&
-                   this.IsRequired == other.IsRequired &&
-                   Enumerable.SequenceEqual((IList<ConnectorType>)this.Fields ?? Array.Empty<ConnectorType>(), (IList<ConnectorType>)other.Fields ?? Array.Empty<ConnectorType>()) &&
-                   Enumerable.SequenceEqual((IList<ConnectorType>)this.HiddenFields ?? Array.Empty<ConnectorType>(), (IList<ConnectorType>)other.HiddenFields ?? Array.Empty<ConnectorType>()) &&
-                   this.ExplicitInput == other.ExplicitInput &&
-                   this.IsEnum == other.IsEnum &&
-                   Enumerable.SequenceEqual((IList<FormulaValue>)this.EnumValues ?? Array.Empty<FormulaValue>(), (IList<FormulaValue>)other.EnumValues ?? Array.Empty<FormulaValue>()) &&
-                   Enumerable.SequenceEqual((IList<string>)this.EnumDisplayNames ?? Array.Empty<string>(), (IList<string>)other.EnumDisplayNames ?? Array.Empty<string>()) &&
-                   this.Visibility == other.Visibility &&
-                   ((this.Capabilities == null && other.Capabilities == null) || this.Capabilities.Equals(other.Capabilities)) &&
-                   this.KeyType == other.KeyType &&
-                   this.KeyOrder == other.KeyOrder &&
-                   this.Permission == other.Permission &&
-                   this.NotificationUrl == other.NotificationUrl &&
-                   ((this.HiddenRecordType == null && other.HiddenRecordType == null) || this.HiddenRecordType.Equals(other.HiddenRecordType)) &&
-                   this.Binary == other.Binary &&
-                   this.MediaKind == other.MediaKind &&
-                   Enumerable.SequenceEqual((IList<string>)this.ExternalTables ?? Array.Empty<string>(), (IList<string>)other.ExternalTables ?? Array.Empty<string>());
+            return left.Name == right.Name &&
+                   left.DisplayName == right.DisplayName &&
+                   left.Description == right.Description &&
+                   left.IsRequired == right.IsRequired &&
+                   ArrayEquals(left.Fields, right.Fields, depth) &&
+                   ArrayEquals(left.HiddenFields, right.HiddenFields, depth) &&
+                   left.ExplicitInput == right.ExplicitInput &&
+                   left.IsEnum == right.IsEnum &&
+                   Enumerable.SequenceEqual((IList<FormulaValue>)left.EnumValues ?? Array.Empty<FormulaValue>(), (IList<FormulaValue>)right.EnumValues ?? Array.Empty<FormulaValue>()) &&
+                   Enumerable.SequenceEqual((IList<string>)left.EnumDisplayNames ?? Array.Empty<string>(), (IList<string>)right.EnumDisplayNames ?? Array.Empty<string>()) &&
+                   left.Visibility == right.Visibility &&
+                   ((left.Capabilities == null && right.Capabilities == null) || left.Capabilities.Equals(right.Capabilities)) &&
+                   left.KeyType == right.KeyType &&
+                   left.KeyOrder == right.KeyOrder &&
+                   left.Permission == right.Permission &&
+                   left.NotificationUrl == right.NotificationUrl &&
+                   ((left.HiddenRecordType == null && right.HiddenRecordType == null) || left.HiddenRecordType.Equals(right.HiddenRecordType)) &&
+                   left.Binary == right.Binary &&
+                   left.MediaKind == right.MediaKind &&
+                   Enumerable.SequenceEqual((IList<string>)left.ExternalTables ?? Array.Empty<string>(), (IList<string>)right.ExternalTables ?? Array.Empty<string>());
+        }
+
+        internal static bool ArrayEquals(ConnectorType[] leftArray, ConnectorType[] rightArray, int depth)
+        {
+            if (depth > 30)
+            {
+                return false;
+            }
+
+            if (leftArray == null && rightArray == null)
+            {
+                return true;
+            }
+
+            if (leftArray.Count() != rightArray.Count())
+            {
+                return false;
+            }
+            
+            for (int i = 0; i < leftArray.Count(); i++)
+            {                
+                if (!Equals(leftArray[i], rightArray[i], depth + 1))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public override bool Equals(object obj)
@@ -425,10 +469,12 @@ namespace Microsoft.PowerFx.Connectors
 
             if (ExternalTables != null)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 foreach (ConnectorRelationship relationship in ExternalTables)
                 {
                     h = Hashing.CombineHash(h, relationship.GetHashCode());                   
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             return h;
