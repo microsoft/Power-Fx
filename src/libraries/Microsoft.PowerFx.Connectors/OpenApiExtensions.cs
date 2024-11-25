@@ -371,6 +371,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static bool? GetNotificationUrl(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsNotificationUrl, out IOpenApiExtension openApiExt) && openApiExt is OpenApiBoolean openApiBool ? openApiBool.Value : null;
 
+        internal static string GetAiSensitivity(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsAiSensitivity, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (bool IsPresent, string Value) GetString(this IDictionary<string, IOpenApiAny> apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
         internal static void WhenPresent(this IDictionary<string, IOpenApiAny> apiObj, string propName, Action<string> action)
@@ -928,6 +930,15 @@ namespace Microsoft.PowerFx.Connectors
                 : Enum.TryParse(visibility, true, out Visibility vis)
                 ? vis
                 : Visibility.Unknown;
+        }
+
+        public static AiSensitivity ToAiSensitivity(this string aiSensitivity)
+        {
+            return string.IsNullOrEmpty(aiSensitivity)
+                ? AiSensitivity.None
+                : Enum.TryParse(aiSensitivity, true, out AiSensitivity ais)
+                ? ais
+                : AiSensitivity.Unknown;
         }
 
         public static MediaKind ToMediaKind(this string mediaKind)

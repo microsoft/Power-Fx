@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool? NotificationUrl => ConnectorType.NotificationUrl;
 
+        public AiSensitivity AiSensitivity => ConnectorType.AiSensitivity;
+
         internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
         {
             Schema = openApiParameter.Schema;
