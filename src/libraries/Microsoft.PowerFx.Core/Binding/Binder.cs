@@ -2817,7 +2817,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![LeftRecord:![...],RigthRecord:![...]]
                         // Example: Join(t1 As X1, t2 As X2, X1.a = X2.a, ...)
                         //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![X1:![...],X2:![...]]
-                        Contracts.Assert(scope.Type.TryGetType(node.Ident.Name, out nodeType));
+                        nodeType = scope.Type.GetType(nodeName);
                     }
 
                     if (!isWholeScope)
