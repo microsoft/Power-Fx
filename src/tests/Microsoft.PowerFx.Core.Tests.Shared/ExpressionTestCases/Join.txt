@@ -54,3 +54,9 @@ Table()
 
 >> Join([{a:1}] As t1,[{a:1}] As t2, t1.a=t2.a, JoinType.Inner, t2.c As d)
 Errors: Error 63-65: Name isn't valid. 'c' isn't recognized.|Error 66-68: Invalid argument type.|Error 13-15: The specified column 't2.c' does not exist.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join( [{a:1,b:2},{a:3,b:4}], [{a:1,c:5},{a:3,c:6}], LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.c As c, LeftRecord.a As b )
+Errors: Error 6-27: 'LeftRecord.a As b' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join( [{a:1,b:2},{a:3,b:4}], [{a:1,c:5},{a:3,c:6}], LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.c As b )
+Errors: Error 6-27: 'RightRecord.c As b' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
