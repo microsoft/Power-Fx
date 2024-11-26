@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -202,6 +203,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
             var config = Default;
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+
+            actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Suggests multiple scopes for functions that creates multiple scopes.
+        [Theory]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),|", "LeftRecord", "RightRecord")]
+        public void TestSuggestMultipleScopes(string expression, params string[] expectedSuggestions)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
 

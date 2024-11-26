@@ -4464,23 +4464,29 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else if (carg > 0)
                         {
-                            // Visit the first arg. This will give us the scope type for any subsequent lambda/predicate args.
-                            var nodeInp = node.Args.Children[0];
-                            nodeInp.Accept(this);
+                            var types = new DType[maybeFunc.ScopeArgs];
+
+                            for (int i = 0; i < maybeFunc.ScopeArgs; i++)
+                            {
+                                var chidNode = node.Args.Children[i];
+
+                                chidNode.Accept(this);
+                                types[i] = _txb.GetType(chidNode);
+                            }
 
                             // At this point we know the type of the first argument, so we can check for untyped objects
-                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(nodeInp) == DType.UntypedObject)
+                            if (overloadWithUntypedObjectLambda != null && _txb.GetType(node.Args.Children[0]) == DType.UntypedObject)
                             {
                                 maybeFunc = overloadWithUntypedObjectLambda;
                                 scopeInfo = maybeFunc.ScopeInfo;
                             }
 
-                            // Determine the Scope Identifier using the 1st arg
+                            // Determine the Scope Identifier using the func.ScopeArgs arg
                             required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, nodeInp, _txb.GetType(nodeInp), out scope))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, types))
                             {
-                                if (_txb.TryGetEntityInfo(nodeInp, out expandInfo))
+                                if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
                                     scopeNew = new Scope(node, _currentScope, scope, scopeIdentifiers, required, expandInfo, skipForInlineRecords: maybeFunc.SkipScopeForInlineRecords);
                                 }
@@ -4491,7 +4497,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 }
                             }
 
-                            argCountVisited = 1;
+                            argCountVisited = maybeFunc.ScopeArgs;
                         }
 
                         // If there is only one function with this name and its arity doesn't match,

@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override int ScopeArgs => 2;
 
         public JoinFunction()
-            : base("Join", TexlStrings.AboutJoin, FunctionCategories.Table, DType.EmptyTable, 0x8, 3, int.MaxValue, DType.EmptyTable, DType.EmptyTable)
+            : base("Join", TexlStrings.AboutJoin, FunctionCategories.Table, DType.EmptyTable, 0x8, 5, int.MaxValue, DType.EmptyTable, DType.EmptyTable)
         {
             ScopeInfo = new FunctionJoinScopeInfo(this);
         }

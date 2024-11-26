@@ -355,15 +355,15 @@ namespace Microsoft.PowerFx.Intellisense
 
                     if (!intellisenseData.TryAddSuggestionForCurrentBinaryOp(checkForOptionSetOnly: true))
                     {
-                        if (info.ScopeIdentifier != default)
+                        if (info.ScopeIdentifiers != default)
                         {
-                            foreach (var ident in info.ScopeIdentifier)
+                            foreach (var ident in info.ScopeIdentifiers)
                             {
                                 AddSuggestion(intellisenseData, ident, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
                             }
                         }
 
-                        if (!info.RequiresScopeIdentifier)
+                        if (!info.RequiresScopeIdentifier && info.ScopeIdentifiers.Length <= 1)
                         {
                             AddTopLevelSuggestions(intellisenseData, type);
                         }

@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Core.Functions
             var ret = false;
             scopeIdents = new DName[2];
 
-            if (nodes[0] is AsNode leftAsNode)
+            if (nodes.Length > 0 && nodes[0] is AsNode leftAsNode)
             {
                 scopeIdents[0] = leftAsNode.Right.Name;
                 ret = true;
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 scopeIdents[0] = LeftRecord;
             }
 
-            if (nodes[1] is AsNode rightAsNode)
+            if (nodes.Length > 1 && nodes[1] is AsNode rightAsNode)
             {
                 scopeIdents[1] = rightAsNode.Right.Name;
                 ret = true;
