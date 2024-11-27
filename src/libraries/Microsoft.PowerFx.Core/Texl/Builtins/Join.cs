@@ -106,7 +106,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (dottedNameNode.Left.AsFirstName().Ident.Name == scopeIdent[1])
                     {
-                        // !!TODO shouldn't the binder have caught this?
                         if (!rightTable.TryGetType(dottedNameNode.Right.Name, out var rightType))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
@@ -164,47 +163,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var recordTypesMap = new Dictionary<DName, RecordType>();
             var recordValueMap = new Dictionary<DName, Dictionary<DName, IntermediateNode>>();
 
-            newArgs.Add(args[0]);
-            newArgs.Add(args[1]);
+            // Inlcudes source1, source2, predicate, and joinType.
+            newArgs.AddRange(args.Take(4));
 
             ScopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out var scopeIdent);
 
-            for (int i = 2; i < carg; i++)
+            for (int i = 4; i < carg; i++)
             {
-                var arg = node.Args.Children[i];
+                var asNode = node.Args.Children[i] as AsNode;
+                var dName = asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name == scopeIdent[0] ? FunctionJoinScopeInfo.LeftRecord : FunctionJoinScopeInfo.RightRecord;
 
-                if (i > 3 && IsLambdaParam(arg, i) && arg is AsNode asNode)
+                if (!recordTypesMap.TryGetValue(dName, out _))
                 {
-                    var dName = asNode.Left.AsDottedName().Left.AsFirstName().Ident.Name == scopeIdent[0] ? FunctionJoinScopeInfo.LeftRecord : FunctionJoinScopeInfo.RightRecord;
-
-                    if (!recordTypesMap.TryGetValue(dName, out _))
-                    {
-                        recordTypesMap[dName] = RecordType.Empty();
-                    }
-
-                    recordTypesMap[dName] = recordTypesMap[dName].Add(asNode.Left.AsDottedName().Right.Name, FormulaType.String);
-
-                    if (!recordValueMap.TryGetValue(dName, out _))
-                    {
-                        recordValueMap[dName] = new Dictionary<DName, IntermediateNode>();
-                    }
-
-                    recordValueMap[dName].Add(asNode.Left.AsDottedName().Right.Name, new TextLiteralNode(IRContext.NotInSource(FormulaType.String), asNode.Right.Name));
+                    recordTypesMap[dName] = RecordType.Empty();
                 }
-                else
+
+                recordTypesMap[dName] = recordTypesMap[dName].Add(asNode.Left.AsDottedName().Right.Name, FormulaType.String);
+
+                if (!recordValueMap.TryGetValue(dName, out _))
                 {
-                    newArgs.Add(args[i]);
+                    recordValueMap[dName] = new Dictionary<DName, IntermediateNode>();
                 }
-            }
 
-            // If JoinType arg is not present, add JoinType.Inner arg as default.
-            if (carg == 3)
-            {
-                newArgs.Add(
-                    new RecordFieldAccessNode(
-                        IRContext.NotInSource(FormulaType.Build(DType.OptionSetValue)),
-                        new ResolvedObjectNode(IRContext.NotInSource(FormulaType.Build(DType.OptionSetValue)), BuiltInEnums.JoinTypeEnum),
-                        new DName("Inner")));
+                recordValueMap[dName].Add(asNode.Left.AsDottedName().Right.Name, new TextLiteralNode(IRContext.NotInSource(FormulaType.String), asNode.Right.Name));
             }
 
             if (recordTypesMap.ContainsKey(FunctionJoinScopeInfo.LeftRecord))
