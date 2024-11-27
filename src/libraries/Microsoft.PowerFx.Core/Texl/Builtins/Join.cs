@@ -91,8 +91,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         valid = false;
                         break;
                     }
+
+                    if (dottedNameNode.Left is not FirstNameNode firstNameNode)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinDottedNameleft, dottedNameNode.Left, scopeIdent[0], scopeIdent[1]);
+                        valid = false;
+                        break;
+                    }
                     
-                    if (dottedNameNode.Left.AsFirstName().Ident.Name == scopeIdent[0])
+                    if (firstNameNode.Ident.Name == scopeIdent[0])
                     {
                         if (!leftTable.TryGetType(dottedNameNode.Right.Name, out var leftType))
                         {
@@ -104,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         returnType = returnType.Drop(ref fError, DPath.Root, dottedNameNode.Right.Name);
                         returnType = returnType.Add(ref fError, DPath.Root, asNode.Right.Name, leftType);
                     }
-                    else if (dottedNameNode.Left.AsFirstName().Ident.Name == scopeIdent[1])
+                    else if (firstNameNode.Ident.Name == scopeIdent[1])
                     {
                         if (!rightTable.TryGetType(dottedNameNode.Right.Name, out var rightType))
                         {

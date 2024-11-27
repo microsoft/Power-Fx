@@ -866,5 +866,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrJoinNotPlainJoinTypeEnum = new ErrorResourceKey("ErrJoinNotPlainJoinTypeEnum");
         public static ErrorResourceKey ErrJoinArgIsNotAsNode = new ErrorResourceKey("ErrJoinArgIsNotAsNode");
         public static ErrorResourceKey ErrJoinAtLeastOneRigthRecordField = new ErrorResourceKey("ErrJoinAtLeastOneRigthRecordField");
+        public static ErrorResourceKey ErrJoinDottedNameleft = new ErrorResourceKey("ErrJoinDottedNameleft");
     }
 }
