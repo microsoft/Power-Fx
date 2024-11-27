@@ -84,6 +84,6 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The string value representing the join type literal.
         /// </summary>
-        public const string JoinTypeName = "JoinType";
+        public const string JoinTypeEnumString = "JoinType";
     }
 }

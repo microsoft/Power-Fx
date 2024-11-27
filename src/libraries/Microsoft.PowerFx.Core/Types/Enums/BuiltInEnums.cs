@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             canConcatenateStronglyTyped: true);
 
         public static readonly EnumSymbol JoinTypeEnum = new EnumSymbol(
-            new DName(LanguageConstants.JoinTypeName),
+            new DName(LanguageConstants.JoinTypeEnumString),
             DType.String,
             new Dictionary<string, object>()
             {
