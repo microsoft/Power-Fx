@@ -734,6 +734,11 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentNullException("optionSet");
             }
 
+            if (symbolTable == null)
+            {
+                return optionSet;
+            }
+
             string name = optionSet.EntityName;
 
             // No existing symbols with that name
