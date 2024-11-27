@@ -392,19 +392,17 @@ namespace Microsoft.PowerFx.Connectors
 
         internal class ConnectorTypeGetterSettings
         {
-            internal readonly ConnectorCompatibility Compatibility;
-            internal readonly IList<SqlRelationship> SqlRelationships;
+            internal readonly ConnectorCompatibility Compatibility;            
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
             internal readonly SymbolTable OptionSets;
 
             private readonly string _tableName;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets, IList<SqlRelationship> sqlRelationships = null)
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets)
             {
                 Compatibility = connectorCompatibility;
-                OptionSets = optionSets;
-                SqlRelationships = sqlRelationships;
+                OptionSets = optionSets;                
 
                 _tableName = tableName;
             }
@@ -437,14 +435,14 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility)
         {
-            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility, sqlRelationships);
+            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility);
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility)
         {
-            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
+            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets);
             ConnectorType connectorType = openApiParameter.GetConnectorType(settings);
 
             return connectorType;
@@ -680,16 +678,6 @@ namespace Microsoft.PowerFx.Connectors
 
                             //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
                             ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
-
-                            if (settings.SqlRelationships != null)
-                            {
-                                SqlRelationship relationship = settings.SqlRelationships.FirstOrDefault(sr => sr.ColumnName == propLogicalName);
-
-                                if (relationship != null)
-                                {
-                                    propertyType.SetRelationship(relationship);
-                                }
-                            }
 
                             settings.UnStack();
 

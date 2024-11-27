@@ -214,8 +214,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
 
             // Note relationships to ProductCategory and ProductModel with ~ notation
-            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~[SalesLT].[ProductCategory]:w, ProductID:w, ProductModelID:~[SalesLT].[ProductModel]:w, ProductNumber:s, " +
-                                 "SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:w, ProductID:w, ProductModelID:w, ProductNumber:s, SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, " +
+                                 "ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -237,22 +237,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("HL Road Frame - Black, 58", address.Value);
 
+            // For SQL we don't have relationships
             bool b = sqlTable.RecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
-            Assert.True(b);
-            Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
-            Assert.Equal("ProductModelID", foreignKey);
-
-            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");
+            Assert.False(b);
+            
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json");
             b = sqlTable.RecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
 
             Assert.True(b);
-            CdpRecordType productModelRecordType = Assert.IsType<CdpRecordType>(productModelID);
-
-            Assert.False(productModelRecordType is null);
-
-            // External relationship table name
-            Assert.Equal("[SalesLT].[ProductModel]", productModelRecordType.TableSymbolName);
-            Assert.Equal<object>("r![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:~[SalesLT].[ProductModel]:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
+            DecimalType productModelId = Assert.IsType<DecimalType>(productModelID);
+            Assert.False(productModelId is null);            
         }
 
         [Fact]
