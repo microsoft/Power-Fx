@@ -134,6 +134,11 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         public const int MaxSelectsToInclude = 100;
 
+        /// <summary>
+        /// Default name used to access a Lambda scope.
+        /// </summary>
+        internal static DName ThisRecordDefaultName => new DName("ThisRecord");
+
         public Features Features { get; }
 
         // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
@@ -1343,7 +1348,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <returns></returns>
         private bool GetScopeIdent(TexlNode node, DType rowType, out DName scopeIdent)
         {
-            scopeIdent = FunctionScopeInfo.ThisRecord;
+            scopeIdent = ThisRecordDefaultName;
             if (node is AsNode asNode)
             {
                 scopeIdent = GetInfo(asNode).AsIdentifier;
@@ -2487,7 +2492,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _nameResolver = resolver;
                 _features = features;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? new[] { FunctionScopeInfo.ThisRecord } : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? new[] { ThisRecordDefaultName } : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
@@ -2813,10 +2818,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     else
                     {
                         // If scope.ScopeIdentifier.Length > 1, it meant the function creates more than 1 scope and the scope types are contained within a record.
-                        // Example: Join(t1, t2, LeftRecord.a = RigthRecord.a, ...)
-                        //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![LeftRecord:![...],RigthRecord:![...]]
+                        // Example: Join(t1, t2, LeftRecord.a = RightRecord.a, ...)
+                        //      The expression above will create LeftRecord and RightRecord scopes. The scope type will be ![LeftRecord:![...],RightRecord:![...]]
                         // Example: Join(t1 As X1, t2 As X2, X1.a = X2.a, ...)
-                        //      The expression above will create LeftRecord and RigthRecord scopes. The scope type will be ![X1:![...],X2:![...]]
+                        //      The expression above will create LeftRecord and RightRecord scopes. The scope type will be ![X1:![...],X2:![...]]
                         nodeType = scope.Type.GetType(nodeName);
                     }
 
@@ -4568,9 +4573,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 var identRequired = false;
                 var fArgsValid = true;
 
-                var typeInputs = new Dictionary<TexlNode, DType>
+                var typeInputs = new Dictionary<int, DType>
                 {
-                    { nodeInput, _txb.GetType(nodeInput) },
+                    { nodeInput.Id, _txb.GetType(nodeInput) },
                 };
 
                 if (scopeInfo.ScopeType != null)
@@ -4586,7 +4591,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
                         args[i].Accept(this);
-                        typeInputs[args[i]] = _txb.GetType(args[i]);
+                        typeInputs[args[i].Id] = _txb.GetType(args[i]);
                     }
 
                     fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, typeInputs.Values.ToArray());
@@ -4665,7 +4670,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
-                        if (typeInputs.TryGetValue(args[i], out _))
+                        if (typeInputs.TryGetValue(args[i].Id, out _))
                         {
                             argTypes[i] = _txb.GetType(args[i]);
                         }

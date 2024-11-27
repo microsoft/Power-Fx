@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx
 
             if (_allowThisRecord)
             {
-                var data = new NameSymbol(FunctionScopeInfo.ThisRecord, new SymbolProperties
+                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
                 {
                      CanMutate = false,
                      CanSet = false,
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx
             _mutable = mutable;
             _allowThisRecord = true;
 
-            var data = new NameSymbol(FunctionScopeInfo.ThisRecord, new SymbolProperties
+            var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
             {
                 CanMutate = false,
                 CanSet = false,
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx
 
                 if (_allowThisRecord)
                 {
-                    yield return new KeyValuePair<string, NameLookupInfo>(FunctionScopeInfo.ThisRecord, _thisRecord);
+                    yield return new KeyValuePair<string, NameLookupInfo>(TexlBinding.ThisRecordDefaultName, _thisRecord);
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
         
             if (_allowThisRecord)
             {
-                if (name == FunctionScopeInfo.ThisRecord)
+                if (name == TexlBinding.ThisRecordDefaultName)
                 {
                     nameInfo = _thisRecord;
                     return true;

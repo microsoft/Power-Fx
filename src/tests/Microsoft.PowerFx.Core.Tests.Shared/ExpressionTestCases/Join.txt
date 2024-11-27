@@ -60,3 +60,6 @@ Errors: Error 6-27: 'LeftRecord.a As b' can not be added/renamed due to colissio
 
 >> Join( [{a:1,b:2},{a:3,b:4}], [{a:1,c:5},{a:3,c:6}], LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.c As b )
 Errors: Error 6-27: 'RightRecord.c As b' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join(Table({a:1},{a:1},{a:0}),Table({b:1}),RightRecord.b/LeftRecord.a > 0,JoinType.Inner,RightRecord.b As b)
+Table({a:1,b:1},{a:1,b:1},Error({Kind:ErrorKind.Div0}))

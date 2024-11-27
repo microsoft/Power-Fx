@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -66,11 +67,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // This means it should not allow lambdas that operate on the same data multiple times, as this will
         // cause nondeterministic behavior.
         public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
-
-        /// <summary>
-        /// Default name used to access a Lambda scope.
-        /// </summary>
-        public static DName ThisRecord => new DName("ThisRecord");
 
         public FunctionScopeInfo(
             TexlFunction function,
@@ -221,9 +217,17 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
+        /// <summary>
+        /// Get the scope identifiers for the function based on the CallNode child args.
+        /// The majority of the functions will have a single scope identifier named ThisRecord.
+        /// Other functions, like Join, may create 2 or more scope identifiers.
+        /// </summary>
+        /// <param name="nodes">Call child nodes.</param>
+        /// <param name="scopeIdents">Scope names.</param>
+        /// <returns></returns>
         public virtual bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
         {
-            scopeIdents = new[] { ThisRecord };
+            scopeIdents = new[] { TexlBinding.ThisRecordDefaultName };
             if (nodes[0] is AsNode asNode)
             {
                 scopeIdents = new[] { asNode.Right.Name };
