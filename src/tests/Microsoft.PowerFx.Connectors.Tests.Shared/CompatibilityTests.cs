@@ -33,9 +33,9 @@ namespace Microsoft.PowerFx.Tests
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 
-            ConnectorType ctCdp = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), null, ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _, out _);
-            ConnectorType ctPa = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), null, ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _, out _);
-            ConnectorType ctSw = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), null, ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _, out _);
+            ConnectorType ctCdp = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), ConnectorCompatibility.CdpCompatibility, "dataset", out _, out _, out _, out _);
+            ConnectorType ctPa = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), ConnectorCompatibility.PowerAppsCompatibility, "dataset", out _, out _, out _, out _);
+            ConnectorType ctSw = ConnectorFunction.GetCdpTableType(tableResolver, "name", null, "schema/items", StringValue.New(text), ConnectorCompatibility.SwaggerCompatibility, "dataset", out _, out _, out _, out _);
 
             string cdp = ctCdp.FormulaType.ToStringWithDisplayNames();
             string pa = ctPa.FormulaType.ToStringWithDisplayNames();
