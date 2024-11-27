@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -110,7 +112,21 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
                         }
                         else
                         {
-                            throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
+                            int firstVersion = GetVersion(first.location);
+                            int secondVersion = GetVersion(second.location);
+
+                            if (firstVersion > secondVersion)
+                            {
+                                list2.Add(swagger.Key, first);
+                            }
+                            else if (firstVersion < secondVersion)
+                            {
+                                list2.Add(swagger.Key, second);
+                            }
+                            else
+                            {
+                                throw new InvalidDataException($"Two documents with same number of operations, can't determine which one to select {new KeyValuePair<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>>(swagger.Key, docs).GetString()}");
+                            }
                         }
                     }
                 }
@@ -126,6 +142,13 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
             }
 
             return list2;
+        }
+
+        private static int GetVersion(string str)
+        {
+            // searches '<space>[v or V]<number>' pattern
+            Match m = new Regex(@"\b[vV](?<v>[0-9]+)\\").Match(str);
+            return m.Success ? int.Parse(m.Groups["v"].Value, CultureInfo.InvariantCulture.NumberFormat) : 0;
         }
 
         private static void ParseSwagger(string folder, string swaggerFile, Dictionary<string, List<(string folder, string location, OpenApiDocument document, List<string> errors)>> list)
