@@ -2801,18 +2801,7 @@ namespace Microsoft.PowerFx.Core.Types
             return result;
         }
 
-        /// <summary>
-        /// Merge two aggregates into an unique DType.
-        /// </summary>
-        /// <param name="fError"></param>
-        /// <param name="leftType"></param>
-        /// <param name="rightType"></param>
-        /// <param name="useLegacyDateTimeAccepts"></param>
-        /// <param name="features"></param>
-        /// <param name="allowCoerce"></param>
-        /// <param name="unionToLeftTypeOnly"></param>
-        /// <returns></returns>
-        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce, bool unionToLeftTypeOnly, bool forceUniqueColumns = false)
+        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, Features features, bool allowCoerce, bool unionToLeftTypeOnly)
         {
             leftType.AssertValid();
             Contracts.Assert(leftType.IsAggregate);
@@ -2829,11 +2818,6 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     result = result.Add(pair);
                     continue;
-                }
-
-                if (forceUniqueColumns)
-                {
-                    fError = true;
                 }
 
                 var field2Type = pair.Type;
