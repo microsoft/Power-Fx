@@ -63,3 +63,9 @@ Errors: Error 6-27: 'RightRecord.c As b' can not be added/renamed due to colissi
 
 >> Join(Table({a:1},{a:1},{a:0}),Table({b:1}),RightRecord.b/LeftRecord.a > 0,JoinType.Inner,RightRecord.b As b)
 Table({a:1,b:1},{a:1,b:1},Error({Kind:ErrorKind.Div0}))
+
+>> Join([{a:1}] As T1,[{a:1}] As T2,true,JoinType.Inner,{a:1}.a As AAA)
+Errors: Error 13-15: The '{ a:1 }' value is invalid in this context. It should be a reference to either 'T1' or 'T2' scope name.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join([{a:1}],[{a:1}],true,JoinType.Inner,{a:1}.a As AAA)
+Errors: Error 5-12: The '{ a:1 }' value is invalid in this context. It should be a reference to either 'LeftRecord' or 'RightRecord' scope name.|Error 0-4: The function 'Join' has some invalid arguments.

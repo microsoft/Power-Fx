@@ -220,9 +220,34 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
 
-            actualSuggestions = SuggestStrings(expression, config);
-            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        // Making sure that functions with multiple scopes wont throw an out of range exception.
+        [Theory]
+        [InlineData("Join(Sequence(3), ForAll(Sequence(3,1,2), { Value : ThisRecord.Value, Value2 : ThisRecord.Value * ThisRecord.Value}), LeftRecord.Value = RightRecord.Value, JoinType.Left, RightRecord.Value2 As V2)")]
+        public void MultipleScopesExceptionTest(string expression)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            // Test if at any point in the expression we going to get a out of range exception.
+            for (int i = 1; i < expression.Length; i++)
+            {
+#pragma warning disable CA1845 // Use span-based 'string.Concat'
+                var subExpr = expression.Substring(0, i) + "|";
+#pragma warning restore CA1845 // Use span-based 'string.Concat'
+
+                try
+                {
+                    SuggestStrings(subExpr, config);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+
+            Assert.True(true);
         }
 
         /// <summary>

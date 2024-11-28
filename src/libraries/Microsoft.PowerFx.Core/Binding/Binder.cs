@@ -4469,14 +4469,15 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else if (carg > 0)
                         {
-                            var types = new DType[maybeFunc.ScopeArgs];
+                            // Gets the lesser number between the CallNode chidl args and func.ScopeArgs.
+                            // There reason why is that the intellisense can visit this code and provide a number of args less than the func.ScopeArgs.
+                            // Example: Join(|
+                            var argsCount = Math.Min(node.Args.Children.Count, maybeFunc.ScopeArgs);
+                            var types = new DType[argsCount];
 
-                            for (int i = 0; i < maybeFunc.ScopeArgs; i++)
+                            for (int i = 0; i < argsCount; i++)
                             {
-                                var chidNode = node.Args.Children[i];
-
-                                chidNode.Accept(this);
-                                types[i] = _txb.GetType(chidNode);
+                                node.Args.Children[i].Accept(this);
                             }
 
                             // At this point we know the type of the first argument, so we can check for untyped objects
@@ -4489,7 +4490,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the func.ScopeArgs arg
                             required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, types))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, argsCount)))
                             {
                                 if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
@@ -4502,7 +4503,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 }
                             }
 
-                            argCountVisited = maybeFunc.ScopeArgs;
+                            argCountVisited = argsCount;
                         }
 
                         // If there is only one function with this name and its arity doesn't match,
@@ -4573,11 +4574,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 var identRequired = false;
                 var fArgsValid = true;
 
-                var typeInputs = new Dictionary<int, DType>
-                {
-                    { nodeInput.Id, _txb.GetType(nodeInput) },
-                };
-
                 if (scopeInfo.ScopeType != null)
                 {
                     typeScope = scopeInfo.ScopeType;
@@ -4591,10 +4587,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
                         args[i].Accept(this);
-                        typeInputs[args[i].Id] = _txb.GetType(args[i]);
                     }
 
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, typeInputs.Values.ToArray());
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);
@@ -4670,16 +4665,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (!isIdentifier || maybeFunc.GetIdentifierParamStatus(args[i], _features, i) == TexlFunction.ParamIdentifierStatus.PossiblyIdentifier)
                     {
-                        if (typeInputs.TryGetValue(args[i].Id, out _))
-                        {
-                            argTypes[i] = _txb.GetType(args[i]);
-                        }
-                        else 
+                        if (_txb.GetTypeAllowInvalid(args[i]) != null && !_txb.GetTypeAllowInvalid(args[i]).IsValid)
                         {
                             args[i].Accept(this);
                             _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
-                            argTypes[i] = _txb.GetType(args[i]);
-                        }                        
+                        }
+
+                        argTypes[i] = _txb.GetType(args[i]);
 
                         Contracts.Assert(argTypes[i].IsValid);
                     }
@@ -4747,6 +4739,17 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // We fully processed the call, so don't visit children or call PostVisit.
                 return false;
+            }
+
+            /// <summary>
+            /// Get all DType used to compose the scope of the function (func.ScopeArgs).
+            /// </summary>
+            /// <param name="args">Call child nodes.</param>
+            /// <param name="scopeArgs">TexlFunction ScopeArgs property.</param>
+            /// <returns>DType array.</returns>
+            private DType[] GetScopeArgsTypes(IReadOnlyList<TexlNode> args, int scopeArgs)
+            {
+                return args.Take(scopeArgs).Select(node => _txb.GetType(node)).ToArray();
             }
 
             private void FinalizeCall(CallNode node)

@@ -4917,4 +4917,8 @@
     <value>At least one '{0}' column must be declared to compose the join result.</value>
     <comment>{Locked='RightRecord'}</comment>
   </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>The '{0}' value is invalid in this context. It should be a reference to either '{1}' or '{2}' scope name.</value>
+    <comment>{Locked='RightRecord'}</comment>
+  </data>
 </root>
