@@ -4469,9 +4469,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else if (carg > 0)
                         {
-                            var types = new DType[maybeFunc.ScopeArgs];
+                            // Gets the lesser number between the CallNode chidl args and func.ScopeArgs.
+                            // There reason why is that the intellisense can visit this code and provide a number of args less than the func.ScopeArgs.
+                            // Example: Join(|
+                            var argsCount = Math.Min(node.Args.Children.Count, maybeFunc.ScopeArgs);
+                            var types = new DType[argsCount];
 
-                            for (int i = 0; i < maybeFunc.ScopeArgs; i++)
+                            for (int i = 0; i < argsCount; i++)
                             {
                                 node.Args.Children[i].Accept(this);
                             }
@@ -4486,7 +4490,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the func.ScopeArgs arg
                             required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs)))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, argsCount)))
                             {
                                 if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
@@ -4499,7 +4503,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 }
                             }
 
-                            argCountVisited = maybeFunc.ScopeArgs;
+                            argCountVisited = argsCount;
                         }
 
                         // If there is only one function with this name and its arity doesn't match,

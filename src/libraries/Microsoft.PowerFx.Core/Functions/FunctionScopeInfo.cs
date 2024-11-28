@@ -297,17 +297,17 @@ namespace Microsoft.PowerFx.Core.Functions
         public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
         {
             var ret = true;
-            var input0 = inputSchema[0];
-            var input1 = inputSchema[1];
+            var argCount = Math.Min(inputNodes.Length, 2);
 
             typeScope = DType.EmptyRecord;
 
-            ret = base.CheckInput(features, callNode, callNode.Args.ChildNodes[0], input0, out var type0);
-            ret &= base.CheckInput(features, callNode, callNode.Args.ChildNodes[1], input1, out var type1);
-
             GetScopeIdent(inputNodes, out DName[] idents);
 
-            typeScope = typeScope.Add(idents[0], type0).Add(idents[1], type1);
+            for (var i = 0; i < argCount; i++)
+            {
+                ret &= base.CheckInput(features, callNode, inputNodes[i], inputSchema[i], out var type);
+                typeScope = typeScope.Add(idents[i], type);
+            }
 
             return ret;
         }
