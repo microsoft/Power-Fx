@@ -11,19 +11,10 @@ namespace Microsoft.AppMagic.Transport
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class TransportPropertyAttribute : Attribute
     {
-        public TransportPropertyAttribute(bool generateSynchronousSetterTemplateInProxyClass = false, bool useDiffSync = false)
+        public TransportPropertyAttribute(bool useDiffSync = false)
         {
-            GenerateSynchronousSetterTemplateInProxyClass = generateSynchronousSetterTemplateInProxyClass;
             UseDiffSync = useDiffSync;
         }
-
-        /// <summary>
-        /// When defined, generates a synchronous setter method that redirects to "set{PropertyName}". This
-        /// allows the programmer to manually define how set calls should be marshalled. The user is still
-        /// responsible for defining the appropriate setter method in either the base class or original
-        /// C# class.
-        /// </summary>
-        public bool GenerateSynchronousSetterTemplateInProxyClass { get; }
 
         /// <summary>
         /// If the marked property is a <c>ITrackedCollection</c>, and it gets updated,
