@@ -88,7 +88,8 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <summary>
-        /// List the display names for this option set. Also see <see cref="LogicalNames"/>.
+        /// List the display names for this option set. 
+        /// This enumeration is in the same order as <see cref="LogicalNames"/>.
         /// </summary>
         public IEnumerable<string> DisplayNames
         {
