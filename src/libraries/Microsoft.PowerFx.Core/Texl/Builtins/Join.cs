@@ -195,6 +195,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 recordValueMap[dName].Add(asNode.Left.AsDottedName().Right.Name, new TextLiteralNode(IRContext.NotInSource(FormulaType.String), asNode.Right.Name));
             }
 
+            // Scope names resolver record
+            var scopeNameResolverType = RecordType.Empty().Add(FunctionJoinScopeInfo.LeftRecord.Value, FormulaType.String).Add(FunctionJoinScopeInfo.RightRecord.Value, FormulaType.String);
+            var scopeNameResolver = new Dictionary<DName, IntermediateNode>()
+            {
+                { FunctionJoinScopeInfo.LeftRecord, new TextLiteralNode(IRContext.NotInSource(FormulaType.String), scopeIdent[0].Value) },
+                { FunctionJoinScopeInfo.RightRecord, new TextLiteralNode(IRContext.NotInSource(FormulaType.String), scopeIdent[1].Value) }
+            };
+
+            newArgs.Add(new RecordNode(
+                    IRContext.NotInSource(scopeNameResolverType),
+                    scopeNameResolver));
+
             if (recordTypesMap.ContainsKey(FunctionJoinScopeInfo.LeftRecord))
             {
                 newArgs.Add(new RecordNode(
