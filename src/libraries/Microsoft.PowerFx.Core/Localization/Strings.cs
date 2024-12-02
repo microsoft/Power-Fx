@@ -608,6 +608,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutClear = (b) => StringResources.Get("AboutClear", b);
         public static StringGetter ClearArg1 = (b) => StringResources.Get("SummarizeArg1", b);
 
+        public static StringGetter AboutJoin = (b) => StringResources.Get("AboutJoin", b);
+        public static StringGetter JoinArg1 = (b) => StringResources.Get("JoinArg1", b);
+        public static StringGetter JoinArg2 = (b) => StringResources.Get("JoinArg2", b);
+        public static StringGetter JoinArg3 = (b) => StringResources.Get("JoinArg3", b);
+        public static StringGetter JoinArg4 = (b) => StringResources.Get("JoinArg4", b);
+        public static StringGetter JoinArg5 = (b) => StringResources.Get("JoinArg5", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -855,5 +862,10 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrUserDefinedTypesDisabled = new ErrorResourceKey("ErrUserDefinedTypesDisabled");
         public static ErrorResourceKey ErrUserDefinedTypeIncorrectSyntax = new ErrorResourceKey("ErrUserDefinedTypeIncorrectSyntax");
+        public static ErrorResourceKey ErrJoinCantAddRename = new ErrorResourceKey("ErrJoinCantAddRename");
+        public static ErrorResourceKey ErrJoinNotPlainJoinTypeEnum = new ErrorResourceKey("ErrJoinNotPlainJoinTypeEnum");
+        public static ErrorResourceKey ErrJoinArgIsNotAsNode = new ErrorResourceKey("ErrJoinArgIsNotAsNode");
+        public static ErrorResourceKey ErrJoinAtLeastOneRigthRecordField = new ErrorResourceKey("ErrJoinAtLeastOneRigthRecordField");
+        public static ErrorResourceKey ErrJoinDottedNameleft = new ErrorResourceKey("ErrJoinDottedNameleft");
     }
 }

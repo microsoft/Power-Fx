@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -85,6 +86,20 @@ namespace Microsoft.PowerFx.Core.Functions
             _function = function;
             AppliesToArgument = appliesToArgument ?? (i => i > 0);
             CanBeCreatedByRecord = canBeCreatedByRecord;
+        }
+
+        /// <summary>
+        /// Allows to type check multiple scopes.
+        /// </summary>
+        /// <param name="features">Features flags.</param>
+        /// <param name="callNode">Caller call node.</param>
+        /// <param name="inputNodes">ArgN node.</param>
+        /// <param name="typeScope">Calculated DType type.</param>
+        /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
+        /// <returns></returns>
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        {
+            return CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -201,6 +216,26 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
         }
+
+        /// <summary>
+        /// Get the scope identifiers for the function based on the CallNode child args.
+        /// The majority of the functions will have a single scope identifier named ThisRecord.
+        /// Other functions, like Join, may create 2 or more scope identifiers.
+        /// </summary>
+        /// <param name="nodes">Call child nodes.</param>
+        /// <param name="scopeIdents">Scope names.</param>
+        /// <returns></returns>
+        public virtual bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            scopeIdents = new[] { TexlBinding.ThisRecordDefaultName };
+            if (nodes[0] is AsNode asNode)
+            {
+                scopeIdents = new[] { asNode.Right.Name };
+                return true;
+            }
+
+            return false;
+        }
     }
 
     internal class FunctionThisGroupScopeInfo : FunctionScopeInfo
@@ -242,6 +277,64 @@ namespace Microsoft.PowerFx.Core.Functions
             if (!typeScope.Contains(ThisGroup))
             {
                 typeScope = typeScope.Add(new TypedName(inputSchema.ToTable(), ThisGroup));
+            }
+
+            return ret;
+        }
+    }
+
+    internal class FunctionJoinScopeInfo : FunctionScopeInfo
+    {
+        public static DName LeftRecord => new DName("LeftRecord");
+
+        public static DName RightRecord => new DName("RightRecord");
+
+        public FunctionJoinScopeInfo(TexlFunction function)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 1)
+        {
+        }
+
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        {
+            var ret = true;
+            var argCount = Math.Min(inputNodes.Length, 2);
+
+            typeScope = DType.EmptyRecord;
+
+            GetScopeIdent(inputNodes, out DName[] idents);
+
+            for (var i = 0; i < argCount; i++)
+            {
+                ret &= base.CheckInput(features, callNode, inputNodes[i], inputSchema[i], out var type);
+                typeScope = typeScope.Add(idents[i], type);
+            }
+
+            return ret;
+        }
+
+        public override bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
+        {
+            var ret = false;
+            scopeIdents = new DName[2];
+
+            if (nodes.Length > 0 && nodes[0] is AsNode leftAsNode)
+            {
+                scopeIdents[0] = leftAsNode.Right.Name;
+                ret = true;
+            }
+            else
+            {
+                scopeIdents[0] = LeftRecord;
+            }
+
+            if (nodes.Length > 1 && nodes[1] is AsNode rightAsNode)
+            {
+                scopeIdents[1] = rightAsNode.Right.Name;
+                ret = true;
+            }
+            else
+            {
+                scopeIdents[1] = RightRecord;
             }
 
             return ret;

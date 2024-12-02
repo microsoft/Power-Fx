@@ -80,6 +80,12 @@ namespace Microsoft.PowerFx
             }
         }
 
+        [Obsolete("Join is still in preview.")]
+        public static void EnableJoinFunction(this PowerFxConfig config)
+        {
+            config.SymbolTable.AddFunction(new JoinImpl());
+        }
+
         [Obsolete("OptionSetInfo function is deprecated. Use the Value function on an option set backed by a number and the Boolean function on an option set backed by a Boolean instead. A new ChoiceInfo function is in the works for access to logical names.")]
         public static void EnableOptionSetInfo(this PowerFxConfig powerFxConfig)
         {
