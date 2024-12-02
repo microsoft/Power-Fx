@@ -86,22 +86,5 @@ namespace Microsoft.PowerFx.Types
                 sb.Append(errorValue.ToExpression());
             }
         }
-
-        /// <summary>
-        /// List the display names for this option set. 
-        /// This enumeration is in the same order as <see cref="LogicalNames"/>.
-        /// </summary>
-        public IEnumerable<string> DisplayNames
-        {
-            get
-            {
-                foreach (var logical in this.LogicalNames)
-                {
-                    this.TryGetValue(logical, out var osValue);
-                    string display = osValue.DisplayName;
-                    yield return display;
-                }
-            }
-        }
     }
 }

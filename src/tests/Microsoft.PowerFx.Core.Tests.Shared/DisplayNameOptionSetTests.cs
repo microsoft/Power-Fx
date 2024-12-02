@@ -89,14 +89,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(2, names.Length);
             Assert.Equal("option_1", names[0]);
             Assert.Equal("option_2", names[1]);
-
-            // Display names are in same order. 
-            var pairs = names.Zip(type.DisplayNames, (logical, display) => new { logical, display }).OrderBy(x => x.logical).ToArray();
-            Assert.Equal(2, pairs.Length);
-            Assert.Equal("DisplayOption1", pairs[0].display);
-            Assert.Equal("option_1", pairs[0].logical);
-            Assert.Equal("DisplayOption2", pairs[1].display);
-            Assert.Equal("option_2", pairs[1].logical);
         }
 
         [Fact]
