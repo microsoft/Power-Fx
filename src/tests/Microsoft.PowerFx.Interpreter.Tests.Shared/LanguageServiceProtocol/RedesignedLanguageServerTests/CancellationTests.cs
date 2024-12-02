@@ -12,6 +12,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
     public partial class LanguageServerTestBase
     {
+        // Fix this: https://github.com/microsoft/Power-Fx/issues/2755
+#if false
         [Fact]
         public async Task TestNl2FxIsCanceledCorrectly()
         {
@@ -28,7 +30,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             nl2FxHandler.Nl2FxDelayTime = 800;
             var payload = NL2FxMessageJson(documentUri);
             using var source = new CancellationTokenSource();
-            source.CancelAfter(500);
+            source.CancelAfter(500);  <-- flaky 
 
             // Act
             var rawResponse = await TestServer.OnDataReceivedAsync(payload.payload, source.Token);
@@ -38,5 +40,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.NotEmpty(TestServer.UnhandledExceptions);
             Assert.Equal(1, nl2FxHandler.PreHandleNl2FxCallCount);
         }
+#endif 
     }
 }

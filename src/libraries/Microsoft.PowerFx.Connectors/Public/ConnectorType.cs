@@ -76,6 +76,9 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-notification-url
         public bool? NotificationUrl { get; }
 
+        // Supports x-ms-ai-sensitivity
+        public AiSensitivity AiSensitivity { get; }
+
         internal RecordType HiddenRecordType { get; }
 
         // Supports x-ms-dynamic-values or -list locally
@@ -128,6 +131,7 @@ namespace Microsoft.PowerFx.Connectors
             Binary = schema.Format == "binary" || schema.Format == "no_format";
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
             NotificationUrl = openApiParameter?.GetNotificationUrl();
+            AiSensitivity = openApiParameter?.GetAiSensitivity().ToAiSensitivity() ?? AiSensitivity.Unknown;
 
             if (schema != null)
             {
@@ -200,16 +204,11 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType(ISwaggerSchema schema, ConnectorCompatibility compatibility)
             : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(compatibility))
         {
-        }
-
-        internal ConnectorType(JsonElement schema, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(compatibility, sqlRelationships))
-        {
-        }
+        }        
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, compatibility, sqlRelationships))
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, compatibility))
         {
             Name = name;
 
@@ -289,14 +288,6 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private DisplayNameProvider _displayNameProvider;
-
-        internal void SetRelationship(SqlRelationship relationship)
-        {
-            ExternalTables ??= new List<string>();
-            ExternalTables.Add(relationship.ReferencedTable);
-            RelationshipName = relationship.RelationshipName;
-            ForeignKey = relationship.ReferencedColumnName;
-        }
 
         private void AggregateErrors(ConnectorType[] types)
         {

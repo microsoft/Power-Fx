@@ -4830,6 +4830,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>The source to clear.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Retrieves data that spans across multiple tables with relationships.</value>
+    <comment>Description of 'Join' function.</comment>
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>source1</value>
+    <comment>function_parameter - First argument to the Join function - the data source (table / collection) to operate as the left source.</comment>
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>source2</value>
+    <comment>function_parameter - Second argument to the Join function - the data source (table / collection) to operate as the right source.</comment>
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominator</value>
+    <comment>function_parameter - Third argument to the Join function - defines the records matching criteria.</comment>
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    <comment>function_parameter - Fourth argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    <comment>function_parameter - Fifth and on argument to the Join function - the join type between the two tables.</comment>
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>The left table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>The right table or collection.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Join criteria between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>The join type between the two tables or collections.</value>
+    <comment>Description for this parameter</comment>
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>The arguments to rename an existing column in one of the sources.</value>
+    <comment>Description for this parameter</comment>
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>The specified data source cannot be used with this function.</value>
     <comment>Error Message.</comment>
@@ -4860,5 +4904,25 @@
       Error message returned when user uses '=' syntax to define User-defined type.
       Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
     </comment>
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' can not be added/renamed due to colission with another column with same name.</value>
+    <comment>Error message returned when user tries to join two data sources with duplicated columns between them.</comment>
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Expected plain 'JoinType' enum value. Different enums or passing it throught another function is not supported i.e. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    <comment>Error message returned when user tries to give anything different than a plain 'JoinType' enum value as argument.</comment>
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Arguments starting from the 5th position are meant to rename columns and are expected to be 'As' node arguments i.e LeftRecord.Name As NewName.</value>
+    <comment>{Locked='As'}{Locked='LeftRecord.Name As NewName'}</comment>
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>At least one '{0}' column must be declared to compose the join result.</value>
+    <comment>{Locked='RightRecord'}</comment>
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>The '{0}' value is invalid in this context. It should be a reference to either '{1}' or '{2}' scope name.</value>
+    <comment>{Locked='RightRecord'}</comment>
   </data>
 </root>

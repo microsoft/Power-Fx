@@ -369,6 +369,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static bool? GetNotificationUrl(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsNotificationUrl, out IOpenApiExtension openApiExt) && openApiExt is OpenApiBoolean openApiBool ? openApiBool.Value : null;
 
+        internal static string GetAiSensitivity(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsAiSensitivity, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (bool IsPresent, string Value) GetString(this IDictionary<string, IOpenApiAny> apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
         internal static void WhenPresent(this IDictionary<string, IOpenApiAny> apiObj, string propName, Action<string> action)
@@ -390,19 +392,17 @@ namespace Microsoft.PowerFx.Connectors
 
         internal class ConnectorTypeGetterSettings
         {
-            internal readonly ConnectorCompatibility Compatibility;
-            internal readonly IList<SqlRelationship> SqlRelationships;
+            internal readonly ConnectorCompatibility Compatibility;            
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
             internal readonly SymbolTable OptionSets;
 
             private readonly string _tableName;
 
-            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets, IList<SqlRelationship> sqlRelationships = null)
+            internal ConnectorTypeGetterSettings(ConnectorCompatibility connectorCompatibility, string tableName, SymbolTable optionSets)
             {
                 Compatibility = connectorCompatibility;
-                OptionSets = optionSets;
-                SqlRelationships = sqlRelationships;
+                OptionSets = optionSets;                
 
                 _tableName = tableName;
             }
@@ -435,14 +435,14 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, ConnectorCompatibility compatibility)
         {
-            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility, sqlRelationships);
+            return openApiParameter.GetConnectorType(tableName: null, optionSets: null, compatibility);
         }
 
-        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<SqlRelationship> sqlRelationships = null)
+        internal static ConnectorType GetConnectorType(this ISwaggerParameter openApiParameter, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility)
         {
-            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets, sqlRelationships);
+            ConnectorTypeGetterSettings settings = new ConnectorTypeGetterSettings(compatibility, tableName, optionSets);
             ConnectorType connectorType = openApiParameter.GetConnectorType(settings);
 
             return connectorType;
@@ -679,16 +679,6 @@ namespace Microsoft.PowerFx.Connectors
                             //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
                             ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
-                            if (settings.SqlRelationships != null)
-                            {
-                                SqlRelationship relationship = settings.SqlRelationships.FirstOrDefault(sr => sr.ColumnName == propLogicalName);
-
-                                if (relationship != null)
-                                {
-                                    propertyType.SetRelationship(relationship);
-                                }
-                            }
-
                             settings.UnStack();
 
                             if (propertyType.HiddenRecordType != null)
@@ -730,6 +720,11 @@ namespace Microsoft.PowerFx.Connectors
             if (optionSet == null)
             {
                 throw new ArgumentNullException("optionSet");
+            }
+
+            if (symbolTable == null)
+            {
+                return optionSet;
             }
 
             string name = optionSet.EntityName;
@@ -930,6 +925,15 @@ namespace Microsoft.PowerFx.Connectors
                 : Enum.TryParse(visibility, true, out Visibility vis)
                 ? vis
                 : Visibility.Unknown;
+        }
+
+        public static AiSensitivity ToAiSensitivity(this string aiSensitivity)
+        {
+            return string.IsNullOrEmpty(aiSensitivity)
+                ? AiSensitivity.None
+                : Enum.TryParse(aiSensitivity, true, out AiSensitivity ais)
+                ? ais
+                : AiSensitivity.Unknown;
         }
 
         public static MediaKind ToMediaKind(this string mediaKind)

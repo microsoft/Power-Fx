@@ -85,5 +85,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// The string value representing the RecordOf keyword.
         /// </summary>
         public const string RecordOfInvariantName = "RecordOf";
+
+        /// <summary>
+        /// The string value representing the join type literal.
+        /// </summary>
+        public const string JoinTypeEnumString = "JoinType";
     }
 }

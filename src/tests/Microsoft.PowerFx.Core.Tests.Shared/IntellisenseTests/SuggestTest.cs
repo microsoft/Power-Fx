@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -163,7 +164,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@In|]", "ErrorKind")]
+        [InlineData("[@In|]", "ErrorKind", "JoinType")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})")]
@@ -207,6 +208,46 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Suggests multiple scopes for functions that creates multiple scopes.
+        [Theory]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),|", "LeftRecord", "RightRecord")]
+        public void TestSuggestMultipleScopes(string expression, params string[] expectedSuggestions)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Making sure that functions with multiple scopes wont throw an out of range exception.
+        [Theory]
+        [InlineData("Join(Sequence(3), ForAll(Sequence(3,1,2), { Value : ThisRecord.Value, Value2 : ThisRecord.Value * ThisRecord.Value}), LeftRecord.Value = RightRecord.Value, JoinType.Left, RightRecord.Value2 As V2)")]
+        public void MultipleScopesExceptionTest(string expression)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            // Test if at any point in the expression we going to get a out of range exception.
+            for (int i = 1; i < expression.Length; i++)
+            {
+#pragma warning disable CA1845 // Use span-based 'string.Concat'
+                var subExpr = expression.Substring(0, i) + "|";
+#pragma warning restore CA1845 // Use span-based 'string.Concat'
+
+                try
+                {
+                    SuggestStrings(subExpr, config);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+
+            Assert.True(true);
         }
 
         /// <summary>
