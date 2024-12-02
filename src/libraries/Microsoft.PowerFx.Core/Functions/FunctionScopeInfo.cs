@@ -314,13 +314,11 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool GetScopeIdent(TexlNode[] nodes, out DName[] scopeIdents)
         {
-            var ret = false;
             scopeIdents = new DName[2];
 
             if (nodes.Length > 0 && nodes[0] is AsNode leftAsNode)
             {
                 scopeIdents[0] = leftAsNode.Right.Name;
-                ret = true;
             }
             else
             {
@@ -330,14 +328,15 @@ namespace Microsoft.PowerFx.Core.Functions
             if (nodes.Length > 1 && nodes[1] is AsNode rightAsNode)
             {
                 scopeIdents[1] = rightAsNode.Right.Name;
-                ret = true;
             }
             else
             {
                 scopeIdents[1] = RightRecord;
             }
 
-            return ret;
+            // Returning false to indicate that the scope is not a whole scope.
+            // Meaning that the scope is a record type and we are accessing the fields directly.
+            return false;
         }
     }
 }

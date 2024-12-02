@@ -41,6 +41,26 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void GetCapabilityTest()
+        {
+            RecordType rt = new TestRecordType("myTable", RecordType.Empty().Add("logic", FormulaType.String, "display"), null);
+
+            var ok = rt.TryGetCapabilities(out var delegationInfo);
+            Assert.True(ok);
+        }
+
+        [Fact]
+        public void GetCapabilityTestMissing()
+        {
+            RecordType rt = RecordType.Empty();
+
+            var ok = rt.TryGetCapabilities(out var delegationInfo);
+
+            Assert.False(ok);
+            Assert.Null(delegationInfo);
+        }
+
+        [Fact]
         public void DelegationOperatorTest()
         {
             string enums = string.Join(", ", Enum.GetNames(typeof(DelegationOperator)).Select(name => name.ToLowerInvariant()).OrderBy(x => x));
