@@ -89,7 +89,8 @@ namespace Microsoft.PowerFx.Connectors
                 sqlRelationships = GetSqlRelationships(text2);
             }
 
-            string connectorName = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)[1];
+            var parts = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
             ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), sqlRelationships, ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, 
                                                                             out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);

@@ -66,6 +66,21 @@ namespace Microsoft.PowerFx.Types
 
         private readonly IEnumerable<string> _fieldNames = null;
 
+        // For tooling, return back capabilities of the table.
+        // $$$ This only works when 
+        public bool TryGetCapabilities(out TableDelegationInfo delegationInfo)
+        {
+            var ads = _type.AssociatedDataSources.FirstOrDefault();
+            if (ads is DataSourceInfo x)
+            {
+                delegationInfo = x.DelegationInfo;
+                return true;
+            }            
+
+            delegationInfo = null;
+            return false;
+        }
+
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
