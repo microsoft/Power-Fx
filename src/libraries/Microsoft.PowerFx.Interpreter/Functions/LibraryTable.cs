@@ -539,23 +539,24 @@ namespace Microsoft.PowerFx.Functions
 
             var predicate = (LambdaFormulaValue)args[2];
             var joinType = (OptionSetValue)args[3];
-            var leftRenaming = (RecordValue)args[4]; // Built by IR. Arg0 (left) mapping of old column names and new columns name e.f. {OldName:"NewName"}
-            var rightRenaming = (RecordValue)args[5]; // Built by IR. Arg1 (right) mapping of old column names and new columns name e.f. {OldName:"NewName"}
+            var scopeNameResolver = (RecordValue)args[4];
+            var leftRenaming = (RecordValue)args[5]; // Built by IR. Arg0 (left) mapping of old column names and new columns name e.f. {OldName:"NewName"}
+            var rightRenaming = (RecordValue)args[6]; // Built by IR. Arg1 (right) mapping of old column names and new columns name e.f. {OldName:"NewName"}
 
             DValue<RecordValue>[] rows;
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -572,6 +573,7 @@ namespace Microsoft.PowerFx.Functions
             LambdaFormulaValue predicate,
             bool outerLeft,
             bool outerRight,
+            RecordValue scopeNameResolver,
             RecordValue leftRenaming,
             RecordValue rightRenaming)
         {
@@ -588,7 +590,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     runner.CheckCancel();
 
-                    var result = await LazyCheckPredicateAsync(runner, context, leftRow, rightRow, predicate).ConfigureAwait(false);
+                    var result = await LazyCheckPredicateAsync(runner, context, scopeNameResolver, leftRow, rightRow, predicate).ConfigureAwait(false);
 
                     if (result != null)
                     {
@@ -675,13 +677,17 @@ namespace Microsoft.PowerFx.Functions
         private static async Task<DValue<RecordValue>> LazyCheckPredicateAsync(
            EvalVisitor runner,
            EvalVisitorContext context,
+           RecordValue scopeNameResolver,
            DValue<RecordValue> leftRow,
            DValue<RecordValue> rightRow,
            LambdaFormulaValue predicate)
         {
+            var leftScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.LeftRecord.Value)).Value);
+            var rightScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.RightRecord.Value)).Value);
+
             var scopeValue = FormulaValue.NewRecordFromFields(
-                new NamedValue(FunctionJoinScopeInfo.LeftRecord.Value, leftRow.Value), 
-                new NamedValue(FunctionJoinScopeInfo.RightRecord.Value, rightRow.Value));
+                new NamedValue(leftScopeName, leftRow.Value), 
+                new NamedValue(rightScopeName, rightRow.Value));
 
             SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeValue);
 
