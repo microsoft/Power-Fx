@@ -62,7 +62,7 @@ Table({Country:"USA",FruitName:"Grapes",SupId:"AAA111",SupName:"Contoso"},{Count
 
 // Renaming first, with duplicated column names
 >> Join(RenameColumns(t1, Id, SupplierId, Name, SupName), RenameColumns(t2, Fruit, FruitName), LeftRecord.SupplierId = RightRecord.SupplierId, JoinType.Inner, LeftRecord.SupplierId As RowId , RightRecord.RowId As RowId)
-Errors: Error 5-53: 'RightRecord.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
+Errors: Error 207-209: 'RightRecord.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
 
 >> Join(RenameColumns(t1, Id, SupplierId, Name, SupName) As x1, RenameColumns(t2, Fruit, FruitName) As x2, x1.SupplierId = x2.SupplierId, JoinType.Inner, x1.SupplierId As RowId , x2.RowId As RowId)
-Errors: Error 54-56: 'x2.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
+Errors: Error 185-187: 'x2.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
