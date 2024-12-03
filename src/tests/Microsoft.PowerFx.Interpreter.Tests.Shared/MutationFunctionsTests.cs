@@ -9,11 +9,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -502,6 +505,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void UnknownKindInErrorMessage()
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(new UnknownReturnFunction());
+            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.AddVariable("t", FormulaType.Build(TestUtils.DT("*[foo:n]")), mutable: true);
+
+            var engine = new Engine(config);
+
+            var formula = "Collect(t, UnknownReturn())";
+            var result = engine.Check(formula, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.False(result.IsSuccess);
+            Assert.Contains(result.Errors, e => e.MessageKey == "ErrBadType_Type");
+            Assert.DoesNotContain(result.Errors, e => e.Message.Contains("_Min"));
+        }
+
+        [Fact]
         public void AppendErrorTests()
         {
             var config = new PowerFxConfig();
@@ -664,6 +685,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
             {
                 return Task.FromResult(DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound())));
+            }
+        }
+
+        /// <summary>
+        /// A function with an unknown return type used in testing.
+        /// </summary>
+        internal class UnknownReturnFunction : TexlFunction
+        {
+            public UnknownReturnFunction()
+                : base(
+                      DPath.Root,
+                      "UnknownReturn",
+                      "UnknownReturn",
+                      TexlStrings.AboutSet, // just to add something
+                      FunctionCategories.Information,
+                      DType.Unknown,
+                      0, // no lambdas
+                      0, // no args
+                      0)
+            {
+            }
+
+            public override bool IsSelfContained => true;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                yield break;
             }
         }
     }
