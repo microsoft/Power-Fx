@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Join(Table({a:1,b:1}) As t1,Table({a:1,c:2,d:2}) As t2,|", "t1", "t2")]
         [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.|", "a", "b")]
         [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.|", "a", "c", "d")]
-        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a,|", "a", "c", "d")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a,|", "JoinType.Full", "JoinType.Inner", "JoinType.Left", "JoinType.Right")]
         [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,|", "LeftRecord", "RightRecord")]
         [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,LeftRecord.|", "a", "b")]
         [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,RightRecord.|", "a", "c", "d")]

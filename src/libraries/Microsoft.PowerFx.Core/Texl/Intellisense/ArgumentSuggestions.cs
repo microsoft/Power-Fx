@@ -39,7 +39,8 @@ namespace Microsoft.PowerFx.Intellisense
                 { typeof(SplitFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(StartsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(TextFunction), TextSuggestions },
-                { typeof(ValueFunction), LanguageCodeSuggestion }
+                { typeof(ValueFunction), LanguageCodeSuggestion },
+                { typeof(JoinFunction), JoinSuggestion },
             }, isThreadSafe: true);
 
         public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(IntellisenseData.IntellisenseData intellisenseData, TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
@@ -52,6 +53,12 @@ namespace Microsoft.PowerFx.Intellisense
             if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.GetType(), out var suggestor))
             {
                 return suggestor(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            }
+
+            // !!! This block will not be necessary once we move Join to Core
+            if (function is JoinFunction joinFunction)
+            {
+                return JoinSuggestion(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
             }
 
             requiresSuggestionEscaping = false;
@@ -127,6 +134,29 @@ namespace Microsoft.PowerFx.Intellisense
                 requiresSuggestionEscaping = false;
                 return GetLanguageCodeSuggestions();
             }
+        }
+
+        private static IEnumerable<KeyValuePair<string, DType>> JoinSuggestion(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
+        {
+            Contracts.Assert(scopeType.IsValid);
+            Contracts.Assert(argumentIndex >= 0);
+
+            requiresSuggestionEscaping = false;
+            tryGetEnumSymbol(LanguageConstants.JoinTypeEnumString, out var enumInfo);
+
+            if (argumentIndex == 3)
+            {
+                var retVal = new List<KeyValuePair<string, DType>>();
+
+                foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
+                {
+                    retVal.Add(new KeyValuePair<string, DType>(enumInfo.EntityName.Value + TexlLexer.PunctuatorDot + name.Name.Value, name.Type));
+                }
+
+                return retVal;
+            }
+            
+            return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
         }
 
         /// <summary>

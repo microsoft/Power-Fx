@@ -153,6 +153,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index == 2 || index > 3;
         }
 
+        public override bool HasSuggestionsForParam(int argumentIndex)
+        {
+            return argumentIndex == 3;
+        }
+
         public override IEnumerable<string> GetRequiredEnumNames()
         {
             return new List<string>() { BuiltInEnums.JoinTypeEnum.EntityName.Value };
