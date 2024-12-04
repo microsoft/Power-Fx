@@ -50,15 +50,9 @@ namespace Microsoft.PowerFx.Intellisense
                 return NamedTypeSuggestions(intellisenseData, function, argumentIndex, out requiresSuggestionEscaping);
             }
 
-            if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.GetType(), out var suggestor))
+            if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.DeclarationType, out var suggestor))
             {
                 return suggestor(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
-            }
-
-            // !!! This block will not be necessary once we move Join to Core
-            if (function is JoinFunction joinFunction)
-            {
-                return JoinSuggestion(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
             }
 
             requiresSuggestionEscaping = false;
