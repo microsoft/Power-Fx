@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl
 {
@@ -23,6 +24,11 @@ namespace Microsoft.PowerFx.Core.Texl
             "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm",
             "Collect", "Clear", "Patch", "Remove", "ClearCollect", "Set"
+        };
+
+        internal static readonly IReadOnlyCollection<string> TypeHelperFunctions = new HashSet<string>()
+        {
+            LanguageConstants.RecordOfInvariantName,
         };
 
         // Functions in this list are shared and may show up in other hosts by default.
@@ -277,7 +283,10 @@ namespace Microsoft.PowerFx.Core.Texl
 
         public static bool IsKnownPublicFunction(string functionName)
         {
-            if (_library.AnyWithName(functionName) || OtherKnownFunctions.Contains(functionName) || _featureGateFunctions.AnyWithName(functionName))
+            if (_library.AnyWithName(functionName) || 
+                OtherKnownFunctions.Contains(functionName) || 
+                _featureGateFunctions.AnyWithName(functionName) ||
+                TypeHelperFunctions.Contains(functionName))
             {
                 return true;
             }
