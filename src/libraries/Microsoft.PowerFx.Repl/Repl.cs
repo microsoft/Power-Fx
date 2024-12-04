@@ -508,26 +508,7 @@ namespace Microsoft.PowerFx
                 definitionsCheckResult.SetText(expression, this.ParserOptions)
                     .ApplyParseErrors();
 
-                if (this.AllowUserDefinedFunctions && definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDF)
-                {
-                    var defCheckResult = this.Engine.AddUserDefinedFunction(expression, this.ParserOptions.Culture, extraSymbolTable);
-
-                    if (!defCheckResult.IsSuccess)
-                    {
-                        foreach (var error in defCheckResult.Errors)
-                        {
-                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                            var msg = error.ToString();
-
-                            await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
-                                .ConfigureAwait(false);
-                        }
-                    }
-
-                    return new ReplResult();
-                }
-
-                if (definitionsCheckResult.IsSuccess && definitionsCheckResult.ContainsUDT)
+                if (definitionsCheckResult.IsSuccess)
                 {
                     try
                     {
