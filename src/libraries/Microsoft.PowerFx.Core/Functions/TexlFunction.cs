@@ -242,6 +242,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
 
+        // Indicates the base type of the function. The base type can differ if the function extends multiple base classes i.e. Join function.
+        public virtual Type DeclarationType => this.GetType();
+
         /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.
         /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
