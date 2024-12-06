@@ -16,11 +16,15 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ICdpTableResolver TableResolver { get; }
 
+        private string[] _primaryKeyNames;
+
         internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
             : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
+
+            _primaryKeyNames = delegationInfo.PrimaryKeyNames;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
@@ -97,6 +101,8 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override string TableSymbolName => ConnectorType.Name;
+
+        public override string[] PrimaryKeyNames => _primaryKeyNames;
 
         public override IEnumerable<string> FieldNames => ConnectorType.Fields.Select(field => field.Name);
     }

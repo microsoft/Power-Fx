@@ -52,6 +52,10 @@ namespace Microsoft.PowerFx.Core.Entities
         // Dataset name
         public string DatasetName { get; init; }
 
+        // Supports primary key names (multiple when composed key)
+        // This array is ordered
+        public string[] PrimaryKeyNames { get; init; }
+
         // Defines columns with relationships
         // Key = field logical name, Value = foreign table logical name
         internal Dictionary<string, string> ColumnsWithRelationships { get; init; }
