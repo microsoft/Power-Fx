@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         // Supports primary key names (multiple when composed key)
         // This array is ordered
-        public string[] PrimaryKeyNames { get; init; }
+        public IEnumerable<string> PrimaryKeyNames { get; init; }
 
         // Defines columns with relationships
         // Key = field logical name, Value = foreign table logical name

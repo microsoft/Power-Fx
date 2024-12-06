@@ -205,5 +205,10 @@ namespace Microsoft.PowerFx.Types
             primaryKeyFieldName = null;
             return false;
         }
+
+        // List of fields names that compose the primary key
+        // There could be multiple entries if we have a composed key
+        // This set is ordered
+        public virtual IEnumerable<string> PrimaryKeyNames => Enumerable.Empty<string>();
     }
 }

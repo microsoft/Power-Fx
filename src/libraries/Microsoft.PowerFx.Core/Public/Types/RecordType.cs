@@ -65,10 +65,6 @@ namespace Microsoft.PowerFx.Types
 
         public override IEnumerable<string> FieldNames => _fieldNames;
 
-        // List of fields names that compose the primary key
-        // This array is ordered and contains logical names
-        public virtual string[] PrimaryKeyNames => Array.Empty<string>();
-
         private readonly IEnumerable<string> _fieldNames = null;
 
         /// <summary>
