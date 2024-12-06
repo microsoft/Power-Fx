@@ -246,7 +246,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(b);
             DecimalType productModelId = Assert.IsType<DecimalType>(productModelID);
-            Assert.False(productModelId is null);            
+            Assert.False(productModelId is null);
+
+            Assert.Equal("ProductID", string.Join("|", sqlTable.RecordType.PrimaryKeyNames));
         }
 
         [Fact]
@@ -292,6 +294,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue sv = Assert.IsType<StringValue>(result);
             Assert.Equal("Holiday", sv.Value);
+
+            // Not defined for SAP
+            Assert.Equal(string.Empty, string.Join("|", sapTableValue.RecordType.PrimaryKeyNames));
         }
 
         [Fact]
@@ -461,6 +466,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
+
+            Assert.Equal("ID", string.Join("|", spTable.RecordType.PrimaryKeyNames));
         }
 
         [Fact]
@@ -778,6 +785,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+
+            Assert.Equal("Id", string.Join("|", sfTable.RecordType.PrimaryKeyNames));
+            Assert.Equal("Id", string.Join("|", userTable.PrimaryKeyNames));
         }
 
         [Fact]
@@ -977,6 +987,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.NotNull(connectorTable.OptionSets);
             Assert.Equal("priority (tickets), status (tickets), type (tickets)", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
+
+            Assert.Equal("id", string.Join("|", zdTable.RecordType.PrimaryKeyNames));
         }
     }
 
