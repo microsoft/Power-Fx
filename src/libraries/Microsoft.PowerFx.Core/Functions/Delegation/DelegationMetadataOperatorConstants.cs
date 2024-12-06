@@ -52,6 +52,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
         public const string Distinct = "distinct";
+        public const string Join = "join";
     }
 
     public enum DelegationOperator
@@ -96,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         Top,
         Astype,
         Arraylookup,
-        Distinct
+        Distinct,
+        Join
     }
 }
