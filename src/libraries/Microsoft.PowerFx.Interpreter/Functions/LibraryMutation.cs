@@ -402,4 +402,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return await new ClearCollectImpl().InvokeAsync(irContext, args, cancellationToken).ConfigureAwait(false);
         }
     }
+
+    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
+    internal class RemoveImpl : RemoveFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await MutationUtils.RemoveCore(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // Remove(collection:*[], source:*[], ["All"])
+    internal class RemoveAllImpl : RemoveAllFunction, IAsyncTexlFunction3
+    {
+        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await MutationUtils.RemoveCore(irContext, args, cancellationToken).ConfigureAwait(false);
+        }
+    }
 }
