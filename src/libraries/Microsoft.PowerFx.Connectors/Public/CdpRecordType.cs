@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading; 
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Types;
 
@@ -16,11 +16,15 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ICdpTableResolver TableResolver { get; }
 
+        private readonly IEnumerable<string> _primaryKeyNames;
+
         internal CdpRecordType(ConnectorType connectorType, ICdpTableResolver tableResolver, TableDelegationInfo delegationInfo)
             : base(connectorType.DisplayNameProvider, delegationInfo)
         {
             ConnectorType = connectorType;
             TableResolver = tableResolver;
+
+            _primaryKeyNames = delegationInfo.PrimaryKeyNames;
         }
 
         public bool TryGetFieldExternalTableName(string fieldName, out string tableName, out string foreignKey)
@@ -97,6 +101,13 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public override string TableSymbolName => ConnectorType.Name;
+
+        [Obsolete]
+        public override bool TryGetPrimaryKeyFieldName(out IEnumerable<string> primaryKeyNames)
+        {
+            primaryKeyNames = _primaryKeyNames;
+            return primaryKeyNames != null && primaryKeyNames.Any();
+        }
 
         public override IEnumerable<string> FieldNames => ConnectorType.Fields.Select(field => field.Name);
     }
