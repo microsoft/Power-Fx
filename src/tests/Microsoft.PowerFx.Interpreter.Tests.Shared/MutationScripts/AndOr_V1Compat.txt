@@ -1,4 +1,4 @@
-﻿#SETUP: PowerFxV1CompatibilityRules
+﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums
 
 // Case to test how shortcut verification work along with behavior functions
 
@@ -98,7 +98,7 @@ true
 Table({Value:false},{Value:true})
 
 // replaced with if from _V1CompatDisabled since short circuiting not supported with Void 
->> If( !true, Remove(t1, First(t1), "All")); t1 // !true || operator
+>> If( !true, Remove(t1, First(t1), RemoveFlags.All)); t1 // !true || operator
 Table({Value:false},{Value:true})
 
 >> -3;t1
@@ -126,7 +126,7 @@ true
 Table({Value:true},{Value:true},{Value:true})
 
 // replaced with if from _V1CompatDisabled since short circuiting not supported with Void 
->> If( !false, Remove(t1, First(t1), "All")); t1  // || Operator
+>> If( !false, Remove(t1, First(t1), RemoveFlags.All)); t1  // || Operator
 Table()
 
 >> 3;t1
@@ -152,5 +152,5 @@ true
 Table({Value:true},{Value:true},{Value:true})
 
 // replaced with if from _V1CompatDisabled since short circuiting not supported with Void 
->> If( !false, Remove(t1, First(t1), "All")); t1   // Or Function
+>> If( !false, Remove(t1, First(t1), RemoveFlags.All)); t1   // Or Function
 Table()
