@@ -4556,6 +4556,10 @@
     <value>Η κυριολεκτική δήλωση τύπου δεν είναι έγκυρη. Η παράσταση '{0}' δεν μπορεί να χρησιμοποιηθεί σε έναν ορισμό τύπου.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Μη υποστηριζόμενη χρήση: οι λεκτικές σταθερές τύπου μπορούν να χρησιμοποιηθούν μόνο σε ορίσματα τύπου και ορισμούς τύπων.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Η προέλευση για απαλοιφή.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Ανακτά δεδομένα που εκτείνονται σε πολλούς πίνακες με σχέσεις.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>προέλευση 1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>προέλευση 2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>παρονομαστής</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Ο αριστερός πίνακας ή συλλογή.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Ο δεξιός πίνακας ή συλλογή.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Κριτήρια σύνδεσης μεταξύ των δύο πινάκων ή συλλογών.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Ο τύπος σύνδεσης μεταξύ των δύο πινάκων ή συλλογών.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Τα ορίσματα για μετονομασία μιας υπάρχουσας στήλης σε μία από τις προελεύσεις.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Η καθορισμένη προέλευση δεδομένων δεν μπορεί να χρησιμοποιηθεί με αυτήν τη συνάρτηση.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Εσφαλμένη σύνταξη: Το '=' δεν μπορεί να χρησιμοποιηθεί για τη δήλωση τύπων καθορισμένων από τον χρήστη. Χρησιμοποιήστε το ":=" αντ' αυτού.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Το "{0}" δεν μπορεί να προστεθεί/μετονομαστεί λόγω διένεξης με άλλη στήλη με το ίδιο όνομα.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Αναμενόμενη απλή τιμή απαρίθμησης 'JoinType'. Διαφορετικά απαριθμήσεις ή διέλευση από μια άλλη συνάρτηση δεν υποστηρίζεται, π.χ. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Τα ορίσματα που ξεκινούν από την 5η θέση προορίζονται για μετονομασία στηλών και αναμένεται να είναι ορίσματα κόμβου "As" π.χ. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Τουλάχιστον μία στήλη '{0}' πρέπει να έχει δηλωθεί, για να συνθέσει το αποτέλεσμα σύνδεσης.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Η τιμή '{0}' δεν είναι έγκυρη σε αυτό το περιβάλλον. Θα πρέπει να είναι μια αναφορά στο όνομα πεδίου είτε '{1}' είτε '{2}'.</value>
     
   </data>
 </root>

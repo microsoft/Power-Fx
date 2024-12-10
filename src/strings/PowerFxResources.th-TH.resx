@@ -4556,6 +4556,10 @@
     <value>พิมพ์การประกาศตามสัญพจน์ไม่ถูกต้อง ไม่สามารถใช้นิพจน์ '{0}' ในข้อกำหนดชนิดได้</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>การใช้งานที่ไม่ได้รับการสนับสนุน: สามารถใช้สัญพจน์ชนิดได้เฉพาะในอาร์กิวเมนต์ชนิดและการกำหนดชนิดเท่านั้น</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>การกำหนดชนิด {0} ไม่ถูกต้อง</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>แหล่งที่มาที่จะล้าง</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>ดึงข้อมูลที่ครอบคลุมหลายตารางที่มีความสัมพันธ์กัน</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>ที่มา1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>ที่มา2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>ตัวหาร</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>ตารางหรือคอลเลกชันด้านซ้าย</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>ตารางหรือคอลเลกชันด้านขวา</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>รวมเกณฑ์ระหว่างตารางหรือคอลเลกชันทั้งสอง</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>ชนิดการรวมระหว่างตารางหรือคอลเลกชันทั้งสอง</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>อาร์กิวเมนต์เพื่อเปลี่ยนชื่อคอลัมน์ที่มีอยู่ในแหล่งข้อมูลใดแหล่งหนึ่ง</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>แหล่งข้อมูลที่ระบุไม่สามารถใช้กับฟังก์ชันนี้ได้</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>รูปแบบไม่ถูกต้อง: ไม่สามารถใช้ '=' เพื่อประกาศชนิดที่ผู้ใช้กำหนดได้ ให้ใช้ ':=' แทน</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>ไม่สามารถเพิ่ม/เปลี่ยนชื่อ '{0}' ได้ เนื่องจากขัดแย้งกับคอลัมน์อื่นที่มีชื่อเดียวกัน</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>คาดว่าค่า enum 'JoinType' แบบธรรมดา ไม่รองรับค่า enum ที่แตกต่างกันหรือการส่งผ่านฟังก์ชันอื่น เช่น Join(..., If(true, JoinType.Inner, JoinType.Full))</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>อาร์กิวเมนต์ที่เริ่มต้นจากตำแหน่งที่ 5 มีไว้เพื่อเปลี่ยนชื่อคอลัมน์และคาดว่าจะเป็นอาร์กิวเมนต์โหนด 'As' นั่นคือ LeftRecord.Name As NewName</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>ต้องประกาศคอลัมน์ '{0}' อย่างน้อยหนึ่งคอลัมน์เพื่อสร้างผลลัพธ์การรวม</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>ค่า '{0}' ไม่ถูกต้องในบริบทนี้ ควรเป็นการอ้างอิงถึงชื่อขอบเขต '{1}' หรือ '{2}'</value>
     
   </data>
 </root>

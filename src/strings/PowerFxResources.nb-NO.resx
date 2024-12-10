@@ -4556,6 +4556,10 @@
     <value>Type bokstavelig deklarasjon er ugyldig. Uttrykket {0} kan ikke brukes i en typedefinisjon.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Bruk som ikke støttes: typelitteraler kan bare brukes i typeargumenter og typedefinisjoner.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definisjonen av typen {0} er ugyldig.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Kilden som skal fjernes.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Henter data som strekker seg over flere tabeller med relasjoner.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>kilde1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>kilde2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nevner</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Venstre tabell eller samling.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Høyre tabell eller samling.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Sammenføyingskriterier mellom de to tabellene eller samlingene.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Sammenføyingstypen mellom de to tabellene eller samlingene.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumentene for å gi nytt navn til en eksisterende kolonne i en av kildene.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Den angitte datakilden kan ikke brukes med denne funksjonen.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Feil syntaks: Kan ikke bruke «=» til å erklære brukerdefinerte typer. Bruk i stedet «:=».</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>{0} kan ikke legges til / få nytt navn på grunn av konflikt med en annen kolonne med samme navn.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Forventet vanlig JoinType-opplistingsverdi. Ulike opplistinger eller å sende den gjennom en annen funksjon støttes ikke, dvs. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenter som starter fra femte plassering, er ment å gi nytt navn til kolonner og forventes å være As-nodeargumenter, dvs. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Du må deklarere minst én {0}-kolonne for å skrive sammenføyningsresultatet.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Verdien {0} er ugyldig i denne konteksten. Den skal være en referanse til omfangsnavnet {1} eller {2}.</value>
     
   </data>
 </root>

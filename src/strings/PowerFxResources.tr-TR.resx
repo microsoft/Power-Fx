@@ -4556,6 +4556,10 @@
     <value>Değişmez beyanname türü geçersiz. '{0}' ifadesi, bir tür tanımında kullanılamaz.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Desteklenmeyen kullanım: Tür değişmezleri yalnızca tür bağımsız değişkenleri ve tür tanımlarında kullanılabilir.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Tanım türü {0} geçersiz.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Temizlenecek kaynak.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>İlişkilere sahip birden fazla tablo geneline yayılmış verileri alır.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>kaynak1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>kaynak2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>payda</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Soldaki tablo veya koleksiyon.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Sağdaki tablo veya koleksiyon.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>İki tablo veya koleksiyon arasındaki birleştirme ölçütleri.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>İki tablo veya koleksiyon arasındaki birleştirme türü.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Kaynaklardan birindeki mevcut bir sütunun adını değiştirmeye yönelik bağımsız değişkenler.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Belirtilen veri kaynağı bu işlevle kullanılamıyor.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Yanlış söz dizimi: '=' kullanıcı tarafından tanımlanan türleri bildirmek için kullanılamaz. Bunun yerine ':=' kullanın.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' öğesi, aynı ada sahip başka bir sütun ile çakışma olması nedeniyle eklenemez/yeniden adlandırılamaz.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Düz 'JoinType' sabit liste değeri bekleniyordu. Farklı sabit liste değerleri veya bunların başka bir işlevden geçirilmesi desteklenmez, ör. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5. konumdan başlayan bağımsız değişkenler, sütunları yeniden adlandırmayı yöneliktir ve "As" düğüm bağımsız değişkenleri olmaları beklenir; ör. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Birleştirme sonucunun oluşturulabilmesi için en az bir '{0}' sütunu bildirilmelidir.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>'{0}' değeri bu bağlamda geçersizdir. Değer, '{1}' veya '{2}' kapsam adına başvuru olmalıdır.</value>
     
   </data>
 </root>

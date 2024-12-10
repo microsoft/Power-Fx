@@ -4556,6 +4556,10 @@
     <value>Perisytiharan secara literal jenis tidak sah. Ungkapan '{0}' tidak dapat digunakan dalam takrif jenis.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan tidak disokong: literal jenis hanya boleh digunakan dalam argumen jenis dan definisi jenis.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Takrif jenis {0} tidak sah.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Sumber untuk dikosongkan.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Mengambil data yang menjangkau berbilang jadual dengan perhubungan.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>sumber1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>sumber2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>penyebut</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Jadual atau koleksi kiri.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Jadual atau koleksi kanan.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Sertai kriteria antara dua jadual atau koleksi.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Jenis cantuman antara dua jadual atau koleksi.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumen untuk menamakan semula lajur sedia ada dalam salah satu sumber.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Sumber data yang ditentukan tidak boleh digunakan dengan fungsi ini.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaks tidak betul: '=' tidak boleh digunakan untuk mengisytiharkan jenis takrifan pengguna. Gunakan ':=' sebaliknya.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' tidak boleh ditambah/dinamakan semula disebabkan oleh percanggahan dengan lajur lain yang mempunyai nama yang sama.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Nilai enum 'JoinType' yang biasa dijangkakan. Enum yang berbeza atau dihantar melalui fungsi lain tidak disokong iaitu Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumen dari kedudukan ke-5 bertujuan untuk menamakan semula lajur dan dijangkakan menjadi argumen nod 'As', iaitu LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Sekurang-kurangnya satu lajur '{0}' mesti diisytiharkan untuk mengarang hasil pencantuman.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Nilai '{0}' tidak sah dalam konteks ini. Ia seharusnya menjadi rujukan kepada nama skop sama ada '{1}' atau '{2}'.</value>
     
   </data>
 </root>

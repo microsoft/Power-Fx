@@ -4556,6 +4556,10 @@
     <value>Idatzi duzun baieztapen literalak ez du balio. "{0}" adierazpena ezin da erabili motako definizio batean.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Onartzen ez den erabilera: motaren adierazpen literalak mota-argumentuetan eta mota-definizioetan soilik erabil daitezke.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>{0} motaren definizioa baliogabea da.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Ezabatuko den iturburua.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Harremanak dituzten hainbat taulatan dauden datuak eskuratzen ditu.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>iturburua1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>iturburua2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>izendatzailea</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Ezkerreko taula edo bilduma.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Eskuineko taula edo bilduma.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Bi taula edo bilduma konbinatzeko irizpideak.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Bi taula edo bildumen arteko konbinazio mota.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Iturburuetako batean dagoen zutabe bati izena aldatzeko argumentuak.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Ezin da erabili zehaztutako datu-iturburua funtzio honekin.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaxi okerra: "=" ezin da erabili erabiltzaileak definitutako motak deklaratzeko. Horren ordez, erabili ":=".</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" ezin da gehitu/berrizendatu, izen bereko beste zutabe batekin gatazkan dagoelako.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>"JoinType" zenbakitze-balio arrunta espero zen. Ez da onargarria zenbakitze desberdinak erabioltzea edo beste funtzio batetik pasatzea; hau da, Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5. posiziotik hasten diren argumentuek zutabeen izena aldatzeko pentsatuta daude, eta "As" nodoaren argumentuak izatea espero da; hau da, LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Gutxienez "{0}" zutabe bat aitortu behar da konbinazio-emaitza osatzeko.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>"{0}" balioa ezin da erabili testuinguru honetan. "{1}" edo "{2}" esparru-izenari egin behar dio erreferentzia.</value>
     
   </data>
 </root>
