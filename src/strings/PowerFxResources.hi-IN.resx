@@ -4556,6 +4556,10 @@
     <value>प्रकार की लिटरल घोषणा अमान्य है. अभिव्यक्ति '{0}' का इस्तेमाल किसी प्रकार की परिभाषा में नहीं किया जा सकता है.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>असमर्थित उपयोग: प्रकार अक्षर का उपयोग केवल प्रकार तर्कों और प्रकार परिभाषाओं में किया जा सकता है.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>प्रकार {0} की परिभाषा अमान्य है.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>स्पष्ट करने के लिए स्रोत.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>संबंधों के साथ एकाधिक तालिकाओं में फैले डेटा को पुनर्प्राप्त करता है.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>स्रोत1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>स्रोत2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>विभाजक</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>बायीं ओर की तालिका या संग्रह.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>दाएं ओर की तालिका या संग्रह.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>दो तालिकाओं या संग्रहों के बीच मानदंड जोड़ें.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>दो तालिकाओं या संग्रहों के बीच जुड़ने का प्रकार.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>किसी एक स्रोत में विद्यमान कॉलम का नाम बदलने के लिए तर्क.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>निर्दिष्ट डेटा स्रोत का उपयोग इस फ़ंक्शन के साथ नहीं किया जा सकता.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>गलत सिंटैक्स: '=' का उपयोगकर्ता द्वारा परिभाषित प्रकार को घोषित करने के लिए नहीं किया जा सकता. इसके बजाय ':=' का उपयोग करें.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' को समान नाम वाले किसी अन्य कॉलम से टकराव के कारण जोड़ा/हटाया नहीं जा सकता.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>अपेक्षित सादा 'JoinType' enum मान. विभिन्न enums या इसे किसी अन्य फ़ंक्शन के माध्यम से पास करना समर्थित नहीं है यानी Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5वें स्थान से शुरू होने वाले तर्क स्तंभों का नाम बदलने के लिए हैं और उनसे 'As' नोड तर्क होने की अपेक्षा की जाती है, अर्थात LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>संयुक्त परिणाम बनाने के लिए कम से कम एक '{0}' कॉलम घोषित किया जाना चाहिए.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>इस संदर्भ में '{0}' मान अमान्य है. यह या तो '{1}' या '{2}' कार्यक्षेत्र नाम का संदर्भ होना चाहिए.</value>
     
   </data>
 </root>

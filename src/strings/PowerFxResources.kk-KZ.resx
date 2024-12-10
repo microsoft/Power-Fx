@@ -4556,6 +4556,10 @@
     <value>Түрді литералды етіп жариялау жарамсыз. "{0}" өрнегі түр анықтамасында пайдаланылмауы керек.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Қолдау көрсетілмейтін пайдалану: литералдар түрін тек аргументтер түрі мен анықтамалар түрінде пайдалануға болады.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>{0} түрін анықтау жарамсыз.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Тазаланатын дереккөз.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Қатынастары бар бірнеше кестеге таралатын деректерді шығарады.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>1-көз</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>2-көз</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>бөлгіш</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Сол жақтағы кесте немесе жинақ.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Оң жақтағы кесте немесе жинақ.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Екі кесте немесе жинақтар арасындағы шартты біріктіру.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Екі кесте немесе жинақтар арасындағы біріктіру түрі.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Дереккөздердің біріндегі бұрыннан бар бағанның атын өзгертуге арналған аргументтер.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Көрсетілген деректер көзі бұл функциямен бірге пайдаланылмайды.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Дұрыс емес синтаксис: "=" пайдаланушы анықтайтын түрлерді жариялау үшін пайдаланылмайды. Оның орнына ":=" пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" атауы бірдей басқа бағанмен соқтығысуына байланысты қосу/атын өзгерту мүмкін емес.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Қарапайым "JoinType" сандық мәні күтілуде. Әртүрлі сандарға немесе оны басқа функция, яғни Join(..., If(true, JoinType.Inner, JoinType.Full)) арқылы өткізуге қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5-ші позициядан басталатын аргументтер бағандардың атын өзгертуге арналған және "As" түйін аргументтері, яғни LeftRecord.Name As NewName болады деп күтіледі.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Біріктіру нәтижесін жасау үшін кемінде бір "{0}" бағаны жариялануы керек.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>"{0}" мәні бұл мазмұнда жарамсыз. Ол "{1}" немесе "{2}" ауқым атауына сілтеме болуы керек.</value>
     
   </data>
 </root>

@@ -4556,6 +4556,10 @@
     <value>Netinkamas tipo literalas. Tipo apraše negalima naudoti išraiškos „{0}“.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Nepalaikomas naudojimas: tipo literalus galima naudoti tik tipo argumentuose ir tipo apibrėžimuose.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Netinkamas tipo {0} apibrėžimas.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Šaltinis, kurį reikia išvalyti.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Nuskaito duomenis, kurie naudojami keliose lentelėse su ryšiais.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>1šaltinis</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>2šaltinis</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>vardiklis</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Kairioji lentelė arba rinkinys.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Kairioji lentelė arba rinkinys.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Sujunkite dviejų lentelių arba rinkinių kriterijus.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Dviejų lentelių arba rinkinių kriterijų sujungimo tipas.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Esamo stulpelio pervardijimo viename iš šaltinių argumentai.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Nurodyto duomenų šaltinio negalima naudoti su šia funkcija.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Neteisinga sintaksė: „=“ negalima naudoti vartotojo apibrėžtiems tipams deklaruoti. Naudokite „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>„{0}“ negalima įtraukti / pervardyti dėl konflikto su kitu stulpeliu tokiu pačiu pavadinimu.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Tikimasis paprastos „JoinType“ išvardijimo reikšmės. Skirtingi išvardijimai arba jų perdavimas per kitą funkciją nepalaikomas, t.y. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumentai, prasidedantys nuo 5-osios pozicijos, yra skirti pervardyti stulpeliams ir tikimasi, kad jie bus mazgo „As“ argumentai, t. y LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Norint sudaryti sujungimo rezultatą, būtina deklaruoti bent vieną stulpelį „{0}“.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Šiame kontekste reikšmė „{0}“ yra netinkama. Ji turėtų nurodyti į „{1}“ arba „{2}“ aprėpties pavadinimą.</value>
     
   </data>
 </root>
