@@ -1,18 +1,59 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,StronglyTypedBuiltinEnums
+﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums
 
-// Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
+>> Set(t1, Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)}))
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
 
->> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}, RemoveFlags.All)
+>> Set(t2, t1)
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> Remove(t1, First(t1))
 If(true, {test:1}, "Void value (result of the expression can't be used).")
 
->> Collect(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+>> 0;t1
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> 0;Set(t1, t2)
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> Remove(t1, First(t1), RemoveFlags.All)
 If(true, {test:1}, "Void value (result of the expression can't be used).")
 
->> Collect(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  If(true, Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false}))
-If(true, {test:1}, "Void value (result of the expression can't be used).")
+>> 1;t1
+Table({a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
 
-// Remove propagates error.
->> Remove(t1, {Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+>> 1;Set(t1, t2)
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> Remove(t1, {a:true})
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-19: Missing column. Your formula is missing a column 'b' with a type of 'Text'.
+
+>> 2;t1
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> Remove(t1, {a:true,b:"does not exist",c:Now()})
 Error({Kind:ErrorKind.NotFound})
+
+>> Remove(t1, {a:true,b:"does not exist",c:Now()}, RemoveFlags.All)
+Error({Kind:ErrorKind.NotFound})
+
+>> Remove(t1, {a:true,b:"does not exist",c:Now()}, {a:false,b:"does not exist",c:Now()}, RemoveFlags.All)
+Error(Table({Kind:ErrorKind.NotFound},{Kind:ErrorKind.NotFound}))
+
+>> 3;t1
+Table({a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:true,b:"hi",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hello",c:DateTime(2024,1,1,0,0,0,0)},{a:false,b:"hi",c:DateTime(2024,1,1,0,0,0,0)})
+
+>> Set(t3, Table({a:{aa:{aaa:true,bbb:true}}}))
+Table({a:{aa:{aaa:true,bbb:true}}})
+
+>> Remove(t3, {a:{aa:{aaa:true}}})
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-30: Missing column. Your formula is missing a column 'a.aa.bbb' with a type of 'Boolean'.|Error 11-30: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-30: Missing column. Your formula is missing a column 'aa.bbb' with a type of 'Boolean'.
+
+>> Remove(t3, {a:{aa:{aaa:true,bbb:false}}})
+Error({Kind:ErrorKind.NotFound})
+
+>> Remove(t3, {a:{aa:{aaa:true,bbb:true}}})
+If(true, {test:1}, "Void value (result of the expression can't be used).")
+
+>> t3
+Table()
+
