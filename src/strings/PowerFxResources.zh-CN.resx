@@ -4556,6 +4556,10 @@
     <value>类型文字声明无效。表达式 '{0}' 不能用于类型定义。</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>不支持的用法: 类型文字只能在类型参数和类型定义中使用。</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>类型 {0} 的定义无效。</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>要清除的源。</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>检索跨越多个具有关系的表的数据。</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>源1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>源2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>分母</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>左边的表或集合。</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>右边的表或集合。</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>两个表或集合之间的联接标准。</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>两个表或集合之间的联接类型。</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>用于重命名一个数据源中的现有列的参数。</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>指定的数据源不能与此函数一起使用。</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>语法不正确:“=”不能用于声明用户定义的类型。请改用“:=”。</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>由于与另一个同名列冲突，无法添加/重命名 '{0}'。</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>希望得到简单的“JoinType”枚举值。不支持不同的枚举或通过其他函数传递，例如 Join(..., If(true, JoinType.Inner, JoinType.Full))。</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>从第 5 位开始的参数用于重新命名列，并应是“As”节点参数，即 LeftRecord.Name As NewName。</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>必须至少声明一个 '{0}' 列才能组成联接结果。</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>'{0}' 值在此情况下无效。它应该是对 '{1}' 或 '{2}' 范围名称的引用。</value>
     
   </data>
 </root>

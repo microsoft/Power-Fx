@@ -4556,6 +4556,10 @@
     <value>Tüübi sõnasõnaline deklaratsioon ei sobi. Avaldist {0} ei saa tüübimääratluses kasutada.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Toetamata kasutusviis: tüübi literaale saab kasutada üksnes tüübi argumentides ja tüübi definitsioonides.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Tüübi {0} määratlus ei sobi.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Eemaldatav allikas.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Toob andmed, mis hõlmavad mitut seoseid sisaldavat tabelit.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>allikas1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>allikas2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nimetaja</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Vasakpoolne tabel või kogum.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Parempoolne tabel või kogum.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kahe tabeli või kogumi vahelised liitmiskriteeriumid.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Kahe tabeli või kogumi vaheline liitmise tüüp.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumendid olemasoleva veeru ümbernimetamiseks ühes allikas.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Määratud andmeallikat ei saa selle funktsiooniga kasutada.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sobimatut süntaksit '=' ei saa kasutada kasutaja määratletud tüüpide kinnitamiseks. Kasutage selle asemel süntaksit ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Veergu „{0}“ ei saa lisada / ümber nimetada teise samanimelise veeruga kokkulangevuse tõttu.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Eeldatud on lihtne loendiväärtus „JoinType“. Teistsuguseid loendeid või selle saatmist mõne muu funktsiooni kaudu ei toetata, nt „Join(..., If(true, JoinType.Inner, JoinType.Full))“.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumendid alates 5. positsioonist on mõeldud veergude ümbernimetamiseks ja peaksid eelduste kohaselt olema „As“-sõlme argumendid, st „LeftRecord.Name As NewName“.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Liitmistulemuse koostamiseks peab vähemalt üks veerg „{0}“ olema deklareeritud.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Väärtus „{0}“ on selles kontekstis sobimatu. See peaks olema viide kas ulatuse nimele „{1}“ või „{2}“.</value>
     
   </data>
 </root>

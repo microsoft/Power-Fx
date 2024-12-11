@@ -220,6 +220,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableJoinFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();

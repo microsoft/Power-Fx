@@ -4556,6 +4556,10 @@
     <value>Tipa literāļa deklarācija ir nederīga. Tipa definīcijā nevar izmantot izteiksmi “{0}”.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Neatbalstīts lietojums: veida literāļus var izmantot tikai veida argumentos un veida definīcijās.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Tipa {0} definīcija nav derīga.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Notīrāmais avots.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Izgūst datus, kas aptver vairākas tabulas ar relācijām.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>avots1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>avots2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>saucējs</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Kreisā tabula vai kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Labā tabula vai kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Apvienojiet kritērijus starp divām tabulām vai kolekcijām.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Savienojuma tips starp divām tabulām vai kolekcijām.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenti esošas kolonnas pārdēvēšanai kādā no avotiem.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Norādīto datu avotu nevar izmantot ar šo funkciju.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Nepareiza sintakse: '=' nevar lietot, lai deklarētu lietotāja definētus tipus. Tā vietā izmantojiet ':='.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" nevar pievienot/pārdēvēt, jo pastāv konflikts ar citu kolonnu ar tādu pašu nosaukumu.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Paredzētā vienkāršā uzskaitījuma vērtība "JoinType". Dažādi uzskaitījumi vai tās nodošana caur citu funkciju netiek atbalstīta, t.i., Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenti, kas sākas no 5. pozīcijas, ir paredzēti kolonnu pārdēvēšanai, un tiem ir jābūt "As" mezgla argumentiem, t.i., LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Lai sastādītu apvienošanas rezultātu, ir jādeklarē vismaz viena "{0}" kolonna.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Vērtība "{0}" šajā kontekstā nav derīga. Tai jābūt atsaucei uz "{1}" vai "{2}" tvēruma nosaukumu.</value>
     
   </data>
 </root>

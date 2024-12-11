@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -189,6 +190,10 @@ namespace Microsoft.PowerFx.Tests
             else if (node.Value is IExternalEntity ee)
             {
                 _sb.Append(ee.EntityName);
+            }
+            else if (node.Value is FormulaValue fv)
+            {
+                _sb.Append(fv.ToExpression());
             }
             else
             {

@@ -4556,6 +4556,10 @@
     <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Ús no admès: els literals de tipus només es poden utilitzar en arguments de tipus i definicions de tipus.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>La definició de tipus {0} no és vàlida.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Origen que s'ha d'esborrar.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Recupera dades que abasten diverses taules amb relacions.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>origen1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>origen2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominador</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>La taula o col·lecció de l'esquerra.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>La taula o col·lecció de la dreta.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Criteris d'unió entre les dues taules o col·leccions.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>El tipus d'unió entre les dues taules o col·leccions.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Els arguments per canviar el nom d'una columna existent en una de les fonts.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>No es pot utilitzar l'origen de dades especificat amb aquesta funció.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaxi incorrecta: "=" no es pot utilitzar per declarar els tipus definits per l'usuari. Utilitzeu ":=" en el seu lloc.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" no es pot afegir ni canviar de nom a causa de la col·lisió amb una altra columna amb el mateix nom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Valor d'enumeració de "JoinType" sense format esperat. No s'admeten diferents enumeracions ni passar-ho a través d'una altra funció, és a dir, Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Els arguments que comencen a partir de la cinquena posició tenen com a finalitat canviar els noms de les columnes i s'espera que siguin arguments de node "As", per exemple, LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>S'ha de declarar com a mínim una columna "{0}" per compondre el resultat de la unió.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>El valor "{0}" no és vàlid en aquest context. Ha de ser una referència al nom de l'àmbit "{1}" o "{2}".</value>
     
   </data>
 </root>

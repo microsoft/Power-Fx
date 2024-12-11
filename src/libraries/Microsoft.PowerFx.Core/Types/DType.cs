@@ -984,6 +984,11 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>String representation of DType.Kind.</returns>
         public string GetKindString()
         {
+            if (Kind == DKind._Min)
+            {
+                return "Unknown";
+            }
+
             if (Kind == DKind._MinPrimitive)
             {
                 return "Boolean";

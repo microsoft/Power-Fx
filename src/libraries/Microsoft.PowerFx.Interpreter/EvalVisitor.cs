@@ -380,6 +380,15 @@ namespace Microsoft.PowerFx
                         throw new Exception("Something went wrong. UDF stack values didn't match.");
                     }
                 }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+
+                // This is a temporary solution to release the Join function for host that want to use it.
+                else if (func is IAsyncTexlFunctionJoin asyncJoin)
+                {
+                    result = await asyncJoin.InvokeAsync(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
+                }
+#pragma warning restore CS0618 // Type or member is obsolete
                 else
                 {
                     if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))

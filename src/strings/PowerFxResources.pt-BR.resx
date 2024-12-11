@@ -4556,6 +4556,10 @@
     <value>O tipo de declaração literal é inválido. A expressão "{0}" não pode ser usada em uma definição de tipo.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Uso sem suporte: os literais de tipo só podem ser usados em argumentos de tipo e definições de tipo.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>A definição de tipo {0} é inválida.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>A origem a ser limpa.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Recupera dados que abrangem várias tabelas com relacionamentos.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>fonte1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>fonte2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>denominador</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>A tabela ou coleção esquerda.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>A tabela ou coleção direita.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Critérios de junção entre as duas tabelas ou coleções.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>O tipo de junção entre as duas tabelas ou coleções.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Os argumentos para renomear uma coluna existente em uma das origens.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>A fonte de dados especificada não pode ser usada com essa função.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaxe incorreta: '=' não pode ser usado para declarar tipos definidos pelo usuário. Use ':=' em vez disso.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' não pode ser adicionada/renomeada devido a colisão com outra coluna com o mesmo nome.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>É esperado um valor de enumeração 'JoinType' simples. Não há suporte a enumerações diferentes ou à passagem por outra função, ou seja, Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Os argumentos a partir da 5ª posição destinam-se a renomear colunas e espera-se que sejam argumentos de nó "As", ou seja LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Pelo menos uma coluna '{0}' deve ser declarada para compor o resultado da junção.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>O valor '{0}' é inválido neste contexto. Ele deve ser uma referência ao nome do escopo '{1}' ou '{2}'.</value>
     
   </data>
 </root>

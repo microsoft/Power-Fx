@@ -1,0 +1,68 @@
+﻿#SETUP: PowerFxV1CompatibilityRules,StronglyTypedBuiltinEnums, SupportColumnNamesAsIdentifiers
+
+>> Set(t1, 
+  Table({Id:"AAA111",Name:"Contoso",Country:"USA"},
+  {Id:"BBB222",Name:"Fabrikam",Country:"CAN"},
+  {Id:"EEE555",Name:"ACME INC.",Country:"MEX"},
+  {Id:"FFF666",Name:"Dunder Mifflin",Country:"USA"}))
+Table({Country:"USA",Id:"AAA111",Name:"Contoso"},{Country:"CAN",Id:"BBB222",Name:"Fabrikam"},{Country:"MEX",Id:"EEE555",Name:"ACME INC."},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin"})
+
+>> Set(t2, 
+  Table({SupplierId:"AAA111", Fruit:"Grapes", Price:220, Purchase:Date(2015,10,1), RowId:1},
+  {SupplierId:"BBB222", Fruit:"Lemons", Price:31, Purchase:Date(2015,10,1), RowId:2},
+  {SupplierId:"AAA111", Fruit:"Lemons", Price:29, Purchase:Date(2015,10,2), RowId:3},
+  {SupplierId:"AAA111", Fruit:"Grapes", Price:210, Purchase:Date(2015,10,2), RowId:4},
+  {SupplierId:"BBB222", Fruit:"Lemons", Price:30, Purchase:Date(2015,10,3), RowId:5},
+  {SupplierId:"AAA111", Fruit:"Bananas", Price:12, Purchase:Date(2015,10,3), RowId:6},
+  {SupplierId:"CCC333", Fruit:"Apples", Price:15, Purchase:Date(2015,12,3), RowId:7},
+  {SupplierId:"DDD444", Fruit:"Mangos", Price:30, Purchase:Date(2016,12,3), RowId:8}))
+Table({Fruit:"Grapes",Price:220,Purchase:Date(2015,10,1),RowId:1,SupplierId:"AAA111"},{Fruit:"Lemons",Price:31,Purchase:Date(2015,10,1),RowId:2,SupplierId:"BBB222"},{Fruit:"Lemons",Price:29,Purchase:Date(2015,10,2),RowId:3,SupplierId:"AAA111"},{Fruit:"Grapes",Price:210,Purchase:Date(2015,10,2),RowId:4,SupplierId:"AAA111"},{Fruit:"Lemons",Price:30,Purchase:Date(2015,10,3),RowId:5,SupplierId:"BBB222"},{Fruit:"Bananas",Price:12,Purchase:Date(2015,10,3),RowId:6,SupplierId:"AAA111"},{Fruit:"Apples",Price:15,Purchase:Date(2015,12,3),RowId:7,SupplierId:"CCC333"},{Fruit:"Mangos",Price:30,Purchase:Date(2016,12,3),RowId:8,SupplierId:"DDD444"})
+
+// Inner
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, RightRecord.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5})
+
+>> Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Inner, x2.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5})
+
+// Left
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Left, RightRecord.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:"MEX",Id:"EEE555",Name:"ACME INC.",RowId:Blank()},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin",RowId:Blank()})
+
+>> Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Left, x2.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:"MEX",Id:"EEE555",Name:"ACME INC.",RowId:Blank()},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin",RowId:Blank()})
+
+// Right
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Right, RightRecord.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:7},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:8})
+
+>> Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Right, x2.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:7},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:8})
+
+// Full
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Full, RightRecord.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin",RowId:Blank()},{Country:"MEX",Id:"EEE555",Name:"ACME INC.",RowId:Blank()},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:7},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:8})
+
+>> Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Full, x2.RowId As RowId)
+Table({Country:"USA",Id:"AAA111",Name:"Contoso",RowId:1},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:3},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:4},{Country:"USA",Id:"AAA111",Name:"Contoso",RowId:6},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:2},{Country:"CAN",Id:"BBB222",Name:"Fabrikam",RowId:5},{Country:"USA",Id:"FFF666",Name:"Dunder Mifflin",RowId:Blank()},{Country:"MEX",Id:"EEE555",Name:"ACME INC.",RowId:Blank()},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:7},{Country:Blank(),Id:Blank(),Name:Blank(),RowId:8})
+
+// Renaming columns with 'As' keyword
+>> Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)
+Table({Country:"USA",FruitName:"Grapes",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Lemons",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Grapes",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Bananas",SupId:"AAA111",SupName:"Contoso"},{Country:"CAN",FruitName:"Lemons",SupId:"BBB222",SupName:"Fabrikam"},{Country:"CAN",FruitName:"Lemons",SupId:"BBB222",SupName:"Fabrikam"})
+
+>> Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Inner, x1.Id As SupId, x1.Name As SupName, x2.Fruit As FruitName)
+Table({Country:"USA",FruitName:"Grapes",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Lemons",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Grapes",SupId:"AAA111",SupName:"Contoso"},{Country:"USA",FruitName:"Bananas",SupId:"AAA111",SupName:"Contoso"},{Country:"CAN",FruitName:"Lemons",SupId:"BBB222",SupName:"Fabrikam"},{Country:"CAN",FruitName:"Lemons",SupId:"BBB222",SupName:"Fabrikam"})
+
+// Renaming first, then joining
+>> First(Join(t1, t2, LeftRecord.Id = RightRecord.SupplierId, JoinType.Inner, LeftRecord.Id As SupId, LeftRecord.Name As SupName, RightRecord.Fruit As FruitName)).SupId
+"AAA111"
+
+>> First(Join(t1 As x1, t2 As x2, x1.Id = x2.SupplierId, JoinType.Inner, x1.Id As SupId, x1.Name As SupName, x2.Fruit As FruitName)).SupId
+"AAA111"
+
+// Renaming first, with duplicated column names
+>> Join(RenameColumns(t1, Id, SupplierId, Name, SupName), RenameColumns(t2, Fruit, FruitName), LeftRecord.SupplierId = RightRecord.SupplierId, JoinType.Inner, LeftRecord.SupplierId As RowId , RightRecord.RowId As RowId)
+Errors: Error 207-209: 'RightRecord.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join(RenameColumns(t1, Id, SupplierId, Name, SupName) As x1, RenameColumns(t2, Fruit, FruitName) As x2, x1.SupplierId = x2.SupplierId, JoinType.Inner, x1.SupplierId As RowId , x2.RowId As RowId)
+Errors: Error 185-187: 'x2.RowId As RowId' can not be added/renamed due to colission with another column with same name.|Error 0-4: The function 'Join' has some invalid arguments.

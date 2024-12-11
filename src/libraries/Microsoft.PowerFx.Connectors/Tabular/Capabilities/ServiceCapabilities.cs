@@ -173,6 +173,7 @@ namespace Microsoft.PowerFx.Connectors
                 });
 
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
+            string[] primaryKeyNames = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).Select(f => f.Name).ToArray();
 
             return new CdpDelegationInfo()
             {
@@ -187,7 +188,8 @@ namespace Microsoft.PowerFx.Connectors
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
                 ColumnsCapabilities = columnCapabilities,
-                ColumnsWithRelationships = columnWithRelationships
+                ColumnsWithRelationships = columnWithRelationships,
+                PrimaryKeyNames = primaryKeyNames
             };
         }
 

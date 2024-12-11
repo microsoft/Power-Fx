@@ -169,6 +169,14 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool CanSuggestInputColumns => false;
 
         /// <summary>
+        /// Identifies which args (1-based) to use to compose the scope type for subsequent lambdas.
+        /// Example:
+        ///     Filter(t1, ...) => ScopeArgs is 1.
+        ///     Join(t1, t2, ...) => ScopeArgs is 2.
+        /// </summary>
+        public virtual int ScopeArgs => 1;
+
+        /// <summary>
         /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
         /// e.g. Collect(), Remove(), etc.
         /// </summary>
@@ -233,6 +241,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
+
+        // Indicates the base type of the function. The base type can differ if the function extends multiple base classes i.e. Join function.
+        public virtual Type DeclarationType => this.GetType();
 
         /// <summary>
         /// Indicates whether the function will propagate the mutability of its first argument.

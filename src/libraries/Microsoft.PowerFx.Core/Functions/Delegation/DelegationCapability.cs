@@ -87,7 +87,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.Top, new DelegationCapability(Top) },
                 { DelegationMetadataOperatorConstants.AsType, new DelegationCapability(AsType) },
                 { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) },
-                { DelegationMetadataOperatorConstants.Distinct, new DelegationCapability(Distinct) }
+                { DelegationMetadataOperatorConstants.Distinct, new DelegationCapability(Distinct) },
+                { DelegationMetadataOperatorConstants.Join, new DelegationCapability(Join) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -139,9 +140,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger AsType = BigInteger.Pow(2, 44);                       //    0x100000000000
         public static readonly BigInteger ArrayLookup = BigInteger.Pow(2, 45);                  //    0x200000000000
         public static readonly BigInteger Distinct = BigInteger.Pow(2, 46);                     //    0x400000000000
+        public static readonly BigInteger Join = BigInteger.Pow(2, 47);                         //    0x800000000000
 
         // Please update it as max value changes.
-        private static BigInteger maxSingleCapabilityValue = Distinct;
+        private static BigInteger maxSingleCapabilityValue = Join;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll
@@ -477,6 +479,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 {
                     AddCommaIfNeeded(sb);
                     sb.Append(nameof(Distinct));
+                }
+
+                if (HasCapability(Join))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(Join));
                 }
 
                 return sb.ToString();
