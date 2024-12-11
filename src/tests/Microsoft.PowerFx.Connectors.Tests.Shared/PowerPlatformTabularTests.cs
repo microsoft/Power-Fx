@@ -246,7 +246,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(b);
             DecimalType productModelId = Assert.IsType<DecimalType>(productModelID);
-            Assert.False(productModelId is null);            
+            Assert.False(productModelId is null);
+
+            Assert.Equal("ProductID", string.Join("|", GetPrimaryKeyNames(sqlTable.RecordType)));
         }
 
         [Fact]
@@ -292,6 +294,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue sv = Assert.IsType<StringValue>(result);
             Assert.Equal("Holiday", sv.Value);
+
+            // Not defined for SAP
+            Assert.Equal(string.Empty, string.Join("|", GetPrimaryKeyNames(sapTableValue.RecordType)));
         }
 
         [Fact]
@@ -461,6 +466,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
+
+            Assert.Equal("ID", string.Join("|", GetPrimaryKeyNames(spTable.RecordType)));
         }
 
         [Fact]
@@ -588,9 +595,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Kutch and Sons", ((StringValue)result).Value);
         }
 
+        private static IEnumerable<string> GetPrimaryKeyNames(RecordType rt)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            rt.TryGetPrimaryKeyFieldName(out IEnumerable<string> primaryKeyNames);
+#pragma warning restore CS0618 // Type or member is obsolete
+            return primaryKeyNames;
+        }
+
         [Fact]
         public async Task SF_CdpTabular_GetTables()
-        {
+        {                       
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
             var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
@@ -778,6 +793,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+
+            Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(sfTable.RecordType)));
+            Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(userTable)));
         }
 
         [Fact]
@@ -977,6 +995,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.NotNull(connectorTable.OptionSets);
             Assert.Equal("priority (tickets), status (tickets), type (tickets)", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
+
+            Assert.Equal("id", string.Join("|", GetPrimaryKeyNames(zdTable.RecordType)));
         }
     }
 

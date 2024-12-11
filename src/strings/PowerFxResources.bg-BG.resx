@@ -4556,6 +4556,10 @@
     <value>Декларацията на литерала за типа е невалидна. Изразът „{0}“ не може да се използва в дефиниция на тип.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдържана употреба: литералите за тип могат да се използват само в аргументи и дефиниции за тип.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Дефиницията на тип {0} е невалидна.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Източникът, който да се изчисти.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Извлича данни от множество таблици с релации.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>източник1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>източник2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>знаменател</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Лявата таблица или колекция.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Дясната таблица или колекция.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Критерии за съединение на двете таблици или колекции.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Типът съединение на двете таблици или колекции.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Аргументите за преименуване на съществуваща колона в един от източниците.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указаният източник на данни не може да се използва с тази функция.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Неправилен синтаксис: „=“ не може да се използва за деклариране на дефинирани от потребителя типове. Вместо това използвайте „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>„{0}“ не може да се добави/преименува поради конфликт с друга колона със същото име.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Очаква се обикновена стойност на изброяване JoinType. Не се поддържат различни изброявания или предаването на стойността през друга функция, т.е. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Аргументите, започващи от 5-та позиция, са предназначени за преименуване на колони и се очаква да бъдат аргументи на възел As, т.е. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Поне една колона „{0}“ трябва да бъде декларирана, за да състави резултата от съединението.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Стойността „{0}“ е невалидна в този контекст. Трябва да бъде препратка към името на обхвата „{1}“ или „{2}“.</value>
     
   </data>
 </root>

@@ -4556,6 +4556,10 @@
     <value>型リテラルの宣言が正しくありません。式 '{0}' を型の定義に使用することはできません。</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>対応していない使用方法: 型リテラルを使用できるのは型引数と型定義のみです。</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>タイプ {0} の定義が正しくありません。</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>消去するソースです。</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>リレーションシップを持つ複数のテーブルにまたがるデータを取得します。</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>ソース1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>ソース2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>分母</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>左のテーブルまたはコレクション。</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>右のテーブルまたはコレクション。</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>2 つのテーブルやコレクション間の結合条件。</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>2 つのテーブルやコレクション間の結合タイプ。</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>いずれかのソースに含まれる既存の列の名前を変更するための引数。</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>指定されたデータ ソースは、この関数では使用できません。</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>構文が正しくありません: '=' はユーザー定義型の宣言に使用できません。代わりに ':=' を使用します。</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' の追加/名前変更を実行できません。同じ名前の別の列と競合します。</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>'JoinType' プレーン列挙値を指定してください。異なる列挙型または別の関数に渡す操作には対応していません。例: Join(..., If(true, JoinType.Inner, JoinType.Full))。</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>5 番目の位置から始まる引数は、列の名前を変更するためのもので、必ず 'As' ノード引数を指定します。例: LeftRecord.Name As NewName。</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>結合の結果を作成する場合は '{0}' 列を少なくとも 1 つ宣言してください。</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>このコンテキストで '{0}' 値は無効です。スコープ名 '{1}' または '{2}' の参照をどちらか指定してください。</value>
     
   </data>
 </root>

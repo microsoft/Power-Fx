@@ -554,11 +554,13 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case null:
+                        case "byte":
                         case "integer":
                         case "int32":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         case "int64":
+                        case "uint64":
                         case "unixtime":
                             return new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 

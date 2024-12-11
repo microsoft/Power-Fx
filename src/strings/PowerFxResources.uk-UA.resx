@@ -4556,6 +4556,10 @@
     <value>Неприпустиме оголошення літералу типу. Вираз "{0}" не можна використовувати у визначенні типу.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Непідтримуване використання. Літерали типів можна використовувати лише в аргументах і визначеннях типів.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Визначення типу "{0}" неприпустиме.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Джерело, яке потрібно очистити.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Отримує дані, які розподілено між кількома таблицями зі зв’язками.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>джерело1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>джерело2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>знаменник</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Таблиця або колекція зліва.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Таблиця або колекція справа.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Умови об’єднання даних із двох таблиць або колекцій.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Тип об’єднання даних із двох таблиць або колекцій.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Аргументи для перейменування наявного стовпця в одному з джерел.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указане джерело даних не можна використовувати з цією функцією.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Неправильний синтаксис: "=" не можна використовувати для оголошення користувацьких типів. Використовуйте натомість ":=".</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>"{0}" не можна додати або перейменувати через збіг з іншим стовпцем із таким же іменем.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Очікуване звичайне значення переліку – "JoinType". Інші переліки або передавання цього значення через іншу функцію не підтримуються, наприклад Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Аргументи після 5-ї позиції включно використовуються для перейменування стовпців. Очікується, що вони будуть аргументами вузла "As", наприклад LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Для отримання результату об’єднання оголосіть принаймні один стовпець "{0}".</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Значення "{0}" недійсне в цьому контексті. Воно має бути посиланням на ім’я області застосування "{1}" або "{2}".</value>
     
   </data>
 </root>

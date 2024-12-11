@@ -4556,6 +4556,10 @@
     <value>Deklarácia explicitnej hodnoty premennej typu je neplatná. Výraz {0} nemožno použiť v definícii typu.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodporované použitie: literály typu sa môžu používať iba v argumentoch typu a definíciách typu.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definícia typu {0} je neplatná.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Zdroj, ktorý sa má vyčistiť.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Načíta údaje z viacerých tabuliek so vzťahmi.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>zdroj1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>zdroj2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>menovateľ</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Ľavá tabuľka alebo kolekcia.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Pravá tabuľka alebo kolekcia.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kritériá spojenia dvoch tabuliek alebo kolekcií.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Typ spojenia dvoch tabuliek alebo kolekcií.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenty na premenovanie existujúceho stĺpca v jednom zo zdrojov.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Zadaný zdroj údajov sa nedá použiť s touto funkciou.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Nesprávna syntax: „=“ nemožno použiť na deklarovanie typov definovaných používateľom. Namiesto toho použite „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>{0} nemožno pridať/premenovať z dôvodu kolízie s iným stĺpcom s rovnakým názvom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Očakáva sa obyčajná hodnota enumerácie JoinType. Nie sú podporované iné enumerácie ani odovzdanie cez inú funkciu, napr. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenty od 5. pozície sú určené na premenovanie stĺpcov a očakáva sa, že to budú argumenty uzla As, t. j. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Na vytvorenie výsledku spojenia musí byť deklarovaný aspoň jeden stĺpec {0}.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Hodnota {0} je v tomto kontexte neplatná. Mal by to byť odkaz na názov rozsahu {1} alebo {2}.</value>
     
   </data>
 </root>
