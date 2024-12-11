@@ -436,7 +436,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // expressions with delegatable async function calls to be delegated
 
             // Impure nodes should only be marked valid when Feature is enabled.
-            if (!isPure && !binding.Features.AllowImpureNodeDelegation)
+            if (!isPure)
             {
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
             }
@@ -446,10 +446,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 {
                     return true;
                 }
-                else if (binding.Features.AllowAsyncDelegation)
+                else
                 {
-                    // If the feature is enabled, enable delegation for
-                    // async call, first name and dotted name nodes.
+                    // Enable delegation for async call, first name, and dotted name nodes.
                     return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
                 }
             }
