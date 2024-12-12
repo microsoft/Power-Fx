@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
             : base(ref idNext, firstToken, sources)
         {
             TypeRoot = type;
+            TypeRoot.Parent = this;
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
@@ -41,7 +42,7 @@ namespace Microsoft.PowerFx.Syntax
                 { TypeRoot, typeRoot }
             };
 
-            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), TypeRoot, this.SourceList.Clone(ts, newNodes));
+            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), typeRoot, this.SourceList.Clone(ts, newNodes));
         }
 
         /// <inheritdoc />
@@ -111,6 +112,28 @@ namespace Microsoft.PowerFx.Syntax
 
             public override void PostVisit(TableNode node)
             {
+            }
+
+            public override bool PreVisit(CallNode node)
+            {
+                if (ValidRecordOfNode(node))
+                {
+                    return true;
+                }
+
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                return false;
+            }
+
+            public override bool PreVisit(ListNode node)
+            {
+                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
+                {
+                    return true;
+                }
+
+                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
+                return false;
             }
 
             // Invalid nodes
@@ -189,18 +212,6 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
 
-            public override bool PreVisit(CallNode node)
-            {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
-                return false;
-            }
-
-            public override bool PreVisit(ListNode node)
-            {
-                _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
-                return false;
-            }
-
             public override bool PreVisit(AsNode node)
             {
                 _errors.Add(new TexlError(node, DocumentErrorSeverity.Severe, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString()));
@@ -239,6 +250,17 @@ namespace Microsoft.PowerFx.Syntax
             public override void PostVisit(AsNode node)
             {
             }
+        }
+
+        internal static bool ValidRecordOfNode(CallNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(node.Args);
+            Contracts.AssertAllValues(node.Args.ChildNodes);
+
+            return node.Head.Token.Name == LanguageConstants.RecordOfInvariantName &&
+                   node.Args.Count == 1 &&
+                   node.Args.ChildNodes.Single().AsFirstName() != null;
         }
     }
 }

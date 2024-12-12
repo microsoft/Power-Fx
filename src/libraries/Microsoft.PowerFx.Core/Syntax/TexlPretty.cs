@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Syntax
                 .With(
                     LanguageConstants.TypeLiteralInvariantName,
                     TexlLexer.PunctuatorParenOpen)
-                .With(node.TypeRoot.Accept(this, Precedence.Atomic))
+                .With(node.TypeRoot.Accept(this, Precedence.None))
                 .With(TexlLexer.PunctuatorParenClose);
 
             return result;

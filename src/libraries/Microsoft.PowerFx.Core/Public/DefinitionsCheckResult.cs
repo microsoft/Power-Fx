@@ -166,14 +166,15 @@ namespace Microsoft.PowerFx
             {
                 _userDefinedFunctions = new TexlFunctionSet();
 
-                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), _symbols, out var errors);
+                var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
+
+                var partialUDFs = UserDefinedFunction.CreateFunctions(_parse.UDFs.Where(udf => udf.IsParseValid), composedSymbols, out var errors);
 
                 if (errors.Any())
                 {
                     _errors.AddRange(ExpressionError.New(errors, _defaultErrorCulture));
                 }
 
-                var composedSymbols = ReadOnlySymbolTable.Compose(_localSymbolTable, _symbols);
                 foreach (var udf in partialUDFs)
                 {
                     var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
