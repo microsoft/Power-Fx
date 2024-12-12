@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Syntax
 
             public override bool PreVisit(ListNode node)
             {
-                if (node.Parent != null && node.Parent is CallNode cn && ValidRecordOfNode(cn))
+                if (node.Parent is CallNode cn && ValidRecordOfNode(cn))
                 {
                     return true;
                 }

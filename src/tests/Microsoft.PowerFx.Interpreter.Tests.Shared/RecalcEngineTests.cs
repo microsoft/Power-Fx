@@ -2056,7 +2056,7 @@ namespace Microsoft.PowerFx.Tests
             true,
             42.0)]
 
-        // Fails for anyother type other than table
+        // Fails for any type other than table
         [InlineData(
             "Account := Type(RecordOf(SomeRecord));",
             "",
@@ -2099,6 +2099,14 @@ namespace Microsoft.PowerFx.Tests
             false)]
         [InlineData(
             "Point := Type(RecordOf([{x : Number, y : Number}]));",
+            "",
+            false)]
+        [InlineData(
+            "T1 := Type(RecordOf(Type([{A:Number}])));",
+            "",
+            false)]
+        [InlineData(
+            "T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));",
             "",
             false)]
 

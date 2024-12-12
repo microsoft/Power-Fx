@@ -143,6 +143,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // RecordOf record type
         [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDefinition")]
+
+        // Inline definitions within RecordOf
+        [InlineData("T1 := Type(RecordOf(Type([{A:Number}])));", "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));", "ErrTypeLiteral_InvalidTypeDefinition")]
         public void TestRecordOfErrors(string typeDefinition, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
