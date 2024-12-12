@@ -138,8 +138,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
 
         // not in Type literal expression;
-        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Points = RecordOf(Points); ", "ErrknownTypeHelperFunction")]
-        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Number = RecordOf(Points).x; ", "ErrknownTypeHelperFunction")]
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Points = RecordOf(Points); ", "ErrKnownTypeHelperFunction")]
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Number = RecordOf(Points).x; ", "ErrKnownTypeHelperFunction")]
 
         // RecordOf record type
         [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDefinition")]
