@@ -109,12 +109,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         //To test DefinitionsCheckResult.ApplyErrors method and error messages
         [InlineData("Point := Type({ x: Number, y: Number }); Point := Type(Number);", 1, "ErrNamedType_TypeAlreadyDefined")]
-        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDefinition")]
+        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles")]
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
         [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
-        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeLiteral")]
-        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeLiteral")]
+        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
+        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeExpression")]
         public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = checkResult.ApplyParse();
             Assert.True(parseResult.HasErrors);
 
-            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeLiteral_InvalidTypeDefinition"));
+            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeFunction_InvalidTypeExpression"));
             Assert.Equal(expectedErrorCount, validatorErrors.Count());
         }
     }

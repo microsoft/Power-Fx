@@ -773,7 +773,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
-        public static ErrorResourceKey ErrNamedType_MissingTypeLiteral = new ErrorResourceKey("ErrNamedType_MissingTypeLiteral");
+        public static ErrorResourceKey ErrNamedType_MissingTypeExpression = new ErrorResourceKey("ErrNamedType_MissingTypeExpression");
         public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
@@ -789,10 +789,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_InvalidParamType = new ErrorResourceKey("ErrUDF_InvalidParamType");
         public static ErrorResourceKey WrnUDF_ShadowingBuiltInFunction = new ErrorResourceKey("WrnUDF_ShadowingBuiltInFunction");
 
-        public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
-        public static ErrorResourceKey ErrTypeLiteral_UnsupportedUsage = new ErrorResourceKey("ErrTypeLiteral_UnsupportedUsage");
+        public static ErrorResourceKey ErrTypeFunction_InvalidTypeExpression = new ErrorResourceKey("ErrTypeFunction_InvalidTypeExpression");
+        public static ErrorResourceKey ErrTypeFunction_UnsupportedUsage = new ErrorResourceKey("ErrTypeFunction_UnsupportedUsage");
         public static ErrorResourceKey ErrNamedType_InvalidCycles = new ErrorResourceKey("ErrNamedType_InvalidCycles");
-        public static ErrorResourceKey ErrNamedType_InvalidTypeDefinition = new ErrorResourceKey("ErrNamedType_InvalidTypeDefinition");
+        public static ErrorResourceKey ErrNamedType_InvalidTypeDeclaration = new ErrorResourceKey("ErrNamedType_InvalidTypeDeclaration");
         public static ErrorResourceKey ErrNamedType_InvalidTypeName = new ErrorResourceKey("ErrNamedType_InvalidTypeName");
         public static ErrorResourceKey ErrNamedType_TypeAlreadyDefined = new ErrorResourceKey("ErrNamedType_TypeAlreadyDefined");
         public static ErrorResourceKey ErrRecordContainsInvalidFields_Arg = new ErrorResourceKey("ErrRecordContainsInvalidFields_Arg");
