@@ -58,6 +58,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool SupportsParamCoercion => true;
 
+        public override bool HasPreciseErrors => true;
+
         private const int MaxParameterCount = 30;
 
         public TexlNode UdfBody { get; }
@@ -91,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     !ParamTypes[i].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, true) &&
                     !argTypes[i].CoercesTo(ParamTypes[i], true, false, context.Features, true))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_ExpectedType, argTypes[i].GetKindString(), ParamTypes[i].GetKindString());
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_ExpectedType, ParamTypes[i].GetKindString());
                     return false;
                 }
             }
@@ -201,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if ((ReturnType.IsTable && actualBodyReturnType.IsTable) || (ReturnType.IsRecord && actualBodyReturnType.IsRecord))
                     {
-                        binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadSchema_ExpectedType, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                        binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeSchemaDoesNotMatch, ReturnType.GetKindString());
                         return;
                     }
 
