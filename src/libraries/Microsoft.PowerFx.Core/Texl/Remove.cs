@@ -43,6 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
 
+        // !!!TODO this might be a problem.
         public override bool RequireAllParamColumns => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
