@@ -498,8 +498,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Type(Decimal)", "Type(Decimal)")]
         [InlineData("Type([Number])", "Type([ Number ])")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
         [InlineData("Type([{Age: Number}])", "Type([ { Age:Number } ])")]
         [InlineData("IsType(ParseJSON(\"42\"),Type(Decimal))", "IsType(ParseJSON(\"42\"), Type(Decimal))")]
+        [InlineData("IsType(ParseJSON(\"{}\"),Type(RecordOf(Accounts)))", "IsType(ParseJSON(\"{}\"), Type(RecordOf(Accounts)))")]
         public void TexlParseTypeLiteral(string script, string expected)
         {
             TestRoundtrip(script, expected, features: Features.PowerFxV1);
