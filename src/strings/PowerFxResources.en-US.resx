@@ -4879,8 +4879,8 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Invalid argument '{0}'. Expected valid type name or inline type definition.</value>
-    <comment>Error Message shown to user when a value other name or inline type definition is passed into AsType, IsType and ParseJSON functions.</comment>
+    <value>Invalid argument '{0}'. Expected valid type name or inline type expression.</value>
+    <comment>Error Message shown to user when a value other name or inline type expression is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Unsupported type '{0}' in type argument.</value>
