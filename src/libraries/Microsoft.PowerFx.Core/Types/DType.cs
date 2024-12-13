@@ -3314,7 +3314,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return false;
             }
 
-            if (typeDest.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            if (typeDest.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, restrictiveAggregateTypes))
             {
                 coercionType = typeDest;
                 return true;

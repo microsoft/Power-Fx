@@ -1975,8 +1975,8 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.ThrowsAny<Exception>(() => 
-                { 
+                Assert.ThrowsAny<Exception>(() =>
+                {
                     recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
                     recalcEngine.Eval(evalExpression, options: parserOptions);
                 });

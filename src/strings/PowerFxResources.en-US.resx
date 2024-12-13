@@ -4221,6 +4221,10 @@
     <value>The stated function return type '{0}' does not match the return type of the function body '{1}'.</value>
     <comment>This error message shows up when expected return type does not match with actual return type. The arguments '{0}' and '{1}' will be replaced with data types. For example, "The stated function return type 'Number' does not match the return type of the function body 'Table'"</comment>
   </data>
+  <data name="ErrUDF_ReturnTypeSchemaDoesNotMatch" xml:space="preserve">
+    <value>The schema of stated function return type '{0}' does not match the schema of return type of the function body.</value>
+    <comment>This error message shows up when expected return type schema does not match with schema of actual return type. The arguments '{0}' will be replaced with aggregate data types. For example, "The schema of stated function return type 'Table' does not match the schema of return type of the function body."</comment>
+  </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
     <value>Function {0} has too many parameters. User-defined functions support up to {1} parameters.</value>
     <comment>This error message shows up when a user tries to define a function with too many parameters. {0} - the name of the user-defined function, {1} - the max number of parameters allowed.</comment>
