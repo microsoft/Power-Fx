@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -76,6 +77,27 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         public bool HasDelegationWarning => _binding?.ErrorContainer.GetErrors().Any(error => error.MessageKey.Contains("SuggestRemoteExecutionHint")) ?? false;
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            if (!base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < argTypes.Length; i++)
+            {
+                if ((argTypes[i].IsTableNonObjNull || argTypes[i].IsRecordNonObjNull) &&
+                    !ParamTypes[i].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, true) &&
+                    !argTypes[i].CoercesTo(ParamTypes[i], true, false, context.Features, true))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBadSchema_ExpectedType, argTypes[i].GetKindString(), ParamTypes[i].GetKindString());
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
@@ -167,15 +189,22 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(binding);
 
-            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, true))
             {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features))
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features, true))
                 {
                     _binding.SetCoercedType(binding.Top, ReturnType);
                 }
                 else
                 {
                     var node = UdfBody is VariadicOpNode variadicOpNode ? variadicOpNode.Children.Last() : UdfBody;
+
+                    if ((ReturnType.IsTable && actualBodyReturnType.IsTable) || (ReturnType.IsRecord && actualBodyReturnType.IsRecord))
+                    {
+                        binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadSchema_ExpectedType, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
+                        return;
+                    }
+
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch, ReturnType.GetKindString(), actualBodyReturnType.GetKindString());
                 }
             }
