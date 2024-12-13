@@ -4556,6 +4556,10 @@
     <value>Tipul declarației literale este nevalid. Expresia „{0}” nu se poate utilizat într-o definiție de tip.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Consum neacceptat: literalele de tip pot fi utilizate numai în argumente de tip și definiții de tip.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definiția tipului {0} este nevalidă.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Sursa de golit.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Regăsește datele care vizează mai multe tabele cu relații.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>sursa1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>sursa2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>numitor</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Tabelul sau colecția din stânga.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Tabelul sau colecția din dreapta.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Asociați criteriile între cele două tabele sau colecții.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Tipul de asociere între cele două tabele sau colecții.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumentele pentru redenumirea unei coloane existente într-una dintre surse.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Sursa de date specificată nu poate fi utilizată cu această funcție.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaxă incorectă: „=” nu se poate utiliza pentru a declara tipuri definite de utilizator. În locul acestui semn, utilizați „:=”.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' nu poate fi adăugat/redenumit din cauza conflictului cu altă coloană cu același nume.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Valoarea enumerării 'JoinType' simplă așteptată. Nu sunt acceptate enumerări diferite sau transmiterea acesteia printr-o altă funcție, adică Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumentele care încep de la a 5-a poziție sunt menite să redenumească coloanele și sunt preconizate că vor fi argumente pentru nodul „As”, adică LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Trebuie declarată cel puțin o coloană '{0}' pentru a compune rezultatul asocierii.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Valoarea '{0}' nu este validă în acest context. Trebuie să fie o referință pentru numele domeniului de aplicare '{1}' sau '{2}'.</value>
     
   </data>
 </root>

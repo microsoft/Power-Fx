@@ -4556,6 +4556,10 @@
     <value>Tyyppiliteraalin esittely on virheellinen. Lauseketta {0} ei voi käyttää tyypin määrittelynä.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Käyttö, jota ei tueta: tyyppiliteraaleja voidaan käyttää vain tyyppiargumenteissa ja -määrityksissä.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Tyypin {0} määritys on virheellinen.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Tyhjennettävä lähde.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Noutaa tietoja, joita on useissa suhteita omaavissa taulukoissa.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>lähde1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>lähde2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nimittäjä</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Vasemmanpuoleinen taulukko tai kokoelma.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Oikeanpuoleinen taulukko tai kokoelma.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Liitosehdot kahden taulukon tai kokoelman välillä.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Liitoksen tyyppi kahden taulukon tai kokoelman välillä.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumentit jonkin lähteen aiemmin määritetyn sarakkeen uudelleennimeämistä varten.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Määritettyä tietolähdettä ei voi käyttää tämän funktion kanssa.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Virheellinen syntaksi: = ei voi ilmoittaa käyttäjän määrittämiä tyyppejä. Käytä sen sijaan merkintää :=.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Kohdetta {0} ei voi lisätä tai nimetä uudelleen, koska toisella sarakkeella on sama nimi.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Odotettiin pelkkää luettelointiarvoa 'JoinType'. Erilaisia luettelointiarvoja ja niiden välittämistä toisen funktion kautta ei tueta. Esimerkiksi Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumentit, jotka alkavat 5. sijainnista, on tarkoitettu sarakkeiden uudelleennimeämiseen. Niiden arvon odotetaan olevan solmun 'As' argumentteja, esimerkiksi LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Vähintään yksi sarake {0} on ilmoitettava, jotta liitoksen tulos voidaan luoda.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Arvo {0} on virheellinen tässä kontekstissa. Sen on oltava joko kohteen {1} tai kohteen {2} vaikutusalueen nimen viite.</value>
     
   </data>
 </root>

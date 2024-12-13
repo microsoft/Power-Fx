@@ -1573,6 +1573,8 @@ namespace Microsoft.PowerFx.Functions
     internal class JoinImpl : JoinFunction, IAsyncTexlFunctionJoin
 #pragma warning restore CS0618 // Type or member is obsolete
     {
+        public override Type DeclarationType => typeof(JoinFunction);
+
         public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return await Library.JoinTables(runner, context, irContext, args).ConfigureAwait(false);

@@ -4556,6 +4556,10 @@
     <value>Deklaracija tipa literala je nevažeća. Izraz „{0}“ ne može da se koristi u definiciji tipa.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodržana upotreba: literali tipa mogu da se koriste samo u argumentima tipa i definicijama tipa.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definicija tipa {0} je nevažeća.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Izvor koji treba obrisati.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Preuzima podatke koji se prostiru u više tabela sa odnosima.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>izvor1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>izvor2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>imenilac</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Leva tabela ili kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Desna tabela ili kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kriterijumi za spajanje između dve tabele ili kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Tip spajanja između dve tabele ili kolekcija.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenti za preimenovanje postojeće kolone u jednom od izvora.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Navedeni izvor podataka ne može da se koristi sa ovom funkcijom.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Pogrešna sintaksa: „=“ ne može da se koristi za označavanje korisnički definisanih tipova. Umesto toga koristite „:=“.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Nije moguće dodati/preimenovati „{0}“ zbog sukoba sa drugom kolonom sa istim nazivom.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Očekivana čista vrednost nabrajanja „JoinType“. Različita nabrajanja ili prosleđivanja kroz drugu funkciju nisu podržana, tj. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenti počev od 5. položaja treba da preimenuju kolone i očekuje se da budu argumenti čvora „As“, tj. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Najmanje jedna kolona „{0}“ mora biti deklarisana da bi se sastavio rezultat pridruživanja.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Vrednost „{0}“ je nevažeća u ovom kontekstu. To bi trebalo da bude referenca na naziv opsega „{1}“ ili „{2}“.</value>
     
   </data>
 </root>

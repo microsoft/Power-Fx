@@ -80,21 +80,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     if (node is not AsNode asNode)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinArgIsNotAsNode);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrJoinArgIsNotAsNode);
                         valid = false;
                         break;
                     }
 
                     if (asNode.Left is not DottedNameNode dottedNameNode)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinArgIsNotAsNode);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrJoinArgIsNotAsNode);
                         valid = false;
                         break;
                     }
 
                     if (dottedNameNode.Left is not FirstNameNode firstNameNode)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinDottedNameleft, dottedNameNode.Left, scopeIdent[0], scopeIdent[1]);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrJoinDottedNameleft, dottedNameNode.Left, scopeIdent[0], scopeIdent[1]);
                         valid = false;
                         break;
                     }
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (!leftTable.TryGetType(dottedNameNode.Right.Name, out var leftType))
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
+                            errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrColDNE_Name, dottedNameNode);
                             valid = false;
                             break;
                         }
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (!rightTable.TryGetType(dottedNameNode.Right.Name, out var rightType))
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrColDNE_Name, dottedNameNode);
+                            errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrColDNE_Name, dottedNameNode);
                             valid = false;
                             break;
                         }
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (fError)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrJoinCantAddRename, node);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrJoinCantAddRename, node);
                         valid = false;
                         break;
                     }
@@ -150,7 +150,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsLambdaParam(TexlNode node, int index)
         {
-            return index == 2 || (index > 3 && node is AsNode);
+            return index == 2 || index > 3;
+        }
+
+        public override bool HasSuggestionsForParam(int argumentIndex)
+        {
+            return argumentIndex == 3;
         }
 
         public override IEnumerable<string> GetRequiredEnumNames()
