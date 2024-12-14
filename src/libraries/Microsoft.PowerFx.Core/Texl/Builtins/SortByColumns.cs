@@ -411,6 +411,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.Sort, out var dataSource))
                 {
+                    SuggestDelegationHint(callNode, binding);
                     return false;
                 }
 
