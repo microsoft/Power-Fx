@@ -510,26 +510,36 @@ namespace Microsoft.PowerFx
 
                 if (definitionsCheckResult.IsSuccess)
                 {
-                    try
+                    definitionsCheckResult.SetBindingInfo(this.Engine.GetAllSymbols());
+
+                    if (definitionsCheckResult.ApplyErrors().Any())
                     {
-                        this.Engine.AddUserDefinitions(expression, this.ParserOptions.Culture);
+                        foreach (var error in definitionsCheckResult.Errors)
+                        {
+                            var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                            var msg = error.ToString();
+
+                            await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                                .ConfigureAwait(false);
+                        }
+                        return new ReplResult();
                     }
-                    catch (Exception ex)
-                    {
-                        await this.Output.WriteLineAsync(lineError + ex.Message, OutputKind.Error, cancel)
-                            .ConfigureAwait(false);
-                    }
+
+                    this.Engine.AddUserDefinitions(expression, this.ParserOptions.Culture);
 
                     return new ReplResult();
                 }
 
-                foreach (var error in definitionsCheckResult.Errors)
+                if (check.ApplyParse().Errors.Any() && definitionsCheckResult.Errors.Any())
                 {
-                    var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
-                    var msg = error.ToString();
+                    foreach (var error in definitionsCheckResult.Errors)
+                    {
+                        var kind = error.IsWarning ? OutputKind.Warning : OutputKind.Error;
+                        var msg = error.ToString();
 
-                    await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
-                        .ConfigureAwait(false);
+                        await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
+                            .ConfigureAwait(false);
+                    }
                 }
 
                 foreach (var error in check.Errors)
