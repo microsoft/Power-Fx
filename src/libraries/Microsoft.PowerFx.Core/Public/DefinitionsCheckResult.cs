@@ -116,6 +116,8 @@ namespace Microsoft.PowerFx
 
         public bool ContainsUDF => _parse.UDFs.Any();
 
+        public bool ContainsUDT => _parse.DefinedTypes.Any();
+
         internal IReadOnlyDictionary<DName, FormulaType> ApplyResolveTypes()
         {
             if (_parse == null)
