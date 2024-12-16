@@ -187,15 +187,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (context.AnalysisMode)
-            {
-                // Remove returns the new collection, so the return schema is the same as the collection schema.
-                returnType = collectionType;
-            }
-            else
-            {
-                returnType = DType.Void;
-            }
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
 
             return fValid;
         }
@@ -459,15 +451,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (context.AnalysisMode)
-            {
-                // Remove returns the new collection, so the return schema is the same as the collection schema.
-                returnType = collectionType;
-            }
-            else
-            {
-                returnType = DType.Void;
-            }
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
 
             return fValid;
         }
