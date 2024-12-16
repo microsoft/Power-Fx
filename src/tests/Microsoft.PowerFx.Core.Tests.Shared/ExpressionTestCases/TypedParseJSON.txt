@@ -104,16 +104,16 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("1", 1)
-Errors: Error 15-16: Invalid argument '1'. Expected valid type name or type literal.
+Errors: Error 15-16: Invalid argument '1'. Expected valid type name or inline type expression.
 
 >> ParseJSON("""RED""", Color)
 Errors: Error 21-26: Unsupported type 'Color' in type argument.
 
 >> ParseJSON("5", Type(5))
-Errors: Error 20-21: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 19-20: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
+Errors: Error 20-21: Type expression is invalid. '5' cannot be used in a type expression.|Error 19-20: Type expression is invalid. 'Type(5)' cannot be used in a type expression.
 
 >> ParseJSON("true", UnKnown)
-Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or type literal.
+Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or inline type expression.
 
 >> ParseJSON("fasle", Boolean)
 Error({Kind:ErrorKind.InvalidJSON})
@@ -143,10 +143,10 @@ Error({Kind:ErrorKind.Div0})
 Blank()
 
 >> ParseJSON("42", Blank())
-Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or type literal.
+Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
 
 >> ParseJSON("42", 1/0)
-Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or type literal.
+Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or inline type expression.
 
 >> ParseJSON(Type(Text))
-Errors: Error 14-15: Unsupported usage: type literals can only be used in type arguments and type definitions.|Error 0-9: The function 'ParseJSON' has some invalid arguments.
+Errors: Error 14-15: Unsupported usage: Type function can only be used in type arguments and type declarations.|Error 0-9: The function 'ParseJSON' has some invalid arguments.
