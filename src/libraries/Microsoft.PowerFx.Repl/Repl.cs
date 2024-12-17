@@ -522,6 +522,7 @@ namespace Microsoft.PowerFx
                             await this.Output.WriteLineAsync(lineError + msg, kind, cancel)
                                 .ConfigureAwait(false);
                         }
+
                         return new ReplResult();
                     }
 
