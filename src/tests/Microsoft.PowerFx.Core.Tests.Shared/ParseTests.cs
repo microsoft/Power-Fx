@@ -1028,5 +1028,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
             Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
         }
+
+        [Theory]
+        [InlineData("SomeFunc(:")]
+        [InlineData("F(a: Boolean,:):Number = 1; G(): Number = 1;")]
+        public void TestUDFParseArgDoesNotThrowException(string script)
+        {
+            var parserOptions = new ParserOptions();
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(parseResult.HasErrors);
+        }
     }
 }
