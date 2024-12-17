@@ -12,13 +12,14 @@ using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IAsyncTexlFunction999, IHasUnsupportedFunctions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -85,8 +86,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool HasSuggestionsForParam(int argumentIndex) => argumentIndex <= MaxArity;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
+            FormulaValue[] args = invokeInfo.Args.ToArray(); // $$$ remove ToArray
+            var serviceProvider = invokeInfo.FunctionServices;
+
             cancellationToken.ThrowIfCancellationRequested();
             BaseRuntimeConnectorContext runtimeContext = serviceProvider.GetService(typeof(BaseRuntimeConnectorContext)) as BaseRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
 

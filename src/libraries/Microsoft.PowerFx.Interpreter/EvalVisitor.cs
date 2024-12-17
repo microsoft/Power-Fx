@@ -266,6 +266,97 @@ namespace Microsoft.PowerFx
             return result;
         }
 
+        // Given a TexlFunction, get the implementation to invoke. 
+        private IAsyncTexlFunction999 GetInvoker(TexlFunction func)
+        {
+            if (func is IAsyncTexlFunction999 invoker)
+            {
+                return invoker;
+            }
+
+            if (func is UserDefinedFunction userDefinedFunc)
+            {
+                return new UserDefinedFunctionAdapter(userDefinedFunc);
+            }
+
+            if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
+            {
+                return new Adapter1(ptr);
+            }
+
+            return null;
+        }
+
+        // $$$ Adapter demonstrating other paths are compatible with interface.
+        private class Adapter1 : IAsyncTexlFunction999
+        {
+            private readonly AsyncFunctionPtr _ptr;
+
+            public Adapter1(AsyncFunctionPtr ptr)
+            {
+                _ptr = ptr;
+            }
+
+            public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+            {
+                var args = invokeInfo.Args.ToArray();
+                var context = invokeInfo.Context;
+                var evalVisitor = invokeInfo.Runner;
+                var irContext = invokeInfo.IRContext;
+
+                var result = await _ptr(evalVisitor, context, irContext, args).ConfigureAwait(false);
+
+                return result;
+            }
+        }
+
+        private class UserDefinedFunctionAdapter : IAsyncTexlFunction999
+        {
+            private readonly UserDefinedFunction _udf;
+
+            public UserDefinedFunctionAdapter(UserDefinedFunction udf)
+            {
+                _udf = udf;
+            }
+
+            public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+            {
+                var args = invokeInfo.Args.ToArray();
+                var context = invokeInfo.Context;
+                var evalVisitor = invokeInfo.Runner;
+
+                var udfStack = evalVisitor._udfStack;
+
+                UDFStackFrame frame = new UDFStackFrame(_udf, args);
+                UDFStackFrame framePop = null;
+                FormulaValue result = null;
+
+                try
+                {
+                    // $$$ Push this so that we have access to args. 
+                    udfStack.Push(frame);
+
+                    // $$$ This repeats IRTranslator each time!
+                    (var irnode, _) = _udf.GetIRTranslator();
+
+                    evalVisitor.CheckCancel();
+
+                    result = await irnode.Accept(evalVisitor, context).ConfigureAwait(false);
+                }
+                finally
+                {
+                    framePop = udfStack.Pop();
+                }
+
+                if (frame != framePop)
+                {
+                    throw new Exception("Something went wrong. UDF stack values didn't match.");
+                }
+
+                return result;
+            }
+        }
+
         public override async ValueTask<FormulaValue> Visit(CallNode node, EvalVisitorContext context)
         {
             CheckCancel();
@@ -301,6 +392,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
+                    // $$$ This is where Lambdas are created! They close over key values to invoke.
                     args[i] = new LambdaFormulaValue(node.IRContext, child, this, context);
                 }
             }
@@ -308,30 +400,52 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
+
+            // [1] ??? who uses this?
+            // Config.EnableRegExFunctions --> Config.AdditionalFunctions
             IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
 
             try
             {
-                if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
+                var invoker = GetInvoker(func);
+
+                // $$$ New standard invoke path. Make everything go through here. 
+                // Eventually collapse all cases to this. 
+                if (invoker != null)
+                {
+                    var invokeInfo = new FunctionInvokeInfo
+                    {
+                        Args = args,
+                        FunctionServices = _services,
+                        Runner = this,
+                        Context = context.IncrementStackDepthCounter(childContext),
+                        IRContext = node.IRContext,
+                    };
+
+                    result = await invoker.InvokeAsync(invokeInfo, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (func is IAsyncTexlFunction asyncFunc)
+                {
+                    // $$$ This is easy to port ... 
+                    result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+                }
+                else if (extraFunctions?.TryGetValue(func, out asyncFunc) == true)
                 {
                     result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
                 }
-#pragma warning disable CS0618 // Type or member is obsolete
-                else if (func is IAsyncTexlFunction2 asyncFunc2)
-#pragma warning restore CS0618 // Type or member is obsolete
-                {
-                    result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
-                }
                 else if (func is IAsyncTexlFunction3 asyncFunc3)
                 {
+                    // $$$Easy  - This is used for various collect functions. easy to port. 
                     result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction4 asyncFunc4)
                 {
+                    // $$$ This is used for Json() functions.  IsType, AsType
                     result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction5 asyncFunc5)
                 {
+                    // $$$ This is used for Json() functions.
                     BasicServiceProvider services2 = new BasicServiceProvider(_services);
 
                     if (services2.GetService(typeof(TimeZoneInfo)) == null)
@@ -346,63 +460,20 @@ namespace Microsoft.PowerFx
 
                     result = await asyncFunc5.InvokeAsync(services2, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
-                else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
-                {
-                    return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is CustomTexlFunction customTexlFunc)
-                {
-                    // If custom function throws an exception, don't catch it - let it propagate up to the host.
-                    result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is UserDefinedFunction userDefinedFunc)
-                {
-                    UDFStackFrame frame = new UDFStackFrame(userDefinedFunc, args);
-                    UDFStackFrame framePop = null;
-
-                    try
-                    {
-                        _udfStack.Push(frame);
-
-                        (var irnode, _) = userDefinedFunc.GetIRTranslator();
-
-                        this.CheckCancel();
-
-                        result = await irnode.Accept(this, context).ConfigureAwait(false);
-                    }
-                    finally
-                    {
-                        framePop = _udfStack.Pop();
-                    }
-
-                    if (frame != framePop)
-                    {
-                        throw new Exception("Something went wrong. UDF stack values didn't match.");
-                    }
-                }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-
-                // This is a temporary solution to release the Join function for host that want to use it.
-                else if (func is IAsyncTexlFunctionJoin asyncJoin)
-                {
-                    result = await asyncJoin.InvokeAsync(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
-                }
-#pragma warning restore CS0618 // Type or member is obsolete
                 else
                 {
-                    if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
-                    {
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
+                    result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
+                }
 
-                        if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
-                        {
-                            throw CommonExceptions.RuntimeMisMatch;
-                        }
-                    }
-                    else
+                // $$$ we should remove this check that limits to just Adapter1, so we apply this check to all impls. 
+                if (invoker is Adapter1) 
+                {
+                    if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
-                        result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
+                        // $$$ We should never actually be hitting thing. Seems like a bug in our code. 
+                        // But we do :| 
+                        // - AsTypeIsTypeParseJSONTests.cs , BlobTests.cs line , ValidateNoRecordToRecordAggregateCoercionCurrency
+                        throw CommonExceptions.RuntimeMisMatch;
                     }
                 }
             }

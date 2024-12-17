@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
 {    
+    // $$$ Only product impl is JsonFunctionImpl.
     // Texl function interface with IServiceProvider
     internal interface IAsyncTexlFunction5
     {

@@ -6,15 +6,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    internal class FileInfoFunctionImpl : FileInfoFunction, IAsyncTexlFunction3
+    internal class FileInfoFunctionImpl : FileInfoFunction, IAsyncTexlFunction999
     {
-        public async Task<FormulaValue> InvokeAsync(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
+            var args = invokeInfo.Args;
+
             var arg0 = args[0];
             if (arg0 is BlankValue || arg0 is ErrorValue)
             {

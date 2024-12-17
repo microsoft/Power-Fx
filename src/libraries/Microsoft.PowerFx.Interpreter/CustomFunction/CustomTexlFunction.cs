@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Internal adapter for adding custom functions. 
     /// </summary>
-    internal class CustomTexlFunction : TexlFunction
+    internal class CustomTexlFunction : TexlFunction, IAsyncTexlFunction999
     {
         public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
@@ -53,8 +54,10 @@ namespace Microsoft.PowerFx
             yield return CustomFunctionUtility.GenerateArgSignature(_argNames, ParamTypes);
         }
 
-        public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        public virtual Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
+            var serviceProvider = invokeInfo.FunctionServices;
+            var args = invokeInfo.Args.ToArray(); // $$$ remove ToArray
             return _impl(serviceProvider, args, cancellationToken);
         }
 
