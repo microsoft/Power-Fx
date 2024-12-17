@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Console = output;
         }
 
-        // File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // abcde File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
@@ -93,6 +93,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
+#if true
+        // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
+        // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
+        // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat,DecimalSupport", "RegEx")]
+        [InterpreterTheory]
+        public void RegExCompare(ExpressionTestCase t)
+        {
+            ExpressionEvaluationTests.RegExCompareNode = true;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;  // PCRE2 has scalability probleems running all the tests, not included here but is enabled with the REPL and RunOne below
+            RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
+        }
+#endif
+
         private static string _currentNetVersion = null;
         private static readonly object _cnvLock = new object();
 
@@ -155,34 +169,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
-        // Helper to run a single .txt 
+#if true
+        // Helper to run a single .txt deefeeeee
         [Fact]
         public void RunOne()
         {
-            var path = @"D:\repos\osp1\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\StronglyTypedEnum_TestEnums_PreV1.txt";
+            var path = @"c:\temp\match_unicode.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(new Dictionary<string, bool>(), path);
+            testRunner.AddFile(new Dictionary<string, bool>(), null, path);
 
-            // We can filter to just cases we want, set line above 
+            // We can filter to just cases we want, set line above a
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
             }
-
+            
             var result = testRunner.RunTests();
             if (result.Fail > 0)
             {
-                Assert.True(false, result.Output);
+                Assert.Fail(result.Output);
             }
             else
             {
                 Console.WriteLine(result.Output);
             }
+        }
+
+        // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
+        [Fact]
+        public void RunOneMatchCompare()
+        {
+            ExpressionEvaluationTests.RegExCompareNode = true;
+            ExpressionEvaluationTests.RegExComparePCRE2 = false;
+            RunOne();
         }
 #endif
 
@@ -236,7 +259,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
+            testRunner.AddFile(TestRunner.ParseSetupString(setup), null, path);
 
             if (testRunner.Tests.Count > 0 && testRunner.Tests[0].SetupHandlerName.Contains("MutationFunctionsTestSetup"))
             {
@@ -297,7 +320,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(new Dictionary<string, bool>(), path);
+            runner.AddDir(new Dictionary<string, bool>(), null, path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);
