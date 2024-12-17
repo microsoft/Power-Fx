@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx.Json.Tests
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type({a: Text})", obj1, isValid: false);
             CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5, \"\"b\"\": 6}\"", "Type({a: Number})", obj1, false);
             CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type({a: Void})", TexlStrings.ErrUnsupportedTypeInTypeArgument.Key);
+            CheckIsTypeAsTypeParseJSONCompileErrors(engine, "\"{\"\"a\"\": \"\"foo/bar/uri\"\"}\"", "Type(RecordOf(T))", TexlStrings.ErrTypeFunction_InvalidTypeExpression.Key);
         }
 
         [Fact]
@@ -109,8 +110,13 @@ namespace Microsoft.PowerFx.Json.Tests
             var t3a = new object[] { true, true, false, true };
             var t3 = new object[] { t3a };
 
+            dynamic obj1 = new ExpandoObject();
+            obj1.a = 5D;
+
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "T", t1);
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([{a: Number}])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": 5}]\"", "Type([RecordOf(T)])", t1);
+            CheckIsTypeAsTypeParseJSON(engine, "\"{\"\"a\"\": 5}\"", "Type(RecordOf(T))", obj1);
             CheckIsTypeAsTypeParseJSON(engine, "\"[{\"\"a\"\": [true, true, false, true]}]\"", "Type([{a: [Boolean]}])", t3);
             CheckIsTypeAsTypeParseJSON(engine, "\"[1, 2, 3, 4]\"", "Type([Decimal])", t2);
 
@@ -122,10 +128,10 @@ namespace Microsoft.PowerFx.Json.Tests
 
         [Theory]
         [InlineData("\"42\"", "SomeType", "ErrInvalidName")]
-        [InlineData("\"42\"", "Type(5)", "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("\"42\"", "Type(5)", "ErrTypeFunction_InvalidTypeExpression")]
         [InlineData("\"42\"", "Text(42)", "ErrInvalidArgumentExpectedType")]
         [InlineData("\"\"\"Hello\"\"\"", "\"Hello\"", "ErrInvalidArgumentExpectedType")]
-        [InlineData("\"{}\"", "Type([{a: 42}])", "ErrTypeLiteral_InvalidTypeDefinition")]
+        [InlineData("\"{}\"", "Type([{a: 42}])", "ErrTypeFunction_InvalidTypeExpression")]
         public void TestCompileErrorsAllStronglyTypedOverloads(string expression, string type, string expectedError)
         {
             var engine = SetupEngine();
@@ -138,9 +144,9 @@ namespace Microsoft.PowerFx.Json.Tests
         [InlineData("AsType(ParseJSON(\"42\"), Number , Text(5))", "ErrBadArity")]
         [InlineData("IsType(ParseJSON(\"42\"), Number, 5)", "ErrBadArity")]
         [InlineData("AsType(ParseJSON(\"123\"), 1)", "ErrInvalidArgumentExpectedType")]
-        [InlineData("AsType(Type(UntypedObject), ParseJSON(\"123\"))", "ErrTypeLiteral_UnsupportedUsage")]
-        [InlineData("IsType(Type(UntypedObject), Type(Boolean))", "ErrTypeLiteral_UnsupportedUsage")]
-        [InlineData("ParseJSON(Type(Text), Type(Text))", "ErrTypeLiteral_UnsupportedUsage")]
+        [InlineData("AsType(Type(UntypedObject), ParseJSON(\"123\"))", "ErrTypeFunction_UnsupportedUsage")]
+        [InlineData("IsType(Type(UntypedObject), Type(Boolean))", "ErrTypeFunction_UnsupportedUsage")]
+        [InlineData("ParseJSON(Type(Text), Type(Text))", "ErrTypeFunction_UnsupportedUsage")]
         public void TestCompileErrors(string expression, string expectedError)
         {
             var engine = SetupEngine();

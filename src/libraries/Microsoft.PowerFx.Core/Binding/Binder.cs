@@ -2566,7 +2566,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 
                 _txb.SetType(node, DType.Error);
-                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_UnsupportedUsage);
+                _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_UnsupportedUsage);
             }
 
             // Method to bind TypeLiteralNode from valid context where a type is expected.
@@ -2592,7 +2592,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else
                 {
                     _txb.SetType(node, DType.Error);
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeLiteral_InvalidTypeDefinition, node.ToString());
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrTypeFunction_InvalidTypeExpression, node.ToString());
                 }
             }
 
@@ -4325,6 +4325,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         if (BuiltinFunctionsCore.OtherKnownFunctions.Contains(node.Head.Name.Value, StringComparer.OrdinalIgnoreCase))
                         {
                             _txb.ErrorContainer.Error(node, TexlStrings.ErrUnimplementedFunction, node.Head.Name.Value);
+                        }
+                        else if (BuiltinFunctionsCore.TypeHelperFunctions.Contains(node.Head.Name.Value, StringComparer.OrdinalIgnoreCase))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrKnownTypeHelperFunction, node.Head.Name.Value);
                         }
                         else
                         {
