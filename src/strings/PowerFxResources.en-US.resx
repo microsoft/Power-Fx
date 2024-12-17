@@ -1817,7 +1817,7 @@
   </data>
   <data name="IsTypeUOArg2" xml:space="preserve">
     <value>type</value>
-    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a typeliteral or global named type.</comment>
+    <comment>function_parameter - Second argument of the IsTypeUO function - Type value - either a inline type expression or a type name.</comment>
   </data>
   <data name="AboutIsType_untypedValue" xml:space="preserve">
     <value>The untyped value to check if it can be casted as specified type.</value>
@@ -4185,10 +4185,10 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Named type must be a type literal.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A named type declaration must be a valid type expression.</value>
     <comment>
-      This error message shows up when Named type is not a type literal. A valid type literal expression is of syntax "Type(Expression)". 
+      This error message shows up when a named type declaration is not valid a type expression. A valid type expression is of syntax "Type(Expression)". 
       Some examples for valid named type declarations - "Point := Type({x: Number, y: Number});" , "T1 := Type(Number);" , "T2 := Type([Boolean]);".
       Some examples for invalid named type declarations - "T1 := 5;" , "T2 := ;" , "T3 := [1, 2, 3];".
     </comment>
@@ -4560,21 +4560,21 @@
     <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration is invalid. The expression '{0}' cannot be used in a type definition.</value>
-    <comment>Error message when validation of type literal fails.</comment>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type expression is invalid. '{0}' cannot be used in a type expression.</value>
+    <comment>Error message when validation of type expression fails.</comment>
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Unsupported usage: type literals can only be used in type arguments and type definitions.</value>
-    <comment>Error message shown when a type literal is used in an unsupported expression.</comment>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Unsupported usage: Type function can only be used in type arguments and type declarations.</value>
+    <comment>{Locked=Type}Error message shown when Type function is used in an unsupported expression.</comment>
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definition of type {0} is invalid.</value>
-    <comment>Error message when type binding is invalid.</comment>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declaration of type {0} is invalid.</value>
+    <comment>Error message when type declaration is invalid.</comment>
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definition of type {0} is invalid and may contain cycles.</value>
-    <comment>Error message when type binding may have cycles.</comment>
+    <value>Declaration of type {0} is invalid and may contain cycles.</value>
+    <comment>Error message when type declaration may contain cycles.</comment>
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
     <value>Restricted type name {0} cannot be used.</value>
@@ -4879,8 +4879,8 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Invalid argument '{0}'. Expected valid type name or type literal.</value>
-    <comment>Error Message shown to user when a value other name or type literal is passed into AsType, IsType and ParseJSON functions.</comment>
+    <value>Invalid argument '{0}'. Expected valid type name or inline type expression.</value>
+    <comment>Error Message shown to user when a value other name or inline type expression is passed into AsType, IsType and ParseJSON functions.</comment>
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
     <value>Unsupported type '{0}' in type argument.</value>

@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
-                        CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeLiteral);
+                        CreateError(thisIdentifier, TexlStrings.ErrNamedType_MissingTypeExpression);
                     }
 
                     // Extract expression
@@ -346,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         }
                         else
                         {
-                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeLiteral);
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedType_MissingTypeExpression);
                         }
 
                         // If the result was an error, keep moving cursor until end of named type expression

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
@@ -1404,6 +1403,11 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> Summarize(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            // This function expects 3 types of arguments:
+            // 1. TableValue (arg0)
+            // 2. StringValue (columns to group by) at any position > 0.
+            // 3. LambdasFormulaValue (aggregates) at any position > 0. Represented by a record value eg {TotalAmount:Sum(Amount)}
+
             if (args[0] is BlankValue)
             {
                 return new BlankValue(irContext);
@@ -1419,6 +1423,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
 
+            // Building a dictionary of key records (based on groupping columns) and a subset of records that match the key.
             var keyRecords = new Dictionary<string, RecordValue>();
             var groupByRecords = new Dictionary<string, List<RecordValue>>();
 
@@ -1442,6 +1447,7 @@ namespace Microsoft.PowerFx.Functions
                 var showColumnsArgs = new List<FormulaValue>() { row.Value };
                 showColumnsArgs.AddRange(stringArgs);
 
+                // We call ShowColumns to keep only the columns that are part of the group by.
                 var keyRecord = await ShowColumns(runner, context, IRContext.NotInSource(FormulaType.Build(irContext.ResultType._type.ToRecord())), showColumnsArgs.ToArray()).ConfigureAwait(false);
                 var key = keyRecord.ToExpression();
 
@@ -1456,12 +1462,13 @@ namespace Microsoft.PowerFx.Functions
 
             var finalRecords = new List<DValue<RecordValue>>();
 
-            foreach (var group in groupByRecords)
+            // Evaluate all aggregates for each group and include the result as columns name and column value in the final record.
+            foreach (var thisGroup in groupByRecords)
             {
                 runner.CancellationToken.ThrowIfCancellationRequested();
 
-                var newTable = FormulaValue.NewTable((RecordType)FormulaType.Build(tableValue.Type._type.ToRecord()), group.Value);
-                var record = (InMemoryRecordValue)keyRecords[group.Key];
+                var thisGroupTableValue = FormulaValue.NewTable(tableValue.Type.ToRecord(), thisGroup.Value);
+                var record = (InMemoryRecordValue)keyRecords[thisGroup.Key];
                 var fields = new Dictionary<string, FormulaValue>();
 
                 foreach (var field in record.Fields)
@@ -1469,7 +1476,7 @@ namespace Microsoft.PowerFx.Functions
                     fields.Add(field.Name, field.Value);
                 }
 
-                SymbolContext childContext = context.SymbolContext.WithScopeValues(newTable);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(thisGroupTableValue);
 
                 foreach (LambdaFormulaValue arg in args.Where(arg => arg is LambdaFormulaValue))
                 {
