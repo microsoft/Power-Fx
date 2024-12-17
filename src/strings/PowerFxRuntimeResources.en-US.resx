@@ -362,7 +362,7 @@
     <comment>{Locked=Filter()}</comment>
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>The untyped object argument to the '{0}' function has an incorrect type. Expected: {1}, Actual: {0}.</value>
+    <value>The untyped object argument to the '{0}' function has an incorrect type. Expected: {1}, Actual: {2}.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
