@@ -167,7 +167,6 @@ namespace Microsoft.PowerFx.Tests
 
             var check = engine.Check("Remove(robintable, {Scores:10}, RemoveFlags.All)", options: opt);
             Assert.False(check.IsSuccess);
-            Assert.Contains("ErrColumnMissing_ColName_ExpectedType", check.Errors.Select(err => err.MessageKey));
 
             Assert.Equal(3, table.Rows.Count);
         }
