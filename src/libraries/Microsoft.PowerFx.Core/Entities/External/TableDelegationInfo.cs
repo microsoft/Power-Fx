@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Entities
         internal bool SupportsRecordPermission { get; init; }
 
         [Obsolete("preview")]
-        internal bool SupportsJoinFunction { get; init; }
+        public bool SupportsJoinFunction { get; init; }
 
         // Logical name of table
         public string TableName { get; init; }
