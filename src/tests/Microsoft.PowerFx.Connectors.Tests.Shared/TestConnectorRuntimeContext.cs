@@ -54,6 +54,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         private readonly List<ConnectorLog> _logs = new ();
 
         internal IEnumerable<string> Uris => _uris.Distinct();
+
         private readonly List<string> _uris = new List<string>();
 
         internal ConsoleLogger(ITestOutputHelper console, bool includeDebug = false)
