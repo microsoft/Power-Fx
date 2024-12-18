@@ -46,11 +46,17 @@ namespace Microsoft.PowerFx.Connectors
                 DatasetMetadata = await GetDatasetsMetadataAsync(httpClient, cancellationToken, logger).ConfigureAwait(false);
             }
 
-            string queryName = httpClient is PowerPlatformConnectorClient ppcc && ppcc.RequestUrlPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables";
+            string queryName = IsSharepoint(httpClient) ? "/alltables" : "/tables";
             string uri = $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}" + queryName;
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
             return tables?.Value?.Select((RawTable rawTable) => new CdpTable(DatasetName, rawTable.Name, DatasetMetadata, tables?.Value) { DisplayName = rawTable.DisplayName });
+
+            static bool IsSharepoint(HttpClient httpClient)
+            {
+                return httpClient is PowerPlatformConnectorClient ppcc && 
+                       ppcc.RequestUrlPrefix.Contains("/sharepointonline/");
+            }
         }
 
         [Obsolete("Use GetTablesAsync without urlPrefix")]

@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string EnvironmentId { get; set; }
 
-        public string RequestUrlPrefix { get; }
+        public string RequestUrlPrefix { get; init; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
