@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Connectors
                 ColumnsWithRelationships = columnWithRelationships,
                 PrimaryKeyNames = primaryKeyNames,
 #pragma warning disable CS0618 // Type or member is obsolete
-                SupportsJoinFunction = serviceCapabilities.SupportsJoinFunction
+                SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false
 #pragma warning restore CS0618 // Type or member is obsolete
             };
         }
