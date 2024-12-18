@@ -16,6 +16,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 #pragma warning disable SA1116
+#pragma warning disable SA1118
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -140,6 +141,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sql/c1a4e9f52ec94d55bb82f319b3e33a6a/v2/$metadata.json/datasets",
+                    "/apim/sql/c1a4e9f52ec94d55bb82f319b3e33a6a/v2/datasets/pfxdev-sql.database.windows.net,connectortest/tables",
+                    "/apim/sql/c1a4e9f52ec94d55bb82f319b3e33a6a/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/tables/%255Bdbo%255D.%255BCustomers%255D"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -240,7 +250,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // For SQL we don't have relationships
             bool b = sqlTable.RecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
             Assert.False(b);
-            
+
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json");
             b = sqlTable.RecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
 
@@ -249,6 +259,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(productModelId is null);
 
             Assert.Equal("ProductID", string.Join("|", GetPrimaryKeyNames(sqlTable.RecordType)));
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sql/2cc03a388d38465fba53f05cd2c76181/v2/$metadata.json/datasets",
+                    "/apim/sql/2cc03a388d38465fba53f05cd2c76181/v2/datasets/default,default/tables",
+                    "/apim/sql/2cc03a388d38465fba53f05cd2c76181/v2/$metadata.json/datasets/default,default/tables/%255BSalesLT%255D.%255BProduct%255D"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -297,6 +316,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Not defined for SAP
             Assert.Equal(string.Empty, string.Join("|", GetPrimaryKeyNames(sapTableValue.RecordType)));
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sapodata/1e702ce4f10c482684cee1465e686764/$metadata.json/datasets",
+                    "/apim/sapodata/1e702ce4f10c482684cee1465e686764/datasets/http%253A%252F%252Fsapecckerb.roomsofthehouse.com%253A8080%252Fsap%252Fopu%252Fodata%252Fsap%252FHRESS_TEAM_CALENDAR_SERVICE/tables",
+                    "/apim/sapodata/1e702ce4f10c482684cee1465e686764/$metadata.json/datasets/http%253A%252F%252Fsapecckerb.roomsofthehouse.com%253A8080%252Fsap%252Fopu%252Fodata%252Fsap%252FHRESS_TEAM_CALENDAR_SERVICE/tables/TeamCalendarCollection"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -310,7 +338,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             string connectionId = "18992e9477684930acd2cc5dc9bb94c2";
             string jwt = "eyJ0eXAiOiJK...";
-            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", $"/apim/sql/{connectionId}", connectionId, () => jwt, httpClient)
+            using var client = new PowerPlatformConnectorClient("firstrelease-003.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", $"/apim/sql/{connectionId}/v2", connectionId, () => jwt, httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
@@ -354,6 +382,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             result = await engine.EvalAsync("Last(Customers).Phone", CancellationToken.None, runtimeConfig: rc);
             StringValue phone = Assert.IsType<StringValue>(result);
             Assert.Equal("+1-425-705-0000", phone.Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sql/18992e9477684930acd2cc5dc9bb94c2/v2/$metadata.json/datasets",
+                    "/apim/sql/18992e9477684930acd2cc5dc9bb94c2/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/tables/Customers"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -468,6 +504,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Document1", docName.Value);
 
             Assert.Equal("ID", string.Join("|", GetPrimaryKeyNames(spTable.RecordType)));
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sharepointonline/3738993883dc406d86802d8a6a923d3e/$metadata.json/datasets",
+                    "/apim/sharepointonline/3738993883dc406d86802d8a6a923d3e/datasets/https%253A%252F%252Fmicrosofteur.sharepoint.com%252Fteams%252Fpfxtest/alltables",
+                    "/apim/sharepointonline/3738993883dc406d86802d8a6a923d3e/$metadata.json/datasets/https%253A%252F%252Fmicrosofteur.sharepoint.com%252Fteams%252Fpfxtest/tables/4bd37916-0026-4726-94e8-5a0cbc8e476a"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -521,6 +566,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/sharepointonline/0b905132239e463a9d12f816be201da9/$metadata.json/datasets",
+                    "/apim/sharepointonline/0b905132239e463a9d12f816be201da9/$metadata.json/datasets/https%253A%252F%252Fmicrosofteur.sharepoint.com%252Fteams%252Fpfxtest/tables/Documents"                    
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -557,6 +610,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             Assert.Equal(6, ((DecimalValue)result).Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/$metadata.json/datasets",
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/datasets/default/tables",
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/$metadata.json/datasets/default/tables/Account"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -593,6 +655,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SF GetData.json");
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
             Assert.Equal("Kutch and Sons", ((StringValue)result).Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/$metadata.json/datasets",
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/datasets/default/tables",
+                    "/apim/salesforce/ba3b1db7bb854aedbad2058b66e36e83/$metadata.json/datasets/default/tables/Account"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         private static IEnumerable<string> GetPrimaryKeyNames(RecordType rt)
@@ -605,7 +676,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         [Fact]
         public async Task SF_CdpTabular_GetTables()
-        {                       
+        {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
             var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
@@ -796,6 +867,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(sfTable.RecordType)));
             Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(userTable)));
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/salesforce/3b997639fd9c4d808ecf723eb4b55c64/$metadata.json/datasets",
+                    "/apim/salesforce/3b997639fd9c4d808ecf723eb4b55c64/datasets/default/tables",
+                    "/apim/salesforce/3b997639fd9c4d808ecf723eb4b55c64/$metadata.json/datasets/default/tables/Account",
+                    "/apim/salesforce/3b997639fd9c4d808ecf723eb4b55c64/$metadata.json/datasets/default/tables/User"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -850,6 +931,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/salesforce/ec5fe6d1cad744a0a716fe4597a74b2e/$metadata.json/datasets",
+                    "/apim/salesforce/ec5fe6d1cad744a0a716fe4597a74b2e/$metadata.json/datasets/default/tables/Account"                    
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -902,7 +991,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(zdTable._tabularService.IsInitialized);
             Assert.True(zdTable.IsDelegable);
 
-            Assert.Equal( 
+            Assert.Equal(
                 "r![active:b, alias:s, created_at:d, custom_role_id:w, details:s, email:s, external_id:s, id:w, last_login_at:d, locale:s, locale_id:w, moderator:b, name:s, notes:s, only_private_comments:b, organization_id:w, " +
                 "phone:s, photo:s, restricted_agent:b, role:s, shared:b, shared_agent:b, signature:s, suspended:b, tags:s, ticket_restriction:s, time_zone:s, updated_at:d, url:s, user_fields:s, verified:b]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
@@ -920,6 +1009,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue userName = Assert.IsType<StringValue>(result);
             Assert.Equal("Ram Sitwat", userName.Value);
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/zendesk/7a82a84f1b454132920a2654b00d45be/v2/$metadata.json/datasets",
+                    "/apim/zendesk/7a82a84f1b454132920a2654b00d45be/v2/datasets/default/tables",
+                    "/apim/zendesk/7a82a84f1b454132920a2654b00d45be/v2/$metadata.json/datasets/default/tables/users"
+                }),
+                string.Join("|", logger.Uris));
         }
 
         [Fact]
@@ -997,6 +1095,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("priority (tickets), status (tickets), type (tickets)", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
 
             Assert.Equal("id", string.Join("|", GetPrimaryKeyNames(zdTable.RecordType)));
+
+            Assert.Equal<object>(
+                string.Join("|", new string[]
+                {
+                    "/apim/zendesk/ca06d34f4b684e38b7cf4c0f517a7e99/v2/$metadata.json/datasets",
+                    "/apim/zendesk/ca06d34f4b684e38b7cf4c0f517a7e99/v2/datasets/default/tables",
+                    "/apim/zendesk/ca06d34f4b684e38b7cf4c0f517a7e99/v2/$metadata.json/datasets/default/tables/tickets"                    
+                }),
+                string.Join("|", logger.Uris));
         }
     }
 
