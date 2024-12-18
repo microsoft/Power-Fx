@@ -49,16 +49,6 @@ namespace Microsoft.PowerFx
         internal bool RestrictedIsEmptyArguments { get; init; }
 
         /// <summary>
-        /// Allow delegation for async calls (delegate using awaited call result).
-        /// </summary>
-        internal bool AllowAsyncDelegation { get; init; }
-
-        /// <summary>
-        /// Allow delegation for impure nodes.
-        /// </summary>
-        internal bool AllowImpureNodeDelegation { get; init; }
-
-        /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
         /// defaulting to 1.
         /// </summary>
@@ -131,8 +121,6 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = other.PowerFxV1CompatibilityRules;
             PrimaryOutputPropertyCoercionDeprecated = other.PrimaryOutputPropertyCoercionDeprecated;
             IsUserDefinedTypesEnabled = other.IsUserDefinedTypesEnabled;
-            AllowImpureNodeDelegation = other.AllowImpureNodeDelegation;
-            AllowAsyncDelegation = other.AllowAsyncDelegation;
             AsTypeLegacyCheck = other.AsTypeLegacyCheck;
             JsonFunctionAcceptsLazyTypes = other.JsonFunctionAcceptsLazyTypes;
             IsLookUpReductionDelegationEnabled = other.IsLookUpReductionDelegationEnabled;
