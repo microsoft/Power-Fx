@@ -202,6 +202,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Entities.IRefreshable",                
                 "Microsoft.PowerFx.Core.Entities.SelectionRestrictions",
                 "Microsoft.PowerFx.Core.Entities.SortRestrictions",
+                "Microsoft.PowerFx.Core.Entities.SummarizeCapabilities",
+                "Microsoft.PowerFx.Core.Entities.SummarizeMethod",
                 "Microsoft.PowerFx.Core.Entities.TableDelegationInfo",
                 "Microsoft.PowerFx.Core.Functions.Delegation.DelegationOperator",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
