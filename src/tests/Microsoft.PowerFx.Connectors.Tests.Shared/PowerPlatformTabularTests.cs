@@ -252,6 +252,46 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task SQL_CdpTabular_JoinCapabilityTest()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "2cc03a388d38465fba53f05cd2c76181";
+            string jwt = "eyJ0eXAiOiJKSuA...";
+            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            string realTableName = "Product";            
+           
+            CdpDataSource cds = new CdpDataSource("default,default");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            
+            CdpTable table = tables.First(t => t.DisplayName == realTableName);
+                       
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products v2.json");
+            await table.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            Assert.True(table.IsInitialized);
+
+            CdpTableValue sqlTable = table.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.True(sqlTable.IsDelegable);
+            
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            DataSourceInfo dsi = Assert.IsType<DataSourceInfo>(ads.First());
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.True(dsi.DelegationInfo.SupportsJoinFunction);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Fact]
         public async Task SAP_CDP()
         {
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);

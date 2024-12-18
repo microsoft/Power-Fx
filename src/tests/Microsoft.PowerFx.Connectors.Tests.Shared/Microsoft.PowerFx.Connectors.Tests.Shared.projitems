@@ -247,6 +247,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema ProductModel.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products v2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables SampleDB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetRelationships SampleDB.json" />
