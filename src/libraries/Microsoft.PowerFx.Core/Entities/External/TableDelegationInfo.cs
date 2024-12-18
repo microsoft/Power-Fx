@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -36,6 +37,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
+
+        [Obsolete("preview")]
+        public bool SupportsJoinFunction { get; init; }
 
         // Logical name of table
         public string TableName { get; init; }

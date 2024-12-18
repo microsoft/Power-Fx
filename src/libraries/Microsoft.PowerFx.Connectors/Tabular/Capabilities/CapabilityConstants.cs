@@ -36,6 +36,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string SPIsChoice = "IsChoice";
         public const string SPQueryName = "OdataQueryName";
         public const string SupportsRecordPermission = "supportsRecordPermission";
+        public const string SupportsJoin = "supportsJoin";
         public const string UngroupableProperties = "ungroupableProperties";
         public const string UnsortableProperties = "unsortableProperties";        
     }
