@@ -140,8 +140,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
-                    // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
-                    args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+                    if (varIdent != null)
+                    {
+                        // Add incomplete UDFArgs (type is mising) as well, these are needed for intellisense.
+                        args.Add(new UDFArg(varIdent.As<IdentToken>(), typeIdent: null, colonToken, argIndex));
+                    }
 
                     // If the result was an error, keep moving cursor until end of expression
                     MoveToNextUserDefinition();
