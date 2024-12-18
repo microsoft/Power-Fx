@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Entities
         // Used to indicate whether this table has selectable columns
         public SelectionRestrictions SelectionRestriction { get; init; }
 
+        public SummarizeRestrictions SummarizeRestriction { get; init; }
+
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
@@ -264,6 +266,30 @@ namespace Microsoft.PowerFx.Core.Entities
         public SelectionRestrictions()
         {
         }
+    }
+
+    public sealed class SummarizeRestrictions
+    {
+        /// <summary>
+        /// List of properties that can not be summarized.
+        /// </summary>
+        public ICollection<string> NonSummarizableProperties { get; init; }
+
+        public ICollection<SummarizeMethod> NotSupportedSummarizeMethods { get; init; }
+        
+        public SummarizeRestrictions()
+        {
+        }
+    }
+
+    public enum SummarizeMethod
+    {
+        None,
+        Sum,
+        Average,
+        Min,
+        Max,
+        Count,
     }
 
     public sealed class FilterRestrictions
