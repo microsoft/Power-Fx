@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Tests
 
             ConnectorLogger connectorLogger = new ConsoleLogger(_output);
             CdpTable tabularTable = new CdpTable("dataset", "table", new List<RawTable>() { });
-            CdpTableResolver tableResolver = new CdpTableResolver(tabularTable, httpClient, "prefix", true, connectorLogger);
+            CdpTableResolver tableResolver = new CdpTableResolver(tabularTable, httpClient, true, connectorLogger);
 
             string text = (string)LoggingTestServer.GetFileText(@"Responses\Compatibility GetSchema.json");
 

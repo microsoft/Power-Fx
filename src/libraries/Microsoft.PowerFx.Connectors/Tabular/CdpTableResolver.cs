@@ -24,10 +24,21 @@ namespace Microsoft.PowerFx.Connectors
 
         private readonly HttpClient _httpClient;
 
-        private readonly string _uriPrefix;
+        [Obsolete]
+        private readonly string _uriPrefix = null;
 
         private readonly bool _doubleEncoding;
 
+        public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, bool doubleEncoding, ConnectorLogger logger = null)
+        {
+            _tabularTable = tabularTable;
+            _httpClient = httpClient;            
+            _doubleEncoding = doubleEncoding;
+
+            Logger = logger;
+        }
+
+        [Obsolete]
         public CdpTableResolver(CdpTable tabularTable, HttpClient httpClient, string uriPrefix, bool doubleEncoding, ConnectorLogger logger = null)
         {
             _tabularTable = tabularTable;
@@ -53,7 +64,12 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : _tabularTable.DatasetName;
-            string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            string prefix = string.IsNullOrEmpty(_uriPrefix) ? string.Empty : (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty);
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            string uri = $"{prefix}/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);
 
@@ -92,7 +108,10 @@ namespace Microsoft.PowerFx.Connectors
             //    sqlRelationships = GetSqlRelationships(text2);
             //}
 
-            var parts = _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+#pragma warning disable CS0612 // Type or member is obsolete
+            var parts = string.IsNullOrEmpty(_uriPrefix) ? Array.Empty<string>() : _uriPrefix.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+#pragma warning restore CS0612 // Type or member is obsolete
+
             string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
             ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, 
@@ -103,8 +122,7 @@ namespace Microsoft.PowerFx.Connectors
             return connectorType;
         }
 
-        internal static bool IsSql(string uriPrefix) => uriPrefix.Contains("/sql/");
-
+        [Obsolete]
         internal static bool UseV2(string uriPrefix) => uriPrefix.Contains("/sql/") ||
                                                         uriPrefix.Contains("/zendesk/");
 

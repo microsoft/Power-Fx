@@ -1025,7 +1025,7 @@ namespace Microsoft.PowerFx.Connectors
             IList<ReferencedEntity> referencedEntities = GetReferenceEntities(connectorName, stringValue);
 
             SymbolTable symbolTable = new SymbolTable();
-            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, compatibility, referencedEntities, datasetName, name, connectorName, tableResolver, serviceCapabilities, isTableReadOnly);
+            ConnectorType connectorType = new ConnectorType(jsonElement, tableName, symbolTable, compatibility, referencedEntities, datasetName, name, tableResolver, serviceCapabilities, isTableReadOnly);
             delegationInfo = ((DataSourceInfo)connectorType.FormulaType._type.AssociatedDataSources.First()).DelegationInfo;
             optionSets = symbolTable.OptionSets.Select(kvp => kvp.Value);
 

@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors
         protected internal static async Task<string> GetObject(HttpClient httpClient, string message, string uri, string content, CancellationToken cancellationToken, ConnectorLogger logger = null, [CallerMemberName] string callingMethod = "")
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string log = $"{callingMethod}.{nameof(GetObject)} for {message}, Uri {uri}";
+            string log = $"{callingMethod}.{nameof(GetObject)} for {message}, Uri {(httpClient is PowerPlatformConnectorClient ppcc ? ppcc.RequestUrlPrefix : string.Empty)}{uri}";
 
             try
             {
