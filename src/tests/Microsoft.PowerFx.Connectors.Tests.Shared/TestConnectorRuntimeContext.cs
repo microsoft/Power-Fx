@@ -53,6 +53,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
         private readonly bool _includeDebug;
         private readonly List<ConnectorLog> _logs = new ();
 
+        internal IEnumerable<string> Uris => _uris.Distinct();
+
+        private readonly List<string> _uris = new List<string>();
+
         internal ConsoleLogger(ITestOutputHelper console, bool includeDebug = false)
         {
             _console = console;
@@ -84,6 +88,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             if (_includeDebug || log.Category != LogCategory.Debug)
             {
                 _console.WriteLine(GetMessage(log));
+
+                string[] parts = log.Message.Split(new string[] { "Uri ", ", ", "?" }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length > 1)
+                {
+                    _uris.Add(parts[1]);
+                }
+
                 _logs.Add(log);
             }
         }
