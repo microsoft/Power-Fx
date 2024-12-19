@@ -1167,7 +1167,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 // Second, set column missing message if applicable
-                if (RequireAllParamColumns && !expectedType.AreFieldsOptional)
+                if ((RequireAllParamColumns || features.PowerFxV1CompatibilityRules) && !expectedType.AreFieldsOptional)
                 {
                     errors.EnsureError(
                         DocumentErrorSeverity.Severe,
