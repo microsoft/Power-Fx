@@ -971,6 +971,26 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[1].Visibility);
             Assert.Equal(Visibility.Advanced, listFolderV4.ReturnParameterType.Fields[2].Visibility);
         }
+
+        [Fact]
+        public void MSNWeather_Sample()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json", _output);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("MSNWeather", doc, new ConsoleLogger(_output)).ToArray();
+
+            Assert.NotNull(functions);
+            Assert.Equal(3, functions.Count());
+
+            Assert.Equal(new List<string>() { "CurrentWeather", "TodaysForecast", "TomorrowsForecast" }, functions.Select(f => f.Name).ToList());
+            Assert.Equal(new List<string>() { "CurrentWeather", "TodaysForecast", "TomorrowsForecast" }, functions.Select(f => f.OriginalName).ToList());
+
+            // "enum"
+            Assert.Equal(FormulaType.String, functions[0].RequiredParameters[1].ConnectorType.FormulaType); // "leadsourcecode"
+            Assert.True(functions[0].RequiredParameters[1].ConnectorType.IsEnum);
+            Assert.Equal(new string[] { "I", "C" }, functions[0].RequiredParameters[1].ConnectorType.EnumValues.Select(fv => (string)fv.ToObject()));
+            Assert.Equal(new string[] { "Imperial", "Metric" }, functions[0].RequiredParameters[1].ConnectorType.EnumDisplayNames);
+            Assert.Equal("I", functions[0].RequiredParameters[1].ConnectorType.Enum["Imperial"].ToObject());
+        }
 #endif
 
         [Fact]
