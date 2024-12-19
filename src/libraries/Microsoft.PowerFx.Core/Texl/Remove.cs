@@ -509,12 +509,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Use ECS flag as a guard.
-            if (binding.Document != null)
+            if (binding.Document != null && !binding.Document.Properties.EnabledFeatures.IsRemoveAllDelegationEnabled)
             {
-                if (!binding.Features.IsRemoveAllDelegationEnabled)
-                {
-                    return false;
-                }
+                return false;
             }
 
             if (!binding.TryGetDataSourceInfo(callNode.Args.Children[0], out IExternalDataSource dataSource))
