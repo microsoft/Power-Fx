@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
@@ -173,10 +174,37 @@ namespace Microsoft.PowerFx.Connectors
                         return FormulaValue.NewBlank();
                     }).ToArray();
 
-                    // x-ms-enum-display-name
-                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is IList<IOpenApiAny> oaa
-                                        ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                        : Array.Empty<string>();
+                    if (schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is IList<IOpenApiAny> enumNamesEntries)
+                    {
+                        // x-ms-enum-display-name is present
+                        EnumDisplayNames = enumNamesEntries.Cast<OpenApiString>().Select(oas => oas.Value).ToArray();
+                    } 
+                    else if (openApiParameter.Extensions != null && openApiParameter.Extensions.TryGetValue(XMsEnumValues, out IOpenApiExtension enumValues) && enumValues is IList<IOpenApiAny> enumValuesEntries) 
+                    {
+                        // x-ms-enum-values is present
+                        EnumDisplayNames = enumValuesEntries.Cast<IDictionary<string, IOpenApiAny>>()
+                            .Select(entry =>
+                            {
+                                var openApiDisplay = entry["displayName"];
+
+                                if (openApiDisplay is OpenApiString displayStr)
+                                {
+                                    return displayStr.Value;
+                                }
+                                else if (openApiDisplay is OpenApiInteger displayInt)
+                                {
+                                    return displayInt.Value.ToString(CultureInfo.InvariantCulture);
+                                } 
+                                else
+                                {
+                                    return null;
+                                }
+                            }).ToArray();
+                    } 
+                    else 
+                    {
+                        EnumDisplayNames = Array.Empty<string>();
+                    }
                 }
                 else
                 {
