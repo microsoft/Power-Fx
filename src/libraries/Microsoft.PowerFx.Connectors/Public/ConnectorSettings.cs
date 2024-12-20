@@ -10,6 +10,12 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public class ConnectorSettings
     {
+        internal static readonly ConnectorSettings DefaultCdp = new ConnectorSettings(null) 
+        { 
+            Compatibility = ConnectorCompatibility.CdpCompatibility,
+            SupportXMsEnumValues = true 
+        };
+        
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
@@ -70,9 +76,15 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
         /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
-        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or  ConnectorCompatibility.CdpCompatibility.
+        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or ConnectorCompatibility.CdpCompatibility.
         /// </summary>
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+
+        /// <summary>
+        /// By default action connectors won't parse x-ms-enum-values.
+        /// Only CDP connectors will have this enabled by default.
+        /// </summary>
+        public bool SupportXMsEnumValues { get; init; } = false;
 
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }

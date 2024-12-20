@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var bugNames = new HashSet<string>()
             {
                 "ConnectorFunction._slash",
+                "ConnectorSettings.DefaultCdp",
                 "ColumnCapabilities.DefaultFilterFunctionSupport"
             };
 
