@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -22,6 +23,9 @@ namespace Microsoft.PowerFx.Core.Entities
         // Used to indicate whether this table has selectable columns
         public SelectionRestrictions SelectionRestriction { get; init; }
 
+        [Obsolete("preview")]
+        public SummarizeCapabilities SummarizeCapabilities { get; init; }
+
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
@@ -36,6 +40,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         // Supports per record permission
         internal bool SupportsRecordPermission { get; init; }
+
+        [Obsolete("preview")]
+        public bool SupportsJoinFunction { get; init; }
 
         // Logical name of table
         public string TableName { get; init; }
@@ -260,6 +267,35 @@ namespace Microsoft.PowerFx.Core.Entities
         public SelectionRestrictions()
         {
         }
+    }
+
+    [Obsolete("preview")]
+    public class SummarizeCapabilities
+    {
+        public virtual bool IsSummarizableProperty(string propertyName)
+        {
+            return false;
+        }
+
+        public virtual bool IsSummarizableMethod(SummarizeMethod method)
+        {
+            return false;
+        }
+
+        public SummarizeCapabilities()
+        {
+        }
+    }
+
+    [Obsolete("preview")]
+    public enum SummarizeMethod
+    {
+        None,
+        Sum,
+        Average,
+        Min,
+        Max,
+        Count,
     }
 
     public sealed class FilterRestrictions

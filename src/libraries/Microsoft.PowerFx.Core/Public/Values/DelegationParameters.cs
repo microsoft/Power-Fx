@@ -73,6 +73,9 @@ namespace Microsoft.PowerFx.Types
         // $apply
         Apply = 1 << 4,
 
+        // $apply = groupby((field1, ..), field with sum as TotalSum)
+        ApplyGroupBy = 1 << 5,
+
         /*
           To be implemented later when needed
          
