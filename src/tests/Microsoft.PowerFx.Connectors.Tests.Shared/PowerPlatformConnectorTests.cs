@@ -45,6 +45,84 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expected.Replace("\r", string.Empty), actual.Replace("\r", string.Empty));
         }
 
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
+        public void MSNWeather_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("MSNWeather") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            ConnectorFunction currentWeather = functions.First(f => f.Name == "CurrentWeather");
+
+            Assert.Equal(2, currentWeather.RequiredParameters.Length);
+            Assert.Equal("Location", currentWeather.RequiredParameters[0].Name);
+            Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[0].FormulaType);
+
+            Assert.Equal("units", currentWeather.RequiredParameters[1].Name);
+            Assert.Equal("units", currentWeather.RequiredParameters[1].ConnectorType.Name);
+            Assert.Null(currentWeather.RequiredParameters[1].ConnectorType.DisplayName);
+            Assert.True(currentWeather.RequiredParameters[1].ConnectorType.IsEnum);
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                Assert.Equal(FormulaType.OptionSetValue, currentWeather.RequiredParameters[1].FormulaType);                
+
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Key)));
+                Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => (kvp.Value as StringValue).Value)));
+
+                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumDisplayNames));                
+            }
+            else
+            {
+                Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);                                                                                            
+            }
+
+            Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumValues.Select(fv => (fv as StringValue).Value)));
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
+
+        // Option set with numeric logical names
+        public void DimeScheduler_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dime.Scheduler.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("DimeScheduler") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            ConnectorFunction actionUriUpsert = functions.First(f => f.Name == "actionUriUpsert");
+
+            Assert.Equal(5, actionUriUpsert.OptionalParameters.Length);
+            Assert.Equal("uriType", actionUriUpsert.OptionalParameters[2].Name);
+            Assert.True(actionUriUpsert.OptionalParameters[2].ConnectorType.IsEnum);
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);
+                Assert.True(actionUriUpsert.OptionalParameters[2].ConnectorType.IsEnum);
+
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("Appointment,Map,Planning Board,Task", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Key)));
+                Assert.Equal("1,3,0,2", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => (kvp.Value as DecimalValue).Value)));
+
+                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumDisplayNames));                
+            }
+            else
+            {
+                Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);                
+            }
+
+            Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (fv as DecimalValue).Value)));
+        }
+
         // Exercise calling the MSNWeather connector against mocked Swagger and Response.json.
         [Theory]
         [InlineData(true)]
@@ -2055,7 +2133,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             string ft = returnType.FormulaType.ToStringWithDisplayNames();
 
             string expected =
-                "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
+               "!['@odata.nextLink'`'Next link':s, value:*[Array:!['@odata.id'`'OData Id':s, _createdby_value`'Created By (Value)':s, '_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created " +
                 "By (Type)':s, _createdbyexternalparty_value`'Created By (External Party) (Value)':s, '_createdbyexternalparty_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (External Party) " +
                 "(Type)':s, _createdonbehalfby_value`'Created By (Delegate) (Value)':s, '_createdonbehalfby_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Created By (Delegate) (Type)':s, _defaultpricelevelid_value`'" +
                 "Price List (Value)':s, '_defaultpricelevelid_value@Microsoft.Dynamics.CRM.lookuplogicalname'`'Price List (Type)':s, _masterid_value`'Master ID (Value)':s, '_masterid_value@Microsoft.Dynamics.CRM.lookup" +
