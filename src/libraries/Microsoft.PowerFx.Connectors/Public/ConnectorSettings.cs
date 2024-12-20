@@ -8,6 +8,7 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Settings for a connector.
     /// </summary>
+    [ThreadSafeImmutable]
     public class ConnectorSettings
     {
         internal static readonly ConnectorSettings DefaultCdp = new ConnectorSettings(null) 
