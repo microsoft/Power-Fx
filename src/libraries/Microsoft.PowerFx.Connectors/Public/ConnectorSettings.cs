@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Namespace of the connector.
         /// </summary>
-        public string Namespace { get; }
+        public string Namespace { get; init; }
 
         /// <summary>
         /// Maximum number of rows to return, per page.
