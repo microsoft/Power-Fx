@@ -822,6 +822,12 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
+        [Obsolete("Use a ConnectorSettings parameter instead")]
+        public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorCompatibility compatibility)
+        {
+            return openApiOperation.GetReturnType(new ConnectorSettings(null) { Compatibility = compatibility });
+        }
+
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorSettings settings)
         {            
             ConnectorType connectorType = openApiOperation.GetConnectorReturnType(settings);
