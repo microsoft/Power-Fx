@@ -281,19 +281,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             string connectionId = "2cc03a388d38465fba53f05cd2c76181";
             string jwt = "eyJ0eXAiOiJKSuA...";
-            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", $"/apim/sql/{connectionId}", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
 
             string realTableName = "Product";            
            
             CdpDataSource cds = new CdpDataSource("default,default");
 
             testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
-            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, CancellationToken.None, logger);
             
             CdpTable table = tables.First(t => t.DisplayName == realTableName);
                        
             testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products v2.json");
-            await table.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            await table.InitAsync(client, CancellationToken.None, logger);
             Assert.True(table.IsInitialized);
 
             CdpTableValue sqlTable = table.GetTableValue();
