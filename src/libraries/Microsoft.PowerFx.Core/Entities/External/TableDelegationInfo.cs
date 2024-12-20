@@ -296,6 +296,7 @@ namespace Microsoft.PowerFx.Core.Entities
         Min,
         Max,
         Count,
+        CountRows
     }
 
     public sealed class FilterRestrictions
