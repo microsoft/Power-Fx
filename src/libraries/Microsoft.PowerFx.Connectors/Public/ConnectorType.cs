@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OpenApi.Any;
@@ -171,12 +172,39 @@ namespace Microsoft.PowerFx.Connectors
 
                         AddError($"Invalid conversion for type {oaa.GetType().Name} in enum");
                         return FormulaValue.NewBlank();
-                    }).ToArray();
+                    }).ToArray();                    
 
                     // x-ms-enum-display-name
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is IList<IOpenApiAny> oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
+
+                    // x-ms-enum-values
+                    if (!EnumDisplayNames.Any() && formulaType is OptionSetValueType osvt)
+                    {
+                        DisplayNameProvider dnpp = openApiParameter.GetEnumValues();
+
+                        List<string> displayNames = new List<string>();
+
+                        // ensure we follow the EnumValues order
+                        foreach (FormulaValue enumName in EnumValues)
+                        {
+                            string logicalName = enumName switch
+                            {
+                                StringValue sv => sv.Value,
+                                DecimalValue dv => dv.Value.ToString(CultureInfo.InvariantCulture),
+                                NumberValue nv => nv.Value.ToString(CultureInfo.InvariantCulture),
+                                _ => throw new InvalidOperationException("Not supported enum type")
+                            };
+
+                            if (osvt.TryGetValue(logicalName, out OptionSetValue osValue))
+                            {
+                                displayNames.Add(osValue.DisplayName ?? logicalName);
+                            }
+                        }
+
+                        EnumDisplayNames = displayNames.ToArray();
+                    }
                 }
                 else
                 {
@@ -191,7 +219,7 @@ namespace Microsoft.PowerFx.Connectors
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
-        }
+        }        
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 
@@ -201,14 +229,14 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = DefaultType;
         }
 
-        internal ConnectorType(ISwaggerSchema schema, ConnectorCompatibility compatibility)
-            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(compatibility))
+        internal ConnectorType(ISwaggerSchema schema, ConnectorSettings settings)
+            : this(schema, null, new SwaggerParameter(null, true, schema, null).GetConnectorType(settings))
         {
         }        
 
         // Called by ConnectorFunction.GetCdpTableType
-        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorCompatibility compatibility, IList<ReferencedEntity> referencedEntities, string datasetName, string name, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
-            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, compatibility))
+        internal ConnectorType(JsonElement schema, string tableName, SymbolTable optionSets, ConnectorSettings settings, IList<ReferencedEntity> referencedEntities, string datasetName, string name, string connectorName, ICdpTableResolver resolver, ServiceCapabilities serviceCapabilities, bool isTableReadOnly)
+            : this(SwaggerJsonSchema.New(schema), null, new SwaggerParameter(null, true, SwaggerJsonSchema.New(schema), null).GetConnectorType(tableName, optionSets, settings))
         {
             Name = name;
 

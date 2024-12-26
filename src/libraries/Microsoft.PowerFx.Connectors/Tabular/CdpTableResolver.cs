@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Connectors
 
             string connectorName = (parts.Length > 1) ? parts[1] : string.Empty;
 
-            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorCompatibility.CdpCompatibility, _tabularTable.DatasetName, 
+            ConnectorType connectorType = ConnectorFunction.GetCdpTableType(this, connectorName, _tabularTable.TableName, "Schema/Items", FormulaValue.New(text), ConnectorSettings.DefaultCdp, _tabularTable.DatasetName, 
                                                                             out string name, out string displayName, out TableDelegationInfo delegationInfo, out IEnumerable<OptionSet> optionSets);
 
             OptionSets = optionSets;
