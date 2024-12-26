@@ -4,13 +4,13 @@
 
 // Wrong arguments
 >> Remove(t1, r1,"Al");
-Errors: Error 14-18: If provided, last argument must be 'RemoveFlags.All'. Is there a typo?|Error 0-6: The function 'Remove' has some invalid arguments.
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 14-18: Cannot use a non-record value in this context: '"Al"'.
 
 >> Remove(t1, r1,"");
-Errors: Error 14-16: If provided, last argument must be 'RemoveFlags.All'. Is there a typo?|Error 0-6: The function 'Remove' has some invalid arguments.
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 14-16: Cannot use a non-record value in this context: '""'.
 
 >> Remove(t1, r1, r1, r1, r1, r1, r1, "Al");
-Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 35-39: If provided, last argument must be 'RemoveFlags.All'. Is there a typo?
+Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 35-39: Cannot use a non-record value in this context: '"Al"'.
 
 >> Remove(t1, "All");
 Errors: Error 0-6: The function 'Remove' has some invalid arguments.|Error 11-16: Cannot use a non-record value in this context: '"All"'.

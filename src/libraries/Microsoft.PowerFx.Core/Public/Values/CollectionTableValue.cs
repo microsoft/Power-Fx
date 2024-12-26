@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Types
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             var ret = false;
-            var deleteList = new List<T>();
+            var markedToDeletion = new HashSet<T>();
             var errors = new List<ExpressionError>();
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -206,9 +206,15 @@ namespace Microsoft.PowerFx.Types
 
                     if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
-                        found = true;
-
-                        deleteList.Add(item);
+                        if (markedToDeletion.Contains(item))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            found = true;
+                            markedToDeletion.Add(item);
+                        }
 
                         if (!all)
                         {
@@ -224,7 +230,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            foreach (var delete in deleteList)
+            foreach (var delete in markedToDeletion)
             {
                 _sourceList.Remove(delete);
                 ret = true;

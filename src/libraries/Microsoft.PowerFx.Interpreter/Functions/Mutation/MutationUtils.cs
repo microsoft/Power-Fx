@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Interpreter
 
                 if (arg is TableValue tableValue)
                 {
-                    var errorRecord = tableValue.Rows.First(row => row.IsError);
+                    var errorRecord = tableValue.Rows.FirstOrDefault(row => row.IsError);
                     if (errorRecord != null)
                     {
                         return errorRecord.Error;
