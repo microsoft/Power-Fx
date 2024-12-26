@@ -119,34 +119,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!argType.IsRecord)
                 {
-                    if (argCount >= 3 && i == argCount - 1)
+                    if (argCount >= 3 && i == argCount - 1 &&
+                        ((context.Features.PowerFxV1CompatibilityRules && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                        (!context.Features.PowerFxV1CompatibilityRules && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))))
                     {
-                        if (context.AnalysisMode)
-                        {
-                            if (!DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
-                                !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                            {
-                                fValid = false;
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRemoveAllArg);
-                            }
-                        }
-                        else
-                        {
-                            if (!BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                            {
-                                fValid = false;
-                                errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrRemoveAllArg);
-                            }
-                        }
+                        continue;
+                    }
 
-                        continue;
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(args[i], TexlStrings.ErrNeedRecord_Arg, args[i]);
-                        continue;
-                    }
+                    fValid = false;
+                    errors.EnsureError(args[i], TexlStrings.ErrNeedRecord_Arg, args[i]);
+                    continue;
                 }
 
                 var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
@@ -351,7 +333,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public RemoveAllFunction()
-            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, 3, DType.EmptyTable, DType.EmptyTable, DType.String)
+            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, 3, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
@@ -425,25 +407,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (args.Length == 3)
+            if (args.Length == 3 && 
+                ((context.Features.PowerFxV1CompatibilityRules && !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) || 
+                (!context.Features.PowerFxV1CompatibilityRules && !DType.String.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))))
             {
-                if (context.AnalysisMode)
-                {
-                    if (!DType.String.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
-                        !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
-                    }
-                }
-                else
-                {
-                    if (!BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
-                    }
-                }
+                fValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
             }
 
             returnType = context.Features.PowerFxV1CompatibilityRules ? DType.Void : collectionType;
