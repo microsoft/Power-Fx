@@ -120,8 +120,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (!argType.IsRecord)
                 {
                     if (argCount >= 3 && i == argCount - 1 &&
-                        ((context.Features.PowerFxV1CompatibilityRules && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
-                        (!context.Features.PowerFxV1CompatibilityRules && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))))
+                        ((!context.AnalysisMode && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
+                        (context.AnalysisMode && (DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) ||
+                                                  BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))))
                     {
                         continue;
                     }
@@ -140,29 +141,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (!context.Features.PowerFxV1CompatibilityRules && (!collectionAcceptsRecord && !recordAcceptsCollection)))
                 {
                     fValid = false;
-                    SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features);
+                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    }
                 }
 
                 // Only warn about no-op record inputs if there are no data sources that would use reference identity for comparison.
                 else if (!collectionType.AssociatedDataSources.Any() && !recordAcceptsCollection)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.ErrCollectionDoesNotAcceptThisType);
-                }
-
-                if (!context.AnalysisMode)
-                {
-                    // ArgType[N] (0<N<argCount) must match all the fields with the data source.
-                    bool checkAggregateNames = argType.CheckAggregateNames(collectionType, args[i], errors, context.Features, SupportsParamCoercion);
-
-                    // The item schema should be compatible with the collection schema.
-                    if (!checkAggregateNames)
-                    {
-                        fValid = false;
-                        if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
-                        }
-                    }
                 }
             }
 
@@ -382,23 +370,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(args[1], TexlStrings.ErrNeedTable_Arg, args[1]);
             }
 
-            if (!context.AnalysisMode)
-            {
-                bool checkAggregateNames = sourceType.CheckAggregateNames(collectionType, args[1], errors, context.Features, SupportsParamCoercion);
-
-                // The item schema should be compatible with the collection schema.
-                if (!checkAggregateNames)
-                {
-                    fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, sourceType, args[1], errors, context.Features))
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTableDoesNotAcceptThisType);
-                    }
-                }
-            }
-
             // The source schema should be compatible with the collection schema.
-            else if (!collectionType.Accepts(sourceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) && !sourceType.Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (!collectionType.Accepts(sourceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) && !sourceType.Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 fValid = false;
                 if (!SetErrorForMismatchedColumns(collectionType, sourceType, args[1], errors, context.Features))
