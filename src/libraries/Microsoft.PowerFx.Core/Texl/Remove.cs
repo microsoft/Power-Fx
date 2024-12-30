@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -19,8 +20,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
-    internal class RemoveFunction : BuiltinFunction, ISuggestionAwareFunction
+    internal abstract class RemoveBaseFunction : BuiltinFunction
     {
         public override bool ManipulatesCollections => true;
 
@@ -30,23 +30,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => false;
 
-        public bool CanSuggestThisItem => true;
-
         public override bool RequiresDataSourceScope => true;
 
         public override bool SupportsParamCoercion => false;
 
         public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Delete;
 
-        // Return true if this function affects datasource query options.
-        public override bool AffectsDataSourceQueryOptions => true;
-
         public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
-
-        public override bool ArgMatchesDatasourceType(int argNum)
-        {
-            return argNum >= 1;
-        }
 
         public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
         {
@@ -59,8 +49,73 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
         }
 
+        public RemoveBaseFunction(int arityMax, params DType[] paramTypes) 
+            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, arityMax, paramTypes)
+        {
+        }
+
+        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
+            MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
+        }
+
+        public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
+        {
+            Contracts.AssertValue(args);
+
+            identifierNode = null;
+            if (args.Length == 0)
+            {
+                return null;
+            }
+
+            var firstNameNode = args[0]?.AsFirstName();
+            identifierNode = firstNameNode;
+            if (firstNameNode == null)
+            {
+                return null;
+            }
+
+            var identifiers = new List<Identifier>
+            {
+                firstNameNode.Ident
+            };
+            return identifiers;
+        }
+
+        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            return Arg0RequiresAsync(callNode, binding);
+        }
+    }
+
+    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
+    internal class RemoveFunction : RemoveBaseFunction, ISuggestionAwareFunction
+    {
+        public bool CanSuggestThisItem => true;
+
+        // Return true if this function affects datasource query options.
+        public override bool AffectsDataSourceQueryOptions => true;
+
+        public override bool ArgMatchesDatasourceType(int argNum)
+        {
+            return argNum >= 1;
+        }
+
         public RemoveFunction()
-            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
+            : base(int.MaxValue, DType.EmptyTable)
         {
         }
 
@@ -84,13 +139,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<string> GetRequiredEnumNames()
         {
             return new List<string>() { LanguageConstants.RemoveFlagsEnumString };
-        }
-
-        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
-        {
-            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
-            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
-            return index == 0;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -159,43 +207,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            base.CheckSemantics(binding, args, argTypes, errors);
-            base.ValidateArgumentIsMutable(binding, args[0], errors);
-            MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
-        }
-
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex != 1;
-        }
-
-        public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
-        {
-            Contracts.AssertValue(args);
-
-            identifierNode = null;
-            if (args.Length == 0)
-            {
-                return null;
-            }
-
-            var firstNameNode = args[0]?.AsFirstName();
-            identifierNode = firstNameNode;
-            if (firstNameNode == null)
-            {
-                return null;
-            }
-
-            var identifiers = new List<Identifier>
-            {
-                firstNameNode.Ident
-            };
-            return identifiers;
         }
 
         /// <summary>
@@ -277,14 +294,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return type.IsRecord || type.Kind == DKind.String;
         }
 
-        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            return Arg0RequiresAsync(callNode, binding);
-        }
-
         protected override bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
         {
             Contracts.AssertValue(args);
@@ -299,29 +308,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Remove(collection:*[], source:*[], ["All"])
-    internal class RemoveAllFunction : BuiltinFunction
+    internal class RemoveAllFunction : RemoveBaseFunction
     {
-        public override bool ManipulatesCollections => true;
-
-        public override bool ModifiesValues => true;
-
-        public override bool IsSelfContained => false;
-
-        public override bool RequiresDataSourceScope => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public override RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.Delete;
-
-        public override bool MutatesArg(int argIndex, TexlNode arg) => argIndex == 0;
-
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum == 1;
         }
 
         public RemoveAllFunction()
-            : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, 3, DType.EmptyTable, DType.EmptyTable)
+            : base(3, DType.EmptyTable, DType.EmptyTable)
         {
         }
 
@@ -334,13 +329,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<string> GetRequiredEnumNames()
         {
             return new List<string>() { LanguageConstants.RemoveFlagsEnumString };
-        }
-
-        public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
-        {
-            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
-            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
-            return index == 0;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -393,51 +381,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            base.CheckSemantics(binding, args, argTypes, errors);
-            base.ValidateArgumentIsMutable(binding, args[0], errors);
-            MutationUtils.CheckSemantics(binding, this, args, argTypes, errors);
-        }
-
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 0;
-        }
-
-        public override IEnumerable<Identifier> GetIdentifierOfModifiedValue(TexlNode[] args, out TexlNode identifierNode)
-        {
-            Contracts.AssertValue(args);
-
-            identifierNode = null;
-            if (args.Length == 0)
-            {
-                return null;
-            }
-
-            var firstNameNode = args[0]?.AsFirstName();
-            identifierNode = firstNameNode;
-            if (firstNameNode == null)
-            {
-                return null;
-            }
-
-            var identifiers = new List<Identifier>
-            {
-                firstNameNode.Ident
-            };
-            return identifiers;
-        }
-
-        public override bool IsAsyncInvocation(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            return Arg0RequiresAsync(callNode, binding);
         }
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
