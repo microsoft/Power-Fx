@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _columnRestrictions = columnRestrictions;
         }
 
+        internal Dictionary<DPath, DelegationCapability> ColumnRestrictions2 => _columnRestrictions;
+
         protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
         public override DelegationCapability DefaultColumnCapabilities => DelegationCapability.Group;

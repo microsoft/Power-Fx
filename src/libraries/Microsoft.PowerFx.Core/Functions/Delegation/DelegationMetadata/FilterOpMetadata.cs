@@ -33,7 +33,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
             }
-        }       
+        }
+
+        internal Dictionary<DPath, DelegationCapability> ColumnCapabilities => _columnCapabilities;
+
+        internal Dictionary<DPath, DelegationCapability> ColumnRestrictions2 => _columnRestrictions;
+
+        internal DelegationCapability? FilterFunctionsSupportedByTable => _filterFunctionsSupportedByTable;
 
         protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
