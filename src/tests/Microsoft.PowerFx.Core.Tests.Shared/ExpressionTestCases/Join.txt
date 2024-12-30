@@ -69,3 +69,9 @@ Errors: Error 61-63: The '{ a:1 }' value is invalid in this context. It should b
 
 >> Join([{a:1}],[{a:1}],true,JoinType.Inner,{a:1}.a As AAA)
 Errors: Error 49-51: The '{ a:1 }' value is invalid in this context. It should be a reference to either 'LeftRecord' or 'RightRecord' scope name.|Error 5-12: At least one 'RightRecord' column must be declared to compose the join result.|Error 0-4: The function 'Join' has some invalid arguments.
+
+>> Join([10,20], Table({Value:20}, Blank()), LeftRecord.Value=RightRecord.Value, JoinType.Left, RightRecord.Value As R2)
+Table({R2:20,Value:20},{R2:Blank(),Value:10})
+
+>> Join([10,20], Table({Value:20}, If(1/0, {Value:25})), LeftRecord.Value=RightRecord.Value, JoinType.Left, RightRecord.Value As R2)
+Table(Error({Kind:ErrorKind.Div0}),{R2:20,Value:20},Error({Kind:ErrorKind.Div0}))
