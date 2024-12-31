@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -49,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
         }
 
-        public RemoveBaseFunction(int arityMax, params DType[] paramTypes) 
+        public RemoveBaseFunction(int arityMax, params DType[] paramTypes)
             : base("Remove", TexlStrings.AboutRemove, FunctionCategories.Behavior, DType.EmptyTable, 0, 2, arityMax, paramTypes)
         {
         }
@@ -98,6 +97,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             return Arg0RequiresAsync(callNode, binding);
+        }
+
+        public bool CheckEnumType(Features features, DType argType)
+        {
+            var enumValid = BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules);
+
+            return (features.StronglyTypedBuiltinEnums && enumValid) ||
+                   (!features.StronglyTypedBuiltinEnums && (DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules) || enumValid));
         }
     }
 
@@ -167,10 +174,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!argType.IsRecord)
                 {
-                    if (argCount >= 3 && i == argCount - 1 &&
-                        ((context.Features.PowerFxV1CompatibilityRules && BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) ||
-                        (!context.Features.PowerFxV1CompatibilityRules && (DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) ||
-                                                  BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))))
+                    if (argCount >= 3 && i == argCount - 1 && CheckEnumType(context.Features, argType))
                     {
                         continue;
                     }
@@ -368,9 +372,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (args.Length == 3 && 
-                ((context.Features.PowerFxV1CompatibilityRules && !BuiltInEnums.RemoveFlagsEnum.FormulaType._type.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)) || 
-                (!context.Features.PowerFxV1CompatibilityRules && !DType.String.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))))
+            if (args.Length == 3 && !CheckEnumType(context.Features, argTypes[2]))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrRemoveAllArg);
