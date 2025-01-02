@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal string ForeignKey { get; set; }
 
-        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default)
+        internal ConnectorType(ISwaggerSchema schema, ISwaggerParameter openApiParameter, FormulaType formulaType, ErrorResourceKey warning = default, IEnumerable<KeyValuePair<DName, DName>> list = null, bool isNumber = false)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -133,35 +133,39 @@ namespace Microsoft.PowerFx.Connectors
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
             NotificationUrl = openApiParameter?.GetNotificationUrl();
             AiSensitivity = openApiParameter?.GetAiSensitivity().ToAiSensitivity() ?? AiSensitivity.Unknown;
+            Description = schema.Description;
 
-            if (schema != null)
+            string summary = schema.GetSummary();
+            string title = schema.Title;
+
+            DisplayName = string.IsNullOrEmpty(title) ? summary : title;
+            ExplicitInput = schema.GetExplicitInput();
+            Capabilities = schema.GetColumnCapabilities();
+            Relationships = schema.GetRelationships(); // x-ms-relationships
+            KeyType = schema.GetKeyType();
+            KeyOrder = schema.GetKeyOrder();
+            Permission = schema.GetPermission();
+
+            // We only support one reference for now
+            // SalesForce only
+            if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
             {
-                Description = schema.Description;
+                ExternalTables = new List<string>(schema.ReferenceTo);
+                RelationshipName = schema.RelationshipName;
+                ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
+            }
 
-                string summary = schema.GetSummary();
-                string title = schema.Title;
+            Fields = Array.Empty<ConnectorType>();
+            IsEnum = (schema.Enum != null && schema.Enum.Any()) || (list != null && list.Any());
 
-                DisplayName = string.IsNullOrEmpty(title) ? summary : title;
-                ExplicitInput = schema.GetExplicitInput();
-                Capabilities = schema.GetColumnCapabilities();
-                Relationships = schema.GetRelationships(); // x-ms-relationships
-                KeyType = schema.GetKeyType();
-                KeyOrder = schema.GetKeyOrder();
-                Permission = schema.GetPermission();
-
-                // We only support one reference for now
-                // SalesForce only
-                if (schema.ReferenceTo != null && schema.ReferenceTo.Count == 1)
+            if (IsEnum)
+            {
+                if (list != null && list.Any())
                 {
-                    ExternalTables = new List<string>(schema.ReferenceTo);
-                    RelationshipName = schema.RelationshipName;
-                    ForeignKey = null; // SalesForce doesn't provide it, defaults to "Id"
+                    EnumValues = list.Select<KeyValuePair<DName, DName>, FormulaValue>(kvp => isNumber ? FormulaValue.New(decimal.Parse(kvp.Value.Value, CultureInfo.InvariantCulture)) : FormulaValue.New(kvp.Value)).ToArray();
+                    EnumDisplayNames = list.Select(list => list.Key.Value).ToArray();                    
                 }
-
-                Fields = Array.Empty<ConnectorType>();
-                IsEnum = schema.Enum != null && schema.Enum.Any();
-
-                if (IsEnum)
+                else
                 {
                     EnumValues = schema.Enum.Select(oaa =>
                     {
@@ -172,18 +176,16 @@ namespace Microsoft.PowerFx.Connectors
 
                         AddError($"Invalid conversion for type {oaa.GetType().Name} in enum");
                         return FormulaValue.NewBlank();
-                    }).ToArray();                    
+                    }).ToArray();
 
                     // x-ms-enum-display-name
                     EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is IList<IOpenApiAny> oaa
-                                        ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                        : Array.Empty<string>();
+                                     ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
+                                     : Array.Empty<string>();
 
                     // x-ms-enum-values
                     if (!EnumDisplayNames.Any() && formulaType is OptionSetValueType osvt)
                     {
-                        DisplayNameProvider dnpp = openApiParameter.GetEnumValues();
-
                         List<string> displayNames = new List<string>();
 
                         // ensure we follow the EnumValues order
@@ -206,12 +208,12 @@ namespace Microsoft.PowerFx.Connectors
                         EnumDisplayNames = displayNames.ToArray();
                     }
                 }
-                else
-                {
-                    // those values are null/empty even if x-ms-dynamic-* could be present and would define possible values
-                    EnumValues = Array.Empty<FormulaValue>();
-                    EnumDisplayNames = Array.Empty<string>();
-                }
+            }
+            else
+            {
+                // those values are null/empty even if x-ms-dynamic-* could be present and would define possible values
+                EnumValues = Array.Empty<FormulaValue>();
+                EnumDisplayNames = Array.Empty<string>();
             }
 
             AddWarning(warning);
@@ -219,7 +221,7 @@ namespace Microsoft.PowerFx.Connectors
             DynamicProperty = AggregateErrorsAndWarnings(openApiParameter.GetDynamicProperty());
             DynamicValues = AggregateErrorsAndWarnings(openApiParameter.GetDynamicValue());
             DynamicList = AggregateErrorsAndWarnings(openApiParameter.GetDynamicList());
-        }        
+        }
 
         internal static readonly FormulaType DefaultType = FormulaType.UntypedObject;
 

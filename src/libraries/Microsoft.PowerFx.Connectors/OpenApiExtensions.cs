@@ -85,14 +85,15 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Get suggested options values.  Returns null if none.
-        internal static DisplayNameProvider GetEnumValues(this ISwaggerParameter openApiParameter)
+        internal static (IEnumerable<KeyValuePair<DName, DName>>, bool isNumber) GetEnumValues(this ISwaggerParameter openApiParameter)
         {
             // x-ms-enum-values is: array of { value: string, displayName: string}.
             if (openApiParameter.Extensions.TryGetValue(XMsEnumValues, out var enumValues))
             {
                 if (enumValues is IList<IOpenApiAny> array)
-                {
-                    SingleSourceDisplayNameProvider displayNameProvider = new SingleSourceDisplayNameProvider();
+                {                    
+                    List<KeyValuePair<DName, DName>> list = new List<KeyValuePair<DName, DName>>();
+                    bool isNumber = false;
 
                     foreach (var item in array)
                     {
@@ -110,6 +111,7 @@ namespace Microsoft.PowerFx.Connectors
                                 else if (openApiLogical is OpenApiInteger logicalInt)
                                 {
                                     logical = logicalInt.Value.ToString(CultureInfo.InvariantCulture);
+                                    isNumber = true;
                                 }
                             }
 
@@ -122,21 +124,22 @@ namespace Microsoft.PowerFx.Connectors
                                 else if (openApiDisplay is OpenApiInteger displayInt)
                                 {
                                     display = displayInt.Value.ToString(CultureInfo.InvariantCulture);
+                                    isNumber = true;
                                 }
                             }
 
                             if (!string.IsNullOrEmpty(logical) && !string.IsNullOrEmpty(display))
                             {
-                                displayNameProvider = displayNameProvider.AddField(new DName(logical), new DName(display));
+                                list.Add(new KeyValuePair<DName, DName>(new DName(logical), new DName(display)));                               
                             }
                         }
                     }
 
-                    return displayNameProvider.LogicalToDisplayPairs.Any() ? displayNameProvider : null;
+                    return (list, isNumber);                    
                 }
             }
 
-            return null;
+            return (null, false);                       
         }
 
         public static bool IsTrigger(this OpenApiOperation op)
@@ -350,7 +353,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetVisibility();
 
-        internal static string GetEnumName(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetEnumName();
+        internal static (string name, bool modelAsString) GetEnumName(this IOpenApiExtensible oae) => SwaggerExtensions.New(oae)?.GetEnumName() ?? (null, false);
 
         // Internal parameters are not showen to the user.
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
@@ -358,12 +361,17 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetVisibility(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsVisibility, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
-        internal static string GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
-                                                                              openApiExt is SwaggerJsonObject jsonObject &&
-                                                                              jsonObject.TryGetValue("name", out IOpenApiAny enumName) &&
-                                                                              enumName is OpenApiString enumNameStr
-                                                                            ? enumNameStr.Value
-                                                                            : null;
+        internal static (string name, bool modelAsString) GetEnumName(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsEnum, out IOpenApiExtension openApiExt) &&
+                                                                                                         openApiExt is IDictionary<string, IOpenApiAny> jsonObject &&
+                                                                                                         jsonObject.TryGetValue("name", out IOpenApiAny enumName) &&
+                                                                                                         enumName is OpenApiString enumNameStr
+                                                                                                       ? (enumNameStr.Value, jsonObject.GetModelAsString())
+                                                                                                       : (null, false);
+
+        private static bool GetModelAsString(this IDictionary<string, IOpenApiAny> jsonObject) => jsonObject.TryGetValue("modelAsString", out IOpenApiAny modelAsString) &&
+                                                                                                  modelAsString is OpenApiBoolean modelAsStringBool
+                                                                                                ? modelAsStringBool.Value
+                                                                                                : false;
 
         internal static string GetMediaKind(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsMediaKind, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
@@ -392,7 +400,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal class ConnectorTypeGetterSettings
         {
-            internal readonly ConnectorSettings Settings;            
+            internal readonly ConnectorSettings Settings;
             internal Stack<string> Chain = new Stack<string>();
             internal int Level = 0;
             internal readonly SymbolTable OptionSets;
@@ -402,7 +410,7 @@ namespace Microsoft.PowerFx.Connectors
             internal ConnectorTypeGetterSettings(ConnectorSettings settings, string tableName, SymbolTable optionSets)
             {
                 Settings = settings;
-                OptionSets = optionSets;                
+                OptionSets = optionSets;
 
                 _tableName = tableName;
             }
@@ -487,7 +495,7 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte": // Base64 string
                         case "binary": // octet stream
                             return new ConnectorType(schema, openApiParameter, FormulaType.Blob);
-                    }                    
+                    }
 
                     return TryGetOptionSet(openApiParameter, settings) ?? new ConnectorType(schema, openApiParameter, FormulaType.String);
 
@@ -529,11 +537,11 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "byte":
                         case "integer":
-                        case "int32":                            
+                        case "int32":
                         case "int64":
                         case "uint64":
-                        case "unixtime":                            
-                            return TryGetOptionSet(openApiParameter, settings) ?? new ConnectorType(schema, openApiParameter, FormulaType.Decimal);                            
+                        case "unixtime":
+                            return TryGetOptionSet(openApiParameter, settings) ?? new ConnectorType(schema, openApiParameter, FormulaType.Decimal);
 
                         default:
                             return new ConnectorType(error: $"Unsupported type of integer: {schema.Format}");
@@ -691,14 +699,23 @@ namespace Microsoft.PowerFx.Connectors
 
             if (settings.Settings.Compatibility.IsCDP() || schema.Format == "enum" || settings.Settings.SupportXMsEnumValues)
             {
-                // Try getting enum from 'x-ms-enum-values'
-                DisplayNameProvider optionSetDisplayNameProvider = openApiParameter.GetEnumValues();
+                // Try getting enum from 'x-ms-enum-values'                
+                (IEnumerable<KeyValuePair<DName, DName>> list, bool isNumber) = openApiParameter.GetEnumValues();
 
-                if (optionSetDisplayNameProvider != null && optionSetDisplayNameProvider.LogicalToDisplayPairs.Any())
+                if (list != null && list.Any())
                 {
-                    string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
-                    OptionSet optionSet = new OptionSet(optionSetName, optionSetDisplayNameProvider);
+                    (string enumName, bool modelAsString) = schema.GetEnumName();
+                    enumName ??= openApiParameter.Name;
+
+                    string optionSetName = settings.GetOptionSetName(enumName);
+                    OptionSet optionSet = new OptionSet(optionSetName, new SingleSourceDisplayNameProvider(list));
                     optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
+
+                    if (modelAsString)
+                    {
+                        return new ConnectorType(schema, openApiParameter, FormulaType.String, list: list, isNumber: isNumber);
+                    }
+
                     return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                 }
 
@@ -707,9 +724,19 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (schema.Enum.All(e => e is OpenApiString))
                     {
-                        string optionSetName = settings.GetOptionSetName(schema.GetEnumName() ?? openApiParameter.Name);
-                        OptionSet optionSet = new OptionSet(optionSetName, schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                        (string enumName, bool modelAsString) = schema.GetEnumName();
+                        enumName ??= openApiParameter.Name;
+
+                        Dictionary<DName, DName> dic = schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e);
+                        string optionSetName = settings.GetOptionSetName(enumName);
+                        OptionSet optionSet = new OptionSet(optionSetName, dic.ToImmutableDictionary());
                         optionSet = settings.OptionSets.TryAddOptionSet(optionSet);
+
+                        if (modelAsString)
+                        {
+                            return new ConnectorType(schema, openApiParameter, FormulaType.String, list: dic);
+                        }
+
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                     }
                     else
@@ -829,7 +856,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public static FormulaType GetReturnType(this OpenApiOperation openApiOperation, ConnectorSettings settings)
-        {            
+        {
             ConnectorType connectorType = openApiOperation.GetConnectorReturnType(settings);
             FormulaType ft = connectorType.HasErrors ? ConnectorType.DefaultType : connectorType?.FormulaType ?? new BlankType();
             return ft;
