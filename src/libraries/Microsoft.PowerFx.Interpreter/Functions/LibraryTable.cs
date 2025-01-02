@@ -546,16 +546,16 @@ namespace Microsoft.PowerFx.Functions
             switch (joinType.Option)
             {
                 case "Full":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Inner":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Left":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: true, outerRight: false, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 case "Right":
-                    rows = await LazyJoinAsync(runner, context, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
+                    rows = await LazyJoinAsync(runner, context, irContext, leftTable, rightTable, predicate, outerLeft: false, outerRight: true, scopeNameResolver, leftRenaming, rightRenaming).ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -567,6 +567,7 @@ namespace Microsoft.PowerFx.Functions
         private static async Task<DValue<RecordValue>[]> LazyJoinAsync(
             EvalVisitor runner,
             EvalVisitorContext context,
+            IRContext irContext,
             TableValue leftSource,
             TableValue rightSource,
             LambdaFormulaValue predicate,
@@ -576,15 +577,13 @@ namespace Microsoft.PowerFx.Functions
             RecordValue leftRenaming,
             RecordValue rightRenaming)
         {
-            var innerRows = new List<DValue<RecordValue>>();
-            var outerDict = new Dictionary<DValue<RecordValue>, bool>();
+            var resultRows = new List<DValue<RecordValue>>();
+            var recordContext = IRContext.NotInSource(((TableType)irContext.ResultType).ToRecord());
 
-            // Keep track of which rows have been included in the inner join.
-            // Using a dictionary to avoid duplicates and to make it easier to check if a row is in the inner join.
-            var innerDict = new Dictionary<DValue<RecordValue>, bool>();
-
+            // Inner and Left loops
             foreach (var leftRow in leftSource.Rows)
             {
+                var hasMatch = false;
                 foreach (var rightRow in rightSource.Rows)
                 {
                     runner.CheckCancel();
@@ -596,68 +595,60 @@ namespace Microsoft.PowerFx.Functions
                         if (result.IsValue)
                         {
                             var fields = new List<NamedValue>();
-                            var leftRenamed = (RecordValue)await RenameColumns(runner, context, IRContext.NotInSource(leftRow.Value.Type), BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                            var leftRecordValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
 
-                            foreach (var field in leftRenamed.OriginalFields)
-                            {
-                                fields.Add(new NamedValue(field.Name, field.Value));
-                            }
+                            fields.AddRange(leftRecordValueRenamed.OriginalFields);
+                            fields.AddRange(rightRenaming.OriginalFields.Select(field => new NamedValue(((StringValue)field.Value).Value, rightRow.Value.GetField(field.Name))));
 
-                            foreach (var field in rightRenaming.OriginalFields)
-                            {
-                                var fieldName = (StringValue)field.Value;
-                                fields.Add(new NamedValue(fieldName.Value, rightRow.Value.GetField(field.Name)));
-                            }
-
-                            innerRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields)));
+                            resultRows.Add(DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(fields)));
                         }
                         else if (result.IsError)
                         {
                             // Lambda evaluation resulted in an error. Include the error.
-                            innerRows.Add(result);
+                            resultRows.Add(result);
                         }
 
-                        innerDict[leftRow] = true;
-                        innerDict[rightRow] = true;
+                        hasMatch = true;
+                    }
+                }
 
-                        if (outerLeft)
+                if (!hasMatch && outerLeft)
+                {
+                    // leftRow is value since it would have been added to the resultRows in the inner loop.
+                    var recorValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                    resultRows.Add(DValue<RecordValue>.Of(recorValueRenamed));
+                }
+            }
+
+            // Right loop
+            if (outerRight)
+            {
+                foreach (var rightRow in rightSource.Rows)
+                {
+                    var hasMatch = false;
+                    foreach (var leftRow in leftSource.Rows)
+                    {
+                        runner.CheckCancel();
+
+                        var result = await LazyCheckPredicateAsync(runner, context, scopeNameResolver, leftRow, rightRow, predicate).ConfigureAwait(false);
+
+                        if (result != null)
                         {
-                            if (outerDict.ContainsKey(leftRow))
-                            {
-                                outerDict.Remove(leftRow);
-                            }
+                            hasMatch = true;
+                            break;
                         }
-
-                        if (outerRight)
-                        {
-                            if (outerDict.ContainsKey(rightRow))
-                            {
-                                outerDict.Remove(rightRow);
-                            }
-                        }
-
-                        continue;
                     }
 
-                    if (outerLeft)
+                    if (!hasMatch)
                     {
-                        if (!innerDict.ContainsKey(leftRow))
-                        {
-                            outerDict[leftRow] = true;
-                        }
-                    }
-
-                    if (outerRight)
-                    {
-                        if (!innerDict.ContainsKey(rightRow))
-                        {
-                            outerDict[rightRow] = true;
-                        }
+                        // rightRow is value since it would have been added to the resultRows in the inner loop.
+                        var recorValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(rightRow.Value, rightRenaming)).ConfigureAwait(false);
+                        resultRows.Add(DValue<RecordValue>.Of(recorValueRenamed));
                     }
                 }
             }
 
-            return innerRows.Concat(outerDict.Keys).ToArray();
+            return resultRows.ToArray();
         }
 
         private static FormulaValue[] BuildRenamingArgs(RecordValue row, RecordValue renaming)
