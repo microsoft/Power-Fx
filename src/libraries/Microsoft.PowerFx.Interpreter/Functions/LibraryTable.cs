@@ -615,8 +615,8 @@ namespace Microsoft.PowerFx.Functions
                 if (!hasMatch && outerLeft)
                 {
                     // leftRow is value since it would have been added to the resultRows in the inner loop.
-                    var recorValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
-                    resultRows.Add(DValue<RecordValue>.Of(recorValueRenamed));
+                    var recordValueRenamed = (RecordValue)await RenameColumns(runner, context, recordContext, BuildRenamingArgs(leftRow.Value, leftRenaming)).ConfigureAwait(false);
+                    resultRows.Add(DValue<RecordValue>.Of(recordValueRenamed));
                 }
             }
 
