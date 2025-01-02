@@ -684,21 +684,29 @@ namespace Microsoft.PowerFx.Functions
             var leftScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.LeftRecord.Value)).Value);
             var rightScopeName = new DName(((StringValue)scopeNameResolver.GetField(FunctionJoinScopeInfo.RightRecord.Value)).Value);
 
+            if (leftRow.IsError)
+            {
+                return leftRow;
+            }
+            else if (leftRow.IsBlank)
+            {
+                return null;
+            }
+            
+            if (rightRow.IsError)
+            {
+                return rightRow;
+            }
+            else if (rightRow.IsBlank)
+            {
+                return null;
+            }
+
             var scopeValue = FormulaValue.NewRecordFromFields(
                 new NamedValue(leftScopeName, leftRow.Value), 
                 new NamedValue(rightScopeName, rightRow.Value));
 
             SymbolContext childContext = context.SymbolContext.WithScopeValues(scopeValue);
-
-            if (leftRow.IsError)
-            {
-                return leftRow;
-            }
-
-            if (rightRow.IsError)
-            {
-                return rightRow;
-            }
 
             var result = await predicate.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
             var include = false;
