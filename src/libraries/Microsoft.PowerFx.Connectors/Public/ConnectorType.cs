@@ -186,8 +186,6 @@ namespace Microsoft.PowerFx.Connectors
                     // x-ms-enum-values
                     if (!EnumDisplayNames.Any() && formulaType is OptionSetValueType osvt)
                     {
-                        // (IEnumerable<KeyValuePair<DName, DName>> list, bool isNumber) = openApiParameter.GetEnumValues();
-
                         List<string> displayNames = new List<string>();
 
                         // ensure we follow the EnumValues order
