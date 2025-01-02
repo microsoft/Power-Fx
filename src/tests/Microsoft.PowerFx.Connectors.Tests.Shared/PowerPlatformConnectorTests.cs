@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +22,6 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -106,12 +106,11 @@ namespace Microsoft.PowerFx.Tests
 
             if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
             {
-                Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);
-                Assert.True(actionUriUpsert.OptionalParameters[2].ConnectorType.IsEnum);
+                Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);                
 
                 // Dictionary is used here, so we need to reorder
-                Assert.Equal("Appointment,Map,Planning Board,Task", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Key)));
-                Assert.Equal("1,3,0,2", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => (kvp.Value as DecimalValue).Value)));
+                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => kvp.Key)));
+                Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => (kvp.Value as DecimalValue).Value)));
 
                 Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumDisplayNames));                
             }
@@ -121,6 +120,57 @@ namespace Microsoft.PowerFx.Tests
             }
 
             Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (fv as DecimalValue).Value)));
+        }
+
+        [Theory]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
+
+        // Option set with numeric logical names
+        public void ACSL_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.2.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            ConnectorFunction analyzeConversationTranscriptSubmitJob = functions.Single(f => f.Name == "AnalyzeConversationTranscriptSubmitJob");
+
+            // AnalyzeConversationTranscript_SubmitJob defined at line 1226 of swagger file
+            // body parameter at line 1240, defined at line 2557(TranscriptJobsInput)
+            // analysisInput parameter at line 2566, defined at line 2573(TranscriptMultiLanguageConversationAnalysisInput)
+            // conversations parameter at line 2577, defined at line 2580(TranscriptConversation)
+            // conversationItems parameter at line 2585, defined at line 2624(TranscriptConversationItem)
+            // role parameter at line 2641 is having extension x-ms-enum with modelAsString set to true
+            ConnectorType connectorType = analyzeConversationTranscriptSubmitJob.RequiredParameters[0].ConnectorType;            
+            ConnectorType role = connectorType.Fields[0].Fields[0].Fields[0].Fields[connectorCompatibility == ConnectorCompatibility.Default ? 4 : 3];
+            Assert.Equal("role", role.Name);
+
+            // Type is always a string here as to be an optionset, we need (ConnectorCompatibility = CdpCompatibility or SupportXMsEnumValues = true) AND (modelAsString = false)
+            Assert.Equal(FormulaType.String, role.FormulaType);
+            Assert.True(role.IsEnum);
+            
+            Assert.Equal<object>(
+                connectorCompatibility != ConnectorCompatibility.Default
+                ? "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, participantId:s, role:s, text:s], domain:s, language:s]]"
+                : "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, modality:s, participantId:s, role:s, text:s], domain:s, language:s]]", 
+                connectorType.FormulaType._type.ToString());            
+
+            if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
+            {
+                // Dictionary is used here, so we need to reorder
+                Assert.Equal("agent,customer,generic", string.Join(",", role.Enum.Select(kvp => kvp.Key)));
+                Assert.Equal("agent,customer,generic", string.Join(",", role.Enum.Select(kvp => (kvp.Value as StringValue).Value)));
+                Assert.Equal("agent,customer,generic", string.Join(",", role.EnumDisplayNames.OrderBy(x => x)));
+            }
+            else
+            {
+                Assert.Empty(role.Enum);
+                Assert.Empty(role.EnumDisplayNames);
+            }
+
+            Assert.Equal("agent,customer,generic", string.Join(",", role.EnumValues.Select(fv => (fv as StringValue).Value)));
         }
 
         // Exercise calling the MSNWeather connector against mocked Swagger and Response.json.
