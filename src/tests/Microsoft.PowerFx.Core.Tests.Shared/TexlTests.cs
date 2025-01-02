@@ -4370,7 +4370,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Table(DS, Blank())", "*[Id:n, Name:s, Age:n]", 1)]
+        [InlineData("Table(DS, Blank())", "*[d:n, Name:s, Age:n]", 1)]
         [InlineData("Table(DS, T1)", "*[Id:n, Name:s, Age:n, a:n, b:s]", 1)]
         [InlineData("Table(DS, Filter(DS, Name = \"Foo\"))", "*[Id:n, Name:s, Age:n]", 2)]
         [InlineData("Table([], Table(DS, []))", "*[Id:n, Name:s, Age:n]", 1)]
@@ -4422,6 +4422,31 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedSchema),
                 features: Features.PowerFxV1);
+        }
+
+        [Fact]
+        public void TestSummarizeDisplayName()
+        {
+            var record = RecordType.Empty().Add("logicalField", FormulaType.Number, "DisplayField").Add("logicalField2", FormulaType.String, "DisplayFiled2");
+
+            var symbol = new SymbolTable();
+            symbol.AddVariable("DS", record.ToTable());
+            symbol.AddFunction(new SummarizeFunction());
+
+            var config = new PowerFxConfig
+            {
+                SymbolTable = symbol
+            };
+
+            var engine = new Engine(config);
+            
+            var logicalCheck = engine.Check("First(Summarize(DS, logicalField, logicalField2)).logicalField");
+
+            Assert.True(logicalCheck.IsSuccess);
+
+            var displayCheck = engine.Check("First(Summarize(DS, logicalField, logicalField2)).DisplayField");
+
+            Assert.True(displayCheck.IsSuccess);
         }
 
         private void TestBindingPurity(string script, bool isPure, SymbolTable symbolTable = null)
