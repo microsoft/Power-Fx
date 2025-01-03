@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -164,8 +165,8 @@ namespace Microsoft.PowerFx.Tests
             var result7 = engine.Eval("Patch(robintable, First(robintable),{Names:\"new-name\"});robintable", options: opt);
             Assert.Equal("Table({Names:\"new-name\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result7).Dump());
 
-            var result8 = engine.Eval("Remove(robintable, {Scores:10}, \"All\");robintable", options: opt);
-            Assert.IsType<ErrorValue>(result8);
+            var check = engine.Check("Remove(robintable, {Scores:10}, RemoveFlags.All)", options: opt);
+            Assert.False(check.IsSuccess);
 
             Assert.Equal(3, table.Rows.Count);
         }
