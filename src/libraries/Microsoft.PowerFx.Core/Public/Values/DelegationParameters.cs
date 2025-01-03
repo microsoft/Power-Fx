@@ -70,8 +70,8 @@ namespace Microsoft.PowerFx.Types
         // $orderBy
         Sort = 1 << 3,
 
-        // $apply
-        Apply = 1 << 4,
+        // $apply = join(table As name)
+        ApplyJoin = 1 << 4,
 
         // $apply = groupby((field1, ..), field with sum as TotalSum)
         ApplyGroupBy = 1 << 5,
