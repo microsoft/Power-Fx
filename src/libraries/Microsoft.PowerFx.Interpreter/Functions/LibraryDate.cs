@@ -177,6 +177,68 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static FormulaValue Workday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+
+            DateTime dateTime = runner.GetNormalizedDateTimeAllowTimeValue(args[0]);
+
+            int delta;
+            string timeUnit;
+
+            if (args[1] is NumberValue number)
+            {
+                delta = (int)number.Value;
+                timeUnit = "days";
+            }
+            else
+            {
+                //throw new NotImplementedException();
+                return CommonErrors.RuntimeTypeMismatch(args[1].IRContext);
+            }
+
+            var useUtcConversion = NeedToConvertToUtc(runner, dateTime, timeUnit);
+
+            if (useUtcConversion)
+            {
+                dateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime, timeZoneInfo);
+            }
+
+            try
+            {
+                // Determine the increment direction (forward or backward)
+                int increment = delta > 0 ? 1 : -1;
+
+                // Add days until the required number of workdays is reached
+                while (delta != 0)
+                {
+                    dateTime = dateTime.AddDays(increment);
+
+                    // If the current date is a weekend, continue without decreasing days
+                    if (dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        continue;
+                    }
+
+                    // If it's a valid workday, decrement the days
+                    delta -= increment;
+                }
+
+                if (useUtcConversion)
+                {
+                    dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, timeZoneInfo);
+                }
+
+                dateTime = MakeValidDateTime(runner, dateTime, timeZoneInfo);
+
+                return new DateValue(irContext, dateTime);
+            }
+            catch
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+        }
+
         private static DateTime MakeValidDateTime(EvalVisitor runner, DateTime dateTime, TimeZoneInfo timeZoneInfo)
         {
             return MakeValidDateTime(runner.TimeZoneInfo, dateTime);
