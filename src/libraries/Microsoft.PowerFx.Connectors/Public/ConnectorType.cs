@@ -312,7 +312,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             get
             {
-                _displayNameProvider ??= new SingleSourceDisplayNameProvider(Fields.Select(field => new KeyValuePair<DName, DName>(new DName(field.Name), new DName(field.DisplayName ?? field.Name))));
+                _displayNameProvider ??= DisplayNameUtility.MakeUnique(Fields.Select(field => new KeyValuePair<string, string>(field.Name, field.DisplayName ?? field.Name)));                    
                 return _displayNameProvider;
             }
         }
