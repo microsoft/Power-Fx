@@ -1872,13 +1872,6 @@ namespace Microsoft.PowerFx.Tests
             true,
             21.0)]
         [InlineData(
-            @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
-              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
-              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
-            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
-            true,
-            2.0)]
-        [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); 
               getAge(e: Employee): Number = e.Age;
               hasNoAge(e: Employee): Number = IsBlank(getAge(e));",
@@ -1946,14 +1939,55 @@ namespace Microsoft.PowerFx.Tests
             true,
             1.0)]
 
-        // Aggregate types with more than expected fields are not allowed in UDF
+        // Aggregate types with more than expected fields are not allowed in UDF args and return types
+        // Records
         [InlineData(
             "f():T = {x: 5, y: 5}; T := Type({x: Number});",
-            "f().x",
+            "",
+            false)]
+        [InlineData(
+            "f():T = {x: 5, y: 5}; T1 := Type([{x: Number}]); T2 := Type(RecordOf(T1));",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = x.n; T := Type({n: Number});",
+            "g({x: 5, y: 5})",
+            false)]
+
+        // Nested Records
+        [InlineData(
+            "f():T = {a: 5, b: {c: {d: 5, e:42}}}; T := Type({a: Number, b: {c: {d: Number}}});",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = x.b.c.d; T := Type({a: Number, b: {c: {d: Number}}});",
+            "g({a: 5, b: {c: {d: 5, e:42}}})",
+            false)]
+
+        // Tables
+        [InlineData(
+            "f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);",
+            "",
             false)]
         [InlineData(
             "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
             "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            false)]
+        [InlineData(
+            @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
+              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
+              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
+            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
+            false)]
+
+        // Nested Tables
+        [InlineData(
+            "f():T = {a: 5, b: [{c: {d: 5, e:42}}]}; T := Type([{a: Number, b: [{c: {d: Number}}]}]);",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = First(First(x).b).c.d; T := Type([{a: Number, b: [{c: {d: Number}}]}])",
+            "g({a: 5, b: [{c: {d: 5, e:42}}]})",
             false)]
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
