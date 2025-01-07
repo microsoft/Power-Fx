@@ -1946,7 +1946,7 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
         [InlineData(
-            "f():T = {x: 5, y: 5}; T1 := Type([{x: Number}]); T2 := Type(RecordOf(T1));",
+            "f():T2 = {x: 5, y: 5}; T1 := Type([{x: Number}]); T2 := Type(RecordOf(T1));",
             "",
             false)]
         [InlineData(
@@ -1986,7 +1986,7 @@ namespace Microsoft.PowerFx.Tests
             "",
             false)]
         [InlineData(
-            "g(x:T):Number = First(First(x).b).c.d; T := Type([{a: Number, b: [{c: {d: Number}}]}])",
+            "g(x:T):Number = First(First(x).b).c.d; T := Type([{a: Number, b: [{c: {d: Number}}]}]);",
             "g({a: 5, b: [{c: {d: 5, e:42}}]})",
             false)]
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
