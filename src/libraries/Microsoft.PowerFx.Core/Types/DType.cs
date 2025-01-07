@@ -1851,7 +1851,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
-        /// <param name="restrictiveAggregateTypes">restrictiveAggregateTypes.</param>
+        /// <param name="restrictiveAggregateTypes">Flag to restrict using aggregate types with more fields than expected.</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
@@ -1886,6 +1886,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
+        /// <param name="restrictiveAggregateTypes">Flag to restrict using aggregate types with more fields than expected.</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
@@ -3208,7 +3209,8 @@ namespace Microsoft.PowerFx.Core.Types
                     out schemaDifferenceType,
                     aggregateCoercion: true,
                     isTopLevelCoercion: false,
-                    features);
+                    features,
+                    restrictiveAggregateTypes);
             }
 
             if (Kind != typeDest.Kind)
@@ -3243,7 +3245,8 @@ namespace Microsoft.PowerFx.Core.Types
                         out var fieldSchemaDifferenceType,
                         aggregateCoercion,
                         isTopLevelCoercion: false,
-                        features);
+                        features,
+                        restrictiveAggregateTypes);
 
                     // This is the attempted coercion type.  If we fail, we need to know this for error handling
                     coercionType = coercionType.Add(typedName.Name, fieldCoercionType);

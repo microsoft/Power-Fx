@@ -191,9 +191,14 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(binding);
 
-            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules, true))
+            if (!ReturnType.Accepts(
+                actualBodyReturnType, 
+                exact: true, 
+                useLegacyDateTimeAccepts: false,
+                usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules,
+                restrictiveAggregateTypes: true))
             {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features, true))
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features, restrictiveAggregateTypes: true))
                 {
                     _binding.SetCoercedType(binding.Top, ReturnType);
                 }
