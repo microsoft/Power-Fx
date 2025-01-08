@@ -1865,24 +1865,12 @@ namespace Microsoft.PowerFx.Tests
             true,
             42.0)]
 
-        // Functions accept record with more/less fields
-        [InlineData(
-            "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
-            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
-            true,
-            0.0)]
+        // Functions accept record with less fields
         [InlineData(
             "Employee := Type({Name: Text, Age: Number, Title: Text}); getAge(e: Employee): Number = e.Age;",
             "getAge({Name: \"Bob\", Age: 21})",
             true,
             21.0)]
-        [InlineData(
-            @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
-              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
-              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
-            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
-            true,
-            2.0)]
         [InlineData(
             @"Employee := Type({Name: Text, Age: Number, Title: Text}); 
               getAge(e: Employee): Number = e.Age;
@@ -1950,6 +1938,57 @@ namespace Microsoft.PowerFx.Tests
             "g(f())",
             true,
             1.0)]
+
+        // Aggregate types with more than expected fields are not allowed in UDF args and return types
+        // Records
+        [InlineData(
+            "f():T = {x: 5, y: 5}; T := Type({x: Number});",
+            "",
+            false)]
+        [InlineData(
+            "f():T2 = {x: 5, y: 5}; T1 := Type([{x: Number}]); T2 := Type(RecordOf(T1));",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = x.n; T := Type({n: Number});",
+            "g({x: 5, y: 5})",
+            false)]
+
+        // Nested Records
+        [InlineData(
+            "f():T = {a: 5, b: {c: {d: 5, e:42}}}; T := Type({a: Number, b: {c: {d: Number}}});",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = x.b.c.d; T := Type({a: Number, b: {c: {d: Number}}});",
+            "g({a: 5, b: {c: {d: 5, e:42}}})",
+            false)]
+
+        // Tables
+        [InlineData(
+            "f():T = [{x: 5, y: 5}]; T := Type([{x: Number}]);",
+            "",
+            false)]
+        [InlineData(
+            "People := Type([{Name: Text, Age: Number}]); countMinors(p: People): Number = CountRows(Filter(p, Age < 18));",
+            "countMinors([{Name: \"Bob\", Age: 21, Title: \"Engineer\"}, {Name: \"Alice\", Age: 25, Title: \"Manager\"}])",
+            false)]
+        [InlineData(
+            @"Employee := Type({Name: Text, Age: Number, Title: Text}); Employees := Type([Employee]);  EmployeeNames := Type([{Name: Text}]); 
+              getNames(e: Employees):EmployeeNames = ShowColumns(e, Name); 
+              getNamesCount(e: EmployeeNames):Number = CountRows(getNames(e));",
+            "getNamesCount([{Name: \"Jim\", Age:25}, {Name: \"Tony\", Age:42}])",
+            false)]
+
+        // Nested Tables
+        [InlineData(
+            "f():T = {a: 5, b: [{c: {d: 5, e:42}}]}; T := Type([{a: Number, b: [{c: {d: Number}}]}]);",
+            "",
+            false)]
+        [InlineData(
+            "g(x:T):Number = First(First(x).b).c.d; T := Type([{a: Number, b: [{c: {d: Number}}]}]);",
+            "g({a: 5, b: [{c: {d: 5, e:42}}]})",
+            false)]
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1970,7 +2009,11 @@ namespace Microsoft.PowerFx.Tests
             }
             else
             {
-                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
+                Assert.ThrowsAny<Exception>(() =>
+                {
+                    recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                    recalcEngine.Eval(evalExpression, options: parserOptions);
+                });
             }
         }
 
