@@ -46,16 +46,30 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
-        public void MSNWeather_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
+        public void MSNWeather_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json", _output);
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("MSNWeather") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("MSNWeather")
+                {
+                    Compatibility = connectorCompatibility,
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
             ConnectorFunction currentWeather = functions.First(f => f.Name == "CurrentWeather");
 
             Assert.Equal(2, currentWeather.RequiredParameters.Length);
@@ -69,35 +83,56 @@ namespace Microsoft.PowerFx.Tests
 
             if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
             {
-                Assert.Equal(FormulaType.OptionSetValue, currentWeather.RequiredParameters[1].FormulaType);                
+                if (returnEnumsAsPrimitive)
+                {
+                    Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);
+                }
+                else
+                {
+                    Assert.Equal(FormulaType.OptionSetValue, currentWeather.RequiredParameters[1].FormulaType);
+                }
 
                 // Dictionary is used here, so we need to reorder
                 Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Key)));
                 Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.Enum.OrderBy(kvp => kvp.Key).Select(kvp => (kvp.Value as StringValue).Value)));
 
-                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumDisplayNames));                
+                Assert.Equal("Imperial,Metric", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumDisplayNames));
             }
             else
             {
-                Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);                                                                                            
+                Assert.Equal(FormulaType.String, currentWeather.RequiredParameters[1].FormulaType);
             }
 
             Assert.Equal("I,C", string.Join(",", currentWeather.RequiredParameters[1].ConnectorType.EnumValues.Select(fv => (fv as StringValue).Value)));
         }
 
         [Theory]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
 
         // Option set with numeric logical names
-        public void DimeScheduler_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        public void DimeScheduler_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Dime.Scheduler.json", _output);
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("DimeScheduler") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("DimeScheduler")
+                {
+                    Compatibility = connectorCompatibility,
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
             ConnectorFunction actionUriUpsert = functions.First(f => f.Name == "actionUriUpsert");
 
             Assert.Equal(5, actionUriUpsert.OptionalParameters.Length);
@@ -106,35 +141,54 @@ namespace Microsoft.PowerFx.Tests
 
             if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
             {
-                Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);                
+                if (returnEnumsAsPrimitive)
+                {
+                    Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);
+                }
+                else
+                {
+                    Assert.Equal(FormulaType.OptionSetValue, actionUriUpsert.OptionalParameters[2].FormulaType);
+                }
 
                 // Dictionary is used here, so we need to reorder
                 Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => kvp.Key)));
                 Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.Enum.Select(kvp => (kvp.Value as DecimalValue).Value)));
 
-                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumDisplayNames));                
+                Assert.Equal("Planning Board,Appointment,Task,Map", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumDisplayNames));
             }
             else
             {
-                Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);                
+                Assert.Equal(FormulaType.Decimal, actionUriUpsert.OptionalParameters[2].FormulaType);
             }
 
             Assert.Equal("0,1,2,3", string.Join(",", actionUriUpsert.OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (fv as DecimalValue).Value)));
         }
 
         [Theory]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true)]
-        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true)]
-        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, true)]
-        [InlineData(ConnectorCompatibility.CdpCompatibility, false)]
-
-        // Option set with numeric logical names
-        public void ACSL_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues)
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.SwaggerCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.PowerAppsCompatibility, false, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, false)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, true, true)]
+        [InlineData(ConnectorCompatibility.CdpCompatibility, false, true)]
+        public void ACSL_OptionSets(ConnectorCompatibility connectorCompatibility, bool supportXMsEnumValues, bool returnEnumsAsPrimitive)
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.2.json", _output);
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("ACSL") { Compatibility = connectorCompatibility, SupportXMsEnumValues = supportXMsEnumValues }, testConnector._apiDocument).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ACSL") 
+                { 
+                    Compatibility = connectorCompatibility, 
+                    SupportXMsEnumValues = supportXMsEnumValues,
+                    ReturnEnumsAsPrimitive = returnEnumsAsPrimitive
+                },
+                testConnector._apiDocument).ToList();
+
             ConnectorFunction analyzeConversationTranscriptSubmitJob = functions.Single(f => f.Name == "AnalyzeConversationTranscriptSubmitJob");
 
             // AnalyzeConversationTranscript_SubmitJob defined at line 1226 of swagger file
@@ -143,19 +197,19 @@ namespace Microsoft.PowerFx.Tests
             // conversations parameter at line 2577, defined at line 2580(TranscriptConversation)
             // conversationItems parameter at line 2585, defined at line 2624(TranscriptConversationItem)
             // role parameter at line 2641 is having extension x-ms-enum with modelAsString set to true
-            ConnectorType connectorType = analyzeConversationTranscriptSubmitJob.RequiredParameters[0].ConnectorType;            
+            ConnectorType connectorType = analyzeConversationTranscriptSubmitJob.RequiredParameters[0].ConnectorType;
             ConnectorType role = connectorType.Fields[0].Fields[0].Fields[0].Fields[connectorCompatibility == ConnectorCompatibility.Default ? 4 : 3];
             Assert.Equal("role", role.Name);
 
             // Type is always a string here as to be an optionset, we need (ConnectorCompatibility = CdpCompatibility or SupportXMsEnumValues = true) AND (modelAsString = false)
             Assert.Equal(FormulaType.String, role.FormulaType);
             Assert.True(role.IsEnum);
-            
+
             Assert.Equal<object>(
                 connectorCompatibility != ConnectorCompatibility.Default
                 ? "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, participantId:s, role:s, text:s], domain:s, language:s]]"
-                : "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, modality:s, participantId:s, role:s, text:s], domain:s, language:s]]", 
-                connectorType.FormulaType._type.ToString());            
+                : "![conversations:![conversationItems:*[audioTimings:*[duration:w, offset:w, word:s], id:s, itn:s, language:s, lexical:s, maskedItn:s, modality:s, participantId:s, role:s, text:s], domain:s, language:s]]",
+                connectorType.FormulaType._type.ToString());
 
             if (connectorCompatibility == ConnectorCompatibility.CdpCompatibility || supportXMsEnumValues)
             {
@@ -1969,16 +2023,16 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         public async Task AiSensitivityTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail.json", _output);
-            OpenApiDocument apiDoc = testConnector._apiDocument;            
-           
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
             ConnectorSettings connectorSettings = new ConnectorSettings("exob")
-            {            
+            {
                 Compatibility = ConnectorCompatibility.SwaggerCompatibility,
                 AllowUnsupportedFunctions = true,
                 IncludeInternalFunctions = true,
-                ReturnUnknownRecordFieldsAsUntypedObjects = true                
+                ReturnUnknownRecordFieldsAsUntypedObjects = true
             };
-            
+
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             ConnectorFunction sendmail = functions.First(f => f.Name == "SendEmailV3");

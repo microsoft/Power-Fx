@@ -716,6 +716,11 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorType(schema, openApiParameter, FormulaType.String, list: list, isNumber: isNumber);
                     }
 
+                    if (settings.Settings.ReturnEnumsAsPrimitive)
+                    {
+                        return new ConnectorType(schema, openApiParameter, isNumber ? FormulaType.Decimal : FormulaType.String, list: list, isNumber: isNumber);
+                    }
+
                     return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);
                 }
 
@@ -735,6 +740,11 @@ namespace Microsoft.PowerFx.Connectors
                         if (modelAsString)
                         {
                             return new ConnectorType(schema, openApiParameter, FormulaType.String, list: dic);
+                        }
+
+                        if (settings.Settings.ReturnEnumsAsPrimitive)
+                        {
+                            return new ConnectorType(schema, openApiParameter, isNumber ? FormulaType.Decimal : FormulaType.String, list: list, isNumber: isNumber);
                         }
 
                         return new ConnectorType(schema, openApiParameter, optionSet.FormulaType);

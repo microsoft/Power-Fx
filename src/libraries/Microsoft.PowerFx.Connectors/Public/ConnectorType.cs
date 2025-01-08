@@ -162,8 +162,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (list != null && list.Any())
                 {
-                    EnumValues = list.Select<KeyValuePair<DName, DName>, FormulaValue>(kvp => isNumber ? FormulaValue.New(decimal.Parse(kvp.Value.Value, CultureInfo.InvariantCulture)) : FormulaValue.New(kvp.Value)).ToArray();
-                    EnumDisplayNames = list.Select(list => list.Key.Value).ToArray();                    
+                    EnumValues = list.Select<KeyValuePair<DName, DName>, FormulaValue>(kvp => isNumber ? FormulaValue.New(decimal.Parse(kvp.Key.Value, CultureInfo.InvariantCulture)) : FormulaValue.New(kvp.Key)).ToArray();
+                    EnumDisplayNames = list.Select(list => list.Value.Value).ToArray();                    
                 }
                 else
                 {
