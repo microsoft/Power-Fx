@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Types
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             var ret = false;
-            var deleteList = new List<T>();
+            var markedToDeletionIndexes = new HashSet<int>();
             var errors = new List<ExpressionError>();
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -194,21 +194,30 @@ namespace Microsoft.PowerFx.Types
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
             }
 
+            var rowsArray = _enumerator.ToArray();
+
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
                 var found = false;
 
-                foreach (T item in _enumerator)
+                for (int i = 0; i < rowsArray.Length; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
+                    var item = rowsArray[i];
                     DValue<RecordValue> dRecord = Marshal(item);
 
                     if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
-                        found = true;
-
-                        deleteList.Add(item);
+                        if (markedToDeletionIndexes.Contains(i))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            found = true;
+                            markedToDeletionIndexes.Add(i);
+                        }
 
                         if (!all)
                         {
@@ -220,13 +229,13 @@ namespace Microsoft.PowerFx.Types
                 if (!found)
                 {
                     // https://github.com/microsoft/Power-Fx/issues/2618
-                    errors.Add(new ExpressionError() { Message = "The specified record was not found.", Kind = ErrorKind.NotFound });
+                    errors.Add(new ExpressionError() { Kind = ErrorKind.NotFound });
                 }
             }
 
-            foreach (var delete in deleteList)
+            foreach (var index in markedToDeletionIndexes)
             {
-                _sourceList.Remove(delete);
+                _sourceList.Remove(rowsArray[index]);
                 ret = true;
             }
 
