@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx
                 foreach (var udf in partialUDFs)
                 {
                     var config = new BindingConfig(allowsSideEffects: _parserOptions.AllowsSideEffects, useThisRecordForRuleScope: false, numberIsFloat: false, userDefinitionsMode: true);
-                    var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config);
+                    var binding = udf.BindBody(composedSymbols, new Glue2DocumentBinderGlue(), config, features: _features);
 
                     List<TexlError> bindErrors = new List<TexlError>();
 

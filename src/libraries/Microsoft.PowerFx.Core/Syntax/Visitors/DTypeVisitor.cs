@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(context);
-
+            
             if (node.ChildNodes.Count != 1)
             {
                 return DType.Invalid;
