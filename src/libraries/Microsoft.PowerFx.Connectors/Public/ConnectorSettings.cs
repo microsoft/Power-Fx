@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Connectors
         internal static readonly ConnectorSettings DefaultCdp = new ConnectorSettings(null) 
         { 
             Compatibility = ConnectorCompatibility.CdpCompatibility,
-            SupportXMsEnumValues = true 
+            SupportXMsEnumValues = true,
+            ReturnEnumsAsPrimitive = false
         };
         
         public ConnectorSettings(string @namespace)
@@ -86,6 +87,21 @@ namespace Microsoft.PowerFx.Connectors
         /// Only CDP connectors will have this enabled by default.
         /// </summary>
         public bool SupportXMsEnumValues { get; init; } = false;
+
+        /// <summary>
+        /// This flag will force all enums to be returns as FormulaType.String or FormulaType.Decimal regardless of x-ms-enum-*.
+        /// This flag is only in effect when SupportXMsEnumValues is true.
+        /// </summary>
+        public bool ReturnEnumsAsPrimitive { get; init; } = false;
+
+        /// <summary>
+        /// Use parameters/param/name instead of parameters/param/schema/properties/name when
+        /// there is only one property for the body parameter.
+        /// In PowerApps, body objects are flattened by default and we create one parameter per property
+        /// of that object. Each of these parameters is names with the name of the property of that object.
+        /// When there is only one property, this setting will force the use of the original body parameter.
+        /// </summary>
+        public bool UseRealBodyNameForSinglePropertyObject { get; init; } = false;
 
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }

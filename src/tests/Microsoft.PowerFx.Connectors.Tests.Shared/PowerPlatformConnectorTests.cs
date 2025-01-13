@@ -2345,6 +2345,26 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ExcelOnlineTest2(bool useRealBodyNameForSinglePropertyObject)
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ExcelOnline")
+                {
+                    Compatibility = ConnectorCompatibility.Default,
+                    UseRealBodyNameForSinglePropertyObject = useRealBodyNameForSinglePropertyObject
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction patchItem = functions.First(f => f.Name == "PatchItem");
+            string bodyName = patchItem.OptionalParameters[2].Name;
+
+            Assert.Equal(useRealBodyNameForSinglePropertyObject ? "item" : "dynamicProperties", bodyName);
+        }
+
         public class HttpLogger : HttpClient
         {
             private readonly ITestOutputHelper _console;
