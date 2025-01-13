@@ -1462,6 +1462,11 @@ namespace Microsoft.PowerFx.Connectors
                                     bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName);
                                     bool bodyPropertyHiddenRequired = false;
 
+                                    if (ConnectorSettings.UseDefaultBodyNameForSinglePropertyObject && bodySchema.Properties.Count == 1)
+                                    {
+                                        bodyPropertyName = bodyName;
+                                    }
+
                                     if (bodyPropertySchema.IsInternal())
                                     {
                                         if (bodyPropertyRequired)
