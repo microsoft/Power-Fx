@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {
-            if (ColumnsCapabilities.TryGetValue(fieldName, out ColumnCapabilitiesBase columnCapabilitiesBase))
+            if (ColumnsCapabilities.TryGetValue(fieldName, out ColumnCapabilitiesBase columnCapabilitiesBase) && columnCapabilitiesBase != null)
             {               
                 return columnCapabilitiesBase switch
                 {
