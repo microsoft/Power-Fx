@@ -3225,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>A new or existing collection to augment.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Clears the collection first and adds one or more items to the specified collection. The items can be from a different table or collection (e.g. ClearCollect(collection, source_collection)), or one or more records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     <comment>{Locked=ClearCollect(collection, source_collection)} {Locked=ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)} Description of 'ClearCollect' function.</comment>
