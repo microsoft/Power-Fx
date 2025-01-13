@@ -94,6 +94,14 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool ReturnEnumsAsPrimitive { get; init; } = false;
 
+        /// <summary>
+        /// In Power Apps, when a body parameter is used it's flattened and we create one parameter for each
+        /// body object property. With that logic each parameter name will be the object property name.
+        /// When set, this setting will use the real body name specified in the swagger instead of the property name
+        /// of the object, provided there is only one property.
+        /// </summary>
+        public bool UseDefaultBodyNameForSinglePropertyObject { get; init; } = false;
+
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 
