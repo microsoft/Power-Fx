@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -111,6 +110,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
             }
 
+            var newDisplayNameProvider = new Dictionary<DName, DName>();
             var atLeastOneGroupByColumn = false;
 
             for (int i = 1; i < args.Length; i++)
@@ -151,6 +151,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeThisGroupColumnName);
                                 continue;
                             }
+
+                            newDisplayNameProvider[columnName] = new DName(displayName);
                         }
 
                         atLeastOneGroupByColumn = true;
@@ -200,6 +202,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 isValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrSummarizeNoGroupBy);
             }
+
+            returnType = DType.AttachOrDisableDisplayNameProvider(returnType, DisplayNameProvider.New(newDisplayNameProvider));
 
             Contracts.Assert(returnType.IsTable);
             return isValid;

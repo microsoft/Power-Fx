@@ -52,7 +52,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
         public const string Distinct = "distinct";
-        public const string Join = "join";
+        public const string JoinInner = "joininner";
+        public const string JoinLeft = "joinleft";
+        public const string JoinRight = "joinright";
+        public const string JoinFull = "joinfull";
     }
 
     public enum DelegationOperator
@@ -98,6 +101,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         Astype,
         Arraylookup,
         Distinct,
-        Join
+        JoinInner,
+        JoinLeft,
+        JoinRight,
+        JoinFull
     }
 }

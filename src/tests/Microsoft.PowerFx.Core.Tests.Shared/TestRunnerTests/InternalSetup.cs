@@ -29,13 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             switch (featureName)
             {
-                // When we move to C# 12 we can use nameof(Features.AllowAsyncDelegation):
-                case "AllowAsyncDelegation":
-                    this.Features = new Features(this.Features) { AllowAsyncDelegation = featureValue };
-                    return true;
-                case "AllowImpureNodeDelegation":
-                    this.Features = new Features(this.Features) { AllowImpureNodeDelegation = featureValue };
-                    return true;
+                // When we move to C# 12 we can use nameof(Features.AsTypeLegacyCheck):
                 case "AsTypeLegacyCheck":
                     this.Features = new Features(this.Features) { AsTypeLegacyCheck = featureValue };
                     return true;
