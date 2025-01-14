@@ -890,6 +890,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableJsonFunctions();
+#pragma warning disable CS0618 // Type or member is obsolete
+                config.EnableJoinFunction();
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 if (iSetup.HandlerNames?.Any(hn => string.Equals(hn, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase)) == true)
                 {

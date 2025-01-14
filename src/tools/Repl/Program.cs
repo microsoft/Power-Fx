@@ -93,6 +93,7 @@ namespace Microsoft.PowerFx
             config.EnableSetFunction();
             config.EnableJsonFunctions();
             config.EnableOptionSetInfo();
+            config.EnableJoinFunction();
 
             config.AddFunction(new AssertFunction());
 

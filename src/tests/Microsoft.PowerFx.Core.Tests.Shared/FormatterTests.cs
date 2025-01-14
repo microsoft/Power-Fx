@@ -30,6 +30,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "ParseJSON(\"[{ \"\"Age\"\": 5}]\", Type([{Age: Number}]))",
             "ParseJSON(#$string$#, Type([ { #$fieldname$#:#$firstname$# } ]))")]
+        [InlineData(
+            "ParseJSON(\"{}\", Type(RecordOf(Accounts)))",
+            "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))")]
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
@@ -262,6 +265,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         [InlineData("ParseJSON(\"[]\", Type([{Age: Number}]))", "ParseJSON(\n    \"[]\",\n    Type([{Age: Number}])\n)")]
         [InlineData("Type([{Age: Number, Name: Text}])", "Type(\n    [\n        {\n            Age: Number,\n            Name: Text\n        }\n    ]\n)")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert
@@ -284,6 +288,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("T := Type(Number);", "T := Type(Number);")]
         [InlineData("N = 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N = 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
         [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
+        [InlineData("T := Type(/*RecordOf*/ RecordOf(Accounts));", "T := Type(/*RecordOf*/RecordOf(Accounts));")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()

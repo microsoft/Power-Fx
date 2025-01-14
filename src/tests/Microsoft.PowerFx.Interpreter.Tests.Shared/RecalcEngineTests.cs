@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
+using static Microsoft.PowerFx.Core.Tests.LazyTypeTests;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -1769,6 +1770,68 @@ namespace Microsoft.PowerFx.Tests
             // Wrong type: https://github.com/microsoft/Power-Fx/issues/2342
         }
 
+        [Fact]
+        public void LazyJsonTest()
+        {
+            bool LazyGetField1(string name, out FormulaType type)
+            {
+                type = name switch
+                {
+                    "field1" => FormulaType.Decimal,
+                    "field2" => FormulaType.String,                    
+                    _ => FormulaType.Blank,
+                };
+
+                return type != FormulaType.Blank;
+            }
+
+            PowerFxConfig config = new PowerFxConfig();
+            config.EnableJsonFunctions();
+
+            RecalcEngine engine = new RecalcEngine(config);            
+            SymbolTable symbolTable = new SymbolTable();            
+            TestLazyRecordType lazyRecordType = new TestLazyRecordType("test", new List<string>() { "field1", "field2" }, LazyGetField1);
+
+            ISymbolSlot slot = symbolTable.AddVariable("var1", lazyRecordType);
+
+            CheckResult checkResult = engine.Check("JSON(var1)", symbolTable: symbolTable);
+            Assert.True(checkResult.IsSuccess, string.Join(", ", checkResult.Errors.Select(err => err.Message)));
+
+            SymbolValues symbolValues = new SymbolValues(symbolTable);
+            symbolValues.Set(slot, new LazyRecordValue(lazyRecordType));
+
+            FormulaValue formulaValue = checkResult.GetEvaluator().Eval(symbolValues);
+            StringValue stringValue = Assert.IsType<StringValue>(formulaValue);
+
+            Assert.Equal<object>(@"{""field1"":10,""field2"":""Str""}", stringValue.Value);
+        }
+
+        public class LazyRecordValue : RecordValue
+        {
+            public LazyRecordValue(RecordType type) 
+                : base(type)
+            {
+            }
+
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                if (fieldName == "field1")
+                {
+                    result = FormulaValue.New(10);
+                    return true;
+                }
+
+                if (fieldName == "field2")
+                {
+                    result = FormulaValue.New("Str");
+                    return true;
+                }
+
+                result = null;
+                return false;
+            }
+        }
+
         [Theory]
         [InlineData(
             "Point := Type({x : Number, y : Number}); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
@@ -1882,13 +1945,11 @@ namespace Microsoft.PowerFx.Tests
             false)]
 
         // UDFs with Enitity Types should work in parameter and return types
-
         [InlineData(
             "f():TestEntity = Entity; g(e: TestEntity):Number = 1;",
             "g(f())",
             true,
             1.0)]
-
         public void UserDefinedTypeTest(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
         {
             var config = new PowerFxConfig();
@@ -1953,6 +2014,128 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 Assert.False(recalcEngine.AddUserDefinedFunction(udf, CultureInfo.InvariantCulture, extraSymbols, true).IsSuccess);
+            }
+        }
+
+        [Theory]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points)); distance(a: Point, b: Point): Number = Sqrt(Power(b.x-a.x, 2) + Power(b.y-a.y, 2));",
+            "distance({x: 0, y: 0}, {x: 0, y: 5})",
+            true,
+            5.0)]
+        [InlineData(
+            "Account := Type(RecordOf(Accounts)); getAccountId(a: Account): Number = a.id;",
+            "getAccountId({id: 42, name: \"T-Rex\", address: \"Museum\"})",
+            true,
+            42.0)]
+        [InlineData(
+            "Account := Type(RecordOf(Accounts)); FirstAccount(a: Accounts): Account = First(a); getAccountId(a: Account): Number = a.id;",
+            "getAccountId(FirstAccount([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}]))",
+            true,
+            1729.0)]
+        [InlineData(
+            "NewAccounts := Type([RecordOf(Accounts)]); getFirstAccountId(a: NewAccounts): Number = First(a).id;",
+            "getFirstAccountId([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}])",
+            true,
+            1729.0)]
+        [InlineData(
+            "AccountWithAge := Type({age: Number, acc: RecordOf(Accounts)}); getAccountAge(a: AccountWithAge): Number = a.age;",
+            "getAccountAge({age : 25, acc:First([{id: 1729, name: \"Bob\"}, {id: 42, name: \"T-Rex\"}])})",
+            true,
+            25.0)]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); ComplexType := Type({p: RecordOf(Points), a: RecordOf(Accounts), s: SomeRecord}); getX(c: ComplexType): Number = c.p.x;",
+            "getX({s: {id: 1729, name: \"Bob\"}, p : {x: 1, y: 2}, a: {id: 42, name: \"Alice\", address: \"internet\"}})",
+            true,
+            1.0)]
+
+        // No error on a UDF named RecordOf
+        [InlineData(
+            @"RecordOf(x:Number): Number = x + 1;",
+            "RecordOf(41)",
+            true,
+            42.0)]
+
+        // Fails for any type other than table
+        [InlineData(
+            "Account := Type(RecordOf(SomeRecord));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(RecordOf(Void));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(RecordOf(UntypedObject));",
+            "",
+            false)]
+
+        // invalid helper name
+        [InlineData(
+            "Account := Type(Recordof(Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(recordOf(Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type(First(Accounts));",
+            "",
+            false)]
+
+        // Does not allow anything other firstname
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points As P));",
+            "",
+            false)]
+        [InlineData(
+            "Points := Type([{x : Number, y : Number}]); Point := Type(RecordOf(Points, Accounts));",
+            "",
+            false)]
+        [InlineData(
+            "Account := Type((Accounts, SomeRecord));",
+            "",
+            false)]
+        [InlineData(
+            "Point := Type(RecordOf([{x : Number, y : Number}]));",
+            "",
+            false)]
+        [InlineData(
+            "T1 := Type(RecordOf(Type([{A:Number}])));",
+            "",
+            false)]
+        [InlineData(
+            "T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));",
+            "",
+            false)]
+
+        // RecordOf not in type literal
+        [InlineData(
+            "Account = RecordOf(Accounts);",
+            "",
+            false)]
+        [InlineData(
+            "F():Accounts = RecordOf(Accounts);",
+            "",
+            false)]
+        public void RecordOfTests(string userDefinitions, string evalExpression, bool isValid, double expectedResult = 0)
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions();
+
+            recalcEngine.Config.SymbolTable.AddType(new DName("Accounts"), FormulaType.Build(TestUtils.DT("*[id: n, name:s, address:s]")));
+            recalcEngine.Config.SymbolTable.AddType(new DName("SomeRecord"), FormulaType.Build(TestUtils.DT("![id: n, name:s]")));
+
+            if (isValid)
+            {
+                recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture);
+                Assert.Equal(expectedResult, recalcEngine.Eval(evalExpression, options: parserOptions).ToObject());
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => recalcEngine.AddUserDefinitions(userDefinitions, CultureInfo.InvariantCulture));
             }
         }
 

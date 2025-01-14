@@ -30,16 +30,19 @@ namespace Microsoft.PowerFx.Connectors
         public bool SupportsDynamicIntellisense => ConnectorType.SupportsDynamicIntellisense;
 
         public bool? NotificationUrl => ConnectorType.NotificationUrl;
-        
-        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorCompatibility compatibility)
+
+        public AiSensitivity AiSensitivity => ConnectorType.AiSensitivity;
+
+        internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorSettings settings)
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(compatibility));
+            ConnectorType = AggregateErrorsAndWarnings(openApiParameter.GetConnectorType(settings));
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, this) && defaultValue is not BlankValue ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions);
         }
 
+        // Intellisense only
         internal ConnectorSchema(ConnectorSchema connectorSchema, ConnectorType connectorType)
         {
             Schema = connectorSchema.Schema;

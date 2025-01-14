@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SafeDTypeToStringTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shims462.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwaggerFailureTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SymbolTableTryAddTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestConnectorRuntimeContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThreadingTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Helpers.cs" />
@@ -246,6 +247,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema ProductModel.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products v2.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetSchema Products.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetTables SampleDB.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL GetRelationships SampleDB.json" />
@@ -285,6 +287,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dataverse 3.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dataverse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\DataverseSample.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dime.Scheduler.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Eden AI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ExcelOnlineBusiness.swagger.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Language - Question Answering.json" />
@@ -296,6 +299,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PetStore.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SalesForce.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />

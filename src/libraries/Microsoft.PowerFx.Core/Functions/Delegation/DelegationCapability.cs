@@ -87,7 +87,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.Top, new DelegationCapability(Top) },
                 { DelegationMetadataOperatorConstants.AsType, new DelegationCapability(AsType) },
                 { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) },
-                { DelegationMetadataOperatorConstants.Distinct, new DelegationCapability(Distinct) }
+                { DelegationMetadataOperatorConstants.Distinct, new DelegationCapability(Distinct) },
+                { DelegationMetadataOperatorConstants.JoinInner, new DelegationCapability(JoinInner) },
+                { DelegationMetadataOperatorConstants.JoinLeft, new DelegationCapability(JoinLeft) },
+                { DelegationMetadataOperatorConstants.JoinRight, new DelegationCapability(JoinRight) },
+                { DelegationMetadataOperatorConstants.JoinFull, new DelegationCapability(JoinFull) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -139,9 +143,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger AsType = BigInteger.Pow(2, 44);                       //    0x100000000000
         public static readonly BigInteger ArrayLookup = BigInteger.Pow(2, 45);                  //    0x200000000000
         public static readonly BigInteger Distinct = BigInteger.Pow(2, 46);                     //    0x400000000000
+        public static readonly BigInteger JoinInner = BigInteger.Pow(2, 47);                    //    0x800000000000
+        public static readonly BigInteger JoinLeft = BigInteger.Pow(2, 48);                     //   0x1000000000000
+        public static readonly BigInteger JoinRight = BigInteger.Pow(2, 49);                    //   0x2000000000000
+        public static readonly BigInteger JoinFull = BigInteger.Pow(2, 50);                     //   0x4000000000000
 
         // Please update it as max value changes.
-        private static BigInteger maxSingleCapabilityValue = Distinct;
+        private static BigInteger maxSingleCapabilityValue = JoinFull;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll
@@ -477,6 +485,30 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 {
                     AddCommaIfNeeded(sb);
                     sb.Append(nameof(Distinct));
+                }
+
+                if (HasCapability(JoinInner))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(JoinInner));
+                }
+
+                if (HasCapability(JoinLeft))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(JoinLeft));
+                }
+
+                if (HasCapability(JoinRight))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(JoinRight));
+                }
+
+                if (HasCapability(JoinFull))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(JoinFull));
                 }
 
                 return sb.ToString();

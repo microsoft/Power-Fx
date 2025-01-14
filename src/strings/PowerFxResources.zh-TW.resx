@@ -4556,6 +4556,10 @@
     <value>類型常值聲明無效。運算式 '{0}' 不能用於類型定義。</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>不支援的使用方式: 類型常值意義只能用在類型參數和類型定義中。</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>類型 {0} 定義無效。</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>要清除的來源。</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>擷取跨越多個具有關係的資料表的資料。</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>來源 1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>來源 2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>分母</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>左側資料表或資料集。</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>右側資料表或資料集。</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>兩個資料表或資料集中的聯結條件。</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>兩個資料表或資料集之間的聯結類型。</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>重新命名其中一個來源中現有資料欄的參數。</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>指定的資料來源無法與此函數一起使用。</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>語法不正確:『=』不能用來宣告使用者定義型別。請使用『:=』代替。</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>『{0}』不能因與同名的另一資料欄結合而新增/重新命名。</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>預期是普通的『JoinType』列舉值。不支援不同的列舉或透過其他函數傳送，例如 Join(..., If(true, JoinType.Inner, JoinType.Full))。</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>從第 5 個位置開始的參數是用來重新命名資料欄，並預期是『As』節點參數，例如 LeftRecord.Name As NewName。</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>必須至少宣告一列『{0}』來組成聯結結果。</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>在這種情況下，『{0}』值是無效的。它應該是對『{1}』或『{2}』範圍名稱的參考。</value>
     
   </data>
 </root>

@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Connectors
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
     }
 }

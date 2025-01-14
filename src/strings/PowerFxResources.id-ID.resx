@@ -4556,6 +4556,10 @@
     <value>Deklarasi harfiah jenis tidak valid. Ekspresi '{0}' tidak dapat digunakan dalam definisi jenis.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan tidak didukung: harfiah jenis hanya dapat digunakan di argumen jenis dan definisi jenis.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definisi jenis {0} tidak valid.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Sumber yang akan dihapus.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Mengambil data di beberapa tabel dengan relasi.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>sumber1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>sumber2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>penyebut</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Tabel atau kumpulan kiri.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Tabel atau kumpulan kanan.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Gabungkan kriteria antara dua tabel atau kumpulan.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Jenis penggabungan antara dua tabel atau kumpulan.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumen untuk mengganti nama kolom yang ada di salah satu sumber.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Sumber data yang ditentukan tidak dapat digunakan dengan fungsi ini.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Sintaks salah: '=' tidak dapat digunakan untuk menentukan jenis yang ditentukan pengguna. Gunakan ':=' sebagai gantinya.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>'{0}' tidak dapat ditambahkan/diganti namanya karena bertabrakan dengan kolom lain dengan nama yang sama.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Nilai enum 'JoinType' yang diharapkan. Enum yang berbeda atau meneruskannya melalui fungsi lain tidak didukung yaitu Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumen yang dimulai dari posisi ke-5 ditujukan untuk mengganti nama kolom dan diperkirakan sebagai argumen node 'As', yakni LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Minimal satu kolom '{0}' harus dinyatakan untuk menyusun hasil penggabungan.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Nilai '{0}' tidak valid dalam konteks ini. Nilai tersebut seharusnya menjadi referensi untuk nama cakupan '{1}' atau '{2}'.</value>
     
   </data>
 </root>

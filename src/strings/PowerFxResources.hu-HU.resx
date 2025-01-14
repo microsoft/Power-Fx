@@ -4556,6 +4556,10 @@
     <value>A literális deklaráció típusa érvénytelen. A(z) '{0}' kifejezés nem használható típusmeghatározásban.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Nem támogatott használat: a konstansérték típusok csak argumentum típusokban és definíció típusokban használható.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>A beírt {0} típusmeghatározás érvénytelen.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>A törölni kívánt forrás.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Olyan adatokat kér le, amelyek kapcsolatokkal rendelkeznek és több táblán átívelnek.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>forrás1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>forrás2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>nevező</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>A bal tábla vagy gyűjtemény.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>A jobb tábla vagy gyűjtemény.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Két tábla vagy gyűjtemény csatlakozási feltételei.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Két tábla vagy gyűjtemény közti csatlakozási típus.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Azok az argumentumok, amelyekkel átnevezheti az egyik forrásban lévő oszlopot.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>A megadott adatforrás nem használható ezzel a függvénnyel.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Helytelen szintaxis: az „=” nem használható a felhasználói típusok meghatározásához. Használja inkább a „:=” lehetőséget.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>A(z) „{0}” nem adható hozzá/nevezhető át, mert ütközik egy azonos nevű oszloppal.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Várt egyszerű „JoinType” felsorolási érték. Eltérő felsorolások vagy egy másik függvényen keresztüli átadás nem támogatott, azaz Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Az 5. pozíciótól kezdődő argumentumok az oszlopok átnevezésére használandók, és várhatóan „As” csomópontargumentumok, azaz LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Legalább egy „{0}” oszlopot deklarálni kell a csatlakozási eredmény beviteléhez.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>A(z) „{0}” érték érvénytelen ebben a kontextusban. A(z) „{1}” vagy „{2}” hatókör nevére kell hivatkoznia.</value>
     
   </data>
 </root>

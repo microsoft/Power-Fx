@@ -202,5 +202,16 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "IgnoreUnsupportedTypes", TraceFunction.IgnoreUnsupportedTypesEnumValue },
             },
             canConcatenateStronglyTyped: true);
+
+        public static readonly EnumSymbol JoinTypeEnum = new EnumSymbol(
+            new DName(LanguageConstants.JoinTypeEnumString),
+            DType.String,
+            new Dictionary<string, object>()
+            {
+                { "Inner", "inner" },
+                { "Left", "left" },
+                { "Right", "right" },
+                { "Full", "full" },
+            });
     }
 }

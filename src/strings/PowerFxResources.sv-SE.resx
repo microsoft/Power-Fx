@@ -4556,6 +4556,10 @@
     <value>Deklarationen för literal typ är ogiltig. Uttrycket "{0}" kan inte användas i en typdefinition.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Användningen stöds inte: typliteraler kan bara användas i typargument och typdefinitioner.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definitionen av typen {0} är ogiltig.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Källan som ska rensas.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Hämtar data som omfattar flera tabeller med relationer.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>källa1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>källa2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>namngivare</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Den vänstra tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Den högra tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kopplingsvillkor mellan de två tabellerna eller samlingarna.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Kopplingstypen mellan de två tabellerna eller samlingarna.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenten för att byta namn på en befintlig kolumn i någon av källorna.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Den angivna datakällan kan inte användas med den här funktionen.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Felaktig syntax: "=" kan inte användas för att deklarera användardefinierade typer. Använd ":=" i stället.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Det går inte att lägga till/byta namn på {0} på grund av en konflikt med en annan kolumn med samma namn.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Förväntat oformaterad uppräkningsvärde för JoinType. Det går inte att använda olika uppräkningsvärden eller att skicka värdet det via en annan funktion, det vill säga Join(..., If(true, JoinType.Inner) JoinType.Full).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argument som börjar vid den 5:e positionen är tänkta att byta namn på kolumner och förväntas vara ”As”-nodargument, det vill säga LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Du måste deklarera minst en {0}-kolumn om du vill få fram kopplingsresultatet.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Värdet {0} är ogiltigt i den här kontexten. Det måste vara en referens till antingen omfattningsnamnet {1} eller {2}.</value>
     
   </data>
 </root>

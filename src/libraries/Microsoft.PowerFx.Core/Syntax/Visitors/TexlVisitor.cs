@@ -12,9 +12,7 @@ namespace Microsoft.PowerFx.Syntax
         /// Visit <see cref="TypeLiteralNode"/> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>
-        public virtual void Visit(TypeLiteralNode node)
-        {
-        }
+        public abstract void Visit(TypeLiteralNode node);
 
         /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.

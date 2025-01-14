@@ -4556,6 +4556,10 @@
     <value>Deklaracja literału typu jest nieprawidłowa. W definicji typu nie można użyć wyrażenia „{0}”.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Nieobsługiwane użycie: literałów typu można używać tylko w argumentach typu i definicjach typu.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Definicja typu {0} jest nieprawidłowa.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Źródło do wyczyszczenia.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Pobiera dane obejmujące wiele tabel z relacjami.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>źródło1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>źródło2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>mianownik</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>join_type</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>column_renaming</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Lewa tabela lub kolekcja.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Prawa tabela lub kolekcja.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Kryteria sprzężenia między dwiema tabelami lub kolekcjami.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Typ sprzężenia między dwiema tabelami lub kolekcjami.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Argumenty służące do zmieniania nazwy istniejącej kolumny w jednym ze źródeł.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Określonego źródła danych nie można użyć z tą funkcją.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Niepoprawna składnia: nie można użyć „=” do zadeklarowania typów zdefiniowanych przez użytkownika. Zamiast tego użyj „:=”.</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Nie można dodać/zmienić nazwy kolumny „{0}” ze względu na konflikt z inną kolumną o takiej samej nazwie.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Oczekiwana zwykła wartość wyliczenia „JoinType”. Inne wyliczenia oraz przekazywanie tej wartości przez inną funkcję, Join(..., If(true, JoinType.Inner, JoinType.Full)), nie są obsługiwane.</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Argumenty zaczynające się od pozycji 5. mają na celu zmianę nazwy kolumn i powinny być argumentami węzła „As”, tj. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Aby można było zredagować wynik sprzężenia, należy zadeklarować co najmniej jedną kolumnę „{0}”.</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Wartość „{0}” jest nieprawidłowa w tym kontekście. Powinna być odwołaniem do nazwy zakresu „{1}” lub „{2}”.</value>
     
   </data>
 </root>

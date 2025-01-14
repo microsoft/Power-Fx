@@ -4556,6 +4556,10 @@
     <value>Недопустимое объявление литерала типа. Выражение "{0}" не может использоваться в определении типа.</value>
     
   </data>
+  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдерживаемое использование: литералы типа можно использовать только в аргументах типа и определениях типа.</value>
+    
+  </data>
   <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
     <value>Определение типа {0} недопустимо.</value>
     
@@ -4814,6 +4818,50 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Источник, который нужно очистить.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Извлекает данные, охватывающие несколько таблиц с отношениями.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>источник1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>источник2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>знаменатель</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>тип_соединения</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>переименование_столбцов</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Левая таблица или коллекция.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Правая таблица или коллекция.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Критерии соединения двух таблиц или коллекций.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Тип соединения двух таблиц или коллекций.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Аргументы для переименования существующего столбца в одном из источников.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указанный источник данных невозможно использовать в этой функции.</value>
     
@@ -4840,6 +4888,26 @@
   </data>
   <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
     <value>Неверный синтаксис: "=" нельзя использовать для объявления пользовательских типов. Используйте ":=".</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Невозможно добавить/переименовать "{0}" из-за конфликта с другим столбцом с таким же именем.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Ожидается обычное значение перечисления JoinType. Другие перечисления или передача значения через другую функцию не поддерживаются, т. е. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Аргументы начиная с 5-й позиции предназначены для переименования столбцов. Ожидается, что это будут аргументы узлов As, т. е. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Для составления результата соединения должен быть объявлен хотя бы один столбец "{0}".</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Значение "{0}" недопустимо в этом контексте. Это должна быть ссылка на имя области "{1}" или "{2}".</value>
     
   </data>
 </root>

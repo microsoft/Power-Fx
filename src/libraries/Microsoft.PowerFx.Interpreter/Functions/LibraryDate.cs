@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
@@ -697,29 +698,50 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static readonly Regex TimeValueRegex = new Regex(@"(?<hours>\d{1,2})\:(?<minutes>\d{2})(\:(?<seconds>\d{2})(\.(?<milliseconds>\d{1,3}))?)?");
+
         public static FormulaValue TimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            var str = args[0].Value;
-
-            // culture will have Cultural info in-case one was passed in argument else it will have the default one.
-            CultureInfo culture = runner.CultureInfo;
-            if (args.Length > 1)
+            var dateTimeResult = DateTimeParse(runner, context, IRContext.NotInSource(FormulaType.DateTime), args);
+            if (dateTimeResult is DateTimeValue dateTimeValue)
             {
-                var languageCode = args[1].Value;
-                if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
+                var dt = dateTimeValue.GetConvertedValue(runner.TimeZoneInfo);
+                var time = new TimeSpan(0, dt.Hour, dt.Minute, dt.Second, dt.Millisecond);
+                return new TimeValue(irContext, time);
+            }
+
+            if (dateTimeResult is BlankValue)
+            {
+                return dateTimeResult;
+            }
+
+            // Error; trying time-only options
+            var match = TimeValueRegex.Match(args[0].Value);
+            if (match.Success)
+            {
+                var hours = int.Parse(match.Groups["hours"].Value, CultureInfo.InvariantCulture) % 24;
+                var minutes = int.Parse(match.Groups["minutes"].Value, CultureInfo.InvariantCulture);
+                var secondsText = match.Groups["seconds"]?.Value;
+                var seconds = string.IsNullOrEmpty(secondsText) ? 0 : int.Parse(secondsText, CultureInfo.InvariantCulture);
+                var millisecondsText = match.Groups["milliseconds"]?.Value;
+                int milliseconds = 0;
+                if (!string.IsNullOrEmpty(millisecondsText))
                 {
-                    return CommonErrors.BadLanguageCode(irContext, languageCode);
+                    milliseconds = int.Parse(millisecondsText, CultureInfo.InvariantCulture);
+                    if (millisecondsText.Length == 1)
+                    {
+                        milliseconds *= 100; // 12:34:56.7 === 12:34:56.700
+                    }
+                    else if (millisecondsText.Length == 2)
+                    {
+                        milliseconds *= 10; // 12:34:56.78 === 12:34:56.780
+                    }
                 }
+
+                return new TimeValue(irContext, new TimeSpan(0, hours, minutes, seconds, milliseconds));
             }
 
-            if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))
-            {
-                return new TimeValue(irContext, result);
-            }
-            else
-            {
-                return CommonErrors.InvalidDateTimeParsingError(irContext);
-            }
+            return dateTimeResult;
         }
 
         // Returns the number of minutes between UTC and either local or defined time zone

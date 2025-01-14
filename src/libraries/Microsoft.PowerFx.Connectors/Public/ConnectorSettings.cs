@@ -8,8 +8,16 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Settings for a connector.
     /// </summary>
+    [ThreadSafeImmutable]
     public class ConnectorSettings
     {
+        internal static readonly ConnectorSettings DefaultCdp = new ConnectorSettings(null) 
+        { 
+            Compatibility = ConnectorCompatibility.CdpCompatibility,
+            SupportXMsEnumValues = true,
+            ReturnEnumsAsPrimitive = false
+        };
+        
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
@@ -70,9 +78,29 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// In Power Apps, all record fields which are not declared in the swagger file will not be part of the Power Fx response.
         /// ReturnUnknownRecordFieldsAsUntypedObjects modifies this behavior to return all unknown fields as UntypedObjects. 
-        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or  ConnectorCompatibility.CdpCompatibility.
+        /// This flag is only working when Compatibility is set to ConnectorCompatibility.SwaggerCompatibility or ConnectorCompatibility.CdpCompatibility.
         /// </summary>
         public bool ReturnUnknownRecordFieldsAsUntypedObjects { get; init; } = false;
+
+        /// <summary>
+        /// By default action connectors won't parse x-ms-enum-values.
+        /// Only CDP connectors will have this enabled by default.
+        /// </summary>
+        public bool SupportXMsEnumValues { get; init; } = false;
+
+        /// <summary>
+        /// This flag will force all enums to be returns as FormulaType.String or FormulaType.Decimal regardless of x-ms-enum-*.
+        /// This flag is only in effect when SupportXMsEnumValues is true.
+        /// </summary>
+        public bool ReturnEnumsAsPrimitive { get; init; } = false;
+
+        /// <summary>
+        /// In Power Apps, when a body parameter is used it's flattened and we create one parameter for each
+        /// body object property. With that logic each parameter name will be the object property name.
+        /// When set, this setting will use the real body name specified in the swagger instead of the property name
+        /// of the object, provided there is only one property.
+        /// </summary>
+        public bool UseDefaultBodyNameForSinglePropertyObject { get; init; } = false;
 
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }

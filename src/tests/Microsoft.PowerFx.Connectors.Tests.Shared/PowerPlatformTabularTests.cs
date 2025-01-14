@@ -214,8 +214,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(sqlTable.IsDelegable);
 
             // Note relationships to ProductCategory and ProductModel with ~ notation
-            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:~[SalesLT].[ProductCategory]:w, ProductID:w, ProductModelID:~[SalesLT].[ProductModel]:w, ProductNumber:s, " +
-                                 "SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
+            Assert.Equal<object>("r*[Color:s, DiscontinuedDate:d, ListPrice:w, ModifiedDate:d, Name:s, ProductCategoryID:w, ProductID:w, ProductModelID:w, ProductNumber:s, SellEndDate:d, SellStartDate:d, Size:s, StandardCost:w, " +
+                                 "ThumbNailPhoto:o, ThumbnailPhotoFileName:s, Weight:w, rowguid:s]", sqlTable.Type.ToStringWithDisplayNames());
 
             HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
             Assert.NotNull(ads);
@@ -237,22 +237,58 @@ namespace Microsoft.PowerFx.Connectors.Tests
             StringValue address = Assert.IsType<StringValue>(result);
             Assert.Equal("HL Road Frame - Black, 58", address.Value);
 
+            // For SQL we don't have relationships
             bool b = sqlTable.RecordType.TryGetFieldExternalTableName("ProductModelID", out string externalTableName, out string foreignKey);
-            Assert.True(b);
-            Assert.Equal("[SalesLT].[ProductModel]", externalTableName); // Logical Name
-            Assert.Equal("ProductModelID", foreignKey);
-
-            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json", @"Responses\SQL GetRelationships SampleDB.json");
+            Assert.False(b);
+            
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema ProductModel.json");
             b = sqlTable.RecordType.TryGetFieldType("ProductModelID", out FormulaType productModelID);
 
             Assert.True(b);
-            CdpRecordType productModelRecordType = Assert.IsType<CdpRecordType>(productModelID);
+            DecimalType productModelId = Assert.IsType<DecimalType>(productModelID);
+            Assert.False(productModelId is null);
 
-            Assert.False(productModelRecordType is null);
+            Assert.Equal("ProductID", string.Join("|", GetPrimaryKeyNames(sqlTable.RecordType)));
+        }
 
-            // External relationship table name
-            Assert.Equal("[SalesLT].[ProductModel]", productModelRecordType.TableSymbolName);
-            Assert.Equal<object>("r![CatalogDescription:s, ModifiedDate:d, Name:s, ProductModelID:~[SalesLT].[ProductModel]:w, rowguid:s]", productModelRecordType.ToStringWithDisplayNames()); // Logical Name
+        [Fact]
+        public async Task SQL_CdpTabular_JoinCapabilityTest()
+        {
+            using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            ConsoleLogger logger = new ConsoleLogger(_output);
+            using var httpClient = new HttpClient(testConnector);
+            string connectionId = "2cc03a388d38465fba53f05cd2c76181";
+            string jwt = "eyJ0eXAiOiJKSuA...";
+            using var client = new PowerPlatformConnectorClient("dac64a92-df6a-ee6e-a6a2-be41a923e371.15.common.tip1002.azure-apihub.net", "dac64a92-df6a-ee6e-a6a2-be41a923e371", connectionId, () => jwt, httpClient) { SessionId = "8e67ebdc-d402-455a-b33a-304820832383" };
+
+            string realTableName = "Product";            
+           
+            CdpDataSource cds = new CdpDataSource("default,default");
+
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetDatasetsMetadata.json", @"Responses\SQL GetTables SampleDB.json");
+            IEnumerable<CdpTable> tables = await cds.GetTablesAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            
+            CdpTable table = tables.First(t => t.DisplayName == realTableName);
+                       
+            testConnector.SetResponseFromFiles(@"Responses\SQL GetSchema Products v2.json");
+            await table.InitAsync(client, $"/apim/sql/{connectionId}", CancellationToken.None, logger);
+            Assert.True(table.IsInitialized);
+
+            CdpTableValue sqlTable = table.GetTableValue();
+            Assert.True(sqlTable._tabularService.IsInitialized);
+            Assert.True(sqlTable.IsDelegable);
+            
+            HashSet<IExternalTabularDataSource> ads = sqlTable.Type._type.AssociatedDataSources;
+            Assert.NotNull(ads);
+            Assert.Single(ads);
+
+            DataSourceInfo dsi = Assert.IsType<DataSourceInfo>(ads.First());
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.True(dsi.DelegationInfo.SupportsJoinFunction);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]
@@ -298,6 +334,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue sv = Assert.IsType<StringValue>(result);
             Assert.Equal("Holiday", sv.Value);
+
+            // Not defined for SAP
+            Assert.Equal(string.Empty, string.Join("|", GetPrimaryKeyNames(sapTableValue.RecordType)));
         }
 
         [Fact]
@@ -467,6 +506,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue docName = Assert.IsType<StringValue>(result);
             Assert.Equal("Document1", docName.Value);
+
+            Assert.Equal("ID", string.Join("|", GetPrimaryKeyNames(spTable.RecordType)));
         }
 
         [Fact]
@@ -594,9 +635,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Kutch and Sons", ((StringValue)result).Value);
         }
 
+        private static IEnumerable<string> GetPrimaryKeyNames(RecordType rt)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            rt.TryGetPrimaryKeyFieldName(out IEnumerable<string> primaryKeyNames);
+#pragma warning restore CS0618 // Type or member is obsolete
+            return primaryKeyNames;
+        }
+
         [Fact]
         public async Task SF_CdpTabular_GetTables()
-        {
+        {                       
             using var testConnector = new LoggingTestServer(null /* no swagger */, _output);
             var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
@@ -784,6 +833,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             StringValue accountId = Assert.IsType<StringValue>(result);
             Assert.Equal("001DR00001Xj1YmYAJ", accountId.Value);
+
+            Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(sfTable.RecordType)));
+            Assert.Equal("Id", string.Join("|", GetPrimaryKeyNames(userTable)));
         }
 
         [Fact]
@@ -962,8 +1014,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(
                 "r![assignee_id:w, brand_id:w, collaborator_ids:s, created_at:d, custom_fields:s, description:s, due_at:d, external_id:s, followup_ids:s, forum_topic_id:w, group_id:w, has_incidents:b, " +
-                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:s, subject:s, submitter_id:w, " +
-                "tags:s, ticket_form_id:w, type:s, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
+                "id:w, organization_id:w, priority:l, problem_id:w, raw_subject:s, recipient:s, requester_id:w, satisfaction_rating:s, sharing_agreement_ids:s, status:l, subject:s, submitter_id:w, " +
+                "tags:s, ticket_form_id:w, type:l, updated_at:d, url:s, via:s]", ((CdpRecordType)zdTable.RecordType).ToStringWithDisplayNames());
 
             SymbolValues symbolValues = new SymbolValues().Add("Tickets", zdTable);
             RuntimeConfig rc = new RuntimeConfig(symbolValues).AddService<ConnectorLogger>(logger);
@@ -979,7 +1031,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OptionSetValue priority = Assert.IsType<OptionSetValue>(result);
             Assert.Equal("normal", priority.Option);
-            Assert.Equal("normal", priority.DisplayName);
+            Assert.Equal("Normal", priority.DisplayName);
+
+            Assert.NotNull(connectorTable.OptionSets);
+            Assert.Equal("priority (tickets), status (tickets), type (tickets)", string.Join(", ", connectorTable.OptionSets.Select(os => os.EntityName.Value).OrderBy(x => x)));
+
+            Assert.Equal("id", string.Join("|", GetPrimaryKeyNames(zdTable.RecordType)));
         }
     }
 

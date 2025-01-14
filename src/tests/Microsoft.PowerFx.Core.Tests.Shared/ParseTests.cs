@@ -498,8 +498,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("Type(Decimal)", "Type(Decimal)")]
         [InlineData("Type([Number])", "Type([ Number ])")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
         [InlineData("Type([{Age: Number}])", "Type([ { Age:Number } ])")]
         [InlineData("IsType(ParseJSON(\"42\"),Type(Decimal))", "IsType(ParseJSON(\"42\"), Type(Decimal))")]
+        [InlineData("IsType(ParseJSON(\"{}\"),Type(RecordOf(Accounts)))", "IsType(ParseJSON(\"{}\"), Type(RecordOf(Accounts)))")]
         public void TexlParseTypeLiteral(string script, string expected)
         {
             TestRoundtrip(script, expected, features: Features.PowerFxV1);
@@ -1025,6 +1027,17 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(parseResult.HasErrors);
             Assert.Equal(namedFormulaCount, parseResult.NamedFormulas.Count());
             Assert.Contains(parseResult.Errors, e => e.MessageKey.Contains("ErrUserDefinedTypeIncorrectSyntax"));
+        }
+
+        [Theory]
+        [InlineData("SomeFunc(:")]
+        [InlineData("F(a: Boolean,:):Number = 1; G(): Number = 1;")]
+        public void TestUDFParseArgDoesNotThrowException(string script)
+        {
+            var parserOptions = new ParserOptions();
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(parseResult.HasErrors);
         }
     }
 }

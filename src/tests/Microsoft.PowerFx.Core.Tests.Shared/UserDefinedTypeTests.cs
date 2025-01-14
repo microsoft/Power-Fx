@@ -93,6 +93,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Have named formulas and udf in the script
         [InlineData("NAlias := Type(Number);X := 5; ADDX(n:Number): Number = n + X; SomeType := Type(UntypedObject)", 2)]
+
+        // Have RecordOf with/ without errors
+        [InlineData("Numbers := Type([Number]);T1 := Type(RecordOf([Number])); Num := Type(RecordOf(Numbers)); T2 := Type(Num);", 3)]
+
+        // Cannot do RecordOf on a Record type
+        [InlineData("Point := Type({x: Number, y: Number});PointR := Type(RecordOf(Point));", 1)]
+
+        // Cannot use RecordOf outside of type literal
+        [InlineData("Point := Type({x: Number, y: Number});PointR = RecordOf(Point);", 1)]
         public void TestValidUDTCounts(string typeDefinition, int expectedDefinedTypesCount)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -109,12 +118,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         //To test DefinitionsCheckResult.ApplyErrors method and error messages
         [InlineData("Point := Type({ x: Number, y: Number }); Point := Type(Number);", 1, "ErrNamedType_TypeAlreadyDefined")]
-        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDefinition")]
+        [InlineData("X:= Type({ f:Number, f:Number});", 1, "ErrNamedType_InvalidTypeDeclaration")]
         [InlineData("B := Type({ x: A }); A := Type(B);", 2, "ErrNamedType_InvalidCycles")]
         [InlineData("B := Type(B);", 1, "ErrNamedType_InvalidCycles")]
         [InlineData("Currency := Type({x: Text}); Record := Type([DateTime]); D := Type(None);", 2, "ErrNamedType_InvalidTypeName")]
-        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeLiteral")]
-        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeLiteral")]
+        [InlineData("A = 5;C :=; B := Type(Number);", 1, "ErrNamedType_MissingTypeExpression")]
+        [InlineData("C := 5; D := [1,2,3];", 2, "ErrNamedType_MissingTypeExpression")]
         public void TestUDTErrors(string typeDefinition, int expectedErrorCount, string expectedMessageKey)
         {
             var checkResult = new DefinitionsCheckResult()
@@ -124,6 +133,27 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(expectedErrorCount, errors.Count());
             Assert.All(errors, e => Assert.Contains(expectedMessageKey, e.MessageKey));
+        }
+
+        [Theory]
+
+        // not in Type literal expression;
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Points = RecordOf(Points); ", "ErrKnownTypeHelperFunction")]
+        [InlineData("Points := Type([{ x: Number, y: Number }]); F(): Number = RecordOf(Points).x; ", "ErrKnownTypeHelperFunction")]
+
+        // RecordOf record type
+        [InlineData("Point := Type({ x: Number, y: Number }); PointR := Type(RecordOf(Point)); ", "ErrNamedType_InvalidTypeDeclaration")]
+
+        // Inline definitions within RecordOf
+        [InlineData("T1 := Type(RecordOf(Type([{A:Number}])));", "ErrTypeFunction_InvalidTypeExpression")]
+        [InlineData("T1 := Type(RecordOf(RecordOf([{x:Number, y:Number}])));", "ErrTypeFunction_InvalidTypeExpression")]
+        public void TestRecordOfErrors(string typeDefinition, string expectedMessageKey)
+        {
+            var checkResult = new DefinitionsCheckResult()
+                                            .SetText(typeDefinition)
+                                            .SetBindingInfo(_primitiveTypes);
+            var errors = checkResult.ApplyErrors();
+            Assert.Contains(errors, e => e.MessageKey.Contains(expectedMessageKey));
         }
 
         [Theory]
@@ -150,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var parseResult = checkResult.ApplyParse();
             Assert.True(parseResult.HasErrors);
 
-            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeLiteral_InvalidTypeDefinition"));
+            var validatorErrors = parseResult.Errors.Where(e => e.MessageKey.Contains("ErrTypeFunction_InvalidTypeExpression"));
             Assert.Equal(expectedErrorCount, validatorErrors.Count());
         }
     }

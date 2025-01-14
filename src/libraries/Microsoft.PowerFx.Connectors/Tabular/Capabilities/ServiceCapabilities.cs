@@ -94,10 +94,15 @@ namespace Microsoft.PowerFx.Connectors
         [JsonPropertyName(CapabilityConstants.SupportsRecordPermission)]
         public readonly bool SupportsRecordPermission;
 
+        [JsonInclude]
+        [JsonPropertyName(CapabilityConstants.SupportsJoin)]
+        public readonly bool SupportsJoinFunction;
+
         public const int CurrentODataVersion = 4;
 
         public ServiceCapabilities(SortRestriction sortRestriction, FilterRestriction filterRestriction, SelectionRestriction selectionRestriction, GroupRestriction groupRestriction, IEnumerable<string> filterFunctions,
-                                   IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false)
+                                   IEnumerable<string> filterSupportedFunctions, PagingCapabilities pagingCapabilities, bool recordPermissionCapabilities, int oDataVersion = CurrentODataVersion, bool supportsDataverseOffline = false,
+                                   bool supportsJoinFunction = false)
         {
             Contracts.AssertValueOrNull(sortRestriction);
             Contracts.AssertValueOrNull(filterRestriction);
@@ -120,6 +125,7 @@ namespace Microsoft.PowerFx.Connectors
             _columnsCapabilities = null;
             ODataVersion = oDataVersion;
             SupportsRecordPermission = recordPermissionCapabilities;
+            SupportsJoinFunction = supportsJoinFunction;
         }
 
         public static TableDelegationInfo ToDelegationInfo(ServiceCapabilities serviceCapabilities, string tableName, bool isReadOnly, ConnectorType connectorType, string datasetName)
@@ -170,9 +176,10 @@ namespace Microsoft.PowerFx.Connectors
                     }) as Core.Entities.ColumnCapabilitiesBase,
                     ComplexColumnCapabilities ccc => new Core.Entities.ComplexColumnCapabilities() as Core.Entities.ColumnCapabilitiesBase,
                     _ => throw new NotImplementedException()
-                });
+                }) ?? new Dictionary<string, Core.Entities.ColumnCapabilitiesBase>();
 
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
+            string[] primaryKeyNames = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).Select(f => f.Name).ToArray();
 
             return new CdpDelegationInfo()
             {
@@ -187,7 +194,11 @@ namespace Microsoft.PowerFx.Connectors
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,
                 ColumnsCapabilities = columnCapabilities,
-                ColumnsWithRelationships = columnWithRelationships
+                ColumnsWithRelationships = columnWithRelationships,
+                PrimaryKeyNames = primaryKeyNames,
+#pragma warning disable CS0618 // Type or member is obsolete
+                SupportsJoinFunction = serviceCapabilities?.SupportsJoinFunction ?? false
+#pragma warning restore CS0618 // Type or member is obsolete
             };
         }
 
@@ -231,6 +242,7 @@ namespace Microsoft.PowerFx.Connectors
             string[] filterSupportedFunctions = ParseFilterSupportedFunctions(capabilitiesMetaData);
             PagingCapabilities pagingCapabilities = ParsePagingCapabilities(capabilitiesMetaData);
             bool recordPermissionCapabilities = ParseRecordPermissionCapabilities(capabilitiesMetaData);
+            bool supportsJoinFunction = ParseSupportsJoinCapabilities(capabilitiesMetaData);
             int oDataVersion = capabilitiesMetaData.GetInt(CapabilityConstants.ODataversionOption, defaultValue: CurrentODataVersion);
 
             if (oDataVersion > CurrentODataVersion || oDataVersion < 3)
@@ -238,7 +250,7 @@ namespace Microsoft.PowerFx.Connectors
                 throw new PowerFxConnectorException("Table capabilities specifies an unsupported oDataVersion");
             }
 
-            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion);
+            return new ServiceCapabilities(sortRestriction, filterRestriction, selectionRestriction, groupRestriction, filterFunctions, filterSupportedFunctions, pagingCapabilities, recordPermissionCapabilities, oDataVersion, supportsJoinFunction: supportsJoinFunction);
         }
 
         private static FilterRestriction ParseFilterRestriction(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
@@ -293,6 +305,11 @@ namespace Microsoft.PowerFx.Connectors
         private static bool ParseRecordPermissionCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
         {
             return capabilitiesMetaData.GetBool(CapabilityConstants.SupportsRecordPermission);
+        }
+
+        private static bool ParseSupportsJoinCapabilities(IDictionary<string, IOpenApiAny> capabilitiesMetaData)
+        {
+            return capabilitiesMetaData.GetBool(CapabilityConstants.SupportsJoin);
         }
     }
 }
