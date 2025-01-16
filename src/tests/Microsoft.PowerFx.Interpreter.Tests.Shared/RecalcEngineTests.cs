@@ -795,30 +795,32 @@ namespace Microsoft.PowerFx.Tests
 
             var recalcEngine = new RecalcEngine(config);
 
-            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
-            var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
+            recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); }; F():MyDataSourceTableType = MyDataSource;", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
 
+            var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
             Assert.True(func.IsAsync);
             Assert.True(func.IsDelegatable);
 
             func = recalcEngine.Functions.WithName("C").First() as UserDefinedFunction;
-
             Assert.True(func.IsAsync);
             Assert.True(func.IsDelegatable);
 
             func = recalcEngine.Functions.WithName("B").First() as UserDefinedFunction;
-
             Assert.True(func.IsAsync);
             Assert.True(func.IsDelegatable);
 
             func = recalcEngine.Functions.WithName("D").First() as UserDefinedFunction;
-
+            
             // Imperative function is not delegable
             Assert.True(func.IsAsync);
             Assert.True(!func.IsDelegatable);
 
             // Binding fails for recursive definitions and hence function is not added.
             Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
+            
+            func = recalcEngine.Functions.WithName("F").First() as UserDefinedFunction;
+            Assert.True(func.IsAsync);
+            Assert.True(func.IsDelegatable);
         }
 
         [Fact]
