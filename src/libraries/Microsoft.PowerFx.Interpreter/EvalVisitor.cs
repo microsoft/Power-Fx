@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx
 
             try
             {
-                var invoker = GetInvoker(func);
+                IFunctionInvoker invoker = GetInvoker(func);
 
                 // Standard invoke path. Make everything go through here. 
                 // Eventually collapse all cases to this. 
@@ -433,11 +433,6 @@ namespace Microsoft.PowerFx
                 else if (extraFunctions?.TryGetValue(func, out asyncFunc) == true)
                 {
                     result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
-                }
-                else if (func is IAsyncTexlFunction3 asyncFunc3)
-                {
-                    // $$$Easy  - This is used for various collect functions. easy to port. 
-                    result = await asyncFunc3.InvokeAsync(node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction4 asyncFunc4)
                 {

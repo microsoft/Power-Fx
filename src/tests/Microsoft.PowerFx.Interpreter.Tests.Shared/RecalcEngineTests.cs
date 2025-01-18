@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
-                "Microsoft.PowerFx.Functions.IAsyncTexlFunction999",
+                "Microsoft.PowerFx.Functions.IFunctionInvoker",
                 "Microsoft.PowerFx.Functions.FunctionInvokeInfo",
                 $"{ns}.Functions.IRandomService",
                 $"{ns}.Functions.IClockService"                

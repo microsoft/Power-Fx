@@ -52,5 +52,28 @@ namespace Microsoft.PowerFx.Functions
 
         internal EvalVisitorContext Context { get; init; }
         #endregion 
+
+        // Since this is immutable, clone to get adjusted parameters. 
+        public FunctionInvokeInfo CloneWith(IReadOnlyList<FormulaValue> newArgs)
+        {
+            return new FunctionInvokeInfo
+            {
+                Args = newArgs,
+                FunctionServices = this.FunctionServices,
+                IRContext = this.IRContext,
+                Runner = this.Runner,
+                Context = this.Context
+            };
+        }
+
+        // Helper to create simple case, primarily for testing. 
+        internal static FunctionInvokeInfo New(FormulaType returnType, params FormulaValue[] args)
+        {
+            return new FunctionInvokeInfo
+            {
+                Args = args,
+                IRContext = IRContext.NotInSource(returnType)
+            };
+        }
     }
 }
