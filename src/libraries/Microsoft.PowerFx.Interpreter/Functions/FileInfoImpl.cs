@@ -12,7 +12,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    internal class FileInfoFunctionImpl : FileInfoFunction, IAsyncTexlFunction999
+    internal class FileInfoFunctionImpl : FileInfoFunction, IFunctionInvoker
     {
         public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {

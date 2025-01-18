@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Internal adapter for adding custom functions. 
     /// </summary>
-    internal class CustomTexlFunction : TexlFunction, IAsyncTexlFunction999
+    internal class CustomTexlFunction : TexlFunction, IFunctionInvoker
     {
         public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         public virtual Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
             var serviceProvider = invokeInfo.FunctionServices;
-            var args = invokeInfo.Args.ToArray(); // $$$ remove ToArray
+            var args = invokeInfo.Args.ToArray(); // remove ToArray: https://github.com/microsoft/Power-Fx/issues/2817
             return _impl(serviceProvider, args, cancellationToken);
         }
 

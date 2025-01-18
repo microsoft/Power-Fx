@@ -34,19 +34,8 @@ namespace Microsoft.PowerFx.Types
             return await EvalInRowScopeAsync(_context).ConfigureAwait(false);
         }
 
-        public async ValueTask<FormulaValue> EvalInRowScopeAsync(RecordValue rowScope)
-        {
-            SymbolContext childContext = _context.SymbolContext.WithScopeValues(rowScope);
-
-            var newScope = _context.NewScope(childContext);
-
-            var result = await this.EvalInRowScopeAsync(newScope).ConfigureAwait(false);
-
-            return result;
-        }
-
-        // $$$ Why does this separate one exist? 
-        // Difference between this context param and _context?
+        // Can we remove this and replace with safer implementations? 
+        // https://github.com/microsoft/Power-Fx/issues/2819
         public async ValueTask<FormulaValue> EvalInRowScopeAsync(EvalVisitorContext context)
         {
             _runner.CheckCancel();

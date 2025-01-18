@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Functions
-{    
-    // $$$ Only product impl is JsonFunctionImpl.
+{
     // Texl function interface with IServiceProvider
+    // Only product impl is JsonFunctionImpl.
+    // Remove this: https://github.com/microsoft/Power-Fx/issues/2818
     internal interface IAsyncTexlFunction5
     {
         Task<FormulaValue> InvokeAsync(IServiceProvider runtimeServiceProvider, FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken);        

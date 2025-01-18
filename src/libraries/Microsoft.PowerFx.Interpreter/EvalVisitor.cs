@@ -267,9 +267,9 @@ namespace Microsoft.PowerFx
         }
 
         // Given a TexlFunction, get the implementation to invoke. 
-        private IAsyncTexlFunction999 GetInvoker(TexlFunction func)
+        private IFunctionInvoker GetInvoker(TexlFunction func)
         {
-            if (func is IAsyncTexlFunction999 invoker)
+            if (func is IFunctionInvoker invoker)
             {
                 return invoker;
             }
@@ -281,18 +281,18 @@ namespace Microsoft.PowerFx
 
             if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
             {
-                return new Adapter1(ptr);
+                return new AsyncFunctionPtrAdapter(ptr);
             }
 
             return null;
         }
 
-        // $$$ Adapter demonstrating other paths are compatible with interface.
-        private class Adapter1 : IAsyncTexlFunction999
+        // Adapter for AsyncFunctionPtr to common invoker interface.
+        private class AsyncFunctionPtrAdapter : IFunctionInvoker
         {
             private readonly AsyncFunctionPtr _ptr;
 
-            public Adapter1(AsyncFunctionPtr ptr)
+            public AsyncFunctionPtrAdapter(AsyncFunctionPtr ptr)
             {
                 _ptr = ptr;
             }
@@ -310,7 +310,9 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private class UserDefinedFunctionAdapter : IAsyncTexlFunction999
+        // Adapter for UDF to common invoker. 
+        // This still ensures that *invoking* a UDF has the same semantics as invoking other function calls. 
+        private class UserDefinedFunctionAdapter : IFunctionInvoker
         {
             private readonly UserDefinedFunction _udf;
 
@@ -333,10 +335,11 @@ namespace Microsoft.PowerFx
 
                 try
                 {
-                    // $$$ Push this so that we have access to args. 
+                    // Push this so that we have access to args. 
                     udfStack.Push(frame);
 
-                    // $$$ This repeats IRTranslator each time!
+                    // https://github.com/microsoft/Power-Fx/issues/2822
+                    // This repeats IRTranslator each time. Do once and save. 
                     (var irnode, _) = _udf.GetIRTranslator();
 
                     evalVisitor.CheckCancel();
@@ -392,7 +395,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    // $$$ This is where Lambdas are created! They close over key values to invoke.
+                    // This is where Lambdas are created. They close over key values to invoke.
                     args[i] = new LambdaFormulaValue(node.IRContext, child, this, context);
                 }
             }
@@ -401,15 +404,14 @@ namespace Microsoft.PowerFx
 
             FormulaValue result;
 
-            // [1] ??? who uses this?
-            // Config.EnableRegExFunctions --> Config.AdditionalFunctions
+            // Remove this: https://github.com/microsoft/Power-Fx/issues/2821
             IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
 
             try
             {
                 var invoker = GetInvoker(func);
 
-                // $$$ New standard invoke path. Make everything go through here. 
+                // Standard invoke path. Make everything go through here. 
                 // Eventually collapse all cases to this. 
                 if (invoker != null)
                 {
@@ -426,7 +428,6 @@ namespace Microsoft.PowerFx
                 }
                 else if (func is IAsyncTexlFunction asyncFunc)
                 {
-                    // $$$ This is easy to port ... 
                     result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (extraFunctions?.TryGetValue(func, out asyncFunc) == true)
@@ -440,14 +441,17 @@ namespace Microsoft.PowerFx
                 }
                 else if (func is IAsyncTexlFunction4 asyncFunc4)
                 {
-                    // $$$ This is used for Json() functions.  IsType, AsType
+                    // https://github.com/microsoft/Power-Fx/issues/2818
+                    // This is used for Json() functions.  IsType, AsType
                     result = await asyncFunc4.InvokeAsync(TimeZoneInfo, node.IRContext.ResultType, args, _cancellationToken).ConfigureAwait(false);
                 }
                 else if (func is IAsyncTexlFunction5 asyncFunc5)
                 {
-                    // $$$ This is used for Json() functions.
+                    // https://github.com/microsoft/Power-Fx/issues/2818
+                    // This is used for Json() functions.
                     BasicServiceProvider services2 = new BasicServiceProvider(_services);
 
+                    // Invocation should not get its own provider.  
                     if (services2.GetService(typeof(TimeZoneInfo)) == null)
                     {
                         services2.AddService(TimeZoneInfo);
@@ -465,14 +469,12 @@ namespace Microsoft.PowerFx
                     result = CommonErrors.NotYetImplementedFunctionError(node.IRContext, func.Name);
                 }
 
-                // $$$ we should remove this check that limits to just Adapter1, so we apply this check to all impls. 
-                if (invoker is Adapter1) 
+                // https://github.com/microsoft/Power-Fx/issues/2820
+                // We should remove this check that limits to just Adapter1, so we apply this check to all impls. 
+                if (invoker is AsyncFunctionPtrAdapter) 
                 {
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
-                        // $$$ We should never actually be hitting thing. Seems like a bug in our code. 
-                        // But we do :| 
-                        // - AsTypeIsTypeParseJSONTests.cs , BlobTests.cs line , ValidateNoRecordToRecordAggregateCoercionCurrency
                         throw CommonExceptions.RuntimeMisMatch;
                     }
                 }

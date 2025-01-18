@@ -1581,7 +1581,7 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    internal class JoinImpl : JoinFunction, IAsyncTexlFunction999
+    internal class JoinImpl : JoinFunction, IFunctionInvoker
     {
         public override Type DeclarationType => typeof(JoinFunction);
 

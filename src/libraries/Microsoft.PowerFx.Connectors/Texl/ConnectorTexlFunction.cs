@@ -19,7 +19,7 @@ using static Microsoft.PowerFx.Connectors.ConnectorHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncTexlFunction999, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IFunctionInvoker, IHasUnsupportedFunctions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
-            FormulaValue[] args = invokeInfo.Args.ToArray(); // $$$ remove ToArray
+            FormulaValue[] args = invokeInfo.Args.ToArray(); // https://github.com/microsoft/Power-Fx/issues/2817
             var serviceProvider = invokeInfo.FunctionServices;
 
             cancellationToken.ThrowIfCancellationRequested();
