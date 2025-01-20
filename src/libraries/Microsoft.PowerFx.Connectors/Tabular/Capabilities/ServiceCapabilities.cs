@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Connectors
                     }) as Core.Entities.ColumnCapabilitiesBase,
                     ComplexColumnCapabilities ccc => new Core.Entities.ComplexColumnCapabilities() as Core.Entities.ColumnCapabilitiesBase,
                     _ => throw new NotImplementedException()
-                });
+                }) ?? new Dictionary<string, Core.Entities.ColumnCapabilitiesBase>();
 
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
             string[] primaryKeyNames = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).Select(f => f.Name).ToArray();
