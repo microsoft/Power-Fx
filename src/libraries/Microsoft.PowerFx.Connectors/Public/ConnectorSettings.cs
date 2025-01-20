@@ -94,6 +94,15 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public bool ReturnEnumsAsPrimitive { get; init; } = false;
 
+        /// <summary>
+        /// This flag enables some special handling for the body parameter, when
+        /// - body nams is 'item'
+        /// - body inner object is 'dynamicProperties'
+        /// - there is only one property in inner object
+        /// In that base the body will be fully flattened and we will retain the 'body' name for the parameter.
+        /// </summary>
+        public bool UseItemDynamicPropertiesSpecialHandling { get; init; } = false;
+        
         public ConnectorCompatibility Compatibility { get; init; } = ConnectorCompatibility.Default;
     }
 

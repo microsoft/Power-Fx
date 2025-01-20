@@ -1373,8 +1373,9 @@ namespace Microsoft.PowerFx.Connectors
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
             bool fatalError = false;
+            bool specialBodyHandling = false;
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
-            ConnectorErrors errorsAndWarnings = new ConnectorErrors();
+            ConnectorErrors errorsAndWarnings = new ConnectorErrors();            
 
             foreach (OpenApiParameter parameter in Operation.Parameters)
             {
@@ -1458,9 +1459,21 @@ namespace Microsoft.PowerFx.Connectors
                                 foreach (KeyValuePair<string, OpenApiSchema> bodyProperty in bodySchema.Properties)
                                 {
                                     OpenApiSchema bodyPropertySchema = bodyProperty.Value;
-                                    string bodyPropertyName = bodyProperty.Key;
-                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName);
-                                    bool bodyPropertyHiddenRequired = false;
+                                    string bodyPropertyName = bodyProperty.Key;                              
+                                    bool bodyPropertyHiddenRequired = false;                                    
+                                    
+                                    // Power Apps has a special handling for the body in this case
+                                    // where it doesn't follow the swagger file
+                                    if (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && 
+                                        bodyName == "item" &&
+                                        bodyPropertyName == "dynamicProperties" &&
+                                        bodySchema.Properties.Count == 1)
+                                    {
+                                        bodyPropertyName = bodyName;
+                                        specialBodyHandling = true;
+                                    }
+                                    
+                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && requestBody.Required); 
 
                                     if (bodyPropertySchema.IsInternal())
                                     {
@@ -1606,7 +1619,8 @@ namespace Microsoft.PowerFx.Connectors
                 ContentType = contentType,
                 BodySchemaReferenceId = bodySchemaReferenceId,
                 ParameterDefaultValues = parameterDefaultValues,
-                SchemaLessBody = schemaLessBody
+                SchemaLessBody = schemaLessBody,
+                SpecialBodyHandling = specialBodyHandling
             };
         }
 

@@ -2399,6 +2399,110 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ExchangeOnlineTest2(bool useItemDynamicPropertiesSpecialHandling)
+        {
+            bool live = false;
+            using var testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(
+                new ConnectorSettings("ExcelOnline")
+                {
+                    Compatibility = ConnectorCompatibility.Default,
+                    UseItemDynamicPropertiesSpecialHandling = useItemDynamicPropertiesSpecialHandling
+                },
+                testConnector._apiDocument).ToList();
+
+            ConnectorFunction patchItem = functions.First(f => f.Name == "PatchItem");
+            ConnectorParameter itemparam = useItemDynamicPropertiesSpecialHandling ? patchItem.RequiredParameters[6] : patchItem.OptionalParameters[2];
+
+            Assert.Equal(!useItemDynamicPropertiesSpecialHandling ? "dynamicProperties" : "item", itemparam.Name);
+            
+            FormulaValue[] parameters = new FormulaValue[7];
+            parameters[0] = FormulaValue.New("b!IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB");
+            parameters[1] = FormulaValue.New("013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL");
+            parameters[2] = FormulaValue.New("{E5A21CC6-3B17-48DE-84D7-0326A06B38F4}");
+            parameters[3] = FormulaValue.New("035fd7a2-34d6-4a6f-a885-a646b1398012"); 
+            parameters[4] = FormulaValue.New("me");
+            parameters[5] = FormulaValue.New("__PowerAppsId__");
+
+            parameters[6] = useItemDynamicPropertiesSpecialHandling
+
+                            ? // Required parameter
+                              RecordValue.NewRecordFromFields(
+                                  new NamedValue("item", RecordValue.NewRecordFromFields(
+                                    new NamedValue("Column1", FormulaValue.New(171)))))
+
+                            : // Optional parameters
+                              RecordValue.NewRecordFromFields(                                
+                                new NamedValue("dynamicProperties", RecordValue.NewRecordFromFields(
+                                    new NamedValue("Column1", FormulaValue.New(171)))));
+
+            using var httpClient = live ? new HttpClient() : new HttpClient(testConnector);
+
+            if (!live)
+            {
+                string output = @"{
+	""@odata.context"": ""https://excelonline-wcus.azconn-wcus-001.p.azurewebsites.net/$metadata#drives('b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB')/Files('013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL')/Tables('%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D')/items/$entity"",
+	""@odata.etag"": """",
+	""ItemInternalId"": ""035fd7a2-34d6-4a6f-a885-a646b1398012"",
+	""Column1"": ""171"",
+	""Column2"": ""Customer1"",
+	""Column3"": """",
+	""__PowerAppsId__"": ""035fd7a2-34d6-4a6f-a885-a646b1398012""
+}";
+                testConnector.SetResponse(output, HttpStatusCode.OK);
+            }
+
+            string jwt = "eyJ0e...";
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net", "49970107-0806-e5a7-be5e-7c60e2750f01", "e24a1ac719284479a4817a0c5bb6ef58", () => jwt, httpClient)
+            {
+                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
+            };
+
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ExcelOnline", client, console: _output);
+            FormulaValue result = await patchItem.InvokeAsync(parameters, context, CancellationToken.None);
+
+            // Can't test the result as it's ![] and is an empty RecordValue
+
+            if (live)
+            {
+                return;
+            }
+
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = useItemDynamicPropertiesSpecialHandling
+                ? $@"POST https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/invoke
+ authority: 49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: PATCH
+ x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
+ x-ms-user-agent: PowerFx/1.99.0-local
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""Column1"":171}}
+"
+                : $@"POST https://49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net/invoke
+ authority: 49970107-0806-e5a7-be5e-7c60e2750f01.12.common.firstrelease.azure-apihub.net
+ Authorization: Bearer {jwt}
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/49970107-0806-e5a7-be5e-7c60e2750f01
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: PATCH
+ x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
+ x-ms-user-agent: PowerFx/1.99.0-local
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] {{""dynamicProperties"":{{""Column1"":171}}}}
+";
+
+            Assert.Equal<object>(expected, testConnector._log.ToString());
+        }
+
         public class HttpLogger : HttpClient
         {
             private readonly ITestOutputHelper _console;
