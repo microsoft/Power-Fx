@@ -20,5 +20,7 @@ namespace Microsoft.PowerFx.Connectors
         internal string BodySchemaReferenceId { get; init; }
 
         internal Dictionary<string, (bool, FormulaValue, DType)> ParameterDefaultValues { get; init; }
+
+        internal bool SpecialBodyHandling { get; init; }
     }
 }
