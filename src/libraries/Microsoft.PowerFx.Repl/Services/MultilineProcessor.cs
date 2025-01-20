@@ -2,11 +2,18 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -23,37 +30,186 @@ namespace Microsoft.PowerFx.Repl.Services
         // false if we're on a subsequent line. 
         public bool IsFirstLine => _commandBuffer.Length == 0;
 
+        private int ParseFormulaToClose(int i, bool closeOnCurly, ref bool complete, ref bool error)
+        {
+            var brackets = new Stack<char>();       // stack of [, {, ( to ensure proper matching
+            var close = false;                      // exit the loop as we've found the closing } if cloneOnCurly is true
+            var leftOpen = false;                   // an identfier, string, or inline comment was left open when the end of the string was encountered
+            var lastChar = '\0';                    // the last character seen, not including whitespace and comments, for detecting a trailing =
+
+            if (closeOnCurly)
+            {
+                brackets.Push('}');
+            }
+
+            for (; !close && !error && i < _commandBuffer.Length; i++)
+            {
+                var thisChar = _commandBuffer[i];
+
+                switch (thisChar)
+                {
+                    case '"':
+                    case '\'':
+                        var stringInterpolation = thisChar == '"' && i > 0 && _commandBuffer[i - 1] == '$';
+
+                        for (i++; i < _commandBuffer.Length; i++) 
+                        {
+                            if (_commandBuffer[i] == thisChar)
+                            {
+                                if (i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == thisChar)
+                                {
+                                    // skip repeated quote
+                                    i++;
+                                }
+                                else
+                                {
+                                    // end delimiter reached
+                                    break;
+                                }
+                            }
+                            else if (stringInterpolation && _commandBuffer[i] == '{')
+                            {
+                                if (i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == '{')
+                                {
+                                    // skip repeated {
+                                    i++;        
+                                }
+                                else
+                                {
+                                    // recurse in for string interpolation island
+                                    i = ParseFormulaToClose(i + 1, true, ref complete, ref error);
+                                }
+                            }
+                        }
+
+                        // reached end of string before we found our ending delimiter
+                        if (i == _commandBuffer.Length)
+                        {
+                            leftOpen = true;
+                        }
+
+                        lastChar = thisChar;
+                        break;
+
+                    case '/':
+                        if (i + 1 < _commandBuffer.Length)
+                        {
+                            if (_commandBuffer[i + 1] == '/')
+                            {
+                                for (i += 2; i < _commandBuffer.Length && _commandBuffer[i] != '\n' && _commandBuffer[i] != '\r'; i++)
+                                {
+                                }
+
+                                // the comment is closed by the end of the buffer
+                            }
+                            else if (_commandBuffer[i + 1] == '*')
+                            {
+                                for (i += 2; i + 1 < _commandBuffer.Length && !(_commandBuffer[i] == '*' && _commandBuffer[i + 1] == '/'); i++)
+                                {
+                                }
+
+                                // reached end of string before we found our ending delimiter
+                                if (i + 1 == _commandBuffer.Length)
+                                {
+                                    leftOpen = true;
+                                }
+                            }
+                        }
+
+                        // lastChar not updated, comment ignored
+                        break;
+
+                    case '[':
+                        brackets.Push(']');
+
+                        // lastChar not updated, stack will be up and won't be complete
+                        break;
+
+                    case '(':
+                        brackets.Push(')');
+
+                        // lastChar not updated, stack will be up and won't be complete
+                        break;
+
+                    case '{':
+                        brackets.Push('}');
+
+                        // lastChar not updated, stack will be up and won't be complete
+                        break;
+
+                    case ']':
+                    case ')':
+                    case '}':
+                        if (brackets.Count == 0 || thisChar != brackets.Pop())
+                        {
+                            error = true;
+                        }
+                        
+                        if (brackets.Count == 0 && thisChar == '}' && closeOnCurly)
+                        {
+                            if (leftOpen || lastChar == '=')
+                            {
+                                error = true;
+                            }
+
+                            close = true;
+                        }
+
+                        lastChar = thisChar;
+                        break;
+
+                    case ' ':
+                    case '\t':
+                    case '\n':
+                    case '\r':
+                        // lastChar not updated, whitepace ignored
+                        break;
+
+                    default:
+                        lastChar = thisChar;
+                        break;
+                }
+            }
+
+            complete &= brackets.Count == 0 && !leftOpen && lastChar != '=';
+
+            return i;
+        }
+
         // Return null if we need more input. 
         // else return string containing multiple lines together. 
         public virtual string HandleLine(string line, ParserOptions parserOptions)
         {
             _commandBuffer.AppendLine(line);
 
-            var commandBufferString = _commandBuffer.ToString();
-
-            // We use the parser results to determine if the command is complete or more lines are needed.
-            // The Engine features and parser options do not need to match what we will actually use,
-            // this just needs to be good enough to detect the errors below for multiline processing.
-            var result = Engine.Parse(commandBufferString, options: parserOptions);
-
-            // We will get this error, with this argument, if we are missing closing punctuation.
-            var missingClose = result.Errors.Any(error => error.MessageKey == "ErrExpectedFound_Ex_Fnd" &&
-                                                    ((TokKind)error.MessageArgs.Last() == TokKind.ParenClose ||
-                                                     (TokKind)error.MessageArgs.Last() == TokKind.CurlyClose ||
-                                                     (TokKind)error.MessageArgs.Last() == TokKind.BracketClose));
-
-            // However, we will get false positives from the above if the statement is very malformed.
-            // For example: Mid("a", 2,) where the second error about ParenClose expected at the end is incorrect.
-            // In this case, more characters will not help and we should complete the command and report the errors with what we have.
-            var badToken = result.Errors.Any(error => error.MessageKey == "ErrBadToken");
+            var error = false;
+            var complete = true;
 
             // An empty line (possibly with spaces) will also finish the command.
             // This is the ultimate escape hatch for the user if our closing detection logic above fails.
-            var emptyLine = Regex.IsMatch(commandBufferString, @"\n[ \t]*\r?\n$", RegexOptions.Multiline);
+            var emptyLine = line.Trim() == string.Empty;
 
-            if (!missingClose || badToken || emptyLine)
+            if (!emptyLine)
             {
-                Clear();
+                if (parserOptions.TextFirst)
+                {
+                    for (int i = 0; complete && i >= 0 && i < _commandBuffer.Length; i++)
+                    {
+                        if ((i == 0 || _commandBuffer[i - 1] != '$') && _commandBuffer[i] == '$' && i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == '{')
+                        {
+                            i = ParseFormulaToClose(i + 2, true, ref complete, ref error);
+                        }
+                    }
+                }
+                else
+                {
+                    ParseFormulaToClose(0, false, ref complete, ref error);
+                }
+            }
+
+            if (complete || error || emptyLine)
+            {
+                string commandBufferString = _commandBuffer.ToString();
 
                 // Removes one newline from the end (\r\n or just \n) for the enter provided by the user.
                 // Important for TextFirst lexer mode where a newline would be significant.
@@ -63,9 +219,11 @@ namespace Microsoft.PowerFx.Repl.Services
                 }
                 else if (commandBufferString.EndsWith("\n", StringComparison.InvariantCulture))
                 {
-                    commandBufferString = commandBufferString.Substring(0, commandBufferString.Length - 1);
+                    commandBufferString = commandBufferString.Substring(0, _commandBuffer.Length - 1);
                 }
-                
+
+                Clear();
+
                 return commandBufferString;
             }
             else

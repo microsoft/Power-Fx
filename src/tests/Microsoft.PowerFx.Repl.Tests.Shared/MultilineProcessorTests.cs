@@ -17,13 +17,38 @@ namespace Microsoft.PowerFx.Repl.Tests
     {
         private readonly MultilineProcessor _processor = new MultilineProcessor();
 
-        // After case is multiple lines. Last line finally completes.
+        // Each of these cases should "continue" (returning null) until the last line is input
         [Theory]
-        [InlineData("Sum(1,", "2)")]
-        [InlineData("Sum(1,", "2", ",3)")]
-        [InlineData("{x:3", ",", "y:4}")]
-        [InlineData("Mid(\"a\", 2,)")] // parse error, still completes. 
-        public void ExpectContinue(params string[] lines)
+        [InlineData(false, "Sum(1,", "2)")]
+        [InlineData(false, "Sum(1,", "2", ",3)")]
+        [InlineData(false, "{x:3", ",", "y:4}")]
+        [InlineData(false, "Mid(\"a\", 2,)")] // parse error, still completes. 
+        [InlineData(false, "a = ", "3")]
+        [InlineData(false, "a = // end of line comment", "3")]
+        [InlineData(false, "a = /* inline comment */", "3")]
+        [InlineData(false, "$\" { \"hi\"", " } \"")]
+        [InlineData(false, "$\" { $\" \"\" { 1 ", " + ", "2 } ", "\"", "}", "\"")]
+        [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "}", "more \"")]
+        [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " */ }", "\"")] // ending inline comment ignored
+        [InlineData(false, "[ 1, 2, 3", "]")]
+        [InlineData(false, "{ a: [ 1, 2, 3", "]", "}")]
+        [InlineData(false, "First( [1,2,3]", "/* ) */", "// )", ")")]
+        [InlineData(false, "First( { a: [ 1, 2, 3", "]", "}", ")")]
+        [InlineData(false, "First( { a: [ 1, 2, 3", ")")] // error that returns complete for wrong delimiter
+        [InlineData(false, "First( { a: [ 1, 2, 3", "}")] // error that returns complete for wrong delimiter
+        [InlineData(false, "'asdfasdf\"asdfasdf'")]
+        [InlineData(false, "'asdfasdf''asdfasdf'")]
+        [InlineData(false, "'asdfasdf\"asdfasdf' =", "4")]
+        [InlineData(false, "'asdfasdf''asdfasdf' =", "4")]
+        [InlineData(false, "'asdfasdf''asdfasdf' =", " ")] // empty line terminates
+        [InlineData(true, "123(")]
+        [InlineData(true, "123{")]
+        [InlineData(true, "123[")]
+        [InlineData(true, "123${", "4", "}")]
+        [InlineData(true, "123${", "4", "} {")]
+        [InlineData(true, "123${", "4", "} ${", "5", "}")]
+        [InlineData(true, "123${ // }", "}")]
+        public void ExpectContinue(bool textFirst, params string[] lines)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -35,7 +60,7 @@ namespace Microsoft.PowerFx.Repl.Tests
                 bool isFirstLine = i == 0;
                 Assert.Equal(isFirstLine, _processor.IsFirstLine);
 
-                var result = _processor.HandleLine(line, new ParserOptions());
+                var result = _processor.HandleLine(line, new ParserOptions() { TextFirst = textFirst });
                 sb.AppendLine(line);
 
                 if (!isLast)
