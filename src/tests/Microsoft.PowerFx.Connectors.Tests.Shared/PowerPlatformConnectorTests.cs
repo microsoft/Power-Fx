@@ -2482,7 +2482,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
  x-ms-request-method: PATCH
  x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
- x-ms-user-agent: PowerFx/1.99.0-local
+ x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""Column1"":171}}
 "
@@ -2495,7 +2495,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
  x-ms-request-method: PATCH
  x-ms-request-url: /apim/excelonlinebusiness/e24a1ac719284479a4817a0c5bb6ef58/drives/b%21IbvdIRe4LEGypNQpzV_eHMlG3PtubVREtOzk7doKeFvkIs8VRqloT4mtkIOb6aTB/files/013DZ3QDGY2Y23HOQN5BC2HUMJWD7G4UPL/tables/%7BE5A21CC6-3B17-48DE-84D7-0326A06B38F4%7D/items/035fd7a2-34d6-4a6f-a885-a646b1398012?source=me&idColumn=__PowerAppsId__
- x-ms-user-agent: PowerFx/1.99.0-local
+ x-ms-user-agent: PowerFx/{version}
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""dynamicProperties"":{{""Column1"":171}}}}
 ";
