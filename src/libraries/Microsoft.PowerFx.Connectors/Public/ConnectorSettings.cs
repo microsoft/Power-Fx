@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// This flag enables some special handling for the body parameter, when
-        /// - body nams is 'item'
+        /// - body name is 'item'
         /// - body inner object is 'dynamicProperties'
         /// - there is only one property in inner object
         /// In that base the body will be fully flattened and we will retain the 'body' name for the parameter.
