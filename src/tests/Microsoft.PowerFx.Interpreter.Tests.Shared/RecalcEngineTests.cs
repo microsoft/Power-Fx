@@ -72,6 +72,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
+                "Microsoft.PowerFx.Functions.IFunctionInvoker",
+                "Microsoft.PowerFx.Functions.FunctionInvokeInfo",
                 $"{ns}.Functions.IRandomService",
                 $"{ns}.Functions.IClockService"                
             };
@@ -1216,8 +1218,10 @@ namespace Microsoft.PowerFx.Tests
                 yield return new[] { TexlStrings.IsBlankArg1 };
             }
 
-            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            public override Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo,  CancellationToken cancellationToken)
             {
+                var args = invokeInfo.Args;
+
                 var arg0 = args[0] as NumberValue;
                 var arg1 = args[1] as StringValue;
 
@@ -1239,8 +1243,10 @@ namespace Microsoft.PowerFx.Tests
                 yield return new[] { TexlStrings.IsBlankArg1 };
             }
 
-            public override Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+            public override Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
             {
+                var args = invokeInfo.Args;
+
                 var arg0 = args[0] as StringValue;
                 var arg1 = args[1] as NumberValue;
 
