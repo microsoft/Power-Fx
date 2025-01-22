@@ -3705,12 +3705,23 @@
     <value>Edit your formula so that it includes a bracket.</value>
     <comment>1 How to fix the error. </comment>
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Expected closing of identifier. We expect a closing (') at this point in the formula.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A closing single quote indicates the end of an identifier (for example, 'First Name').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit your formula so that it includes a closing single quote.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>The identifier has no valid text.</value>
+    <value>The identifier is empty or contains an invalid character, such as a tab or newline.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
+    <value>Ensure you have valid text in your your identifier. This error occurs when the identifier is blank, only has spaces, or contains a tab or newline.</value>
     <comment>1 How to fix the error. </comment>
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">

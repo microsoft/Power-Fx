@@ -1429,13 +1429,13 @@ namespace Microsoft.PowerFx.Core.Parser
             if (_curs.TidCur == TokKind.Ident)
             {
                 tok = _curs.TokMove().As<IdentToken>();
-                if (tok.HasDelimiterStart && !tok.HasDelimiterEnd)
-                {
-                    PostError(tok, TexlStrings.ErrClosingBracketExpected);
-                }
-                else if (tok.IsModified)
+                if (tok.IsModified)
                 {
                     PostError(tok, TexlStrings.ErrEmptyInvalidIdentifier);
+                }
+                else if (tok.HasDelimiterStart && !tok.HasDelimiterEnd)
+                {
+                    PostError(tok, TexlStrings.ErrClosingIdentifierExpected);
                 }
             }
             else
