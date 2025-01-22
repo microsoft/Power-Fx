@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
         #region Remove these 
 
         // IrContext has a mutability flag. 
-        internal IRContext IRContext { get; set; }
+        internal IRContext IRContext { get; init; }
 
         // https://github.com/microsoft/Power-Fx/issues/2819
         // Get rid of these... Capture in them in the closure of a lambdaValue.

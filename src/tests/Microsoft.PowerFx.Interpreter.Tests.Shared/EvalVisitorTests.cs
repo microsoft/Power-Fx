@@ -6,8 +6,8 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    // This file should get 100% code-coverage on EvalVistor.
-    // Excercise via RecalcEngine 
+    // This file should eventually get 100% code-coverage on EvalVistor.
+    // Exercise via RecalcEngine 
     public class EvalVistitorTests
     {
         [Theory]
