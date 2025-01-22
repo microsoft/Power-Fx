@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool IsSelectable => true;
 
-        public virtual bool IsDelegatable => throw new NotImplementedException();
+        public virtual bool IsDelegatable => true;
 
         public bool RequiresAsync => throw new NotImplementedException();
 
@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         }
     }
 
-    internal class TestDelegableDataSource : TestDataSource, IExternalDelegatableSymbol
+    internal class TestDelegableDataSource : TestDataSource
     {
         private readonly TabularDataQueryOptions _queryOptions;
         private readonly IDelegationMetadata _delegationMetadata;
@@ -329,6 +329,16 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         {
             return new List<string>();
         }
+    }
+
+    internal class TestNonDelegableDataSource : TestDelegableDataSource
+    {
+        internal TestNonDelegableDataSource(string name, DType schema, IDelegationMetadata delegationMetadata, bool isPageable = false)
+            : base(name, schema, delegationMetadata, isPageable)
+        {
+        }
+
+        public override bool IsDelegatable => false;
     }
 
     internal class TestExpandInfo : IExpandInfo
