@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(true, "123'asdf")]
         [InlineData(true, "${}")] // minimal
         [InlineData(true, "${ 4 ", "}")] // at beginning
-        [InlineData(true, "${ 4 ","} more")] // at beginning
+        [InlineData(true, "${ 4 ", "} more")] // at beginning
         [InlineData(true, "more ${", "}")] // at end
         [InlineData(true, "more ${}")] // at end
         [InlineData(true, "123${", "4", "}")]
