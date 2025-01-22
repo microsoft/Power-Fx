@@ -21,6 +21,9 @@ namespace Microsoft.PowerFx.Repl.Tests
 
         // basics
         [InlineData(false, "Sum(1,", "2)")]
+        [InlineData(false, "Sum(1,", "")] // empty line stops continuation
+        [InlineData(false, "Sum(1,", "  ")] // empty line stops continuation
+        [InlineData(false, "Sum(1,", " \t ")] // empty line stops continuation
         [InlineData(false, "Sum(1,", "2", ",3)")]
         [InlineData(false, "{x:3", ",", "y:4}")]
         [InlineData(false, "Mid(\"a\", 2,)")] // parse error, still completes. 
@@ -31,6 +34,9 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "First( { a: [ 1, 2, 3", "}")] // error that returns complete for wrong delimiter
         [InlineData(false, "\"string", "\"")]
         [InlineData(false, "/* text", "more", "end */")]
+        [InlineData(false, "/* text", "more", " \t ")] // empty line stops continuation
+        [InlineData(false, "/* text", "more", "  ")] // empty line stops continuation
+        [InlineData(false, "/* text", "more", "")] // empty line stops continuation
         [InlineData(false, "( // ) text", ")")]
         [InlineData(false, "( /* ) text", "*/ )")]
         [InlineData(false, "[ // ] text", "]")]
@@ -92,6 +98,8 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "$\" { $\" \"\" { 1 ", " + ", "2 } ", "\"", "}", "\"")]
         [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "}", "more \"")]
         [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " & ", "\"a\" }", "\"")] // ending inline comment ignored
+        [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "")] // empty line stops continuation
+        [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " & ", "\"a\" }", "")] // empty line stops continuation
 
         // comments
         [InlineData(false, "4 /* a *//", "3")]
