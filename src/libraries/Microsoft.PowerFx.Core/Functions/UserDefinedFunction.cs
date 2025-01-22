@@ -52,7 +52,17 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
 
-            return base.IsServerDelegatable(callNode, binding) || IsDelegatable;
+            if (base.IsServerDelegatable(callNode, binding) || IsDelegatable)
+            {
+                return true;
+            }
+
+            if (_binding.Top.Kind == NodeKind.FirstName && ArgValidators.DelegatableDataSourceInfoValidator.TryGetValidValue(_binding.Top, _binding, out _))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override bool SupportsParamCoercion => true;
