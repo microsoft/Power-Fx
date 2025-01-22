@@ -191,7 +191,9 @@ namespace Microsoft.PowerFx.Repl.Services
                         {
                             error = true;
                         }
-                        else if (brackets.Count == 0 && _commandBuffer[bufferIndex] == '}' && closeOnCurly) // brackets.Count is 0 after brackets.Pop above
+
+                        // if no error, brackets.Count has been decremented after brackets.Pop for this closing bracket in the first test
+                        else if (brackets.Count == 0 && _commandBuffer[bufferIndex] == '}' && closeOnCurly)
                         {
                             close = true;
                         }
