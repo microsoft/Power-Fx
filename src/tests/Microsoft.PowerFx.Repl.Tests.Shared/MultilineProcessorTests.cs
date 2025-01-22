@@ -45,6 +45,16 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "{ /* } text", "*/ }")]
         [InlineData(false, "IsMatch( \"asdf\", \"\\w+", "\")")]
 
+        // errors
+        [InlineData(false, "[ ( // ) text", "}")] // incorrect close
+        [InlineData(false, "[ ( /* ) text", "*/ ]")] // incorrect close
+        [InlineData(false, "{ [ // ] text", "}")] // incorrect close
+        [InlineData(false, "{ [ /* ] text", "*/ )")] // incorrect close
+        [InlineData(false, "( { // } text", ")")] // incorrect close
+        [InlineData(false, "( { /* } text", "*/ ]")] // incorrect close
+        [InlineData(false, "{ ( 1 + 2 ) )")] // error, incorrect close
+        [InlineData(false, "( 1 + 2 ) )")] // error, too many closes
+
         // udfs
         [InlineData(false, "func( a: Number ) : ", "Text = ", "Text( a + 4)")]
         [InlineData(false, "func( a: Number ) : Text = ", "Text( a + 4)")]
@@ -100,6 +110,9 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " & ", "\"a\" }", "\"")] // ending inline comment ignored
         [InlineData(false, "$\" { $\" { 1 /* } ", " + } ", "2 } ", "\"", " */ }", "\"", "")] // empty line stops continuation
         [InlineData(false, "$\" { $\" { 1 // } ", " + ", "2 } ", "\"", " & ", "\"a\" }", "")] // empty line stops continuation
+        [InlineData(false, "[ $\" { 4 + }\"")] // error, unclosed expresion in island
+        [InlineData(false, "[ $\" { 4 * /* inline */ }\"")] // error, unclosed expresion in island
+        [InlineData(false, "[ $\" { 4 * //", "}\"")] // error, unclosed expresion in island
 
         // comments
         [InlineData(false, "4 /* a *//", "3")]
@@ -125,12 +138,22 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(true, "123{")]
         [InlineData(true, "123[")]
         [InlineData(true, "123'asdf")]
+        [InlineData(true, "${}")] // minimal
+        [InlineData(true, "${ 4 ", "}")] // at beginning
+        [InlineData(true, "${ 4 ","} more")] // at beginning
+        [InlineData(true, "more ${", "}")] // at end
+        [InlineData(true, "more ${}")] // at end
         [InlineData(true, "123${", "4", "}")]
-        [InlineData(true, "123$${")]
+        [InlineData(true, "123$${")] // escaped $
+        [InlineData(true, "$${")] // escaped $
         [InlineData(true, "123${", "4", "} {")]
         [InlineData(true, "123${", "4", "} ${", "5", "}")]
         [InlineData(true, "123${", "4", "} {{ ${", "5", "}")]
         [InlineData(true, "123${ // }", "}")]
+        [InlineData(true, "123 ${ { a: [ 1, 2, 3 }")] // error, incorrect closing bracket
+        [InlineData(true, "123 ${ { a: [ 1, 2, 3 )")] // error, incorrect closing bracket
+        [InlineData(true, "123 ${ [ 4 + ] }")] // error, dangling operator
+        [InlineData(true, "123 ${ 1 + 2 } }")] // not an error
 
         public void ExpectContinue(bool textFirst, params string[] lines)
         {

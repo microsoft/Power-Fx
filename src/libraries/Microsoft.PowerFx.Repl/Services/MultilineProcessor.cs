@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Repl.Services
                 brackets.Push('}');
             }
 
-            for (; !close && !error && bufferIndex < _commandBuffer.Length; bufferIndex++)
+            for (; !close && !error && !leftOpen && bufferIndex < _commandBuffer.Length; bufferIndex++)
             {
                 switch (_commandBuffer[bufferIndex])
                 {
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Repl.Services
                                 {
                                 }
 
-                                // the comment is closed by the end of the buffer
+                                // no leftOpen, the comment is closed by the end of the buffer without an error
                             }
                             else if (_commandBuffer[bufferIndex + 1] == '*')
                             {
@@ -139,14 +139,15 @@ namespace Microsoft.PowerFx.Repl.Services
                                 {
                                 }
 
-                                // reached end of string before we found our ending delimiter
-                                if (bufferIndex + 1 < _commandBuffer.Length)
+                                // reached end of comment before we found our ending delimiter
+                                if (bufferIndex + 1 >= _commandBuffer.Length)
                                 {
-                                    bufferIndex++;
+                                    leftOpen = true;
                                 }
                                 else
                                 {
-                                    leftOpen = true;
+                                    // skip past closing '/'
+                                    bufferIndex++;
                                 }
                             }
                             else
@@ -186,18 +187,12 @@ namespace Microsoft.PowerFx.Repl.Services
                     case ']':
                     case ')':
                     case '}':
-                        if (brackets.Count == 0 || _commandBuffer[bufferIndex] != brackets.Pop())
+                        if (lastOperator || brackets.Count == 0 || _commandBuffer[bufferIndex] != brackets.Pop())
                         {
                             error = true;
                         }
-
-                        if (brackets.Count == 0 && _commandBuffer[bufferIndex] == '}' && closeOnCurly)
+                        else if (brackets.Count == 0 && _commandBuffer[bufferIndex] == '}' && closeOnCurly) // brackets.Count is 0 after brackets.Pop above
                         {
-                            if (leftOpen || lastOperator)
-                            {
-                                error = true;
-                            }
-
                             close = true;
                         }
 
