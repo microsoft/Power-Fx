@@ -37,6 +37,12 @@ namespace Microsoft.PowerFx.Repl.Tests
         [InlineData(false, "[ /* ] text", "*/ ]")]
         [InlineData(false, "{ // } text", "}")]
         [InlineData(false, "{ /* } text", "*/ }")]
+        [InlineData(false, "IsMatch( \"asdf\", \"\\w+", "\")")]
+
+        // udfs
+        [InlineData(false, "func( a: Number ) : ", "Text = ", "Text( a + 4)")]
+        [InlineData(false, "func( a: Number ) : Text = ", "Text( a + 4)")]
+        [InlineData(false, "func( a: Number ) : Text = {", "Text( a + 4) }")]
 
         // ends with oeprator
         [InlineData(false, "a =", "3")]
