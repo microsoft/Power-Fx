@@ -7,11 +7,13 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalDataSource : IExternalEntity, IExternalPageableSymbol, IExternalDelegatableSymbol
+    internal interface IExternalDataSource : IExternalEntity, IExternalPageableSymbol
     {
         string Name { get; }
 
         bool IsSelectable { get; }
+
+        bool IsDelegatable { get; }
         
         bool IsRefreshable { get; }
 
