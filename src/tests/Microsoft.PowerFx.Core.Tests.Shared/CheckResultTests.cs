@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Binding doesn't compute dependency analysis. 
             // These are other Apply* calls. 
             Assert.Throws<InvalidOperationException>(() => check.TopLevelIdentifiers);
-            check.ApplyDependencyAnalysis();
+            check.ApplyTopLevelIdentifiersAnalysis();
             Assert.NotNull(check.TopLevelIdentifiers);
         }
 

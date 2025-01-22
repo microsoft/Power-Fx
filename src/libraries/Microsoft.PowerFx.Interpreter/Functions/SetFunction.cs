@@ -2,16 +2,17 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Interpreter
 {
@@ -145,6 +146,19 @@ namespace Microsoft.PowerFx.Interpreter
             }
 
             return false;
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var newContext = new DependencyVisitor.DependencyContext()
+            {
+                WriteState = true
+            };
+
+            node.Args[0].Accept(visitor, newContext);
+            node.Args[1].Accept(visitor, context);
+
+            return true;
         }
     }
 }

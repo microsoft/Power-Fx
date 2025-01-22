@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
@@ -292,7 +291,7 @@ namespace Microsoft.PowerFx
         {
             check.ApplyBindingInternal();
             check.ApplyErrors();
-            check.ApplyDependencyAnalysis();
+            check.ApplyTopLevelIdentifiersAnalysis();
         }
 
         // Called after check result, can inject additional errors or constraints. 

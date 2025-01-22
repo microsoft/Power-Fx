@@ -238,5 +238,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
         }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            // Skipping args 0 and 1.
+            for (int i = 2; i < node.Args.Count; i++)
+            {
+                var arg = node.Args[i];
+                RecordNode recordNode;
+
+                switch (i)
+                {
+                    case 2: // Predicate arg. 
+                        arg.Accept(visitor, context);
+                        break;
+                    case 5:
+                    case 6: // Left and right record args.
+                        var sourceArg = node.Args[i - 5];
+                        recordNode = arg as RecordNode;
+                        foreach (var field in recordNode.Fields)
+                        {
+                            var tableType = (TableType)sourceArg.IRContext.ResultType;
+                            visitor.AddField(context, tableType.TableSymbolName, field.Key.Value);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return true;
+        }
     }
 }

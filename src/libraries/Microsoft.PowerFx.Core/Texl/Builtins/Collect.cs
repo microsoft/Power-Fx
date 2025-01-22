@@ -19,7 +19,8 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
-using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using IRRecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -450,7 +451,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (arg.IRContext.ResultType._type.IsPrimitive)
                 {
                     newArgs.Add(
-                        new RecordNode(
+                        new IRRecordNode(
                             new IRContext(arg.IRContext.SourceContext, RecordType.Empty().Add(TableValue.ValueName, arg.IRContext.ResultType)),
                             new Dictionary<DName, IntermediateNode>
                             {
@@ -464,6 +465,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return newArgs;
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var newContext = new DependencyVisitor.DependencyContext()
+            {
+                WriteState = true,
+                TableType = node.Args[0].IRContext.ResultType as TableType
+            };
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                arg.Accept(visitor, newContext);
+            }
+
+            return true;
         }
     }
 
@@ -489,6 +506,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         internal override IntermediateNode CreateIRCallNode(PowerFx.Syntax.CallNode node, IRTranslator.IRTranslatorContext context, List<IntermediateNode> args, ScopeSymbol scope)
         {
             return base.CreateIRCallNode(node, context, CreateIRCallNodeCollect(node, context, args, scope), scope);
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+            visitor.AddFieldWrite(tableType.TableSymbolName, "Value");
+
+            return true;
         }
     }
 
