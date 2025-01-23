@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Types
             return await EvalInRowScopeAsync(_context).ConfigureAwait(false);
         }
 
+        // Can we remove this and replace with safer implementations? 
+        // https://github.com/microsoft/Power-Fx/issues/2819
         public async ValueTask<FormulaValue> EvalInRowScopeAsync(EvalVisitorContext context)
         {
             _runner.CheckCancel();
