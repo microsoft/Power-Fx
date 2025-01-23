@@ -66,6 +66,11 @@ namespace Microsoft.PowerFx.Connectors
         {
             _cachedRows = null;
         }
+
+        public Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
     }   
 
     internal static class ODataParametersExtensions
