@@ -44,6 +44,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public override IEnumerable<DValue<RecordValue>> Rows => GetRowsAsync(null, null, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
+        public DelegationParameterFeatures SupportedFeatures => DelegationParameterFeatures.Filter |
+                DelegationParameterFeatures.Top |
+                DelegationParameterFeatures.Columns | // $select
+                DelegationParameterFeatures.Sort; // $orderby
+
         public async Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel)
         {
             if (parameters == null && _cachedRows != null)

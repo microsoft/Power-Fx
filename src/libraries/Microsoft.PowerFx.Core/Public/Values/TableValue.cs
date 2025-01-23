@@ -37,6 +37,11 @@ namespace Microsoft.PowerFx.Types
         /// <param name="parameters">Delegation parameters.</param>
         /// <param name="cancel"></param>
         Task<FormulaValue> ExecuteQueryAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
+
+        /// <summary>
+        /// Supported features for delegation to verify correct Features are delegated at runtime.
+        /// </summary>
+        DelegationParameterFeatures SupportedFeatures { get; }
     }
 
     /// <summary>
