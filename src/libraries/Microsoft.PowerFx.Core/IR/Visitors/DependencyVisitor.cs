@@ -295,6 +295,8 @@ namespace Microsoft.PowerFx.Core.IR
     /// </summary>
     public class DependencyInfo
     {
+
+#pragma warning disable CS1570 // XML comment has badly formed XML
         /// <summary>
         /// A dictionary of field logical names on related records, indexed by the related entity logical name.
         /// </summary>
@@ -305,6 +307,7 @@ namespace Microsoft.PowerFx.Core.IR
         ///    "contact" => { "fullname", "numberofchildren" }.
         /// </example>
         public Dictionary<string, HashSet<string>> FieldReads { get; set; }
+#pragma warning restore CS1570 // XML comment has badly formed XML
 
         public Dictionary<string, HashSet<string>> FieldWrites { get; set; }
 
