@@ -452,12 +452,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
             // Arg1 is the record to be found. All fields are readonly, so we don't need to add any writes here.
-            node.Args[1].Accept(visitor, new DependencyVisitor.DependencyContext() { TableType = node.Args[0].IRContext.ResultType as TableType });
+            node.Args[1].Accept(visitor, new DependencyVisitor.DependencyContext() { ScopeType = node.Args[0].IRContext.ResultType as TableType });
 
             var newContext = new DependencyVisitor.DependencyContext()
             {
                 WriteState = true,
-                TableType = node.Args[0].IRContext.ResultType as TableType
+                ScopeType = node.Args[0].IRContext.ResultType as TableType
             };
 
             foreach (var arg in node.Args.Skip(2).Select(arg => (IRRecordNode)arg))

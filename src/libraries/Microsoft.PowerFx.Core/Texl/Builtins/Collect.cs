@@ -472,7 +472,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var newContext = new DependencyVisitor.DependencyContext()
             {
                 WriteState = true,
-                TableType = node.Args[0].IRContext.ResultType as TableType
+                ScopeType = node.Args[0].IRContext.ResultType as TableType
             };
 
             foreach (var arg in node.Args.Skip(1))

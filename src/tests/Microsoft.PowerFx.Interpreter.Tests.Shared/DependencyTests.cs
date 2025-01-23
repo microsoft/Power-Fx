@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("12 & true & \"abc\" ", "")] // walker ignores literals
         [InlineData("12;'Address 1: City';12", "Read Accounts: address1_city;")] // chaining
         [InlineData("ParamLocal1.'Address 1: City'", "Read Accounts: address1_city;")] // basic read
+        [InlineData("{test:First(local).name}", "Read Accounts: name;")]
 
         // Basic scoping
         [InlineData("Min(local,numberofemployees)", "Read Accounts: numberofemployees;")]
@@ -50,10 +51,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Patch(local, {accountid:GUID(), 'Address 1: City':\"test\"})", "Read Accounts: accountid; Write Accounts: address1_city;")]
         [InlineData("Patch(local, Table({accountid:GUID(), 'Address 1: City':\"test\"},{accountid:GUID(), 'Account Name':\"test\"}))", "Read Accounts: accountid; Write Accounts: address1_city, name;")]
         [InlineData("Patch(local, Table({accountid:GUID(), 'Address 1: City':\"test\"},{accountid:GUID(), 'Account Name':\"test\"}),Table({'Address 1: City':\"test\"},{'Address 1: City':\"test\",'Account Name':\"test\"}))", "Read Accounts: accountid, address1_city, name; Write Accounts: address1_city, name;")]
+        [InlineData("Patch(local, First(local), { 'Address 1: City' : First(local).'Account Name'  } )", "Read Accounts: name; Write Accounts: address1_city;")]
 
         // Collect and ClearCollect.
         [InlineData("Collect(local, Table({ 'Account Name' : \"some name\"}))", "Write Accounts: name;")]
         [InlineData("Collect(local, local)", "Write Accounts: ;")]
+        [InlineData("Collect(local, { 'Address 1: City' : First(local).'Account Name'  })", "Read Accounts: name; Write Accounts: address1_city;")]
         [InlineData("ClearCollect(local, local)", "Write Accounts: ;")]
         [InlineData("ClearCollect(local, Table({ 'Account Name' : \"some name\"}))", "Write Accounts: name;")]
 

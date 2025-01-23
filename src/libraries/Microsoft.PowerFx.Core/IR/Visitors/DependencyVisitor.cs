@@ -56,7 +56,10 @@ namespace Microsoft.PowerFx.Core.IR
             // Read all the fields. The context will determine if the record is referencing a data source
             foreach (var kv in node.Fields)
             {
-                AddField(context, context.TableType?.TableSymbolName, kv.Key.Value);
+                AddField(context, context.ScopeType?.TableSymbolName, kv.Key.Value);
+
+                // Reset the context for field values in case we are operating in a write context.
+                kv.Value.Accept(this, new DependencyContext());
             }
 
             return null;
@@ -155,7 +158,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var tableLogicalName = aggregateType.TableSymbolName;
                 if (context.WriteState)
                 {
-                    tableLogicalName = context.TableType?.TableSymbolName;
+                    tableLogicalName = context.ScopeType?.TableSymbolName;
                 }
 
                 if (tableLogicalName != null)
@@ -223,7 +226,7 @@ namespace Microsoft.PowerFx.Core.IR
         {
             public bool WriteState { get; set; }
 
-            public TableType TableType { get; set; }
+            public TableType ScopeType { get; set; }
 
             public DependencyContext()
             {
