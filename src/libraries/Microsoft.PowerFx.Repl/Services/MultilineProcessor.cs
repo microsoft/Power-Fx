@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,7 +12,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -30,36 +29,37 @@ namespace Microsoft.PowerFx.Repl.Services
         // false if we're on a subsequent line. 
         public bool IsFirstLine => _commandBuffer.Length == 0;
 
-        private int ParseFormulaToClose(int i, bool closeOnCurly, ref bool complete, ref bool error)
+        // Recursively parses a formula to see if there are any open (, {, [, comments, strings, or if the formula ends with a unary prefix or binary operator
+        // Recursion happens for string interoplation
+        // An earlier version of this routine attempted to use the Power Fx parser directly, but interpreting erorr messages to determine continuation situations was not accurate enough
+        private int ParseFormulaToClose(int bufferIndex, bool closeOnCurly, ref bool complete, ref bool error)
         {
             var brackets = new Stack<char>();       // stack of [, {, ( to ensure proper matching
             var close = false;                      // exit the loop as we've found the closing } if cloneOnCurly is true
             var leftOpen = false;                   // an identfier, string, or inline comment was left open when the end of the string was encountered
-            var lastChar = '\0';                    // the last character seen, not including whitespace and comments, for detecting a trailing =
+            var lastOperator = false;               // was the last non-whitespace, non-comment character an operator?
 
             if (closeOnCurly)
             {
                 brackets.Push('}');
             }
 
-            for (; !close && !error && i < _commandBuffer.Length; i++)
+            for (; !close && !error && !leftOpen && bufferIndex < _commandBuffer.Length; bufferIndex++)
             {
-                var thisChar = _commandBuffer[i];
-
-                switch (thisChar)
+                switch (_commandBuffer[bufferIndex])
                 {
+                    // text string
                     case '"':
-                    case '\'':
-                        var stringInterpolation = thisChar == '"' && i > 0 && _commandBuffer[i - 1] == '$';
+                        var stringInterpolation = bufferIndex > 0 && _commandBuffer[bufferIndex - 1] == '$';
 
-                        for (i++; i < _commandBuffer.Length; i++) 
+                        for (bufferIndex++; bufferIndex < _commandBuffer.Length; bufferIndex++)
                         {
-                            if (_commandBuffer[i] == thisChar)
+                            if (_commandBuffer[bufferIndex] == '"')
                             {
-                                if (i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == thisChar)
+                                if (bufferIndex + 1 < _commandBuffer.Length && _commandBuffer[bufferIndex + 1] == '"')
                                 {
                                     // skip repeated quote
-                                    i++;
+                                    bufferIndex++;
                                 }
                                 else
                                 {
@@ -67,113 +67,177 @@ namespace Microsoft.PowerFx.Repl.Services
                                     break;
                                 }
                             }
-                            else if (stringInterpolation && _commandBuffer[i] == '{')
+                            else if (stringInterpolation && _commandBuffer[bufferIndex] == '{')
                             {
-                                if (i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == '{')
+                                if (bufferIndex + 1 < _commandBuffer.Length && _commandBuffer[bufferIndex + 1] == '{')
                                 {
                                     // skip repeated {
-                                    i++;        
+                                    bufferIndex++;
                                 }
                                 else
                                 {
                                     // recurse in for string interpolation island
-                                    i = ParseFormulaToClose(i + 1, true, ref complete, ref error);
+                                    bufferIndex = ParseFormulaToClose(bufferIndex + 1, true, ref complete, ref error);
                                 }
                             }
                         }
 
                         // reached end of string before we found our ending delimiter
-                        if (i == _commandBuffer.Length)
+                        if (bufferIndex == _commandBuffer.Length)
                         {
                             leftOpen = true;
                         }
 
-                        lastChar = thisChar;
+                        lastOperator = false;
                         break;
 
-                    case '/':
-                        if (i + 1 < _commandBuffer.Length)
+                    // delimited identifier, which can't span lines but may have other characters within that should be ignored
+                    case '\'':
+                        for (bufferIndex++; bufferIndex < _commandBuffer.Length; bufferIndex++)
                         {
-                            if (_commandBuffer[i + 1] == '/')
+                            if (_commandBuffer[bufferIndex] == '\'')
                             {
-                                for (i += 2; i < _commandBuffer.Length && _commandBuffer[i] != '\n' && _commandBuffer[i] != '\r'; i++)
+                                if (bufferIndex + 1 < _commandBuffer.Length && _commandBuffer[bufferIndex + 1] == '\'')
                                 {
+                                    // skip repeated quote
+                                    bufferIndex++;
                                 }
-
-                                // the comment is closed by the end of the buffer
+                                else
+                                {
+                                    // end delimiter reached
+                                    break;
+                                }
                             }
-                            else if (_commandBuffer[i + 1] == '*')
+                            else if (CharacterUtils.IsTabulation(_commandBuffer[bufferIndex]) || CharacterUtils.IsLineTerm(_commandBuffer[bufferIndex]))
                             {
-                                for (i += 2; i + 1 < _commandBuffer.Length && !(_commandBuffer[i] == '*' && _commandBuffer[i + 1] == '/'); i++)
+                                // invalid in identifier names
+                                error = true;
+                                break;
+                            }
+                        }
+
+                        // reached end of string before we found our ending delimiter
+                        if (bufferIndex == _commandBuffer.Length)
+                        {
+                            leftOpen = true;
+                        }
+
+                        lastOperator = false;
+                        break;
+
+                    // comments or division operator
+                    case '/':
+                        if (bufferIndex + 1 < _commandBuffer.Length)
+                        {
+                            if (_commandBuffer[bufferIndex + 1] == '/')
+                            {
+                                for (bufferIndex += 2; bufferIndex < _commandBuffer.Length && _commandBuffer[bufferIndex] != '\n' && _commandBuffer[bufferIndex] != '\r'; bufferIndex++)
                                 {
                                 }
 
-                                // reached end of string before we found our ending delimiter
-                                if (i + 1 == _commandBuffer.Length)
+                                // no leftOpen, the comment is closed by the end of the buffer without an error
+                            }
+                            else if (_commandBuffer[bufferIndex + 1] == '*')
+                            {
+                                for (bufferIndex += 2; bufferIndex + 1 < _commandBuffer.Length && !(_commandBuffer[bufferIndex] == '*' && _commandBuffer[bufferIndex + 1] == '/'); bufferIndex++)
+                                {
+                                }
+
+                                // reached end of comment before we found our ending delimiter
+                                if (bufferIndex + 1 >= _commandBuffer.Length)
                                 {
                                     leftOpen = true;
                                 }
+                                else
+                                {
+                                    // skip past closing '/'
+                                    bufferIndex++;
+                                }
+                            }
+                            else
+                            {
+                                // division operator
+                                lastOperator = true;
                             }
                         }
+                        else
+                        {
+                            // division operator at end of buffer
+                            lastOperator = true;
+                        }
 
-                        // lastChar not updated, comment ignored
+                        // if it was indeed a comment and not division, lastOperator not updated, comments ignored
                         break;
 
+                    // table notation
                     case '[':
                         brackets.Push(']');
-
-                        // lastChar not updated, stack will be up and won't be complete
+                        lastOperator = false;
                         break;
 
+                    // function parameters and grouping notation
                     case '(':
                         brackets.Push(')');
-
-                        // lastChar not updated, stack will be up and won't be complete
+                        lastOperator = false;
                         break;
 
+                    // record notation
                     case '{':
                         brackets.Push('}');
-
-                        // lastChar not updated, stack will be up and won't be complete
+                        lastOperator = false;
                         break;
 
+                    // closing notation
                     case ']':
                     case ')':
                     case '}':
-                        if (brackets.Count == 0 || thisChar != brackets.Pop())
+                        if (lastOperator || brackets.Count == 0 || _commandBuffer[bufferIndex] != brackets.Pop())
                         {
                             error = true;
                         }
-                        
-                        if (brackets.Count == 0 && thisChar == '}' && closeOnCurly)
-                        {
-                            if (leftOpen || lastChar == '=')
-                            {
-                                error = true;
-                            }
 
+                        // if no error, brackets.Count has been decremented after brackets.Pop for this closing bracket in the first test
+                        else if (brackets.Count == 0 && _commandBuffer[bufferIndex] == '}' && closeOnCurly)
+                        {
                             close = true;
                         }
 
-                        lastChar = thisChar;
+                        lastOperator = false;
                         break;
 
+                    // whitespace
                     case ' ':
                     case '\t':
                     case '\n':
                     case '\r':
-                        // lastChar not updated, whitepace ignored
+                        // lastOperator not updated, whitepace ignored
                         break;
 
+                    // binary and unary prefix operators that can't end a formula and may well be continued on the next line                    
+                    case '=':
+                    case '>':
+                    case '<':
+                    case ':':
+                    case '+':
+                    case '-':
+                    case '*': // division is handled above with comments
+                    case '^':
+                    case '&': // string concatenation and &&
+                    case '|': // ||
+                    case '!': // not and old property selector
+                        lastOperator = true;
+                        break;
+
+                    // everything else
                     default:
-                        lastChar = thisChar;
+                        lastOperator = false;
                         break;
                 }
             }
 
-            complete &= brackets.Count == 0 && !leftOpen && lastChar != '=';
+            complete &= brackets.Count == 0 && !leftOpen && !lastOperator;
 
-            return i;
+            return bufferIndex;
         }
 
         // Return null if we need more input. 
@@ -181,23 +245,23 @@ namespace Microsoft.PowerFx.Repl.Services
         public virtual string HandleLine(string line, ParserOptions parserOptions)
         {
             _commandBuffer.AppendLine(line);
-
-            var error = false;
-            var complete = true;
+            
+            var complete = true;    // the buffer is complete, no longer continue, any open phrase will make this false
+            var error = false;      // an error was encountered, no longer continue, overriding a false complete
 
             // An empty line (possibly with spaces) will also finish the command.
-            // This is the ultimate escape hatch for the user if our closing detection logic above fails.
+            // This is the ultimate escape hatch if our closing detection logic above fails.
             var emptyLine = line.Trim() == string.Empty;
 
             if (!emptyLine)
             {
                 if (parserOptions.TextFirst)
                 {
-                    for (int i = 0; complete && i >= 0 && i < _commandBuffer.Length; i++)
+                    for (int bufferIndex = 0; complete && bufferIndex >= 0 && bufferIndex < _commandBuffer.Length; bufferIndex++)
                     {
-                        if ((i == 0 || _commandBuffer[i - 1] != '$') && _commandBuffer[i] == '$' && i + 1 < _commandBuffer.Length && _commandBuffer[i + 1] == '{')
+                        if ((bufferIndex == 0 || _commandBuffer[bufferIndex - 1] != '$') && _commandBuffer[bufferIndex] == '$' && bufferIndex + 1 < _commandBuffer.Length && _commandBuffer[bufferIndex + 1] == '{')
                         {
-                            i = ParseFormulaToClose(i + 2, true, ref complete, ref error);
+                            bufferIndex = ParseFormulaToClose(bufferIndex + 2, true, ref complete, ref error);
                         }
                     }
                 }

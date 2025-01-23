@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
@@ -524,8 +525,13 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Join(t1, t2, LeftRecord.Id = RightRecord.RefId, JoinType.Inner)
-        public static async ValueTask<FormulaValue> JoinTables(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> JoinTables(FunctionInvokeInfo invokeInfo)
         {
+            var args = invokeInfo.Args;
+            var runner = invokeInfo.Runner;
+            var context = invokeInfo.Context;
+            var irContext = invokeInfo.IRContext;
+
             if (args[0] is not TableValue leftTable)
             {
                 return args[0];
@@ -1583,15 +1589,13 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-    internal class JoinImpl : JoinFunction, IAsyncTexlFunctionJoin
-#pragma warning restore CS0618 // Type or member is obsolete
+    internal class JoinImpl : JoinFunction, IFunctionInvoker
     {
         public override Type DeclarationType => typeof(JoinFunction);
 
-        public async Task<FormulaValue> InvokeAsync(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
-            return await Library.JoinTables(runner, context, irContext, args).ConfigureAwait(false);
+            return await Library.JoinTables(invokeInfo).ConfigureAwait(false);
         }
     }
 }

@@ -395,11 +395,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
 
-        // Identifiers can't be all-blank.
-        [InlineData("' '")]
-        [InlineData("'     '")]
-        [InlineData("'                                          '")]
-
         // Can't mix dot and bang within the same identifier.
         [InlineData("A!B.C")]
         [InlineData("A.B!C")]
@@ -407,7 +402,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("A!B!C!D!E!F!G.H")]
 
         // Missing delimiters
-        [InlineData("'foo")]
         [InlineData("foo'")]
 
         // Disambiguated identifiers and scope fields
@@ -432,6 +426,45 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // Identifiers can't be all-blank.
             TestParseErrors(script);
+        }
+
+        [Theory]
+
+        // Missing delimiters
+        [InlineData("'foo")]
+
+        public void TexlParseIdentifiersNegative_MissingClose(string script)
+        {
+            // Identifiers can't be all-blank.
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrClosingIdentifierExpected));
+        }
+
+        [Theory]
+
+        // Identifiers can't be all-blank.
+        [InlineData("''")]
+        [InlineData("' '")]
+        [InlineData("'     '")]
+        [InlineData("'                                          '")]
+        [InlineData("' \t '")]
+        [InlineData("' \n '")]
+        [InlineData("' \r '")]
+
+        // Tabs and newlines in an identifier or DName
+        // Should match CharacterUtils.IsTabulation() and CharacterUtils.IsLineTerm() used in DName.MakeValid
+        [InlineData("'a \t b'")] // \u0009
+        [InlineData("'a \u000b b'")] // vertical tab
+        [InlineData("'a \n b'")]
+        [InlineData("'a \r b'")]
+        [InlineData("'a \u0085 b'")]
+        [InlineData("'a \u2028 b'")]
+        [InlineData("'a \u2029 b'")]
+        [InlineData("'a \u000c b'")] // form feed
+
+        public void TexlParseIdentifiersNegative_EmptyTabsNewlines(string script)
+        {
+            // Identifiers can't be all-blank.
+            TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrEmptyInvalidIdentifier));
         }
 
         [Theory]

@@ -692,6 +692,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrCannotCoerce_SourceType_TargetType = new ErrorResourceKey("ErrCannotCoerce_SourceType_TargetType");
         public static ErrorResourceKey ErrNumberOrStringExpected = new ErrorResourceKey("ErrNumberOrStringExpected");
         public static ErrorResourceKey ErrClosingBracketExpected = new ErrorResourceKey("ErrClosingBracketExpected");
+        public static ErrorResourceKey ErrClosingIdentifierExpected = new ErrorResourceKey("ErrClosingIdentifierExpected");
         public static ErrorResourceKey ErrEmptyInvalidIdentifier = new ErrorResourceKey("ErrEmptyInvalidIdentifier");
         public static ErrorResourceKey ErrIncompatibleTypes = new ErrorResourceKey("ErrIncompatibleTypes");
         public static ErrorResourceKey ErrIncompatibleTypesForEquality_Left_Right = new ErrorResourceKey("ErrIncompatibleTypesForEquality_Left_Right");
