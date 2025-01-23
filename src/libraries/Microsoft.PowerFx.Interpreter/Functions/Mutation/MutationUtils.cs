@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter.Localization;
 using Microsoft.PowerFx.Types;
 
@@ -46,8 +46,9 @@ namespace Microsoft.PowerFx.Interpreter
             return DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(mergedFields.Select(kvp => new NamedValue(kvp.Key, kvp.Value))));
         }
 
-        public static async Task<FormulaValue> RemoveCore(FormulaType irContext, FormulaValue[] args, CancellationToken cancellationToken)
+        public static async Task<FormulaValue> RemoveCore(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
+            var args = invokeInfo.Args.ToArray();
             cancellationToken.ThrowIfCancellationRequested();
 
             FormulaValue arg0;
@@ -124,10 +125,10 @@ namespace Microsoft.PowerFx.Interpreter
                     });
                 }
 
-                return new ErrorValue(IRContext.NotInSource(irContext), errors);
+                return new ErrorValue(invokeInfo.IRContext, errors);
             }
 
-            return irContext == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank();
+            return invokeInfo.ReturnType == FormulaType.Void ? FormulaValue.NewVoid() : FormulaValue.NewBlank();
         }
     }
 }
