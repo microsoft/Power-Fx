@@ -76,14 +76,14 @@ namespace Microsoft.PowerFx.Types
         // $apply = groupby((field1, ..), field with sum as TotalSum)
         ApplyGroupBy = 1 << 5,
 
+        // $count
+        Count = 1 << 6,
+
         /*
           To be implemented later when needed
          
         // $compute
         Compute = 1 << 5,
-
-        // $count
-        Count = 1 << 6,
 
         // $expand
         Expand = 1 << 7,
