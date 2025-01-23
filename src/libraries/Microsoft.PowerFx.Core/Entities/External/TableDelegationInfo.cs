@@ -311,7 +311,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         /// <summary>
         /// If the table is countable, return true. 
-        /// Relevant expression: CountRows(Table);
+        /// Relevant expression: CountRows(Table).
         /// </summary>
         /// <returns></returns>
         public virtual bool IsCountableTable()

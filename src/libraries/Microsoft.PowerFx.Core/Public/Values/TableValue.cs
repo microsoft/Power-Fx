@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="parameters">delegation parameters.</param>
         /// <param name="cancel"></param>
         /// <returns></returns>
+        [Obsolete($"Use  {nameof(ExecuteQueryAsync)} instead.")]
         Task<IReadOnlyCollection<DValue<RecordValue>>> GetRowsAsync(IServiceProvider services, DelegationParameters parameters, CancellationToken cancel);
 
         /// <summary>
