@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Functions
     /// This includings the binding (and hence IR for evaluation) - 
     /// This is conceptually immutable after initialization - if the body or signature changes, you need to create a new instance.
     /// </summary>
-    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol, IExternalDelegatableSymbol
+    internal class UserDefinedFunction : TexlFunction, IExternalPageableSymbol
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
@@ -44,15 +44,13 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public bool IsPageable => _binding.IsPageable(_binding.Top);
 
-        public bool IsDelegatable => _binding.IsDelegatable(_binding.Top);
-
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.GetInfo(callNode).Function is UserDefinedFunction udf && udf.Binding != null);
 
-            if (base.IsServerDelegatable(callNode, binding) || IsDelegatable)
+            if (base.IsServerDelegatable(callNode, binding) || _binding.IsDelegatable(_binding.Top))
             {
                 return true;
             }

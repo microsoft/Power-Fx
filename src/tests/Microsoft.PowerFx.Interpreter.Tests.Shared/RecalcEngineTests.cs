@@ -799,23 +799,23 @@ namespace Microsoft.PowerFx.Tests
             var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
+            Assert.True(func.Binding.IsDelegatable(func.Binding.Top));
 
             func = recalcEngine.Functions.WithName("C").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
+            Assert.True(func.Binding.IsDelegatable(func.Binding.Top));
 
             func = recalcEngine.Functions.WithName("B").First() as UserDefinedFunction;
 
             Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
+            Assert.True(func.Binding.IsDelegatable(func.Binding.Top));
 
             func = recalcEngine.Functions.WithName("D").First() as UserDefinedFunction;
 
             // Imperative function is not delegable
             Assert.True(func.IsAsync);
-            Assert.True(!func.IsDelegatable);
+            Assert.True(!func.Binding.IsDelegatable(func.Binding.Top));
 
             // Binding fails for recursive definitions and hence function is not added.
             Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
