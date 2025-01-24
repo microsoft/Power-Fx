@@ -266,6 +266,10 @@ namespace Microsoft.PowerFx.Connectors
 
         private DType[] _parameterTypes;
 
+        /// <summary>
+        /// Indicates if the specific handling of the body takes place in this functions.
+        /// This is only when UseItemDynamicPropertiesSpecialHandling is enabled in ConnectorSettings.
+        /// </summary>
         public bool SpecialBodyHandling => _specialBodyHandling;
 
         private bool _specialBodyHandling = false;
