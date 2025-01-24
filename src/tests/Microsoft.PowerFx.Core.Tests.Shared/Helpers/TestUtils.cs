@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 if (dataSource != null && dataSource.DelegationMetadata != null)
                 {
                     var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
-                    if (!IsValidDelegatableFilterPredicateNode(args[1], binding, metadata, false))
+                    if (!IsValidDelegatableFilterPredicateNode(args[1], binding, metadata, false, false))
                     {
                         return false;
                     }

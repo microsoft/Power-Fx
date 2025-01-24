@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Verifies if given kind of node is supported by function delegation.
-        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool isRHSNode)
+        private bool IsSupportedNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, IOpDelegationStrategy opDelStrategy, bool isRHSNode, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             // Non row-scope, non async, pure nodes should always be valid because we can calculate value in runtime before delegation.
-            if (!binding.IsRowScope(node) && !binding.IsAsync(node) && binding.IsPure(node))
+            if (!binding.IsRowScope(node) && !binding.IsAsync(node) && binding.IsPure(node) && !nodeInheritsRowScope)
             {
                 return true;
             }
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
-                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
+                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.Call:
@@ -137,13 +137,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         }
 
                         var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata, nodeInheritsRowScope);
                     }
 
                 case NodeKind.FirstName:
                     {
                         var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
-                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
+                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy, nodeInheritsRowScope);
                     }
 
                 case NodeKind.UnaryOp:
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
                         var unaryopNode = node.AsUnaryOpLit();
                         var unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
-                        return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding);
+                        return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding, nodeInheritsRowScope);
                     }
 
                 case NodeKind.BinaryOp:
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
                         Contracts.Assert(binaryOpNode.Op == binaryOpDelStrategy.Op);
 
-                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope))
                         {
                             SuggestDelegationHint(binaryOpNode, binding);
                             return false;
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return (node.Kind == NodeKind.FirstName) && binding.IsRowScope(node);
         }
 
-        private bool DoCoercionCheck(BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata, TexlBinding binding)
+        private bool DoCoercionCheck(BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(binaryOpNode);
             Contracts.AssertValue(metadata);
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         // If rhs is a column of type DateTime and lhs is row scoped then we will need to apply the coercion on rhs. So check if coercion function date is supported or not.
                         if (IsColumnNode(binaryOpNode.Right, binding) && binding.IsRowScope(binaryOpNode.Left))
                         {
-                            return IsDelegatableColumnNode(binaryOpNode.Right.AsFirstName(), binding, null, DelegationCapability.Date);
+                            return IsDelegatableColumnNode(binaryOpNode.Right.AsFirstName(), binding, null, DelegationCapability.Date, nodeInheritsRowScope);
                         }
 
                         // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         // If lhs is a column of type DateTime and RHS is also row scoped then check if coercion function date is supported or not.
                         if (IsColumnNode(binaryOpNode.Left, binding) && binding.IsRowScope(binaryOpNode.Right))
                         {
-                            return IsDelegatableColumnNode(binaryOpNode.Left.AsFirstName(), binding, null, DelegationCapability.Date);
+                            return IsDelegatableColumnNode(binaryOpNode.Left.AsFirstName(), binding, null, DelegationCapability.Date, nodeInheritsRowScope);
                         }
 
                         // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding)
+        public virtual bool IsSupportedOpNode(TexlNode node, OperationCapabilityMetadata metadata, TexlBinding binding, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(metadata);
@@ -297,13 +297,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            if (!IsSupportedNode(binaryOpNode.Left, metadata, binding, opDelStrategy, false))
+            if (!IsSupportedNode(binaryOpNode.Left, metadata, binding, opDelStrategy, false, nodeInheritsRowScope))
             {
                 SuggestDelegationHint(node, binding);
                 return false;
             }
 
-            if (!IsSupportedNode(binaryOpNode.Right, metadata, binding, opDelStrategy, true))
+            if (!IsSupportedNode(binaryOpNode.Right, metadata, binding, opDelStrategy, true, nodeInheritsRowScope))
             {
                 SuggestDelegationHint(node, binding);
                 return false;
@@ -321,7 +321,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
-            if (!DoCoercionCheck(binaryOpNode, metadata, binding))
+            if (!DoCoercionCheck(binaryOpNode, metadata, binding, nodeInheritsRowScope))
             {
                 SuggestDelegationHint(node, binding);
                 return false;

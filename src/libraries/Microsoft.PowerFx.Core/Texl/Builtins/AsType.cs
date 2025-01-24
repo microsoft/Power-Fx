@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 tDsInfo is IExternalTabularDataSource; 
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope)
         {
             return metadata.IsDelegationSupportedByTable(DelegationCapability.AsType);
         }

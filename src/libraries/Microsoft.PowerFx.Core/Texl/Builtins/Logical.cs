@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
-        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.FirstName:
                         {
                             var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                            if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
+                            if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 return false;
                             }
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.Call:
                         {
                             var cNodeStrategy = GetCallNodeDelegationStrategy();
-                            if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                            if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 SuggestDelegationHint(arg, binding);
                                 return false;
@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.DottedName:
                         {
                             var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                            if (!dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null))
+                            if (!dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 SuggestDelegationHint(arg, binding);
                                 return false;
@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             var opNode = arg.AsBinaryOp();
                             var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 SuggestDelegationHint(arg, binding);
                                 return false;
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             var opNode = arg.AsUnaryOpLit();
                             var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding, nodeInheritsRowScope: nodeInheritsRowScope))
                             {
                                 SuggestDelegationHint(arg, binding);
                                 return false;

@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         }
     }
 
-    internal class TestDelegableDataSource : TestDataSource
+    internal class TestDelegableDataSource : TestDataSource, IExternalDelegatableSymbol
     {
         private readonly TabularDataQueryOptions _queryOptions;
         private readonly IDelegationMetadata _delegationMetadata;

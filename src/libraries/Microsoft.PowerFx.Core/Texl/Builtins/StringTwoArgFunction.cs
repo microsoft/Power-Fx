@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
+        protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata, bool nodeInheritsRowScope = false)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     case NodeKind.FirstName:
                         var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                        if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
+                        if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null, nodeInheritsRowScope: nodeInheritsRowScope))
                         {
                             return false;
                         }
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
 
                         var cNodeStrategy = GetCallNodeDelegationStrategy();
-                        if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                        if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata, nodeInheritsRowScope: nodeInheritsRowScope))
                         {
                             return false;
                         }
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     case NodeKind.DottedName:
                         {
                             var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                            return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
+                            return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null, nodeInheritsRowScope: nodeInheritsRowScope);
                         }
 
                     default:
