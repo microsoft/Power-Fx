@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (pcre2Expr != null && pcre2Expr != dotnetExpr)
                 {
-                    prefix = $"{kind}: node != net";
+                    prefix = $"{kind}: pcre2 != net";
                 }
 
                 if (prefix != null)

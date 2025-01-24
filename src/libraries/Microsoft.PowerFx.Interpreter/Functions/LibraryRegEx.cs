@@ -235,6 +235,19 @@ namespace Microsoft.PowerFx.Functions
                 bool matchEnd = options.Contains("$");
                 bool numberedSubMatches = options.Contains("N");
 
+                // Can't apply options ^ and $ too early as there may be freespacing comments, centalize the logic here and call subfunctions
+                string AlterStart()
+                {
+                    // ^ doesn't require any translation if not in multilline, only matches the start of the string
+                    return !openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^";
+                }
+
+                string AlterEnd()
+                {
+                    // ^ does require translation if not in multilline, as $ looks past newlines in .NET
+                    return openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)");
+                }
+
                 for (; index < regex.Length; index++)
                 {
                     switch (regex[index])
@@ -302,11 +315,11 @@ namespace Microsoft.PowerFx.Functions
                             break;
 
                         case '^':
-                            altered.Append(!openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
+                            altered.Append(AlterStart());
                             break;
 
                         case '$':
-                            altered.Append(openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)"));
+                            altered.Append(AlterEnd());
                             break;
 
                         default:
@@ -322,7 +335,7 @@ namespace Microsoft.PowerFx.Functions
                     (freeSpacing ? RegexOptions.IgnorePatternWhitespace : 0) |
                     (numberedSubMatches ? 0 : RegexOptions.ExplicitCapture);
 
-                return ((matchStart ? "^" : string.Empty) + altered.ToString() + (matchEnd ? "$" : string.Empty), alteredOptions);
+                return ((matchStart ? AlterStart() : string.Empty) + altered.ToString() + (matchEnd ? AlterEnd() : string.Empty), alteredOptions);
             }
 
             protected static RecordValue GetRecordFromMatch(Regex rex, Match m, RegexOptions options)

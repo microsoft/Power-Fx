@@ -84,8 +84,39 @@ Table({FullMatch:"1",StartMatch:1},{FullMatch:"2",StartMatch:5},{FullMatch:"3",S
  a
  b
  c
- ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch) } )
-Table({Len:2,Match:" a"},{Len:2,Match:" b"},{Len:2,Match:" c"},{Len:1,Match:" "})
+ ", "^.+$"), { Match: FullMatch, Len: Len(FullMatch), Start: StartMatch } )
+Table()
+
+>> ForAll( MatchAll( "
+ a
+ b
+ c
+ ", "^.+$", MatchOptions.Multiline), { Match: FullMatch, Len: Len(FullMatch), Start: StartMatch } )
+Table({Len:2,Match:" a",Start:3},{Len:2,Match:" b",Start:7},{Len:2,Match:" c",Start:11},{Len:1,Match:" ",Start:15})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w" )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3},{FullMatch:"c",StartMatch:5},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3},{FullMatch:"c",StartMatch:5},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Multiline & MatchOptions.Complete )
+Table({FullMatch:"a",StartMatch:1},{FullMatch:"b",StartMatch:3})
+
+>> MatchAll( "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "\w", MatchOptions.Complete )
+Table()
+
+>> MatchAll( Char(13) & "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "^\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"b",StartMatch:4},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( Char(10) & "a" & Char(10) & "b" & Char(10) & "cc" & Char(10), "^\w", MatchOptions.Multiline )
+Table({FullMatch:"a",StartMatch:2},{FullMatch:"b",StartMatch:4},{FullMatch:"c",StartMatch:6})
+
+>> MatchAll( Char(13) & "a" & Char(13) & "b" & Char(13) & "cc" & Char(13), "^\w" )
+Table()
+
+>> MatchAll( Char(10) & "a" & Char(10) & "b" & Char(10) & "cc" & Char(10), "^\w" )
+Table()
 
 // spaces
 
