@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx
             // By default ...
             check.ApplyBindingInternal();
             check.ApplyErrors();
-            check.ApplyTopLevelIdentifiersAnalysis();
+            check.ApplyDependencyAnalysis();
 
             return check;
         }

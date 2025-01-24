@@ -291,7 +291,7 @@ namespace Microsoft.PowerFx
         {
             check.ApplyBindingInternal();
             check.ApplyErrors();
-            check.ApplyTopLevelIdentifiersAnalysis();
+            check.ApplyDependencyAnalysis();
         }
 
         // Called after check result, can inject additional errors or constraints. 

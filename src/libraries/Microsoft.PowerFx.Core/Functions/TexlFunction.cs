@@ -1747,26 +1747,12 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="node">IR CallNode.</param>
         /// <param name="visitor">Dependency visitor.</param>
         /// <param name="context">Dependency context.</param>
-        /// <returns>Static boolean value.</returns>
+        /// <returns></returns>
         public virtual bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyContext context)
         {
-            for (int i = 0; i < node.Args.Count; i++)
+            foreach (var arg in node.Args)
             {
-                if (node.Scope != null && i < node.Function.ScopeArgs)
-                {
-                    if (node.Args[i] is IRCallNode callNode)
-                    {
-                        callNode.Accept(visitor, context);
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    node.Args[i].Accept(visitor, context);
-                }
+                arg.Accept(visitor, context);
             }
 
             // The return value is used by DepedencyScanFunctionTests test case.

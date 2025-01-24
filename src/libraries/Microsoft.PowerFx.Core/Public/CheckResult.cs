@@ -246,7 +246,7 @@ namespace Microsoft.PowerFx
             {
                 if (_topLevelIdentifiers == null)
                 {
-                    throw new InvalidOperationException($"Call {nameof(ApplyTopLevelIdentifiersAnalysis)} first.");
+                    throw new InvalidOperationException($"Call {nameof(ApplyDependencyAnalysis)} first.");
                 }
 
                 return _topLevelIdentifiers;
@@ -483,13 +483,8 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Compute the dependencies. Called after binding. 
         /// </summary>
-        public DependencyInfo ApplyDependencyAnalysis()
+        public DependencyInfo ApplyDependencyInfoScan()
         {
-            if (!IsSuccess)
-            {
-                return null;
-            }
-
             var ir = ApplyIR(); //throws on errors
 
             var ctx = new DependencyVisitor.DependencyContext();
@@ -503,7 +498,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Compute the dependencies. Called after binding. 
         /// </summary>
-        public void ApplyTopLevelIdentifiersAnalysis()
+        public void ApplyDependencyAnalysis()
         {
             var binding = this.Binding; // will throw if binding wasn't run
             this._topLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);

@@ -3,14 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Xml;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
-using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Core.IR
 {
@@ -167,9 +164,14 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            // Check if identifer is a field access on a table in row scope
-            var obj = node.Value;
-            if (obj is NameSymbol sym)
+            CheckResolvedObjectNodeValue(node, context);
+
+            return null;
+        }
+
+        protected virtual void CheckResolvedObjectNodeValue(ResolvedObjectNode node, DependencyContext context)
+        {
+            if (node.Value is NameSymbol sym)
             {
                 if (sym.Owner is SymbolTableOverRecordType symTable)
                 {
@@ -180,7 +182,7 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         // "ThisRecord". Whole entity
                         AddField(context, tableLogicalName, null);
-                        return null;
+                        return;
                     }
 
                     // on current table
@@ -189,8 +191,6 @@ namespace Microsoft.PowerFx.Core.IR
                     AddField(context, tableLogicalName, fieldLogicalName);
                 }
             }
-
-            return null;
         }
 
         public override RetVal Visit(SingleColumnTableAccessNode node, DependencyContext context)
@@ -224,9 +224,11 @@ namespace Microsoft.PowerFx.Core.IR
 
         public class DependencyContext
         {
-            public bool WriteState { get; set; }
+            // Indicates the scanning is working on the args of a non self-contained function.
+            public bool WriteState { get; init; }
 
-            public TableType ScopeType { get; set; }
+            // If WriteState is true, this will be set with the arg0 type.
+            public TableType ScopeType { get; init; }
 
             public DependencyContext()
             {
@@ -234,7 +236,7 @@ namespace Microsoft.PowerFx.Core.IR
         }
 
         // Translate relationship names to actual field references.
-        public string Translate(string tableLogicalName, string fieldLogicalName)
+        public virtual string Translate(string tableLogicalName, string fieldLogicalName)
         {
             return fieldLogicalName;
         }
@@ -256,7 +258,7 @@ namespace Microsoft.PowerFx.Core.IR
             if (fieldLogicalName != null)
             {
                 var name = Translate(tableLogicalName, fieldLogicalName);
-                fieldReads.Add(fieldLogicalName);
+                fieldReads.Add(name);
             }
         }
 

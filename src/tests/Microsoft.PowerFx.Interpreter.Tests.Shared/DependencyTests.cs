@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -53,6 +54,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Patch(local, Table({accountid:GUID(), 'Address 1: City':\"test\"},{accountid:GUID(), 'Account Name':\"test\"}),Table({'Address 1: City':\"test\"},{'Address 1: City':\"test\",'Account Name':\"test\"}))", "Read Accounts: accountid, address1_city, name; Write Accounts: address1_city, name;")]
         [InlineData("Patch(local, First(local), { 'Address 1: City' : First(local).'Account Name'  } )", "Read Accounts: name; Write Accounts: address1_city;")]
 
+        // Remove
+        [InlineData("Remove(local, {name: First(remote).name})", "Read Contacts: name; Write Accounts: name;")]
+
         // Collect and ClearCollect.
         [InlineData("Collect(local, Table({ 'Account Name' : \"some name\"}))", "Write Accounts: name;")]
         [InlineData("Collect(local, local)", "Write Accounts: ;")]
@@ -81,6 +85,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Set(numberofemployees, 200)", "Write Accounts: numberofemployees;")]
         [InlineData("Set('Address 1: City', 'Account Name')", "Read Accounts: name; Write Accounts: address1_city;")]
         [InlineData("Set('Address 1: City', 'Address 1: City' & \"test\")", "Read Accounts: address1_city; Write Accounts: address1_city;")]
+        [InlineData("Set(NewRecord.'Address 1: City', \"test\")", "Write Accounts: address1_city;")]
         public void GetDependencies(string expr, string expected)
         {
             var opt = new ParserOptions() { AllowsSideEffects = true };
@@ -92,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             check.ApplyBinding();            
 
-            var info = check.ApplyDependencyAnalysis();
+            var info = check.ApplyDependencyInfoScan();
             var actual = info.ToString().Replace("\r", string.Empty).Replace("\n", string.Empty).Trim();
             Assert.Equal(expected, actual);
         }
@@ -117,6 +122,7 @@ namespace Microsoft.PowerFx.Core.Tests
             customSymbols.AddFunction(new PatchSingleRecordFunction());
             customSymbols.AddFunction(new SummarizeFunction());
             customSymbols.AddFunction(new RecalcEngineSetFunction());
+            customSymbols.AddFunction(new RemoveFunction());
             customSymbols.AddVariable("local", localType, mutable: true);
             customSymbols.AddVariable("remote", remoteType, mutable: true);
 
@@ -159,8 +165,10 @@ namespace Microsoft.PowerFx.Core.Tests
             return (TableType)FormulaType.Build(contactType);
         }
 
-        // Some functions might require an different dependecy scan. This test case is to ensure that any new functions that
-        // is not self-contained or has a scope info has been assessed and either added to the exception list or has a dependency scan.
+        /// <summary>
+        /// This test case is to ensure that all functions that are not self-contained or 
+        /// have a scope info have been assessed and either added to the exception list or overrides <see cref="TexlFunction.ComposeDependencyInfo"/>.
+        /// </summary>
         [Fact]
         public void DepedencyScanFunctionTests()
         {
@@ -168,6 +176,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var functions = new List<TexlFunction>();
             functions.AddRange(BuiltinFunctionsCore.BuiltinFunctionsLibrary);
 
+            // These methods use default implementation of ComposeDependencyInfo and do not neeed to override it. 
             var exceptionList = new HashSet<string>()
             {
                 "AddColumns",
@@ -198,11 +207,11 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 if (!func.IsSelfContained || func.ScopeInfo != null)
                 {
+                    var irContext = IRContext.NotInSource(FormulaType.String);
+                    var node = new CallNode(irContext, func, new ErrorNode(irContext, "test"));
                     var visitor = new DependencyVisitor();
                     var context = new DependencyVisitor.DependencyContext();
-                    var node = new CallNode(IRContext.NotInSource(FormulaType.String), func);
                     var overwritten = func.ComposeDependencyInfo(node, visitor, context);
-
                     if (!overwritten && !exceptionList.Contains(func.Name))
                     {
                         names.Add(func.Name);

@@ -10,13 +10,13 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -237,6 +237,22 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return result;
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var newContext = new DependencyVisitor.DependencyContext()
+            {
+                WriteState = true,
+                ScopeType = node.Args[0].IRContext.ResultType as TableType
+            };
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                arg.Accept(visitor, newContext);
+            }
+
+            return true;
         }
     }
 }
