@@ -43,6 +43,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public string EnvironmentId { get; set; }
 
+        public string RequestUrlPrefix { get; init; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
         /// </summary>
@@ -74,11 +76,39 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         /// <param name="endpoint">APIM Endpoint.</param>
         /// <param name="environmentId">Environment Id.</param>
+        /// /// <param name="requestUrlPrefix">Url Prefix for CDP connectors.</param>
+        /// <param name="connectionId">Connection/connector Id.</param>
+        /// <param name="getAuthToken">Function returning the JWT token.</param>
+        /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string requestUrlPrefix, string connectionId, Func<string> getAuthToken, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, requestUrlPrefix, connectionId, getAuthToken, null, httpInvoker)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
+        /// </summary>
+        /// <param name="endpoint">APIM Endpoint.</param>
+        /// <param name="environmentId">Environment Id.</param>
         /// <param name="connectionId">Connection/connector Id.</param>
         /// <param name="getAuthToken">Async function returning the JWT token.</param>
         /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
         public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<Task<string>> getAuthToken, HttpMessageInvoker httpInvoker = null)
             : this(endpoint, environmentId, connectionId, getAuthToken, null, httpInvoker)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
+        /// </summary>
+        /// <param name="endpoint">APIM Endpoint.</param>
+        /// <param name="environmentId">Environment Id.</param>
+        /// <param name="requestUrlPrefix">Url Prefix for CDP connectors.</param>
+        /// <param name="connectionId">Connection/connector Id.</param>
+        /// <param name="getAuthToken">Async function returning the JWT token.</param>
+        /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string requestUrlPrefix, string connectionId, Func<Task<string>> getAuthToken, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, requestUrlPrefix, connectionId, getAuthToken, null, httpInvoker)
         {
         }
 
@@ -103,10 +133,25 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="environmentId">Environment Id.</param>
         /// <param name="connectionId">Connection/connector Id.</param>
         /// <param name="getAuthToken">Function returning the JWT token.</param>
-        /// /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
+        /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
         /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
         public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<string> getAuthToken, string userAgent, HttpMessageInvoker httpInvoker = null)
             : this(endpoint, environmentId, connectionId, async () => getAuthToken(), userAgent, httpInvoker)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
+        /// </summary>
+        /// <param name="endpoint">APIM Endpoint.</param>
+        /// <param name="environmentId">Environment Id.</param>
+        /// <param name="requestUrlPrefix">Url Prefix for CDP connectors.</param>
+        /// <param name="connectionId">Connection/connector Id.</param>
+        /// <param name="getAuthToken">Async function returning the JWT token.</param>
+        /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
+        /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string requestUrlPrefix, string connectionId, Func<string> getAuthToken, string userAgent, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, requestUrlPrefix, connectionId, async () => getAuthToken(), userAgent, httpInvoker)
         {
         }
 
@@ -120,6 +165,21 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
         /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
         public PowerPlatformConnectorClient(string endpoint, string environmentId, string connectionId, Func<Task<string>> getAuthToken, string userAgent, HttpMessageInvoker httpInvoker = null)
+            : this(endpoint, environmentId, null, connectionId, getAuthToken, userAgent, httpInvoker)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerPlatformConnectorClient"/> class.        
+        /// </summary>
+        /// <param name="endpoint">APIM Endpoint.</param>
+        /// <param name="environmentId">Environment Id.</param>
+        /// <param name="requestUrlPrefix">Url Prefix for CDP connectors.</param>
+        /// <param name="connectionId">Connection/connector Id.</param>
+        /// <param name="getAuthToken">Async function returning the JWT token.</param>
+        /// <param name="userAgent">Product UserAgent to add to Power-Fx one (Power-Fx/version).</param>
+        /// <param name="httpInvoker">Optional HttpMessageInvoker. If not provided a default HttpClient is used.</param>
+        public PowerPlatformConnectorClient(string endpoint, string environmentId, string requestUrlPrefix, string connectionId, Func<Task<string>> getAuthToken, string userAgent, HttpMessageInvoker httpInvoker = null)
         {
             _client = httpInvoker ?? new HttpClient();
 
@@ -127,6 +187,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectionId = connectionId ?? throw new ArgumentNullException(nameof(connectionId));
             EnvironmentId = environmentId ?? throw new ArgumentNullException(nameof(environmentId));
             UserAgent = string.IsNullOrWhiteSpace(userAgent) ? $"PowerFx/{Version}" : $"{userAgent} PowerFx/{Version}";
+            RequestUrlPrefix = requestUrlPrefix;
 
             // Case insensitive comparison per RFC 9110 [4.2.3 http(s) Normalization and Comparison]
             if (endpoint.StartsWith($"{Uri.UriSchemeHttp}://", StringComparison.OrdinalIgnoreCase))
@@ -171,7 +232,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<HttpRequestMessage> Transform(HttpRequestMessage request)
         {
-            var url = request.RequestUri.OriginalString;
+            var url = $"{RequestUrlPrefix ?? string.Empty}{request.RequestUri.OriginalString}";
             if (request.RequestUri.IsAbsoluteUri)
             {
                 // Client has Basepath set. 

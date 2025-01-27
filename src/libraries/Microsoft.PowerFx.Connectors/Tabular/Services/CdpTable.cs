@@ -39,7 +39,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal IReadOnlyCollection<RawTable> Tables;
 
-        private string _uriPrefix;
+        [Obsolete]
+        private string _uriPrefix = null;
 
         private HttpClient _httpClient;
 
@@ -60,6 +61,32 @@ namespace Microsoft.PowerFx.Connectors
 
         //// TABLE METADATA SERVICE
         // GET: /$metadata.json/datasets/{datasetName}/tables/{tableName}?api-version=2015-09-01
+        public virtual async Task InitAsync(HttpClient httpClient, CancellationToken cancellationToken, ConnectorLogger logger = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (IsInitialized)
+            {
+                throw new InvalidOperationException("TabularService already initialized");
+            }
+
+            _httpClient = httpClient;
+
+            if (DatasetMetadata == null)
+            {
+                await InitializeDatasetMetadata(httpClient, logger, cancellationToken).ConfigureAwait(false);
+            }            
+
+            CdpTableResolver tableResolver = new CdpTableResolver(this, httpClient, DatasetMetadata.IsDoubleEncoding, logger);
+            TabularTableDescriptor = await tableResolver.ResolveTableAsync(TableName, cancellationToken).ConfigureAwait(false);
+
+            _relationships = TabularTableDescriptor.Relationships;
+            OptionSets = tableResolver.OptionSets;
+
+            RecordType = (RecordType)TabularTableDescriptor.FormulaType;
+        }
+
+        [Obsolete("Use InitAsync without uriPrefix")]
         public virtual async Task InitAsync(HttpClient httpClient, string uriPrefix, CancellationToken cancellationToken, ConnectorLogger logger = null)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -87,10 +114,20 @@ namespace Microsoft.PowerFx.Connectors
             RecordType = (RecordType)TabularTableDescriptor.FormulaType;
         }
 
-        private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
+        private async Task InitializeDatasetMetadata(HttpClient httpClient, ConnectorLogger logger, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             
+            DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, cancellationToken, logger).ConfigureAwait(false);
+
+            DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
+        }
+
+        [Obsolete]
+        private async Task InitializeDatasetMetadata(HttpClient httpClient, string uriPrefix, ConnectorLogger logger, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
             DatasetMetadata dm = await CdpDataSource.GetDatasetsMetadataAsync(httpClient, uriPrefix, cancellationToken, logger).ConfigureAwait(false);
 
             DatasetMetadata = dm ?? throw new InvalidOperationException("Dataset metadata is not available");
@@ -110,10 +147,11 @@ namespace Microsoft.PowerFx.Connectors
 
             string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
 
-            Uri uri = new Uri(
-                   (_uriPrefix ?? string.Empty) +
-                   (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
-                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
+#pragma warning disable CS0612 // Type or member is obsolete
+            string prefix = string.IsNullOrEmpty(_uriPrefix) ? string.Empty : (_uriPrefix ?? string.Empty) + (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty);
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            Uri uri = new Uri($"{prefix}/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
 
             string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
