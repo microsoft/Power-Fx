@@ -2417,6 +2417,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             ConnectorFunction patchItem = functions.First(f => f.Name == "PatchItem");
             ConnectorParameter itemparam = useItemDynamicPropertiesSpecialHandling ? patchItem.RequiredParameters[6] : patchItem.OptionalParameters[2];
 
+            Assert.Equal(useItemDynamicPropertiesSpecialHandling, patchItem.SpecialBodyHandling);
             Assert.Equal(!useItemDynamicPropertiesSpecialHandling ? "dynamicProperties" : "item", itemparam.Name);
             
             FormulaValue[] parameters = new FormulaValue[7];

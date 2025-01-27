@@ -267,6 +267,14 @@ namespace Microsoft.PowerFx.Connectors
         private DType[] _parameterTypes;
 
         /// <summary>
+        /// Indicates if the specific handling of the body takes place in this functions.
+        /// This is only when UseItemDynamicPropertiesSpecialHandling is enabled in ConnectorSettings.
+        /// </summary>
+        public bool SpecialBodyHandling => _specialBodyHandling;
+
+        private bool _specialBodyHandling = false;
+
+        /// <summary>
         /// Contains the list of functions in the same swagger file, used for resolving dynamic schema/property.
         /// Also contains all global values.
         /// </summary>
@@ -1372,8 +1380,7 @@ namespace Microsoft.PowerFx.Connectors
             Dictionary<ConnectorParameter, FormulaValue> openApiBodyParameters = new ();
             string bodySchemaReferenceId = null;
             bool schemaLessBody = false;
-            bool fatalError = false;
-            bool specialBodyHandling = false;
+            bool fatalError = false;            
             string contentType = OpenApiExtensions.ContentType_ApplicationJson;
             ConnectorErrors errorsAndWarnings = new ConnectorErrors();            
 
@@ -1470,7 +1477,7 @@ namespace Microsoft.PowerFx.Connectors
                                         bodySchema.Properties.Count == 1)
                                     {
                                         bodyPropertyName = bodyName;
-                                        specialBodyHandling = true;
+                                        _specialBodyHandling = true;
                                     }
                                     
                                     bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && requestBody.Required); 
@@ -1620,7 +1627,7 @@ namespace Microsoft.PowerFx.Connectors
                 BodySchemaReferenceId = bodySchemaReferenceId,
                 ParameterDefaultValues = parameterDefaultValues,
                 SchemaLessBody = schemaLessBody,
-                SpecialBodyHandling = specialBodyHandling
+                SpecialBodyHandling = _specialBodyHandling
             };
         }
 
