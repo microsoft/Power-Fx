@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
 
             string uri = (_uriPrefix ?? string.Empty)
                 + (CdpTableResolver.UseV2(uriPrefix) ? "/v2" : string.Empty)
-                + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}"
+                + $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}"
                 + (uriPrefix.Contains("/sharepointonline/") ? "/alltables" : "/tables");
 
             GetTables tables = await GetObject<GetTables>(httpClient, "Get tables", uri, null, cancellationToken, logger).ConfigureAwait(false);
