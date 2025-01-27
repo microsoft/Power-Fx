@@ -42,6 +42,11 @@ namespace Microsoft.PowerFx.Types
 
         public abstract string GetOdataFilter();
 
+        public virtual string GetExpand()
+        {
+            return null;
+        }
+
         // 0 columns means return all columns.
         public virtual IReadOnlyCollection<string> GetColumns()
         {
@@ -79,14 +84,14 @@ namespace Microsoft.PowerFx.Types
         // $count
         Count = 1 << 6,
 
+        // $expand
+        Expand = 1 << 7
+
         /*
           To be implemented later when needed
          
         // $compute
         Compute = 1 << 5,
-
-        // $expand
-        Expand = 1 << 7,
 
         // $format
         Format = 1 << 8,

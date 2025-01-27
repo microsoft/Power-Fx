@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             CheckResult check = engine.Check(expr, options: new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbolValues.SymbolTable);
             Assert.True(check.IsSuccess);
-            
+
             // Use tabular connector. Internally we'll call CdpTableValue.GetRowsInternal to get the data
             FormulaValue result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues);
             StringValue str = Assert.IsType<StringValue>(result);
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             _fileName = File.Exists(fileName) ? fileName : throw new FileNotFoundException($"File not found: {_fileName}");
         }
 
-        public override bool IsDelegable => false;        
+        public override bool IsDelegable => false;
 
         // No need for files
         public override HttpClient HttpClient => null;
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         // Initialization can be synchronous
         public void Init()
-        {            
+        {
             RecordType = new FileTabularRecordType(RecordType.Empty().Add("line", FormulaType.String));
         }
 
@@ -116,13 +116,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         private static TableDelegationInfo GetDelegationInfo()
         {
-            return new CdpDelegationInfo()
+            return new CdpDelegationInfo(null)
             {
                 TableName = "FileTabular"
             };
         }
 
-        private static DisplayNameProvider GetDisplayNameProvider(RecordType recordType) => DisplayNameProvider.New(recordType.FieldNames.Select(f => new KeyValuePair<Core.Utils.DName, Core.Utils.DName>(new Core.Utils.DName(f), new Core.Utils.DName(f))));        
+        private static DisplayNameProvider GetDisplayNameProvider(RecordType recordType) => DisplayNameProvider.New(recordType.FieldNames.Select(f => new KeyValuePair<Core.Utils.DName, Core.Utils.DName>(new Core.Utils.DName(f), new Core.Utils.DName(f))));
 
         public override bool TryGetFieldType(string name, out FormulaType type)
         {
@@ -142,6 +142,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public override int GetHashCode()
         {
             throw new NotImplementedException();
-        }       
+        }
     }
 }

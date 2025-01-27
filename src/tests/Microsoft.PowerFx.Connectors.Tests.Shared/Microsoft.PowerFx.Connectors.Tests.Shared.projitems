@@ -230,6 +230,10 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetDataSetMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTable Schema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP GetTables 2.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP_ProductSet_Schema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP_BusinessPartnerSet_Schema.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SAP_SalesOrderLineItemSet_Schema.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetData.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetDatasetsMetadata.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SF GetSchema Users.json" />

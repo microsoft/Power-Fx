@@ -656,8 +656,7 @@ namespace Microsoft.PowerFx.Connectors
                                 // Here, we have a circular reference and default to a string
                                 return new ConnectorType(schema, openApiParameter, FormulaType.String, hiddenfields.ToRecordType());
                             }
-
-                            //ConnectorType propertyType = new OpenApiParameter() { Name = propLogicalName, Required = schema.Required.Contains(propLogicalName), Schema = kv.Value, Extensions = kv.Value.Extensions }.GetConnectorType(settings.Stack(schemaIdentifier));
+                            
                             ConnectorType propertyType = new SwaggerParameter(propLogicalName, schema.Required.Contains(propLogicalName), kv.Value, kv.Value.Extensions).GetConnectorType(settings.Stack(schemaIdentifier));
 
                             settings.UnStack();
@@ -680,6 +679,18 @@ namespace Microsoft.PowerFx.Connectors
                                 fields.Add((propLogicalName, propDisplayName, propertyType.FormulaType));
                                 connectorTypes.Add(propertyType);
                             }
+                        }
+
+                        bool HasExternalRef(ConnectorType c) => c.ExternalTables?.Any() == true && !string.IsNullOrEmpty(c.SourceField);
+
+                        // Link navigation properties to source fields
+                        foreach (ConnectorType ct in connectorTypes.Where(c => HasExternalRef(c))
+                                                                   .Union(hiddenConnectorTypes.Where(c => HasExternalRef(c))))
+                        {
+                            ConnectorType sourceField = connectorTypes.FirstOrDefault(c => c.Name == ct.SourceField) ??
+                                                  hiddenConnectorTypes.FirstOrDefault(c => c.Name == ct.SourceField);
+                            
+                            sourceField?.AddNavigationProperty(ct);                            
                         }
 
                         return new ConnectorType(schema, openApiParameter, fields.ToRecordType(), hiddenfields.ToRecordType(), connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());

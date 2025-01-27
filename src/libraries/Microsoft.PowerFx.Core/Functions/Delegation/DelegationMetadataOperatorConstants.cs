@@ -1,10 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
     // Operator strings which are part of delegation metadata Json.
@@ -56,6 +52,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string JoinLeft = "joinleft";
         public const string JoinRight = "joinright";
         public const string JoinFull = "joinfull";
+        public const string OdataExpand = "odataexpand";
     }
 
     public enum DelegationOperator
@@ -104,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         JoinInner,
         JoinLeft,
         JoinRight,
-        JoinFull
+        JoinFull,
+        OdataExpand
     }
 }

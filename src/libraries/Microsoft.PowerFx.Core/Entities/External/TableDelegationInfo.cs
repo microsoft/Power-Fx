@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Entities
 {
     // Supports delegation information for CDP connectors
-    public abstract class TableDelegationInfo
+    public abstract class TableDelegationInfo : ISupportsNavigationProperties
     {
         // Defines unsortable columns or columns only supporting ascending ordering
         // If set to null, the table is not sortable
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Entities
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
-        // Filter functions supported by all columns of the table        
+        // Filter functions supported by all columns of the table
         public IEnumerable<DelegationOperator> FilterSupportedFunctions { get; init; }
 
         // Defines paging capabilities
@@ -84,6 +84,11 @@ namespace Microsoft.PowerFx.Core.Entities
         }
 
         public abstract ColumnCapabilitiesDefinition GetColumnCapability(string fieldName);
+
+        public virtual IReadOnlyList<INavigationProperty> GetNavigationProperties(string fieldName)
+        {
+            return null;
+        }
     }
 
     internal sealed class ComplexColumnCapabilities : ColumnCapabilitiesBase
@@ -114,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public ColumnCapabilitiesDefinition Definition => _capabilities;
 
-        // Those are default CDS filter supported functions 
+        // Those are default CDS filter supported functions
         // From // PowerApps-Client\src\Language\PowerFx.Dataverse.Parser\Importers\DataDescription\CdsCapabilities.cs
         public static readonly IEnumerable<DelegationOperator> DefaultFilterFunctionSupport = new DelegationOperator[]
         {
@@ -191,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Entities
         internal bool? IsChoice { get; init; }
 
         private IEnumerable<DelegationOperator> _filterFunctions;
-                
+
         public ColumnCapabilitiesDefinition()
         {
         }
@@ -228,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Entities
         public bool IsOnlyServerPagable { get; init; }
 
         // Only supported values "top" and "skiptoken"
-        // Used to define paging options to use 
+        // Used to define paging options to use
         public IEnumerable<string> ServerPagingOptions { get; init; }
 
         public PagingCapabilities()
@@ -310,7 +315,7 @@ namespace Microsoft.PowerFx.Core.Entities
         }
 
         /// <summary>
-        /// If the table is countable, return true. 
+        /// If the table is countable, return true.
         /// Relevant expression: CountRows(Table).
         /// </summary>
         /// <returns></returns>
