@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable, script);
         }
 
-        private void TestDelegableExpressions(Features features, string expression, bool isDelegable, string script = null)
+        private void TestDelegableExpressions(Features features, string expression, bool isDelegable, string udfScript = null)
         {
             var symbolTable = new DelegatableSymbolTable();
             symbolTable.AddEntity(new AccountsEntity());
@@ -100,9 +100,9 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             };
 
             var engine = new Engine(config);
-            if (!string.IsNullOrWhiteSpace(script))
+            if (!string.IsNullOrWhiteSpace(udfScript))
             {
-                engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture);
+                engine.AddUserDefinedFunction(udfScript, CultureInfo.InvariantCulture);
             }
 
             var result = engine.Check(expression);
