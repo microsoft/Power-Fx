@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public AiSensitivity AiSensitivity => ConnectorType.AiSensitivity;
 
+        public string PropertyEntityType => ConnectorType.PropertyEntityType;
+
         internal ConnectorSchema(ISwaggerParameter openApiParameter, ISwaggerExtensions bodyExtensions, bool useHiddenTypes, ConnectorSettings settings)
         {
             Schema = openApiParameter.Schema;

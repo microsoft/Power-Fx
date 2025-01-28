@@ -80,6 +80,9 @@ namespace Microsoft.PowerFx.Connectors
         // Supports x-ms-ai-sensitivity
         public AiSensitivity AiSensitivity { get; }
 
+        // Supports x-ms-property-entity-type
+        public string PropertyEntityType { get; }
+
         internal RecordType HiddenRecordType { get; }
 
         // Supports x-ms-dynamic-values or -list locally
@@ -132,6 +135,7 @@ namespace Microsoft.PowerFx.Connectors
             Binary = schema.Format == "binary" || schema.Format == "no_format";
             MediaKind = openApiParameter?.GetMediaKind().ToMediaKind() ?? (Binary ? MediaKind.File : MediaKind.NotBinary);
             NotificationUrl = openApiParameter?.GetNotificationUrl();
+            PropertyEntityType = openApiParameter?.GetPropertyEntityType();
             AiSensitivity = openApiParameter?.GetAiSensitivity().ToAiSensitivity() ?? AiSensitivity.Unknown;
             Description = schema.Description;
 

@@ -2020,9 +2020,9 @@ POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Fact]
-        public async Task AiSensitivityTest()
+        public async Task AiSensitivity_PropertyEntityType_Test()
         {
-            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail.json", _output);
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SendMail_Modified.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             ConnectorSettings connectorSettings = new ConnectorSettings("exob")
@@ -2036,7 +2036,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             ConnectorFunction sendmail = functions.First(f => f.Name == "SendEmailV3");
-            IEnumerable<ConnectorParameter> parameters = sendmail.RequiredParameters.Union(sendmail.OptionalParameters);
+            List<ConnectorParameter> parameters = sendmail.RequiredParameters.Union(sendmail.OptionalParameters).ToList();
 
             string unknownAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.Unknown).Select(p => p.Name));
             string noAiSensitivity = string.Join(", ", parameters.Where(p => p.AiSensitivity == AiSensitivity.None).Select(p => p.Name));
@@ -2047,6 +2047,26 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal("subject, text, toname, ccname, bccname, files, filenames", noAiSensitivity);
             Assert.Equal(string.Empty, lowAiSensitivity);
             Assert.Equal("to, cc, bcc", highAiSensitivity);
+
+            Assert.Equal("to", sendmail.RequiredParameters[0].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[0].Description);
+            Assert.Equal("Comma separated list of email addresses", sendmail.RequiredParameters[0].PropertyEntityType);
+
+            Assert.Equal("subject", sendmail.RequiredParameters[1].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[1].Description);
+            Assert.Null(sendmail.RequiredParameters[1].PropertyEntityType);
+
+            Assert.Equal("text", sendmail.RequiredParameters[2].Name);
+            Assert.Equal("The email message to send.", sendmail.RequiredParameters[2].Description);
+            Assert.Null(sendmail.RequiredParameters[2].PropertyEntityType);
+
+            Assert.Equal("toname", sendmail.OptionalParameters[0].Name);
+            Assert.Equal("The email message to send.", sendmail.OptionalParameters[0].Description);
+            Assert.Equal("Comma separated list of display names", sendmail.OptionalParameters[0].PropertyEntityType);
+
+            Assert.Equal("response", sendmail.ReturnParameterType.Name);
+            Assert.Null(sendmail.ReturnParameterType.Description);
+            Assert.Equal("Some object!", sendmail.ReturnParameterType.PropertyEntityType);
         }
 
         [Fact]
