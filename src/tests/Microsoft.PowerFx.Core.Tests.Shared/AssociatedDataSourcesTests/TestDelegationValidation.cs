@@ -91,6 +91,7 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
         {
             var symbolTable = new DelegatableSymbolTable();
             symbolTable.AddEntity(new AccountsEntity());
+            symbolTable.AddVariable("varString", FormulaType.String);
             symbolTable.AddType(new DName("Accounts"), FormulaType.Build(AccountsTypeHelper.GetDType()));
 
             var config = new PowerFxConfig(features)
