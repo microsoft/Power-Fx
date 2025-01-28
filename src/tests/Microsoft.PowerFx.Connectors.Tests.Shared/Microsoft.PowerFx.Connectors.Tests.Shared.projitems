@@ -300,6 +300,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail_Modified.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SalesForce.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />
