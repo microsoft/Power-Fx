@@ -3,12 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -75,11 +79,19 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             TestDelegableExpressions(features, expression, isDelegable);
         }
 
-        private void TestDelegableExpressions(Features features, string expression, bool isDelegable)
+        [Theory]
+        [InlineData("UDF1()", "UDF1():Accounts = Accounts;", true)]
+        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", true)]
+        public void TestDelegableExpressions_UserDfeinedFunction(string expression, string script, bool isDelegable)
+        {
+            TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable, script);
+        }
+
+        private void TestDelegableExpressions(Features features, string expression, bool isDelegable, string script = null)
         {
             var symbolTable = new DelegatableSymbolTable();
             symbolTable.AddEntity(new AccountsEntity());
-            symbolTable.AddVariable("varString", FormulaType.String);
+            symbolTable.AddType(new DName("Accounts"), FormulaType.Build(AccountsTypeHelper.GetDType()));
 
             var config = new PowerFxConfig(features)
             {
@@ -87,6 +99,11 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             };
 
             var engine = new Engine(config);
+            if (!string.IsNullOrWhiteSpace(script))
+            {
+                engine.AddUserDefinedFunction(script, CultureInfo.InvariantCulture);
+            }
+
             var result = engine.Check(expression);
             Assert.True(result.IsSuccess);
 
