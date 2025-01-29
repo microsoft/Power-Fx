@@ -16,6 +16,10 @@
     {
       "Name": "[sys].[database_firewall_rules]",
       "DisplayName": "sys.database_firewall_rules"
+    },
+    {
+      "Name": "[dbo].[Customers_Aßþ]",
+      "DisplayName": "Customers_Aßþ"
     }
   ]
 }
