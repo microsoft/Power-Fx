@@ -2003,20 +2003,25 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.True(functions.First(f => f.Name == "ReceiptParser").IsSupported);
         }
 
-        [Fact]
-        public async Task SendEmail()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SendEmail(bool useItemDynamicPropertiesSpecialHandling)
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\shared_sendmail.json", _output);
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             ConnectorSettings connectorSettings = new ConnectorSettings("sendmail")
             {
-                Compatibility = ConnectorCompatibility.SwaggerCompatibility
+                Compatibility = ConnectorCompatibility.SwaggerCompatibility,
+                UseItemDynamicPropertiesSpecialHandling = useItemDynamicPropertiesSpecialHandling,
             };
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
             Assert.Single(functions.Where(x => x.Name == "SendEmailV3"));
+            var sendEmailFunction = Assert.Single(functions.Where(x => x.Name == "SendEmail"));
+            Assert.Equal(3, sendEmailFunction.RequiredParameters.Length);
         }
 
         [Fact]

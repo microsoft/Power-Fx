@@ -1480,7 +1480,7 @@ namespace Microsoft.PowerFx.Connectors
                                         _specialBodyHandling = true;
                                     }
                                     
-                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && requestBody.Required); 
+                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (_specialBodyHandling && requestBody.Required); 
 
                                     if (bodyPropertySchema.IsInternal())
                                     {
