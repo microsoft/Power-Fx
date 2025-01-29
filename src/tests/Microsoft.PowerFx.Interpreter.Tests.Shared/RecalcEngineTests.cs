@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -796,26 +797,39 @@ namespace Microsoft.PowerFx.Tests
             var recalcEngine = new RecalcEngine(config);
 
             recalcEngine.AddUserDefinedFunction("A():MyDataSourceTableType = Filter(MyDataSource, Value > 10);C():MyDataSourceTableType = A(); B():MyDataSourceTableType = Filter(C(), Value > 11); D():MyDataSourceTableType = { Filter(B(), Value > 12); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true);
-            var func = recalcEngine.Functions.WithName("A").First() as UserDefinedFunction;
+            var result = recalcEngine.Check("A()");
+            Assert.True(result.IsSuccess);
+            var callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            var callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
 
-            Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
+            result = recalcEngine.Check("B()");
+            Assert.True(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
 
-            func = recalcEngine.Functions.WithName("C").First() as UserDefinedFunction;
+            result = recalcEngine.Check("C()");
+            Assert.True(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.True(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
 
-            Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
-
-            func = recalcEngine.Functions.WithName("B").First() as UserDefinedFunction;
-
-            Assert.True(func.IsAsync);
-            Assert.True(func.IsDelegatable);
-
-            func = recalcEngine.Functions.WithName("D").First() as UserDefinedFunction;
+            result = recalcEngine.Check("D()");
+            Assert.False(result.IsSuccess);
+            callNode = result.Binding.Top.AsCall();
+            Assert.NotNull(callNode);
+            callInfo = result.Binding.GetInfo(callNode);
 
             // Imperative function is not delegable
-            Assert.True(func.IsAsync);
-            Assert.True(!func.IsDelegatable);
+            Assert.True(callInfo.Function.IsAsyncInvocation(callNode, result.Binding));
+            Assert.False(callInfo.Function.IsServerDelegatable(callNode, result.Binding));
 
             // Binding fails for recursive definitions and hence function is not added.
             Assert.False(recalcEngine.AddUserDefinedFunction("E():Void = { E(); };", CultureInfo.InvariantCulture, symbolTable: recalcEngine.EngineSymbols, allowSideEffects: true).IsSuccess);
