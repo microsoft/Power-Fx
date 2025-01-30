@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMarshallerGetter();
 
-        private readonly Dictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
+        private readonly IReadOnlyDictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;
