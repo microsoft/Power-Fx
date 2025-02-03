@@ -88,7 +88,6 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
-            FormulaValue[] args = invokeInfo.Args.ToArray(); // https://github.com/microsoft/Power-Fx/issues/2817
             var serviceProvider = invokeInfo.FunctionServices;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -96,14 +95,14 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)}");
-                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
+                runtimeContext.ExecutionLogger?.LogInformation($"Entering in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(invokeInfo.Args)}");
+                FormulaValue formulaValue = await ConnectorFunction.InvokeInternalAsync(invokeInfo.Args, runtimeContext, cancellationToken).ConfigureAwait(false);
                 runtimeContext.ExecutionLogger?.LogInformation($"Exiting [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} returning from {nameof(ConnectorFunction.InvokeInternalAsync)} with {LogFormulaValue(formulaValue)}");
                 return formulaValue;
             }
             catch (Exception ex)
             {
-                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(args)} {LogException(ex)}");
+                runtimeContext.ExecutionLogger?.LogException(ex, $"Exception in [Texl] {ConnectorFunction.LogFunction(nameof(InvokeAsync))} with {LogArguments(invokeInfo.Args)} {LogException(ex)}");
                 throw;
             }
         }

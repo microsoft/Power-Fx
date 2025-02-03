@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx
             return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
         }
 
-        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args, CancellationToken cancellationToken)
         {
             var info = Scan();
 
@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx
             }
 
             List<ErrorValue> errors = null;
-            for (var i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Count; i++)
             {
                 object arg = args[i];
 
