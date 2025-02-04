@@ -1917,6 +1917,10 @@
     <value>„{0}“ yra nežinoma arba nepalaikoma funkcija.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Elementas „{0}“ atpažintas kaip tipo pagelbiklio funkcija, todėl jį galima naudoti tik funkcijai „Type“.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ yra nežinoma arba nepalaikoma funkcija vardų srityje „{1}“.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Naujas arba esamas rinkinys papildymui.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Įrašas arba lentelė, kurią įtraukti į rinkinį. Įrašas bus pridėtas prie rinkini. Lentelės eilutės bus pridėtos prie rinkinio.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Pirmiausia išvalo rinkinį ir įtraukia į nurodytą rinkinį vieną ar kelis elementus. Elementai gali būti iš kitos lentelės ar rinkiniai (pvz., ClearCollect(collection, source_collection)) arba vienas ar keli įrašai ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Redaguokite savo formulę taip, kad joje būtų skliaustas.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Numatomas identifikatoriaus uždarymas. Šioje formulės dalyje numatomas uždarymas (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Uždaromoji vienguba kabutė nurodo identifikatoriaus pabaigą (pvz., 'Vardas').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Redaguokite savo formulę taip, kad joje būtų vienguba uždaromoji kabutė.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatoriuje nėra tinkamo teksto.</value>
+    <value>Identifikatorius yra tuščias arba jame įvestas netinkamas simbolis, pvz., tabuliacijos žymė arba nauja eilutė.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Įsitikinkite, kad turite savo identifikatoriaus tekstą. Ši klaida įvyksta, kai identifikatoriuje yra visi tušti langeliai arba tarpai.</value>
+    <value>Įsitikinkite, kad jūsų identifikatoriuje yra tinkamas tekstas. Ši klaida įvyksta, kai identifikatorius yra tuščias, yra tik tarpai arba tabuliacijos žymė ar nauja eilutė.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Įvardytoji formulė turi būti reiškinys.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Pavadinimo tipas turi būti literalas.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Įvardytojo tipo deklaracija turi būti tinkamo tipo išraiška.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Nustačius kintamąjį su internetinio duomenų šaltinio reikšme (lentele arba įrašu), į serverį gali būti pateikiamos kelios užklausos. Ši funkcija greitai bus užblokuota.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Netinkamas tipo literalas. Tipo apraše negalima naudoti išraiškos „{0}“.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Netinkama tipo išraiška. Tipo išraiškoje negalima naudoti „{0}“.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nepalaikomas naudojimas: tipo literalus galima naudoti tik tipo argumentuose ir tipo apibrėžimuose.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepalaikomas naudojimas: funkciją „Type“ galima naudoti tik tipo argumentuose ir tipo deklaracijose.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Netinkamas tipo {0} apibrėžimas.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Netinkama tipo {0} deklaracija.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tipo {0} apibrėžimas netinkamas, jame gali būti ciklų.</value>
+    <value>Tipo {0} deklaracija netinkama, jame gali būti ciklų.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Netinkamas argumentas {0}. Reikia tinkamo tipo pavadinimo arba tipo literalo.</value>
+    <value>Netinkamas argumentas {0}. Reikia tinkamo tipo pavadinimo arba įdėtojo tipo reiškinio.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

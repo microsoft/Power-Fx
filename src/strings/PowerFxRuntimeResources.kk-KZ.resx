@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>"{0}" функциясының жіктелмеген нысан аргументінің түрі дұрыс емес. Күтілген: {1}, нақты: {0}.</value>
+    <value>"{0}" функциясының жіктелмеген нысан аргументінің түрі дұрыс емес. Күтілген: {1}, нақты: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

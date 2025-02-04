@@ -1917,6 +1917,10 @@
     <value>'{0}' 为未知或不支持的函数。</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' 被识别为类型帮助程序函数，并且它只能在 Type 函数中使用。</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' 为命名空间 '{1}' 中未知或不支持的函数。</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>要扩充的新集合或现有集合。</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>要收集的记录或表。记录将附加到集合中。表的行将附加到集合中。</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>先清除集合，然后将一个或多个项目添加到指定集合。这些项目可以来自不同的表或集合(例如 ClearCollect(collection, source_collection))，也可以来自一条或多条记录 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
@@ -3704,12 +3705,23 @@
     <value>请编辑公式，使其包含一个方括号。</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>标识符应使用右单引号。公式的此处应使用右单引号(')。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>右单引号表示标识符的结尾(例如 '名')。</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>编辑公式，使其包含右单引号。</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>此标识符没有有效文本。</value>
+    <value>标识符为空或包含无效字符，如制表符或换行符。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>请确保标识符具有文本。当标识符全部空白或全为空格时，会发生此错误。</value>
+    <value>确保标识符中使用有效文本。当标识符为空白、仅有空格或者包含制表符或换行符时，会发生此错误。</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>指定的公式必须为表达式。</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>命名类型必须为类型文字。</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>命名类型声明必须是有效的类型表达式。</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>使用在线数据源值(表或记录)设置变量可能会导致对服务器提出多个请求。这很快将被阻止。</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型文字声明无效。表达式 '{0}' 不能用于类型定义。</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>类型表达式无效。'{0}' 不能用于类型表达式。</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>不支持的用法: 类型文字只能在类型参数和类型定义中使用。</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>不支持的用法: Type 函数只能在类型参数和类型声明中使用。</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>类型 {0} 的定义无效。</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>类型 {0} 的声明无效。</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>类型 {0} 的定义无效，并且可能包含循环。</value>
+    <value>类型 {0} 的声明无效，并且可能包含循环。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>参数“{0}”无效。预期有效的类型名称或类型文字。</value>
+    <value>参数 '{0}' 无效。预期有效的类型名称或内联类型表达式。</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

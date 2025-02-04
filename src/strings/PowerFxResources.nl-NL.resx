@@ -1917,6 +1917,10 @@
     <value>{0} is een onbekende of niet-ondersteunde functie.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' wordt herkend als type helperfunctie en kan alleen worden gebruikt binnen de functie Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} is een onbekende of niet-ondersteunde functie in naamruimte {1}.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Een nieuwe of bestaande verzameling om te verbeteren.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Een record of tabel die moet worden verzameld. Een record wordt aan de verzameling toegevoegd. Van een tabel worden de rijen aan de verzameling toegevoegd.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Hiermee wordt eerst de verzameling gewist en worden vervolgens een of meer items aan de opgegeven verzameling toegevoegd. De items kunnen afkomstig zijn uit een andere tabel of verzameling (bijv. ClearCollect(collection, source_collection)), of een of meer records ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Bewerk de formule zodanig dat deze een accolade bevat.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Afsluiting van id wordt verwacht. Op deze positie in de formule wordt een afsluitend aanhalingsteken (') verwacht.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Een enkel afsluitend aanhalingsteken geeft het einde aan van een id (bijvoorbeeld 'Voornaam').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Bewerk uw formule zodanig dat deze een enkel afsluitend aanhalingsteken bevat.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>De id heeft geen geldige tekst.</value>
+    <value>De id is leeg of bevat een ongeldig teken, zoals een tab of nieuwe regel.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Zorg dat er tekst voor de id is. Deze fout treedt op wanneer de id uitsluitend uit spaties of lege ruimte bestaat.</value>
+    <value>Zorg dat uw id geldige tekst bevat. Deze fout treedt op wanneer de id leeg is, uitsluitend uit spaties bestaat of een tab of nieuwe regel bevat.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Benoemd type moet van het type letterlijke waarde zijn.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Een declaratie van een benoemd type moet een geldige type-expressie zijn.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Het instellen van een variabele met een onlinegegevensbronwaarde (tabel of record) kan meerdere aanvragen bij de server veroorzaken. Dit wordt binnenkort geblokkeerd.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Letterlijke aangifte van het type is ongeldig. De expressie {0} kan niet in een typedefinitie worden gebruikt.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type expressie is ongeldig. '{0}' kan niet in een type-expressie worden gebruikt.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Niet-ondersteund gebruik: type letterlijke waarden kan alleen worden gebruikt in typeargumenten en typedefinities.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Niet-ondersteund gebruik: functie Type kan alleen worden gebruikt in typeargumenten en typedeclaraties.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitie van type {0} is ongeldig.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declaratie van type {0} is ongeldig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitie van het type {0} is ongeldig en bevat mogelijk cycli.</value>
+    <value>Declaratie van type {0} is ongeldig en bevat mogelijk cycli.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Ongeldig argument '{0}'. Verwachte geldige typenaam of letterlijke waarde voor type.</value>
+    <value>Ongeldig argument '{0}'. Verwachte geldige typenaam of inline-expressie voor type.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

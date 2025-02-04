@@ -1917,6 +1917,10 @@
     <value>{0} on tuntematon tai ei-tuettu funktio.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>{0} tunnistetaan tyypin apufunktioksi, ja sitä voi käyttää vain Type-funktiossa.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} on tuntematon tai ei-tuettu funktio nimitilassa {1}.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Uusi tai täydennettävä nykyinen kokoelma.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Kerättävä tietue tai taulukko. Tietue lisätään kokoelmaan. Taulukon rivit lisätään kokoelmaan.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Tyhjentää kokoelman ensin ja lisää vähintään yhden kohteen määritettyyn kokoelmaan. Kohteet voivat olla eri taulukosta tai kokoelmasta (kuten ClearCollect(collection, source_collection)) tai vähintään yhdestä tietueesta ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Muokkaa kaavaasi niin, että se sisältää aaltosulkeen.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Odotettiin tunnisteen sulkemista. Odotetaan sulkevaa heittomerkkiä (') kaavan tässä kohdassa.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Sulkeva heittomerkki osoittaa tunnisteen päättymisen (esimerkiksi 'Etunimi').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Muokkaa kaavaa niin, että se sisältää sulkevan heittomerkin.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Tunnisteella ei ole kelvollista tekstiä.</value>
+    <value>Tunniste on tyhjä tai sisältää virheellisen merkin, kuten sarkaimen tai rivinvaihdon.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Varmista, että sinulla on teksti tunnisteellesi. Tämä virhe tapahtuu, kun tunniste on kokonaan tyhjä tai koostuu vain välilyönneistä.</value>
+    <value>Varmista, että tunnisteelle on olemassa sallittu teksti. Tämä virhe tapahtuu, kun tunniste on tyhjä, koostuu vain välilyönneistä tai sisältää sarkaimen tai rivinvaihdon.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Nimetyn kaavan on oltava lauseke.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Nimetyn tyypin on oltava literaali.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Nimetyn tyyppi-ilmoituksen on oltava sallittu tyyppilauseke.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Muuttujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tyyppiliteraalin esittely on virheellinen. Lauseketta {0} ei voi käyttää tyypin määrittelynä.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tyyppilauseke on virheellinen. Kohdetta {0} ei voi käyttää tyyppilausekkeena.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Käyttö, jota ei tueta: tyyppiliteraaleja voidaan käyttää vain tyyppiargumenteissa ja -määrityksissä.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Käyttö, jota ei tueta: Type-funktiota voidaan käyttää vain tyyppiargumenteissa ja -ilmoituksissa.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tyypin {0} määritys on virheellinen.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Tyypin {0} ilmoitus on virheellinen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tyypin {0} määritys on virheellinen, ja se voi sisältää jaksoja.</value>
+    <value>Tyypin {0} ilmoitus on virheellinen, ja se voi sisältää jaksoja.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Virheellinen argumentti {0}. Odotetaan sallittua tyypin nimeä tai tyypin literaalia.</value>
+    <value>Virheellinen argumentti {0}. Odotetaan sallittua tyypin nimeä tai tekstiin upotettua tyyppilauseketta.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

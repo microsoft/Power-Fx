@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Tüübita objektiargument funktsioonile '{0}' on vale tüübiga. Eeldatav: {1}, tegelik: {0}.</value>
+    <value>Tüübita objektiargument funktsioonile '{0}' on vale tüübiga. Eeldatav: {1}, tegelik: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

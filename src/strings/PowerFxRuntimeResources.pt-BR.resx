@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>O argumento de objeto sem tipo para a função '{0}' tem um tipo incorreto. Esperado: {1}, Real: {0}.</value>
+    <value>O argumento de objeto sem tipo para a função '{0}' tem um tipo incorreto. Esperado: {1}, Real: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

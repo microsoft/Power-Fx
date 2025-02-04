@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>L’argument d’objet sans type pour la fonction « {0} » a un type incorrect. Prévu : {1}, réel : {0}.</value>
+    <value>L’argument d’objet sans type pour la fonction « {0} » a un type incorrect. Prévu : {1}, réel : {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

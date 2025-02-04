@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Το όρισμα μη τυπολογημένου αντικειμένου στη συνάρτησης '{0}' έχει εσφαλμένο τύπο. Αναμενόμενο: {1}, Πραγματικό: {0}.</value>
+    <value>Το όρισμα μη τυπολογημένου αντικειμένου στη συνάρτησης '{0}' έχει εσφαλμένο τύπο. Αναμενόμενο: {1}, Πραγματικό: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

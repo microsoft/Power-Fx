@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Đối số đối tượng chưa được phân loại vào hàm "{0}" có loại không chính xác. Dự kiến: {1}, Thực tế: {0}.</value>
+    <value>Đối số đối tượng chưa được phân loại vào hàm "{0}" có loại không chính xác. Dự kiến: {1}, Thực tế: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

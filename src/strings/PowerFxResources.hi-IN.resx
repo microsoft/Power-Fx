@@ -1917,6 +1917,10 @@
     <value>{0}' एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' को टाइप हेल्पर फ़ंक्शन के रूप में पहचाना जाता है और इसका उपयोग केवल Type फ़ंक्शन के भीतर ही किया जा सकता है.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' नेमस्पेस '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>एक नया या मौजूदा संग्रह बढ़ाना.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>संग्रहित करने के लिए एक रिकॉर्ड या तालिका. संग्रह में एक रिकॉर्ड जोड़ा जाएगा. एक तालिका की पंक्तियाँ संग्रह में जोड़ी जाएँगी.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>पहले संग्रह को साफ़ करता है और निर्दिष्ट संग्रह में एक या अधिक आइटम जोड़ता है. आइटम किसी भिन्न तालिका या संग्रह से हो सकते हैं (जैसे ClearCollect(collection, source_collection)) या एक या अधिक रिकॉर्ड ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>अपने सूत्र को संपादित करें ताकि इसमें कोष्ठक शामिल किया जा सके.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>पहचानकर्ता का अपेक्षित समापन. हम सूत्र में इस बिंदु पर समापन (') की अपेक्षा करते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>समापन एकल कोट चिह्न किसी पहचानकर्ता (उदाहरण के लिए, 'प्रथम नाम') के अंत को इंगित करता है.</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>अपने सूत्र को संपादित करें ताकि इसमें समापन एकल कोट शामिल हो.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>पहचानकर्ता के पास कोई मान्य पाठ नहीं है.</value>
+    <value>पहचानकर्ता रिक्त है या उसमें कोई अमान्य वर्ण, जैसे टैब या नई पंक्ति, है.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>सुनिश्चित करें कि आपके पास अपने पहचानकर्ता के लिए पाठ है. यह त्रुटि तब होती है, जब पहचानकर्ता पूरी तरह रिक्त हो या उसमें रिक्त स्थान हो.</value>
+    <value>सुनिश्चित करें कि आपके पहचानकर्ता में वैध टेक्स्ट है. यह त्रुटि तब होती है जब पहचानकर्ता रिक्त होता है, उसमें केवल रिक्त स्थान होते हैं, या उसमें कोई टैब या नई लाइन होती है.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>नामित सूत्र एक व्यंजक होना चाहिए.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>नामित प्रकार एक प्रकार लिटरल होना चाहिए.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>नामित प्रकार घोषणा एक वैध प्रकार अभिव्यक्ति होनी चाहिए.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>ऑनलाइन डेटास्रोत मान (तालिका या रिकॉर्ड) के साथ एक वैरिएबल सेट करने से सर्वर पर कई अनुरोध हो सकते हैं. जल्द ही इसे ब्लॉक कर दिया जाएगा.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>प्रकार की लिटरल घोषणा अमान्य है. अभिव्यक्ति '{0}' का इस्तेमाल किसी प्रकार की परिभाषा में नहीं किया जा सकता है.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>प्रकार अभिव्यक्ति अमान्य है. '{0}' का उपयोग प्रकार अभिव्यक्ति में नहीं किया जा सकता.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>असमर्थित उपयोग: प्रकार अक्षर का उपयोग केवल प्रकार तर्कों और प्रकार परिभाषाओं में किया जा सकता है.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>असमर्थित उपयोग: Type फ़ंक्शन का उपयोग केवल प्रकार तर्कों और प्रकार घोषणाओं में किया जा सकता है.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>प्रकार {0} की परिभाषा अमान्य है.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>प्रकार {0} की घोषणा अमान्य है.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>प्रकार {0} की परिभाषा अमान्य है और इसमें चक्र शामिल हो सकते हैं.</value>
+    <value>प्रकार {0} की घोषणा अमान्य है और इसमें चक्र शामिल हो सकते हैं.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>अमान्य तर्क '{0}'. अपेक्षित वैध प्रकार नाम या प्रकार लिटरल.</value>
+    <value>अमान्य तर्क '{0}'. अपेक्षित वैध प्रकार नाम या इनलाइन प्रकार व्यंजक.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

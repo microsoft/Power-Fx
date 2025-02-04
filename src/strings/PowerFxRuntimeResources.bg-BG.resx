@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Аргументът на функцията {0}, представляващ нетипизиран обект, е с неправилен тип. Очакван: {1}, действителен: {0}.</value>
+    <value>Аргументът на функцията {0}, представляващ нетипизиран обект, е с неправилен тип. Очакван: {1}, действителен: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">
