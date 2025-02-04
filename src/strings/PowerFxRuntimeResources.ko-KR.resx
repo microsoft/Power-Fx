@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>'{0}' 함수에 형식화되지 않은 개체 인수의 유형이 잘못되었습니다. 예상: {1}, 실제: {0}.</value>
+    <value>'{0}' 함수에 형식화되지 않은 개체 인수의 유형이 잘못되었습니다. 예상: {1}, 실제: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

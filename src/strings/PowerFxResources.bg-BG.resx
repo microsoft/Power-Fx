@@ -1917,6 +1917,10 @@
     <value>„{0}“ е неизвестна или неподдържана функция.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ е разпознато като помощна функция за тип и може да се използва само в рамките на функцията Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ е неизвестна или неподдържана функция в пространството на имената „{1}“.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Нова или съществуваща колекция за увеличаване.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Запис или таблица за събиране. Към колекцията ще се добави запис. Редовете на дадена таблица ще се добавят към колекцията.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Първо изчиства колекцията и добавя един или повече елемента към указаната колекция. Елементите може да са от друга таблица или колекция (например ClearCollect(collection, source_collection)) или един или повече записа ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Редактирайте формулата си така, че да включва скоба.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Очаква се затварящ символ за идентификатора. Очакваме затваряща кавичка (') на този етап във формулата.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Затварящата единична кавичка указва края на идентификатора (например 'Собствено име').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Редактирайте формулата си така, че да включва затваряща единична кавичка.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторът няма валиден текст.</value>
+    <value>Идентификаторът е празен или съдържа невалиден знак, като например табулация или нов ред.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Уверете се, че имате текст за вашия идентификатор. Тази грешка възниква, когато идентификаторът се състои изцяло от празни места или интервали.</value>
+    <value>Уверете се, че имате валиден текст в своя идентификатор. Тази грешка възниква, когато идентификаторът е празен, състои се само от интервали или съдържа табулация или нов ред.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Наименуваната формула трябва да бъде израз.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Именуваният тип трябва да е литерал за тип.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Декларацията на наименувания тип трябва да бъде валиден израз за тип.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларацията на литерала за типа е невалидна. Изразът „{0}“ не може да се използва в дефиниция на тип.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Изразът за тип е невалиден. „{0}“ не може да се използва в израз за тип.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Неподдържана употреба: литералите за тип могат да се използват само в аргументи и дефиниции за тип.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдържана употреба: функцията Type може да се използва само в аргументи и декларации за тип.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Декларацията на тип {0} е невалидна.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Дефиницията на тип {0} е невалидна и може да съдържа цикли.</value>
+    <value>Декларацията на тип {0} е невалидна и може да съдържа цикли.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Невалиден аргумент „{0}“. Очаква се валидно име на тип или тип литерал.</value>
+    <value>Невалиден аргумент „{0}“. Очаква се валидно име на тип или вграден израз за тип.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

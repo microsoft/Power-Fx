@@ -1917,6 +1917,10 @@
     <value>"{0}" è una funzione sconosciuta o non supportata.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" è riconosciuta come funzione helper di tipo e può essere usata solo all'interno della funzione Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" è una funzione sconosciuta o non supportata nello spazio dei nomi "{1}".</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Raccolta nuova o esistente da aumentare.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Record o tabella da raccogliere. Alla raccolta verrà aggiunto l'intero record o le righe di una tabella.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Cancella prima di tutto la raccolta e aggiunge uno o più elementi all'oggetto raccolta specificato. Gli elementi possono provenire da una tabella o una raccolta diversa (ad esempio, ClearCollect(collection, source_collection)), o da uno o più record ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Modificare la formula affinché includa una parentesi graffa.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>È prevista la chiusura dell'identificatore. A questo punto della formula è prevista una chiusura (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Una virgoletta singola di chiusura indica la fine di un identificatore (ad esempio, 'Nome').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Modifica la formula affinché includa una virgoletta singola di chiusura.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>L'identificatore non contiene testo valido.</value>
+    <value>L'identificatore è vuoto o contiene un carattere non valido, ad esempio una tabulazione o una nuova riga.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Assicurarsi che l'identificatore contenga testo. Questo errore si verifica quando l'identificatore è completamente vuoto o costituito da spazi vuoti.</value>
+    <value>Verifica che l'identificatore contenga testo valido. Questo errore si verifica quando l'identificatore è vuoto, contiene solo spazi vuoti o una tabulazione o una nuova riga.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>La formula denominata deve essere un'espressione.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Il tipo denominato deve essere un tipo di valore letterale.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Una dichiarazione di tipo denominato deve essere un'espressione di tipo valida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>L'impostazione di una variabile con un valore di origine dati online (tabella o record) può generare più richieste al server. Questa funzionalità verrà presto bloccata.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Dichiarazione valore letterale tipo non valida. Impossibile utilizzare l'espressione "{0}" in una definizione di tipo.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Espressione di tipo non valida. Impossibile usare "{0}" in un'espressione di tipo.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Utilizzo non supportato: i valori letterali tipo possono essere usati solo negli argomenti tipo e nelle definizioni tipo.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Utilizzo non supportato: la funzione Type può essere usata solo negli argomenti di tipo e nelle dichiarazioni di tipo.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definizione di tipo {0} non valida.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Dichiarazione del tipo {0} non valida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definizione di tipo {0} non valida e può contenere cicli.</value>
+    <value>La dichiarazione del tipo {0} non è valida e può contenere cicli.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argomento non valido "{0}". Nome o valore letterale del tipo valido previsto.</value>
+    <value>Argomento "{0}" non valido. È previsto un nome di tipo o un'espressione di tipo inline valida.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

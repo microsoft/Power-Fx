@@ -1917,6 +1917,10 @@
     <value>„{0}“ ist eine unbekannte oder nicht unterstützte Funktion.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ wird als Hilfsfunktion erkannt und kann nur innerhalb der Type-Funktion verwendet werden.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ ist eine unbekannte oder nicht unterstützte Funktion im Namespace „{1}“.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Eine neue oder vorhandene, zu vergrößernde Sammlung.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Ein zu erfassender Datensatz oder eine zu erfassende Tabelle. Ein Datensatz wird an die Sammlung angefügt. Bei einer Tabelle werden die Zeilen an die Sammlung angefügt.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Löscht zuerst die Sammlung und fügt der angegebenen Sammlung ein oder mehrere Element(e) hinzu. Die Elemente können aus einer anderen Tabelle oder Sammlung (z. B. ClearCollect(collection, source_collection)) oder aus Datensätzen (ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)) stammen.</value>
     
@@ -3704,12 +3705,23 @@
     <value>Bearbeiten Sie Ihre Formel so, dass sie eine Klammer enthält.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Es wird erwartet, dass der Bezeichner geschlossen wird. An diesem Punkt in der Formel wird ein schließendes (') erwartet.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Ein schließendes einfaches Anführungszeichen gibt das Ende eines Bezeichners an (z. B. 'Vorname').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Bearbeiten Sie Ihre Formel so, dass sie ein schließendes einfaches Anführungszeichen enthält.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Der Bezeichner enthält keinen gültigen Text.</value>
+    <value>Der Bezeichner ist leer oder enthält ein ungültiges Zeichen, z. B. einen Tabulator oder Zeilenumbruch.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Stellen Sie sicher, dass für Ihren Bezeichner Text vorliegt. Dieser Fehler tritt auf, wenn der Bezeichner nur Leerzeichen enthält.</value>
+    <value>Überprüfen Sie, ob der Text im Bezeichner gültig ist. Dieser Fehler tritt auf, wenn der Bezeichner leer ist, lediglich Leerzeichen enthält oder einen Tabulator oder Zeilenumbruch enthält.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Die benannte Formel muss ein Ausdruck sein.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Der benannte Typ muss ein Typliteral sein.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Eine benannte Typdeklaration muss ein gültiger Typausdruck sein.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Das Festlegen einer Variablen mit einem Onlinedatenquellenwert (Tabelle oder Datensatz) kann mehrere Anfragen an den Server verursachen. Dies wird demnächst blockiert.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Die Literaltyperklärung ist ungültig. Der Ausdruck „{0}“ kann nicht in einer Typdefinition verwendet werden.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typausdruck ist ungültig. „{0}“ kann nicht in einer Typdefinition verwendet werden.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nicht unterstützte Verwendung: Typliterale können nur in Typargumenten und Typdefinitionen verwendet werden.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nicht unterstützte Verwendung: Die Type-Funktion kann nur in Typargumenten und Typdeklarationen verwendet werden.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Die Definition des Typs {0} ist ungültig.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaration des Typs {0} ist ungültig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Die Definition des Typs {0} ist ungültig und kann Zyklen enthalten.</value>
+    <value>Deklaration des Typs {0} ist ungültig und enthält möglicherweise Zyklen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Ungültiges Argument „{0}“. Es wurde ein gültiger Typname oder ein gültiges Typliteral erwartet.</value>
+    <value>Ungültiges Argument „{0}“. Es wurde ein gültiger Typname oder Inline-Typausdruck erwartet.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

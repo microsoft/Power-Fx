@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>A(z) „{0}” függvény be nem írt objektum argumentumának típusa helytelen. Várható: {1}, Tényleges: {0}.</value>
+    <value>A(z) „{0}” függvény be nem írt objektum argumentumának típusa helytelen. Várható: {1}, Tényleges: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

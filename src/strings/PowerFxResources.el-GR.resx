@@ -1917,6 +1917,10 @@
     <value>'{0}' είναι μια άγνωστη ή μη υποστηριζόμενη συνάρτηση.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Το '{0}' αναγνωρίζεται ως συνάρτηση type helper και μπορεί να χρησιμοποιηθεί μόνο εντός της συνάρτησης Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' είναι μια άγνωστη ή μη υποστηριζόμενη συνάρτηση στο χώρο ονομάτων '{1}'.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Μια νέα ή υπάρχουσα συλλογή προς αύξηση.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Καρτέλα ή πίνακας για συλλογή. Στη συλλογή θα προσαρτηθεί μια καρτέλα. Στη συλλογή θα προσαρτηθούν οι γραμμές ενός πίνακα.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Εκκαθαρίζει πρώτα τη συλλογή και προσθέτει ένα ή περισσότερα στοιχεία στην καθορισμένη συλλογή. Τα στοιχεία μπορεί να είναι από διαφορετικό πίνακα ή διαφορετική συλλογή (π.χ. ClearCollect(collection, source_collection)) ή μία ή περισσότερες εγγραφές ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Επεξεργαστείτε τον τύπο ώστε να περιλαμβάνει μια αγκύλη.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Αναμενόμενο κλείσιμο αναγνωριστικού. Σε αυτό το σημείο στον τύπο αναμένουμε ένα (') κλεισίματος.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Μια μεμονωμένη προσφορά κλεισίματος υποδεικνύει το τέλος ενός αναγνωριστικού (για παράδειγμα, 'Όνομα').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Επεξεργαστείτε τον τύπο σας ώστε να περιλαμβάνει μια μεμονωμένη προσφορά κλεισίματος.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Το αναγνωριστικό δεν έχει έγκυρο κείμενο.</value>
+    <value>Το αναγνωριστικό είναι κενό ή περιέχει μη έγκυρο χαρακτήρα, όπως καρτέλα ή νέα γραμμή.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Βεβαιωθείτε ότι έχετε κείμενο για το αναγνωριστικό. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό αποτελείται μόνο από κενά ή διαστήματα.</value>
+    <value>Βεβαιωθείτε ότι έχετε έγκυρο κείμενο στο αναγνωριστικό ας. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό είναι κενό, έχει μόνο διαστήματα ή περιέχει μια καρτέλα ή νέα γραμμή.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Ο τύπος με όνομα πρέπει να είναι παράσταση.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Ο κατονομαζόμενος τύπος πρέπει να είναι κυριολεκτικός τύπος.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Μια δήλωση τύπου με όνομα πρέπει να είναι έγκυρη παράσταση τύπου.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Εάν ορίσετε μια μεταβλητή με μια τιμή προέλευσης δεδομένων online (πίνακας ή καρτέλα) μπορεί να προκαλέσει πολλαπλές αιτήσεις στον διακομιστή. Σύντομα θα αποκλειστεί.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Η κυριολεκτική δήλωση τύπου δεν είναι έγκυρη. Η παράσταση '{0}' δεν μπορεί να χρησιμοποιηθεί σε έναν ορισμό τύπου.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Η παράσταση τύπου δεν είναι έγκυρη. Το '{0}' δεν μπορεί να χρησιμοποιηθεί σε μια παράσταση τύπου.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Μη υποστηριζόμενη χρήση: οι λεκτικές σταθερές τύπου μπορούν να χρησιμοποιηθούν μόνο σε ορίσματα τύπου και ορισμούς τύπων.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Μη υποστηριζόμενη χρήση: η συνάρτηση οι Type μπορεί να χρησιμοποιηθεί μόνο σε ορίσματα τύπου και δηλώσεις τύπου.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Η δήλωση τύπου {0} δεν είναι έγκυρη.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Ο ορισμός τύπου {0} δεν είναι έγκυρος και μπορεί να περιέχει κύκλους.</value>
+    <value>Η δήλωση τύπου {0} δεν είναι έγκυρη και μπορεί να περιέχει κύκλους.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Μη έγκυρο όρισμα '{0}'. Αναμενόμενο όνομα έγκυρου τύπου ή λεκτική σταθερά τύπου.</value>
+    <value>Μη έγκυρο όρισμα '{0}'. Αναμενόμενο όνομα έγκυρου τύπου ή παράσταση ενσωματωμένου τύπου.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
