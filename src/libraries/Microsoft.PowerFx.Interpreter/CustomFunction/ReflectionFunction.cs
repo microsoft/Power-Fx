@@ -217,9 +217,15 @@ namespace Microsoft.PowerFx
             return _info.Name;
         }
 
+        [Obsolete("Soon to be removed.")]
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
         {
             return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await InvokeAsync(serviceProvider, (IReadOnlyList<FormulaValue>)args, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args, CancellationToken cancellationToken)
