@@ -1816,7 +1816,7 @@
     
   </data>
   <data name="IsTypeUOArg2" xml:space="preserve">
-    <value>型</value>
+    <value>タイプ</value>
     
   </data>
   <data name="AboutIsType_untypedValue" xml:space="preserve">
@@ -1915,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>'{0}' は不明またはサポートされていない関数です。</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' は型ヘルパー関数として認識され、使用できるのは Type 関数内のみです。</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>強化する新規コレクションまたは既存のコレクション。</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>収集するレコードまたはテーブル。レコードはコレクションに追加されます。テーブルには、コレクションに追加された行が含まれます。</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>最初にコレクションを消去し、指定されたコレクションに 1 つまたは複数の項目を追加します。項目を異なるテーブルまたはコレクションから追加したり (例: ClearCollect(collection, source_collection))、1 つまたは複数のレコードから追加したり (例: ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)) できます。</value>
     
@@ -3704,12 +3705,23 @@
     <value>数式を編集し、かっこが含まれるようにします。</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>識別子の末尾が必要です。式のこの場所には終了 (') が必要です。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>閉じ一重引用符は識別子の末尾を示します (例: '名')。</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>この数式を閉じ一重引用符を使用して編集してください。</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>識別子に有効なテキストがありません。</value>
+    <value>この識別子は空であるか、またはタブや改行などの無効な文字が使用されています。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>識別子のテキストがあることを確認してください。このエラーは、識別子がすべて空白またはスペースである場合に発生します。</value>
+    <value>識別子には有効なテキストを必ず使用してください。このエラーが発生するのは、識別子が空白の場合、スペースのみである場合、タブや改行が含まれている場合です。</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>名前付き計算式は式である必要があります。</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>名前付き型は型リテラルである必要があります。</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>名前付きタイプ宣言には必ず有効な Type 式を指定してください。</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>変数をオンラインのデータ ソース値 (テーブルまたはレコード) に設定すると、サーバーへの要求が複数発生する可能性があります。これはすぐにブロックされます。</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>型リテラルの宣言が正しくありません。式 '{0}' を型の定義に使用することはできません。</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Type 式が無効です。'{0}' は Type 式で使用できません。</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>対応していない使用方法: 型リテラルを使用できるのは型引数と型定義のみです。</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>対応していない使用方法: Type 関数を使用できるのはタイプ引数とタイプ宣言のみです。</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>タイプ {0} の定義が正しくありません。</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>タイプ {0} の宣言が正しくありません。</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>タイプ {0} の定義が正しくありません。サイクルが含まれている可能性があります。</value>
+    <value>タイプ {0} の宣言が正しくありません。サイクルが含まれている可能性があります。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>引数 '{0}' が無効です。有効な型名または型リテラルが必要です。</value>
+    <value>引数 '{0}' が無効です。有効なタイプ名またはインライン Type 式を指定してください。</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

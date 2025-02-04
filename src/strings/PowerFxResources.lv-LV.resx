@@ -1917,6 +1917,10 @@
     <value>Funkcija “{0}” ir nezināma vai netiek atbalstīta.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Līdzeklis {0} ir atpazīts kā tipa palīga funkcija, un to var lietot tikai funkcijā Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>Funkcija “{0}” ir nezināma vai netiek atbalstīta nosaukumvietā “{1}”.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Jauna vai esoša kolekcija, ko papildināt.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Apkopojamais ieraksts vai tabula. Ieraksts tiks pievienots kolekcijai. Tabulas rindas tiks pievienotas kolekcijai.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Vispirms notīra kolekciju un pievieno vienu vairākus vienumus norādītajai kolekcijai. Vienumi var būt no citas tabulas vai kolekcijas (piemēram, ClearCollect(collection, source_collection)) vai viena vai vairākiem ierakstiem ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Rediģējiet formulu tā, lai tā ietvertu figūriekavu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Sagaidāmais identifikatora noslēgums. Šajā formulas vietā mēs sagaidām noslēgumu (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Beigu vienpēdiņa apzīmē identifikatora beigas (piemēram, 'Vārds').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediģējiet formulu tā, lai tā ietvertu beigu vienpēdiņu.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatorā nav derīga teksta.</value>
+    <value>Identifikators ir tukšs vai satur nederīgu rakstzīmi, piemēram, tabulēšanas rakstzīmi vai jaunu rindu.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Identifikatoram jābūt tekstam. Šī kļūda rodas, ja identifikators pilnībā sastāv no tukšumiem vai atstarpēm.</value>
+    <value>Identifikatoram jāsatur derīgs teksts. Šī kļūda rodas, ja identifikators ir tukšs, sastāv tikai no atstarpēm vai satur tabulēšanas rakstzīmi vai jaunu rindu.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Nosauktajai formulai ir jābūt izteiksmei.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Nosauktajam tipam ir jābūt tipa literālim.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Nosauktai tipa deklarācijai ir jābūt derīgai tipa izteiksmei.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Iestatīt mainīgo ar tiešsaistes datu avota vērtību (tabula vai ieraksts) var izraisīt vairākus pieprasījumus serverim. Drīz tas tiks bloķēts.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipa literāļa deklarācija ir nederīga. Tipa definīcijā nevar izmantot izteiksmi “{0}”.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tipa izteiksme ir nederīga. Tipa izteiksmē nevar izmantot “{0}”.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Neatbalstīts lietojums: veida literāļus var izmantot tikai veida argumentos un veida definīcijās.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Neatbalstīts lietojums: funkciju Type var izmantot tikai tipa argumentos un tipa deklarācijās.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipa {0} definīcija nav derīga.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Tipa {0} deklarācija nav derīga.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tipa {0} definīcija nav derīga un var saturēt ciklus.</value>
+    <value>Tipa {0} deklarācija nav derīga un var saturēt ciklus.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Nederīgs arguments “{0}'. Tiek gaidīts derīgs tipa nosaukums vai tipa literālis.</value>
+    <value>Nederīgs arguments “{0}”. Tiek gaidīts derīgs tipa nosaukums vai iekļautā tipa izteiksme.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

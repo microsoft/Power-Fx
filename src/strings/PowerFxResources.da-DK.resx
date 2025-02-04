@@ -1917,6 +1917,10 @@
     <value>"{0}" er en ukendt eller ikke-understøttet funktion.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' genkendes som typehjælperfunktion, og den kan kun bruges i funktionen Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" er en ukendt eller ikke-understøttet funktion i navneområdet "{1}".</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>En ny eller eksisterende samling, der skal forøges.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>En post eller tabel, som skal samles. Der føjes en post til samlingen. En tabel får vedhæftet sine rækker til samlingen.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Rydder først samlingen og føjer et eller flere elementer til den angivne samling. Elementerne kan være fra en anden tabel eller samling (f.eks. ClearCollect(collection, source_collection)) eller en eller flere poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Rediger din formel, så den indeholder en parentes.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Forventede afslutning af id. Vi forventer et afsluttende (') på dette sted i formlen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Et afsluttende enkelt anførselstegn angiver slutningen af et id (f.eks. 'Fornavn').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger din formel, så den indeholder et afsluttende enkelt anførselstegn.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatoren har ikke nogen gyldig tekst.</value>
+    <value>Id'et er tomt eller indeholder et ugyldigt tegn, f.eks. et tabulatortegn eller tegn for ny linje.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Sørg for, at du har tekst til din identifikator. Denne fejl opstår, når identifikatoren udelukkende består af tomme celler eller mellemrum.</value>
+    <value>Sørg for, at du har gyldig tekst i dit id. Denne fejl opstår, når id'et er tomt, kun indeholder mellemrum eller indeholder et tabulatortegn eller tegn for ny linje.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Den navngivne formel skal være et udtryk.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Den navngivne type skal være af typen bogstavelig værdi.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>En navngivet typeerklæring skal være et gyldigt typeudtryk.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Angiv en variabel med en værdi i onlinedatakilde (tabel eller post) kan medføre flere anmodninger til serveren. Snart blokeres dette.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Erklæringen af typekonstant er ugyldig. Udtrykket '{0}' kan ikke bruges i en typedefinition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typeudtrykket er ugyldigt. '{0}' kan ikke bruges i et typeudtryk.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Ikke-understøttet brug: Bogstavelig værdi for type kan kun bruges i typeargumenter og typedefinitioner.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Ikke-understøttet brug: Funktionen Type kan kun bruges i typeargumenter og typeerklæringer.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitionen af typen {0} er ugyldig.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Erklæringen af typen {0} er ugyldig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitionen af typen {0} er ugyldig og kan indeholde cyklusser.</value>
+    <value>Erklæringen af typen {0} er ugyldig og kan indeholde cyklusser.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Ugyldigt argument '{0}'. Forventet gyldigt typenavn eller bogstavelig værditype.</value>
+    <value>Ugyldigt argument '{0}'. Forventet gyldigt typenavn eller udtryk af typen udtryk.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
