@@ -74,8 +74,20 @@
 
 // Self referencing groups are disallowed
 
+>> Match( "aa", "(a\1)" )
+Errors: Error 13-20: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa", "(a\1)", MatchOptions.NumberedSubMatches )
+Errors: Error 13-20: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa", "(?<first>a\k<first>)" )
+Errors: Error 13-35: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
 Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+", MatchOptions.NumberedSubMatches )
+Errors: Error 26-41: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
 Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -319,6 +331,21 @@ Errors: Error 13-19: Invalid regular expression: Literal square braces must be e
 
 >> Match( ">test[", "[\w\]>]+" )
 {FullMatch:">test",StartMatch:1}
+
+>> Match( "aaaaa", "[-a]" )
+Errors: Error 16-22: Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "[-a]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[]a]" )
+Errors: Error 16-22: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[[a]" )
+Errors: Error 16-22: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[a^]" )
+Errors: Error 16-22: Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "^".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaa", "[]" )
+Errors: Error 16-20: Invalid regular expression: Square bracket character classes cannot be empty, found "[]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // character class subtraction
 
@@ -763,7 +790,7 @@ Errors: Error 22-29: Invalid regular expression: Inline options are limited to a
 "ab"
 
 >> Match( "abcdef", "\w{2}?" ).FullMatch
-"ab"
+Errors: Error 17-25: Invalid regular expression: Exact quantifiers cannot be used with lazy or possessive quantifiers, found "{2}?".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w{2,}" ).FullMatch
 "abcdef"
@@ -786,22 +813,22 @@ Errors: Error 17-26: Invalid regular expression: Literal curly braces must be es
 // possessive quantifiers
 
 >> Match( "abcdef", "\w++" ).FullMatch
-Errors: Error 17-23: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "++".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w*+" ).FullMatch
-Errors: Error 17-23: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "*+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w?+" ).FullMatch
-Errors: Error 17-23: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-23: Invalid regular expression: Possessive quantifiers are not supported, found "?+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 25-35: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w{2}+" ).FullMatch
-Errors: Error 17-25: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-25: Invalid regular expression: Exact quantifiers cannot be used with lazy or possessive quantifiers, found "{2}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 27-37: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w{2,}+" ).FullMatch
-Errors: Error 17-26: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 28-38: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-26: Invalid regular expression: Possessive quantifiers are not supported, found "{2,}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 28-38: Name isn't valid. 'FullMatch' isn't recognized.
 
 >> Match( "abcdef", "\w{2,4}+" ).FullMatch
-Errors: Error 17-27: Invalid regular expression.|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
+Errors: Error 17-27: Invalid regular expression: Possessive quantifiers are not supported, found "{2,4}+".|Error 0-5: The function 'Match' has some invalid arguments.|Error 29-39: Name isn't valid. 'FullMatch' isn't recognized.
 
 //
 // UNICODE

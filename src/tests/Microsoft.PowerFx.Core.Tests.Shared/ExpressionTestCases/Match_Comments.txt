@@ -18,6 +18,12 @@
 >> Match( "test", "(?# this is a test ( with an open paren )st" )
 {FullMatch:"st",StartMatch:3}
 
+>> Match( "aaaaa", "(?# happu ( )a" )
+{FullMatch:"a",StartMatch:1}
+
+>> Match( "aaaaa", "(?# happu () )a" )
+Errors: Error 16-33: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "test", "(?# this is a test \) with an escaped close paren )st" )  // can't escape a paren in an inline comment
 Errors: Error 15-70: Invalid regular expression: Unopened groups, too few opening parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
@@ -89,6 +95,16 @@ true
 
 >> IsMatch( "ab", "(?x)a # " &Char(133)& " b" )  // \x85
 false
+
+// Edge cases for removal during RE translations
+>> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\11", MatchOptions.NumberedSubMatches )
+{FullMatch:"111111112222",StartMatch:1,SubMatches:Table({Value:"1"},{Value:"1"},{Value:"1"},{Value:"1"},{Value:"1"},{Value:"1"},{Value:"1"},{Value:"1"},{Value:"2"},{Value:"2"},{Value:"2"})}
+
+>> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\1(?#asdf)1", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "1111111122221", "(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)\1#asdf" & Char(13) & "1", MatchOptions.NumberedSubMatches & MatchOptions.FreeSpacing )
+Blank()
 
 // MatchOptions.Contains doesn't strip free spacing on PCRE2, good to compare results
 

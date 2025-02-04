@@ -4571,6 +4571,10 @@
     <value>Invalid regular expression: Possessive quantifiers are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression does not support possessive quantifiers.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Exact quantifiers cannot be used with lazy or possessive quantifiers, found "{0}".</value>
+    <comment>Error message indicating that the regular expression does not support modifiers for exact quantifiers.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Invalid escape code, found "{0}".</value>
     <comment>Error message indicating that the regular expression has an invalid alphanumeric escape code.</comment>

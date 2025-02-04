@@ -755,6 +755,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches");
         public static ErrorResourceKey ErrInvalidRegExConflictingInlineOptions = new ErrorResourceKey("ErrInvalidRegExConflictingInlineOptions");
         public static ErrorResourceKey ErrInvalidRegExBadQuantifier = new ErrorResourceKey("ErrInvalidRegExBadQuantifier");
+        public static ErrorResourceKey ErrInvalidRegExBadExactQuantifier = new ErrorResourceKey("ErrInvalidRegExBadExactQuantifier");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefNumber = new ErrorResourceKey("ErrInvalidRegExBadBackRefNumber");

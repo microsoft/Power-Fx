@@ -38,3 +38,49 @@ Errors: Error 18-25: Regular expression options must be constant values.|Error 0
 
 >> Match("28", "28", 28)
 Errors: Error 18-20: Regular expression options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"},{Value:Blank()})}
+
+>> Match( "b", "((a)|(b))", MatchOptions.NumberedSubMatches )
+{FullMatch:"b",StartMatch:1,SubMatches:Table({Value:"b"},{Value:Blank()},{Value:"b"})}
+
+>> Match( "c", "((a)|(b))", MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "a", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"a",StartMatch:1,alpha:"a",beta:Blank(),whole:"a"}
+
+>> Match( "b", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+{FullMatch:"b",StartMatch:1,alpha:Blank(),beta:"b",whole:"b"}
+
+>> Match( "c", "(?<whole>(?<alpha>a)|(?<beta>b))" )
+Blank()
+
+// Match( "a", "(b*)*", MatchOptions.NumberedSubMatches ) is ambiguous, with different results for .NET and JavaScript
+
+>> Match( "a", "(b)*", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b*)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b)?", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b?)", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+>> Match( "a", "(b){0,4}", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:Blank()})}
+
+>> Match( "a", "(b{0,4})", MatchOptions.NumberedSubMatches )
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
+
+//  Match( "ab", "(a)*b\1" , MatchOptions.NumberedSubMatches ) is ambiguous, with different results for .NET and JavaScript
+
+>> Match( "ab", "(a)*b" , MatchOptions.NumberedSubMatches )
+{FullMatch:"ab",StartMatch:1,SubMatches:Table({Value:"a"})}
+
+>> Match( "ab", "(a*)b\1" , MatchOptions.NumberedSubMatches )
+{FullMatch:"b",StartMatch:2,SubMatches:Table({Value:""})}

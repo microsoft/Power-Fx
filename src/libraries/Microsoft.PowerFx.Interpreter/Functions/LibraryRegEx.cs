@@ -235,16 +235,19 @@ namespace Microsoft.PowerFx.Functions
                 bool matchEnd = options.Contains("$");
                 bool numberedSubMatches = options.Contains("N");
 
-                // Can't apply options ^ and $ too early as there may be freespacing comments, centalize the logic here and call subfunctions
+                // Can't add options ^ and $ too early as there may be freespacing comments, centalize the logic here and call subfunctions
                 string AlterStart()
                 {
                     // ^ doesn't require any translation if not in multilline, only matches the start of the string
-                    return !openCharacterClass && multiline ? @"(?<=\A|\r\n|\r|\n)" : "^";
+                    // MatchAll( "1a3" & Char(13) & "2b4", "(?m)^\d" ) would not match "2" without translation
+                    return openCharacterClass ? "^" : (multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
                 }
 
                 string AlterEnd()
                 {
-                    // ^ does require translation if not in multilline, as $ looks past newlines in .NET
+                    // $ does require translation if not in multilline, as $ does look past newlines to the end in .NET but it doesn't take into account \r
+                    // MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" ) would not match "3" or "4" without translation
+                    // Match( "1a3" & Char(13), "\d$" ) would also not match "3" without translation
                     return openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)");
                 }
 
@@ -270,9 +273,9 @@ namespace Microsoft.PowerFx.Functions
                                     // skip the comment characters until the next newline, in case it includes [ ] 
                                 }
 
+                                // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
                                 // need to replace a \r ending comment (supported by Power Fx) with a \n ending comment (supported by .NET)
                                 // also need to make sure the comment terminates with a newline in case we add a "$" below
-                                // need something to be emitted to avoid "\1#" & Char(10) & "1" being interpreted as "\11"
                                 altered.Append("\n");
                             }
                             else
@@ -295,7 +298,7 @@ namespace Microsoft.PowerFx.Functions
                                 altered.Append("(?#)");
                             }
                             else
-                            {
+                            { 
                                 altered.Append(regex[index]);
                             }
 

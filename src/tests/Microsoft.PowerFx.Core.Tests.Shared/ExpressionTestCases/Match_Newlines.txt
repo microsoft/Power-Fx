@@ -118,6 +118,33 @@ Table()
 >> MatchAll( Char(10) & "a" & Char(10) & "b" & Char(10) & "cc" & Char(10), "^\w" )
 Table()
 
+>> MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:7})
+
+>> MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "\d$" )
+Table({FullMatch:"4",StartMatch:7})
+
+>> Match( "1a3" & Char(13), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
+>> MatchAll( "1a3" & Char(10) & "2b4" & Char(10), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:7})
+
+>> MatchAll( "1a3" & Char(10) & "2b4" & Char(10), "\d$" )
+Table({FullMatch:"4",StartMatch:7})
+
+>> Match( "1a3" & Char(10), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
+>> MatchAll( "1a3" & Char(13)&Char(10) & "2b4" & Char(13)&Char(10), "(?m)\d$" )
+Table({FullMatch:"3",StartMatch:3},{FullMatch:"4",StartMatch:8})
+
+>> MatchAll( "1a3" & Char(13)&Char(10) & "2b4" & Char(13)&Char(10), "\d$" )
+Table({FullMatch:"4",StartMatch:8})
+
+>> Match( "1a3" & Char(13)&Char(10), "\d$" )
+{FullMatch:"3",StartMatch:3}
+
 // spaces
 
 >> IsMatch( "h" & "a" & "d", "h\sd") // control

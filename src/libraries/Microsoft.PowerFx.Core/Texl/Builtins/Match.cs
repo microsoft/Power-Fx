@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     internal class BaseMatchFunction : BuiltinFunction
-    {        
+    {
         private readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache;
         private readonly string _cachePrefix;
         private readonly int _regexCacheSize;
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            if (context.Features.PowerFxV1CompatibilityRules && args.Length == 3 && 
+            if (context.Features.PowerFxV1CompatibilityRules && args.Length == 3 &&
                 ((argTypes[2].Kind != DKind.String && argTypes[2].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, args[2], out regularExpressionOptions)))
             {
                 errors.EnsureError(args[2], TexlStrings.ErrVariableRegExOptions);
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             string alteredOptions = regularExpressionOptions;
 
-            return fValid && 
+            return fValid &&
                     (!context.Features.PowerFxV1CompatibilityRules || IsSupportedRegularExpression(regExNode, regularExpression, regularExpressionOptions, out alteredOptions, errors)) &&
                     (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
         }
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             "N", "Nd", "Nl", "No",
             "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
             "S", "Sm", "Sc", "Sk", "So",
-            "Z", "Zs", "Zl", "Zp", 
+            "Z", "Zs", "Zl", "Zp",
             "Cc", "Cf", 
 
             // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // - escapeRE is a regular expression fragment that is shared by the other two, included at the beginning each of the others
             // - generalRE is used outside of a character class
             // - characterClassRE is used inside a character class
-          
+
             const string escapeRE =
                 @"
                     # leading backslash, escape sequences
@@ -281,12 +281,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
                     # leading ?\*\+, quantifiers
-                    (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
                     (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
+                    (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
 
                     # leading {, limited quantifiers
-                    (?<goodLimited>{\d+(,\d*)?}\??)                    | # standard limited quantifiers
-                    (?<badLimited>{\d+(,\d*)?}[\+|\*])                 | # possessive and useless quantifiers
+                    (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
+                    (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
+                    (?<badLimited>{\d+,\d*}[\+|\*])                    | # possessive and useless quantifiers
+                    (?<goodLimited>{\d+,\d*}\??)                       | # standard limited quantifiers, with optional lazy
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # character class
@@ -352,7 +354,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success || token.Groups["goodLimited"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
                         // all is well, nothing to do
                     }
@@ -384,6 +386,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             {
                                 if (ccToken.Groups["goodUEscape"].Value == "P" && characterClassNegative)
                                 {
+                                    // would be problematic for us to allow this if we wanted to implement MatchOptions.LocaleAware in the future
                                     CCRegExError(TexlStrings.ErrInvalidRegExBadEscapeInsideNegativeCharacterClass);
                                     return false;
                                 }
@@ -434,20 +437,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
+                        var namedCapture = token.Groups["goodNamedCapture"].Value;
+
                         if (numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
                             return false;
                         }
 
-                        if (captureNames.Contains(token.Groups["goodNamedCapture"].Value))
+                        if (captureNames.Contains(namedCapture))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists);
                             return false;
                         }
 
-                        captureStack.Push(token.Groups["goodNamedCapture"].Value);
-                        captureNames.Add(token.Groups["goodNamedCapture"].Value);
+                        captureStack.Push(namedCapture);
+                        captureNames.Add(namedCapture);
                     }
                     else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
                     {
@@ -503,7 +508,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["backRefNumber"].Success)
                     {
-                        var backRefNumber = Convert.ToInt32(token.Groups["backRefNumber"].Value, CultureInfo.InvariantCulture);
+                        var backRef = token.Groups["backRefNumber"].Value;
+                        var backRefNumber = Convert.ToInt32(backRef, CultureInfo.InvariantCulture);
 
                         if (!numberedCpature)
                         {
@@ -519,7 +525,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
 
                         // group is not closed and thus self referencing
-                        if (captureStack.Contains(token.Groups["goodBackRefNumber"].Value))
+                        if (captureStack.Contains(backRef))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
                             return false;
@@ -535,19 +541,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodInlineOptions"].Success)
                     {
-                        if (Regex.IsMatch(token.Groups["goodInlineOptions"].Value, @"(?<char>.).*\k<char>"))
+                        var inlineOptions = token.Groups["goodInlineOptions"].Value;
+
+                        if (Regex.IsMatch(inlineOptions, @"(?<char>.).*\k<char>"))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExRepeatedInlineOption);
                             return false;
                         }
 
-                        if (token.Groups["goodInlineOptions"].Value.Contains("n") && numberedCpature)
+                        if (inlineOptions.Contains("n") && numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExInlineOptionConflictsWithNumberedSubMatches);
                             return false;
                         }
 
-                        if (token.Groups["goodInlineOptions"].Value.Contains("x"))
+                        if (inlineOptions.Contains("x"))
                         {
                             freeSpacing = true;
                         }
@@ -600,9 +608,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
                         return false;
                     }
-                    else if (token.Groups["badQuantifier"].Success || token.Groups["badLimited"].Success)
+                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success)
                     {
                         RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
+                        return false;
+                    }
+                    else if (token.Groups["badExact"].Success)
+                    {
+                        RegExError(TexlStrings.ErrInvalidRegExBadExactQuantifier);
                         return false;
                     }
                     else if (token.Groups["badCurly"].Success)
@@ -627,7 +640,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        // This should never be hit. It is here in case one of the names checked doesn't match the RE, in which case running tests would hit this.
+                        // This should never be hit. It is here in case one of the Groups names checked doesn't match the RE, in which case running tests would hit this.
                         throw new NotImplementedException("Unknown general regular expression match: " + token.Value);
                     }
                 }
@@ -689,7 +702,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
 
                     // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                    regexPattern = regexPattern.Replace('\r', '\n');                    
+                    regexPattern = regexPattern.Replace('\r', '\n');
                 }
 
                 var regex = new Regex(regexPattern, regexDotNetOptions);
