@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class CustomTexlFunction : TexlFunction, IFunctionInvoker
     {
-        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+        public Func<IServiceProvider, IReadOnlyList<FormulaValue>, CancellationToken, Task<FormulaValue>> _impl;
 
         internal BigInteger LamdaParamMask;
 
@@ -57,8 +57,7 @@ namespace Microsoft.PowerFx
         public virtual Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
             var serviceProvider = invokeInfo.FunctionServices;
-            var args = invokeInfo.Args.ToArray(); // remove ToArray: https://github.com/microsoft/Power-Fx/issues/2817
-            return _impl(serviceProvider, args, cancellationToken);
+            return _impl(serviceProvider, invokeInfo.Args, cancellationToken);
         }
 
         public override bool IsLazyEvalParam(TexlNode node, int index, Features features)
