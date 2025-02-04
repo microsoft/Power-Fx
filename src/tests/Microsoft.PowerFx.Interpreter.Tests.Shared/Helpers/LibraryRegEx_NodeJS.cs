@@ -146,8 +146,11 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     var jsString = js.ToString();
+                    
                     var bytes = Encoding.UTF8.GetBytes(jsString);
+#pragma warning disable CA1835
                     await node.StandardInput.BaseStream.WriteAsync(bytes, 0, bytes.Length);
+#pragma warning restore CA1835
                     await node.StandardInput.WriteLineAsync();
 
                     await node.StandardInput.FlushAsync();
@@ -223,8 +226,10 @@ namespace Microsoft.PowerFx.Functions
                 }
                 catch (Exception e)
                 {
+#pragma warning disable CA2200
                     // rethrow here just so we can debug the exception in the task
                     throw e;
+#pragma warning restore CA2200
                 }
             }
         }
