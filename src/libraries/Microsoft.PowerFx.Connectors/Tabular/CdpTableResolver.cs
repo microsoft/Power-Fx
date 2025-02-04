@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : _tabularTable.DatasetName;
+            string dataset = _doubleEncoding ? CdpServiceBase.DoubleEncode(_tabularTable.DatasetName) : CdpServiceBase.SingleEncode(_tabularTable.DatasetName);
             string uri = (_uriPrefix ?? string.Empty) + (UseV2(_uriPrefix) ? "/v2" : string.Empty) + $"/$metadata.json/datasets/{dataset}/tables/{CdpServiceBase.DoubleEncode(tableName)}?api-version=2015-09-01";
 
             string text = await CdpServiceBase.GetObject(_httpClient, $"Get table metadata", uri, null, cancellationToken, Logger).ConfigureAwait(false);

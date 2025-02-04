@@ -49,6 +49,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\LoggingTestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Get First Customers_Aßþ.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Responses\SQL Server Load Customers_Aßþ.json" />
     <None Include="$(MSBuildThisFileDirectory)Owl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -300,6 +302,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerAppsForMakers.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\PowerPlatformForAdmins.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SendMail_Modified.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SQL Server.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\SalesForce.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ServiceNow.json" />

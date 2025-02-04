@@ -110,12 +110,11 @@ namespace Microsoft.PowerFx.Connectors
 
             string queryParams = (odataParameters != null) ? "&" + odataParameters.ToQueryString() : string.Empty;
 
-            Uri uri = new Uri(
-                   (_uriPrefix ?? string.Empty) +
+            var uri = (_uriPrefix ?? string.Empty) +
                    (CdpTableResolver.UseV2(_uriPrefix) ? "/v2" : string.Empty) +
-                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : DatasetName)}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams, UriKind.Relative);
+                   $"/datasets/{(DatasetMetadata.IsDoubleEncoding ? DoubleEncode(DatasetName) : SingleEncode(DatasetName))}/tables/{Uri.EscapeDataString(TableName)}/items?api-version=2015-09-01" + queryParams;
 
-            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri.ToString(), null, cancellationToken, executionLogger).ConfigureAwait(false);
+            string text = await GetObject(_httpClient, $"List items ({nameof(GetItemsInternalAsync)})", uri, null, cancellationToken, executionLogger).ConfigureAwait(false);
             return !string.IsNullOrWhiteSpace(text) ? GetResult(text) : Array.Empty<DValue<RecordValue>>();
         }        
 

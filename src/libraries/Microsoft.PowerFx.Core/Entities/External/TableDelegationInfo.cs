@@ -26,6 +26,9 @@ namespace Microsoft.PowerFx.Core.Entities
         [Obsolete("preview")]
         public SummarizeCapabilities SummarizeCapabilities { get; init; }
 
+        [Obsolete("preview")]
+        public CountCapabilities CountCapabilities { get; init; }
+
         // Defines ungroupable columns
         public GroupRestrictions GroupRestriction { get; init; }
 
@@ -297,6 +300,54 @@ namespace Microsoft.PowerFx.Core.Entities
         Max,
         Count,
         CountRows
+    }
+
+    [Obsolete("preview")]
+    public class CountCapabilities
+    {
+        public CountCapabilities()
+        {
+        }
+
+        /// <summary>
+        /// If the table is countable, return true. 
+        /// Relevant expression: CountRows(Table).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableTable()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after filter, return true.
+        /// Relevant expression: CountRows(Filter(Table, Condition)); / CountIf(Table, Condition).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterFilter()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after join, return true.
+        /// Relevant expression: CountRows(Join(Table1, Table2, ...)).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterJoin()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// If the table is countable after summarize, return true.
+        /// Relevant expression: CountRows(Summarize(Table, ...)).
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCountableAfterSummarize()
+        {
+            return false;
+        }
     }
 
     public sealed class FilterRestrictions

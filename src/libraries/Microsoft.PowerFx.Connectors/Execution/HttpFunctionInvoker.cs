@@ -568,6 +568,7 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
+    [ThreadSafeImmutable]
     internal interface IConvertToUTC
     {
         DateTime ToUTC(DateTimeValue d);

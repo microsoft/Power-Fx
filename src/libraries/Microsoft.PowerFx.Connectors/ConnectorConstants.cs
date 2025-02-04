@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string XMsNotificationUrl = "x-ms-notification-url";
         public const string XMsPageable = "x-ms-pageable";
         public const string XMsPermission = "x-ms-permission";
+        public const string XMsPropertyEntityType = "x-ms-property-entity-type";
         public const string XMsRelationships = "x-ms-relationships";
         public const string XMsRequireUserConfirmation = "x-ms-require-user-confirmation";
         public const string XMsSort = "x-ms-sort";
