@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>'{0}' 函数的非类型化对象参数的类型不正确。应为: {1}，实际为: {0}。</value>
+    <value>'{0}' 函数的非类型化对象参数的类型不正确。应为: {1}，实际为: {2}。</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

@@ -1917,6 +1917,10 @@
     <value>»{0}« je neznana ali nepodprta funkcija.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>»{0}« je prepoznana kot pomožna funkcija vrste in jo je mogoče uporabiti samo v funkciji Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>»{0}« je neznana ali nepodprta funkcija v imenskem prostoru »{1}«.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nova ali obstoječa zbirka za povečanje.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Zapis ali tabela za zbiranje. Zapis bo dodan v zbirko. V tabelo bodo dodani vrstice v zbirki.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najprej počisti zbirko in doda enega ali več elementov v navedeno zbirko. Elementi so lahko iz druge tabele ali zbirke (npr. ClearCollect(collection, source_collection)) ali enega ali več zapisov ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Uredite formulo tako, da bo vsebovala oklepaj.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Pričakovan je zaključek identifikatorja. Na tem mestu v formuli je pričakovan zaključek (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Končni enojni narekovaj označuje konec identifikatorja (na primer 'Ime').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Uredite formulo tako, da bo vključevala zaključni enojni narekovaj.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikator ne vsebuje nobenega veljavnega besedila.</value>
+    <value>Identifikator je prazen ali vsebuje neveljaven znak, na primer tabulator ali nova vrstica.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Prepričajte se, da imate besedilo za svoj identifikator. Do te napake pride, če je identifikator prazen ali vsebuje samo presledke.</value>
+    <value>Prepričajte se, da imate v identifikatorju veljavno besedilo. Do te napake pride, če je identifikator prazen, vsebuje samo presledke oziroma zavihek ali novo vrstico.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Navedena formula mora biti izraz.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Imenovana vrsta mora biti vrsta »niz«.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Poimenovana deklaracija vrste mora biti veljaven izraz vrste.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Nastavitev spremenljivke z vrednostjo spletnega vira podatkov (tabela ali zapis) lahko povzroči več zahtev strežniku. Ta nastavitev bo kmalu blokirana.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracija niza za tip ni veljavna. Izraza »{0}« ni mogoče uporabiti v definiciji tipa.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Izraz vrste ni veljaven. »{0}« ni mogoče uporabiti v izrazu vrste.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nepodprta uporaba: vrste niza je mogoče uporabiti le v argumentih vrste in definicijah vrst.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodprta uporaba: funkcijo Type je mogoče uporabiti le v argumentih vrste in deklaracijah vrst.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Opredelitev vrste {0} ni veljavna.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracija vrste {0} ni veljavna.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Opredelitev vrste {0} je neveljavna in lahko vsebuje cikle.</value>
+    <value>Deklaracija vrste {0} je neveljavna in lahko vsebuje cikle.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Neveljaven argument »{0}«. Pričakovano je veljavno ime vrste ali vrsta »niz«.</value>
+    <value>Neveljaven argument »{0}«. Pričakovano je veljavno ime vrste ali vrsta izraza v vrstici.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

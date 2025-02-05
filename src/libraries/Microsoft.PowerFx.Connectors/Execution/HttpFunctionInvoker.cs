@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        public async Task<HttpRequestMessage> BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
+        public async Task<HttpRequestMessage> BuildRequest(IReadOnlyList<FormulaValue> args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             HttpContent body = null;
             var path = _function.OperationPath;
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
 
-        public Dictionary<string, FormulaValue> ConvertToNamedParameters(FormulaValue[] args)
+        public Dictionary<string, FormulaValue> ConvertToNamedParameters(IReadOnlyList<FormulaValue> args)
         {
             // First N are required params.
             // Last param is a record with each field being an optional.
@@ -255,9 +255,9 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Optional parameters are next and stored in a Record
-            if (_function.OptionalParameters.Length > 0 && args.Length > _function.RequiredParameters.Length)
+            if (_function.OptionalParameters.Length > 0 && args.Count > _function.RequiredParameters.Length)
             {
-                FormulaValue optionalArg = args[args.Length - 1];
+                FormulaValue optionalArg = args[args.Count - 1];
 
                 // Objects are always flattenned
                 if (optionalArg is RecordValue record)
@@ -483,7 +483,7 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, IReadOnlyList<FormulaValue> args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, FormulaType expectedType, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -551,7 +551,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(IReadOnlyList<FormulaValue> args, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

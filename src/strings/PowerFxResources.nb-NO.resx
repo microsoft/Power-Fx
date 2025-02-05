@@ -1917,6 +1917,10 @@
     <value>{0} er en ukjent eller ikke støttet funksjon.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>{0} gjenkjennes som typehjelperfunksjon, og den kan bare brukes i Type-funksjonen.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} er en ukjent eller ikke støttet funksjon i navneområdet {1}.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>En ny eller eksisterende samling som skal utvides.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>En post eller tabell som samles inn. En post legges til i samlingen. Radene i en tabell legges til i samlingen.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Tømmer samlingen først og legger til et eller flere elementer i den angitte samlingen. Elementene kan være fra en annen tabell eller samling (f.eks. ClearCollect(collection, source_collection)) eller en eller flere oppføringer ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Rediger formelen slik at den inneholder en sløyfeparentes.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet avslutning av identifikatoren. Vi forventer en avslutning (') på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Et avsluttende enkelt anførselstegn angir slutten på en identifikator (f.eks. 'Fornavn').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den inneholder et avsluttende enkelt anførselstegn.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatoren har ingen gyldig tekst.</value>
+    <value>Identifikatoren er tom eller inneholder et ugyldig tegn, for eksempel tabulator eller linjeskift.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Kontroller at du har tekst for identifikatoren. Denne feilen oppstår når identifikatoren er bare tomrom eller mellomrom.</value>
+    <value>Kontroller at du har gyldig tekst i identifikatoren. Denne feilen oppstår når identifikatoren er tom, bare har mellomrom eller inneholder tabulator eller linjeskift.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Den navngitte formelen må være et uttrykk.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Navngitt type må være en type litteral.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>En navngitt typedeklarasjon må være et gyldig typeuttrykk.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Hvis du angir en variabel med en nettbasert datakildeverdi (tabell eller oppføring), kan det føre til flere forespørsler til serveren. Snart blir dette blokkert.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type bokstavelig deklarasjon er ugyldig. Uttrykket {0} kan ikke brukes i en typedefinisjon.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typeuttrykket er ugyldig. {0} kan ikke brukes i et typeuttrykk.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Bruk som ikke støttes: typelitteraler kan bare brukes i typeargumenter og typedefinisjoner.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Bruk som ikke støttes: Type-funksjon kan bare brukes i typeargumenter og typedeklarasjoner.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definisjonen av typen {0} er ugyldig.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarasjon av typen {0} er ugyldig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definisjonen av typen {0} er ugyldig og kan inneholde sykluser.</value>
+    <value>Deklarasjon av typen {0} er ugyldig og kan inneholde sykluser.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Ugyldig argument {0}. Forventet gyldig typenavn eller litteral.</value>
+    <value>Ugyldig argument {0}. Forventet gyldig typenavn eller innebygd typeuttrykk.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

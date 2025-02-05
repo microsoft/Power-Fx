@@ -1917,6 +1917,10 @@
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' dikenali sebagai fungsi pembantu jenis dan hanya dapat digunakan di dalam fungsi Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung dalam ruang nama '{1}'.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Koleksi baru atau yang sudah ada untuk ditambahkan.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rekaman atau tabel untuk dikumpulkan. Rekaman akan ditambahkan ke koleksi. Kolom tabel akan ditambahkan ke koleksi.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Menghapus koleksi terlebih dahulu dan menambah satu atau beberapa item ke koleksi yang ditentukan. Item dapat berasal dari tabel atau koleksi berbeda (misalnya, ClearCollect(collection, source_collection)), atau satu atau beberapa catatan ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Edit rumus Anda agar mencantumkan tanda kurung.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanda penutup yang diharapkan pada pengidentifikasi. Tanda penutup (') diharapkan ada pada titik ini dalam rumus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Tanda kutip tunggal penutup menunjukkan akhir pengidentifikasi (misalnya, 'Nama Depan').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit rumus Anda agar mencantumkan tanda kutip tunggal penutup.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Pengidentifikasi tidak memiliki teks yang valid.</value>
+    <value>Pengidentifikasi kosong atau berisi karakter yang tidak valid, seperti tab atau baris baru.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Pastikan Anda memiliki teks untuk pengidentifikasi Anda. Kesalahan ini terjadi jika semua pengidentifikasi kosong atau berisi spasi.</value>
+    <value>Pastikan Anda memiliki teks yang valid pada pengidentifikasi Anda. Kesalahan ini terjadi jika pengidentifikasi kosong, hanya diisi dengan spasi, atau berisi tab atau baris baru.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Rumus bernama harus merupakan ekspresi.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Jenis yang diberi nama harus berupa jenis harfiah.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklarasi jenis bernama harus berupa ekspresi jenis yang valid.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Mengatur variabel dengan nilai sumber data online (tabel atau data) dapat menyebabkan banyak permintaan ke server. Hal ini akan segera diblokir.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarasi harfiah jenis tidak valid. Ekspresi '{0}' tidak dapat digunakan dalam definisi jenis.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Ekspresi jenis tidak valid. '{0}' tidak dapat digunakan dalam ekspresi jenis.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Penggunaan tidak didukung: harfiah jenis hanya dapat digunakan di argumen jenis dan definisi jenis.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan yang tidak didukung: Fungsi Type hanya dapat digunakan dalam argumen jenis dan deklarasi jenis.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definisi jenis {0} tidak valid.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarasi jenis {0} tidak valid.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definisi jenis {0} tidak valid dan mungkin berisi siklus.</value>
+    <value>Deklarasi jenis {0} tidak valid dan mungkin berisi siklus.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argumen '{0}' tidak valid. Nama jenis atau harfiah jenis valid yang diharapkan.</value>
+    <value>Argumen '{0}' tidak valid. Yang diharapkan adalah nama jenis yang valid atau ekspresi jenis sebaris.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

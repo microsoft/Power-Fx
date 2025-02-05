@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Funktion {0} tyypittämättömän objektin argumentin tyyppi on virheellinen. Odotettu: {1}, toteutunut: {0}.</value>
+    <value>Funktion {0} tyypittämättömän objektin argumentin tyyppi on virheellinen. Odotettu: {1}, toteutunut: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

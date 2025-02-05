@@ -1917,6 +1917,10 @@
     <value>„{0}” to nieznana lub nieobsługiwana funkcja.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Element „{0}” rozpoznano jako funkcję pomocnika typu; tego elementu można używać tylko w ramach funkcji Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}” to nieznana lub nieobsługiwana funkcja w przestrzeni nazw „{1}”.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nowa lub istniejąca kolekcja do rozszerzenia.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rekord lub tabela na potrzeby gromadzenia danych. Rekord zostanie dołączony do kolekcji. W przypadku tabeli do kolekcji zostaną dołączone jej wiersze.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najpierw czyści kolekcję, a następnie dodaje co najmniej jeden element do określonej kolekcji. Elementy mogą pochodzić z innej tabeli lub kolekcji (np. ClearCollect(collection, source_collection)) lub co najmniej jednego rekordu ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Edytuj formułę tak, aby zawierała nawias.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Oczekiwano symbolu zamykającego identyfikator. W tym miejscu w formule oczekiwany jest symbol zamykający (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Pojedynczy zamykający cudzysłów wskazuje koniec identyfikatora (na przykład 'Imię').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edytuj formułę tak, aby zawierała pojedynczy zamykający cudzysłów.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identyfikator nie ma prawidłowego tekstu.</value>
+    <value>Identyfikator jest pusty lub zawiera nieprawidłowy znak, taki jak tabulator lub znak końca wiersza.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Upewnij się, że podano tekst dla identyfikatora. Ten błąd występuje, gdy identyfikator zawiera same wartości puste lub spacje.</value>
+    <value>Upewnij się, że identyfikator zawiera prawidłowy tekst. Ten błąd występuje, gdy identyfikator jest pusty, zawiera same spacje lub tabulator albo znak końca wiersza.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Nazwana formuła musi być wyrażeniem.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Nazwany typ musi być typem literał.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Deklaracja nazwanego typu musi być prawidłowym wyrażeniem typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklaracja literału typu jest nieprawidłowa. W definicji typu nie można użyć wyrażenia „{0}”.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie typu. W wyrażeniu typu nie można użyć wyrażenia „{0}”.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nieobsługiwane użycie: literałów typu można używać tylko w argumentach typu i definicjach typu.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nieobsługiwane użycie: funkcji Type można używać tylko w argumentach typu i deklaracjach typu.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracja typu {0} jest nieprawidłowa.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definicja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
+    <value>Deklaracja typu {0} jest nieprawidłowa i może zawierać cykle.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Nieprawidłowy argument „{0}”. Oczekiwano prawidłowej nazwy typu lub typu dosłownego.</value>
+    <value>Nieprawidłowy argument „{0}”. Oczekiwano prawidłowej nazwy typu lub wyrażenia typu w tekście.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

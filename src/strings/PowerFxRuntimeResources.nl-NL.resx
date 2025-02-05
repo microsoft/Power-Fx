@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Het argument met een niet-getypeerd object voor de functie '{0}' heeft een onjuist type. Verwacht: {1}, werkelijk: {0}.</value>
+    <value>Het argument met een niet-getypeerd object voor de functie '{0}' heeft een onjuist type. Verwacht: {1}, werkelijk: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

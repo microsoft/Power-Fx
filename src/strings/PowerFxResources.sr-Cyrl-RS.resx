@@ -1917,6 +1917,10 @@
     <value>„{0}“ је непозната или неподржана функција.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ је препознато као помоћна функција типа и може се користити само у оквиру функције Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ је непозната или неподржана функција у простору за имена „{1}“.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Нова или постојећа колекција за проширење.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Запис или табела за прикупљање. Запис ће бити додат у извор колекцију. Табела ће имати редове који су додати у колекцију.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Прво брише колекцију и додаје неке ставке у наведену колекцију. Ставке могу да буду из различите табеле или колекције (нпр. ClearCollect(collection, source_collection)) или неки записи ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Уредите формулу тако да садржи заграду.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се затварање идентификатора. Очекујемо затварање (') у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Једноструки наводник за затварање означава крај идентификатора (на пример, 'Име').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да садржи једноструки наводник за затварање.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификатор нема важећи текст.</value>
+    <value>Идентификатор је празан или садржи неважећи знак, као што је табулатор или нови ред.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Уверите се да идентификатор има текст. Ова грешка се јавља када се идентификатор састоји само од празних места или размака.</value>
+    <value>Уверите се да идентификатор има важећи текст. Ова грешка се јавља када је идентификатор празан, кад има само просторе или садржи табулатор или нови ред.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Именована формула мора да буде израз.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Именовани тип мора бити тип литерал.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Именована изјава типа мора бити важећи израз типа.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Постављање променљиве са вредношћу извора података на мрежи (табела или запис) може да изазове више захтева упућених серверу. Ово ће ускоро бити блокирано.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Декларација типа литерала је неважећа. Израз „{0}“ не може да се користи у дефиницији типа.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Изјава типа је неважећа. '{0}' не може да се користи у изразу типа.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Неподржана употреба: литерали типа могу се користити само у аргументима типа и дефиницијама типа.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Неподржана употреба: Функција Type може се користити само у аргументима типа и изјавама типа.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Дефиниција типа {0} је неважећа.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Изјава типа {0} је неважећа.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Дефиниција типа {0} је неважећа и може да садржи циклусе.</value>
+    <value>Изјава типа {0} је неважећа и може да садржи циклусе.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Неважећи аргумент '{0}'. Очекиван је важећи назив типа или тип литерала.</value>
+    <value>Неважећи аргумент '{0}'. Очекиван је важећи назив типа или уметнути тип израза.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

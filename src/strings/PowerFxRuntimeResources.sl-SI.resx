@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argument predmeta brez vrste za funkcijo »{0}« ima napačno vrsto. Pričakovana: {1}, dejanska: {0}.</value>
+    <value>Argument predmeta brez vrste za funkcijo »{0}« ima napačno vrsto. Pričakovana: {1}, dejanska: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

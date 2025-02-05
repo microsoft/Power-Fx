@@ -1917,6 +1917,10 @@
     <value>"{0}" és una funció desconeguda o no admesa.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" es reconeix com a funció d'ajuda de tipus i només es pot utilitzar dins de la funció Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" és una funció desconeguda o no admesa a l'espai de noms "{1}".</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Col·lecció nova o existent que s'augmentarà.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Registre o taula que es recollirà. S'annexarà un registre a la col·lecció. S'annexaran les files de la taula a la col·lecció.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Esborra la col·lecció i, després, afegeix un o més elements a la col·lecció especificada. Els elements poden ser d'una taula o d'una col·lecció diferent (p. ex., ClearCollect(collection, source_collection)) o d'un o més registres ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Editeu la fórmula perquè inclogui un claudàtor.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>S'esperava el tancament de l'identificador. S'espera una cometa de tancament (') en aquest punt de la fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Una cometa simple de tancament indica el final d'un identificador (per exemple, 'Nom').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Editeu la fórmula perquè inclogui un cometa simple de tancament.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>L'identificador no conté text vàlid.</value>
+    <value>L'identificador està buit o conté un caràcter no vàlid, com ara una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Assegureu-vos que teniu text per a l'identificador. Aquest error es produeix quan l'identificador està buit o només conté espais.</value>
+    <value>Assegureu-vos que teniu text vàlid a l'identificador. Aquest error es produeix quan l'identificador està en blanc, només conté espais o conté una tabulació o un salt de línia.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>La fórmula amb nom ha de ser una expressió.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>El tipus de nom ha de ser un tipus literal.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Una declaració de tipus amb nom ha de ser una expressió de tipus vàlida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>La declaració literal de tipus no és vàlida. L'expressió "{0}" no es pot utilitzar en una definició de tipus.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>L'expressió de tipus no és vàlida. "{0}" no es pot utilitzar en una expressió de tipus.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Ús no admès: els literals de tipus només es poden utilitzar en arguments de tipus i definicions de tipus.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Ús no admès: la funció Type només es pot utilitzar en arguments de tipus i declaracions de tipus.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>La declaració de tipus {0} no és vàlida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>La definició de tipus {0} no és vàlida i pot contenir cicles.</value>
+    <value>La declaració de tipus {0} no és vàlida i pot contenir cicles.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argument "{0}" no vàlid. S'esperava un nom de tipus vàlid o un tipus literal.</value>
+    <value>Argument "{0}" no vàlid. S'esperava un nom de tipus vàlid o una expressió de tipus en línia.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
