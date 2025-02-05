@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>อาร์กิวเมนต์ออบเจ็กต์ที่ไม่ได้ระบุชนิดของฟังก์ชัน '{0}' มีชนิดที่ไม่ถูกต้อง ค่าที่ต้องการ: {1}, ค่าจริง: {0}</value>
+    <value>อาร์กิวเมนต์ออบเจ็กต์ที่ไม่ได้ระบุชนิดของฟังก์ชัน '{0}' มีชนิดที่ไม่ถูกต้อง ค่าที่ต้องการ: {1}, ค่าจริง: {2}</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

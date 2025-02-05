@@ -1917,6 +1917,10 @@
     <value>"{0}" é unha función descoñecida ou non compatible.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Recoñeceuse "{0}" como función de tipo auxiliar e só se pode usar dentro da función Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" é unha función descoñecida ou non compatible no espazo do nomes "{1}".</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Colección nova ou existente que se vai aumentar.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rexistro ou táboa que se vai recompilar. Anexarase un rexistro á colección. As filas dunha táboa anexaranse á colección.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Primeiro borra a colección e engade un ou máis elementos á colección especificada. Os elementos poden ser doutra táboa ou colección (por exemplo, ClearCollect(collection, source_collection)) ou dun ou máis rexistros ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Edite a fórmula de xeito que inclúa un corchete.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase o peche do identificador. Neste punto da fórmula, espérase un peche (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Unha comiña simple de peche indica o final dun identificador (por exemplo, 'Nome').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula de xeito que inclúa unha comiña simple de peche.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>O identificador non ten un texto válido.</value>
+    <value>O identificador está baleiro ou contén un carácter non válido, como un separador ou unha nova liña.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Asegúrese de que ten texto para o identificador. Este erro prodúcese cando o identificador consiste só en espazos ou espazos en branco.</value>
+    <value>Asegúrese de que ten texto válido no identificador. Este erro prodúcese cando o identificador está en branco, só ten espazos ou contén un separador ou unha nova liña.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>A fórmula con nome debe ser unha expresión.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>O tipo con nome debe ser un tipo literal.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A declaración de tipo mencionada debe ser unha expresión de tipo válida.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Se se establece unha variable cun valor de orixe de datos en liña (táboa ou rexistro), pode que se realicen múltiples solicitudes ao servidor. Isto impedirase en breve.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A declaración literal de tipo non é válida. A expresión "{0}" non se pode usar nunha definición de tipo.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>A expresión de tipo non é válida. "{0}" non se pode usar nunha expresión de tipo.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Uso non compatible: os literais de tipo só se poden usar en argumentos de tipo e definicións de tipo.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Uso non compatible: a función Type só se pode usar en argumentos e declaracións de tipo.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>A definición de tipo {0} non é válida.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>A declaración de tipo {0} non é válida.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>A definición de tipo {0} non é válida e pode conter ciclos.</value>
+    <value>A declaración de tipo {0} non é válida e pode conter ciclos.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argumento non válido "{0}". Nome de tipo válido esperado ou tipo literal.</value>
+    <value>Argumento non válido "{0}". Esperábase un nome de tipo ou unha expresión de tipo inserida válidos.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argument obiektu bez typu przekazany do funkcji „{0}” ma niepoprawny typ. Oczekiwany: {1}; rzeczywisty: {0}.</value>
+    <value>Argument obiektu bez typu przekazany do funkcji „{0}” ma niepoprawny typ. Oczekiwany: {1}; rzeczywisty: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

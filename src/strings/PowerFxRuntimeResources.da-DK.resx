@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argumentet til objekt uden type til funktionen "{0}" har en forkert type. Forventet: {1}, Faktisk: {0}.</value>
+    <value>Argumentet til objekt uden type til funktionen "{0}" har en forkert type. Forventet: {1}, Faktisk: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

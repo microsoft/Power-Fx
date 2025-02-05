@@ -1917,6 +1917,10 @@
     <value>'{0}' 為未知或不支援的函式。</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>「{0}」已識別為類型協助程式函式，所以只能用於 Type 函式內。</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' 為命名空間 '{1}' 中未知或不支援的函式。</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>要增加的新集合或現有集合。</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>要收集的記錄或資料表。系統會對該集合附加一筆記錄。若是資料表，則會對該集合附加其資料列。</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>先清除集合，然後將一或多個項目新增至指定的集合。項目可來自不同的資料表或集合 (例如 ClearCollect(collection, source_collection))，或是一或多筆記錄 ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)。</value>
     
@@ -3622,11 +3623,11 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
-    <value>非行為使用者定義函數 (UDF) 中的行為函數。請用大括弧 ({...}) 包住使用者定義函數正文，以宣告行為 UDF。</value>
+    <value>非行為使用者定義函式 (UDF) 中的行為函式。請用大括弧 ({...}) 包住使用者定義函式主體，以宣告行為 UDF。</value>
     
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
-    <value>行為函數會改變目前的工作階段狀態。『Clear』、『Collect』、『Patch』和『Refresh』是常見的行為函數。</value>
+    <value>行為函式會改變目前的工作階段狀態。『Clear』、『Collect』、『Patch』和『Refresh』是常見的行為函式。</value>
     
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
@@ -3704,12 +3705,23 @@
     <value>編輯公式，以便其包含括號。</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>預期識別碼需要結束。在公式的此處需要一個結尾單引號 (')。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>結尾的單引號表示識別碼的結束 (例如: '名字')。</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>請編輯您的公式，確保包含結尾的單引號。</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>識別碼沒有有效的文字。</value>
+    <value>識別碼為空或包含無效字元，例如定位字元或換行符號。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>請確認您為識別碼提供了文字。若識別碼完全為空白或空格，就會發生此錯誤。</value>
+    <value>請確保您的識別碼包含有效的文字。當識別碼為空白、只有空格，或包含定位字元或換行符號時，就會發生此錯誤。</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>命名公式必須是運算式。</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>已命名的類型必須是文字常值。</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>具名類型宣告必須是有效的類型運算式。</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>使用線上資料來源值 (資料表或記錄) 來設定變數可能導致向伺服器提出多個要求。這很快就會被封鎖。</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型常值聲明無效。運算式 '{0}' 不能用於類型定義。</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>類型運算式無效。「{0}」不能用於類型運算式。</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>不支援的使用方式: 類型常值意義只能用在類型參數和類型定義中。</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>不支援的使用方式: Type 函式只能用在類型引數和類型宣告中。</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>類型 {0} 定義無效。</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>類型 {0} 宣告無效。</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>類型定義 {0} 無效並可能包含迴圈。</value>
+    <value>類型 {0} 宣告無效並可能包含週期。</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>無效引數『{0}』。預期為有效的類型名稱或類型常值。</value>
+    <value>無效引數「{0}」。預期為有效的類型名稱或內嵌類型運算式。</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

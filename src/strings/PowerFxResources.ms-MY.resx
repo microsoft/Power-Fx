@@ -1917,6 +1917,10 @@
     <value>'{0}' ialah fungsi yang tidak diketahui atau tidak disokong.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' diiktiraf sebagai fungsi pemilih jenis dan hanya boleh digunakan dalam fungsi Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' ialah fungsi yang tidak diketahui atau tidak disokong dalam ruang nama '{1}'.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Koleksi baharu atau sedia ada ke augmen.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Rekod atau jadual untuk dikumpulkan. Rekod akan ditambahkan pada koleksi. Jadual akan mempunyai baris yang ditambahkan pada koleksi.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Kosongkan koleksi terlebih dahulu dan tambahkan satu atau lebih item pada koleksi yang ditentukan. Item boleh terdiri daripada jadual atau koleksi (e.g. ClearCollect(collection, source_collection)) yang berbeza atau satu atau lebih rekod ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Edit formula anda supaya mengandungi tanda kurung.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanda penutup pengecam dijangka. Kami menjangkakan tanda penutup (') di bahagian ini dalam formula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Tanda petik tunggal penutup menunjukkan penghujung pengecam (sebagai contoh, 'Nama Pertama').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Edit formula anda supaya mengandungi tanda petik tunggal.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Pengecam tidak mempunyai teks yang sah.</value>
+    <value>Pengecam kosong atau mengandungi aksara yang tidak sah, seperti tab atau baris baharu.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Pastikan anda mempunyai teks untuk pengecam anda. Ralat ini berlaku apabila pengecam semuanya ruang kosong atau ruang.</value>
+    <value>Pastikan anda mempunyai teks sah dalam pengecam anda. Ralat ini berlaku apabila pengecam kosong, hanya mempunyai ruang kosong atau mengandungi tab atau baris baharu.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Formula yang dinamakan mestilah ungkapan.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Jenis yang dinamakan hendaklah literal jenis.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Perisytiharan jenis yang dinamakan mestilah ungkapan jenis yang sah.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Penetapan pemboleh ubah dengan nilai sumber data dalam talian (jadual atau rekod) boleh menyebabkan berbilang permintaan kepada pelayan. Ini akan disekat tidak lama lagi.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Perisytiharan secara literal jenis tidak sah. Ungkapan '{0}' tidak dapat digunakan dalam takrif jenis.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Ungkapan jenis tidak sah. '{0}' tidak dapat digunakan dalam ungkapan jenis.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Penggunaan tidak disokong: literal jenis hanya boleh digunakan dalam argumen jenis dan definisi jenis.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Penggunaan tidak disokong: Fungsi Type hanya boleh digunakan dalam argumen jenis dan pengisytiharan jenis.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Takrif jenis {0} tidak sah.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Pengisytiharan jenis {0} tidak sah.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Takrif jenis {0} tidak sah dan mungkin mengandungi kitaran.</value>
+    <value>Pengisytiharan jenis {0} tidak sah dan mungkin mengandungi kitaran.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argumen tidak sah '{0}'. Nama jenis atau jenis literal sah yang dijangkakan.</value>
+    <value>Argumen tidak sah '{0}'. Nama jenis atau ungkapan jenis sebaris yang sah dijangkakan.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
