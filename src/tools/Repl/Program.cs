@@ -42,8 +42,15 @@ namespace Microsoft.PowerFx
         private const string OptionTextFirst = "TextFirst";
         private static bool _textFirst = false;
 
+#if MATCHCOMPARE
+        // to enable, place this in Solution Items/Directiory.Build.Props:
+        //  <PropertyGroup>
+        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+        //  </PropertyGroup>
+
         private const string OptionMatchCompare = "MatchCompare";
         private static bool _matchCompare = false;
+#endif
 
         private const string OptionUDF = "UserDefinedFunctions";
         private static bool _enableUDFs = true;
@@ -75,7 +82,9 @@ namespace Microsoft.PowerFx
                 { OptionHashCodes, OptionHashCodes },
                 { OptionStackTrace, OptionStackTrace },
                 { OptionTextFirst, OptionTextFirst },
+#if MATCHCOMPARE
                 { OptionMatchCompare, OptionMatchCompare },
+#endif
                 { OptionUDF, OptionUDF },
             };
 
@@ -107,6 +116,7 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
+#if MATCHCOMPARE
             if (_matchCompare)
             {
                 // requires PCRE2 DLL (pcre2-16d.dll) on the path and Node.JS installed
@@ -114,6 +124,7 @@ namespace Microsoft.PowerFx
                 Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5));
             }
             else
+#endif
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
@@ -286,7 +297,9 @@ namespace Microsoft.PowerFx
                 sb.Append(CultureInfo.InvariantCulture, $"{"StackTrace:",-42}{_stackTrace}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"TextFirst:",-42}{_textFirst}\n");
                 sb.Append(CultureInfo.InvariantCulture, $"{"UserDefinedFunctions:",-42}{_enableUDFs}\n");
+#if MATCHCOMPARE
                 sb.Append(CultureInfo.InvariantCulture, $"{"MatchCompare:",-42}{_matchCompare}\n");
+#endif
 
                 foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -406,12 +419,14 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+#if MATCHCOMPARE
                 if (string.Equals(option.Value, OptionMatchCompare, StringComparison.OrdinalIgnoreCase))
                 {
                     _matchCompare = value.Value;
                     _reset = true;
                     return value;
                 }
+#endif
 
                 if (string.Equals(option.Value, OptionPowerFxV1, StringComparison.OrdinalIgnoreCase))
                 {

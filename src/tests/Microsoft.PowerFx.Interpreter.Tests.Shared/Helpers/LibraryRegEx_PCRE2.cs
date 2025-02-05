@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+#if MATCHCOMPARE
+
 // This file implements our Regular Expression functions using PCRE2 instead of .NET.
 // We run tests with this to find semantic differences between our regular expression language and what Excel supports.
 // To run this code, make sure that pcre2-32d.dll in your path, built from https://github.com/PCRE2Project/pcre2
@@ -459,3 +461,5 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 }
+
+#endif

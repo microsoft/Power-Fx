@@ -93,7 +93,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 #endif
 
-#if false
+#if MATCHCOMPARE
+        // to enable, place this in Solution Items/Directiory.Build.Props:
+        //  <PropertyGroup>
+        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+        //  </PropertyGroup>
+
+#if false // may not want to run this, even if MATCHCOMPARE is enabled
+
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
         // This is not run all the time.  It requires Node to be installed and PCRE2 built as a shared library DLL and on the path.
@@ -106,6 +113,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             RunExpressionTestCase(t, Features.PowerFxV1, numberIsFloat: false, Console);
         }
+#endif
 #endif
 
         private static string _currentNetVersion = null;
@@ -199,9 +207,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Console.WriteLine(result.Output);
             }
         }
-#endif
 
-#if false
+#if MATCHCOMPARE
         // Helper to run a single .txt with regular expression comparison between .NET, Node, and PCRE2
         [Fact]
         public void RunOneMatchCompare()
@@ -210,6 +217,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             ExpressionEvaluationTests.RegExComparePCRE2 = false;
             RunOne();
         }
+#endif
 #endif
 
         // Run cases in MutationScripts

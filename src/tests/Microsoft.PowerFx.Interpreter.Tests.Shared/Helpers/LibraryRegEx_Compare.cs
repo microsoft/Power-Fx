@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+#if MATCHCOMPARE
+
 // This file compares the results from .NET, PCRE2, and NODEJS.
 
 using System;
@@ -208,3 +210,5 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 }
+
+#endif

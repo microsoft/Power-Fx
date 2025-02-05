@@ -4,6 +4,8 @@
 // This file implements our Regular Expression functions using ECMAScript hosted by Node.js.
 // We run tests with this to find semantic differences between our regular expression language and what the JavaScript runtime (Canvas) supports.
 
+#if MATCHCOMPARE
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -324,3 +326,5 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 }
+
+#endif

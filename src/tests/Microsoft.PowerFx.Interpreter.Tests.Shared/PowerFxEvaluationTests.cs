@@ -65,17 +65,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return null;
         }
 
+#if MATCHCOMPARE
         // This "global" turns on regex comparison. Yes, it is a hack, but it is only used for manual testing (no automated testing).
         public static bool RegExCompareNode = false;
         public static bool RegExComparePCRE2 = false;
+#endif
 
         private static object RegExSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
+#if MATCHCOMPARE
             if (RegExCompareNode || RegExComparePCRE2)
             {
                 Functions.RegEx_Compare.EnableRegExFunctions(config, new TimeSpan(0, 0, 5), includeNode: RegExCompareNode, includePCRE2: RegExComparePCRE2);
             }
             else
+#endif
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
@@ -83,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             return null;
-        }       
+        }
 
         private static object BlobSetup(PowerFxConfig config, SymbolTable symbolTable)
         {
