@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter.Localization;
@@ -421,6 +420,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
         {
             return await new ClearCollectImpl().InvokeAsync(invokeInfo, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // Remove(collection:*[], item1:![], item2:![], ..., ["All"])
+    internal class RemoveImpl : RemoveFunction, IFunctionInvoker
+    {
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+        {
+            return await MutationUtils.RemoveCore(invokeInfo, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    // Remove(collection:*[], source:*[], ["All"])
+    internal class RemoveAllImpl : RemoveAllFunction, IFunctionInvoker
+    {
+        public async Task<FormulaValue> InvokeAsync(FunctionInvokeInfo invokeInfo, CancellationToken cancellationToken)
+        {
+            return await MutationUtils.RemoveCore(invokeInfo, cancellationToken).ConfigureAwait(false);
         }
     }
 }
