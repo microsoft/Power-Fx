@@ -275,12 +275,7 @@ namespace Microsoft.PowerFx.Core.Entities
     [Obsolete("preview")]
     public class SummarizeCapabilities
     {
-        public virtual bool IsSummarizableProperty(string propertyName)
-        {
-            return false;
-        }
-
-        public virtual bool IsSummarizableMethod(SummarizeMethod method)
+        public virtual bool IsSummarizableProperty(string propertyName, SummarizeMethod method)
         {
             return false;
         }
