@@ -451,18 +451,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
-            // Arg1 is the record to be found. All fields are readonly, so we don't need to add any writes here.
-            node.Args[1].Accept(visitor, new DependencyVisitor.DependencyContext() { ScopeType = node.Args[0].IRContext.ResultType as TableType });
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
+            var recordType = (RecordType)node.Args[1].IRContext.ResultType;
 
-            var newContext = new DependencyVisitor.DependencyContext()
+            // arg1 might refere both to arg0 and arg1.
+            // Examples:
+            // Patch(t1, {...}, {...}) => arg1 is inmemory record and the fields refers to t1.
+            // Patch(t1, First(t2), {...}) => arg1 fields refers to t2 and t1. 
+            foreach (var fieldName in recordType.FieldNames)
             {
-                WriteState = true,
-                ScopeType = node.Args[0].IRContext.ResultType as TableType
-            };
+                visitor.AddDependency(recordType.TableSymbolName, fieldName);
+            }
 
-            foreach (var arg in node.Args.Skip(2).Select(arg => (IRRecordNode)arg))
+            foreach (var arg in node.Args.Skip(1))
             {
-                arg.Accept(visitor, newContext);
+                arg.Accept(visitor, context);
+                if (arg.IRContext.ResultType is AggregateType aggregateType)
+                {
+                    foreach (var fieldName in aggregateType.FieldNames)
+                    {
+                        visitor.AddDependency(tableType.TableSymbolName, fieldName);
+                    }
+                }
             }
 
             return true;
@@ -496,7 +506,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
-        {
+        {            
             var tableType = (TableType)node.Args[0].IRContext.ResultType;
             var recordType = (RecordType)node.Args[1].IRContext.ResultType;
 
@@ -504,14 +514,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var fieldName in recordType.FieldNames)
             {
-                if (datasource != null && datasource.GetKeyColumns().Contains(fieldName))
-                {
-                    visitor.AddFieldRead(tableType.TableSymbolName, fieldName);
-                }
-                else
-                {
-                    visitor.AddFieldWrite(tableType.TableSymbolName, fieldName);
-                }
+                visitor.AddDependency(tableType.TableSymbolName, fieldName);
             }
 
             return true;
@@ -549,16 +552,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var tableType1 = (TableType)node.Args[1].IRContext.ResultType;
             var tableType2 = (TableType)node.Args[2].IRContext.ResultType;
 
-            var datasource = tableType0._type.AssociatedDataSources.First();
-
             foreach (var fieldName in tableType1.FieldNames)
             {
-                visitor.AddFieldRead(tableType0.TableSymbolName, fieldName);
+                visitor.AddDependency(tableType0.TableSymbolName, fieldName);
             }
 
             foreach (var fieldName in tableType2.FieldNames)
             {
-                visitor.AddFieldWrite(tableType0.TableSymbolName, fieldName);
+                visitor.AddDependency(tableType0.TableSymbolName, fieldName);
             }
 
             return true;
@@ -591,11 +592,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (datasource != null && datasource.GetKeyColumns().Contains(fieldName))
                 {
-                    visitor.AddFieldRead(tableType0.TableSymbolName, fieldName);
+                    visitor.AddDependency(tableType0.TableSymbolName, fieldName);
                 }
                 else
                 {
-                    visitor.AddFieldWrite(tableType0.TableSymbolName, fieldName);
+                    visitor.AddDependency(tableType0.TableSymbolName, fieldName);
                 }
             }
 

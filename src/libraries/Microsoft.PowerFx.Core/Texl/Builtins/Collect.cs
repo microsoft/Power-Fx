@@ -469,15 +469,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
-            var newContext = new DependencyVisitor.DependencyContext()
-            {
-                WriteState = true,
-                ScopeType = node.Args[0].IRContext.ResultType as TableType
-            };
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
 
             foreach (var arg in node.Args.Skip(1))
             {
-                arg.Accept(visitor, newContext);
+                var argType = arg.IRContext.ResultType;
+                string argTableSymbolName = null;
+
+                if (argType is AggregateType aggregateType)
+                {
+                    // If argN is a record/table and has a table symbol name, it means we are referencing another entity.
+                    // We then need to add a dependency to the table symbol name as well.
+                    argTableSymbolName = aggregateType.TableSymbolName;
+                }
+
+                foreach (var name in argType._type.GetAllNames(DPath.Root))
+                {
+                    visitor.AddDependency(tableType.TableSymbolName, name.Name.Value);
+                    visitor.AddDependency(argTableSymbolName, name.Name.Value);
+                }
+
+                arg.Accept(visitor, context);
             }
 
             return true;
@@ -511,7 +523,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
             var tableType = (TableType)node.Args[0].IRContext.ResultType;
-            visitor.AddFieldWrite(tableType.TableSymbolName, "Value");
+            visitor.AddDependency(tableType.TableSymbolName, "Value");
 
             return true;
         }

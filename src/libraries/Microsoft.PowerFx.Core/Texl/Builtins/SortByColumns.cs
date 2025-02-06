@@ -7,18 +7,22 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
+using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -542,6 +546,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return (index % 2) == 1 ? ParamIdentifierStatus.PossiblyIdentifier : ParamIdentifierStatus.NeverIdentifier;
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            Utils2.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(node, visitor);
+
+            return true;
         }
     }
 }

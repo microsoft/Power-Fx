@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Public;
@@ -483,6 +484,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Compute the dependencies. Called after binding. 
         /// </summary>
+        [Obsolete("Preview")]
         public DependencyInfo ApplyDependencyInfoScan()
         {
             var ir = ApplyIR(); //throws on errors
@@ -490,7 +492,8 @@ namespace Microsoft.PowerFx
             var ctx = new DependencyVisitor.DependencyContext();
             var visitor = new DependencyVisitor();
 
-            ir.TopNode.Accept(visitor, ctx);
+            // Using the original node without transformations. This simplifies the dependency analysis for PFx.DV side.
+            ir.TopOriginalNode.Accept(visitor, ctx);
 
             return visitor.Info;
         }
@@ -549,17 +552,19 @@ namespace Microsoft.PowerFx
         {
             if (_irresult == null)
             {
+                IntermediateNode irnode = null;
+
                 // IR should not create any new errors. 
                 var binding = this.ApplyBindingInternal();
                 this.ThrowOnErrors();
-                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+                (var originalIRNode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var list = _engine.IRTransformList;
                 if (list != null)
                 {
                     foreach (var transform in list)
                     {
-                        irnode = transform.Transform(irnode, _errors);
+                        irnode = transform.Transform(irnode ?? originalIRNode, _errors);
 
                         // Additional errors from phases. 
                         // Stop any further processing if we have errors. 
@@ -569,7 +574,8 @@ namespace Microsoft.PowerFx
 
                 _irresult = new IRResult
                 {
-                    TopNode = irnode,
+                    TopNode = irnode ?? originalIRNode,
+                    TopOriginalNode = originalIRNode,
                     RuleScopeSymbol = ruleScopeSymbol
                 };
             }
@@ -606,7 +612,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="node"></param>
         /// <returns>Null if the node is not bound.</returns>
-        public FunctionInfo GetFunctionInfo(CallNode node)
+        public FunctionInfo GetFunctionInfo(Syntax.CallNode node)
         {
             if (node == null)
             {

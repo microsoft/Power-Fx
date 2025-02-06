@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         foreach (var field in recordNode.Fields)
                         {
                             var tableType = (TableType)sourceArg.IRContext.ResultType;
-                            visitor.AddField(context, tableType.TableSymbolName, field.Key.Value);
+                            visitor.AddDependency(tableType.TableSymbolName, field.Key.Value);
                         }
 
                         break;

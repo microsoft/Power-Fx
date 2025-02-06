@@ -150,12 +150,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
-            var newContext = new DependencyVisitor.DependencyContext()
-            {
-                WriteState = true
-            };
-
-            node.Args[0].Accept(visitor, newContext);
+            node.Args[0].Accept(visitor, context);
             node.Args[1].Accept(visitor, context);
 
             return true;

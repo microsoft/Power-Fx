@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (arg is TextLiteralNode textLiteralNode)
                 {
-                    visitor.AddFieldRead(tableTypeName, textLiteralNode.LiteralValue);
+                    visitor.AddDependency(tableTypeName, textLiteralNode.LiteralValue);
                 }
                 else if (arg is LazyEvalNode lazyEvalNode)
                 {

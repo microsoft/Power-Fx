@@ -241,15 +241,18 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
-            var newContext = new DependencyVisitor.DependencyContext()
-            {
-                WriteState = true,
-                ScopeType = node.Args[0].IRContext.ResultType as TableType
-            };
+            var tableType = (TableType)node.Args[0].IRContext.ResultType;
 
-            foreach (var arg in node.Args.Skip(1))
+            foreach (var arg in node.Args.Skip(1).Where(a => a.IRContext.ResultType is AggregateType))
             {
-                arg.Accept(visitor, newContext);
+                var argType = arg.IRContext.ResultType;
+
+                foreach (var name in argType._type.GetAllNames(DPath.Root))
+                {
+                    visitor.AddDependency(tableType.TableSymbolName, name.Name.Value);
+                }
+
+                arg.Accept(visitor, context);
             }
 
             return true;

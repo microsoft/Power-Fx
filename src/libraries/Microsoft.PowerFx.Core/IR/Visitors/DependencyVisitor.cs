@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
@@ -14,7 +16,7 @@ namespace Microsoft.PowerFx.Core.IR
     // IR has already:
     // - resolved everything to logical names.
     // - resolved implicit ThisRecord
-    internal class DependencyVisitor : IRNodeVisitor<DependencyVisitor.RetVal, DependencyVisitor.DependencyContext>
+    internal sealed class DependencyVisitor : IRNodeVisitor<DependencyVisitor.RetVal, DependencyVisitor.DependencyContext>
     {
         // Track reults.
         public DependencyInfo Info { get; private set; } = new DependencyInfo();
@@ -50,13 +52,10 @@ namespace Microsoft.PowerFx.Core.IR
 
         public override RetVal Visit(RecordNode node, DependencyContext context)
         {
-            // Read all the fields. The context will determine if the record is referencing a data source
+            // Visit all field values in case there are CallNodes. Field keys should be handled by the function caller.
             foreach (var kv in node.Fields)
             {
-                AddField(context, context.ScopeType?.TableSymbolName, kv.Key.Value);
-
-                // Reset the context for field values in case we are operating in a write context.
-                kv.Value.Accept(this, new DependencyContext());
+                kv.Value.Accept(this, context);
             }
 
             return null;
@@ -109,20 +108,16 @@ namespace Microsoft.PowerFx.Core.IR
                 if (_scopeTypes.TryGetValue(sym.Parent.Id, out var type))
                 {
                     // Ignore ThisRecord scopeaccess node. e.g. Summarize(table, f1, Sum(ThisGroup, f2)) where ThisGroup should be ignored.
-                    if (type is TableType tableType && node.IRContext.ResultType is not AggregateType)
+                    if (type is TableType tableType && tableType.TryGetFieldType(sym.Name.Value, out _))
                     {
-                        var tableLogicalName = tableType.TableSymbolName;
-                        var fieldLogicalName = sym.Name.Value;
-
-                        AddField(context, tableLogicalName, fieldLogicalName);
+                        AddDependency(tableType.TableSymbolName, sym.Name.Value);
 
                         return null;
                     }
                 }
             }
-
-            // Any symbol access here is some temporary local, and not a field.
-            return null;
+           
+            return null;           
         }
 
         // field              // IR will implicity recognize as ThisRecod.field
@@ -141,7 +136,7 @@ namespace Microsoft.PowerFx.Core.IR
                 if (tableLogicalName != null)
                 {
                     var fieldLogicalName = node.Field.Value;
-                    AddField(context, tableLogicalName, fieldLogicalName);
+                    AddDependency(tableLogicalName, fieldLogicalName);
                 }
             }
 
@@ -152,16 +147,7 @@ namespace Microsoft.PowerFx.Core.IR
         {
             if (node.IRContext.ResultType is AggregateType aggregateType)
             {
-                var tableLogicalName = aggregateType.TableSymbolName;
-                if (context.WriteState)
-                {
-                    tableLogicalName = context.ScopeType?.TableSymbolName;
-                }
-
-                if (tableLogicalName != null)
-                {
-                    AddField(context, tableLogicalName, null);
-                }
+                AddDependency(aggregateType.TableSymbolName, null);
             }
 
             CheckResolvedObjectNodeValue(node, context);
@@ -169,7 +155,7 @@ namespace Microsoft.PowerFx.Core.IR
             return null;
         }
 
-        protected virtual void CheckResolvedObjectNodeValue(ResolvedObjectNode node, DependencyContext context)
+        public void CheckResolvedObjectNodeValue(ResolvedObjectNode node, DependencyContext context)
         {
             if (node.Value is NameSymbol sym)
             {
@@ -181,14 +167,14 @@ namespace Microsoft.PowerFx.Core.IR
                     if (symTable.IsThisRecord(sym))
                     {
                         // "ThisRecord". Whole entity
-                        AddField(context, tableLogicalName, null);
+                        AddDependency(type.TableSymbolName, null);
                         return;
                     }
 
                     // on current table
                     var fieldLogicalName = sym.Name;
 
-                    AddField(context, tableLogicalName, fieldLogicalName);
+                    AddDependency(type.TableSymbolName, fieldLogicalName);
                 }
             }
         }
@@ -224,73 +210,27 @@ namespace Microsoft.PowerFx.Core.IR
 
         public class DependencyContext
         {
-            // Indicates the scanning is working on the args of a non self-contained function.
-            public bool WriteState { get; init; }
-
-            // If WriteState is true, this will be set with the arg0 type.
-            public TableType ScopeType { get; init; }
-
             public DependencyContext()
             {
             }
         }
 
-        // Translate relationship names to actual field references.
-        public virtual string Translate(string tableLogicalName, string fieldLogicalName)
-        {
-            return fieldLogicalName;
-        }
-
         // if fieldLogicalName, then we're taking a dependency on entire record.
-        private void AddField(Dictionary<string, HashSet<string>> list, string tableLogicalName, string fieldLogicalName)
+        public void AddDependency(string tableLogicalName, string fieldLogicalName)
         {
             if (tableLogicalName == null)
             {
                 return;
             }
 
-            if (!list.TryGetValue(tableLogicalName, out var fieldReads))
+            if (!Info.Dependencies.ContainsKey(tableLogicalName))
             {
-                fieldReads = new HashSet<string>();
-                list[tableLogicalName] = fieldReads;
+                Info.Dependencies[tableLogicalName] = new HashSet<string>();
             }
-            
+
             if (fieldLogicalName != null)
             {
-                var name = Translate(tableLogicalName, fieldLogicalName);
-                fieldReads.Add(name);
-            }
-        }
-
-        public void AddFieldRead(string tableLogicalName, string fieldLogicalName)
-        {
-            if (Info.FieldReads == null)
-            {
-                Info.FieldReads = new Dictionary<string, HashSet<string>>();
-            }
-
-            AddField(Info.FieldReads, tableLogicalName, fieldLogicalName);
-        }
-
-        public void AddFieldWrite(string tableLogicalName, string fieldLogicalName)
-        {
-            if (Info.FieldWrites == null)
-            {
-                Info.FieldWrites = new Dictionary<string, HashSet<string>>();
-            }
-
-            AddField(Info.FieldWrites, tableLogicalName, fieldLogicalName);
-        }
-
-        public void AddField(DependencyContext context, string tableLogicalName, string fieldLogicalName)
-        {
-            if (context.WriteState)
-            {
-                AddFieldWrite(tableLogicalName, fieldLogicalName);
-            }
-            else
-            {
-                AddFieldRead(tableLogicalName, fieldLogicalName);
+                Info.Dependencies[tableLogicalName].Add(fieldLogicalName);
             }
         }
     }
@@ -310,29 +250,28 @@ namespace Microsoft.PowerFx.Core.IR
         /// The formula "Name & 'Primary Contact'.'Full Name' & Sum(Contacts, 'Number Of Childeren')" would return
         ///    "contact" => { "fullname", "numberofchildren" }.
         /// </example>
-        public Dictionary<string, HashSet<string>> FieldReads { get; set; }
-#pragma warning restore CS1570 // XML comment has badly formed XML
+        public Dictionary<string, HashSet<string>> Dependencies { get; set; }
 
-        public Dictionary<string, HashSet<string>> FieldWrites { get; set; }
-
-        public bool HasWrites => FieldWrites != null && FieldWrites.Count > 0;
+        public DependencyInfo()
+        {
+            Dependencies = new Dictionary<string, HashSet<string>>();
+        }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            DumpHelper(sb, "Read", FieldReads);
-            DumpHelper(sb, "Write", FieldWrites);
+            DumpHelper(sb, Dependencies);
 
             return sb.ToString();
         }
 
-        private static void DumpHelper(StringBuilder sb, string kind, Dictionary<string, HashSet<string>> dict)
+        private static void DumpHelper(StringBuilder sb, Dictionary<string, HashSet<string>> dict)
         {
             if (dict != null)
             {
                 foreach (var kv in dict)
                 {
-                    sb.Append(kind);
+                    sb.Append("Entity");
                     sb.Append(" ");
                     sb.Append(kv.Key);
                     sb.Append(": ");
