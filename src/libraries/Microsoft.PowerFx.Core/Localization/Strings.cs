@@ -758,26 +758,19 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExBadExactQuantifier = new ErrorResourceKey("ErrInvalidRegExBadExactQuantifier");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefSelfReferencing = new ErrorResourceKey("ErrInvalidRegExBadBackRefSelfReferencing");
         public static ErrorResourceKey ErrInvalidRegExBadBackRefNotDefined = new ErrorResourceKey("ErrInvalidRegExBadBackRefNotDefined");
-        public static ErrorResourceKey ErrInvalidRegExBadBackRefNumber = new ErrorResourceKey("ErrInvalidRegExBadBackRefNumber");
         public static ErrorResourceKey ErrInvalidRegExBadBalancing = new ErrorResourceKey("ErrInvalidRegExBadBalancing");
         public static ErrorResourceKey ErrInvalidRegExBadSingleQuoteNamedCapture = new ErrorResourceKey("ErrInvalidRegExBadSingleQuoteNamedCapture");
         public static ErrorResourceKey ErrInvalidRegExBadEscape = new ErrorResourceKey("ErrInvalidRegExBadEscape");
         public static ErrorResourceKey ErrInvalidRegExBadConditional = new ErrorResourceKey("ErrInvalidRegExBadConditional");
         public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureAlreadyExists = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureAlreadyExists");
         public static ErrorResourceKey ErrInvalidRegExBadNamedCaptureName = new ErrorResourceKey("ErrInvalidRegExBadNamedCaptureName");
-        public static ErrorResourceKey ErrInvalidRegExBadCharacterClassLiteralSquareBracket = new ErrorResourceKey("ErrInvalidRegExBadCharacterClassLiteralSquareBracket");
         public static ErrorResourceKey ErrInvalidRegExUnclosedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnclosedCaptureGroups");
         public static ErrorResourceKey ErrInvalidRegExUnclosedInlineComment = new ErrorResourceKey("ErrInvalidRegExUnclosedInlineComment");
         public static ErrorResourceKey ErrInvalidRegExUnopenedCaptureGroups = new ErrorResourceKey("ErrInvalidRegExUnopenedCaptureGroups");
-        public static ErrorResourceKey ErrInvalidRegExUnclosedCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnclosedCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExMixingNamedAndNumberedSubMatches = new ErrorResourceKey("ErrInvalidRegExMixingNamedAndNumberedSubMatches");
         public static ErrorResourceKey ErrInvalidRegExNumberedSubMatchesDisabled = new ErrorResourceKey("ErrInvalidRegExNumberedSubMatchesDisabled");
-        public static ErrorResourceKey ErrInvalidRegExBadUnsupportedCharacterClassSubtraction = new ErrorResourceKey("ErrInvalidRegExBadUnsupportedCharacterClassSubtraction");
-        public static ErrorResourceKey ErrInvalidRegExOpenParenInComment = new ErrorResourceKey("ErrInvalidRegExOpenParenInComment");
         public static ErrorResourceKey ErrInvalidRegExLiteralHyphenInCharacterClass = new ErrorResourceKey("ErrInvalidRegExLiteralHyphenInCharacterClass");
-        public static ErrorResourceKey ErrInvalidRegExBackRefInCharacterClass = new ErrorResourceKey("ErrInvalidRegExBackRefInCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExUnescapedCharInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedCharInCharacterClass");
-        public static ErrorResourceKey ErrInvalidRegExUnescapedParensInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedParensInCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExBadUnicodeCategory = new ErrorResourceKey("ErrInvalidRegExBadUnicodeCategory");
         public static ErrorResourceKey ErrInvalidRegExEmptyCharacterClass = new ErrorResourceKey("ErrInvalidRegExEmptyCharacterClass");
 

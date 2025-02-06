@@ -34,10 +34,10 @@ Blank()
 {FullMatch:"Hi",StartMatch:1}
 
 >> Match("28", "28", Blank())
-Errors: Error 18-25: Regular expression options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 18-25: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match("28", "28", 28)
-Errors: Error 18-20: Regular expression options must be constant values.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 18-20: MatchOptions must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "a", "((a)|(b))", MatchOptions.NumberedSubMatches )
 {FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"},{Value:Blank()})}

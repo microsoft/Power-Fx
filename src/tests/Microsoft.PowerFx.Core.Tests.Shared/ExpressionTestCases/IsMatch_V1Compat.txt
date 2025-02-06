@@ -2,3 +2,6 @@
 
 >> IsMatch("Foo", "J(")
 Errors: Error 15-19: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-7: The function 'IsMatch' has some invalid arguments.
+
+>> IsMatch("""Hello world""", "\w+", If( Sqrt(4) > 0, MatchOptions.Contains, MatchOptions.Complete))
+Errors: Error 34-96: MatchOptions must be a constant value.|Error 0-7: The function 'IsMatch' has some invalid arguments.

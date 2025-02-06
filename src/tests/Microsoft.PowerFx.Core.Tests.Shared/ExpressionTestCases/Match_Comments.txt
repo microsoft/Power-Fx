@@ -58,7 +58,7 @@ Errors: Error 15-63: Invalid regular expression: Unclosed inline comment, starts
 
  s
 
- t # t is for terminte
+ t # t is for termite
 
  ").FullMatch
 "test"

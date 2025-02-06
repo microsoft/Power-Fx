@@ -32,8 +32,8 @@ Power Fx supports the following regular expression features, with notes on how P
 
 | Feature | Description |
 |---------|---------|
-| Literal characters | Any character except `[` `]` `\` `^` `$` `.` `|` `?` `*` `+` `(` `)` can be inserted directly. |
-| Escaped literal characters | `\` (backslash) followed by any character except a letter or underscore. Used to insert the exceptions to direct literal characters, such as `\?` to insert a question mark. | 
+| Literal characters | Any Unicode character can be inserted directly, except `\`, `[`, `]`, `^`, `$`, `.`, `|`, `?`, `*`, `+`, `(`, `)`, `{`, and `}`. When using **MatchOptions.FreeSpacing**, `#`, ` `, and other `\s` space characters must be escaped as they have a different meaning. |
+| Escaped literal characters | `\` (backslash) followed by one of the direct literal characters, such as `\?` to insert a question mark. `\#` and `\ ` may also be used even when **MatchOptions.FreeSpacing** is disabled for consistency. | 
 | Control characters | `\cA`, where the control characters is `A` through `Z`, upper or lowercase. |
 | Hexadecimal and Unicode character codes | `\x20` with two hexadecimal digits, `\u2028` with four hexadecimal digits. |
 | Carriage return | `\r`, the same as `Char(13)`. |
@@ -41,13 +41,9 @@ Power Fx supports the following regular expression features, with notes on how P
 | Form feed | `\f`, the same as `Char(12)`. |
 | Horizontal Tab | `\t`, the same as `Char(9)`. |
 
-Octal codes for characters, such as `\044` or `\o{044}` are disallowed. Use `\x` or `\u` instead. Octal character codes can be ambiguous with numbered back references which is why Power Fx disallows them.
+Octal codes for characters, such as `\044` or `\o{044}` are disallowed, as they can be ambiguous with numbered back references. Use `\x` or `\u` instead. 
 
-Unescaped `[`, `]`, `{`, or `}` as a literal character is disallowed, instead escape these characters with a backslash. This avoids ambiguity.
-
-Escaped letters and underscore are reserved for character classes, even if they are not used today.
-
-Vertical tab, `\v` in some regular expression systems, is not supported as it ambiguous across regular expression languages. Use `\x0b` instead.
+`\v` is not supported as it ambiguous across regular expression languages. Use `\x0b` for a vertical tab or `[\x0b\f\r\n\u2028\u2029]` for vertical whitespace.
 
 ### Assertions
 
@@ -78,7 +74,8 @@ To increase clarity and avoid ambiguity, square bracket character classes are mo
 - Literal hyphen characters must be escaped. Use `[\-a]` instead of `[-a]` to match `-` or `a`.
 - Beginning square brackets must be escaped. Use `[\[a]` instead of `[[]` to match `[` or `a`.
 - Unless it is the first character and indicating negation, the character must be escaped. Use `[a\^]` instead of `[a^]` to match `^` or `a`.
-- Character classes cannot be empty and `[]` is not supported. To include a closing square bracket in a character class, escape it.
+- Curly braces must be escaped. Use `[\{\}]` to match `{` or `}`.
+- Empty character class `[]` is not supported. To include a closing square bracket in a character class, escape it.
 
 Unicode character categories supported by `\p{}` and `\P{}`:
 - Letters: `L`, `Lu`, `Ll`, `Lt`, `Lm`, `Lo`
@@ -141,17 +138,17 @@ See **MatchOptions.FreeSpacing** for an alternative for formatting and commentin
 
 | Feature | Description |
 |---------|---------|
-| Inline options | `(?im)` is the same as using **MatchOptions.IgnoreCase** and **MatchOptions.Multiline**. Must be used at the beginning of the regular expression. |
+| Inline options | `(?im)` is the same as using **MatchOptions.IgnoreCase** and **MatchOptions.Multiline**. Must be set at the beginning of the regular expression. |
 
-Supported inline modes are `[imsx]`, corresponding to **MatchOptions.IgnoreCase**, **MatchOptions.Multiline**, **MatchOptions.DotAll**, and **MatchOptions.FreeSpacing**, respectively. 
+Supported inline modes are `[imsx]`, corresponding to **MatchOptions.IgnoreCase**, **MatchOptions.Multiline**, **MatchOptions.DotAll**, and **MatchOptions.FreeSpacing**, respectively. `n` is also accepted for compatibility but has no effect as it is the default and is incompatible with **MatchOptions.NumberedSubMatches**.
 
-Some regular expression systems support changing the options in the middle of a regular expression or apply an option to only a part of the regular expression; Power Fx does not.
+Inline options cannot be used to disable an option or set an option for a sub-expression.
 
 ## Options
 
-Match options change the behavior of regular expression matching. There are two ways to enable each modifier:
-- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Mode modifiers can be combined with the `&` operator, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`.
-- `(?...)` prefix at the very beginning of the regular expression.  Mode midfiers can be combined with multiple letters in the `(?...)` construct, for example `(?sx)`.  Some options do not have a `(?...)` equivalent but may have other ways to get the same effect.
+Match options change the behavior of regular expression matching. There are two ways to enable options, which can be mixed so long as there is no conflict:
+- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Options can be combined with the `&` operator, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`. All of the regular expression functions requires that **MatchOptions** is a constant value, it cannot be calculated or stored in a variable. 
+- `(?...)` prefix at the very beginning of the regular expression.  Options can be combined with multiple letters in the `(?...)` construct, for example `(?sx)`.  Some options do not have a `(?...)` equivalent but may have other ways to get the same effect, for example **MatchOptions.BeginsWith** is the equivalent of `^` at the beginning of the regular expression.
 
 ### Contains
 
@@ -171,7 +168,7 @@ Enabled with **MatchOptions.EndsWith** or use `$` at the end of the regular expr
 
 ### DotAll
 
-Enabled with **MatchOptions.DotAll** or `(?s)` at the start of a regular expression.
+Enabled with **MatchOptions.DotAll** or `(?s)` at the start of the regular expression.
 
 Normally the dot `.` operator will match all characters except newline characters `Char(10)` and `Char(13)`. With the **DotAll** modifier, all characters are matched, including newlines.
 
@@ -266,6 +263,16 @@ MatchAll( "Hello" & Char(13) & Char(10) & "World", "^.+$" )
 // returns 
 // "Hello"
 ```
+
+### NumberedSubMatches
+
+Enabled with **MatchOptions.NumberedSubMatches** with no inline option. `(?n)` is supported as the opposite of this option for compatibility and is the default.
+
+By default, `(...)` does not capture, the equivalent of what most systems call "explicit capture". To capture, use a named capture with `(?<name>...)` with backreference `\k<name>`. This improves performance of the regular expression by not capturing gruops that do not need to be captures and improving clarity by using names instead of numbers that can change.
+
+If you have an existing regular expression, it may depend on groups being captured automatically and numbered, including numbered back references. This is available by using the **MatchOptions.NumberedSubMaches** option.
+
+Named and numbered sub-matches cannot be used together. Some implementations treat a mix of numbered and named capture groups differently which is why Power Fx disallows it. 
 
 ## Differences between implementations
 

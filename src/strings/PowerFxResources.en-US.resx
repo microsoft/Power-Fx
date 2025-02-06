@@ -4520,7 +4520,7 @@
     <comment>Error message indicating that the regular expression has inline options not at the front.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadInlineOptions_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Inline options are limited to a combination of the letters [imsx], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
+    <value>Invalid regular expression: Inline options are limited to a combination of the letters [imnsx], cannot disable options, and cannot be used on a subexpression, found "{0}".</value>
     <comment>Error message indicating that the regular expression has bad inline options.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadOctal_ShortMessage" xml:space="preserve">
@@ -4572,7 +4572,7 @@
     <comment>Error message indicating that the regular expression does not support possessive quantifiers.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadExactQuantifier_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Exact quantifiers cannot be used with lazy or possessive quantifiers, found "{0}".</value>
+    <value>Invalid regular expression: Exact quantifiers cannot be used with quantifier modifiers such as ? for lazy, found "{0}".</value>
     <comment>Error message indicating that the regular expression does not support modifiers for exact quantifiers.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadEscape_ShortMessage" xml:space="preserve">
@@ -4586,14 +4586,6 @@
   <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Self-referencing capture groups are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has self-referencing capture groups.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExBadBackRefNumber_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Numbered back references are not supported, use named back references with "(?&lt;name&gt;)" and "\k&lt;name&gt;" instead, found "{0}".</value>
-    <comment>Error message indicating that the regular expression is using numeric capture groups.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExUnclosedCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Unclosed character class, too few closing square brackets.</value>
-    <comment>Error message indicating that the regular expression has unclosed character classes.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Unclosed groups, too few closing parenthesis.</value>
@@ -4619,16 +4611,12 @@
     <value>Invalid regular expression: Character appears more than once in character class, found repeated "{0}".</value>
     <comment>Error message indicating that the regular expression has repeated characters in a character class definition.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBadCharacterClassLiteralSquareBracket_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Square bracket character classes cannot include unescaped literal open or close square brackets, escape with "\[" or "\]", found at the end of "{0}".</value>
-    <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
-  </data>
   <data name="ErrorResource_ErrInvalidRegExEmptyCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Square bracket character classes cannot be empty, found "{0}".</value>
     <comment>Error message indicating that the regular expression character class is empty.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Balancing capture groups is not supported, found "{0}".</value>
+    <value>Invalid regular expression: Balancing capture groups are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has balancing capture groups.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
@@ -4644,43 +4632,23 @@
     <comment>Error message indicating that the regular expression is mixing named and numbered captures.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExNumberedSubMatchesDisabled_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;" and "\k&lt;name&gt;" or enable MatchOptions.NumberedSubMatches, found "{0}".</value>
+    <value>Invalid regular expression: Use named captures with "(?&lt;name&gt;...)" and "\k&lt;name&gt;" or enable MatchOptions.NumberedSubMatches, found "{0}".</value>
     <comment>Error message indicating that the regular expression is not enabled for numbered captures.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExBadUnsupportedCharacterClassSubtraction_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Character class subtraction is not supported, found at the end of "{0}".</value>
-    <comment>Error message indicating that the regular expression is using character class subtraction and it is not supported.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExOpenParenInComment_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Inline comments cannot include open parenthesis, found in "{0}".</value>
-    <comment>Error message indicating that the regular expression has an open paren in an inline comment.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExLiteralHyphenInCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal hyphen in character class must be escaped with backslash, escape with "\-", found in "{0}".</value>
     <comment>Error message indicating that the regular expression has a hyphen in a character class.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExBackRefInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Backref in character class, found "{0}".</value>
-    <comment>Error message indicating that the regular expression has a backref in a character class.</comment>
-  </data>
-  <data name="ErrorResource_ErrInvalidRegExUnescapedParensInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Literal parenthesis need to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
-    <comment>Error message indicating that the regular expression has an unescaped paren within a character class.</comment>
-  </data>
   <data name="ErrorResource_ErrInvalidRegExUnescapedCharInCharacterClass_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExInvalidInCharacterClass_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Illegal characters in character class, found at the end of "{0}".</value>
-    <comment>Error message indicating that the regular expression has an illegal character in character class.</comment>
-  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regular expressions must be constant values.</value>
+    <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
-    <value>Regular expression options must be constant values.</value>
+    <value>MatchOptions must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
