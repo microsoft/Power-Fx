@@ -1367,6 +1367,9 @@ Errors: Error 15-26: Invalid regular expression: Unclosed inline comment, starts
 >> Match( "asdf", "as" & "df" )
 {FullMatch:"asdf",StartMatch:1}
 
+>> Match( "asdf", Concatenate( "as", "df" ) )
+{FullMatch:"asdf",StartMatch:1}
+
 // Concat function is not
 >> Match( "asdf", Concat(["as", "df"], Value) )
 Errors: Error 15-42: Regular expression must be a constant value.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -1392,6 +1395,12 @@ Errors: Error 23-74: MatchOptions must be a constant value.|Error 0-5: The funct
 // ErrVariableRegEx
 >> MatchAll( "asdf", Text( "asdf" ) )
 Errors: Error 18-32: Regular expression must be a constant value.|Error 0-8: The function 'MatchAll' has some invalid arguments.
+
+>> Match( "asDFASdf", "dfas", MatchOptions.IgnoreCase & MatchOptions.Contains )
+{FullMatch:"DFAS",StartMatch:3}
+
+>> Match( "asDFASdf", "dfas", Concatenate( MatchOptions.IgnoreCase, MatchOptions.Contains ) )
+{FullMatch:"DFAS",StartMatch:3}
 
 // ErrVariableRegExOptions
 >> MatchAll( "asdf", "asdf", If( Int(4) > -1, MatchOptions.IgnoreCase, MatchOptions.Contains ) )

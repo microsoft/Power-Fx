@@ -28,6 +28,8 @@ Power Fx will produce an authoring time error when unsupported features are enco
 
 Power Fx supports the following regular expression features, with notes on how Power Fx behavior may differ from other systems.
 
+The regular expression must be a constant and not calculated or stored in a variable. Using the `&` operator and the `Concatenate`, `Char`, and `UniChar` functions with constant arguments is supported.
+
 ### Literal characters
 
 | Feature | Description |
@@ -147,7 +149,7 @@ Inline options cannot be used to disable an option or set an option for a sub-ex
 ## Options
 
 Match options change the behavior of regular expression matching. There are two ways to enable options, which can be mixed so long as there is no conflict:
-- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Options can be combined with the `&` operator, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`. All of the regular expression functions requires that **MatchOptions** is a constant value, it cannot be calculated or stored in a variable. 
+- **MatchOptions** enum value passed as the third argument to **Match**, **MatchAll**, and **IsMatch**.  Options can be combined with the `&` operator or `Concatenate` function, for example `MatchOptions.DotAll & MatchOptions.FreeSpacing`. All of the regular expression functions requires that **MatchOptions** is a constant value, it cannot be calculated or stored in a variable. 
 - `(?...)` prefix at the very beginning of the regular expression.  Options can be combined with multiple letters in the `(?...)` construct, for example `(?sx)`.  Some options do not have a `(?...)` equivalent but may have other ways to get the same effect, for example **MatchOptions.BeginsWith** is the equivalent of `^` at the beginning of the regular expression.
 
 ### Contains
