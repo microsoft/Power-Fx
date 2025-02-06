@@ -13,7 +13,14 @@
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Repl\Microsoft.PowerFx.Repl.csproj" />
-    <ProjectReference Include="..\..\tests\.Net7.0\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj" />
   </ItemGroup>
 
-</Project>
+  <Choose>
+    <When Condition="$(DefineConstants.Contains('MATCHCOMPARE'))">
+      <ItemGroup>
+        <ProjectReference Include="..\..\tests\.Net7.0\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  </Project>
