@@ -229,6 +229,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var exceptionList = new HashSet<string>()
             {
                 "Average",
+                "AddColumns",
                 "Concat",
                 "CountIf",
                 "Filter",
