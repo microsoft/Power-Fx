@@ -550,7 +550,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
         {
-            Utils2.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(node, visitor);
+            node.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(visitor);
 
             return true;
         }

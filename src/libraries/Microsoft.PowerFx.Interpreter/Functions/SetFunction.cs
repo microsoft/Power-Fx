@@ -147,13 +147,5 @@ namespace Microsoft.PowerFx.Interpreter
 
             return false;
         }
-
-        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
-        {
-            node.Args[0].Accept(visitor, context);
-            node.Args[1].Accept(visitor, context);
-
-            return true;
-        }
     }
 }

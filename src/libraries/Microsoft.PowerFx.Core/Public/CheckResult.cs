@@ -552,19 +552,19 @@ namespace Microsoft.PowerFx
         {
             if (_irresult == null)
             {
-                IntermediateNode irnode = null;
-
                 // IR should not create any new errors. 
                 var binding = this.ApplyBindingInternal();
                 this.ThrowOnErrors();
-                (var originalIRNode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+
+                var originalIRNode = irnode;
 
                 var list = _engine.IRTransformList;
                 if (list != null)
                 {
                     foreach (var transform in list)
                     {
-                        irnode = transform.Transform(irnode ?? originalIRNode, _errors);
+                        irnode = transform.Transform(irnode, _errors);
 
                         // Additional errors from phases. 
                         // Stop any further processing if we have errors. 
@@ -574,7 +574,7 @@ namespace Microsoft.PowerFx
 
                 _irresult = new IRResult
                 {
-                    TopNode = irnode ?? originalIRNode,
+                    TopNode = irnode,
                     TopOriginalNode = originalIRNode,
                     RuleScopeSymbol = ruleScopeSymbol
                 };

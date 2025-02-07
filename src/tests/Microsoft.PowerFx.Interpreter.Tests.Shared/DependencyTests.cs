@@ -16,7 +16,6 @@ using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -45,6 +44,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("AddColumns(simple1, z, 1)", "Entity Simple1: ;")]
         [InlineData("RenameColumns(simple1, b, c)", "Entity Simple1: b;")]
         [InlineData("SortByColumns(simple1, a, SortOrder.Descending)", "Entity Simple1: a;")]
+        [InlineData("RenameColumns(If(false, simple1, Error({Kind:ErrorKind.Custom})), b, c)", "Entity Simple1: b;")]
+        [InlineData("SortByColumns(If(false, simple1, Error({Kind:ErrorKind.Custom})), a, SortOrder.Descending)", "Entity Simple1: a;")]
 
         // Basic scoping
         [InlineData("Min(local,numberofemployees)", "Entity Accounts: numberofemployees;")]
@@ -96,6 +97,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [InlineData("Filter(Distinct(ShowColumns(simple2, a, b), a), Value < 20)", "Entity Simple2: a, b;")]
         [InlineData("Filter(Distinct(DropColumns(simple2, c), a), Value < 20)", "Entity Simple2: c, a;")]
+
+        [InlineData("AddColumns(simple1, z, a+1)", "Entity Simple1: a;")]
         public void GetDependencies(string expr, string expected)
         {
             var opt = new ParserOptions() { AllowsSideEffects = true };
@@ -228,8 +231,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // These methods use default implementation of ComposeDependencyInfo and do not neeed to override it. 
             var exceptionList = new HashSet<string>()
             {
-                "Average",
                 "AddColumns",
+                "Average",
                 "Concat",
                 "CountIf",
                 "Filter",
@@ -242,6 +245,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Search",
                 "Sort",
                 "StdevP",
+                "Set",
                 "Sum",
                 "Trace",
                 "VarP",
