@@ -21,6 +21,7 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
@@ -31,6 +32,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Core.IR.DependencyVisitor;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -1737,6 +1739,26 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return ArgPreprocessor.None;
+        }
+
+        /// <summary>
+        /// Visit all function nodes to compose dependency info.
+        /// </summary>
+        /// <param name="node">IR CallNode.</param>
+        /// <param name="visitor">Dependency visitor.</param>
+        /// <param name="context">Dependency context.</param>
+        /// <returns></returns>
+        public virtual bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyContext context)
+        {
+            foreach (var arg in node.Args)
+            {
+                arg.Accept(visitor, context);
+            }
+
+            // The return value is used by DepedencyScanFunctionTests test case.
+            // Returning false to indicate that the function runs a basic dependency scan.
+            // Other functions can override this method to return true if they have a custom dependency scan.
+            return false;
         }
     }
 }
