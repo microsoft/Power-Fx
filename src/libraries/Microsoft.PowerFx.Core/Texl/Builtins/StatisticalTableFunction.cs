@@ -116,8 +116,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            ScopeInfo?.CheckLiteralPredicates(args, errors);
-
             return true;
         }
     }
