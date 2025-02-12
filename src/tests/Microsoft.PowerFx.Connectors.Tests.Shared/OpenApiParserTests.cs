@@ -61,6 +61,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public void SwaggerWithArrayBody()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\TestSwagger1.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("swagger") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction createFileWithTable = functions.First(cf => cf.Name == "CreateFileWithTable");
+
+            Assert.Single(createFileWithTable.RequiredParameters);
+            Assert.Equal("rows", createFileWithTable.RequiredParameters[0].Name);
+            Assert.Equal("*[Value:*[]]", createFileWithTable.RequiredParameters[0].FormulaType.ToStringWithDisplayNames());
+        }
+
+        [Fact]
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json", _output);

@@ -1,0 +1,85 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Power Apps Connector",
+    "description": "API definition for Power Apps Connector",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/{connectionId}/codeless/createFileWithTable": {
+      "post": {
+        "summary": "Create File with Table",
+        "description": "Create an excel file with a table",
+        "operationId": "CreateFileWithTable",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "rows",
+            "in": "body",
+            "description": "Input an array with comma separated values",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            "x-ms-summary": "Rows to be added to the table"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CreateFileMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "externalDocs": {
+          "url": "https://docs.microsoft.com/connectors/excelonlinebusiness/#create-file-with-table"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateFileMetadata": {
+      "type": "object",
+      "properties": {
+        "fileId": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
