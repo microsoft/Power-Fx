@@ -210,8 +210,8 @@ namespace Microsoft.PowerFx.Connectors
             return TryGetOpenApiValue(schema.Default, formulaType, out defaultValue, errors);
         }
 
-        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue, SupportsConnectorErrors errors, bool allowOpenApiDateTime = false)
-        {
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, FormulaType formulaType, out FormulaValue formulaValue, SupportsConnectorErrors errors)        
+        {            
             formulaValue = null;
 
             if (openApiAny == null)
@@ -279,11 +279,11 @@ namespace Microsoft.PowerFx.Connectors
                 // OpenApi library uses Convert.FromBase64String
                 formulaValue = FormulaValue.New(Convert.ToBase64String(by.Value));
             }
-            else if (openApiAny is OpenApiDateTime dt && allowOpenApiDateTime)
+            else if (openApiAny is OpenApiDateTime dt)            
             {
                 formulaValue = FormulaValue.New(new DateTime(dt.Value.Ticks, DateTimeKind.Utc));
             }
-            else if (openApiAny is OpenApiDate dte && allowOpenApiDateTime)
+            else if (openApiAny is OpenApiDate dte)            
             {
                 formulaValue = FormulaValue.NewDateOnly(new DateTime(dte.Value.Ticks, DateTimeKind.Utc));
             }
@@ -1162,7 +1162,7 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this IDictionary<string, IOpenApiAny> opPrms, SupportsConnectorErrors errors, bool forceString = false)
+        internal static Dictionary<string, IConnectorExtensionValue> GetParameterMap(this IDictionary<string, IOpenApiAny> opPrms, SupportsConnectorErrors errors)        
         {
             Dictionary<string, IConnectorExtensionValue> dvParams = new ();
 
@@ -1173,7 +1173,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {
-                if (!TryGetOpenApiValue(prm.Value, null, out FormulaValue fv, errors, forceString))
+                if (!TryGetOpenApiValue(prm.Value, null, out FormulaValue fv, errors))                
                 {
                     errors.AddError($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
                     continue;
@@ -1183,8 +1183,8 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     // https://github.com/microsoft/OpenAPI.NET/issues/533
                     // https://github.com/microsoft/Power-Fx/pull/1987 - https://github.com/microsoft/Power-Fx/issues/1982
-                    // api-version, x-ms-api-version, X-GitHub-Api-Version...
-                    if (forceString && prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
+                    // api-version, x-ms-api-version, X-GitHub-Api-Version...                    
+                    if (prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
                     {
                         fv = FormulaValue.New(dtv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                     }
@@ -1202,7 +1202,7 @@ namespace Microsoft.PowerFx.Connectors
                     // https://github.com/microsoft/OpenAPI.NET/issues/533
                     // https://github.com/microsoft/Power-Fx/pull/1987 - https://github.com/microsoft/Power-Fx/issues/1982
                     // api-version, x-ms-api-version, X-GitHub-Api-Version...
-                    if (forceString && prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))
+                    if (prm.Key.EndsWith("api-version", StringComparison.OrdinalIgnoreCase))                    
                     {
                         fv = FormulaValue.New(dv.GetConvertedValue(TimeZoneInfo.Utc).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
                     }
