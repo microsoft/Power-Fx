@@ -220,13 +220,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 #endif
 
-            // Run cases in MutationScripts
-            //
-            // Normal tests have each line as an independent test case. 
-            // Whereas these are fed into a repl and each file maintains state.
-            // 
-            // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
-            [Theory]
+        // Run cases in MutationScripts
+        //
+        // Normal tests have each line as an independent test case. 
+        // Whereas these are fed into a repl and each file maintains state.
+        // 
+        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
+        [Theory]
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
         {

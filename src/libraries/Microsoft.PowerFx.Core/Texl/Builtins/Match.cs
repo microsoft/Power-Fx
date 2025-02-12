@@ -329,8 +329,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             bool[] zeroAlt = new bool[1000];
             bool[] zeroCaptureSeen = new bool[1000];
             bool[] captureAlt = new bool[1000];
+            bool[] lookAround = new bool[1000];
+            List<string> capturesWithin = new List<string>();
 
             var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
+            var capturePossibleZero = new Dictionary<string, bool>();
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
             bool openInlineComment = false;                         // there is an open inline comment
@@ -492,9 +495,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         isCapture[captureStack.Count] = true;
                     }
-                    else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
+                    else if (token.Groups["goodNonCapture"].Success)
                     {
                         captureStack.Push(null);
+                    }
+                    else if (token.Groups["goodLookaround"].Success)
+                    {
+                        captureStack.Push(null);
+                        lookAround[captureStack.Count] = true;
                     }
                     else if (token.Groups["alternation"].Success)
                     {
@@ -537,10 +545,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             var idx = token.Index + token.Length;
                             bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
 
+                            if (lookAround[captureStack.Count])
+                            {
+                                captureSeen[captureStack.Count] = false;
+                                groupAlt[captureStack.Count] = false;
+                                zeroAlt[captureStack.Count] = false;
+                                captureAlt[captureStack.Count] = false;
+                                isCapture[captureStack.Count] = false;
+                                nonZeroCapture[captureStack.Count] = false;
+                                zeroCaptureSeen[captureStack.Count] = false;
+                                lookAround[captureStack.Count] = false;
+                            }
+
 #if true
                             if (!nonZeroCapture[captureStack.Count])
                             {
                                 zeroAlt[captureStack.Count] = true;
+                            }
+
+                            if (zeroAlt[captureStack.Count] && quant)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
                             }
 
                             if (isCapture[captureStack.Count] && (zeroAlt[captureStack.Count] || (captureSeen[captureStack.Count] && groupAlt[captureStack.Count])))
@@ -568,55 +594,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
 #endif
 
-#if false
-                            groupAlt[captureStack.Count] = false;
-
-                            if (zeroCaptureSeen[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
-                            {
-                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
-                                return false;
-                            }
-
-#if false
-                            if (captureSeen[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
-                            {
-                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
-                                return false;
-                            }
-#endif
-
-                            if (isCapture[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
-                            {
-                                for (var t = 1; t < captureStack.Count; t++)
-                                {
-                                    zeroCaptureSeen[t] = true;
-                                }
-                            }
-
-#if true
-                            if (isCapture[captureStack.Count] && !nonZeroCapture[captureStack.Count])
-                            {
-                                for (var t = 1; t < captureStack.Count; t++)
-                                {
-                                    zeroCaptureSeen[t] = true;
-                                }
-                            }
-#endif
-
-#if false
-                            if (isCapture[captureStack.Count] && zeroAlt[captureStack.Count])
-                            {
-                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
-                                return false;
-                            }
-#endif
-
-                            if (nonZeroCapture[captureStack.Count])
-                            {
-                                nonZeroCapture[captureStack.Count - 1] = true;
-                            }
-#endif
-
                             captureSeen[captureStack.Count] = false;
                             groupAlt[captureStack.Count] = false;
                             zeroAlt[captureStack.Count] = false;
@@ -624,6 +601,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             isCapture[captureStack.Count] = false;
                             nonZeroCapture[captureStack.Count] = false;
                             zeroCaptureSeen[captureStack.Count] = false;
+                            lookAround[captureStack.Count] = false;
                             captureStack.Pop();
                         }
                     }
