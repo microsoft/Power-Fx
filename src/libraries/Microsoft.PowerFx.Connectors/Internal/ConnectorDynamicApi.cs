@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicApi(IDictionary<string, IOpenApiAny> openApiObject)
         {
-            ParameterMap = OpenApiExtensions.GetParameterMap(openApiObject, this);            
+            ParameterMap = OpenApiExtensions.GetParameterMap(openApiObject, this);
         }
 
         internal ConnectorDynamicApi(string error)
