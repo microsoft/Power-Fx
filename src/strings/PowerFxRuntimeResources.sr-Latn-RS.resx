@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argument netipiziranog objekta do „{0}“ funkcije ima netačan tip. Očekivano: {1}, stvarno: {0}.</value>
+    <value>Argument netipiziranog objekta do „{0}“ funkcije ima netačan tip. Očekivano: {1}, stvarno: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

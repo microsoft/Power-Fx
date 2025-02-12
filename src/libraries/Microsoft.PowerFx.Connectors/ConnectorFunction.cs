@@ -837,12 +837,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        internal Task<FormulaValue> InvokeInternalAsync(IReadOnlyList<FormulaValue> arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             return InvokeInternalAsync(arguments, runtimeContext, null, cancellationToken);
         }
 
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> InvokeInternalAsync(IReadOnlyList<FormulaValue> arguments, BaseRuntimeConnectorContext runtimeContext, FormulaType outputTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -1480,7 +1480,7 @@ namespace Microsoft.PowerFx.Connectors
                                         _specialBodyHandling = true;
                                     }
                                     
-                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (ConnectorSettings.UseItemDynamicPropertiesSpecialHandling && requestBody.Required); 
+                                    bool bodyPropertyRequired = bodySchema.Required.Contains(bodyPropertyName) || (_specialBodyHandling && requestBody.Required); 
 
                                     if (bodyPropertySchema.IsInternal())
                                     {

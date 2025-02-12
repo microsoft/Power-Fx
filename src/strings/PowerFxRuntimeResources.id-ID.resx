@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argumen objek tidak bertipe untuk fungsi '{0}' memiliki tipe yang salah. Diharapkan: {1}, Aktual: {0}.</value>
+    <value>Argumen objek tidak bertipe untuk fungsi '{0}' memiliki tipe yang salah. Diharapkan: {1}, Aktual: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

@@ -379,6 +379,8 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetAiSensitivity(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsAiSensitivity, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
 
+        internal static string GetPropertyEntityType(this ISwaggerExtensions schema) => schema.Extensions.TryGetValue(XMsPropertyEntityType, out IOpenApiExtension openApiExt) && openApiExt is OpenApiString openApiStr ? openApiStr.Value : null;
+
         internal static (bool IsPresent, string Value) GetString(this IDictionary<string, IOpenApiAny> apiObj, string str) => apiObj.TryGetValue(str, out IOpenApiAny openApiAny) && openApiAny is OpenApiString openApiStr ? (true, openApiStr.Value) : (false, null);
 
         internal static void WhenPresent(this IDictionary<string, IOpenApiAny> apiObj, string propName, Action<string> action)

@@ -1917,6 +1917,10 @@
     <value>{0} är en okänd funktion eller funktion som inte stöds.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>”{0}” identifieras som funktionen typhjälp och kan endast användas i funktionen Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>{0} är en okänd funktion eller funktion som inte stöds i namnområdet {1}.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>En ny eller befintlig samling att öka.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>En post eller tabell att samla in. En post kommer att läggas till i samlingen. En tabell får sina rader tillagda till samlingen.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Rensar samlingen först och lägger till ett eller flera objekt till den angivna samlingen. Objekten kan vara från en annan tabell eller samling (till exempel ClearCollect(collection, source_collection)) eller en eller flera poster ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Redigera din formel så att den innehåller en klammerparantes.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Avslutande tecken för identifierare förväntades. Vi förväntar oss ett avslutande tecken (') vid denna punkt i formeln.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Ett avslutande enkelt citattecken anger slutet på en identifierare (till exempel 'Förnamn').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigera din formel så att den innehåller ett avslutade enkelt citattecken.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifieraren har inte någon giltig text.</value>
+    <value>Identifieraren är tom eller innehåller ett ogiltigt tecken, till exempel ett tabbtecken eller tecken för ny rad.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Se till att du har text för din identifierare. Felet uppstår när identifieraren är tom eller bara innehåller blanksteg.</value>
+    <value>Se till att du har giltig text för din identifierare. Felet uppstår när identifieraren är tom, bara innehåller blanksteg eller innehåller ett tabbtecken eller tecken för ny rad.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Den namngivna formeln måste vara ett uttryck.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Den namngivna typen måste vara en literal typ.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>En namngiven typdeklaration måste vara ett giltigt typuttryck.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarationen för literal typ är ogiltig. Uttrycket "{0}" kan inte användas i en typdefinition.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Typuttrycket är ogiltigt. {0} kan inte användas i ett typuttryck.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Användningen stöds inte: typliteraler kan bara användas i typargument och typdefinitioner.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Användningen stöds inte: Funktionen Type kan bara användas i typargument och typdeklarationer.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definitionen av typen {0} är ogiltig.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklarationen av typen {0} är ogiltig.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definitionen av typen {0} är ogiltig och kan innehålla cykler.</value>
+    <value>Deklarationen av typen {0} är ogiltig och kan innehålla cykler.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Ogiltigt argument {0}. Förväntat giltigt typnamn eller literal typ.</value>
+    <value>Ogiltigt argument {0}. Förväntat giltigt typnamn eller infogat typuttryck.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

@@ -1917,6 +1917,10 @@
     <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุน</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' ได้รับการยอมรับว่าเป็นฟังก์ชันตัวช่วยชนิด และสามารถใช้ได้ภายในฟังก์ชัน Type เท่านั้น</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุนใน namespace '{1}'</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>คอลเลกชันใหม่หรือที่มีอยู่แล้วที่จะขยาย</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>เรกคอร์ดหรือตารางที่จะรวบรวม เรกคอร์ดจะถูกผนวกเข้ากับคอลเลกชัน แถวต่างๆ ในตารางจะถูกผนวกเข้ากับคอลเลกชัน</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>ล้างข้อมูลคอลเลกชันก่อน และเพิ่มหนึ่งรายการขึ้นไปในคอลเลกชันที่ระบุ รายการต่างๆ อาจมาจากตารางหรือคอลเลกชันอื่นก็ได้ (เช่น ClearCollect(collection, source_collection)) หรือหนึ่งเรกคอร์ดขึ้นไป ClearCollect(collection, {key1: val1, key2: val2, ...}, ...)</value>
     
@@ -3704,12 +3705,23 @@
     <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายวงเล็บเหลี่ยม</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>ต้องมีเครื่องหมายปิดของตัวระบุ เราต้องการเครื่องหมายปิด (') ที่จุดนี้ในสูตร</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>เครื่องหมายอัญประกาศเดี่ยวปิดจะระบุจุดสิ้นสุดของตัวระบุ (ตัวอย่างเช่น 'ชื่อ')</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายเครื่องหมายอัญประกาศเดี่ยวปิด</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>ตัวระบุไม่มีข้อความถูกต้อง</value>
+    <value>ตัวระบุว่างเปล่าหรือมีอักขระที่ไม่ถูกต้อง เช่น แท็บหรือบรรทัดใหม่</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความสำหรับตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวตัวระบุนั้นเว้นว่างไว้หรือเป็นพื้นที่ว่างทั้งหมด</value>
+    <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความที่ถูกต้องในตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวระบุนั้นเว้นว่างไว้ หรือมีเฉพาะเว้นวรรค หรือมีแท็บหรือบรรทัดใหม่</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>ชนิดที่มีชื่อจะต้องเป็นชนิดสัญพจน์</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>การประกาศชนิดที่มีชื่อจะต้องเป็นนิพจน์ของชนิดที่ถูกต้อง</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>การตั้งค่าตัวแปรที่มีค่าแหล่งข้อมูลแบบออนไลน์ (ตารางหรือเรกคอร์ด) อาจทำให้เกิดการร้องขอหลายรายการไปยังเซิร์ฟเวอร์ การดำเนินการแบบนี้จะถูกบล็อกในเร็วๆ นี้</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>พิมพ์การประกาศตามสัญพจน์ไม่ถูกต้อง ไม่สามารถใช้นิพจน์ '{0}' ในข้อกำหนดชนิดได้</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>นิพจน์ของชนิดไม่ถูกต้อง ไม่สามารถใช้ '{0}' ในนิพจน์ของชนิดได้</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>การใช้งานที่ไม่ได้รับการสนับสนุน: สามารถใช้สัญพจน์ชนิดได้เฉพาะในอาร์กิวเมนต์ชนิดและการกำหนดชนิดเท่านั้น</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>การใช้งานที่ไม่ได้รับการสนับสนุน: สามารถใช้ฟังก์ชัน Type ได้เฉพาะในอาร์กิวเมนต์ชนิดและการประกาศชนิดเท่านั้น</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>การกำหนดชนิด {0} ไม่ถูกต้อง</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>การประกาศชนิด {0} ไม่ถูกต้อง</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>การกำหนดชนิด {0} ไม่ถูกต้องและอาจมีรอบ</value>
+    <value>การประกาศชนิด {0} ไม่ถูกต้องและอาจมีรอบ</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>อาร์กิวเมนต์ '{0}' ไม่ถูกต้อง ต้องระบุชื่อชนิดหรือสัญพจน์ของชนิดที่ถูกต้อง</value>
+    <value>อาร์กิวเมนต์ '{0}' ไม่ถูกต้อง ต้องระบุชื่อชนิดหรือนิพจน์ของชนิดแบบอินไลน์ที่ถูกต้อง</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

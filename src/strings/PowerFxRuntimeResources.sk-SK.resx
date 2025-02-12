@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argument netypového objektu funkcie {0} má nesprávny typ. Očakávaný: {1}, skutočný: {0}.</value>
+    <value>Argument netypového objektu funkcie {0} má nesprávny typ. Očakávaný: {1}, skutočný: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

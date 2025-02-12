@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx
             {
                 return new CustomSetPropertyFunction(info.NameSpace, info.Name, info.ArgNames)
                 {
-                    _impl = args => InvokeAsync(null, args, CancellationToken.None)
+                    _impl = args => InvokeAsync(null, (IReadOnlyList<FormulaValue>)args, CancellationToken.None)
                 };
             }
 
@@ -217,12 +217,24 @@ namespace Microsoft.PowerFx
             return _info.Name;
         }
 
+        [Obsolete("Soon to be removed.")]
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
+        {
+            return InvokeAsync(serviceProvider, (IReadOnlyList<FormulaValue>)args, CancellationToken.None).Result;
+        }
+
+        public FormulaValue Invoke(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args)
         {
             return InvokeAsync(serviceProvider, args, CancellationToken.None).Result;
         }
 
+        [Obsolete("Soon to be removed.")]
         public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            return await InvokeAsync(serviceProvider, (IReadOnlyList<FormulaValue>)args, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, IReadOnlyList<FormulaValue> args, CancellationToken cancellationToken)
         {
             var info = Scan();
 
@@ -241,7 +253,7 @@ namespace Microsoft.PowerFx
             }
 
             List<ErrorValue> errors = null;
-            for (var i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Count; i++)
             {
                 object arg = args[i];
 

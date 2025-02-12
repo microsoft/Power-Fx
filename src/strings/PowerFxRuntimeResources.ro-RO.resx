@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argumentul obiectului fără tip pentru funcția „{0}” are un tip incorect. Se aștepta: {1}, dar ce real este: {0}.</value>
+    <value>Argumentul obiectului fără tip pentru funcția „{0}” are un tip incorect. Se aștepta: {1}, dar ce real este: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

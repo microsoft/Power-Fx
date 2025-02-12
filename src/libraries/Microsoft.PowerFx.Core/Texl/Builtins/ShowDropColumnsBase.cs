@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -192,6 +195,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return index > 0 ? ParamIdentifierStatus.AlwaysIdentifier : ParamIdentifierStatus.NeverIdentifier;
+        }
+
+        public override bool ComposeDependencyInfo(IR.Nodes.CallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            node.FunctionSupportColumnNamesAsIdentifiersDependencyUtil(visitor);
+
+            return true;
         }
     }
 }
