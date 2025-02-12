@@ -34,7 +34,6 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "ParseJSON(\"{}\", Type(RecordOf(Accounts)))",
             "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))")]
-
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
