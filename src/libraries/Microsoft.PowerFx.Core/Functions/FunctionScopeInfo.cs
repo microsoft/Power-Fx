@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -194,7 +195,12 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
-        public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
+        protected virtual void CheckPredicates(TexlNode[] inputNodes, DType typeScope, bool wholeScope, IErrorContainer errors = null)
+        {
+            CheckLiteralPredicates(inputNodes, errors);
+        }
+
+        protected void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(errors);
@@ -301,13 +307,15 @@ namespace Microsoft.PowerFx.Core.Functions
 
             typeScope = DType.EmptyRecord;
 
-            GetScopeIdent(inputNodes, out DName[] idents);
+            var wholeScope = GetScopeIdent(inputNodes, out DName[] idents);
 
             for (var i = 0; i < argCount; i++)
             {
                 ret &= base.CheckInput(features, callNode, inputNodes[i], inputSchema[i], out var type);
                 typeScope = typeScope.Add(idents[i], type);
             }
+
+            CheckPredicates(inputNodes, typeScope, wholeScope);
 
             return ret;
         }
@@ -337,6 +345,12 @@ namespace Microsoft.PowerFx.Core.Functions
             // Returning false to indicate that the scope is not a whole scope.
             // Meaning that the scope is a record type and we are accessing the fields directly.
             return false;
+        }
+
+        protected override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, bool wholeScope, IErrorContainer errors = null)
+        {
+            var visitor = new ScopePredicateVisitor(typeScope, wholeScope);
+            inputNodes[2].Accept(visitor);
         }
     }
 }
