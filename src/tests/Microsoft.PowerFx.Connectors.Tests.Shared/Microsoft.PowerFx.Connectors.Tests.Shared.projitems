@@ -290,6 +290,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dataverse.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\DataverseSample.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Dime.Scheduler.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\DocuSign.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Eden AI.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\ExcelOnlineBusiness.swagger.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Swagger\Language - Question Answering.json" />
