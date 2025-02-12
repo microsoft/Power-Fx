@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -33,6 +34,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "ParseJSON(\"{}\", Type(RecordOf(Accounts)))",
             "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))")]
+
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
@@ -40,7 +42,8 @@ namespace Microsoft.PowerFx.Tests
                 flags: Flags.EnableExpressionChaining,
                 features: Features.PowerFxV1);
 
-            Assert.Equal(expected, StructuralPrint.Print(result.Root));
+            var actual = StructuralPrint.Print(result.Root);
+            Assert.Equal(expected, actual);
 
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine(new PowerFxConfig()));
@@ -66,6 +69,14 @@ namespace Microsoft.PowerFx.Tests
             "ForAll([1,2,3], ThisRecord.Value * 2)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$#.#$righthandid$# * #$decimal$#)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaFullRecord$#.#$righthandid$# * #$decimal$#)")]
+        [InlineData(
+            "Join(Table({a:1}), Table({a:1}), LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.a As AAA)",
+            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$firstname$#.#$righthandid$# = #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$# As #$righthandid$#)",
+            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$LambdaField$#.#$righthandid$# = #$LambdaField$#.#$righthandid$#, JoinType.Inner, #$LambdaField$#.#$righthandid$# As #$righthandid$#)")]
+        [InlineData(
+            "WeekNum(Date(2020, 12, 8),StartOfWeek.Sunday)",
+            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), #$firstname$#.#$righthandid$#)",
+            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), StartOfWeek.Sunday)")]
 
         public void TestStucturalPrintWithBinding(string script, string beforebinding, string afterbinding)
         {
@@ -73,17 +84,21 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(beforebinding, StructuralPrint.Print(result.Root));
+            var actual = StructuralPrint.Print(result.Root);
+            Assert.Equal(beforebinding, actual);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new JoinFunction());
 
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
 
             check.SetText(script, new ParserOptions { AllowsSideEffects = true })
-                .SetBindingInfo()
+                .SetBindingInfo(symbolTable)
                 .ApplyBinding();
 
-            var result2 = check.ApplyGetLogging();
-            Assert.Equal(afterbinding, result2);
+            actual = check.ApplyGetLogging();
+            Assert.Equal(afterbinding, actual);
         }
 
         private class TestSanitizer : ISanitizedNameProvider
