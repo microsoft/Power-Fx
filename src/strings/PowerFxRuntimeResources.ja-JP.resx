@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>'{0}' 関数に入力された型指定されていないオブジェクトへの引数の型が正しくありません。予期される型: {1}、現在の型: {0}。</value>
+    <value>'{0}' 関数に入力された型指定されていないオブジェクトへの引数の型が正しくありません。予期される型: {1}、現在の型: {2}。</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

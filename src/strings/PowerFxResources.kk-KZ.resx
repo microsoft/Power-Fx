@@ -1917,6 +1917,10 @@
     <value>"{0}" — белгісіз немесе қолдау көрсетілмейтін функция.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" терудің көмекші функциясы ретінде танылады және оны тек Type функциясының ішінде пайдалануға болады.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{0}" — "{1}" атау кеңістігіндегі белгісіз немесе қолдау көрсетілмейтін функция.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Жеделдетілетін жаңа немесе бар жиынтық.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Жиналатын жазба немесе кесте. Жазба жиынтыққа қосылады. Кестенің жолдары жиынтыққа қосылады.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Алдымен жиынды өшіріп, көрсетілген жиынға бір не одан көп элемент қосады. Элементтер басқа кестеден немесе жиыннан (мысалы, ClearCollect(collection, source_collection)) немесе бір не одан көп ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) жазбасынан болуы мүмкін.</value>
     
@@ -3704,12 +3705,23 @@
     <value>Формуланы ол жақшаны қамтитын етіп өзгертіңіз.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Идентификаторды жабу күтілген. Формуладағы бұл жерде жабатын (') таңбасы күтіледі.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Жалғыз тырнақша идентификатордың соңын көрсетеді (мысалы, 'Аты').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Формуланы жабылатын жалғыз тырнақшаны қамтитын етіп өзгертіңіз.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификаторда жарамды мәтін жоқ.</value>
+    <value>Идентификатор бос немесе қойынша немесе жаңа жол сияқты жарамсыз таңбаны қамтиды.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Идентификатор үшін мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, осы қате пайда болады.</value>
+    <value>Идентификатор ішінде жарамды мәтіннің болуына көз жеткізіңіз. Идентификатор бос немесе бос орындар болса, не болмаса қойынша немесе жаңа жолды қамтитын болса, осы қате пайда болады.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Аталған формула өрнек болуы керек.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Атаулы түр литерал түрі болуы қажет.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Атауы бар түр туралы декларация жарамды түр өрнегі болуы керек.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Онлайн дереккөз мәні (кесте немесе жазба) бар айнымалыны орнату серверге бірнеше сұрау тудыруы мүмкін. Жақын арада ол бұғатталады.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Түрді литералды етіп жариялау жарамсыз. "{0}" өрнегі түр анықтамасында пайдаланылмауы керек.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Түр өрнегі жарамсыз. "{0}" өрнегі түр өрнегінде пайдаланылмауы керек.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Қолдау көрсетілмейтін пайдалану: литералдар түрін тек аргументтер түрі мен анықтамалар түрінде пайдалануға болады.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Қолдау көрсетілмейтін пайдалану: Type функциясын тек түр аргументтері мен түр декларациясында пайдалануға болады.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>{0} түрін анықтау жарамсыз.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>{0} түріндегі декларация жарамсыз.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} түріндегі анықтама жарамсыз және циклдерді қамтуы мүмкін.</value>
+    <value>{0} түріндегі декларация жарамсыз және циклдерді қамтуы мүмкін.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Жарамсыз аргумент '{0}'. Күтілетін жарамды түр атауы немесе литерал түрі.</value>
+    <value>Жарамсыз аргумент '{0}'. Күтілетін жарамды түр атауы немесе кірістірілген түр өрнегі.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

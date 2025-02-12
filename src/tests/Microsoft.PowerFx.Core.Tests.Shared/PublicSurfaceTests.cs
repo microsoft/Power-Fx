@@ -217,7 +217,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Logging.ITracer",
                 "Microsoft.PowerFx.Logging.TraceSeverity",
                 "Microsoft.PowerFx.PowerFxFileInfo",
-                "Microsoft.PowerFx.UserInfo"
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.Core.IR.DependencyInfo",
             };
 
             var sb = new StringBuilder();

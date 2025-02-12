@@ -1917,6 +1917,10 @@
     <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>A(z) „{0}” típussegítő függvényként ismerhető fel, és csak a Type függvényen belül használható.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény a(z) "{1}" névtérben.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Kiterjesztendő új vagy meglévő gyűjtemény.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A gyűjteménybe felveendő rekord vagy tábla. A megadott rekordot hozzáfűzi a függvény a gyűjteményhez. Tábla megadása esetén a tábla sorait fűzi hozzá a függvény a gyűjteményhez.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Először kiüríti a gyűjteményt, és felvesz egy vagy több elemet a gyűjtemény argumentumban megadott gyűjteménybe. Az elemek származhatnak más táblából vagy gyűjteményből (például ClearCollect(collection, source_collection)), vagy egy vagy több rekordból ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Módosítsa a képletet úgy, hogy az zárójelet tartalmazzon.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Az azonosító várt zárása. A rendszer (') záró idézőjelet vár a képlet ezen pontján.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>A szimpla idézőjel egy azonosító végét jelöli (például 'Utónév').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Módosítsa a képletet úgy, hogy szimpla idézőjelet tartalmazzon.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Az azonosító nem tartalmaz érvényes szöveget.</value>
+    <value>Az azonosító üres vagy érvénytelen karaktert tartalmaz, például tabulátort vagy új sor.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
+    <value>Győződjön meg arról, hogy az azonosító érvényes szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító üres, csak szóközöket, tabulátort vagy egy új sort tartalmaz.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>A megnevezett típusnak literális típusúnak kell lennie.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>A megnevezett típusnyilatkozatnak érvényes típuskifejezésnek kell lennie.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>A literális deklaráció típusa érvénytelen. A(z) '{0}' kifejezés nem használható típusmeghatározásban.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>A típus kifejezése érvénytelen. A(z) „{0}” nem használható típuskifejezésben.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nem támogatott használat: a konstansérték típusok csak argumentum típusokban és definíció típusokban használható.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nem támogatott használat: a Type függvény csak típusargumentumokban és típusmeghatározásokban használható.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>A beírt {0} típusnyilatkozat érvénytelen.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>A beírt {0} típusmeghatározás érvénytelen, és ciklusokat tartalmazhat.</value>
+    <value>A beírt {0} típusnyilatkozat érvénytelen, és ciklusokat tartalmazhat.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Érvénytelen „{0}” argumentum. A várt érvényes típus neve vagy típus konstansértéke.</value>
+    <value>Érvénytelen „{0}” argumentum. A várt érvényes típus neve vagy beágyazott típusú kifejezés.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

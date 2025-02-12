@@ -1917,6 +1917,10 @@
     <value>'{0}' bilinmeyen veya desteklenmeyen bir işlevdir.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}', tür yardımcısı işlevi olarak algılandı ve yalnızca Type işlevi içinde kullanılabilir.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}', '{1}' ad alanı içinde bilinmeyen veya desteklenmeyen bir işlevdir.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Çoğaltılacak yeni veya mevcut bir koleksiyon.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Toplanacak bir kayıt veya tablo. Koleksiyona bir kayıt eklenir. Tablonun satırları da koleksiyona eklenir.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Önce koleksiyonu siler ve ardından belirtilen koleksiyona bir veya daha fazla öğe ekler. Öğeler, farklı bir tablo veya koleksiyondan (ör. ClearCollect(collection, source_collection)) veya bir ya da daha fazla kayıttan alınabilir. Örneğin, ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Formülünüzü ayraç içerecek şekilde düzenleyin.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Tanımlayıcı kapanışı bekleniyor. Formülde bu noktada bir kapanış (') bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Kapatma tekli tırnak işareti, bir tanımlayıcının sonunu belirtir (örneğin 'Ad').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü tekli kapatma tekli tırnak işareti içerecek şekilde düzenleyin.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Tanımlayıcıda geçerli metin yok.</value>
+    <value>Tanımlayıcı boş veya sekme ya da yeni satır gibi geçersiz bir karakter içeriyor.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
+    <value>Tanımlayıcınızda geçerli metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı boşsa, yalnızca boşluk içeriyorsa veya bir sekme ya da yeni satır içeriyorsa oluşur.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Adlandırılmış formül bir ifade olmalı.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Adlandırılmış türü, değişmez türde olmalıdır.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Adlandırılmış tür bildirimi, geçerli bir tür ifadesi olmalıdır.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Değişmez beyanname türü geçersiz. '{0}' ifadesi, bir tür tanımında kullanılamaz.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tür ifadesi geçersiz. '{0}', bir tür ifadesinde kullanılamaz.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Desteklenmeyen kullanım: Tür değişmezleri yalnızca tür bağımsız değişkenleri ve tür tanımlarında kullanılabilir.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Desteklenmeyen kullanım: Type işlevi yalnızca tür bağımsız değişkenleri ve tür bildirimlerinde kullanılabilir.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tanım türü {0} geçersiz.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Bildirim türü {0} geçersiz.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} türünün tanımı geçersiz ve döngü içerebilir.</value>
+    <value>{0} türünün bildirimi geçersiz ve döngü içerebilir.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Geçersiz bağımsız değişken '{0}'. Beklenen geçerli tür adı veya değişmez türü.</value>
+    <value>Geçersiz bağımsız değişken '{0}'. Beklenen geçerli tür adı veya satır içi türü ifade.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

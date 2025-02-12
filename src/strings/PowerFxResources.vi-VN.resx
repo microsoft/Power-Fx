@@ -1816,7 +1816,7 @@
     
   </data>
   <data name="IsTypeUOArg2" xml:space="preserve">
-    <value>loại</value>
+    <value>kiểu</value>
     
   </data>
   <data name="AboutIsType_untypedValue" xml:space="preserve">
@@ -1915,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" là một hàm không xác định hoặc không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" được nhận dạng là hàm trợ giúp kiểu và chỉ có thể sử dụng trong hàm Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Bộ sưu tập mới hoặc hiện có để bổ sung.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Bản ghi hoặc bảng cần thu thập. Một bản ghi sẽ được nối vào bộ sưu tập. Bảng sẽ có các hàng được nối vào bộ sưu tập.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Trước tiên, hãy xóa bộ sưu tập và thêm một hoặc nhiều mục vào bộ sưu tập được chỉ định. Mục có thể từ một bảng hoặc bộ sưu tập khác (ví dụ: ClearCollect(collection, source_collection)), hoặc một hay nhiều bản ghi ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu ngoặc.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Cần kết thúc thông tin định danh. Chúng tôi yêu cầu một dấu (') đóng tại vị trí này trong công thức.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Một dấu nháy đơn đóng báo hiệu kết thúc một thông tin nhận dạng (ví dụ: 'Tên').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu nháy đơn đóng.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Mã định danh không có văn bản hợp lệ.</value>
+    <value>Thông tin nhận dạng còn trống hoặc chứa ký tự không hợp lệ, chẳng hạn như tab hoặc ký tự xuống dòng.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Hãy đảm bảo mã định danh của bạn chứa văn bản. Lỗi này xảy ra khi mã định danh chứa toàn khoảng trống hoặc dấu cách.</value>
+    <value>Đảm bảo rằng bạn có văn bản hợp lệ trong thông tin nhận dạng. Lỗi này xảy ra khi thông tin nhận dạng trống, chỉ chứa khoảng trắng, hoặc chứa tab hoặc ký tự xuống dòng.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Công thức được đặt tên phải là một biểu thức.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Kiểu được đặt tên phải là kiểu ký tự.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Khai báo kiểu được đặt tên phải là một biểu thức kiểu hợp lệ.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Việc đặt một biến có giá trị nguồn dữ liệu trực tuyến (bảng hoặc bản ghi) có thể gây ra nhiều yêu cầu đến máy chủ. Tính năng này sẽ sớm bị chặn.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Nội dung khai báo ký tự kiểu dữ liệu không hợp lệ. Không thể sử dụng biểu thức "{0}" trong định nghĩa kiểu dữ liệu.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Biểu thức kiểu không hợp lệ. Không thể sử dụng "{0}" trong biểu thức kiểu.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Cách sử dụng không được hỗ trợ: chỉ có thể sử dụng kiểu ký tự trong đối số kiểu và định nghĩa kiểu.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Cách sử dụng không được hỗ trợ: chỉ có thể sử dụng hàm Type trong đối số kiểu và khai báo kiểu.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Định nghĩa loại {0} không hợp lệ.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Khai báo kiểu {0} không hợp lệ.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Định nghĩa loại {0} không hợp lệ và có thể chứa chu kỳ.</value>
+    <value>Khai báo kiểu {0} không hợp lệ và có thể chứa chu kỳ.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Đối số '{0}' không hợp lệ. Cần tên loại hoặc ký tự loại hợp lệ.</value>
+    <value>Đối số "{0}" không hợp lệ. Cần tên kiểu hoặc biểu thức kiểu nội tuyến hợp lệ.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

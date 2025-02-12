@@ -1917,6 +1917,10 @@
     <value>Ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" motaren laguntzaile-funtzio gisa ezagutzen da eta soilik Type funtzioan erabil daiteke.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>"{1}" izen-lekuan ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Handiagotu beharreko lehendik dagoen bilduma edo berri bat.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Bilduko den erregistro edo taula bat. Erregistro bat bilduma bati erantsiko zaio. Taula batek bere errenkadak bildumari erantsita izango ditu.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Bilduma garbitzen du eta elementu bat edo gehiago gehitzen ditu zehaztutako bilduman. Elementuak beste taula edo bilduma batekoak izan daitezke (adibidez, ClearCollect(collection, source_collection)) edo ClearCollect(collection, {key1: val1, key2: val2, ...}, ...) erregistro batekoak edo gehiagokoak.</value>
     
@@ -3704,12 +3705,23 @@
     <value>Editatu formula giltzaren karaktere bat eduki dezan.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Identifikatzailearen itxiera espero zen. Itxiera bat (') izan behar du formularen puntu horrek.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Itxiera-komatxo bakar batek identifikatzaile baten amaiera adierazten du (adibidez, 'Izena').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Editatu formula itxiera-komatxo bakar bat eduki dezan.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikatzaileak ez du erabil daitekeen testurik.</value>
+    <value>Identifikatzailea hutsik dago edo karaktere baliogabe bat dauka; adibidez, tabulazio-marka bat edo lerro-jauzi bat.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Ziurtatu identifikatzaileak testua duela. Identifikatzailea hutsik badago edo zuriuneak soilik baditu gertatu ohi da errore hau.</value>
+    <value>Ziurtatu identifikatzaileak balio duen testua duela. Identifikatzailea hutsik badago, zuriuneak soilik baditu edo tabulazio-marka edo lerro-jauzi bat badu gertatu ohi da errore hau.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Izendatutako formulak adierazpen bat izan behar du.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Izendatutako motak mota literala izan behar du.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Izendatutako motako deklarazioak baliozko motaren adierazpena izan behar du.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Lineako datu-iturburuaren balio bat (taula edo erregistro bat) duen aldagai bat ezartzen baduzu, hainbat eskaera sortuko dira zerbitzarian. Laster blokeatuko da aukera hau.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Idatzi duzun baieztapen literalak ez du balio. "{0}" adierazpena ezin da erabili motako definizio batean.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Motaren adierazpenak ez du balio. "{0}" ezin da erabili motaren adierazpen batean.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Onartzen ez den erabilera: motaren adierazpen literalak mota-argumentuetan eta mota-definizioetan soilik erabil daitezke.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Onartzen ez den erabilera: Type funtzioa soilik motaren argumentu eta deklarazioetan soilik erabil daiteke.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>{0} motaren definizioa baliogabea da.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>{0} motaren deklarazioa baliogabea da.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>{0} motako definizioa baliogabea da eta zikloak izan ditzake.</value>
+    <value>{0} motako deklarazioa baliogabea da eta zikloak izan ditzake.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>'{0}' argumentu baliogabea. Baliozko motaren izena edo mota literala espero da.</value>
+    <value>"{0}" argumentu baliogabea. Baliozko motaren izena edo lerroko motako adierazpena espero da.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

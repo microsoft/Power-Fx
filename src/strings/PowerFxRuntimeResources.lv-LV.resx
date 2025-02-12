@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Funkcijas “{0}” netipizēta objekta argumentam ir nepareizs tips. Paredzams: {1}, faktiski: {0}.</value>
+    <value>Funkcijas “{0}” netipizēta objekta argumentam ir nepareizs tips. Paredzams: {1}, faktiski: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

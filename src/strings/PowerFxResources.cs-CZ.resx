@@ -1917,6 +1917,10 @@
     <value>„{0}“ je neznámá nebo nepodporovaná funkce v oboru názvů „{1}“.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>Atribut „{0}“ je rozpoznán jako pomocná funkce typu a lze jej použít pouze v rámci funkce Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>'{0}' je neznámá nebo nepodporovaná funkce v '{1}' oboru názvů.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nová nebo existující kolekce pro rozšíření.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Záznam nebo tabulka ke shromažďování. Záznam bude připojen ke kolekci. Ke kolekci budou připojeny řádky tabulky.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Nejdříve vymaže kolekci a přidá jednu nebo více položek k zadané kolekci. Položky mohou být z jiné tabulky nebo kolekce (např. ClearCollect(collection, source_collection)), případně jeden nebo několik záznamů ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Upravte svůj vzorec tak, aby obsahoval složenou závorku.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Očekávané uzavření identifikátoru. Na tomto místě vzorce očekáváme uzavření (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Uzavírací jednoduchá uvozovka označuje konec identifikátoru (například 'Křestní jméno').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Upravte svůj vzorec tak, aby obsahoval uzavírací jednoduchou uvozovku.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikátor nemá žádný platný text.</value>
+    <value>Identifikátor je prázdný nebo obsahuje neplatný znak, například tabulátor nebo nový řádek.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Ujistěte se, že pro svůj identifikátor máte nějaký text. K této chybě dojde v případě, že identifikátor obsahuje jen mezery nebo prázdné znaky.</value>
+    <value>Ujistěte se, že máte ve svém identifikátoru platný text. K této chybě dochází, pokud je identifikátor prázdný, obsahuje pouze mezery nebo tabulátor či nový řádek.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Pojmenovaný vzorec musí být výraz.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Pojmenovaný typ musí být literál typu.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Prohlášení pojmenovaného typu musí být výrazem platného typu.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Nastavení proměnné s hodnotou online zdroje dat (tabulky nebo záznamu) může způsobit vícenásobné požadavky na server. Brzy to bude zablokováno.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Deklarace literálu typu je neplatná. Výraz „{0}” nelze použít v definici typu.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Výraz typu je neplatná. „{0}” nelze použít ve výrazu typu.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nepodporované využití: typové literály lze použít pouze v argumentech typu a definicích typů.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodporované využití: funkci Type lze použít pouze v argumentech typu a prohlášení typů.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definice typu {0} je neplatná.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Prohlášení typu {0} je neplatné.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definice typu {0} je neplatná a může obsahovat cykly.</value>
+    <value>Prohlášení typu {0} je neplatné a může obsahovat cykly.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Neplatný argument „{0}“. Očekáván je platný název typu nebo literál typu.</value>
+    <value>Neplatný argument „{0}“. Očekáván je platný název typu nebo vložený typ výrazu.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

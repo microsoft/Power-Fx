@@ -1917,6 +1917,10 @@
     <value>„{0}” este o funcție necunoscută sau neacceptată.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' este recunoscut ca funcție de instrument de ajutor pentru tip și poate fi utilizat numai în cadrul funcției Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}” este o funcție necunoscută sau neacceptată în spațiul nume „{1}”.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>O colecție nouă de augmentat.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>O înregistrare sau un tabel de colectat. Se va adăuga o înregistrare la colecție. Un tabel își va adăuga rândurile la colecție.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Mai întâi golește colecția și adaugă unul sau mai multe elemente în colecția specificată. Elementele pot proveni dintr-un tabel sau dintr-o colecție diferită (de ex. ClearCollect(collection, source_collection)) sau dintr-una sau mai multe înregistrări ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Editați formula astfel încât să includă o acoladă.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta închiderea identificatorului. Așteptăm ghilimele de închidere (') în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Ghilimelele simple de închidere indică sfârșitul unui identificator (de exemplu, 'Prenume').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați formula astfel încât să includă ghilimele simple de închidere.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identificatorul nu are niciun text valid.</value>
+    <value>Identificatorul este necompletat sau conține un caracter nevalid, cum ar fi un caracter de tabulare sau de linie nouă.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Asigurați-vă că aveți text pentru identificator. Această eroare apare atunci când identificatorul are numai blancuri sau spații.</value>
+    <value>Asigurați-vă că aveți text valid în identificator. Această eroare apare atunci când identificatorul este necompletat, are numai spații goale sau conține un caracter de tabulare sau de linie nouă.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Formula denumită trebuie să fie o expresie.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Tipul denumit trebuie să fie o valoare literală de tip.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>O declarație de tip denumită trebuie să fie o expresie validă pentru tip.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Setarea unei variabile cu o valoare sursă de date online (tabel sau înregistrare) poate provoca mai multe solicitări către server. În curând acesta va fi blocat.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tipul declarației literale este nevalid. Expresia „{0}” nu se poate utilizat într-o definiție de tip.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Expresia pentru tip nu este validă. '{0}' nu se poate utiliza într-o expresie pentru tip.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Consum neacceptat: literalele de tip pot fi utilizate numai în argumente de tip și definiții de tip.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Consum neacceptat: funcția Type se poate utiliza numai în argumente și declarații pentru tip.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definiția tipului {0} este nevalidă.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Declarația de tip {0} nu este validă.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definiția tipului {0} este nevalidă și poate conține cicluri.</value>
+    <value>Declarația de tip {0} nu este validă și poate conține cicluri.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Argument „{0}” nu este valid. Numele de tip valid așteptat sau valoarea literală pentru tip.</value>
+    <value>Argumentul '{0}' nu este valid. Numele de tip valid așteptat sau expresia în linie pentru tip validă așteptată.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

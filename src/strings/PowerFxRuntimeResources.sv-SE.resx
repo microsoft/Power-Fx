@@ -362,7 +362,7 @@
     
   </data>
   <data name="ErrUntypedObjectIncorrectTypeArg" xml:space="preserve">
-    <value>Argumentet för typlöst objekt till {0} har fel typ. Förväntat: {1}, Faktisk: {0}.</value>
+    <value>Argumentet för typlöst objekt till {0} har fel typ. Förväntat: {1}, Faktisk: {2}.</value>
     
   </data>
   <data name="ErrArgumentMustBeBigEnough" xml:space="preserve">

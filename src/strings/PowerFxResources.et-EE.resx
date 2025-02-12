@@ -1917,6 +1917,10 @@
     <value>„{0}“ on tundmatu või toetuseta funktsioon.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>„{0}“ on tuvastatud tüübi abifunktsioonina ja seda saab kasutada ainult funktsioonis Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}“ on tundmatu või toetuseta funktsioon nimeruumis „{1}“.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Uus või olemasolev kogum täiendamiseks.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Koondatav kirje või tabel. Kirje lisatakse kogumisse. Tabeliread lisatakse kogumisse.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Esmalt tühjendab kogumi ja lisab määratud kogumisse ühe või mitu üksust. Üksused võivad olla teisest tabelist või kogumist (nt ClearCollect(collection, source_collection)) või ühest või mitmest kirjest ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3704,12 +3705,23 @@
     <value>Redigeerige oma valemit nii, et see sisaldaks sulgu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldatakse identifikaatori sulgemist. Valemi selles kohas eeldame lõpuüksikjutumärki (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Lõpuüksikjutumärk tähistab identifikaatori lõppu (nt ’Eesnimi’).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see sisaldaks lõpuüksikjutumärki.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikaatoril puudub sobiv tekst.</value>
+    <value>Identifikaator on tühiväärtusega või sisaldab sobimatut märki (nt tabeldust või uut rida).</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Veenduge, et teil oleks oma identifikaatorile tekst. See tõrge ilmneb, kui identifikaator koosneb ainult tühiväärtustest või tühikutest.</value>
+    <value>Veenduge, et teil oleks oma identifikaatoris sobiv tekst. See tõrge ilmneb, kui identifikaator on tühiväärtusega koosneb ainult tühikutest või sisaldab tabeldust või uut rida.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Nimega valem peab olema avaldis.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Nimega tüüp peab olema sõnasõnaline.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Nimega tüübi deklaratsioon peab olema kehtiv tüübiavaldis.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Veebiandmeallika väärtusega (tabel või kirje) muutuja määramine võib põhjustada serverisse mitme taotluse esitamise. Varsti see blokeeritakse.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tüübi sõnasõnaline deklaratsioon ei sobi. Avaldist {0} ei saa tüübimääratluses kasutada.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Tüübiavaldis ei sobi. Olemit „{0}“ ei saa tüübiavaldises kasutada.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Toetamata kasutusviis: tüübi literaale saab kasutada üksnes tüübi argumentides ja tüübi definitsioonides.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Toetamata kasutusviis: funktsiooni Type saab kasutada üksnes tüübi argumentides ja tüübi deklaratsioonides.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Tüübi {0} määratlus ei sobi.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Tüübi {0} deklaratsioon ei sobi.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Tüübi {0} määratlus ei sobi ja võib sisaldada tsükleid.</value>
+    <value>Tüübi {0} deklaratsioon ei sobi ja võib sisaldada tsükleid.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Sobimatu argument „{0}“. Eeldati sobivat tüübinime või sõnasõnalist tüüpi.</value>
+    <value>Sobimatu argument „{0}“. Eeldati sobivat tüübinime või tekstisisest tüübiavaldist.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

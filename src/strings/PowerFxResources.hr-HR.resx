@@ -1917,6 +1917,10 @@
     <value>„{0}” je nepoznata ili nepodržana funkcija.</value>
     
   </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>'{0}' se prepoznaje kao pomoćna funkcija vrste i može se koristiti samo unutar funkcije Type.</value>
+    
+  </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
     <value>„{0}” je nepoznata ili nepodržana funkcija u prostoru za naziv „{1}”.</value>
     
@@ -3221,9 +3225,6 @@
   <data name="AboutCollect_collection" xml:space="preserve">
     <value>Nova ili postojeća zbirka za povećanje.</value>
   </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>Zapis ili tablica za prikupljanje. Zapis će se dodati u zbirku. Reci tablice dodat će se u zbirku.</value>
-  </data>
   <data name="AboutClearCollect" xml:space="preserve">
     <value>Najprije briše zbirku i dodaje jednu ili više stavki u navedenu zbirku. Stavke mogu potjecati iz različitih tablica ili zbirki (npr. ClearCollect(collection, source_collection)) ili pak jednog ili više zapisa ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
@@ -3626,7 +3627,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
-    <value>Funkcija ponašanja mijenja trenutno stanje sesije. Uobičajene funkcije ponašanja uključuju 'Clear', 'Collect', 'Patch' i 'Refresh'.</value>
+    <value>Funkcija ponašanja mijenja trenutačno stanje sesije. Uobičajene funkcije ponašanja uključuju 'Clear', 'Collect', 'Patch' i 'Refresh'.</value>
     
   </data>
   <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
@@ -3704,12 +3705,23 @@
     <value>Uredite formulu tako da sadrži zagradu.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Očekuje se da će se identifikator zatvoriti. Na ovom mjestu u formuli očekuje se zatvaranje (').</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Završni jednostruki navodnik označava kraj identifikatora (na primjer, 'Ime').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Uredite svoju formulu tako da uključuje završni jednostruki navodnik.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Identifikator ne sadrži valjan tekst.</value>
+    <value>Identifikator je prazan ili sadrži znak koji nije valjan, kao što je kartica ili novi redak.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Provjerite imate li tekst za identifikator. Ta se pogreška pojavljuje kada se identifikator sastoji samo od praznina ili razmaka.</value>
+    <value>Provjerite sadrži li identifikator važeći tekst. Ova se pogreška javlja kada je identifikator prazan, sadrži samo razmak ili tabulator ili novi red.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -4181,8 +4193,8 @@
     <value>Imenovana formula mora biti izraz.</value>
     
   </data>
-  <data name="ErrNamedType_MissingTypeLiteral" xml:space="preserve">
-    <value>Imenovana vrsta mora biti vrsta doslovne vrijednosti.</value>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Imenovana vrsta deklaracije mora biti valjani izraz vrste.</value>
     
   </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
@@ -4552,20 +4564,20 @@
     <value>Postavljanje varijable s vrijednošću online izvora podataka (tablica ili zapis) može uzrokovati više zahtjeva poslužitelju. To će se uskoro blokirati.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Vrsta doslovne vrijednosti nije valjana. Izraz „{0}” ne može se upotrijebiti u definiciji vrste.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Vrsta izraza nije valjana. '{0}' ne može se upotrijebiti u izrazu vrste.</value>
     
   </data>
-  <data name="ErrTypeLiteral_UnsupportedUsage" xml:space="preserve">
-    <value>Nepodržana iskorištenost: literali vrste mogu se koristiti samo u argumentima vrste i definicijama vrste.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Nepodržana iskorištenost: funkcija Type može se koristiti samo u argumentima vrste i deklaracijama vrste.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Definicija vrste {0} nije valjana.</value>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Deklaracija vrste {0} nije valjana.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Definicija vrste {0} nije valjana i možda sadrži cikluse.</value>
+    <value>Deklaracija vrste {0} nije valjana i možda sadrži cikluse.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4867,7 +4879,7 @@
     
   </data>
   <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
-    <value>Nevažeći argument '{0}'. Očekivao se važeći naziv tipa ili doslovna vrijednost tipa.</value>
+    <value>Nevažeći argument '{0}'. Očekivao se važeći naziv tipa ili umetnuti izraz tipa.</value>
     
   </data>
   <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">

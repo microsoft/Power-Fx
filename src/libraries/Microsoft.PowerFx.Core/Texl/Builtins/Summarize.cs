@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -259,6 +260,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableTypeName = ((AggregateType)node.Args[0].IRContext.ResultType).TableSymbolName;
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                if (arg is TextLiteralNode textLiteralNode)
+                {
+                    visitor.AddDependency(tableTypeName, textLiteralNode.LiteralValue);
+                }
+                else if (arg is LazyEvalNode lazyEvalNode)
+                {
+                    var recordNode = (RecordNode)lazyEvalNode.Child;
+
+                    recordNode.Fields.Values.First().Accept(visitor, context);
+                }
+            }
+
+            return true;
         }
     }
 }
