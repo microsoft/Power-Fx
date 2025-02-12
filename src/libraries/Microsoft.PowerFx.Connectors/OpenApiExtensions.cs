@@ -957,7 +957,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     // application/json
-                    if (mediaType.Schema.Properties.Any() || mediaType.Schema.Type == "object")
+                    if (mediaType.Schema.Properties.Any() || mediaType.Schema.Type == "object" || mediaType.Schema.Type == "array")
                     {
                         return (ct, mediaType);
                     }
