@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -300,9 +301,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     # open and close regions
                     (?<openParen>\()                                   |
                     (?<closeParen>\))                                  |
+                    (?<alternation>\|)                                 |
+                    (?<anchors>[\^\$])                                 |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                                   # used in free spacing mode (to detect end of comment), ignored otherwise
-                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+                    (?<newline>[\r\n])                                 |  # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<else>.)
+                ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 
             var characterClassRE = new Regex(
                 escapeRE +
@@ -318,6 +322,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
+            bool[] groupAlt = new bool[1000];
+            bool[] captureSeen = new bool[1000];
+            bool[] isCapture = new bool[1000];
+            bool[] nonZeroCapture = new bool[1000];
+            bool[] zeroAlt = new bool[1000];
+            bool[] zeroCaptureSeen = new bool[1000];
+            bool[] captureAlt = new bool[1000];
+
             var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
@@ -355,14 +367,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    if (token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["anchors"].Success)
                     {
                         // all is well, nothing to do
+                    }
+                    else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    {
+                        // length
+                        var idx = token.Index + token.Length;
+
+                        if (captureStack.Count > 0 && idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?" && !Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"))))
+                        {
+                            nonZeroCapture[captureStack.Count] = true;
+                        }
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
                         bool characterClassNegative = token.Groups["characterClass"].Value[0] == '^';
                         string ccString = characterClassNegative ? token.Groups["characterClass"].Value.Substring(1) : token.Groups["characterClass"].Value;
+
+                        // closing character class check
 
                         foreach (Match ccToken in characterClassRE.Matches(ccString))
                         {
@@ -435,6 +459,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 throw new NotImplementedException("Unknown character class regular expression match: CC = " + token.Value + ", ccToken = " + ccToken.Value);
                             }
                         }
+
+                        var idx = token.Index + token.Length;
+
+                        if (captureStack.Count > 0 && idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?")))
+                        {
+                            nonZeroCapture[captureStack.Count] = true;
+                        }
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
@@ -454,10 +485,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         captureStack.Push(namedCapture);
                         captureNames.Add(namedCapture);
+                        for (var t = 1; t < captureStack.Count; t++)
+                        {
+                            captureSeen[t] = true;
+                        }
+
+                        isCapture[captureStack.Count] = true;
                     }
                     else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
                     {
                         captureStack.Push(null);
+                    }
+                    else if (token.Groups["alternation"].Success)
+                    {
+                        if (!nonZeroCapture[captureStack.Count])
+                        {
+                            zeroAlt[captureStack.Count] = true;
+                        }
+
+                        nonZeroCapture[captureStack.Count] = false;
+
+                        groupAlt[captureStack.Count] = true;
                     }
                     else if (token.Groups["openParen"].Success)
                     {
@@ -465,6 +513,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             captureNumber++;
                             captureStack.Push(captureNumber.ToString(CultureInfo.InvariantCulture));
+                            for (var t = 1; t < captureStack.Count; t++)
+                            {
+                                captureSeen[t] = true;
+                            }
+
+                            isCapture[captureStack.Count] = true;
                         }
                         else
                         {
@@ -480,6 +534,96 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
+                            var idx = token.Index + token.Length;
+                            bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
+
+#if true
+                            if (!nonZeroCapture[captureStack.Count])
+                            {
+                                zeroAlt[captureStack.Count] = true;
+                            }
+
+                            if (isCapture[captureStack.Count] && (zeroAlt[captureStack.Count] || (captureSeen[captureStack.Count] && groupAlt[captureStack.Count])))
+                            {
+                                zeroCaptureSeen[captureStack.Count] = true;
+                            }
+
+                            if (zeroCaptureSeen[captureStack.Count] && quant)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
+                            }
+
+                            if (zeroCaptureSeen[captureStack.Count] || (isCapture[captureStack.Count] && quant))
+                            {
+                                for (var t = 1; t < captureStack.Count; t++)
+                                {
+                                    zeroCaptureSeen[t] = true;
+                                }
+                            }
+
+                            if (!zeroAlt[captureStack.Count] && idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?" && !Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"))))
+                            {
+                                nonZeroCapture[captureStack.Count - 1] = true;
+                            }
+#endif
+
+#if false
+                            groupAlt[captureStack.Count] = false;
+
+                            if (zeroCaptureSeen[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
+                            }
+
+#if false
+                            if (captureSeen[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
+                            }
+#endif
+
+                            if (isCapture[captureStack.Count] && ((idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "?")) || groupAlt[captureStack.Count]))
+                            {
+                                for (var t = 1; t < captureStack.Count; t++)
+                                {
+                                    zeroCaptureSeen[t] = true;
+                                }
+                            }
+
+#if true
+                            if (isCapture[captureStack.Count] && !nonZeroCapture[captureStack.Count])
+                            {
+                                for (var t = 1; t < captureStack.Count; t++)
+                                {
+                                    zeroCaptureSeen[t] = true;
+                                }
+                            }
+#endif
+
+#if false
+                            if (isCapture[captureStack.Count] && zeroAlt[captureStack.Count])
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
+                            }
+#endif
+
+                            if (nonZeroCapture[captureStack.Count])
+                            {
+                                nonZeroCapture[captureStack.Count - 1] = true;
+                            }
+#endif
+
+                            captureSeen[captureStack.Count] = false;
+                            groupAlt[captureStack.Count] = false;
+                            zeroAlt[captureStack.Count] = false;
+                            captureAlt[captureStack.Count] = false;
+                            isCapture[captureStack.Count] = false;
+                            nonZeroCapture[captureStack.Count] = false;
+                            zeroCaptureSeen[captureStack.Count] = false;
                             captureStack.Pop();
                         }
                     }

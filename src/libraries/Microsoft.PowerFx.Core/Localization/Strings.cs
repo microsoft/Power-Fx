@@ -773,6 +773,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExUnescapedCharInCharacterClass = new ErrorResourceKey("ErrInvalidRegExUnescapedCharInCharacterClass");
         public static ErrorResourceKey ErrInvalidRegExBadUnicodeCategory = new ErrorResourceKey("ErrInvalidRegExBadUnicodeCategory");
         public static ErrorResourceKey ErrInvalidRegExEmptyCharacterClass = new ErrorResourceKey("ErrInvalidRegExEmptyCharacterClass");
+        public static ErrorResourceKey ErrInvalidRegExQuantifiedCapture = new ErrorResourceKey("ErrInvalidRegExQuantifiedCapture");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");

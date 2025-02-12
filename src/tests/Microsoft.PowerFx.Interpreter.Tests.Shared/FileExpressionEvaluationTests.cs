@@ -178,12 +178,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_unicode.txt";
+            var path = @"D:\repos\regex-min-star\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -214,19 +214,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RunOneMatchCompare()
         {
             ExpressionEvaluationTests.RegExCompareNode = true;
-            ExpressionEvaluationTests.RegExComparePCRE2 = false;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();
         }
 #endif
 #endif
 
-        // Run cases in MutationScripts
-        //
-        // Normal tests have each line as an independent test case. 
-        // Whereas these are fed into a repl and each file maintains state.
-        // 
-        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
-        [Theory]
+            // Run cases in MutationScripts
+            //
+            // Normal tests have each line as an independent test case. 
+            // Whereas these are fed into a repl and each file maintains state.
+            // 
+            // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
+            [Theory]
         [ReplFileSimpleList("MutationScripts")]
         public void RunMutationTests_V1(string file)
         {

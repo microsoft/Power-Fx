@@ -4643,6 +4643,10 @@
     <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantified Capture.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>
