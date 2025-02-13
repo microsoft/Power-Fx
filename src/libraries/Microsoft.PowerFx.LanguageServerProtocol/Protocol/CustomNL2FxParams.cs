@@ -21,6 +21,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Sentence in Natural Language.
         /// </summary>
         public string Sentence { get; set; }
+
+        /// <summary>
+        /// Name of the NL2Fx feature being used.
+        /// </summary>
+        public string FeatureName { get; set; }
     }
 
     /// <summary>
@@ -32,7 +37,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Possible expression.
         /// Maybe 0 length. 
         /// </summary>
-        public CustomNL2FxResultItem[] Expressions { get; set; }        
+        public CustomNL2FxResultItem[] Expressions { get; set; }
     }
 
     /// <summary>

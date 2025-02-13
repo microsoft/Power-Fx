@@ -74,6 +74,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// For example: "vi-VN" or "fr-FR".
         /// </summary>
         public CultureInfo ExpressionLocale { get; set; }
+
+        public string FeatureName { get; set; }
     }
 
     /// <summary>
