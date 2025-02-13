@@ -3,11 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
+using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -74,11 +79,20 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             TestDelegableExpressions(features, expression, isDelegable);
         }
 
-        private void TestDelegableExpressions(Features features, string expression, bool isDelegable)
+        [Theory]
+        [InlineData("UDF1()", "UDF1():Accounts = Accounts;", true)]
+        [InlineData("Filter(UDF1(), \"name\" <> \"\")", "UDF1():Accounts = Accounts;", true)]
+        public void TestDelegableExpressions_UserDfeinedFunction(string expression, string script, bool isDelegable)
+        {
+            TestDelegableExpressions(Features.PowerFxV1, expression, isDelegable, script);
+        }
+
+        private void TestDelegableExpressions(Features features, string expression, bool isDelegable, string udfScript = null)
         {
             var symbolTable = new DelegatableSymbolTable();
             symbolTable.AddEntity(new AccountsEntity());
             symbolTable.AddVariable("varString", FormulaType.String);
+            symbolTable.AddType(new DName("Accounts"), FormulaType.Build(AccountsTypeHelper.GetDType()));
 
             var config = new PowerFxConfig(features)
             {
@@ -86,6 +100,11 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
             };
 
             var engine = new Engine(config);
+            if (!string.IsNullOrWhiteSpace(udfScript))
+            {
+                engine.AddUserDefinedFunction(udfScript, CultureInfo.InvariantCulture);
+            }
+
             var result = engine.Check(expression);
             Assert.True(result.IsSuccess);
 
@@ -99,6 +118,39 @@ namespace Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests
 
             // validate we can generate the display expression
             string displayExpr = engine.GetDisplayExpression(expression, symbolTable);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestCountRowsWarningForCachedData(bool isCachedData)
+        {
+            var symbolTable = new DelegatableSymbolTable();
+            symbolTable.AddEntity(new AccountsEntity(isCachedData));
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var result = engine.Check("CountRows(Accounts)");
+            Assert.True(result.IsSuccess);
+
+            if (!isCachedData)
+            {
+                Assert.Empty(result.Errors);
+            }
+            else
+            {
+                Assert.Single(result.Errors);
+                var error = result.Errors.Single();
+                Assert.Equal(ErrorSeverity.Warning, error.Severity);
+            }
+
+            // Only shows warning if data source is passed directly to CountRows
+            result = engine.Check("CountRows(Filter(Accounts, IsBlank('Address 1: City')))");
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Errors);
         }
     }
 }

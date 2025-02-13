@@ -108,21 +108,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     await WritePropertyAsync(
                         nv.Name,
                         new SwaggerSchema(
-                            type: nv.Value.Type._type.Kind switch
-                            {
-                                DKind.Number => "number",
-                                DKind.Decimal => "number",
-                                DKind.String or
-                                DKind.Date or
-                                DKind.DateTime or
-                                DKind.DateTimeNoTimeZone => "string",
-                                DKind.Boolean => "boolean",
-                                DKind.Record => "object",
-                                DKind.Table => "array",
-                                DKind.ObjNull => "null",
-                                _ => $"type: unknown_dkind {nv.Value.Type._type.Kind}"
-                            },
-                            format: GetDateFormat(nv.Value.Type._type.Kind)),
+                            type: GetType(nv.Value.Type),
+                            format: GetFormat(nv.Value.Type)),
                         nv.Value).ConfigureAwait(false);
                 }
             }
@@ -130,9 +117,27 @@ namespace Microsoft.PowerFx.Connectors.Execution
             EndObject(objectName);
         }
 
-        private static string GetDateFormat(DKind kind)
+        internal static string GetType(FormulaType type)
         {
-            return kind switch
+            return type._type.Kind switch
+            {
+                DKind.Number => "number",
+                DKind.Decimal => "number",
+                DKind.String or
+                DKind.Date or
+                DKind.DateTime or
+                DKind.DateTimeNoTimeZone => "string",
+                DKind.Boolean => "boolean",
+                DKind.Record => "object",
+                DKind.Table => "array",
+                DKind.ObjNull => "null",
+                _ => $"type: unknown_dkind {type._type.Kind}"
+            };
+        }
+
+        internal static string GetFormat(FormulaType type)
+        {
+            return type._type.Kind switch
             {
                 DKind.Date => "date",
                 DKind.DateTime => "date-time",
@@ -282,6 +287,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     else if (fv is BlobValue bv)
                     {
                         await WriteBlobValueAsync(bv).ConfigureAwait(false);
+                    }
+                    else if (fv is OptionSetValue optionSetValue)
+                    {
+                        WriteStringValue(optionSetValue.Option);
                     }
                     else
                     {

@@ -51,5 +51,59 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string Top = "top";
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
+        public const string Distinct = "distinct";
+        public const string JoinInner = "joininner";
+        public const string JoinLeft = "joinleft";
+        public const string JoinRight = "joinright";
+        public const string JoinFull = "joinfull";
+    }
+
+    public enum DelegationOperator
+    {
+        Eq,
+        Ne,
+        Lt,
+        Le,
+        Gt,
+        Ge,
+        And,
+        Or,
+        Contains,
+        Indexof,
+        Substringof,
+        Not,
+        Year,
+        Month,
+        Day,
+        Hour,
+        Minute,
+        Second,
+        Tolower,
+        Toupper,
+        Trim,
+        Null,
+        Date,
+        Length,
+        Sum,
+        Min,
+        Max,
+        Average,
+        Count,
+        Add,
+        Sub,
+        Startswith,
+        Mul,
+        Div,
+        Endswith,
+        Countdistinct,
+        Cdsin,
+        Top,
+        Astype,
+        Arraylookup,
+        Distinct,
+        JoinInner,
+        JoinLeft,
+        JoinRight,
+        JoinFull
     }
 }

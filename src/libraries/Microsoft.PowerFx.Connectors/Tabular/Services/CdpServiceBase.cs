@@ -69,7 +69,12 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string DoubleEncode(string param)
         {
-            return HttpUtility.UrlEncode(HttpUtility.UrlEncode(param));
+            return SingleEncode(SingleEncode(param));
+        }
+
+        internal static string SingleEncode(string param)
+        {
+            return Uri.EscapeDataString(param);
         }
     }
 }

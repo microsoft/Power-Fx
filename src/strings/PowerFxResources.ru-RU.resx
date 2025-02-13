@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1313,7 +1313,7 @@
     
   </data>
   <data name="AboutFileInfo_file" xml:space="preserve">
-    <value>BLOB-объект файла, о котором нужно получить сведения.</value>
+    <value>BLOB-объект файла, информацию о котором нужно получить.</value>
   </data>
   <data name="FileInfoArg1" xml:space="preserve">
     <value>файл</value>
@@ -1807,12 +1807,30 @@
     <value>typeTable</value>
     
   </data>
+  <data name="AboutIsTypeUO" xml:space="preserve">
+    <value>Возвращает true, если предоставленное нетипизированное значение имеет указанный тип.</value>
+    
+  </data>
+  <data name="IsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="IsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutIsType_untypedValue" xml:space="preserve">
+    <value>Нетипизированное значение, которое требуется проверить на возможность приведения к указанному типу.</value>
+  </data>
+  <data name="AboutIsType_type" xml:space="preserve">
+    <value>Тип, на принадлежность к которому требуется проверить untypedValue.</value>
+  </data>
   <data name="AboutAsType" xml:space="preserve">
     <value>Использует предоставленное значение как имеющее указанный тип.</value>
     
   </data>
   <data name="AsTypeArg1" xml:space="preserve">
-    <value>значение</value>
+    <value>value</value>
     
   </data>
   <data name="AsTypeArg2" xml:space="preserve">
@@ -1824,6 +1842,24 @@
   </data>
   <data name="AboutAsType_typeTable" xml:space="preserve">
     <value>Таблица объектов, представляющая тип, который должно иметь значение.</value>
+  </data>
+  <data name="AboutAsTypeUO" xml:space="preserve">
+    <value>Проверяет и использует предоставленное нетипизированное значение как значение указанного типа.</value>
+    
+  </data>
+  <data name="AsTypeUOArg1" xml:space="preserve">
+    <value>untypedValue</value>
+    
+  </data>
+  <data name="AsTypeUOArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutAsType_untypedValue" xml:space="preserve">
+    <value>Нетипизированное значение для приведения к новому типу.</value>
+  </data>
+  <data name="AboutAsType_type" xml:space="preserve">
+    <value>Тип, который должно иметь значение.</value>
   </data>
   <data name="AboutWith" xml:space="preserve">
     <value>Выполняет формулу, предоставленную как второй параметр, используя область, указанную в первом.</value>
@@ -1879,6 +1915,10 @@
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
     <value>"{0}" — неизвестная или неподдерживаемая функция.</value>
+    
+  </data>
+  <data name="ErrKnownTypeHelperFunction" xml:space="preserve">
+    <value>"{0}" распознается как вспомогательная функция для работы с типами и может использоваться только внутри функции Type.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
@@ -2673,6 +2713,24 @@
   <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Строка JSON для обработки.</value>
   </data>
+  <data name="AboutTypedParseJSON" xml:space="preserve">
+    <value>Преобразует строку JSON в типизированный объект.</value>
+    
+  </data>
+  <data name="TypedParseJSONArg1" xml:space="preserve">
+    <value>string</value>
+    
+  </data>
+  <data name="AboutParseJSON_string" xml:space="preserve">
+    <value>Строка JSON для преобразования в типизированный объект.</value>
+  </data>
+  <data name="TypedParseJSONArg2" xml:space="preserve">
+    <value>type</value>
+    
+  </data>
+  <data name="AboutParseJSON_type" xml:space="preserve">
+    <value>Встроенное определение типа или глобально определенный именованный тип.</value>
+  </data>
   <data name="AboutIndex" xml:space="preserve">
     <value>Возвращает запись в таблице по заданному индексу.</value>
     
@@ -2690,6 +2748,18 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>Индекс записи, которую требуется извлечь.</value>
+    
+  </data>
+  <data name="ListItemTemplate_Single_Name" xml:space="preserve">
+    <value>Single</value>
+    
+  </data>
+  <data name="ListItemTemplate_Double_Name" xml:space="preserve">
+    <value>Double</value>
+    
+  </data>
+  <data name="ListItemTemplate_Person_Name" xml:space="preserve">
+    <value>Person</value>
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
@@ -2710,6 +2780,38 @@
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
     <value>Тип штрихкода</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_Name" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_Name" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_Name" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_Name" xml:space="preserve">
+    <value>DataMatrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_Name" xml:space="preserve">
+    <value>Ean</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_Name" xml:space="preserve">
+    <value>QRCode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_Name" xml:space="preserve">
+    <value>RssExpanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_Name" xml:space="preserve">
+    <value>Upc</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2826,6 +2928,10 @@
   </data>
   <data name="AboutIsNumeric_value" xml:space="preserve">
     <value>Значение для проверки.</value>
+  </data>
+  <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
     <value>Преобразует дату и время в виде текста в число, представляющее дату в формате кода даты и времени Power Apps.</value>
@@ -3101,7 +3207,7 @@
     
   </data>
   <data name="AboutCollect" xml:space="preserve">
-    <value>Добавляет один или несколько элементов в указанную "коллекцию". Элементы могут происходить из другой таблицы или коллекции (например, Collect(collection, source_collection)) или из одной или нескольких записей: Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Добавляет один или несколько элементов в указанную коллекцию. Элементы могут происходить из другой таблицы или коллекции (например, Collect(collection, source_collection)) или из одной или нескольких записей: Collect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="CollectDataSourceArg" xml:space="preserve">
@@ -3117,20 +3223,17 @@
     
   </data>
   <data name="AboutCollect_collection" xml:space="preserve">
-    <value>Новая или существующая коллекция для увеличения.</value>
-  </data>
-  <data name="AboutCollect_item" xml:space="preserve">
-    <value>A record or table to collect. A record will be appended to the collection. A table will have its rows appended to the collection.</value>
+    <value>Новая или существующая коллекция для дополнения.</value>
   </data>
   <data name="AboutClearCollect" xml:space="preserve">
-    <value>Очищает коллекцию и добавляет один или несколько элементов к указанной коллекции. Эти элементы могут браться из другой таблицы или коллекции (например, ClearCollect(collection, source_collection))) или из записей ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
+    <value>Очищает коллекцию, а затем добавляет один или несколько элементов в указанную коллекцию. Элементы могут происходить из другой таблицы или коллекции (например, ClearCollect(collection, source_collection)) или из одной или нескольких записей: ClearCollect(collection, {key1: val1, key2: val2, ...}, ...).</value>
     
   </data>
   <data name="AboutClearCollect_collection" xml:space="preserve">
-    <value>Новая или существующая коллекция для увеличения.</value>
+    <value>Новая или существующая коллекция для дополнения.</value>
   </data>
   <data name="AboutClearCollect_item" xml:space="preserve">
-    <value>Запись или таблица для получения. Запись будет добавлена к коллекции. Строки таблицы будут добавлены в коллекцию.</value>
+    <value>Запись или таблица для получения. Запись будет добавлена в конец коллекции. Строки таблицы будут добавлены в конец коллекции.</value>
   </data>
   <data name="AboutPatch" xml:space="preserve">
     <value>Применяет обновления к заданной строке и изменяет строку в указанном источнике данных. Возвращает обновленную строку.</value>
@@ -3266,6 +3369,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBadToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
     <value>Непредвиденный символ "{0}" в позиции "{1}" в формуле.</value>
     
@@ -3278,6 +3385,10 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -3295,6 +3406,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
     <value>Непредусмотренные символы. Формула содержит "{0}", где ожидается "{1}".</value>
     
@@ -3308,6 +3423,10 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -3325,6 +3444,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
     <value>Недопустимое имя. Этот идентификатор не распознан.</value>
     
@@ -3338,6 +3461,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -3355,6 +3482,10 @@
     <value>Статья. Справочник по формулам в PowerApps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
     <value>Ссылка "Parent" недопустима. Вы не можете ссылаться на родительский элемент управления в этом контексте.</value>
     
@@ -3368,6 +3499,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
     <value>Статья. Добавление и настройка элемента управления приложения на основе холста в Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2119116</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -3407,6 +3542,10 @@
     <value>Модуль. Использование базовых формул</value>
     
   </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
     <value>Ожидалось число. В этой точке формулы должно быть число.</value>
     
@@ -3420,6 +3559,10 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -3437,6 +3580,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
     <value>Ожидалось двоеточие. В этой точке формулы должно быть двоеточие (:).</value>
     
@@ -3452,6 +3599,10 @@
     <value>Статья. Отображение текста, дат и времени в Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132645</value>
+    
+  </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
     <value>Функция поведения используется в несвязанном с поведением свойстве. Это свойство не позволяет изменять значения в других областях приложения.</value>
     
@@ -3465,6 +3616,22 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
     <value>Статья. Общие сведения о формулах поведения для приложений на основе холста в Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132570</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_ShortMessage" xml:space="preserve">
+    <value>Функция поведения в пользовательской функции, не являющейся функцией поведения. Заключите тело пользовательской функции в фигурные скобки ({...}), чтобы объявить пользовательскую функцию поведения.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_LongMessage" xml:space="preserve">
+    <value>Функции поведения изменяют текущее состояние сеанса. Типичные функции поведения — это Clear, Collect, Patch и Refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorFunctionInDataUDF_HowToFix_1" xml:space="preserve">
+    <value>Отредактируйте выражение пользовательской функции так, чтобы оно находилось внутри фигурных скобок ({...}).</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -3504,6 +3671,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
     <value>Ожидался текст или число. В этой точке формулы должен быть текст или число.</value>
     
@@ -3519,6 +3690,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
     <value>Ожидалась закрывающая скобка. В этой точке формулы должна быть закрывающая фигурная скобка (}).</value>
     
@@ -3530,12 +3705,23 @@
     <value>Измените формулу так, чтобы она включала фигурную скобку.</value>
     
   </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_ShortMessage" xml:space="preserve">
+    <value>Ожидалось закрытие идентификатора. В этой точке формулы должна быть закрывающая одинарная кавычка ().</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_LongMessage" xml:space="preserve">
+    <value>Закрывающая одинарная кавычка указывает на конец идентификатора (например, 'Имя').</value>
+  </data>
+  <data name="ErrorResource_ErrClosingIdentifierExpected_HowToFix_1" xml:space="preserve">
+    <value>Измените формулу так, чтобы она включала закрывающую одинарную кавычку.</value>
+    
+  </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
-    <value>Идентификатор не содержит допустимый текст.</value>
+    <value>Идентификатор пуст или содержит недопустимый символ, например символ табуляции или новой строки.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Введите для идентификатора текст. Ошибка возникает, если идентификатор пустой или состоит из одних пробелов.</value>
+    <value>Убедитесь, что идентификатор представляет собой допустимый текст. Эта ошибка возникает, когда идентификатор пуст, состоит из одних пробелов либо содержит символ табуляции или новой строки.</value>
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
@@ -3561,8 +3747,16 @@
     <value>Модуль. Использование базовых формул</value>
     
   </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
     <value>Модуль. Создание базовых формул с таблицами и записями</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
@@ -3577,6 +3771,10 @@
     <value>Статья. Справка по формулам для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
     <value>Несовместимый тип. В столбце "{0}" в обновляемом источнике данных требуется тип "{1}", а используется тип "{2}".</value>
     
@@ -3589,8 +3787,16 @@
     <value>Модуль. Использование базовых формул</value>
     
   </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
     <value>Модуль. Создание базовых формул с таблицами и записями</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
@@ -3603,6 +3809,10 @@
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -3621,8 +3831,16 @@
     <value>Модуль. Использование базовых формул</value>
     
   </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
     <value>Модуль. Создание базовых формул с таблицами и записями</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
@@ -3640,8 +3858,16 @@
     <value>Модуль. Использование базовых формул</value>
     
   </data>
+  <data name="ErrorResource_ErrTypeError_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132396</value>
+    
+  </data>
   <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
     <value>Модуль. Создание базовых формул с таблицами и записями</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132700</value>
     
   </data>
   <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
@@ -3657,6 +3883,10 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
     <value>Статья. Справка по формулам для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -3682,8 +3912,16 @@
     <value>Статья. Общие сведения о делегировании в приложении на основе холста</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
     <value>Блог. Ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -3709,8 +3947,16 @@
     <value>Статья. Общие сведения о делегировании в приложении на основе холста</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
     <value>Блог. Ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -3740,8 +3986,16 @@
     <value>Статья. Общие сведения о делегировании в приложении на основе холста</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
     <value>Блог. Ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -3773,8 +4027,70 @@
     <value>Статья. Общие сведения о делегировании в приложении на основе холста</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
     <value>Блог. Ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_ShortMessage" xml:space="preserve">
+    <value>Предупреждение о делегировании: именованная формула {0} не подлежит делегированию, поэтому при ее использовании в этой формуле возможна некорректная работа с большими объемами данных. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_LongMessage" xml:space="preserve">
+    <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора данных приложение может возвращать неверные результаты или работать некорректно.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_HowToFix_1" xml:space="preserve">
+    <value>Попробуйте упростить определение именованной формулы.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1" xml:space="preserve">
+    <value>Статья: общие сведения о делегировании в приложении на основе холста</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2" xml:space="preserve">
+    <value>Запись блога: ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_NF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_ShortMessage" xml:space="preserve">
+    <value>Предупреждение о делегировании: пользовательская функция {0} не подлежит делегированию, поэтому при ее использовании в этой формуле возможна некорректная работа с большими объемами данных. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_LongMessage" xml:space="preserve">
+    <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора данных приложение может возвращать неверные результаты или работать некорректно.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_HowToFix_1" xml:space="preserve">
+    <value>Попробуйте упростить определение пользовательской функции.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1" xml:space="preserve">
+    <value>Статья: общие сведения о делегировании в приложении на основе холста</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2" xml:space="preserve">
+    <value>Запись блога: ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_UDF_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -3801,8 +4117,16 @@
     <value>Статья. Общие сведения о делегировании в приложении на основе холста</value>
     
   </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132701</value>
+    
+  </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
     <value>Блог. Ограничения на количество строк данных для делегирования</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132702</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -3831,6 +4155,10 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Ссылка: ConfirmExit для приложений на основе холста</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
@@ -3865,8 +4193,12 @@
     <value>Именованная формула должна быть выражением.</value>
     
   </data>
+  <data name="ErrNamedType_MissingTypeExpression" xml:space="preserve">
+    <value>Объявление именованного типа должно представлять собой допустимое выражение типа.</value>
+    
+  </data>
   <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
-    <value>Определяемая пользователем функция должна иметь основную часть.</value>
+    <value>Пользовательская функция должна иметь тело.</value>
     
   </data>
   <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
@@ -3874,11 +4206,11 @@
     
   </data>
   <data name="WrnUDF_ShadowingBuiltInFunction" xml:space="preserve">
-    <value>Предупреждение. Пользовательская функция {0} будет использовать существующую встроенную функцию {0}.</value>
+    <value>Предупреждение: пользовательская функция {0} будет дублировать существующую встроенную функцию {0}.</value>
     
   </data>
   <data name="ErrUDF_FunctionNameRestricted" xml:space="preserve">
-    <value>Для имени функции ({0}) установлено ограничение.</value>
+    <value>Имя функции {0} является запрещенным.</value>
     
   </data>
   <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
@@ -3890,7 +4222,7 @@
     
   </data>
   <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
-    <value>Указанный тип возврата функции "{0}" не соответствует типу возврата основной части функции "{1}".</value>
+    <value>Указанный тип возвращаемого значения функции ({0}) не соответствует типу возвращаемого значения тела функции ({1}).</value>
     
   </data>
   <data name="ErrUDF_TooManyParameters" xml:space="preserve">
@@ -3898,11 +4230,11 @@
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>Отсутствует тип возврата функции, например ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>Отсутствует тип возвращаемого значения функции, например ":Number" в ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
-    <value>Отсутствует тип аргумента функции, например ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    <value>Отсутствует тип аргумента функции, например ":Text" в "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
     
   </data>
   <data name="ErrUDF_InvalidReturnType" xml:space="preserve">
@@ -3921,7 +4253,7 @@
     
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
-    <value>"{1}" нельзя изменить на "{0}" или есть конфликт с именем существующей переменной области, источника данных или другого объекта.</value>
+    <value>"{1}" нельзя изменить с помощью "{0}", или возникает конфликт с именем существующей переменной области, источника данных или другого объекта.</value>
     
   </data>
   <data name="AboutSet" xml:space="preserve">
@@ -4082,6 +4414,10 @@
     <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
     
   </data>
+  <data name="WrnCountRowsMayReturnCachedValue" xml:space="preserve">
+    <value>CountRows может возвращать кэшированное значение. Для получения последнего количества используйте CountIf(DataSource, true).</value>
+    
+  </data>
   <data name="AboutIsMatch" xml:space="preserve">
     <value>Определяет, есть ли в предоставленном тексте совпадение с указанным форматом текста.</value>
     
@@ -4228,16 +4564,20 @@
     <value>Если задать переменную со значением источника данных в интернете (таблица или запись), это может вызвать несколько запросов к серверу. Вскоре эта возможность будет заблокирована.</value>
     
   </data>
-  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Недопустимая декларация типа литерала. Выражение "{0}" не может использоваться в определении типа.</value>
+  <data name="ErrTypeFunction_InvalidTypeExpression" xml:space="preserve">
+    <value>Недопустимое выражение типа. "{0}" нельзя использовать в выражении типа.</value>
     
   </data>
-  <data name="ErrNamedType_InvalidTypeDefinition" xml:space="preserve">
-    <value>Определение типа {0} недопустимо.</value>
+  <data name="ErrTypeFunction_UnsupportedUsage" xml:space="preserve">
+    <value>Неподдерживаемое использование: функцию Type можно использовать только в аргументах типа и объявлениях типа.</value>
+    
+  </data>
+  <data name="ErrNamedType_InvalidTypeDeclaration" xml:space="preserve">
+    <value>Объявление типа {0} является недопустимым.</value>
     
   </data>
   <data name="ErrNamedType_InvalidCycles" xml:space="preserve">
-    <value>Определение типа {0} является недопустимым и может содержать циклы.</value>
+    <value>Объявление типа {0} является недопустимым и может содержать циклы.</value>
     
   </data>
   <data name="ErrNamedType_InvalidTypeName" xml:space="preserve">
@@ -4442,7 +4782,7 @@
     <value>Источник данных, в который нужно добавить данные.</value>
   </data>
   <data name="AboutCollect_item" xml:space="preserve">
-    <value>Запись или таблица для получения. Запись будет добавлена к источнику данных. Строки таблицы будут добавлены в источник данных.</value>
+    <value>Запись или таблица для получения. Запись будет добавлена в конец источника данных. Строки таблицы будут добавлены в конец источника данных.</value>
   </data>
   <data name="CollectItemArg" xml:space="preserve">
     <value>элемент</value>
@@ -4490,8 +4830,96 @@
   <data name="AboutClear_source" xml:space="preserve">
     <value>Источник, который нужно очистить.</value>
   </data>
+  <data name="AboutJoin" xml:space="preserve">
+    <value>Извлекает данные, охватывающие несколько таблиц с отношениями.</value>
+    
+  </data>
+  <data name="JoinArg1" xml:space="preserve">
+    <value>источник1</value>
+    
+  </data>
+  <data name="JoinArg2" xml:space="preserve">
+    <value>источник2</value>
+    
+  </data>
+  <data name="JoinArg3" xml:space="preserve">
+    <value>знаменатель</value>
+    
+  </data>
+  <data name="JoinArg4" xml:space="preserve">
+    <value>тип_соединения</value>
+    
+  </data>
+  <data name="JoinArg5" xml:space="preserve">
+    <value>переименование_столбцов</value>
+    
+  </data>
+  <data name="AboutJoin_source1" xml:space="preserve">
+    <value>Левая таблица или коллекция.</value>
+    
+  </data>
+  <data name="AboutJoin_source2" xml:space="preserve">
+    <value>Правая таблица или коллекция.</value>
+    
+  </data>
+  <data name="AboutJoin_denominator" xml:space="preserve">
+    <value>Критерии соединения двух таблиц или коллекций.</value>
+    
+  </data>
+  <data name="AboutJoin_join_type" xml:space="preserve">
+    <value>Тип соединения двух таблиц или коллекций.</value>
+    
+  </data>
+  <data name="AboutJoin_column_renaming" xml:space="preserve">
+    <value>Аргументы для переименования существующего столбца в одном из источников.</value>
+    
+  </data>
   <data name="ErrInvalidDataSourceForFunction" xml:space="preserve">
     <value>Указанный источник данных невозможно использовать в этой функции.</value>
+    
+  </data>
+  <data name="ErrInvalidArgumentExpectedType" xml:space="preserve">
+    <value>Недопустимый аргумент "{0}". Ожидается допустимое имя типа или встроенное выражение типа.</value>
+    
+  </data>
+  <data name="ErrUnsupportedTypeInTypeArgument" xml:space="preserve">
+    <value>Неподдерживаемый тип "{0}" в аргументе типа.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonDepth" xml:space="preserve">
+    <value>Достигнута максимальная глубина при обходе полезных данных JSON.</value>
+    
+  </data>
+  <data name="ErrReachedMaxJsonLength" xml:space="preserve">
+    <value>Достигнута максимальная глубина в функции JSON.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypesDisabled" xml:space="preserve">
+    <value>Экспериментальная функция "Пользовательские типы" не включена.</value>
+    
+  </data>
+  <data name="ErrUserDefinedTypeIncorrectSyntax" xml:space="preserve">
+    <value>Неверный синтаксис: "=" нельзя использовать для объявления пользовательских типов. Используйте ":=".</value>
+    
+  </data>
+  <data name="ErrJoinCantAddRename" xml:space="preserve">
+    <value>Невозможно добавить/переименовать "{0}" из-за конфликта с другим столбцом с таким же именем.</value>
+    
+  </data>
+  <data name="ErrJoinNotPlainJoinTypeEnum" xml:space="preserve">
+    <value>Ожидается обычное значение перечисления JoinType. Другие перечисления или передача значения через другую функцию не поддерживаются, т. е. Join(..., If(true, JoinType.Inner, JoinType.Full)).</value>
+    
+  </data>
+  <data name="ErrJoinArgIsNotAsNode" xml:space="preserve">
+    <value>Аргументы начиная с 5-й позиции предназначены для переименования столбцов. Ожидается, что это будут аргументы узлов As, т. е. LeftRecord.Name As NewName.</value>
+    
+  </data>
+  <data name="ErrJoinAtLeastOneRigthRecordField" xml:space="preserve">
+    <value>Для составления результата соединения должен быть объявлен хотя бы один столбец "{0}".</value>
+    
+  </data>
+  <data name="ErrJoinDottedNameleft" xml:space="preserve">
+    <value>Значение "{0}" недопустимо в этом контексте. Это должна быть ссылка на имя области "{1}" или "{2}".</value>
     
   </data>
 </root>

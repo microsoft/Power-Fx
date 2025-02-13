@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -163,7 +164,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@In|]", "ErrorKind")]
+        [InlineData("[@In|]", "ErrorKind", "JoinType")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})")]
@@ -207,6 +208,53 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             actualSuggestions = SuggestStrings(expression, config);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Suggests multiple scopes for functions that creates multiple scopes.
+        [Theory]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),|", "LeftRecord", "RightRecord")]
+        [InlineData("Join(Table({a:1,b:1}) As t1,Table({a:1,c:2,d:2}) As t2,|", "t1", "t2")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.|", "a", "b")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.|", "a", "c", "d")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a,|", "JoinType.Full", "JoinType.Inner", "JoinType.Left", "JoinType.Right")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,|", "LeftRecord", "RightRecord")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,LeftRecord.|", "a", "b")]
+        [InlineData("Join(Table({a:1,b:1}),Table({a:1,c:2,d:2}),LeftRecord.a = RightRecord.a, JoinType.Inner,RightRecord.|", "a", "c", "d")]
+        public void TestSuggestMultipleScopes(string expression, params string[] expectedSuggestions)
+        {
+            var config = Default;
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            var actualSuggestions = SuggestStrings(expression, config);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        // Making sure that functions with multiple scopes wont throw an out of range exception.
+        [Theory]
+        [InlineData("Join(Sequence(3), ForAll(Sequence(3,1,2), { Value : ThisRecord.Value, Value2 : ThisRecord.Value * ThisRecord.Value}), LeftRecord.Value = RightRecord.Value, JoinType.Left, RightRecord.Value2 As V2)")]
+        public void MultipleScopesExceptionTest(string expression)
+        {
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddFunction(new JoinFunction());
+
+            // Test if at any point in the expression we going to get a out of range exception.
+            for (int i = 1; i < expression.Length; i++)
+            {
+#pragma warning disable CA1845 // Use span-based 'string.Concat'
+                var subExpr = expression.Substring(0, i) + "|";
+#pragma warning restore CA1845 // Use span-based 'string.Concat'
+
+                try
+                {
+                    SuggestStrings(subExpr, config);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+
+            Assert.True(true);
         }
 
         /// <summary>
@@ -289,17 +337,38 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
-        
-        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]        
+        [InlineData("SortByColumns(|", "Tabela a ser classificada.", "Classifica 'source' (origem) com base na coluna, com a opção de especificar uma 'order' (ordem) de classificação.", "pt-BR")]
         [InlineData("First(|", "Table dont la première ligne sera retournée.", "Retourne la première ligne de « source ».", "fr-FR")]
         [InlineData("First(|", "A table whose first row will be returned.", "Returns the first row of 'source'.", "")] // Invariant culture
+        [InlineData("If(|", "Condição que resulta em um valor booleano.", "Verifica se alguma das condições especificadas foi atendida e retorna o valor correspondente. Se nenhuma das condições for atendida, a função retornará o valor padrão especificado.", "pt-BR")]
         public void TestIntellisenseFunctionParameterDescriptionLocale(string expression, string expectedParameterDescription, string expectedDefinition, string locale)
         {
             var result = Suggest(expression, Default, CultureInfo.InvariantCulture, CultureInfo.CreateSpecificCulture(locale));
 
-            var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
-            Assert.Equal(expectedDefinition, currentOverload.Definition);
-            Assert.Equal(expectedParameterDescription, currentOverload.FunctionParameterDescription);
+            var signature = result.SignatureHelp.Signatures[result.SignatureHelp.ActiveSignature];
+            var overload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
+
+            Assert.Equal(expectedDefinition, signature.Documentation);
+            Assert.Equal(expectedDefinition, overload.Definition);
+
+            Assert.Equal(expectedParameterDescription, signature.Parameters[0].Documentation);
+            Assert.Equal(expectedParameterDescription, overload.FunctionParameterDescription);
+        }
+
+        /// <summary>
+        /// In cases for which Intellisense produces exceedingly numerous results, they should
+        /// contain localized strings.
+        /// </summary>
+        [Fact]
+        public void TestNonEmptyLocalizedSuggest()
+        {
+            var expression = "| ForAll([1],Value)";
+            var config = Default;
+            var suggestions = Suggest(expression, Default, null, CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            // Fetching arg1 (Abs function).
+            var definition = suggestions.Suggestions.ToArray()[1].Definition;
+            Assert.Equal("Retorna o valor absoluto de um número, sem o sinal.", definition);
         }
 
         [Theory]
@@ -574,6 +643,30 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             // Just check that the execution didn't stack overflow.
             Assert.True(suggestions.Any());
+        }
+
+        [Theory]
+        [InlineData("ParseJSON(\"42\", Nu|", "Number")]
+        [InlineData("AsType(ParseJSON(\"42\"), Da|", "Date", "DateTime", "DateTimeTZInd")]
+        [InlineData("IsType(ParseJSON(\"42\"),|", "'My Type With Space'", "'Some \" DQuote'", "Boolean", "Date", "DateTime", "DateTimeTZInd", "Decimal", "GUID", "Hyperlink", "MyNewType", "Number", "Text", "Time", "UntypedObject")]
+        [InlineData("ParseJSON(\"42\", Voi|")]
+        [InlineData("ParseJSON(\"42\", MyN|", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", Tim|", "DateTime", "DateTimeTZInd", "Time")]
+        [InlineData("ParseJSON(\"42\", My|", "'My Type With Space'", "MyNewType")]
+        [InlineData("ParseJSON(\"42\", So|", "'Some \" DQuote'")]
+        public void TypeArgumentsTest(string expression, params string[] expected)
+        {
+            var symbolTable = SymbolTable.WithPrimitiveTypes();
+
+            symbolTable.AddType(new DName("MyNewType"), FormulaType.String);
+            symbolTable.AddType(new DName("My Type With Space"), FormulaType.String);
+            symbolTable.AddType(new DName("Some \" DQuote"), FormulaType.String);
+            symbolTable.AddFunctions(new TexlFunctionSet(BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions.Where(f => f.HasTypeArgs).ToArray()));
+            symbolTable.AddFunctions(new TexlFunctionSet(new[] { BuiltinFunctionsCore.ParseJSON }));
+
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, symbolTable);
+            Assert.Equal(expected, actualSuggestions);
         }
     }
 }

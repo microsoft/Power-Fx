@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -27,16 +28,24 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "$\"Hello {5}\"",
             "$\"#$string$#{#$decimal$#}\"")]
+        [InlineData(
+            "ParseJSON(\"[{ \"\"Age\"\": 5}]\", Type([{Age: Number}]))",
+            "ParseJSON(#$string$#, Type([ { #$fieldname$#:#$firstname$# } ]))")]
+        [InlineData(
+            "ParseJSON(\"{}\", Type(RecordOf(Accounts)))",
+            "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))")]
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
                 script,
-                flags: Flags.EnableExpressionChaining);
+                flags: Flags.EnableExpressionChaining,
+                features: Features.PowerFxV1);
 
-            Assert.Equal(expected, StructuralPrint.Print(result.Root));
+            var actual = StructuralPrint.Print(result.Root);
+            Assert.Equal(expected, actual);
 
             // Test same cases via CheckResult
-            var check = new CheckResult(new Engine());
+            var check = new CheckResult(new Engine(new PowerFxConfig()));
             check.SetText(script, new ParserOptions { AllowsSideEffects = true });
             var result2 = check.ApplyGetLogging();
             Assert.Equal(expected, result2);
@@ -59,6 +68,14 @@ namespace Microsoft.PowerFx.Tests
             "ForAll([1,2,3], ThisRecord.Value * 2)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$#.#$righthandid$# * #$decimal$#)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaFullRecord$#.#$righthandid$# * #$decimal$#)")]
+        [InlineData(
+            "Join(Table({a:1}), Table({a:1}), LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.a As AAA)",
+            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$firstname$#.#$righthandid$# = #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$# As #$righthandid$#)",
+            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$LambdaField$#.#$righthandid$# = #$LambdaField$#.#$righthandid$#, JoinType.Inner, #$LambdaField$#.#$righthandid$# As #$righthandid$#)")]
+        [InlineData(
+            "WeekNum(Date(2020, 12, 8),StartOfWeek.Sunday)",
+            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), #$firstname$#.#$righthandid$#)",
+            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), StartOfWeek.Sunday)")]
 
         public void TestStucturalPrintWithBinding(string script, string beforebinding, string afterbinding)
         {
@@ -66,17 +83,21 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(beforebinding, StructuralPrint.Print(result.Root));
+            var actual = StructuralPrint.Print(result.Root);
+            Assert.Equal(beforebinding, actual);
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddFunction(new JoinFunction());
 
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
 
             check.SetText(script, new ParserOptions { AllowsSideEffects = true })
-                .SetBindingInfo()
+                .SetBindingInfo(symbolTable)
                 .ApplyBinding();
 
-            var result2 = check.ApplyGetLogging();
-            Assert.Equal(afterbinding, result2);
+            actual = check.ApplyGetLogging();
+            Assert.Equal(afterbinding, actual);
         }
 
         private class TestSanitizer : ISanitizedNameProvider
@@ -256,6 +277,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Set(str, $\"{{}}\")", "Set(\n    str,\n    $\"{{}}\"\n)")]
         [InlineData("Set(additionText, $\"The sum of 1 and 3 is {{{1 + 3}}})\")", "Set(\n    additionText,\n    $\"The sum of 1 and 3 is {{{1 + 3}}})\"\n)")]
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
+        [InlineData("ParseJSON(\"[]\", Type([{Age: Number}]))", "ParseJSON(\n    \"[]\",\n    Type([{Age: Number}])\n)")]
+        [InlineData("Type([{Age: Number, Name: Text}])", "Type(\n    [\n        {\n            Age: Number,\n            Name: Text\n        }\n    ]\n)")]
+        [InlineData("Type(RecordOf(Accounts))", "Type(RecordOf(Accounts))")]
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert
@@ -275,6 +299,10 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;", "F(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;")]
         [InlineData("X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "X():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
         [InlineData("x= /* test */ 1; y =3 /* test */; F(ax: Number /* testttt */ , ab: Number): Number = ax* ab+y   + 2 + x;X():Void = { /* test */ Notify(\"SADF\"); /* asfddsf */ Notify(\"ASDFSFD\"); /* hi */ };", "x = /* test */1;\ny = 3/* test */;\nF(ax: Number /* testttt */ , ab: Number): Number = ax * ab + y + 2 + x;\nX():Void = \n{\n\t/* test */Notify(\"SADF\");\n    /* asfddsf */Notify(\"ASDFSFD\");\n    /* hi */\n};")]
+        [InlineData("T := Type(Number);", "T := Type(Number);")]
+        [InlineData("N = 5; /*Type Dec*/ T := Type([{name: Text, age: Number}]);", "N = 5;\n/*Type Dec*/ T := Type([\n    {\n        name: Text,\n        age: Number\n    }\n]);")]
+        [InlineData("T := Type/*com*/( /*com*/ Number /*com*/) /*com*/;", "T := Type/*com*/( /*com*/Number /*com*/)/*com*/;")]
+        [InlineData("T := Type(/*RecordOf*/ RecordOf(Accounts));", "T := Type(/*RecordOf*/RecordOf(Accounts));")]
         public void TestUserDefinitionsPrettyPrint(string script, string expected)
         {
             var parserOptions = new ParserOptions()
@@ -283,12 +311,12 @@ namespace Microsoft.PowerFx.Tests
             };
 
             // Act & Assert
-            var result = FormatUserDefinitions(script, parserOptions);
+            var result = FormatUserDefinitions(script, parserOptions, Features.PowerFxV1);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
             // Act & Assert: Ensure idempotence
-            result = FormatUserDefinitions(result, parserOptions);
+            result = FormatUserDefinitions(result, parserOptions, Features.PowerFxV1);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
         }

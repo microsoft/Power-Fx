@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -56,6 +55,13 @@ namespace Microsoft.PowerFx.Types
 
             type = Build(dType);
             return true;
+        }
+
+        // When a relationship is used in connected types, this returns the 'base' type of the field 
+        // without retrieving the type issued from the relationship
+        public virtual bool TryGetUnderlyingFieldType(string name, out FormulaType type)
+        {
+            return TryGetFieldType(name, out type);
         }
 
         internal bool TryGetBackingDType(string fieldName, out DType type)
@@ -189,15 +195,15 @@ namespace Microsoft.PowerFx.Types
 
         /// <summary>
         /// Primarily used for optimizing delegation when looking up record with primary key on a relationship. 
-        /// e.g. LookUp(t1, relationField.PrimaryKey = GUID).
+        /// e.g. LookUp(t1, relationField.PrimaryKey = GUID).        
         /// </summary>
-        /// <param name="primaryKeyFieldName"></param>
+        /// <param name="primaryKeyNames">List of key names creating the primary key.  There could be multiple entries if we have a composed key. This set is ordered.</param>
         /// <returns></returns>
         [Obsolete("preview")]
-        public virtual bool TryGetPrimaryKeyFieldName(out string primaryKeyFieldName)
+        public virtual bool TryGetPrimaryKeyFieldName(out IEnumerable<string> primaryKeyNames)
         {
-            primaryKeyFieldName = null;
+            primaryKeyNames = Enumerable.Empty<string>();
             return false;
-        }
+        }       
     }
 }

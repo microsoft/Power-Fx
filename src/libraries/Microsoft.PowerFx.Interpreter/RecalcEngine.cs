@@ -397,13 +397,12 @@ namespace Microsoft.PowerFx
             var options = new ParserOptions()
             {
                 AllowsSideEffects = false,
-                AllowParseAsTypeLiteral = true,
                 Culture = parseCulture ?? CultureInfo.InvariantCulture
             };
 
             var sb = new StringBuilder();
 
-            var checkResult = new DefinitionsCheckResult()
+            var checkResult = new DefinitionsCheckResult(this.Config.Features)
                                     .SetText(script, options);
 
             var parseResult = checkResult.ApplyParse();
@@ -421,7 +420,7 @@ namespace Microsoft.PowerFx
             }
 
             // Compose will handle null symbols
-            var composedSymbols = SymbolTable.Compose(Config.SymbolTable, SupportedFunctions, PrimitiveTypes, _symbolTable);
+            var composedSymbols = SymbolTable.Compose(Config.ComposedConfigSymbols, SupportedFunctions, PrimitiveTypes, _symbolTable);
 
             if (parseResult.DefinedTypes.Any())
             {
@@ -460,14 +459,17 @@ namespace Microsoft.PowerFx
 
             foreach (var udf in udfs)
             {
-                Config.SymbolTable.AddFunction(udf);
                 var binding = udf.BindBody(nameResolver, new Glue2DocumentBinderGlue(), BindingConfig.Default, Config.Features);
 
                 List<TexlError> bindErrors = new List<TexlError>();
 
-                if (binding.ErrorContainer.GetErrors(ref errors))
+                if (binding.ErrorContainer.GetErrors(ref bindErrors))
                 {
                     sb.AppendLine(string.Join(", ", bindErrors.Select(err => err.ToString())));
+                }
+                else
+                {
+                    Config.SymbolTable.AddFunction(udf);
                 }
             }
 

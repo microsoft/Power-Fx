@@ -111,6 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrSummarizeDataSourceContainsThisGroupColumn);
             }
 
+            var newDisplayNameProvider = new Dictionary<DName, DName>();
             var atLeastOneGroupByColumn = false;
 
             for (int i = 1; i < args.Length; i++)
@@ -151,6 +152,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrSummarizeThisGroupColumnName);
                                 continue;
                             }
+
+                            newDisplayNameProvider[columnName] = new DName(displayName);
                         }
 
                         atLeastOneGroupByColumn = true;
@@ -200,6 +203,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 isValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrSummarizeNoGroupBy);
             }
+
+            returnType = DType.AttachOrDisableDisplayNameProvider(returnType, DisplayNameProvider.New(newDisplayNameProvider));
 
             Contracts.Assert(returnType.IsTable);
             return isValid;
@@ -255,6 +260,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return new IRCallNode(context.GetIRContext(node), this, scope, newArgs);
+        }
+
+        public override bool ComposeDependencyInfo(IRCallNode node, DependencyVisitor visitor, DependencyVisitor.DependencyContext context)
+        {
+            var tableTypeName = ((AggregateType)node.Args[0].IRContext.ResultType).TableSymbolName;
+
+            foreach (var arg in node.Args.Skip(1))
+            {
+                if (arg is TextLiteralNode textLiteralNode)
+                {
+                    visitor.AddDependency(tableTypeName, textLiteralNode.LiteralValue);
+                }
+                else if (arg is LazyEvalNode lazyEvalNode)
+                {
+                    var recordNode = (RecordNode)lazyEvalNode.Child;
+
+                    recordNode.Fields.Values.First().Accept(visitor, context);
+                }
+            }
+
+            return true;
         }
     }
 }

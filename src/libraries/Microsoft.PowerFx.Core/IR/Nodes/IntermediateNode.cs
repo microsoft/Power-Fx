@@ -3,6 +3,8 @@
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
+    // IRNodes are immutable. But the actual IR can tree can be recreated and shared. 
+    [ThreadSafeImmutable]
     internal abstract class IntermediateNode
     {
         public IRContext IRContext { get; }

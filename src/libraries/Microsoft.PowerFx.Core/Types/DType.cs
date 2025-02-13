@@ -525,7 +525,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider = null)
+        internal DType(LazyTypeProvider provider, bool isTable, DisplayNameProvider displayNameProvider = null, HashSet<IExternalTabularDataSource> associatedDataSources = null)
         {
             Contracts.AssertValue(provider);
 
@@ -538,7 +538,7 @@ namespace Microsoft.PowerFx.Core.Types
             ExpandInfo = null;
             PolymorphicInfo = null;
             Metadata = null;
-            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
+            AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -994,6 +994,11 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>String representation of DType.Kind.</returns>
         public string GetKindString()
         {
+            if (Kind == DKind._Min)
+            {
+                return "Unknown";
+            }
+
             if (Kind == DKind._MinPrimitive)
             {
                 return "Boolean";
@@ -1079,7 +1084,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                     return this;
                 case DKind.LazyTable:
-                    return new DType(LazyTypeProvider, isTable: false, DisplayNameProvider);
+                    return new DType(LazyTypeProvider, isTable: false, DisplayNameProvider, AssociatedDataSources);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1123,7 +1128,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return new DType(LazyTypeProvider, isTable: true, DisplayNameProvider);
+                    return new DType(LazyTypeProvider, isTable: true, DisplayNameProvider, AssociatedDataSources);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -3954,6 +3959,40 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return !fError;
+        }
+
+        internal static bool IsSupportedType(DType type, ISet<DType> supportedTypes, out DType unsupportedType)
+        {
+            unsupportedType = null;
+
+            // Dataverse types may contain fields with ExpandInfo that may have self / mutually recursive reference
+            // we allow these in type check phase by ignoring validation of types in such fields.
+            if (type.HasExpandInfo)
+            {
+                return true;
+            }
+
+            if ((type.IsRecordNonObjNull || type.IsTableNonObjNull) && type.TypeTree != null)
+            {
+                foreach (var ctype in type.TypeTree)
+                {
+                    if (!IsSupportedType(ctype.Value, supportedTypes, out unsupportedType))
+                    {
+                        return false;
+                    }
+                }
+
+                unsupportedType = null;
+                return true;
+            }
+
+            if (!supportedTypes.Contains(type))
+            {
+                unsupportedType = type;
+                return false;
+            }
+
+            return true;
         }
     }
 }

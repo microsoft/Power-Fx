@@ -1,5 +1,3 @@
-#SETUP: AllowTypeLiteral, TimeZoneInfo("Pacific Standard Time")
-
 // Primitives
 >> ParseJSON("5", Number)
 5
@@ -28,20 +26,14 @@
 >> ParseJSON("""1984-01-01""", Date)
 Date(1984,1,1)
 
->> ParseJSON("""2008-01-01T12:12:12.100Z""", DateTime)
-DateTime(2008,1,1,4,12,12,100)
+>> ParseJSON("""1900-12-31T23:59:59.999""", Date)
+Date(1900,12,31)
 
 >> ParseJSON("""2008-01-01T12:12:12.100""", DateTime)
 DateTime(2008,1,1,12,12,12,100)
 
->> ParseJSON("""2008-01-01T12:12:12.100-08:00""", DateTime)
-DateTime(2008,1,1,12,12,12,100)
-
 >> ParseJSON("""1900-12-31""", DateTime)
 DateTime(1900,12,31,0,0,0,0)
-
->> ParseJSON("""1900-12-31T23:59:59.999""", Date)
-Date(1900,12,31)
 
 >> ParseJSON("""11:59:59.999""", Time)
 Time(11,59,59,999)
@@ -60,12 +52,6 @@ DateTime(1900,12,31,0,0,0,0)
 
 >> ParseJSON("""1900-12-31T00:00:00.000-08:00""", DateTimeTZInd)
 DateTime(1900,12,31,8,0,0,0)
-
->> DateTimeValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
-DateTime(1900,12,30,16,0,0,0)
-
->> DateValue(ParseJSON("""1900-12-31T00:00:00.000Z""", UntypedObject))
-Date(1900,12,30)
 
 >> Value(ParseJSON("42", UntypedObject))
 42
@@ -118,22 +104,22 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("1", 1)
-Errors: Error 15-16: Invalid argument '1'. Expected valid type name or type literal.
+Errors: Error 15-16: Invalid argument '1'. Expected valid type name or inline type expression.
 
 >> ParseJSON("""RED""", Color)
-Errors: Error 21-26: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 21-26: Unsupported type 'Color' in type argument.
 
 >> ParseJSON("5", Type(5))
-Errors: Error 20-21: Type literal declaration is invalid. The expression '5' cannot be used in a type definition.|Error 19-20: Type literal declaration is invalid. The expression 'Type(5)' cannot be used in a type definition.
+Errors: Error 20-21: Type expression is invalid. '5' cannot be used in a type expression.|Error 19-20: Type expression is invalid. 'Type(5)' cannot be used in a type expression.
 
 >> ParseJSON("true", UnKnown)
-Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or type literal.
+Errors: Error 18-25: Name isn't valid. 'UnKnown' isn't recognized.|Error 0-26: Invalid argument 'UnKnown'. Expected valid type name or inline type expression.
 
 >> ParseJSON("fasle", Boolean)
 Error({Kind:ErrorKind.InvalidJSON})
 
 >> ParseJSON("true", Void)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'Void' in argument.
+Errors: Error 18-22: Unsupported type 'Void' in type argument.
 
 >> ParseJSON("{""a"": 5, ""b"":true}", Type({a: Number}))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -142,13 +128,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 Errors: Error 0-51: Invalid number of arguments: received 3, expected 2.
 
 >> ParseJSON("true", None)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 18-22: Unsupported type 'ObjNull' in type argument.
 
 >> ParseJSON("null", None)
-Errors: Error 18-22: Unsupported untyped/JSON conversion type 'ObjNull' in argument.
+Errors: Error 18-22: Unsupported type 'ObjNull' in type argument.
 
 >> ParseJSON("{}", Type({a: Text, b: [Color]}))
-Errors: Error 20-21: Unsupported untyped/JSON conversion type 'Color' in argument.
+Errors: Error 20-21: Unsupported type 'Color' in type argument.
 
 >> ParseJSON(If(1/0 > 1, "42"), Number)
 Error({Kind:ErrorKind.Div0})
@@ -157,7 +143,10 @@ Error({Kind:ErrorKind.Div0})
 Blank()
 
 >> ParseJSON("42", Blank())
-Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or type literal.
+Errors: Error 16-23: Invalid argument 'Blank()'. Expected valid type name or inline type expression.
 
 >> ParseJSON("42", 1/0)
-Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or type literal.
+Errors: Error 17-18: Invalid argument '1 / 0'. Expected valid type name or inline type expression.
+
+>> ParseJSON(Type(Text))
+Errors: Error 14-15: Unsupported usage: Type function can only be used in type arguments and type declarations.|Error 0-9: The function 'ParseJSON' has some invalid arguments.
