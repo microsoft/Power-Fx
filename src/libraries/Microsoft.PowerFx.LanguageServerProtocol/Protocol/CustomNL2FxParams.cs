@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Possible expression.
         /// Maybe 0 length. 
         /// </summary>
-        public CustomNL2FxResultItem[] Expressions { get; set; }
+        public CustomNL2FxResultItem[] Expressions { get; set; }        
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// A power fx expression.
         /// This should be valid and LSP verified it has no errors. 
         /// </summary>
-        public string Expression { get; set; }        
+        public string Expression { get; set; }
 
         /// <summary>
         /// An expression that has all PII stripped and can be logged. 
