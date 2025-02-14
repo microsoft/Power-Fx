@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
         private readonly INLHandlerFactory _nLHandlerFactory;
 
-        private readonly CustomNL2FxParams _nl2FxRequestParams;
-
         public Nl2FxLanguageServerOperationHandler(INLHandlerFactory nLHandlerFactory)
         {
             _nLHandlerFactory = nLHandlerFactory;
@@ -39,12 +37,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
         private static Task<NL2FxParameters> PreHandleNl2Fx(NLHandler handler, CustomNL2FxParams requestNl2FxParams, LanguageServerOperationContext operationContext, CancellationToken cancellationToken)
         {
             return operationContext.ExecuteHostTaskAsync(
-            requestNl2FxParams.TextDocument.Uri,
+            requestNl2FxParams.TextDocument.Uri, 
             (scope) =>
             {
-                var nl2FxParameters = scope is IPowerFxScopeNL2Fx nL2FxScope ? nL2FxScope.GetNL2FxParameters() : new NL2FxParameters();
-                nl2FxParameters.FeatureName ??= requestNl2FxParams.FeatureName;
-                nl2FxParameters.Sentence = requestNl2FxParams.Sentence;
+                var nl2FxParameters = new NL2FxParameters
+                {
+                    Sentence = requestNl2FxParams.Sentence
+                };
 
                 if (!handler.SkipDefaultPreHandleForNl2Fx)
                 {
@@ -57,7 +56,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
 
                 handler.PreHandleNl2Fx(requestNl2FxParams, nl2FxParameters, operationContext);
                 return Task.FromResult(nl2FxParameters);
-            },
+            }, 
             cancellationToken);
         }
 
@@ -118,7 +117,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Handlers
             }
 
             var nlHandler = await operationContext.GetNLHandlerAsync(nl2FxRequestParams.TextDocument.Uri, _nLHandlerFactory, nl2FxRequestParams, cancellationToken).ConfigureAwait(false);
-            if (!nlHandler.SupportsNL2Fx)
+            if (!nlHandler.SupportsNL2Fx) 
             {
                 throw new NotSupportedException("Nl2fx is not supported");
             }
