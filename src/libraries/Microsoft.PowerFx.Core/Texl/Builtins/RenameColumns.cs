@@ -69,6 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var isRecord = false;
             nodeToCoercedTypeMap = null;
             bool isValidInvocation;
+
+            if (context.Features.PowerFxV1CompatibilityRules && argTypes[0].IsSealed)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrRenameOfSealed);
+                return false;
+            }
+
             if (argTypes[0].IsTable)
             {
                 isValidInvocation = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
