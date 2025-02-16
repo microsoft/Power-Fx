@@ -98,6 +98,16 @@ namespace Microsoft.PowerFx
             config.AddFunction(new Run1Function());
             config.AddFunction(new Run2Function());
 
+            var testRecordType = RecordType.Empty()
+              .Add(new NamedFormulaType("name", FormulaType.String, "Name"))
+              .Add(new NamedFormulaType("age", FormulaType.Number, "Age"));
+
+            testRecordType
+              .SetFieldsOptional();
+
+            config.SymbolTable.AddType(new Core.Utils.DName("TestRecord"), testRecordType);
+            config.SymbolTable.AddType(new Core.Utils.DName("TestTable"), testRecordType.ToTable());
+
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
