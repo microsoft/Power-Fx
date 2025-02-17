@@ -2182,6 +2182,88 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public async Task DataverseTest_WithItemLessArray()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json", _output);
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "b29c41cf-173b-e469-830b-4f00163d296b" /* environment Id */, "82728ddb6bfa461ea3e50e17da8ab164" /* connectionId */, () => "eyJ0eXAiOiJKV1QiLCJ...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext runtimeContext = new TestConnectorRuntimeContext("DV", client, console: _output);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(new ConnectorSettings("DV") { Compatibility = ConnectorCompatibility.SwaggerCompatibility }, testConnector._apiDocument).ToArray();
+            ConnectorFunction performUnboundActionWithOrganization = functions.First(f => f.Name == "PerformUnboundActionWithOrganizationV2");
+
+#pragma warning disable SA1118, SA1009, SA1111, SA1137
+            
+            // response here is fully ignored
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_3.json");
+            _ = await performUnboundActionWithOrganization.InvokeAsync(
+                new FormulaValue[]
+                {
+                    // required params
+                    FormulaValue.New("https://aurorabapenv9984a.crm10.dynamics.com/"),
+                    FormulaValue.New("someAction"),
+
+                    // optional param "item" with (in swagger) "item-less array" (![])
+                    FormulaValue.NewRecordFromFields(
+                        new NamedValue(
+                            "item", 
+                            new InMemoryTableValue(
+                                IRContext.NotInSource(
+                                    RecordType.Empty()
+                                              .Add("arg1", FormulaType.String)
+                                              .Add("arg2", FormulaType.Decimal)
+                                              .Add("arg3", RecordType.Empty().Add("innerArg1", FormulaType.String))
+                                              .Add("arg4", RecordType.Empty().Add("innerArg2", FormulaType.String).ToTable())
+                                              .ToTable()
+                                ),
+                                new DValue<RecordValue>[]
+                                {
+                                    DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(
+                                        new NamedValue("arg1", FormulaValue.New("foo")),
+                                        new NamedValue("arg2", FormulaValue.New(17.88m)),
+                                        new NamedValue("arg3", FormulaValue.NewRecordFromFields(
+                                                                    new NamedValue("innerArg1", FormulaValue.New("bar")))),
+                                        new NamedValue(
+                                            "arg4", 
+                                            new InMemoryTableValue(                                            
+                                                IRContext.NotInSource(RecordType.Empty().Add("innerArg2", FormulaType.String).ToTable()),
+                                                new DValue<RecordValue>[]
+                                                {
+                                                    DValue<RecordValue>.Of(FormulaValue.NewRecordFromFields(
+                                                                                new NamedValue("innerArg2", FormulaValue.New("xyz"))))
+                                                }
+                                            ))))                                                                       
+                                }
+                            )))
+                },
+                runtimeContext,
+                CancellationToken.None);
+
+#pragma warning restore SA1118, SA1009, SA1111, SA1137
+
+            string actual = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+
+            // Validate that we send the 'array' as expected
+            string expected = @$"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJ...
+ organization: https://aurorabapenv9984a.crm10.dynamics.com/
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/b29c41cf-173b-e469-830b-4f00163d296b
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/82728ddb6bfa461ea3e50e17da8ab164/flow/api/data/v9.1.0/someAction/v2-fake
+ x-ms-user-agent: PowerFx/{version}
+ [content-header] Content-Type: application/json; charset=utf-8
+ [body] [{{""arg1"":""foo"",""arg2"":17.88,""arg3"":{{""innerArg1"":""bar""}},""arg4"":[{{""innerArg2"":""xyz""}}]}}]
+";
+
+            Assert.Equal<object>(expected, actual);
+        }
+
         // ConnectorCompatibility element will determine if an internal parameters will be suggested.
         [Theory]
         [InlineData(ConnectorCompatibility.Default, "Office365Users.SearchUserV2(", "SearchUserV2({ searchTerm:String,top:Decimal,isSearchTermRequired:Boolean,skipToken:String })")]
