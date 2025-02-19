@@ -6,14 +6,22 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Logging
-{    
-    public sealed class SimpleAnonymizer : TexlVisitor
+{
+    /// <summary>
+    /// Simple anonymizer for Power Fx expressions.
+    /// It will replace:
+    /// - string content with 'x' characters
+    /// - numbers digits with '0' characters
+    /// - decimal digits with '1' characters
+    /// - unknown function names with 'c' characters, including ReflectionFunctions.
+    /// </summary>
+    public sealed class SimpleAnonymizer : IdentityTexlVisitor
     {
-        private readonly char[] _expression;        
+        private readonly char[] _expression;
 
         private SimpleAnonymizer(string expression)
         {
-            _expression = expression.ToCharArray();            
+            _expression = expression.ToCharArray();
         }
 
         public static string GetAnonymousExpression(ParseResult parse)
@@ -21,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Logging
             SimpleAnonymizer anonymizer = new SimpleAnonymizer(parse.Text);
             parse.Root.Accept(anonymizer);
             return new string(anonymizer._expression);
-        }        
+        }
 
         public override void Visit(StrLitNode node)
         {
@@ -35,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Logging
         }
 
         private void ReplaceSpan(Span span, char replacement, Func<char, int, Span, bool> condition)
-        { 
+        {
             for (int i = span.Min; i < span.Lim; i++)
             {
                 char c = _expression[i];
@@ -61,80 +69,13 @@ namespace Microsoft.PowerFx.Core.Logging
 
         public override bool PreVisit(CallNode node)
         {
+            // ReflectionFunction functions will be renamed
             if (node.Head.Namespace.IsRoot && !BuiltinFunctionsCore.IsKnownPublicFunction(node.Head.Token.ToString()))
             {
                 ReplaceSpan(node.Head.Span, 'c', (c, _, _) => true);
             }
 
             return true;
-        }
-
-        public override void Visit(FirstNameNode node)
-        {
-        }
-
-        public override void Visit(ErrorNode node)
-        {
-        }
-
-        public override void Visit(BlankNode node)
-        {
-        }
-
-        public override void Visit(BoolLitNode node)
-        {
-        }
-
-        public override void Visit(ParentNode node)
-        {
-        }
-
-        public override void Visit(SelfNode node)
-        {
-        }
-
-        public override void Visit(TypeLiteralNode node)
-        {
-        }
-
-        public override void PostVisit(StrInterpNode node)
-        {
-        }
-
-        public override void PostVisit(DottedNameNode node)
-        {
-        }
-
-        public override void PostVisit(UnaryOpNode node)
-        {
-        }
-
-        public override void PostVisit(BinaryOpNode node)
-        {
-        }
-
-        public override void PostVisit(VariadicOpNode node)
-        {
-        }
-
-        public override void PostVisit(CallNode node)
-        {
-        }
-
-        public override void PostVisit(ListNode node)
-        {
-        }
-
-        public override void PostVisit(RecordNode node)
-        {
-        }
-
-        public override void PostVisit(TableNode node)
-        {
-        }
-
-        public override void PostVisit(AsNode node)
-        {
         }
     }
 }
