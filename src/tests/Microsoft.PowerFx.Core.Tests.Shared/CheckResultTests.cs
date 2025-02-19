@@ -522,7 +522,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("123+abc", "#$decimal$# + #$firstname$#", true, "111+abc")] // display names
         [InlineData("123+", "#$decimal$# + #$error$#", false, "111+")] // error 
         [InlineData("123,456", "#$decimal$#", true, "111,111")] // locales 
-        [InlineData("Power(2,3)", "Power(#$decimal$#)", true, "Power(1,1)")] // functions aren't Pii
+        [InlineData("Power(2,3)", "Power(#$decimal$#)", true, "Power(1,1)")] // functions aren't Pii       
+        [InlineData(
+            @"With({ tbl: [ {name:""John""; Age:33}; {name:""Jane""; Age:32} ] }; CountRows(tbl) + First(tbl).Age )", 
+            "With({ #$fieldname$#:[ { #$fieldname$#:#$string$#, #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$string$#, #$fieldname$#:#$decimal$# } ] }, CountRows(#$firstname$#) + First(#$firstname$#).#$righthandid$#)", 
+            true,
+            @"With({ tbl: [ {name:""xxxx""; Age:11}; {name:""xxxx""; Age:11} ] }; CountRows(tbl) + First(tbl).Age )")]
 
         // Unkown public function are PII
         [InlineData("MadeUpFunction(1)", "#$function$#(#$decimal$#)", true, "cccccccccccccc(1)")]
