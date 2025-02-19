@@ -11,13 +11,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Tests.AssociatedDataSourcesTests;
-using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -25,6 +23,7 @@ using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Logging;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
+using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -937,8 +936,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var combinedSymbolTable = new ComposedReadOnlySymbolTable(symbolTableFromParams, symbolTable);
 
                 // These tests are only run in en-US locale for now
-                var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
-                var check = engine.Check(expr, options: options, symbolTable: combinedSymbolTable);                
+                ParserOptions options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
+                CheckResult check = engine.Check(expr, options: options, symbolTable: combinedSymbolTable);
+                
+                string anonymousExpr = check.ApplySimpleAnonymizer();
+                Assert.Equal(expr.Length, anonymousExpr.Length);
+
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);

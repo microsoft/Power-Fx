@@ -519,26 +519,28 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // CheckResult properly wired up to Apply logging. 
         [Theory]
-        [InlineData("123+abc", "#$decimal$# + #$firstname$#", true)] // display names
-        [InlineData("123+", "#$decimal$# + #$error$#", false)] // error 
-        [InlineData("123,456", "#$decimal$#", true)] // locales 
-        [InlineData("Power(2,3)", "Power(#$decimal$#)", true)] // functions aren't Pii
+        [InlineData("123+abc", "#$decimal$# + #$firstname$#", true, "111+abc")] // display names
+        [InlineData("123+", "#$decimal$# + #$error$#", false, "111+")] // error 
+        [InlineData("123,456", "#$decimal$#", true, "111,111")] // locales 
+        [InlineData("Power(2,3)", "Power(#$decimal$#)", true, "Power(1,1)")] // functions aren't Pii
 
         // Unkown public function are PII
-        [InlineData("MadeUpFunction(1)", "#$function$#(#$decimal$#)", true)]
-        [InlineData("Power(MadeUpFunction(1))", "Power(#$function$#(#$decimal$#))", true)]
-        [InlineData("Power(Clear(1))", "Power(Clear(#$decimal$#))", true)]
-        public void TestApplyGetLogging(string expr, string execptedLog, bool success)
+        [InlineData("MadeUpFunction(1)", "#$function$#(#$decimal$#)", true, "cccccccccccccc(1)")]
+        [InlineData("Power(MadeUpFunction(1))", "Power(#$function$#(#$decimal$#))", true, "Power(cccccccccccccc(1))")]
+        [InlineData("Power(Clear(9))", "Power(Clear(#$decimal$#))", true, "Power(Clear(1))")]
+        public void TestApplyGetLogging(string expr, string expectedLog, bool success, string simpleAnonymized)
         {
             var check = new CheckResult(new Engine());
 
             Assert.Throws<InvalidOperationException>(() => check.ApplyGetLogging());
+            Assert.Throws<InvalidOperationException>(() => check.ApplySimpleAnonymizer());
 
             // Only requires text, not binding
             check.SetText(expr, _frCultureOpts);
             var log = check.ApplyGetLogging();
             Assert.Equal(success, check.IsSuccess);
-            Assert.Equal(execptedLog, log);
+            Assert.Equal(expectedLog, log);
+            Assert.Equal(simpleAnonymized, check.ApplySimpleAnonymizer());
         }
 
         [Theory]
@@ -557,6 +559,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(errors);
 
             var anon = check.ApplyGetLogging();
+
+            Assert.Equal("ShowColumns(Table, Name)", check.ApplySimpleAnonymizer());
         }
 
         [Fact]

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Types;
@@ -83,7 +84,14 @@ namespace Microsoft.PowerFx.Tests
                 rtConfig.AddService(setup.TimeZoneInfo);
             }
 
-            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(new CultureInfo("en-US")), runtimeConfig: rtConfig);
+            var parseOptions = setup.Flags.ToParserOptions(new CultureInfo("en-US"));
+            
+            ParseResult pResult = engine.Parse(expr, parseOptions);
+            string anonymousExpr = SimpleAnonymizer.GetAnonymousExpression(pResult);
+
+            Assert.Equal(expr.Length, anonymousExpr.Length);
+
+            var task = engine.EvalAsync(expr, CancellationToken.None, options: parseOptions, runtimeConfig: rtConfig);
 
             var i = 0;
             while (HasOutanding)

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,10 +79,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)")]
-        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# }, #$fne$#)")]
-        [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)")]
-        public async Task TestExpandedStucturalPrint(string expr, string anonymized)
+        [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)", "Set(x, Table)")]
+        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# }, #$fne$#)", "With({t:Table},t)")]
+        [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)", "ForAll(Table, ThisRecord.Value)")]
+        public async Task TestExpandedStucturalPrint(string expr, string anonymized, string simpleAnonymized)
         {
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
             var symbols = new SymbolTable();
@@ -100,6 +99,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
 
             Assert.Equal(anonymized, check.ApplyGetLogging());
+            Assert.Equal(simpleAnonymized, check.ApplySimpleAnonymizer());
         }
 
         // This was previously allowed to unblock Cards team. This is not longer allowed.

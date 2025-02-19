@@ -17,26 +17,32 @@ namespace Microsoft.PowerFx.Tests
     {
         [Theory]
         [InlineData(
-            "Collect(Yep, { a: [1], b: \"Hello\" })",
-            "Collect(#$firstname$#, { #$fieldname$#:[ #$decimal$# ], #$fieldname$#:#$string$# })")]
+            "Collect(Yep, { a: [90], b: \"Hello\" })",
+            "Collect(#$firstname$#, { #$fieldname$#:[ #$decimal$# ], #$fieldname$#:#$string$# })",
+            "Collect(Yep, { a: [11], b: \"xxxxx\" })")]
         [InlineData(
             "Set(x, 10 + 3); Launch(\"example.com\", ThisItem.Text, Parent.Text)",
-            "Set(#$firstname$#, #$decimal$# + #$decimal$#) ; Launch(#$string$#, #$firstname$#.#$righthandid$#, Parent.#$righthandid$#)")]
+            "Set(#$firstname$#, #$decimal$# + #$decimal$#) ; Launch(#$string$#, #$firstname$#.#$righthandid$#, Parent.#$righthandid$#)",
+            "Set(x, 11 + 1); Launch(\"xxxxxxxxxxx\", ThisItem.Text, Parent.Text)")]
         [InlineData(
             "$\"Hello {\"World\"}\"",
-            "$\"#$string$##$string$#\"")]
+            "$\"#$string$##$string$#\"",
+            "$\"xxxxxx{\"xxxxx\"}\"")]
         [InlineData(
             "$\"Hello {5}\"",
-            "$\"#$string$#{#$decimal$#}\"")]
+            "$\"#$string$#{#$decimal$#}\"",
+            "$\"xxxxxx{1}\"")]
         [InlineData(
-            "ParseJSON(\"[{ \"\"Age\"\": 5}]\", Type([{Age: Number}]))",
-            "ParseJSON(#$string$#, Type([ { #$fieldname$#:#$firstname$# } ]))")]
+            "ParseJSON(  \"[{ \"\"Age\"\": 5}]\"   , Type([{Age: Number}]))",
+            "ParseJSON(#$string$#, Type([ { #$fieldname$#:#$firstname$# } ]))",
+            "ParseJSON(  \"xxxxxxxxxxxxxxx\"   , Type([{Age: Number}]))")]
         [InlineData(
             "ParseJSON(\"{}\", Type(RecordOf(Accounts)))",
-            "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))")]
-        public void TestStucturalPrint(string script, string expected)
+            "ParseJSON(#$string$#, Type(RecordOf(#$firstname$#)))",
+            "ParseJSON(\"xx\", Type(RecordOf(Accounts)))")]
+        public void TestStucturalPrint(string script, string expected, string simpleAnonymized)
         {
-            var result = ParseScript(
+            ParseResult result = ParseScript(
                 script,
                 flags: Flags.EnableExpressionChaining,
                 features: Features.PowerFxV1);
@@ -44,47 +50,57 @@ namespace Microsoft.PowerFx.Tests
             var actual = StructuralPrint.Print(result.Root);
             Assert.Equal(expected, actual);
 
+            Assert.Equal<object>(simpleAnonymized, SimpleAnonymizer.GetAnonymousExpression(result));
+
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine(new PowerFxConfig()));
             check.SetText(script, new ParserOptions { AllowsSideEffects = true });
             var result2 = check.ApplyGetLogging();
             Assert.Equal(expected, result2);
+
+            Assert.Equal(simpleAnonymized, check.ApplySimpleAnonymizer());
         }
 
         [Theory]
         [InlineData(
             "With({t:Table({a:1},{a:2})},t)",
             "With({ #$fieldname$#:Table({ #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$decimal$# }) }, #$firstname$#)",
-            "With({ #$fieldname$#:Table({ #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$decimal$# }) }, #$LambdaField$#)")]
+            "With({ #$fieldname$#:Table({ #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$decimal$# }) }, #$LambdaField$#)",
+            "With({t:Table({a:1},{a:1})},t)")]
         [InlineData(
             "Set(x, 1); Set(y, 2); x + y",
             "Set(#$firstname$#, #$decimal$#) ; Set(#$firstname$#, #$decimal$#) ; #$firstname$# + #$firstname$#",
-            "Set(#$firstname$#, #$decimal$#) ; Set(#$firstname$#, #$decimal$#) ; #$firstname$# + #$firstname$#")]
+            "Set(#$firstname$#, #$decimal$#) ; Set(#$firstname$#, #$decimal$#) ; #$firstname$# + #$firstname$#",
+            "Set(x, 1); Set(y, 1); x + y")]
         [InlineData(
             "ForAll([1,2,3], Value * 2)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$# * #$decimal$#)",
-            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaField$# * #$decimal$#)")]
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaField$# * #$decimal$#)",
+            "ForAll([1,1,1], Value * 1)")]
         [InlineData(
             "ForAll([1,2,3], ThisRecord.Value * 2)",
             "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$#.#$righthandid$# * #$decimal$#)",
-            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaFullRecord$#.#$righthandid$# * #$decimal$#)")]
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaFullRecord$#.#$righthandid$# * #$decimal$#)",
+            "ForAll([1,1,1], ThisRecord.Value * 1)")]
         [InlineData(
-            "Join(Table({a:1}), Table({a:1}), LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.a As AAA)",
+            "Join(Table({a:6}), Table({a:7}), LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.a As AAA)",
             "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$firstname$#.#$righthandid$# = #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$#, #$firstname$#.#$righthandid$# As #$righthandid$#)",
-            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$LambdaField$#.#$righthandid$# = #$LambdaField$#.#$righthandid$#, JoinType.Inner, #$LambdaField$#.#$righthandid$# As #$righthandid$#)")]
+            "Join(Table({ #$fieldname$#:#$decimal$# }), Table({ #$fieldname$#:#$decimal$# }), #$LambdaField$#.#$righthandid$# = #$LambdaField$#.#$righthandid$#, JoinType.Inner, #$LambdaField$#.#$righthandid$# As #$righthandid$#)",
+            "Join(Table({a:1}), Table({a:1}), LeftRecord.a = RightRecord.a, JoinType.Inner, RightRecord.a As AAA)")]
         [InlineData(
             "WeekNum(Date(2020, 12, 8),StartOfWeek.Sunday)",
             "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), #$firstname$#.#$righthandid$#)",
-            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), StartOfWeek.Sunday)")]
+            "WeekNum(Date(#$decimal$#, #$decimal$#, #$decimal$#), StartOfWeek.Sunday)",
+            "WeekNum(Date(1111, 11, 1),StartOfWeek.Sunday)")]
 
-        public void TestStucturalPrintWithBinding(string script, string beforebinding, string afterbinding)
+        public void TestStucturalPrintWithBinding(string script, string beforebinding, string afterbinding, string simpleAnonymized)
         {
-            var result = ParseScript(
-                script,
-                flags: Flags.EnableExpressionChaining);
+            ParseResult result = ParseScript(script, flags: Flags.EnableExpressionChaining);
 
             var actual = StructuralPrint.Print(result.Root);
             Assert.Equal(beforebinding, actual);
+
+            Assert.Equal<object>(simpleAnonymized, SimpleAnonymizer.GetAnonymousExpression(result));
 
             var symbolTable = new SymbolTable();
             symbolTable.AddFunction(new JoinFunction());
@@ -98,6 +114,8 @@ namespace Microsoft.PowerFx.Tests
 
             actual = check.ApplyGetLogging();
             Assert.Equal(afterbinding, actual);
+
+            Assert.Equal(simpleAnonymized, check.ApplySimpleAnonymizer());
         }
 
         private class TestSanitizer : ISanitizedNameProvider
@@ -110,32 +128,25 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData(
-            "Function(Field,1,\"foo\")",
-            "#$function$#(custom, #$decimal$#, #$string$#)")]
-        [InlineData(
-            "Lookup.Field && true",
-            "custom.custom2 && #$boolean$#")]
-        public void TestStucturalPrintWithCustomSanitizer(string script, string expected)
+        [InlineData("Function(Field,3,\"foo\")", "#$function$#(custom, #$decimal$#, #$string$#)", "cccccccc(Field,1,\"xxx\")")]
+        [InlineData("Lookup.Field && true", "custom.custom2 && #$boolean$#", "Lookup.Field && true")]
+        public void TestStucturalPrintWithCustomSanitizer(string script, string expected, string simpleAnonymous)
         {
-            var result = ParseScript(
-                script,
-                flags: Flags.EnableExpressionChaining);
+            ParseResult result = ParseScript(script, flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root, nameProvider: new TestSanitizer()));
+            Assert.Equal(simpleAnonymous, SimpleAnonymizer.GetAnonymousExpression(result));
         }
 
         [Theory]
-        [InlineData("Back()", false)]
-        [InlineData("false", false)]
-        [InlineData("\"Are you sure you want to delete this \r\nreceipt?\"", false)]
-        [InlineData("RGBA(\n    255,\n    255,\n    255,\n    1\n)", false)]
-        [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
-        public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
+        [InlineData("Back()", false, "Back()")]
+        [InlineData("false", false, "false")]
+        [InlineData("\"Are you sure you want to delete this \r\nreceipt?\"", false, "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"")]
+        [InlineData("RGBA(\n    255,\n    255,\n    255,\n    1\n)", false, "RGBA(\n    111,\n    111,\n    111,\n    1\n)")]
+        [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true, "RGBA(\n    111,\n    /*r   */111,   ")]
+        public void TestSeverityLevelsForPrettyPrint(string script, bool expected, string simpleAnonymous)
         {
-            var result = ParseScript(
-                script,
-                flags: Flags.EnableExpressionChaining);
+            ParseResult result = ParseScript(script, flags: Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.
             var hasErrorsWithSeverityHigherThanWarning = false;
@@ -146,6 +157,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             Assert.Equal(hasErrorsWithSeverityHigherThanWarning, expected);
+            Assert.Equal<object>(simpleAnonymous, SimpleAnonymizer.GetAnonymousExpression(result));
         }
 
         [Theory]
@@ -385,8 +397,8 @@ namespace Microsoft.PowerFx.Tests
 
         // Testing for hosts to provide a custom way to print the structural representation of an expression.
         [Theory]
-        [InlineData("With({myfield:firstNameControl.Text}, myfield & \"something\")", "With({ #$fieldname$#:TextInputControl.#$righthandid$# }, #$LambdaField$# & #$string$#)")]
-        public void CustomStructuralPrintTest(string expression, string expected)
+        [InlineData("With({myfield:firstNameControl.Text}, myfield & \"something\")", "With({ #$fieldname$#:TextInputControl.#$righthandid$# }, #$LambdaField$# & #$string$#)", "With({myfield:firstNameControl.Text}, myfield & \"xxxxxxxxx\")")]
+        public void CustomStructuralPrintTest(string expression, string expected, string simpleAnonymized)
         {
             var engine = new Engine();
             var result = engine.Check(expression);
@@ -402,8 +414,9 @@ namespace Microsoft.PowerFx.Tests
             var parse = check.ApplyParse();
 
             var log = result.ApplyGetLogging(new CustomStructuralPrintSanitizer());
-
             Assert.Equal(expected, log);
+
+            Assert.Equal<object>(simpleAnonymized, result.ApplySimpleAnonymizerInternal());
         }
 
         [Fact]
@@ -430,7 +443,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping1));
-            Assert.Equal("With({ #$fieldname$#:Mapping1.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+            Assert.Equal("With({ #$fieldname$#:Mapping1.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);            
 
             var mapping2 = new Dictionary<string, string>()
             {
@@ -438,7 +451,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping2));
-            Assert.Equal("With({ #$fieldname$#:Mapping2.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+            Assert.Equal("With({ #$fieldname$#:Mapping2.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);            
 
             var mapping3 = new Dictionary<string, string>()
             {
@@ -447,6 +460,8 @@ namespace Microsoft.PowerFx.Tests
 
             logging = result.ApplyGetLogging(new CustomStructuralPrintSanitizer(mapping3));
             Assert.Equal("With({ #$fieldname$#:Mapping3.#$righthandid$# }, #$LambdaField$# & #$string$#)", logging);
+
+            Assert.Equal<object>("With({myfield:firstNameControl.Text}, myfield & \"xxxxxxxxx\")", result.ApplySimpleAnonymizerInternal());
         }
 
         /// <summary>

@@ -656,6 +656,7 @@ namespace Microsoft.PowerFx
         // form of expression with personal info removed,
         // suitable for logging the structure of a formula.
         private string _expressionAnonymous;
+        private string _simpleAnonymizerExpression;
 
         /// <summary>
         /// Get the invariant form of the expression.  
@@ -682,12 +683,22 @@ namespace Microsoft.PowerFx
         {
             if (_expressionAnonymous == null)
             {
-                var parse = ApplyParse();
-
+                ParseResult parse = ApplyParse();
                 _expressionAnonymous = StructuralPrint.Print(parse.Root, _binding);
             }
 
             return _expressionAnonymous;
+        }
+
+        public string ApplySimpleAnonymizer()
+        {
+            if (_simpleAnonymizerExpression == null)
+            {
+                ParseResult parse = ApplyParse();
+                _simpleAnonymizerExpression = SimpleAnonymizer.GetAnonymousExpression(parse);
+            }
+
+            return _simpleAnonymizerExpression;
         }
 
         /// <summary>
@@ -699,6 +710,12 @@ namespace Microsoft.PowerFx
         {
             var parse = ApplyParse();
             return StructuralPrint.Print(parse.Root, _binding, nameProvider);
+        }
+
+        internal string ApplySimpleAnonymizerInternal()
+        {
+            var parse = ApplyParse();
+            return SimpleAnonymizer.GetAnonymousExpression(parse);
         }
 
         public CheckContextSummary ApplyGetContextSummary()

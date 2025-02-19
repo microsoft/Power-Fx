@@ -118,5 +118,13 @@ namespace Microsoft.PowerFx
         {
             return StructuralPrint.Print(Root);
         }
+
+        /// <summary>
+        /// Converts the current formula into an anonymized format suitable for logging, keeping length of identifiers, numbers, etc.
+        /// </summary>
+        public string GetLengthConservativeAnonymizedFormula()
+        {
+            return SimpleAnonymizer.GetAnonymousExpression(this);
+        }
     }
 }
