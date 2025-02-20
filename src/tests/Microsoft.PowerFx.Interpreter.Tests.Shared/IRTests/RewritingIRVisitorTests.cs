@@ -76,31 +76,37 @@ namespace Microsoft.PowerFx.Tests
 
         // This test is to ensure a binary op chain is rewritten and does not get blocked by the depth limit.
         [Theory]
-        [InlineData(
-            "true && true && If(true && true && true, true) && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true",
-            "And(True, (True), (If(And(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
-        [InlineData(
-            "true And true And If(true && true && true, true) And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true",
-            "And(True, (True), (If(And(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
-        [InlineData(
-            "true || true || If(true || true || true, true) || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true",
-            "Or(True, (True), (If(Or(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
-        [InlineData(
-            "true Or true Or If(true Or true Or true, true) Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true",
-            "Or(True, (True), (If(Or(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
-        [InlineData(
-            "\"A\" & \"A\" & \"A\" & \"A\" & \"A\"",
-            "Concatenate(A, A, A, A, A)")]
-        public void BinaryOpIRRewriteTest(string expr, string expectedIR)
+        [InlineData("&&", "And")]
+        [InlineData("And", "And")]
+        [InlineData("||", "Or")]
+        [InlineData("Or", "Or")]
+        public void BinaryOpIRRewriteTest(string op, string func)
         {
-            var engine = new RecalcEngine();
+            var sbExpr = new StringBuilder($"true {op} If(true {op} true {op} true, true)");
+            var sbExpected = new StringBuilder($"{func}(True, (If({func}(True, (True), (True)), (True)))");
+
+            for (var i = 0; i < 1000; i++)
+            {
+                sbExpr.Append($" {op} true");
+                sbExpected.Append(", (True)");
+            }
+
+            sbExpected.Append(')');
+
+            var config = new PowerFxConfig()
+            {
+                MaximumExpressionLength = 10000
+            };
+
+            var engine = new RecalcEngine(config);
             var check = new CheckResult(engine)
-                .SetText(expr)
+                .SetText(sbExpr.ToString())
                 .SetBindingInfo();
 
             var actualIR = check.GetCompactIRString();
-            Assert.Equal(expectedIR, actualIR);
+            Assert.Equal(sbExpected.ToString(), actualIR);
 
+            // Checking that no depth limit is reached.
             var result = check.GetEvaluator().Eval();
             Assert.IsAssignableFrom<FormulaValue>(result);
         }
