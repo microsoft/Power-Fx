@@ -1341,14 +1341,14 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
 
-            if (typeOuter.TypeTree.TryGetValue(name, out var typeCur))
-            {
-                fError = true;
-            }
-
             if (typeOuter.IsLazyType)
             {
                 typeOuter = typeOuter.LazyTypeProvider.GetExpandedType(typeOuter.IsTable);
+            }
+
+            if (typeOuter.TypeTree.TryGetValue(name, out var typeCur))
+            {
+                fError = true;
             }
 
             var tree = typeOuter.TypeTree.SetItem(name, type);
