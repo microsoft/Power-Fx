@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -58,6 +59,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
             Assert.Equal("The documents to analyze.", detectSentimentV3.OptionalParameters[0].Description);
+        }
+
+        [Fact]
+        public void DocuSign_ListEnvelopes_DefaultValue()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DocuSign.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("DocuSign") { IncludeInternalFunctions = true, AllowUnsupportedFunctions = true }, doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction listEnvelopes = functions.First(cf => cf.Name == "ListEnvelopes");
+
+            Assert.True(listEnvelopes.IsSupported, listEnvelopes.NotSupportedReason);
+            Assert.Equal("from_date", listEnvelopes.OptionalParameters[10].Name);
+
+            DateTimeValue dtv = Assert.IsType<DateTimeValue>(listEnvelopes.OptionalParameters[10].DefaultValue);
+            Assert.Equal(new DateTime(2000, 1, 2, 12, 45, 0, DateTimeKind.Utc), dtv.GetConvertedValue(TimeZoneInfo.Utc));
+        }
+
+        [Fact]
+        public void SwaggerWithArrayBody()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\TestSwagger1.json", _output);
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("swagger") { AllowUnsupportedFunctions = true, IncludeInternalFunctions = true }, doc, new ConsoleLogger(_output)).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction createFileWithTable = functions.First(cf => cf.Name == "CreateFileWithTable");
+
+            Assert.Single(createFileWithTable.RequiredParameters);
+            Assert.Equal("rows", createFileWithTable.RequiredParameters[0].Name);
+            Assert.Equal("*[Value:*[]]", createFileWithTable.RequiredParameters[0].FormulaType.ToStringWithDisplayNames());
         }
 
         [Fact]

@@ -51,19 +51,6 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue tableQueryable)
-            {
-#pragma warning restore CS0618 // Type or member is obsolete
-                try
-                {
-                    return tableQueryable.FirstN(1).Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
-
             return arg0.First(mutationCopy: irContext.IsMutation).ToFormulaValue();
         }
 
@@ -86,19 +73,6 @@ namespace Microsoft.PowerFx.Functions
 
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue queryableTable)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                try
-                {
-                    return queryableTable.FirstN((int)arg1.Value);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
 
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
@@ -506,19 +480,6 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue tableQueryable)
-#pragma warning restore CS0618 // Type or member is obsolete
-            {
-                try
-                {
-                    return tableQueryable.Filter(arg1, runner, context);
-                }
-                catch (NotDelegableException)
-                {
-                }
-            }
-
             var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
@@ -817,19 +778,6 @@ namespace Microsoft.PowerFx.Functions
                     break;
                 default:
                     return CommonErrors.RuntimeTypeMismatch(args[2].IRContext);
-            }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (arg0 is QueryableTableValue queryableTable)
-            {
-#pragma warning restore CS0618 // Type or member is obsolete
-                try
-                {
-                    return queryableTable.Sort(arg1, isDescending, runner, context);
-                }
-                catch (NotDelegableException)
-                {
-                }
             }
 
             var pairs = new List<(DValue<RecordValue> row, FormulaValue distinctValue)>();
