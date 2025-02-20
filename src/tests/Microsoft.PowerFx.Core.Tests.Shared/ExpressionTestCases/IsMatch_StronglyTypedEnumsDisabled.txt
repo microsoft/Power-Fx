@@ -47,13 +47,13 @@ false
 true
 
 >> IsMatch("Foo", 17)
-Errors: Error 15-17: Regular expressions must be constant values.
+Errors: Error 15-17: Regular expression must be a constant value.
 
 >> IsMatch("Foo", 1/0)
-Errors: Error 16-17: Regular expressions must be constant values.
+Errors: Error 16-17: Regular expression must be a constant value.
 
 >> IsMatch("28", 28)
-Errors: Error 14-16: Regular expressions must be constant values.
+Errors: Error 14-16: Regular expression must be a constant value.
 
 >> IsMatch("Hello", "Hello", "")
 true
