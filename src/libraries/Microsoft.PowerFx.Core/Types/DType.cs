@@ -1346,6 +1346,11 @@ namespace Microsoft.PowerFx.Core.Types
                 fError = true;
             }
 
+            if (typeOuter.IsLazyType)
+            {
+                typeOuter = typeOuter.LazyTypeProvider.GetExpandedType(typeOuter.IsTable);
+            }
+
             var tree = typeOuter.TypeTree.SetItem(name, type);
             var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProvider);
 
