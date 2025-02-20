@@ -74,6 +74,37 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // This test is to ensure a binary op chain is rewritten and does not get blocked by the depth limit.
+        [Theory]
+        [InlineData(
+            "true && true && If(true && true && true, true) && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true && true",
+            "And(True, (True), (If(And(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
+        [InlineData(
+            "true And true And If(true && true && true, true) And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true And true",
+            "And(True, (True), (If(And(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
+        [InlineData(
+            "true || true || If(true || true || true, true) || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true || true",
+            "Or(True, (True), (If(Or(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
+        [InlineData(
+            "true Or true Or If(true Or true Or true, true) Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true Or true",
+            "Or(True, (True), (If(Or(True, (True), (True)), (True))), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True), (True))")]
+        [InlineData(
+            "\"A\" & \"A\" & \"A\" & \"A\" & \"A\"",
+            "Concatenate(A, A, A, A, A)")]
+        public void BinaryOpIRRewriteTest(string expr, string expectedIR)
+        {
+            var engine = new RecalcEngine();
+            var check = new CheckResult(engine)
+                .SetText(expr)
+                .SetBindingInfo();
+
+            var actualIR = check.GetCompactIRString();
+            Assert.Equal(expectedIR, actualIR);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.IsAssignableFrom<FormulaValue>(result);
+        }
+
         // When we don't rewrite, preserve the same object reference identity 
         [Fact]
         public void PreserveObjectReference()
