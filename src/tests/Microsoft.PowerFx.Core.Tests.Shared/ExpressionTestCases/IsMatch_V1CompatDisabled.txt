@@ -1,0 +1,4 @@
+#SETUP: RegEx,disable:PowerFxV1CompatibilityRules
+
+>> IsMatch("Foo", "J(")
+Error({Kind:ErrorKind.BadRegex})
