@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Connectors
             Contracts.AssertValue(pagingCapabilities);
 
             SortRestriction = sortRestriction;
-            FilterRestriction = filterRestriction;            
+            FilterRestriction = filterRestriction;
             PagingCapabilities = pagingCapabilities;
             SelectionRestriction = selectionRestriction;
             GroupRestriction = groupRestriction;
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Connectors
             Dictionary<string, string> columnWithRelationships = connectorType.Fields.Where(f => f.ExternalTables?.Any() == true).Select(f => (f.Name, f.ExternalTables.First())).ToDictionary(tpl => tpl.Name, tpl => tpl.Item2);
             string[] primaryKeyNames = connectorType.Fields.Where(f => f.KeyType == ConnectorKeyType.Primary).OrderBy(f => f.KeyOrder).Select(f => f.Name).ToArray();
 
-            return new CdpDelegationInfo()
+            return new CdpDelegationInfo(connectorType)
             {
                 TableName = tableName,
                 IsReadOnly = isReadOnly,
@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Connectors
                 SortRestriction = sortRestriction,
                 FilterRestriction = filterRestriction,
                 SelectionRestriction = selectionRestriction,
-                GroupRestriction = groupRestriction,                
+                GroupRestriction = groupRestriction,
                 FilterSupportedFunctions = serviceCapabilities?.FilterSupportedFunctionsEnum,
                 PagingCapabilities = pagingCapabilities,
                 SupportsRecordPermission = serviceCapabilities?.SupportsRecordPermission ?? false,

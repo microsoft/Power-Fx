@@ -130,6 +130,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public string RelationshipName => SafeGetString("relationshipName");
 
+        public string ForeignKey => SafeGetString("destinationKey");
+
+        public string SourceField => SafeGetString("sourceField");
+
+        public string RelationshipType => SafeGetString("relationshipType");
+
         public string DataType => SafeGetString("datatype");
 
         private string SafeGetString(string key)

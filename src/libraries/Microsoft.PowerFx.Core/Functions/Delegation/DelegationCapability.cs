@@ -91,7 +91,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.JoinInner, new DelegationCapability(JoinInner) },
                 { DelegationMetadataOperatorConstants.JoinLeft, new DelegationCapability(JoinLeft) },
                 { DelegationMetadataOperatorConstants.JoinRight, new DelegationCapability(JoinRight) },
-                { DelegationMetadataOperatorConstants.JoinFull, new DelegationCapability(JoinFull) }
+                { DelegationMetadataOperatorConstants.JoinFull, new DelegationCapability(JoinFull) },
+                { DelegationMetadataOperatorConstants.OdataExpand, new DelegationCapability(OdataExpand) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -147,9 +148,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger JoinLeft = BigInteger.Pow(2, 48);                     //   0x1000000000000
         public static readonly BigInteger JoinRight = BigInteger.Pow(2, 49);                    //   0x2000000000000
         public static readonly BigInteger JoinFull = BigInteger.Pow(2, 50);                     //   0x4000000000000
+        public static readonly BigInteger OdataExpand = BigInteger.Pow(2, 51);                  //   0x8000000000000
 
         // Please update it as max value changes.
-        private static BigInteger maxSingleCapabilityValue = JoinFull;
+        private static BigInteger maxSingleCapabilityValue = OdataExpand;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll
@@ -509,6 +511,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 {
                     AddCommaIfNeeded(sb);
                     sb.Append(nameof(JoinFull));
+                }
+
+                if (HasCapability(OdataExpand))
+                {
+                    AddCommaIfNeeded(sb);
+                    sb.Append(nameof(OdataExpand));
                 }
 
                 return sb.ToString();
