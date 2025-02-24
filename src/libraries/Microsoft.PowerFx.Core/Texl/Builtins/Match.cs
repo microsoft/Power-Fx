@@ -152,6 +152,146 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
         };
 
+        private class CaptureStack
+        {
+            private readonly Stack<CaptureInfo> _captureStack = new Stack<CaptureInfo>();
+
+            public CaptureStack()
+            {
+                Push();
+            }
+
+            public bool IsEmpty()
+            {
+                return _captureStack.Count == 0;
+            }
+
+            public bool IsOnlyBase()
+            {
+                return _captureStack.Count == 1;
+            }
+
+            public CaptureInfo Push(bool isLookAround = false, bool isNonCapture = false)
+            {
+                var captureInfo = new CaptureInfo
+                {
+                    IsLookAround = isLookAround,
+                    IsNonCapture = isNonCapture
+                };
+
+                if (_captureStack.Count >= 10)
+                {
+                    // error todo
+                }
+
+                if (!IsEmpty())
+                {
+                    captureInfo.Parent = _captureStack.Peek();
+                }
+
+                _captureStack.Push(captureInfo);
+
+                return captureInfo;
+            }
+
+            public CaptureInfo Peek()
+            {
+                return _captureStack.Peek();
+            }
+
+            public CaptureInfo Pop()
+            {
+                return _captureStack.Pop();
+            }
+        }
+
+        private class CaptureInfo
+        {
+            public bool IsClosed;
+            public bool IsNotEmpty;
+            public bool HasZeroQuantifier;
+            public bool HasZeroAlternation;
+            public bool ContainsAlternation;
+            public bool IsLookAround;
+            public bool IsNonCapture;
+            public CaptureInfo Parent;
+            public bool HasChildZeroCapture;
+
+            public void SeenAlternation()
+            {
+                if (!IsNotEmpty)
+                {
+                    HasZeroAlternation = true;
+                }
+
+                IsNotEmpty = false;
+                ContainsAlternation = true;
+            }
+
+            public void SeenNonEmpty()
+            {
+                IsNotEmpty = true;
+            }
+
+            public bool IsPossibleZeroCapture()
+            {
+                if (HasZeroAlternation || HasZeroQuantifier)
+                {
+                    return true;
+                }
+                else if (Parent != null)
+                {
+                    return Parent.IsPossibleZeroCapture();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public ErrorResourceKey? SeenClose(bool quant)
+            {
+                IsClosed = true;
+
+                if (ContainsAlternation)
+                {
+                    SeenAlternation();
+                    if (!HasZeroAlternation)
+                    {
+                        IsNotEmpty = true;
+                    }
+                }
+
+                if (IsLookAround || IsNonCapture)
+                {
+                }
+                else
+                {
+                    if (HasZeroAlternation && quant)
+                    {
+                        return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                    }
+
+                    if (HasChildZeroCapture && quant)
+                    {
+                        return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                    }
+
+                    if (quant)
+                    {
+                        HasZeroQuantifier = true;
+                    }
+
+                    if (Parent != null && HasChildZeroCapture)
+                    {
+                        Parent.HasChildZeroCapture = true;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
         // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
         // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
@@ -244,9 +384,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             const string escapeRE =
                 @"
                     # leading backslash, escape sequences
-                    \\k<(?<backRefName>\w+)>                           | # named backreference
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
-                    \\(?<backRefNumber>\d+)                            | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+                    \\k<(?<backRefName>\w+)>                           | # named backreference
+                    \\(?<backRefNumber>[1-9]\d*)                            | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
+
                     (?<goodEscape>\\
                            ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
@@ -300,8 +441,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     # open and close regions
                     (?<openParen>\()                                   |
                     (?<closeParen>\))                                  |
+                    (?<alternation>\|)                                 |
+                    (?<anchors>[\^\$])                                 |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
-                    (?<newline>[\r\n])                                   # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<newline>[\r\n])                                 | # used in free spacing mode (to detect end of comment), ignored otherwise
+                    (?<else>.)
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             var characterClassRE = new Regex(
@@ -317,8 +461,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
-            var captureStack = new Stack<string>();                 // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
-            var captureNames = new List<string>();                  // list of seen named groups, does not included numbered groups or non capture groups
+            var captureStack = new CaptureStack();            // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
+            var captures = new Dictionary<string, CaptureInfo>();
+            List<string> backRefs = new List<string>();
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
             bool openInlineComment = false;                         // there is an open inline comment
@@ -355,9 +500,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["goodEscape"].Success || token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    if (token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["anchors"].Success)
                     {
                         // all is well, nothing to do
+                    }
+                    else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
+                    {
+                        // length TODO
+                        var idx = token.Index + token.Length;
+
+                        if (idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?" && !Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"))))
+                        {
+                            captureStack.Peek().SeenNonEmpty();
+                        }
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
@@ -398,7 +553,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     return false;
                                 }
                             }
-                            else if (ccToken.Groups["badEscape"].Success)
+                            else if (ccToken.Groups["badEscape"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
                             {
                                 CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
                                 return false;
@@ -435,6 +590,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 throw new NotImplementedException("Unknown character class regular expression match: CC = " + token.Value + ", ccToken = " + ccToken.Value);
                             }
                         }
+
+                        // TODO
+                        var idx = token.Index + token.Length;
+
+                        if (!captureStack.IsEmpty() && idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?")))
+                        {
+                            captureStack.Peek().SeenNonEmpty();
+                        }
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
@@ -446,87 +609,97 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        if (captureNames.Contains(namedCapture))
+                        if (captures.ContainsKey(namedCapture))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists);
                             return false;
                         }
 
-                        captureStack.Push(namedCapture);
-                        captureNames.Add(namedCapture);
+                        var captureInfo = captureStack.Push();
+                        captures.Add(namedCapture, captureInfo);
                     }
-                    else if (token.Groups["goodNonCapture"].Success || token.Groups["goodLookaround"].Success)
+                    else if (token.Groups["goodNonCapture"].Success)
                     {
-                        captureStack.Push(null);
+                        captureStack.Push();
+                    }
+                    else if (token.Groups["goodLookaround"].Success)
+                    {
+                        captureStack.Push(isLookAround: true);
+                    }
+                    else if (token.Groups["alternation"].Success)
+                    {
+                        captureStack.Peek().SeenAlternation();
                     }
                     else if (token.Groups["openParen"].Success)
                     {
                         if (numberedCpature)
                         {
+                            var captureInfo = captureStack.Push();
                             captureNumber++;
-                            captureStack.Push(captureNumber.ToString(CultureInfo.InvariantCulture));
+                            captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), captureInfo);
                         }
                         else
                         {
-                            captureStack.Push(null);
+                            var captureInfo = captureStack.Push(isNonCapture: true);
                         }
                     }
                     else if (token.Groups["closeParen"].Success)
                     {
-                        if (captureStack.Count == 0)
+                        var idx = token.Index + token.Length;
+                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
+
+                        var captureInfo = captureStack.Pop();
+
+                        if (captureStack.IsEmpty())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExUnopenedCaptureGroups, context: true);
                             return false;
                         }
-                        else
-                        {
-                            captureStack.Pop();
-                        }
-                    }
-                    else if (token.Groups["backRefName"].Success)
-                    {
-                        var backRefName = token.Groups["backRefName"].Value;
 
-                        if (numberedCpature)
+                        var errorString = captureInfo.SeenClose(quant);
+
+                        if (errorString != null)
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
+                            RegExError((ErrorResourceKey)errorString, context: true);
                             return false;
                         }
+                    }
+                    else if (token.Groups["backRefName"].Success || token.Groups["backRefNumber"].Success)
+                    {
+                        string backRefName;
+
+                        if (token.Groups["backRefName"].Success)
+                        {
+                            backRefName = token.Groups["backRefName"].Value;
+
+                            if (numberedCpature)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
+                                return false;
+                            }
+                        }
+                        else // token.Groups["backRefNumber"].Success
+                        {
+                            backRefName = token.Groups["backRefNumber"].Value;
+
+                            if (!numberedCpature)
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
+                                return false;
+                            }
+                        }
+
+                        backRefs.Add(backRefName);
 
                         // group isn't defined, or not defined yet
-                        if (!captureNames.Contains(backRefName))
+                        if (!captures.ContainsKey(backRefName))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExBadBackRefNotDefined);
                             return false;
                         }
 
                         // group is not closed and thus self referencing
-                        if (captureStack.Contains(backRefName))
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
-                            return false;
-                        }
-                    }
-                    else if (token.Groups["backRefNumber"].Success)
-                    {
-                        var backRef = token.Groups["backRefNumber"].Value;
-                        var backRefNumber = Convert.ToInt32(backRef, CultureInfo.InvariantCulture);
-
-                        if (!numberedCpature)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExNumberedSubMatchesDisabled);
-                            return false;
-                        }
-
-                        // back ref number has not yet been defined
-                        if (backRefNumber < 1 || backRefNumber > captureNumber)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefNotDefined);
-                            return false;
-                        }
-
-                        // group is not closed and thus self referencing
-                        if (captureStack.Contains(backRef))
+                        if (!captures[backRefName].IsClosed)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
                             return false;
@@ -647,13 +820,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            foreach (var s in backRefs)
+            {
+                if (captures[s].IsPossibleZeroCapture())
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExQuantifiedCapture);
+                    return false;
+                }
+            }
+
             if (openInlineComment)
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
                 return false;
             }
 
-            if (captureStack.Count > 0)
+            if (!captureStack.IsOnlyBase())
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
                 return false;

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <LangVersion>10.0</LangVersion>

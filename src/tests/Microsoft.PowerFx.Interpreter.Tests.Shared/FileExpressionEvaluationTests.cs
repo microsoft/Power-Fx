@@ -94,10 +94,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
 #if MATCHCOMPARE
-        // to enable, place this in Solution Items/Directiory.Build.Props:
-        //  <PropertyGroup>
-        //      <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
-        //  </PropertyGroup>
+        /* to enable, place this in Solution Items/Directiory.Build.Props:
+          <PropertyGroup>
+              <DefineConstants>$(DefineConstants);MATCHCOMPARE</DefineConstants>
+          </PropertyGroup>
+        */
 
 #if true // may not want to run this, even if MATCHCOMPARE is enabled
 
@@ -178,12 +179,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return false;
         }
 
-#if false
+#if true
         // Helper to run a single .txt
         [Fact]
         public void RunOne()
         {
             var path = @"c:\temp\match_unicode.txt";
+            path = @"C:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();

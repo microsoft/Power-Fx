@@ -4647,10 +4647,15 @@
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantified Capture.</value>
+    <comment>Error Message.</comment>
+  </data>  
   <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
     <value>MatchOptions must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
+  
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>The value passed to the '{0}' function cannot be changed.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
