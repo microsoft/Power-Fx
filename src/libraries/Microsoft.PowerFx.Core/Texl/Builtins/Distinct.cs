@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -53,7 +54,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var exprType = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(exprType, GetOneColumnTableResultName(context.Features)));
+            // Restricted supported types
+            if (context.Features.PowerFxV1CompatibilityRules && !(exprType == DType.String ||
+                  exprType == DType.Number ||
+                  exprType == DType.Decimal ||
+                  exprType == DType.Boolean ||
+                  exprType == DType.Time ||
+                  exprType == DType.OptionSetValue ||
+                  exprType == DType.DateTime ||
+                  exprType == DType.Date ||
+                  exprType == DType.Guid))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNeedPrimitive);
+                fValid = false;
+            }
+            else
+            {
+                returnType = DType.CreateTable(new TypedName(exprType, GetOneColumnTableResultName(context.Features)));
+            }
 
             return fValid;
         }

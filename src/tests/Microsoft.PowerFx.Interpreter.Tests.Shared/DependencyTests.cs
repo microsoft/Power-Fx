@@ -140,7 +140,6 @@ namespace Microsoft.PowerFx.Core.Tests
             customSymbols.AddFunction(new SummarizeFunction());
             customSymbols.AddFunction(new RecalcEngineSetFunction());
             customSymbols.AddFunction(new RemoveFunction());
-            customSymbols.AddFunction(Library.DistinctInterpreterFunction);
             customSymbols.AddVariable("local", localType, mutable: true);
             customSymbols.AddVariable("remote", remoteType, mutable: true);
             customSymbols.AddVariable("simple1", simple1Type, mutable: true);
