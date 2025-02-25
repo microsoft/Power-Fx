@@ -78,10 +78,10 @@ Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: 
 Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "((a)|b|c){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"a",StartMatch:2,SubMatches:Table({Value:"a"},{Value:"a"})}
 
 >> Match( "%aaa%", "(a|(b)|c){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-31: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"},{Value:Blank()})}
 
 >> Match( "%aaa%", "(a|b|(c)){1,2}", MatchOptions.NumberedSubMatches )
 Errors: Error 16-32: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -91,6 +91,21 @@ Errors: Error 13-23: Invalid regular expression: Quantified Capture.|Error 0-5: 
 
 >> Match( "a", "((a)|b)*", MatchOptions.NumberedSubMatches ) // .net == node, input text dependent
 Errors: Error 12-22: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ab", "(((?<first>a)|b))+" )  // .net != node, capture alone
+Errors: Error 13-33: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aab", "(((?<first>a)a|b))+" )  // .net != node, capture not alone
+Errors: Error 14-35: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))+" )  // .net != node
+Errors: Error 15-37: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))*" )  // .net != node
+Errors: Error 15-37: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaab", "((a(?<first>a)a|b))?" )  // .net == node, 1 iteration
+{FullMatch:"aaa",StartMatch:1,first:"a"}
 
 // alternation with possible zero length (doesn't need to be a capture) and any quantifier 
 
@@ -265,10 +280,10 @@ Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: 
 Errors: Error 16-27: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(a*){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-25: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a?){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-25: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a+){1}", MatchOptions.NumberedSubMatches )
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
@@ -283,19 +298,19 @@ Errors: Error 16-25: Invalid regular expression: Quantified Capture.|Error 0-5: 
 {FullMatch:"aa",StartMatch:2,SubMatches:Table({Value:"aa"})}
 
 >> Match( "%aaa%", "(a{0}){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-27: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a{0,}){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a{0,2}){1}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-29: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a*){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a?){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a+){1,}", MatchOptions.NumberedSubMatches )
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"aaa"})}
@@ -310,13 +325,13 @@ Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: 
 {FullMatch:"aaa",StartMatch:2,SubMatches:Table({Value:"a"})}
 
 >> Match( "%aaa%", "(a{0}){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a{0,}){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-29: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a{0,2}){1,}", MatchOptions.NumberedSubMatches )
-Errors: Error 16-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+{FullMatch:"",StartMatch:1,SubMatches:Table({Value:""})}
 
 >> Match( "%aaa%", "(a*){1,2}", MatchOptions.NumberedSubMatches )
 Errors: Error 16-27: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -348,8 +363,17 @@ Errors: Error 16-31: Invalid regular expression: Quantified Capture.|Error 0-5: 
 >> Match( "on", "((o)*){2}" , MatchOptions.NumberedSubMatches ) // .net != node
 Errors: Error 13-24: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "on", "((o)+){2}" , MatchOptions.NumberedSubMatches ) // .net != node
-Errors: Error 13-24: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "on", "((o)+){2}" , MatchOptions.NumberedSubMatches ) // .net == node
+Blank()
+
+>> Match( "on", "((o){1}){2}" , MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "on", "((o){1,}){2}" , MatchOptions.NumberedSubMatches )
+Blank()
+
+>> Match( "oon", "((o)+){2}" , MatchOptions.NumberedSubMatches ) // .net == node
+{FullMatch:"oo",StartMatch:1,SubMatches:Table({Value:"o"},{Value:"o"})}
 
 >> Match( "on", "((o)?){2}" , MatchOptions.NumberedSubMatches ) // .net != node
 Errors: Error 13-24: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
@@ -357,8 +381,11 @@ Errors: Error 13-24: Invalid regular expression: Quantified Capture.|Error 0-5: 
 >> Match( "on", "(?:(o)*){2}" , MatchOptions.NumberedSubMatches ) // .net != node
 Errors: Error 13-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "on", "((?<one>o)*){2}" ) // .net != node
+>> Match( "on", "((?<one>o)*){2}" )                            // .net != node
 Errors: Error 13-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<cap>((a*b*)))*" )                       // .net != node
+Errors: Error 16-35: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "on", "(o+){2,}", MatchOptions.NumberedSubMatches )  // .net == node
 Blank()
@@ -400,6 +427,9 @@ Errors: Error 13-22: Invalid regular expression: Quantified Capture.|Error 0-5: 
 >> Match( "cb", "(a)*\1b", MatchOptions.NumberedSubMatches )
 Errors: Error 13-22: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "cb", "(?:(?:(a)))*\1b", MatchOptions.NumberedSubMatches )
+Errors: Error 13-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "aa", "(a)*?\1", MatchOptions.NumberedSubMatches )
 Errors: Error 13-22: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
 
@@ -425,3 +455,68 @@ Errors: Error 12-20: Invalid regular expression: Quantified Capture.|Error 0-5: 
 
 >> Match( "a", "(a*?)*" )
 Errors: Error 12-20: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// JavaScript does not allow quantifiers on lookbehinds, we block lookahead as well for now
+
+>> Match( "%aaa%", "(?<=%)?a" )
+Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%)*a" )
+Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%)+a" )
+Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){2}a" )
+Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){2,}a" )
+Errors: Error 16-29: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%){1,2}a" )
+Errors: Error 16-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// PCRE2 does not allow quantifiers inside the lookbehind, must be fixed length
+
+>> Match( "%aaa%", "(?<=%*)a" )
+Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%{2,})a" )
+Errors: Error 16-29: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%+)a" )
+Errors: Error 16-26: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%{2})a" )
+Errors: Error 16-28: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%aaa%", "(?<=%{2,3})a" )
+Errors: Error 16-30: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+// different lengths OK
+
+>> Match( "%abc%", "(?<=(%a|%%b|b|))b")
+{FullMatch:"b",StartMatch:3}
+
+>> Match( "%abc%", "(?<=(%z|%%b|b|))c")
+{FullMatch:"c",StartMatch:4}
+
+// captures in lookarounds
+
+>> Match( "%abc%", "(?<=(?<caught>%z|%%b|ab|%ab))c")  // .net != node
+Errors: Error 16-48: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(?<=(%z|%%b|ab|%ab))c", MatchOptions.NumberedSubMatches)
+Errors: Error 16-39: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "m%abc%", "m(?=(?<caught>%z|%%b|ab|%ab))")  // .net == node {FullMatch:"m", StartMatch:1, caught:"%ab"}
+Errors: Error 17-48: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "m%abc%", "m(?=(%z|%%b|ab|%ab))", MatchOptions.NumberedSubMatches)
+Errors: Error 17-39: Invalid regular expression: Quantified Capture.|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "%abc%", "(?<=(%z|%%b|ab|%ab))c")  // non capture
+{FullMatch:"c",StartMatch:4}
+
+>> Match( "%abc%", "(?<caught>%z|%%b|ab|%ab)c")  // non lookaround
+{FullMatch:"%abc",StartMatch:1,caught:"%ab"}

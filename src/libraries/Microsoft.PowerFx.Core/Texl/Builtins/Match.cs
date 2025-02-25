@@ -155,6 +155,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private class CaptureStack
         {
             private readonly Stack<CaptureInfo> _captureStack = new Stack<CaptureInfo>();
+            private bool _inLookAround;
+            private const int MaxStackDepth = 16;
 
             public CaptureStack()
             {
@@ -171,6 +173,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return _captureStack.Count == 1;
             }
 
+            public bool InLookAround()
+            {
+                return _inLookAround;
+            }
+
             public CaptureInfo Push(bool isLookAround = false, bool isNonCapture = false)
             {
                 var captureInfo = new CaptureInfo
@@ -179,7 +186,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     IsNonCapture = isNonCapture
                 };
 
-                if (_captureStack.Count >= 10)
+                if (isLookAround)
+                {
+                    _inLookAround = true;
+                }
+
+                if (_captureStack.Count >= MaxStackDepth)
                 {
                     // error todo
                 }
@@ -201,41 +213,129 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public CaptureInfo Pop()
             {
-                return _captureStack.Pop();
+                var captureInfo = _captureStack.Pop();
+
+                if (captureInfo.IsLookAround)
+                {
+                    _inLookAround = false;
+                }
+
+                return captureInfo;
             }
         }
 
         private class CaptureInfo
         {
             public bool IsClosed;
-            public bool IsNotEmpty;
+            public bool PossibleEmpty = true;
+            public bool PossibleEmptyAlteration;
             public bool HasZeroQuantifier;
-            public bool HasZeroAlternation;
+            public bool HasOneQuantifier;
+            public bool HasTwoQuantifier;
             public bool ContainsAlternation;
+            public CaptureInfo Parent;
             public bool IsLookAround;
             public bool IsNonCapture;
-            public CaptureInfo Parent;
-            public bool HasChildZeroCapture;
 
             public void SeenAlternation()
             {
-                if (!IsNotEmpty)
+                ContainsAlternation = true;
+
+                if (PossibleEmpty)
                 {
-                    HasZeroAlternation = true;
+                    PossibleEmptyAlteration = true;
                 }
 
-                IsNotEmpty = false;
-                ContainsAlternation = true;
+                PossibleEmpty = true;
             }
 
             public void SeenNonEmpty()
             {
-                IsNotEmpty = true;
+                PossibleEmpty = false;
+            }
+
+            public ErrorResourceKey? SeenClose(bool zeroQuant, bool oneQuant, bool twoQuant)
+            {
+                IsClosed = true;
+
+                if (IsLookAround && (zeroQuant || oneQuant || twoQuant))
+                {
+                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                }
+
+                if (ContainsAlternation)
+                {
+                    SeenAlternation();
+                    PossibleEmpty = PossibleEmptyAlteration;
+                }
+
+                HasZeroQuantifier = zeroQuant;
+                HasOneQuantifier = oneQuant;
+                HasTwoQuantifier = twoQuant;
+
+                if (Parent != null && !PossibleEmpty)
+                {
+                    Parent.PossibleEmpty = false;
+                }
+
+                return null;
+            }
+
+            public ErrorResourceKey? CheckCapture(bool noTwoQuant, bool noOneQuant, bool noZeroQuant)
+            {
+                if (PossibleEmpty)
+                {
+                    noZeroQuant = true;
+                    noTwoQuant = true;
+
+                    // OneQuant is OK
+                }
+
+                if (IsLookAround)
+                {
+                    noZeroQuant = true;
+                    noTwoQuant = true;
+                    noOneQuant = true;
+                }
+
+                if (HasTwoQuantifier && noTwoQuant)
+                {
+                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                }
+
+                if (HasZeroQuantifier && noZeroQuant)
+                {
+                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                }
+
+                if (HasOneQuantifier && noOneQuant)
+                {
+                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                }
+
+                if (HasZeroQuantifier)
+                {
+                    noZeroQuant = true;
+                    noOneQuant = true;
+                    noTwoQuant = true;
+                }
+
+                if (Parent != null && Parent.ContainsAlternation)
+                {
+                    noTwoQuant = true;
+                }
+
+                if (Parent != null)
+                {
+                    return Parent.CheckCapture(noTwoQuant, noOneQuant, noZeroQuant);
+                }
+
+                return null;
             }
 
             public bool IsPossibleZeroCapture()
             {
-                if (HasZeroAlternation || HasZeroQuantifier)
+                if (HasZeroQuantifier || ContainsAlternation)
                 {
                     return true;
                 }
@@ -247,48 +347,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     return false;
                 }
-            }
-
-            public ErrorResourceKey? SeenClose(bool quant)
-            {
-                IsClosed = true;
-
-                if (ContainsAlternation)
-                {
-                    SeenAlternation();
-                    if (!HasZeroAlternation)
-                    {
-                        IsNotEmpty = true;
-                    }
-                }
-
-                if (IsLookAround || IsNonCapture)
-                {
-                }
-                else
-                {
-                    if (HasZeroAlternation && quant)
-                    {
-                        return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                    }
-
-                    if (HasChildZeroCapture && quant)
-                    {
-                        return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                    }
-
-                    if (quant)
-                    {
-                        HasZeroQuantifier = true;
-                    }
-
-                    if (Parent != null && HasChildZeroCapture)
-                    {
-                        Parent.HasChildZeroCapture = true;
-                    }
-                }
-
-                return null;
             }
         }
 
@@ -383,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             const string escapeRE =
                 @"
-                    # leading backslash, escape sequences
+# leading backslash, escape sequences
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                            | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
@@ -405,40 +463,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var generalRE = new Regex(
                 escapeRE +
                 @"
-                    # leading (?<, named captures
+# leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
                     (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
 
-                    # leading (?, misc
+# leading (?, misc
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
                     \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
 
-                    # leading (, used for other special purposes
+# leading (, used for other special purposes
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
-                    # leading ?\*\+, quantifiers
+# leading ?\*\+, quantifiers
                     (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
                     (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
 
-                    # leading {, limited quantifiers
+# leading {, limited quantifiers
                     (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
                     (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
                     (?<badLimited>{\d+,\d*}[\+|\*])                    | # possessive and useless quantifiers
                     (?<goodLimited>{\d+,\d*}\??)                       | # standard limited quantifiers, with optional lazy
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
-                    # character class
+# character class
                     (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
                     \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
                     (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
 
-                    # open and close regions
+# open and close regions
                     (?<openParen>\()                                   |
                     (?<closeParen>\))                                  |
                     (?<alternation>\|)                                 |
@@ -461,6 +519,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
+            int nonCaptureNumber = 0;
             var captureStack = new CaptureStack();            // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
             var captures = new Dictionary<string, CaptureInfo>();
             List<string> backRefs = new List<string>();
@@ -502,7 +561,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     if (token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["anchors"].Success)
                     {
-                        // all is well, nothing to do
+                        if (captureStack.InLookAround())
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            return false;
+                        }
                     }
                     else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
@@ -603,6 +666,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         var namedCapture = token.Groups["goodNamedCapture"].Value;
 
+                        if (captureStack.InLookAround())
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            return false;
+                        }
+
                         if (numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
@@ -620,11 +689,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        captureStack.Push();
+                        var captureInfo = captureStack.Push(isNonCapture: true);
+                        nonCaptureNumber++;
+                        captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
                     }
                     else if (token.Groups["goodLookaround"].Success)
                     {
-                        captureStack.Push(isLookAround: true);
+                        if (captureStack.InLookAround())
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            return false;
+                        }
+
+                        var captureInfo = captureStack.Push(isLookAround: true);
+                        nonCaptureNumber++;
+                        captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
                     }
                     else if (token.Groups["alternation"].Success)
                     {
@@ -634,6 +713,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (numberedCpature)
                         {
+                            if (captureStack.InLookAround())
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                return false;
+                            }
+
                             var captureInfo = captureStack.Push();
                             captureNumber++;
                             captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), captureInfo);
@@ -641,12 +726,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         else
                         {
                             var captureInfo = captureStack.Push(isNonCapture: true);
+                            nonCaptureNumber++;
+                            captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
                         }
                     }
                     else if (token.Groups["closeParen"].Success)
                     {
                         var idx = token.Index + token.Length;
-                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
+
+                        //                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
+                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "?" || Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"));
+
+                        bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
+                        bool oneQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\?|\{0*1}|\{0*1,0*1})");
+                        bool twoQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\+|\*|\{0*(([1-9][0-9]|[2-9])|1,([2-9]|[1-9][0-9])))");
 
                         var captureInfo = captureStack.Pop();
 
@@ -656,7 +749,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var errorString = captureInfo.SeenClose(quant);
+                        var errorString = captureInfo.SeenClose(zeroQuant, oneQuant, twoQuant);
 
                         if (errorString != null)
                         {
@@ -817,6 +910,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // This should never be hit. It is here in case one of the Groups names checked doesn't match the RE, in which case running tests would hit this.
                         throw new NotImplementedException("Unknown general regular expression match: " + token.Value);
                     }
+                }
+            }
+
+            foreach (var c in captures)
+            {
+                var err = c.Value.CheckCapture(false, false, false);
+                if (err != null)
+                {
+                    errors.EnsureError(regExNode, (ErrorResourceKey)err);
+                    return false;
                 }
             }
 
