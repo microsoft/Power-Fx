@@ -284,7 +284,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 : base(name, (l) => "MockFunction", FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
             {
                 _runtimeFunctionNameSuffix = runtimeFunctionNameSuffix;
-                ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
+                ScopeInfo = new FunctionScopeInfo(this, checkPredicateUsage: false);
             }
 
             public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)

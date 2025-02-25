@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -40,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// If false, the author will be warned when inputting predicates that
         /// do not reference the input table.
         /// </summary>
-        public bool AcceptsLiteralPredicates { get; }
+        public bool CheckPredicateUsage { get; }
 
         /// <summary>
         /// True indicates that the function performs some sort of iteration over
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Functions
             TexlFunction function,
             bool usesAllFieldsInScope = true,
             bool supportsAsyncLambdas = true,
-            bool acceptsLiteralPredicates = true,
+            bool checkPredicateUsage = false,
             bool iteratesOverScope = true,
             DType scopeType = null,
             Func<int, bool> appliesToArgument = null,
@@ -81,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             UsesAllFieldsInScope = usesAllFieldsInScope;
             SupportsAsyncLambdas = supportsAsyncLambdas;
-            AcceptsLiteralPredicates = acceptsLiteralPredicates;
+            CheckPredicateUsage = checkPredicateUsage;
             IteratesOverScope = iteratesOverScope;
             ScopeType = scopeType;
             _function = function;
@@ -96,11 +97,19 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="callNode">Caller call node.</param>
         /// <param name="inputNodes">ArgN node.</param>
         /// <param name="typeScope">Calculated DType type.</param>
+        /// <param name="errors"></param>
         /// <param name="inputSchema">List of data sources to compose the calculated type.</param>
         /// <returns></returns>
-        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        public virtual bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, IErrorContainer errors, params DType[] inputSchema)
         {
-            return CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
+            var result = CheckInput(features, callNode, inputNodes[0], inputSchema[0], out typeScope);
+
+            if (result && CheckPredicateUsage)
+            {
+                CheckPredicates(inputNodes, typeScope, errors);
+            }
+
+            return result;
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -195,31 +204,24 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
-        protected virtual void CheckPredicates(TexlNode[] inputNodes, DType typeScope, bool wholeScope, IErrorContainer errors = null)
+        public virtual void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors = null)
         {
-            CheckLiteralPredicates(inputNodes, errors);
-        }
+            GetScopeIdent(inputNodes, out DName[] idents);
+            var visitor = new ScopePredicateVisitor(typeScope, idents);            
 
-        protected void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(errors);
-
-            if (!AcceptsLiteralPredicates)
+            for (var i = 1; i < inputNodes.Length; i++)
             {
-                for (var i = 0; i < args.Length; i++)
+                var arg = inputNodes[i];
+
+                if (_function.IsLambdaParam(inputNodes[i], i))
                 {
-                    if (_function.IsLambdaParam(args[i], i))
-                    {
-                        if (args[i].Kind == NodeKind.BoolLit ||
-                            args[i].Kind == NodeKind.NumLit ||
-                            args[i].Kind == NodeKind.DecLit ||
-                            args[i].Kind == NodeKind.StrLit)
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.WarnLiteralPredicate);
-                        }
-                    }
+                    arg.Accept(visitor);
                 }
+            }
+
+            if (visitor.InUsePredicates.Count == 0)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[0], TexlStrings.WarnCheckPredicateUsage, idents.First());
             }
         }
 
@@ -296,18 +298,18 @@ namespace Microsoft.PowerFx.Core.Functions
         public static DName RightRecord => new DName("RightRecord");
 
         public FunctionJoinScopeInfo(TexlFunction function)
-            : base(function, appliesToArgument: (argIndex) => argIndex > 1)
+            : base(function, appliesToArgument: (argIndex) => argIndex > 1, checkPredicateUsage: true)
         {
         }
 
-        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, params DType[] inputSchema)
+        public override bool CheckInput(Features features, CallNode callNode, TexlNode[] inputNodes, out DType typeScope, IErrorContainer errors, params DType[] inputSchema)
         {
             var ret = true;
             var argCount = Math.Min(inputNodes.Length, 2);
 
             typeScope = DType.EmptyRecord;
 
-            var wholeScope = GetScopeIdent(inputNodes, out DName[] idents);
+            GetScopeIdent(inputNodes, out DName[] idents);
 
             for (var i = 0; i < argCount; i++)
             {
@@ -315,7 +317,10 @@ namespace Microsoft.PowerFx.Core.Functions
                 typeScope = typeScope.Add(idents[i], type);
             }
 
-            CheckPredicates(inputNodes, typeScope, wholeScope);
+            if (ret)
+            {
+                CheckPredicates(inputNodes, typeScope, errors);
+            }
 
             return ret;
         }
@@ -347,10 +352,17 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, bool wholeScope, IErrorContainer errors = null)
+        public override void CheckPredicates(TexlNode[] inputNodes, DType typeScope, IErrorContainer errors)
         {
-            var visitor = new ScopePredicateVisitor(typeScope, wholeScope);
+            var wholeScope = GetScopeIdent(inputNodes, out DName[] idents);
+            var visitor = new ScopePredicateVisitor(typeScope, idents);
+
             inputNodes[2].Accept(visitor);
+
+            if (!visitor.InUsePredicates.Contains(idents[0]) || !visitor.InUsePredicates.Contains(idents[1]))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Warning, inputNodes[2], TexlStrings.WarnCheckPredicateUsage, string.Join("/", idents.Select(id => id.Value)));
+            }
         }
     }
 }

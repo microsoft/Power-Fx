@@ -491,7 +491,7 @@ namespace Microsoft.PowerFx.TexlFunctionExporter
 
         internal YamlTexlScopeInfo(FunctionScopeInfo scopeInfo)
         {
-            AcceptsLiteralPredicates = scopeInfo.AcceptsLiteralPredicates;
+            AcceptsLiteralPredicates = scopeInfo.CheckPredicateUsage;
             CanBeCreatedByRecord = scopeInfo.CanBeCreatedByRecord;
             HasNondeterministicOperationOrder = scopeInfo.HasNondeterministicOperationOrder;
             IteratesOverScope = scopeInfo.IteratesOverScope;
