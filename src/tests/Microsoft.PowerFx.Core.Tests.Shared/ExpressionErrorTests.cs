@@ -7,7 +7,10 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -45,6 +48,40 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(ErrorKind.None, error.Kind);
 
             Assert.Equal("Warning 2-5: ouch", error.ToString());
+        }
+
+        [Theory]
+        [InlineData("Join(t1 As L, t1 As R, L.a = R.a, JoinType.Inner, R.a As AAA)")]
+        [InlineData("Filter(t1, a > 1)")]
+        [InlineData("Filter(t1, ThisRecord.a > 1)")]
+        [InlineData("Filter(t1 As T, T.a > 1)")]
+        [InlineData("Filter(t1 As T, 1 < T.a)")]
+        [InlineData("Filter(t1 As T, With({x:1}, x) > T.a)")]
+
+        [InlineData("Filter(t1 As T, With({x:1}, x))", true)]
+        [InlineData("Filter(t1 As T, true)", true)]
+        [InlineData("Join(t1 As L, t1 As R, true, JoinType.Inner, R.a As AAA)", true)]
+        [InlineData("Join(t1 As L, t1 As R, With({L:R, R:R}, L.a = R.a), JoinType.Inner, R.a As RA, L.a As LA)", true)]
+        public void CheckPredicateUsageTest(string expression, bool raiseWarning = false)
+        {
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+
+            DType.TryParse("*[a:w,b:w,c:w]", out var tableType);
+
+            symbols.AddFunction(new JoinFunction());
+            symbols.AddVariable("t1", FormulaType.Build(tableType));
+
+            var check = engine.Check(expression, symbolTable: symbols);
+
+            if (raiseWarning)
+            {
+                Assert.Contains(check.Errors, d => d.IsWarning);
+            }
+            else
+            {
+                Assert.DoesNotContain(check.Errors, d => d.IsWarning);
+            }
         }
 
         [Fact]

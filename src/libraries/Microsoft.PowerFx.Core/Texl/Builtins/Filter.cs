@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public FilterFunction()
             : base("Filter", TexlStrings.AboutFilter, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
+            ScopeInfo = new FunctionScopeInfo(this, checkPredicateUsage: true);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

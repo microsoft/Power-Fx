@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -12,74 +14,89 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
     internal class ScopePredicateVisitor : TexlVisitor
     {
         private readonly DType _typeScope;
-        private readonly bool _wholeScope;
+        private readonly DName[] _idents;
 
-        public ScopePredicateVisitor(DType typeScope, bool wholeScope)
+        public HashSet<DName> InUsePredicates;
+
+        public ScopePredicateVisitor(DType typeScope, DName[] indents)
         {
             _typeScope = typeScope;
-            _wholeScope = wholeScope;
+
+            InUsePredicates = new HashSet<DName>();
+            _idents = indents;
         }
 
         public override void Visit(TypeLiteralNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(ErrorNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(BlankNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(BoolLitNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(StrLitNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(NumLitNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(DecLitNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(FirstNameNode node)
         {
-            if (_wholeScope)
+            // We should reach this block only if we are working with an implicity 'ThisRecord'.
+            if (_idents.Length == 1 && _typeScope.TryGetType(node.Ident.Name, out _))
             {
-                throw new NotImplementedException();
+                InUsePredicates.Add(_idents.First());
             }
-            else
+        }
+
+        // We can assume if visiting a DottedNameNode is always a whole scope.
+        public override bool PreVisit(DottedNameNode node)
+        {
+            var left = node.Left.AsFirstName();
+
+            if (_idents.Contains(left.Ident.Name))
             {
-                var test = _typeScope.TryGetType(node.Ident.Name, out _);
-            }
+                InUsePredicates.Add(left.Ident.Name);
+            }            
+
+            // No need to visit left/right separately.
+            return false;
         }
 
         public override void Visit(ParentNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void Visit(SelfNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(StrInterpNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(DottedNameNode node)
@@ -89,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override void PostVisit(UnaryOpNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(BinaryOpNode node)
@@ -99,32 +116,37 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public override void PostVisit(VariadicOpNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(CallNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(ListNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(RecordNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(TableNode node)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public override void PostVisit(AsNode node)
         {
-            throw new NotImplementedException();
+            return;
+        }
+
+        public override bool PreVisit(CallNode node)
+        {
+            return false;
         }
     }
 }

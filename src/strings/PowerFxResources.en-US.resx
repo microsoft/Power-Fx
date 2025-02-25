@@ -2439,9 +2439,9 @@
     <value>A column named '{0}' was specified more than once.</value>
     <comment>Duplicate columns.</comment>
   </data>
-  <data name="WarnLiteralPredicate" xml:space="preserve">
-    <value>Warning: This predicate is a literal value and does not reference the input table.</value>
-    <comment>Warning given when a literal predicate is given to a function operating over a table.</comment>
+  <data name="WarnCheckPredicateUsage" xml:space="preserve">
+    <value>Warning: The expression does not access '{0}' directly and can return unexpected results.</value>
+    <comment>Warning given when an expression with a function operating over a table does not access the predicate directly.</comment>
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
     <value>Warning: Select "Capture Schema" at the bottom of the expanded formula bar to set and refresh this method's result schema. Otherwise this method will return no result.</value>

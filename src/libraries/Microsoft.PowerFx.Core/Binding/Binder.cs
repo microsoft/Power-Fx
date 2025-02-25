@@ -4494,7 +4494,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Determine the Scope Identifier using the func.ScopeArgs arg
                             required = scopeInfo.GetScopeIdent(node.Args.Children.ToArray(), out scopeIdentifiers);
 
-                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, GetScopeArgsTypes(node.Args.Children, argsCount)))
+                            if (scopeInfo.CheckInput(_txb.Features, node, node.Args.Children.ToArray(), out scope, _txb.ErrorContainer, GetScopeArgsTypes(node.Args.Children, argsCount)))
                             {
                                 if (_txb.TryGetEntityInfo(node.Args.Children[0], out expandInfo))
                                 {
@@ -4593,7 +4593,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         args[i].Accept(this);
                     }
 
-                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
+                    fArgsValid = scopeInfo.CheckInput(_txb.Features, node, args, out typeScope, _txb.ErrorContainer, GetScopeArgsTypes(node.Args.Children, maybeFunc.ScopeArgs));
 
                     // Determine the scope identifier using the first node for lambda params
                     identRequired = scopeInfo.GetScopeIdent(args, out scopeIdent);
