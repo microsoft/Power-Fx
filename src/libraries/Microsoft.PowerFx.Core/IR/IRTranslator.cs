@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -225,11 +224,11 @@ namespace Microsoft.PowerFx.Core.IR
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
-                        binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
+                        binaryOpResult = UnpackArgs(BuiltinFunctionsCore.Concatenate, left, right, context.GetIRContext(node));
                         break;
                     case BinaryOpKind.Or:
                     case BinaryOpKind.And:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), node.Op == BinaryOp.And ? BuiltinFunctionsCore.And : BuiltinFunctionsCore.Or, left, new LazyEvalNode(context.GetIRContext(node), right));
+                        binaryOpResult = UnpackArgs(node.Op == BinaryOp.And ? BuiltinFunctionsCore.And : BuiltinFunctionsCore.Or, left, new LazyEvalNode(context.GetIRContext(node), right), context.GetIRContext(node));
                         break;
 
                     // Reversed Args:
@@ -593,31 +592,38 @@ namespace Microsoft.PowerFx.Core.IR
                 return new UnaryOpNode(convertedIRContext, UnaryOpKind.BlankToEmptyString, arg);
             }
 
+#pragma warning disable CS1570 // XML comment has badly formed XML
             /// <summary>
-            /// This is not a generic arg concatenate function, but a special case for the Concatenate function,
-            /// used for Binary Concatenate operator.
+            /// Some chain of binary operator (&&, &, ||) can be translated into a single call.
+            /// This unwraps the args from a child call to the parent call.
             /// </summary>
-            private static IntermediateNode ConcatenateArgs(IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
+            /// <param name="func"></param>
+            /// <param name="arg1"></param>
+            /// <param name="arg2"></param>
+            /// <param name="irContext"></param>
+            /// <returns></returns>
+            private static IntermediateNode UnpackArgs(TexlFunction func, IntermediateNode arg1, IntermediateNode arg2, IRContext irContext)
+#pragma warning restore CS1570 // XML comment has badly formed XML
             {
-                var concatenateArgs = new List<IntermediateNode>();
+                var rangeArgs = new List<IntermediateNode>();
                 foreach (var arg in new[] { arg1, arg2 })
                 {
-                    // if arg is call node to Concatenate unpack it, and pass it as arg to outer Concatenate
-                    if (arg is CallNode maybeConcatenate && maybeConcatenate.Function is ConcatenateFunction concatenateFunction)
+                    // If arg is a call node to the same function, unpack the args.
+                    if (arg is CallNode callNode && callNode.Function.Name == func.Name)
                     {
-                        foreach (var argC in maybeConcatenate.Args)
+                        foreach (var argC in callNode.Args)
                         {
-                            concatenateArgs.Add(argC);
+                            rangeArgs.Add(argC);
                         }
                     }
                     else
                     {
-                        concatenateArgs.Add(arg);
+                        rangeArgs.Add(arg);
                     }
                 }
 
-                var concatenatedNode = new CallNode(irContext, BuiltinFunctionsCore.Concatenate, concatenateArgs);
-                return concatenatedNode;
+                var result = new CallNode(irContext, func, rangeArgs);
+                return result;
             }
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)

@@ -74,6 +74,43 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        // This test is to ensure a binary op chain is rewritten and does not get blocked by the depth limit.
+        [Theory]
+        [InlineData("&&", "And")]
+        [InlineData("And", "And")]
+        [InlineData("||", "Or")]
+        [InlineData("Or", "Or")]
+        public void BinaryOpIRRewriteTest(string op, string func)
+        {
+            var sbExpr = new StringBuilder($"true {op} If(true {op} true {op} true, true)");
+            var sbExpected = new StringBuilder($"{func}(True, (If({func}(True, (True), (True)), (True)))");
+
+            for (var i = 0; i < 1000; i++)
+            {
+                sbExpr.Append($" {op} true");
+                sbExpected.Append(", (True)");
+            }
+
+            sbExpected.Append(')');
+
+            var config = new PowerFxConfig()
+            {
+                MaximumExpressionLength = 10000
+            };
+
+            var engine = new RecalcEngine(config);
+            var check = new CheckResult(engine)
+                .SetText(sbExpr.ToString())
+                .SetBindingInfo();
+
+            var actualIR = check.GetCompactIRString();
+            Assert.Equal(sbExpected.ToString(), actualIR);
+
+            // Checking that no depth limit is reached.
+            var result = check.GetEvaluator().Eval();
+            Assert.IsAssignableFrom<FormulaValue>(result);
+        }
+
         // When we don't rewrite, preserve the same object reference identity 
         [Fact]
         public void PreserveObjectReference()
