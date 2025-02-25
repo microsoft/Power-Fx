@@ -184,8 +184,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_unicode.txt";
-            path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
+            var path = @"c:\temp\match_att.txt";
+            // path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RunOneMatchCompare()
         {
             ExpressionEvaluationTests.RegExCompareNode = true;
-            ExpressionEvaluationTests.RegExComparePCRE2 = false;
+            ExpressionEvaluationTests.RegExComparePCRE2 = true;
             RunOne();
         }
 #endif

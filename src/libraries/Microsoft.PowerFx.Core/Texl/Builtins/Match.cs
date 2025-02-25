@@ -178,12 +178,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return _inLookAround;
             }
 
-            public CaptureInfo Push(bool isLookAround = false, bool isNonCapture = false)
+            public CaptureInfo Push(bool isLookAround = false)
             {
                 var captureInfo = new CaptureInfo
                 {
                     IsLookAround = isLookAround,
-                    IsNonCapture = isNonCapture
                 };
 
                 if (isLookAround)
@@ -229,13 +228,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public bool IsClosed;
             public bool PossibleEmpty = true;
             public bool PossibleEmptyAlteration;
-            public bool HasZeroQuantifier;
-            public bool HasOneQuantifier;
-            public bool HasTwoQuantifier;
+            public bool NoZeroQuant;
+            public bool NoOneQuant;
+            public bool NoTwoQuant;
+            public bool NoTwoQuantAlternation;
             public bool ContainsAlternation;
             public CaptureInfo Parent;
             public bool IsLookAround;
-            public bool IsNonCapture;
 
             public void SeenAlternation()
             {
@@ -258,76 +257,62 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 IsClosed = true;
 
-                if (IsLookAround && (zeroQuant || oneQuant || twoQuant))
-                {
-                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                }
-
                 if (ContainsAlternation)
                 {
                     SeenAlternation();
                     PossibleEmpty = PossibleEmptyAlteration;
+                    NoTwoQuant = NoTwoQuant || NoTwoQuantAlternation;
                 }
 
-                HasZeroQuantifier = zeroQuant;
-                HasOneQuantifier = oneQuant;
-                HasTwoQuantifier = twoQuant;
-
-                if (Parent != null && !PossibleEmpty)
-                {
-                    Parent.PossibleEmpty = false;
-                }
-
-                return null;
-            }
-
-            public ErrorResourceKey? CheckCapture(bool noTwoQuant, bool noOneQuant, bool noZeroQuant)
-            {
                 if (PossibleEmpty)
                 {
-                    noZeroQuant = true;
-                    noTwoQuant = true;
+                    NoZeroQuant = true;
+                    NoTwoQuant = true;
 
                     // OneQuant is OK
                 }
 
                 if (IsLookAround)
                 {
-                    noZeroQuant = true;
-                    noTwoQuant = true;
-                    noOneQuant = true;
+                    NoZeroQuant = true;
+                    NoTwoQuant = true;
+                    NoOneQuant = true;
                 }
 
-                if (HasTwoQuantifier && noTwoQuant)
+                if (twoQuant && NoTwoQuant)
                 {
                     return TexlStrings.ErrInvalidRegExQuantifiedCapture;
                 }
 
-                if (HasZeroQuantifier && noZeroQuant)
+                if (zeroQuant && NoZeroQuant)
                 {
                     return TexlStrings.ErrInvalidRegExQuantifiedCapture;
                 }
 
-                if (HasOneQuantifier && noOneQuant)
+                if (oneQuant && NoOneQuant)
                 {
                     return TexlStrings.ErrInvalidRegExQuantifiedCapture;
                 }
 
-                if (HasZeroQuantifier)
+                if (zeroQuant)
                 {
-                    noZeroQuant = true;
-                    noOneQuant = true;
-                    noTwoQuant = true;
-                }
-
-                if (Parent != null && Parent.ContainsAlternation)
-                {
-                    noTwoQuant = true;
+                    NoZeroQuant = true;
+                    NoOneQuant = true;
+                    NoTwoQuant = true;
                 }
 
                 if (Parent != null)
                 {
-                    return Parent.CheckCapture(noTwoQuant, noOneQuant, noZeroQuant);
+                    if (!PossibleEmpty)
+                    {
+                        Parent.PossibleEmpty = false;
+                    }
+
+                    Parent.NoZeroQuant |= NoZeroQuant;
+                    Parent.NoOneQuant |= NoOneQuant;
+                    Parent.NoTwoQuant |= NoTwoQuant;
+
+                    Parent.NoTwoQuantAlternation = true;
                 }
 
                 return null;
@@ -335,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool IsPossibleZeroCapture()
             {
-                if (HasZeroQuantifier || ContainsAlternation)
+                if (NoZeroQuant || NoTwoQuant)
                 {
                     return true;
                 }
@@ -519,7 +504,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
-            int nonCaptureNumber = 0;
             var captureStack = new CaptureStack();            // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
             var captures = new Dictionary<string, CaptureInfo>();
             List<string> backRefs = new List<string>();
@@ -689,9 +673,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        var captureInfo = captureStack.Push(isNonCapture: true);
-                        nonCaptureNumber++;
-                        captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
+                        captureStack.Push();
                     }
                     else if (token.Groups["goodLookaround"].Success)
                     {
@@ -701,9 +683,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var captureInfo = captureStack.Push(isLookAround: true);
-                        nonCaptureNumber++;
-                        captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
+                        captureStack.Push(isLookAround: true);
                     }
                     else if (token.Groups["alternation"].Success)
                     {
@@ -725,9 +705,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
-                            var captureInfo = captureStack.Push(isNonCapture: true);
-                            nonCaptureNumber++;
-                            captures.Add(nonCaptureNumber.ToString(CultureInfo.InvariantCulture) + "_NonCapture", captureInfo);
+                            captureStack.Push();
                         }
                     }
                     else if (token.Groups["closeParen"].Success)
@@ -739,7 +717,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
                         bool oneQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\?|\{0*1}|\{0*1,0*1})");
-                        bool twoQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\+|\*|\{0*(([1-9][0-9]|[2-9])|1,([2-9]|[1-9][0-9])))");
+                        bool twoQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\+|\*|\{0*(([1-9][0-9]|[2-9])|1,(0*([2-9]|[1-9][0-9]))?))");
 
                         var captureInfo = captureStack.Pop();
 
@@ -913,14 +891,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            foreach (var c in captures)
+            if (!captureStack.IsOnlyBase())
             {
-                var err = c.Value.CheckCapture(false, false, false);
-                if (err != null)
-                {
-                    errors.EnsureError(regExNode, (ErrorResourceKey)err);
-                    return false;
-                }
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
+                return false;
+            }
+
+            var baseCaptureInfo = captureStack.Pop();
+
+            var baseErrorString = baseCaptureInfo.SeenClose(false, false, false);
+
+            if (baseErrorString != null)
+            {
+                errors.EnsureError(regExNode, (ErrorResourceKey)baseErrorString);
+                return false;
             }
 
             foreach (var s in backRefs)
@@ -935,12 +919,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (openInlineComment)
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedInlineComment);
-                return false;
-            }
-
-            if (!captureStack.IsOnlyBase())
-            {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
                 return false;
             }
 
