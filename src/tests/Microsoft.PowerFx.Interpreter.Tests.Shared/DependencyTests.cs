@@ -234,6 +234,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Average",
                 "Concat",
                 "CountIf",
+                "Distinct",
                 "Filter",
                 "ForAll",
                 "IfError",
