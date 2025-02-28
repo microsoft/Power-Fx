@@ -629,4 +629,3 @@ Errors: Error 17-39: Invalid regular expression: Sub matches are not supported i
 
 >> Match( "aa", "((a)(?<=\2))", MatchOptions.NumberedSubMatches )
 {FullMatch:"a",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"a"})}
-

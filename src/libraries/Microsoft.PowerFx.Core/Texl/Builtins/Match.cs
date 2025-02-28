@@ -239,6 +239,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public bool HasOneQuant;
             public bool HasTwoQuant;
             public bool ContainsAlternation;
+            public bool ContainsCapture;
             public CaptureInfo Parent;
             public bool IsLookAround;
 
@@ -274,6 +275,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     NoTwoQuant = NoTwoQuant || NoTwoQuantAlternation;
                 }
 
+#if true
                 if (PossibleEmpty)
                 {
                     NoZeroQuant = true;
@@ -281,6 +283,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     // OneQuant is OK
                 }
+#endif 
 
                 if (IsLookAround)
                 {
@@ -288,6 +291,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     NoTwoQuant = true;
                     NoOneQuant = true;
                 }
+
+#if false
+                if (PossibleEmpty && (!IsNonCapture || ContainsCapture))
+                {
+                    NoZeroQuant = true;
+                    NoOneQuant = true;
+                    NoTwoQuant = true;
+                }
+#endif
 
                 if (twoQuant && NoTwoQuant)
                 {
@@ -304,16 +316,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return TexlStrings.ErrInvalidRegExQuantifiedCapture;
                 }
 
-                if (zeroQuant && PossibleEmpty)
+#if true
+                if (zeroQuant && (!IsNonCapture || ContainsCapture))
                 {
                     NoZeroQuant = true;
                     NoOneQuant = true;
                     NoTwoQuant = true;
                 }
+#endif
 
                 if (Parent != null)
                 {
-                    if (!PossibleEmpty)
+                    if (!PossibleEmpty && !zeroQuant)
                     {
                         Parent.PossibleEmpty = false;
                     }
@@ -323,6 +337,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     Parent.NoTwoQuant |= NoTwoQuant;
 
                     Parent.NoTwoQuantAlternation = true;
+
+                    if (!IsNonCapture)
+                    {
+                        Parent.ContainsCapture = true;
+                    }
                 }
 
                 return null;

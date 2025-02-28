@@ -184,11 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            string path;
-
-            // path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
-
-            path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
+            var path = @"c:\temp\match_comb.txt";
 
             var line = 0;
 

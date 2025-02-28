@@ -252,9 +252,6 @@ Errors: Error 15-27: Invalid regular expression: Sub match name must be a combin
 >> Match( "test", "(?<a!>s).*" )
 Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> TODO rationalize unicode group name characters
-Error
-
 // Group name case sensitivity
 
 >> Match( "test", "(?<a>t).*\k<a>")
