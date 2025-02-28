@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public DistinctFunction()
             : base("Distinct", TexlStrings.AboutDistinct, FunctionCategories.Table, DType.EmptyTable, 0x02, 2, 2, DType.EmptyTable)
         {
-            ScopeInfo = new FunctionScopeInfo(this);
+            ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false);
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

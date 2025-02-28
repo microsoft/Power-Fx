@@ -895,6 +895,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Distinct(Table, Time)", "*[Date:D, DateTime:d, Time:T]", "*[Value:T]")]
         [InlineData("Distinct(Table, G)", "*[G:g, OS:l]", "*[Value:g]")]
         [InlineData("Distinct(Table, OS)", "*[G:g, OS:l]", "*[Value:l]")]
+        [InlineData("Distinct(Table, Untyped)", "*[Untyped:O]", "*[Value:O]", true)]
         public void TexlFunctionTypeSemanticsDistinct(string expression, string tableType, string expectedResult, bool failsForPFxV1 = false)
         {
             foreach (var usePFxV1 in new[] { false, true })
