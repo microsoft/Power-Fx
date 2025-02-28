@@ -93,19 +93,19 @@ Errors: Error 13-20: Invalid regular expression: Use named captures with "(?<nam
 
 // ErrInvalidRegExBadBackRefSelfReferencing
 >> Match( "aa", "(a\1)", MatchOptions.NumberedSubMatches )
-Errors: Error 13-20: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-20: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa", "(?<first>a\k<first>)" )
-Errors: Error 13-35: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-35: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+" )
 Errors: Error 26-41: Invalid regular expression: Use named captures with "(?<name>...)" and "\k<name>" or enable MatchOptions.NumberedSubMatches, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "((a+)(\1) ?)+", MatchOptions.NumberedSubMatches )
-Errors: Error 26-41: Invalid regular expression: Self-referencing capture groups are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-41: Invalid regular expression: Self-referencing sub matches are not supported, found "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "aa aaaa aaaaaa ", "(?<first>(a+)(\k<first>) ?)+" )
-Errors: Error 26-56: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 26-56: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Backreferences without a group are disallowed
 
@@ -114,7 +114,7 @@ Errors: Error 22-34: Invalid regular expression: Use named captures with "(?<nam
 
 // ErrInvalidRegExBadBackRefNotDefined
 >> Match( "hello howdy", "([hi]).*\k<1>" )
-Errors: Error 22-37: Invalid regular expression: Capture group "\k<1>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-37: Invalid regular expression: Sub match "\k<1>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<first>" )
 {FullMatch:"hello h",StartMatch:1,first:"h"}
@@ -130,7 +130,7 @@ Errors: Error 22-42: Invalid regular expression: Use named captures with "(?<nam
 {FullMatch:"hello h",StartMatch:1,SubMatches:Table({Value:"h"})}
 
 >> Match( "hello howdy", "(?<first>[hi]).*\k<second>" )
-Errors: Error 22-50: Invalid regular expression: Capture group "\k<second>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-50: Invalid regular expression: Sub match "\k<second>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(((((((((((?<eleven>l))))))))))).*\k<eleven>")  // 11 parens
 {FullMatch:"llo worl",StartMatch:3,eleven:"l"}
@@ -145,7 +145,7 @@ Errors: Error 22-52: Invalid regular expression: Use named captures with "(?<nam
 Errors: Error 22-67: Invalid regular expression: Unclosed groups, too few closing parenthesis.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?<first>((((((((((?<eleven>l)))))))))).*\k<first>")   // unclosed 11th paren
-Errors: Error 22-74: Invalid regular expression: Self-referencing capture groups are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 22-74: Invalid regular expression: Self-referencing sub matches are not supported, found "\k<first>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "hello world", "(?<a>(?<b>(?<c>(?<d>(?<e>(?<f>(?<g>(?<h>(?<i>(?<j>(l))))))))))).*\k<f>")  // 11 parens
 {FullMatch:"llo worl",StartMatch:3,a:"l",b:"l",c:"l",d:"l",e:"l",f:"l",g:"l",h:"l",i:"l",j:"l"}
@@ -190,10 +190,10 @@ Errors: Error 22-82: Invalid regular expression: Named captures cannot be used w
 
 // ErrInvalidRegExBadBalancing
 >> Match( "(hello world)", "(?<s-e>)a")
-Errors: Error 24-35: Invalid regular expression: Balancing capture groups are not supported, found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-35: Invalid regular expression: Balancing sub matches are not supported, found "(?<s-e>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "(hello world)", "(?<s>)a(?<-s>)b")
-Errors: Error 24-41: Invalid regular expression: Balancing capture groups are not supported, found "(?<-s>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 24-41: Invalid regular expression: Balancing sub matches are not supported, found "(?<-s>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // groups with single ticks
 
@@ -226,10 +226,10 @@ Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are no
 
 // ErrInvalidRegExBadNamedCaptureAlreadyExists
 >> Match( "test", "(?<one>t).*(?<one>t)" )
-Errors: Error 15-37: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-37: Invalid regular expression: Named sub match "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "((?<one>t)|(?<one>t))" )
-Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-38: Invalid regular expression: Named sub match "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Bad named capture group names
 
@@ -241,16 +241,19 @@ Errors: Error 15-38: Invalid regular expression: Named capture group "(?<one>" d
 
 // ErrInvalidRegExBadNamedCaptureName
 >> Match( "test", "(?<1>s).*" )
-Errors: Error 15-26: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-26: Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "(?<1>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<1a>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "(?<1a>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<a_>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a_>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "(?<a_>".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<a!>s).*" )
-Errors: Error 15-27: Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-27: Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "(?<a!>".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> TODO rationalize unicode group name characters
+Error
 
 // Group name case sensitivity
 
@@ -258,10 +261,10 @@ Errors: Error 15-27: Invalid regular expression: Named capture group name must b
 {FullMatch:"test",StartMatch:1,a:"t"}
 
 >> Match( "test", "(?<a>t).*\k<A>")
-Errors: Error 15-31: Invalid regular expression: Capture group "\k<A>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<A>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "(?<A>t).*\k<a>")
-Errors: Error 15-31: Invalid regular expression: Capture group "\k<a>" not defined.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-31: Invalid regular expression: Sub match "\k<a>" not defined or is an unsupported forward reference.|Error 0-5: The function 'Match' has some invalid arguments.
 
 // conditional alternation
 
@@ -287,26 +290,6 @@ Errors: Error 22-36: Invalid regular expression: Conditional alternation is not 
 
 >> ShowColumns( Match( "ab", "a # " & Char(10) & " (?<capture>b)", MatchOptions.FreeSpacing ), capture )
 {capture:"b"}
-
-// quantified capture groups
-
-// Node != Net for this test ("b" is empty for Node), a known difference between PCRE2 and Perl too
-// >> Match( "aba", "^(a(b)?)+$", MatchOptions.NumberedSubMatches )
-// {FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"},{Value:"b"})}
-
->> Match( "aba", "^(a(?:b)?)+$", MatchOptions.NumberedSubMatches )
-{FullMatch:"aba",StartMatch:1,SubMatches:Table({Value:"a"})}
-
->> Match( "aba", "^(a(b)?)+$" )
-{FullMatch:"aba",StartMatch:1}
-
-// Node != Net for this test
-// >> Match( "b", "(a)?b\1", MatchOptions.NumberedSubMatches )
-// Blank()
-
-// Node != Net for this test
-// >> Match( "b", "(?<cap>a)?b\k<cap>", MatchOptions.NumberedSubMatches )
-// Blank()
 
 // difference between null and empty string
 

@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -178,11 +179,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return _inLookAround;
             }
 
-            public CaptureInfo Push(bool isLookAround = false)
+            public CaptureInfo Push(bool isLookAround = false, bool isNonCapture = false)
             {
                 var captureInfo = new CaptureInfo
                 {
                     IsLookAround = isLookAround,
+                    IsNonCapture = isNonCapture
                 };
 
                 if (isLookAround)
@@ -226,12 +228,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private class CaptureInfo
         {
             public bool IsClosed;
+            public bool IsNonCapture;
             public bool PossibleEmpty = true;
             public bool PossibleEmptyAlteration;
             public bool NoZeroQuant;
             public bool NoOneQuant;
             public bool NoTwoQuant;
             public bool NoTwoQuantAlternation;
+            public bool HasZeroQuant;
+            public bool HasOneQuant;
+            public bool HasTwoQuant;
             public bool ContainsAlternation;
             public CaptureInfo Parent;
             public bool IsLookAround;
@@ -256,6 +262,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             public ErrorResourceKey? SeenClose(bool zeroQuant, bool oneQuant, bool twoQuant)
             {
                 IsClosed = true;
+
+                HasZeroQuant = zeroQuant;
+                HasOneQuant = oneQuant;
+                HasTwoQuant = twoQuant;
 
                 if (ContainsAlternation)
                 {
@@ -294,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return TexlStrings.ErrInvalidRegExQuantifiedCapture;
                 }
 
-                if (zeroQuant)
+                if (zeroQuant && PossibleEmpty)
                 {
                     NoZeroQuant = true;
                     NoOneQuant = true;
@@ -320,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool IsPossibleZeroCapture()
             {
-                if (NoZeroQuant || NoTwoQuant)
+                if (HasZeroQuant || ContainsAlternation || PossibleEmpty)
                 {
                     return true;
                 }
@@ -429,8 +439,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 # leading backslash, escape sequences
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
-                    \\(?<backRefNumber>[1-9]\d*)                            | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
-
+                    \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
                     (?<goodEscape>\\
                            ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
@@ -466,14 +475,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
 # leading ?\*\+, quantifiers
-                    (?<badQuantifiers>[\?\*\+][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
-                    (?<goodQuantifiers>[\?\*\+]\??)                    | # greedy and lazy quantifiers
+                    (?<badQuantifiers>[\*\+][\+\*])                    | # possessive (ends with +) and useless quantifiers (ends with *)
+                    (?<goodQuantifiers>[\*\+]\??)                      | # greedy and lazy quantifiers
+                    (?<badZeroOrOne>[\?][\+\*])                        |
+                    (?<goodZeroOrOne>[\?]\??)                          |
 
-# leading {, limited quantifiers
+# leading {, exact and limited quantifiers
                     (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
                     (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
-                    (?<badLimited>{\d+,\d*}[\+|\*])                    | # possessive and useless quantifiers
-                    (?<goodLimited>{\d+,\d*}\??)                       | # standard limited quantifiers, with optional lazy
+                    (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
+                    {(?<goodLimitedL>\d+),(?<goodLimitedH>\d+)}\??     | # standard limited quantifiers, with optional lazy
+                    (?<badUnlimited>{\d+,}[\+|\*])                     |
+                    (?<goodUnlimited>{\d+,}\??)                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
 # character class
@@ -513,23 +526,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (Match token in generalRE.Matches(regexPattern))
             {
-                void RegExError(ErrorResourceKey errKey, Match errToken = null, bool context = false)
+                void RegExError(ErrorResourceKey errKey, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
                 {
+                    const int contextLength = 8;
+
                     if (errToken == null)
                     {
                         errToken = token;
                     }
 
-                    if (context)
+                    if (endContext)
                     {
-                        const int contextLength = 8;
                         var tokenEnd = errToken.Index + errToken.Length;
                         var found = tokenEnd >= contextLength ? "..." + regexPattern.Substring(tokenEnd - contextLength, contextLength) : regexPattern.Substring(0, tokenEnd);
-                        errors.EnsureError(regExNode, errKey, found);
+                        errors.EnsureError(regExNode, errKey, found + postContext);
+                    }
+                    else if (startContext)
+                    {
+                        var found = errToken.Index + contextLength >= regexPattern.Length ? regexPattern.Substring(errToken.Index) : regexPattern.Substring(errToken.Index, contextLength) + "...";
+                        errors.EnsureError(regExNode, errKey, found + postContext);
                     }
                     else
                     {
-                        errors.EnsureError(regExNode, errKey, errToken.Value);
+                        errors.EnsureError(regExNode, errKey, errToken.Value + postContext);
                     }
                 }
 
@@ -543,11 +562,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["goodQuantifiers"].Success || token.Groups["goodExact"].Success || token.Groups["goodLimited"].Success || token.Groups["anchors"].Success)
+                    if (token.Groups["anchors"].Success || token.Groups["goodZeroOrOne"].Success || token.Groups["goodExact"].Success)
+                    {
+                        // nothing to do
+                    }
+                    else if (token.Groups["goodLimitedL"].Success)
+                    {
+                        var low = Convert.ToInt32(token.Groups["goodLimitedL"].Value, CultureInfo.InvariantCulture);
+                        var high = Convert.ToInt32(token.Groups["goodLimitedH"].Value, CultureInfo.InvariantCulture);
+
+                        if (high < low)
+                        {
+                            // todo new error
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
+                            return false;
+                        }
+
+                        if (captureStack.InLookAround() && (high - low > 64))
+                        {
+                            // todo new error
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodQuantifiers"].Success || token.Groups["goodUnlimited"].Success)
                     {
                         if (captureStack.InLookAround())
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
                             return false;
                         }
                     }
@@ -556,7 +598,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // length TODO
                         var idx = token.Index + token.Length;
 
-                        if (idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?" && !Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"))))
+                        bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
+
+                        if (!zeroQuant)
                         {
                             captureStack.Peek().SeenNonEmpty();
                         }
@@ -600,7 +644,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                     return false;
                                 }
                             }
-                            else if (ccToken.Groups["badEscape"].Success || ccToken.Groups["backRefName"].Success || ccToken.Groups["backRefNumber"].Success)
+                            else if (ccToken.Groups["badEscape"].Success)
                             {
                                 CCRegExError(TexlStrings.ErrInvalidRegExBadEscape);
                                 return false;
@@ -652,7 +696,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (captureStack.InLookAround())
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround);
                             return false;
                         }
 
@@ -673,13 +717,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        captureStack.Push();
+                        captureStack.Push(isNonCapture: true);
                     }
                     else if (token.Groups["goodLookaround"].Success)
                     {
                         if (captureStack.InLookAround())
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                            RegExError(TexlStrings.ErrInvalidRegExNestedLookAround, startContext: true);
                             return false;
                         }
 
@@ -695,7 +739,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         {
                             if (captureStack.InLookAround())
                             {
-                                RegExError(TexlStrings.ErrInvalidRegExQuantifiedCapture, context: true);
+                                RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround, startContext: true);
                                 return false;
                             }
 
@@ -705,15 +749,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                         else
                         {
-                            captureStack.Push();
+                            captureStack.Push(isNonCapture: true);
                         }
                     }
                     else if (token.Groups["closeParen"].Success)
                     {
                         var idx = token.Index + token.Length;
-
-                        //                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "+" || regexPattern.Substring(idx, 1) == "{" || regexPattern.Substring(idx, 1) == "?");
-                        bool quant = idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == "*" || regexPattern.Substring(idx, 1) == "?" || Regex.IsMatch(regexPattern.Substring(idx), @"^\{0+[,\}]"));
 
                         bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
                         bool oneQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\?|\{0*1}|\{0*1,0*1})");
@@ -723,7 +764,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (captureStack.IsEmpty())
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExUnopenedCaptureGroups, context: true);
+                            RegExError(TexlStrings.ErrInvalidRegExUnopenedCaptureGroups);
                             return false;
                         }
 
@@ -731,7 +772,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (errorString != null)
                         {
-                            RegExError((ErrorResourceKey)errorString, context: true);
+                            var match = Regex.Match(regexPattern.Substring(idx), @"^(\*|\?|\+|\{[^\}]*\})");
+                            RegExError((ErrorResourceKey)errorString, endContext: true, postContext: match.Value);
                             return false;
                         }
                     }
@@ -853,7 +895,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
                         return false;
                     }
-                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success)
+                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success || token.Groups["badZeroOrOne"].Success || token.Groups["badUnlimited"].Success)
                     {
                         RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
                         return false;
@@ -870,12 +912,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["badParen"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadParen, context: true);
+                        RegExError(TexlStrings.ErrInvalidRegExBadParen);
                         return false;
                     }
                     else if (token.Groups["badSquareBrackets"].Success)
                     {
-                        RegExError(TexlStrings.ErrInvalidRegExBadSquare, context: true);
+                        RegExError(TexlStrings.ErrInvalidRegExBadSquare, endContext: true);
                         return false;
                     }
                     else if (token.Groups["badEmptyCharacterClass"].Success)
@@ -907,11 +949,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            foreach (var s in backRefs)
+            foreach (var backRef in backRefs)
             {
-                if (captures[s].IsPossibleZeroCapture())
+                if (captures[backRef].IsPossibleZeroCapture())
                 {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExQuantifiedCapture);
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBackRefToZeroCapture, CharacterUtils.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">");
                     return false;
                 }
             }

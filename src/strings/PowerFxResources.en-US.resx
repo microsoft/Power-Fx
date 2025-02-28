@@ -4580,12 +4580,28 @@
     <comment>Error message indicating that the regular expression has an invalid alphanumeric escape code.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBackRefNotDefined_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Capture group "{0}" not defined.</value>
-    <comment>Error message indicating that the regular expression capture group is not defined.</comment>
+    <value>Invalid regular expression: Sub match "{0}" not defined or is an unsupported forward reference.</value>
+    <comment>Error message indicating that the regular expression sub match is not defined.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Sub matches are not supported in look behinds or look aheads, found at the beginning of "{0}".</value>
+    <comment>Error message indicating sub matches are not supported in look arounds.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Look behinds and look aheads cannot be nested, found at the beginning of "{0}".</value>
+    <comment>Error message indicating look behind and look ahead cannot be nested.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported in look arounds.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Back reference "{0}" to sub match that may not happen due to alternation or zero quantifier.</value>
+    <comment>Error message indicating back reference to illegal sub match.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBackRefSelfReferencing_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Self-referencing capture groups are not supported, found "{0}".</value>
-    <comment>Error message indicating that the regular expression has self-referencing capture groups.</comment>
+    <value>Invalid regular expression: Self-referencing sub matches are not supported, found "{0}".</value>
+    <comment>Error message indicating that the regular expression has self-referencing sub matches.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExUnclosedCaptureGroups_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Unclosed groups, too few closing parenthesis.</value>
@@ -4596,11 +4612,11 @@
     <comment>Error message indicating that the regular expression has unclosed capture groups.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureAlreadyExists_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Named capture group "{0}" defined more than once.</value>
+    <value>Invalid regular expression: Named sub match "{0}" defined more than once.</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Named capture group name must be a combination of letters and digits and begin with a letter, found "{0}".</value>
+    <value>Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "{0}".</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
@@ -4616,7 +4632,7 @@
     <comment>Error message indicating that the regular expression character class is empty.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadBalancing_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Balancing capture groups are not supported, found "{0}".</value>
+    <value>Invalid regular expression: Balancing sub matches are not supported, found "{0}".</value>
     <comment>Error message indicating that the regular expression has balancing capture groups.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadSingleQuoteNamedCapture_ShortMessage" xml:space="preserve">
@@ -4643,14 +4659,14 @@
     <value>Invalid regular expression: Literal character needs to be escaped with a backslash when used in a character class, found at the end of "{0}".</value>
     <comment>Error message indicating that the regular expression has an unescaped character within a character class.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExQuantifiedCapture_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Quantified Capture.</value>
-    <comment>Error Message.</comment>
-  </data>  
   <data name="ErrorResource_ErrVariableRegExOptions_ShortMessage" xml:space="preserve">
     <value>MatchOptions must be a constant value.</value>
     <comment>Error Message.</comment>

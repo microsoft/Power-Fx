@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
           </PropertyGroup>
         */
 
-#if true // may not want to run this, even if MATCHCOMPARE is enabled
+#if true // may not want to run this, even if MATCHCOMPARE is enabled a
 
         // Runs only tests that have asked for RegEx setup. This test run will compare the regular expression results between
         // .NET (used in the C# interpreter), NodeJS with JavaScript (used in Canvas), and PCRE2 (used in Excel).
@@ -184,8 +184,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RunOne()
         {
-            var path = @"c:\temp\match_att.txt";
-            // path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
+            string path;
+
+            // path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_Limited.txt";
+
+            path = @"d:\repos\regex-star2\src\tests\Microsoft.PowerFx.Core.Tests.Shared\ExpressionTestCases\Match_CaptureQuant.txt";
+
             var line = 0;
 
             var runner = new InterpreterRunner();
@@ -193,7 +197,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             testRunner.AddFile(new Dictionary<string, bool>(), null, path);
 
-            // We can filter to just cases we want, set line above a
+            // We can filter to just cases we want, set line above abcd
             if (line > 0)
             {
                 testRunner.Tests.RemoveAll(x => x.SourceLine != line);
