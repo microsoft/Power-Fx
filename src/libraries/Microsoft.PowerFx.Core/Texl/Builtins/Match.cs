@@ -1111,6 +1111,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
 
+                // should never happen
+                if (maxDepth < 0)
+                {
+                    throw new IndexOutOfRangeException("regular expression maximum GroupStack depth exceeded");
+                }
+
                 BackRefOK = true;
 
                 return false;
