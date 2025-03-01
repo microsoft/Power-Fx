@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -140,227 +141,131 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (returnType == DType.Boolean || TryCreateReturnType(regExNode, regularExpression, alteredOptions, errors, ref returnType));
         }
 
-        private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
+        // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
+        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
         {
-            "L", "Lu", "Ll", "Lt", "Lm", "Lo",
-            "M", "Mn", "Mc", "Me",
-            "N", "Nd", "Nl", "No",
-            "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
-            "S", "Sm", "Sc", "Sk", "So",
-            "Z", "Zs", "Zl", "Zp",
-            "Cc", "Cf", 
+            Contracts.AssertValue(regexPattern);
+            string prefixedRegexPattern = this._cachePrefix + regexPattern;
 
-            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
-        };
-
-        private class CaptureStack
-        {
-            private readonly Stack<CaptureInfo> _captureStack = new Stack<CaptureInfo>();
-            private bool _inLookAround;
-            private const int MaxStackDepth = 16;
-
-            public CaptureStack()
+            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(prefixedRegexPattern))
             {
-                Push();
-            }
-
-            public bool IsEmpty()
-            {
-                return _captureStack.Count == 0;
-            }
-
-            public bool IsOnlyBase()
-            {
-                return _captureStack.Count == 1;
-            }
-
-            public bool InLookAround()
-            {
-                return _inLookAround;
-            }
-
-            public CaptureInfo Push(bool isLookAround = false, bool isNonCapture = false)
-            {
-                var captureInfo = new CaptureInfo
+                var cachedType = _regexTypeCache[prefixedRegexPattern];
+                if (cachedType != null)
                 {
-                    IsLookAround = isLookAround,
-                    IsNonCapture = isNonCapture
-                };
-
-                if (isLookAround)
-                {
-                    _inLookAround = true;
-                }
-
-                if (_captureStack.Count >= MaxStackDepth)
-                {
-                    // error todo
-                }
-
-                if (!IsEmpty())
-                {
-                    captureInfo.Parent = _captureStack.Peek();
-                }
-
-                _captureStack.Push(captureInfo);
-
-                return captureInfo;
-            }
-
-            public CaptureInfo Peek()
-            {
-                return _captureStack.Peek();
-            }
-
-            public CaptureInfo Pop()
-            {
-                var captureInfo = _captureStack.Pop();
-
-                if (captureInfo.IsLookAround)
-                {
-                    _inLookAround = false;
-                }
-
-                return captureInfo;
-            }
-        }
-
-        private class CaptureInfo
-        {
-            public bool IsClosed;
-            public bool IsNonCapture;
-            public bool PossibleEmpty = true;
-            public bool PossibleEmptyAlteration;
-            public bool NoZeroQuant;
-            public bool NoOneQuant;
-            public bool NoTwoQuant;
-            public bool NoTwoQuantAlternation;
-            public bool HasZeroQuant;
-            public bool HasOneQuant;
-            public bool HasTwoQuant;
-            public bool ContainsAlternation;
-            public bool ContainsCapture;
-            public CaptureInfo Parent;
-            public bool IsLookAround;
-
-            public void SeenAlternation()
-            {
-                ContainsAlternation = true;
-
-                if (PossibleEmpty)
-                {
-                    PossibleEmptyAlteration = true;
-                }
-
-                PossibleEmpty = true;
-            }
-
-            public void SeenNonEmpty()
-            {
-                PossibleEmpty = false;
-            }
-
-            public ErrorResourceKey? SeenClose(bool zeroQuant, bool oneQuant, bool twoQuant)
-            {
-                IsClosed = true;
-
-                HasZeroQuant = zeroQuant;
-                HasOneQuant = oneQuant;
-                HasTwoQuant = twoQuant;
-
-                if (ContainsAlternation)
-                {
-                    SeenAlternation();
-                    PossibleEmpty = PossibleEmptyAlteration;
-                    NoTwoQuant = NoTwoQuant || NoTwoQuantAlternation;
-                }
-
-#if true
-                if (PossibleEmpty)
-                {
-                    NoZeroQuant = true;
-                    NoTwoQuant = true;
-
-                    // OneQuant is OK
-                }
-#endif 
-
-                if (IsLookAround)
-                {
-                    NoZeroQuant = true;
-                    NoTwoQuant = true;
-                    NoOneQuant = true;
-                }
-
-#if false
-                if (PossibleEmpty && (!IsNonCapture || ContainsCapture))
-                {
-                    NoZeroQuant = true;
-                    NoOneQuant = true;
-                    NoTwoQuant = true;
-                }
-#endif
-
-                if (twoQuant && NoTwoQuant)
-                {
-                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                }
-
-                if (zeroQuant && NoZeroQuant)
-                {
-                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                }
-
-                if (oneQuant && NoOneQuant)
-                {
-                    return TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                }
-
-#if true
-                if (zeroQuant && (!IsNonCapture || ContainsCapture))
-                {
-                    NoZeroQuant = true;
-                    NoOneQuant = true;
-                    NoTwoQuant = true;
-                }
-#endif
-
-                if (Parent != null)
-                {
-                    if (!PossibleEmpty && !zeroQuant)
-                    {
-                        Parent.PossibleEmpty = false;
-                    }
-
-                    Parent.NoZeroQuant |= NoZeroQuant;
-                    Parent.NoOneQuant |= NoOneQuant;
-                    Parent.NoTwoQuant |= NoTwoQuant;
-
-                    Parent.NoTwoQuantAlternation = true;
-
-                    if (!IsNonCapture)
-                    {
-                        Parent.ContainsCapture = true;
-                    }
-                }
-
-                return null;
-            }
-
-            public bool IsPossibleZeroCapture()
-            {
-                if (HasZeroQuant || ContainsAlternation || PossibleEmpty)
-                {
+                    returnType = cachedType.Item1;
+                    AddWarnings(regExNode, errors, cachedType.Item2, cachedType.Item3, cachedType.Item4);
                     return true;
-                }
-                else if (Parent != null)
-                {
-                    return Parent.IsPossibleZeroCapture();
                 }
                 else
                 {
+                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
                     return false;
                 }
+            }
+
+            if (_regexTypeCache != null && _regexTypeCache.Count >= _regexCacheSize)
+            {
+                // To preserve memory during authoring, we clear the cache if it gets
+                // too large. This should only happen in a minority of cases and
+                // should have no impact on deployed apps.
+                _regexTypeCache.Clear();
+            }
+
+            try
+            {
+                var regexDotNetOptions = RegexOptions.None;
+                if (alteredOptions.Contains("x"))
+                {
+                    regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
+
+                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
+                    regexPattern = regexPattern.Replace('\r', '\n');
+                }
+
+                var regex = new Regex(regexPattern, regexDotNetOptions);
+
+                List<TypedName> propertyNames = new List<TypedName>();
+                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
+
+                foreach (var captureName in regex.GetGroupNames())
+                {
+                    if (int.TryParse(captureName, out _))
+                    {
+                        // Unnamed captures are returned as integers, ignoring them
+                        continue;
+                    }
+
+                    if (captureName == ColumnName_FullMatch.Value)
+                    {
+                        fullMatchHidden = true;
+                    }
+                    else if (captureName == ColumnName_SubMatches.Value)
+                    {
+                        subMatchesHidden = true;
+                    }
+                    else if (captureName == ColumnName_StartMatch.Value)
+                    {
+                        startMatchHidden = true;
+                    }
+
+                    propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
+                }
+
+                if (!fullMatchHidden)
+                {
+                    propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
+                }
+
+                if (!subMatchesHidden && alteredOptions.Contains("N"))
+                {
+                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
+                }
+
+                if (!startMatchHidden)
+                {
+                    propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
+                }
+
+                returnType = returnType.IsRecord
+                    ? DType.CreateRecord(propertyNames)
+                    : DType.CreateTable(propertyNames);
+
+                AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
+
+                if (_regexTypeCache != null)
+                {
+                    _regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+                }
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
+                if (_regexTypeCache != null)
+                {
+                    _regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                }
+
+                return false;
+            }
+        }
+
+        private void AddWarnings(TexlNode regExNode, IErrorContainer errors, bool hidesFullMatch, bool hidesSubMatches, bool hidesStartMatch)
+        {
+            if (hidesFullMatch)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedFullMatchField, ColumnName_FullMatch.Value);
+            }
+
+            if (hidesSubMatches)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedSubMatchesField, ColumnName_SubMatches.Value);
+            }
+
+            if (hidesStartMatch)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedStartMatchField, ColumnName_StartMatch.Value);
             }
         }
 
@@ -455,7 +360,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             const string escapeRE =
                 @"
-# leading backslash, escape sequences
+                    # leading backslash, escape sequences
                     (?<badOctal>\\0\d*)                                | # \0 and octal are not accepted, ambiguous and not needed (use \x instead)
                     \\k<(?<backRefName>\w+)>                           | # named backreference
                     \\(?<backRefNumber>[1-9]\d*)                       | # numeric backreference, must be enabled with MatchOptions.NumberedSubMatches
@@ -476,30 +381,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var generalRE = new Regex(
                 escapeRE +
                 @"
-# leading (?<, named captures
+                    # leading (?<, named captures
                     \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
                     (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
 
-# leading (?, misc
+                    # leading (?, misc
                     (?<goodNonCapture>\(\?:)                           | # non-capture group, still need to track to match with closing paren
                     \A\(\?(?<goodInlineOptions>[imnsx]+)\)             | # inline options
                     (?<goodInlineComment>\(\?\#)                       | # inline comment
                     (?<badInlineOptions>\(\?(\w+|\w*-\w+)[\:\)])       | # inline options, including disable of options
                     (?<badConditional>\(\?\()                          | # .NET conditional alternations are not supported
 
-# leading (, used for other special purposes
+                    # leading (, used for other special purposes
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
-# leading ?\*\+, quantifiers
+                    # leading ?\*\+, quantifiers
                     (?<badQuantifiers>[\*\+][\+\*])                    | # possessive (ends with +) and useless quantifiers (ends with *)
                     (?<goodQuantifiers>[\*\+]\??)                      | # greedy and lazy quantifiers
                     (?<badZeroOrOne>[\?][\+\*])                        |
                     (?<goodZeroOrOne>[\?]\??)                          |
 
-# leading {, exact and limited quantifiers
+                    # leading {, exact and limited quantifiers
                     (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
                     (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
                     (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
@@ -508,14 +413,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<goodUnlimited>{\d+,}\??)                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
-# character class
+                    # character class
                     (?<badEmptyCharacterClass>\[\]|\[^\])              | # some implementations support empty character class, with varying semantics; we do not
                     \[(?<characterClass>(\\\]|\\\[|[^\]\[])+)\]        | # does not accept empty character class
                     (?<badSquareBrackets>[\[\]])                       | # square brackets that are not escaped and didn't define a character class
 
-# open and close regions
+                    # open and close regions
                     (?<openParen>\()                                   |
-                    (?<closeParen>\))                                  |
+                    (?<closeParen>\))                                  |                                      
                     (?<alternation>\|)                                 |
                     (?<anchors>[\^\$])                                 |
                     (?<poundComment>\#)                                | # used in free spacing mode (to detect start of comment), ignored otherwise
@@ -536,9 +441,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 ", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
 
             int captureNumber = 0;                                  // last numbered capture encountered
-            var captureStack = new CaptureStack();            // stack of all open capture groups, including null for non capturing groups, for detecting if a named group is closed
-            var captures = new Dictionary<string, CaptureInfo>();
-            List<string> backRefs = new List<string>();
+            var groupStack = new GroupStack();                      // stack of all open groups, including captures and non-captures
+            var captures = new Dictionary<string, GroupInfo>();     // capture map from name or number (as a string)
+            List<string> backRefs = new List<string>();             // list of back references
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
             bool openInlineComment = false;                         // there is an open inline comment
@@ -597,7 +502,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        if (captureStack.InLookAround() && (high - low > 64))
+                        if (groupStack.InLookAround() && (high - low > 64))
                         {
                             // todo new error
                             RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
@@ -606,7 +511,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["goodQuantifiers"].Success || token.Groups["goodUnlimited"].Success)
                     {
-                        if (captureStack.InLookAround())
+                        if (groupStack.InLookAround())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
                             return false;
@@ -614,14 +519,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
-                        // length TODO
-                        var idx = token.Index + token.Length;
-
-                        bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
-
-                        if (!zeroQuant)
+                        if (!Regex.IsMatch(regexPattern.Substring(token.Index + token.Length), @"^(\*|\?|\{0+[,\}])"))
                         {
-                            captureStack.Peek().SeenNonEmpty();
+                            groupStack.Peek().SeenNonEmpty();
                         }
                     }
                     else if (token.Groups["characterClass"].Success)
@@ -701,19 +601,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
 
-                        // TODO
-                        var idx = token.Index + token.Length;
-
-                        if (!captureStack.IsEmpty() && idx < regexPattern.Length && (regexPattern.Substring(idx, 1) == ")" || (regexPattern.Substring(idx, 1) != "*" && regexPattern.Substring(idx, 1) != "?")))
+                        if (!Regex.IsMatch(regexPattern.Substring(token.Index + token.Length), @"^(\*|\?|\{0+[,\}])"))
                         {
-                            captureStack.Peek().SeenNonEmpty();
+                            groupStack.Peek().SeenNonEmpty();
                         }
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
                         var namedCapture = token.Groups["goodNamedCapture"].Value;
 
-                        if (captureStack.InLookAround())
+                        if (groupStack.InLookAround())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround);
                             return false;
@@ -731,68 +628,88 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var captureInfo = captureStack.Push();
+                        var captureInfo = new GroupInfo();
+                        if (!groupStack.Push(captureInfo))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            return false;
+                        }
+
                         captures.Add(namedCapture, captureInfo);
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        captureStack.Push(isNonCapture: true);
+                        var captureInfo = new GroupInfo() { IsNonCapture = true };
+                        if (!groupStack.Push(captureInfo))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            return false;
+                        }
                     }
                     else if (token.Groups["goodLookaround"].Success)
                     {
-                        if (captureStack.InLookAround())
+                        if (groupStack.InLookAround())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExNestedLookAround, startContext: true);
                             return false;
                         }
 
-                        captureStack.Push(isLookAround: true);
+                        var captureInfo = new GroupInfo() { IsLookAround = true };
+                        if (!groupStack.Push(captureInfo))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            return false;
+                        }
                     }
                     else if (token.Groups["alternation"].Success)
                     {
-                        captureStack.Peek().SeenAlternation();
+                        groupStack.Peek().SeenAlternation();
                     }
                     else if (token.Groups["openParen"].Success)
                     {
                         if (numberedCpature)
                         {
-                            if (captureStack.InLookAround())
+                            if (groupStack.InLookAround())
                             {
                                 RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround, startContext: true);
                                 return false;
                             }
 
-                            var captureInfo = captureStack.Push();
+                            var captureInfo = new GroupInfo();
+                            if (!groupStack.Push(captureInfo))
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                                return false;
+                            }
+
                             captureNumber++;
                             captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), captureInfo);
                         }
                         else
                         {
-                            captureStack.Push(isNonCapture: true);
+                            var captureInfo = new GroupInfo() { IsNonCapture = true };
+                            if (!groupStack.Push(captureInfo))
+                            {
+                                RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                                return false;
+                            }
                         }
                     }
                     else if (token.Groups["closeParen"].Success)
                     {
-                        var idx = token.Index + token.Length;
-
-                        bool zeroQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\*|\?|\{0+[,\}])");
-                        bool oneQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\?|\{0*1}|\{0*1,0*1})");
-                        bool twoQuant = Regex.IsMatch(regexPattern.Substring(idx), @"^(\+|\*|\{0*(([1-9][0-9]|[2-9])|1,(0*([2-9]|[1-9][0-9]))?))");
-
-                        var captureInfo = captureStack.Pop();
-
-                        if (captureStack.IsEmpty())
+                        if (groupStack.IsEmpty())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExUnopenedCaptureGroups);
                             return false;
                         }
 
-                        var errorString = captureInfo.SeenClose(zeroQuant, oneQuant, twoQuant);
+                        var captureInfo = groupStack.Pop();
+                        var lookAhead = regexPattern.Substring(token.Index + 1);
 
-                        if (errorString != null)
+                        if (!captureInfo.SeenClose(lookAhead, out var error))
                         {
-                            var match = Regex.Match(regexPattern.Substring(idx), @"^(\*|\?|\+|\{[^\}]*\})");
-                            RegExError((ErrorResourceKey)errorString, endContext: true, postContext: match.Value);
+                            var match = Regex.Match(lookAhead, @"^(\*|\?|\+|\{[^\}]*\})");
+                            RegExError((ErrorResourceKey)error, endContext: true, postContext: match.Value);
                             return false;
                         }
                     }
@@ -952,21 +869,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (!captureStack.IsOnlyBase())
+            if (!groupStack.IsEmpty())
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExUnclosedCaptureGroups);
                 return false;
             }
 
-            var baseCaptureInfo = captureStack.Pop();
-
-            var baseErrorString = baseCaptureInfo.SeenClose(false, false, false);
-
-            if (baseErrorString != null)
-            {
-                errors.EnsureError(regExNode, (ErrorResourceKey)baseErrorString);
-                return false;
-            }
+            // simulate "close" on the root expression, setup for back ref checks if the base had any alternations.
+            // can't error as there are no quantifiers.
+            groupStack.Peek().SeenClose(string.Empty, out _);
 
             foreach (var backRef in backRefs)
             {
@@ -989,131 +900,220 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
-        // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
-        private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, string alteredOptions, IErrorContainer errors, ref DType returnType)
+        private static readonly IReadOnlyCollection<string> UnicodeCategories = new HashSet<string>()
         {
-            Contracts.AssertValue(regexPattern);
-            string prefixedRegexPattern = this._cachePrefix + regexPattern;
+            "L", "Lu", "Ll", "Lt", "Lm", "Lo",
+            "M", "Mn", "Mc", "Me",
+            "N", "Nd", "Nl", "No",
+            "P", "Pc", "Pd", "Ps", "Pe", "Pi", "Pf", "Po",
+            "S", "Sm", "Sc", "Sk", "So",
+            "Z", "Zs", "Zl", "Zp",
+            "Cc", "Cf", 
 
-            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(prefixedRegexPattern))
+            // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
+        };
+
+        // Used by IsSupportedRegularExpression, current stack of GroupInfos for open groups.
+        // Groups that have been closed may still have references through GroupInfo.Parent and captures list.
+        // The depth is limited so that the recursive descent of GroupInfo.IsPossibleZeroCapture() is limited.
+        private class GroupStack
+        {
+            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();
+            private bool _inLookAround;
+            public const int MaxStackDepth = 32;
+
+            public GroupStack()
             {
-                var cachedType = _regexTypeCache[prefixedRegexPattern];
-                if (cachedType != null)
+                // We add a base level for stuff at the root of the regular expression, for example "a|b|c".
+                // This level is analyzed for backreferences, where "(a)|\1" should be an error
+                Push(new GroupInfo());
+            }
+
+            public bool IsEmpty()
+            {
+                return _groupStack.Count <= 1;
+            }
+
+            public bool InLookAround()
+            {
+                return _inLookAround;
+            }
+
+            public bool Push(GroupInfo groupInfo)
+            {
+                if (groupInfo.IsLookAround)
                 {
-                    returnType = cachedType.Item1;
-                    AddWarnings(regExNode, errors, cachedType.Item2, cachedType.Item3, cachedType.Item4);
-                    return true;
+                    _inLookAround = true;
                 }
-                else
+
+                if (_groupStack.Count >= MaxStackDepth)
                 {
-                    errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
                     return false;
                 }
-            }
 
-            if (_regexTypeCache != null && _regexTypeCache.Count >= _regexCacheSize)
-            {
-                // To preserve memory during authoring, we clear the cache if it gets
-                // too large. This should only happen in a minority of cases and
-                // should have no impact on deployed apps.
-                _regexTypeCache.Clear();
-            }
-
-            try
-            {
-                var regexDotNetOptions = RegexOptions.None;
-                if (alteredOptions.Contains("x"))
+                if (_groupStack.Count != 0)
                 {
-                    regexDotNetOptions |= RegexOptions.IgnorePatternWhitespace;
-
-                    // In x mode, comment line endings are [\r\n], but .NET only supports \n.  For our purposes here, we can just replace the \r.
-                    regexPattern = regexPattern.Replace('\r', '\n');
+                    groupInfo.Parent = _groupStack.Peek();
                 }
 
-                var regex = new Regex(regexPattern, regexDotNetOptions);
-
-                List<TypedName> propertyNames = new List<TypedName>();
-                bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
-
-                foreach (var captureName in regex.GetGroupNames())
-                {
-                    if (int.TryParse(captureName, out _))
-                    {
-                        // Unnamed captures are returned as integers, ignoring them
-                        continue;
-                    }
-
-                    if (captureName == ColumnName_FullMatch.Value)
-                    {
-                        fullMatchHidden = true;
-                    }
-                    else if (captureName == ColumnName_SubMatches.Value)
-                    {
-                        subMatchesHidden = true;
-                    }
-                    else if (captureName == ColumnName_StartMatch.Value)
-                    {
-                        startMatchHidden = true;
-                    }
-
-                    propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out _)));
-                }
-
-                if (!fullMatchHidden)
-                {
-                    propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
-                }
-
-                if (!subMatchesHidden && alteredOptions.Contains("N"))
-                {
-                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
-                }
-
-                if (!startMatchHidden)
-                {
-                    propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
-                }
-
-                returnType = returnType.IsRecord
-                    ? DType.CreateRecord(propertyNames)
-                    : DType.CreateTable(propertyNames);
-
-                AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
-
-                if (_regexTypeCache != null)
-                {
-                    _regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
-                }
+                _groupStack.Push(groupInfo);
 
                 return true;
             }
-            catch (ArgumentException)
+
+            public GroupInfo Peek()
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
-                if (_regexTypeCache != null)
+                return _groupStack.Peek();
+            }
+
+            public GroupInfo Pop()
+            {
+                var groupInfo = _groupStack.Pop();
+
+                if (groupInfo.IsLookAround)
                 {
-                    _regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                    // LookArounds cannot be nested, no need to restore to previous value
+                    // We want _inLookAround to be true if there are gruops within the LookAround
+                    _inLookAround = false;
                 }
 
-                return false;
+                return groupInfo;
             }
         }
 
-        private void AddWarnings(TexlNode regExNode, IErrorContainer errors, bool hidesFullMatch, bool hidesSubMatches, bool hidesStartMatch)
+        private class GroupInfo
         {
-            if (hidesFullMatch)
+            public bool IsNonCapture;               // this group is a non-capture group
+            public bool IsLookAround;               // this gruop is a look behind or look ahead
+            public bool IsClosed;                   // this group is closed (we've seen the ending paren), ok to use for backref
+            public bool PossibleEmpty = true;       // this group could be empty, set to false if we see something in it that can't be zero sized
+            public bool PossibleEmptyAlteration;    // this group contains an alternation, and one part of the alternation could be empty
+            public bool ErrorOnZeroQuant;           // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
+            public bool ErrorOnAnyQuant;            // used for look arounds, erorr on any quantifier
+            public bool HasZeroQuant;               // this group has a quantifier
+            public bool HasAlternation;             // this group has an alternation within
+            public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
+            public bool BackRefOK;                  // we've checked, and this back ref is OK
+            public GroupInfo Parent;                // reference to the next level down
+
+            public void SeenAlternation()
             {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedFullMatchField, ColumnName_FullMatch.Value);
+                // we need to examine each part of the alternation for a potential empty result
+                // PossibleEmpty is reset and PossibleEmptyAlternation is the accumulator for any empty parts
+                // HasAlternation is important because 
+
+                HasAlternation = true;
+
+                if (PossibleEmpty)
+                {
+                    PossibleEmptyAlteration = true;
+                }
+
+                PossibleEmpty = true;
             }
 
-            if (hidesSubMatches)
+            public void SeenNonEmpty()
             {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedSubMatchesField, ColumnName_SubMatches.Value);
+                // groups that contain anything that isn't zero sized (for example, quantified by a * or ?)
+                PossibleEmpty = false;
             }
 
-            if (hidesStartMatch)
+            public bool SeenClose(string lookAhead, out ErrorResourceKey? error)
             {
-                errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedStartMatchField, ColumnName_StartMatch.Value);
+                IsClosed = true;
+
+                // in processing the end of capture groups, we lookahead for any quantifiers
+                //   -- Zero of More, including ranges that being with {0,
+                //   -- One or More, including ranges such as {3,10}, excludes the identity {1} and {1,1}
+                // quantifiers are later processed again as tokens for other errors, such as {hi,lo}
+                var zeroQuant = Regex.IsMatch(lookAhead, @"^(\*|\?|\{0+[,\}])");
+                var oneQuant = Regex.IsMatch(lookAhead, @"^(\+|\{0*([2-9]|1[0-9]|1,(?!0*1})))");
+
+                HasZeroQuant = zeroQuant;
+
+                if (HasAlternation)
+                {
+                    SeenAlternation();                                // closes the last part of the alternation, the "c" in "(a|b|c)"
+                    PossibleEmpty = PossibleEmptyAlteration;          // pulls the aggregate as the final value
+
+                    // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
+                    // The capture group "b" in this case is not empty, but it is a capture in an alternation.
+                    ErrorOnZeroQuant = ErrorOnZeroQuant || ContainsCapture;   
+                }
+
+                // If we are possibly empty, we can't suport a zero quantifier.
+                if (PossibleEmpty)
+                {
+                    ErrorOnZeroQuant = true;
+                }
+
+                if ((zeroQuant || oneQuant) && ErrorOnZeroQuant)
+                {
+                    error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                    return false;
+                }
+
+                // Look arounds can never have quantification, JavaScript doesn't support this.
+                // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
+                if (IsLookAround)
+                {
+                    ErrorOnAnyQuant = true;
+                }
+
+                // only do this regex test if we have a look around, the only way ErrorOnAnyQuant would be true
+                if (ErrorOnAnyQuant && Regex.IsMatch(lookAhead, @"^(\+|\*|\?|\{)"))
+                {
+                    error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
+                    return false;
+                }
+
+                // This needs to come after the error checks above, for the next iteration.
+                if ((zeroQuant || (oneQuant && (PossibleEmpty || ContainsCapture))) && (!IsNonCapture || ContainsCapture))
+                {
+                    ErrorOnZeroQuant = true;
+                }
+
+                if (Parent != null)
+                {
+                    if (!PossibleEmpty && !zeroQuant)
+                    {
+                        Parent.PossibleEmpty = false;
+                    }
+
+                    Parent.ErrorOnZeroQuant |= ErrorOnZeroQuant;
+                    Parent.ErrorOnAnyQuant |= ErrorOnAnyQuant;
+
+                    if (!IsNonCapture)
+                    {
+                        Parent.ContainsCapture = true;
+                    }
+                }
+
+                error = null;
+                return true;
+            }
+
+            public bool IsPossibleZeroCapture()
+            {
+                // short circuit in case we are asked about the same capture
+                if (BackRefOK)
+                {
+                    return false;
+                }
+
+                int maxDepth = GroupStack.MaxStackDepth;
+
+                for (var ptr = this; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
+                {
+                    if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.PossibleEmpty)
+                    {
+                        return true;
+                    }
+                }
+
+                BackRefOK = true;
+
+                return false;
             }
         }
     }
