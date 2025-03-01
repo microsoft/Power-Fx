@@ -1103,7 +1103,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 int maxDepth = GroupStack.MaxStackDepth;
 
-                for (var ptr = this; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
+                // ok to have alternation in the capture group, unless it is empty that PossibleEmpty would detect
+                if (HasZeroQuant || PossibleEmpty) 
+                {
+                    return true;
+                }
+
+                for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
                 {
                     if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.PossibleEmpty)
                     {

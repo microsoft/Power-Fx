@@ -572,40 +572,40 @@ Errors: Error 12-27: Invalid regular expression: Quantifier on a group containin
 // JavaScript does not allow quantifiers on lookbehinds, we block lookahead as well for now
 
 >> Match( "%aaa%", "(?<=%)?a" )
-Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%)?".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(?<=%)*a" )
-Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%)*".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(?<=%)+a" )
-Errors: Error 16-26: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%)+".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%)+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(?<=%){2}a" )
-Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%){2}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(?<=%){2,}a" )
-Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-29: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "(?<=%){1,2}a" )
-Errors: Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(?<=%){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-30: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "(?<=%){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%aaa%", "((?<=%))?a" )
-Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...((?<=%))?".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%))?".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(()?<=%))*a" )
-Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(()?".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "%aaa%", "((?<=%))*a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(()?<=%))+a" )
-Errors: Error 16-29: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(()?".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "%aaa%", "((?<=%))+a" )
+Errors: Error 16-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(()?<=%)){2}a" )
-Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(()?".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "%aaa%", "((?<=%)){2}a" )
+Errors: Error 16-30: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%)){2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(()?<=%)){2,}a" )
-Errors: Error 16-32: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(()?".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "%aaa%", "((?<=%)){2,}a" )
+Errors: Error 16-31: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%)){2,}".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "%aaa%", "(()?<=%)){1,2}a" )
-Errors: Error 16-33: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(()?".|Error 0-5: The function 'Match' has some invalid arguments.
+>> Match( "%aaa%", "((?<=%)){1,2}a" )
+Errors: Error 16-32: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=%)){1,2}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // PCRE2 does not allow quantifiers inside the lookbehind, must be fixed length
 
@@ -675,19 +675,19 @@ Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported o
 Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b((?<=a)){1}" )
-Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b((?<=a)){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=a)){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b(?!a)*" )
-Errors: Error 13-24: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b((?!a))*".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-22: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?!a)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b((?!a))*" )
-Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b((?=a)){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-24: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b((?!a))*".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b(?<!a)?" )
-Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<!a))?".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-23: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<!a)?".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b((?<!a))?" )
-Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...b((?=a)){1,1}".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<!a))?".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "ba", "b(?<!a)+" )
 Errors: Error 13-23: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<!a)+".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -701,13 +701,13 @@ Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported o
 {FullMatch:"a",StartMatch:1}
 
 >> Match( "a", "((((((((((((((((((((((((((((((((a))))))))))))))))))))))))))))))))" )
-Errors: Error 12-146: Invalid regular expression: Too many nested groups, found at the beginning of "(a))))))...".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 12-79: Invalid regular expression: Too many nested groups, found at the beginning of "(a))))))...".|Error 0-5: The function 'Match' has some invalid arguments.
 
->> Match( "a", "((((((((((((((((((((((((((((((((b))))))))))))))))))))))))))))))))?((((((((((((((((((((((((((((((((a))))))))))))))))))))))))))))))))?" )
+>> Match( "a", "(((((((((((((((((((((((((((((((b)))))))))))))))))))))))))))))))?(((((((((((((((((((((((((((((((a)))))))))))))))))))))))))))))))?" )
 {FullMatch:"a",StartMatch:1}
 
 >> Match( "babaabb", "(((((((((((((((((((((((((((((((?<cap>a|b)))))))))))))))))))))))))))))))\k<cap>" )
-ok
+{FullMatch:"aa",StartMatch:4,cap:"a"}
 
 >> Match( "babaabb", "((((((((((((((((((((((((((((((?<cap>(a|b)))))))))))))))))))))))))))))))\k<cap>" )
 {FullMatch:"aa",StartMatch:4,cap:"a"}
