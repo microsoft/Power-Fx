@@ -432,7 +432,7 @@ namespace Microsoft.PowerFx
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
-                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                            if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                         {
                             prop.SetValue(_features, value.Value);
                         }

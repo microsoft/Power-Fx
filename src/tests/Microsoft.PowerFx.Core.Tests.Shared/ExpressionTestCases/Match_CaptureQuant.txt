@@ -677,6 +677,21 @@ Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported o
 >> Match( "ba", "b((?<=a)){1}" )
 Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=a)){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
+>> Match( "ba", "b(?<=a){1,}" )
+Errors: Error 13-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<=a)){1,}" )
+Errors: Error 13-28: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=a)){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){3,}" )
+Errors: Error 13-26: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){3,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b((?<=a)){2,3}" )
+Errors: Error 13-29: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<=a)){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "ba", "b(?<=a){2,3}" )
+Errors: Error 13-27: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?<=a){2,3}".|Error 0-5: The function 'Match' has some invalid arguments.
+
 >> Match( "ba", "b(?!a)*" )
 Errors: Error 13-22: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "b(?!a)*".|Error 0-5: The function 'Match' has some invalid arguments.
 
@@ -694,6 +709,35 @@ Errors: Error 13-23: Invalid regular expression: Quantifiers are not supported o
 
 >> Match( "ba", "b((?<!a))+" )
 Errors: Error 13-25: Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "...((?<!a))+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+// quantifiers in lookarounds
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a+)b" )
+Errors: Error 28-38: Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "(?<=a+".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a*)b" )
+Errors: Error 28-38: Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "(?<=a*".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a?)b" )
+{FullMatch:"b",StartMatch:6}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1})b" )
+{FullMatch:"b",StartMatch:17}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1,})b" )
+Errors: Error 28-41: Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "...?<=a{1,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{1,1})b" )
+{FullMatch:"b",StartMatch:17}
+
+>> Match( "cccccbaabaaaaaaaaaab", "(?<=a{2})b" )
+{FullMatch:"b",StartMatch:9}
+
+>> Match( "cccccbaaaaaaaaaab", "(?<=a{2,})b" )
+Errors: Error 28-41: Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "...?<=a{2,}".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "cccccbaabaaaaaaaaaab", "(?<=a{2,3})b" )
+{FullMatch:"b",StartMatch:9}
 
 // group stack overflow
 

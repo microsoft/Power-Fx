@@ -269,6 +269,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
         }
 
+        public const int MaxNamedCaptureLength = 62;
+
         // Power Fx regular expressions are limited to features that can be transpiled to native .NET (C# Interpreter), ECMAScript (Canvas), or PCRE2 (Excel).
         // We want the same results everywhere for Power Fx, even if the underlying implementation is different. Even with these limits in place there are some minor semantic differences but we get as close as we can.
         // These tests can be run through all three engines and the results compared with by setting ExpressionEvaluationTests.RegExCompareEnabled, a PCRE2 DLL and NodeJS must be installed on the system.
@@ -285,54 +287,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         //     Unicode characters are used throughout.
         //     Newlines support Windows friendly \r\n as well as \r and \n.
         //
-        // Features that are supported:
-        //     Literal characters. Any character except the special characters [ ] \ ^ $ . | ? * + ( ) can be inserted directly.
-        //     Escaped special characters. \ (backslash) followed by a special character to insert it directly, includes \- when in a character class.
-        //     Operators
-        //         Dot (.), matches everything except [\r\n] unless MatchOptions.DotAll is used.
-        //         Anchors, ^ and $, matches the beginning and end of the string, or of a line if MatchOptions.Multiline is used.
-        //     Quanitfiers
-        //         Greedy quantifiers. ? matches 0 or 1 times, + matches 1 or more times, * matches 0 or more times, {3} matches exactly 3 times, {1,} matches at least 1 time, {1,3} matches between 1 and 3 times. By default, matching is "greedy" and the match will be as large as possible.
-        //         Lazy quantifiers. Same as the greedy quantifiers followed by ?, for example *? or {1,3}?. With the lazy modifier, the match will be as small as possible.
-        //     Alternation. a|b matches "a" or "b".
-        //     Character classes
-        //         Custom character class. [abc] list of characters, [a-fA-f0-9] range of characters, [^a-z] everything but these characters. Character classes cannot be nested, subtracted, or intersected, and the same special character cannot be repeated in the character class.
-        //         Word characters and breaks. \w, \W, \b, \B, using the Unicode definition of letters [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}].
-        //         Digit characters. \d includes the digits 0-9 and \p{Nd}, \D matches everything except characters matched by \d.
-        //         Space characters. \s includes spacing characters [ \r\n\t\f\x0B\x85\p{Z}], \S which matches everything except characters matched by \s, \r carriage return, \n newline, \t tab, \f form feed.
-        //         Control characters. \cA, where the control character is [A-Za-z].
-        //         Hexadecimal and Unicode character codes. \x20 with two hexadecimal digits, \u2028 with four hexadecimal digits.
-        //         Unicode character class and property. \p{Ll} matches all Unicode lowercase letters, while \P{Ll} matches everything that is not a Unicode lowercase letter.
-        //     Capture groups
-        //         Non capture group. (?:a), group without capturing the result as a named or numbered sub-match.
-        //         Named group and back reference. (?<name>chars) captures a sub-match with the name name, referenced with \k<name>. Cannot be used if MatchOptions.NumberedSubMatches is enabled.
-        //         Numbered group and back referencs. (a|b) captures a sub-match, referenced with \1. MatchOptions.NumberedSubMatches must be enabled.
-        //     Lookahead and lookbehind. (?=a), (?!a), (?<=b), (?<!b).
-        //     Free spacing mode. Whitepsace within the regular expression is ignored and # starts an end of line comment.
-        //     Inline comments. (?# comment here), which is ignored as a comment. See MatchOptions.FreeSpacing for an alternative to formatting and commenting regular expressions.
-        //     Inline mode modifiers. (?im) is the same as using MatchOptions.IgnoreCase and MatchOptions.Multiline. Must be used at the beginning of the regular expression. Supported inline modes are [imsx], corresponding to MatchOptions.IgnoreCase, MatchOptions.Multiline, MatchOptions.DotAll, and MatchOptions.FreeSpacing, respectively.
-        //
-        // Significant features that are not supported:
-        //     Capture groups
-        //         Numbered capture groups are disable by default, use named captures or MatchOptions.NumberedSubMatches
-        //         Self-referncing groups, such as "(a\1)"
-        //         Single quoted named capture groups "(?'name'..." and "\k'name'"
-        //         Balancing capture groups
-        //         Recursion
-        //     Character classes
-        //         \W, \D, \P, \S are not supported inside character classes if the character class is negated (starts with [^...])
-        //         Use of ^, -, [, or ] without an escape inside a character class is not supported
-        //         Character class set operations, such as subraction or intersection
-        //         Empty character classes
-        //     Inline options
-        //         Turning options on or off
-        //         Changing options later in the expression
-        //         Setting options for a subexpression
-        //     Conditionals
-        //     Octal characters
-        //     \x{...} and \u{...} notation
-        //     Subroutines
-        //     Possessive quantifiers
+        // There are significant differences between how possibly empty capture groups are handled between implementations which are blocked.
+        // See Match_CaptureQuant.txt for test cases, which is very important to run through both .net and node to determine coverage of the block.
+        // 
+        // See docs/regular-expressions.md for more details on the language supported.
         //
         // In addition, the Power Fx compiler uses the .NET regular expression engine to validate the expression and determine capture group names.
         // So, any regular expression that does not compile with .NET is also automatically disallowed.
@@ -382,7 +340,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 escapeRE +
                 @"
                     # leading (?<, named captures
-                    \(\?<(?<goodNamedCapture>[a-zA-Z][a-zA-Z\d]*)>     | # named capture group, can only be letters and numbers and must start with a letter
+                    \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
+                                                                         # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
+                                                                         # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
                     (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
@@ -497,8 +457,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if (high < low)
                         {
-                            // todo new error
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
+                            RegExError(TexlStrings.ErrInvalidRegExLowHighQuantifierFlip, endContext: true);
                             return false;
                         }
 
@@ -619,6 +578,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
+                            return false;
+                        }
+
+                        if (namedCapture.Length > MaxNamedCaptureLength)
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExNamedCaptureNameTooLong);
                             return false;
                         }
 
@@ -877,7 +842,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // simulate "close" on the root expression, setup for back ref checks if the base had any alternations.
             // can't error as there are no quantifiers.
-            groupStack.Peek().SeenClose(string.Empty, out _);
+            if (!groupStack.Peek().SeenClose(string.Empty, out _))
+            {
+                throw new NotImplementedException("unexpected error closing regular expression group");
+            }
 
             foreach (var backRef in backRefs)
             {

@@ -4620,7 +4620,7 @@
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBadNamedCaptureName_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Sub match name must be a combination of letters and digits and begin with a letter, found "{0}".</value>
+    <value>Invalid regular expression: Sub match name must be a combination of word characters and not begin with a number, found "{0}".</value>
     <comment>Error message indicating that the regular expression is trying to define the same capture group more than once.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExInlineOptionNotAtStart_ShortMessage" xml:space="preserve">
@@ -4667,10 +4667,18 @@
     <value>Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "{0}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Quantifier range low number is greater than high number, found "{0}".</value>
+    <comment>Error message.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidRegExGroupStackOverflow_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Too many nested groups, found at the beginning of "{0}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExNamedCaptureNameTooLong_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Name of submatch is too long, found "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>  
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expression must be a constant value.</value>
     <comment>Error Message.</comment>
@@ -4679,7 +4687,6 @@
     <value>MatchOptions must be a constant value.</value>
     <comment>Error Message.</comment>
   </data>
-  
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>The value passed to the '{0}' function cannot be changed.</value>
     <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
