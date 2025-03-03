@@ -4584,20 +4584,20 @@
     <comment>Error message indicating that the regular expression sub match is not defined.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExCaptureInLookAround_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Sub matches are not supported in look behinds or look aheads, found at the beginning of "{0}".</value>
+    <value>Invalid regular expression: Sub matches are not supported in look behinds, found at the beginning of "{0}".</value>
     <comment>Error message indicating sub matches are not supported in look arounds.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExNestedLookAround_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Look behinds and look aheads cannot be nested, found at the beginning of "{0}".</value>
+    <value>Invalid regular expression: Look behinds cannot be nested, found at the beginning of "{0}".</value>
     <comment>Error message indicating look behind and look ahead cannot be nested.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExQuantifierInLookAround_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Unlimited quantifiers are not supported in look behinds or look aheads, found at the end of "{0}".</value>
-    <comment>Error message indicating quantifiers are not supported in look arounds.</comment>
+  <data name="ErrorResource_ErrInvalidRegExUnlimitedQuantifierInLookAround_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported in look behinds.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "{0}".</value>
-    <comment>Error message indicating quantifiers are not supported on look arounds.</comment>
+    <value>Invalid regular expression: Quantifiers are not supported on look behinds, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported on look behinds.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Back reference "{0}" to sub match that may not happen due to alternation or zero quantifier.</value>
@@ -4667,6 +4667,10 @@
     <value>Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "{0}".</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidRegExLookbehindTooManyChars_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "{0}".</value>
+    <comment>Error Message.</comment>
+  </data>  
   <data name="ErrorResource_ErrInvalidRegExLowHighQuantifierFlip_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Quantifier range low number is greater than high number, found "{0}".</value>
     <comment>Error message.</comment>

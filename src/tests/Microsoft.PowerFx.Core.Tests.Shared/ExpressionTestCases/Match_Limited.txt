@@ -325,7 +325,7 @@ Errors: Error 12-17: Invalid regular expression: Literal square braces must be e
 Errors: Error 23-32: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "abcdef]ghijk", "asdfasdfasdfsadf[\w]\w]" )
-Errors: Error 23-48: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "...f[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 23-48: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "...fsadf[\w]\w]".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "a]", "[a]]" )
 Errors: Error 13-19: Invalid regular expression: Literal square braces must be escaped with a backslash even in character classes, for example \[ or \], found at the end of "[a]]".|Error 0-5: The function 'Match' has some invalid arguments.
@@ -1459,4 +1459,102 @@ Errors: Error 25-90: MatchOptions must be a constant value.|Error 0-7: The funct
 
 >> Match( "a", "a{00002,000003}" )
 Blank()
+
+// look behind character count
+
+>> Match ( "a", "(?<=a{1,250})")
+{FullMatch:"", StartMatch:2}
+
+>> Match ( "a", "(?<=a{1,251})")
+Errors: Error 13-28: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<=a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+Blank()
+
+>> Match( "a", "(?<=(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=(1234567890){25})")
+Blank()
+
+>> Match( "a", "(?<=(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<=((1234567890){1,12}){1,2}1234567890)")
+Blank()
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:21}
+
+>> Match( "12345678901234567890", "(?<=((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaab",StartMatch:18,SubMatches:Table({Value:"aaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<=\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<=\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match ( "a", "(?<!a{1,250})")
+{FullMatch:"", StartMatch:2}
+
+>> Match ( "a", "(?<!a{1,251})")
+Errors: Error 13-28: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...?<=a{1,251})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,16}0123456789)" )
+Blank()
+
+>> Match( "a", "(?<!(bc((a{1,3})b){2,4}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,5}d){5,16}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-56: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!a(bc((a{1,2})b){2,4}d){5,17}0123456789)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...}0123456789)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(bc((a{1,2})b){2,4}d){5,17}0123456789a)" )
+Errors: Error 12-57: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...0123456789a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!(1234567890){25})")
+Blank()
+
+>> Match( "a", "(?<!(1234567890){26})")
+Errors: Error 12-35: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...567890){26})".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "a", "(?<!((1234567890){1,12}){1,2}1234567890)")
+Blank()
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890)")
+{FullMatch:"",StartMatch:21}
+
+>> Match( "12345678901234567890", "(?<!((1234567890){1,12}){1,2}1234567890a)")
+Errors: Error 31-74: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...1234567890a)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+{FullMatch:"aaaab",StartMatch:18,SubMatches:Table({Value:"aaaa"},{Value:"aa"})}
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,10})(?<!\1{2,12}aaaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum possible character limit of 250, found at the end of "...aaaaaaaaaaa)".|Error 0-5: The function 'Match' has some invalid arguments.
+
+>> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
+Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 

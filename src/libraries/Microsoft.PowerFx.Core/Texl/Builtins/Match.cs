@@ -343,7 +343,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     \(\?<(?<goodNamedCapture>[_\p{L}][_\p{L}\p{Nd}]*)> | # named capture group, name characters are the lowest common denonminator with Unicode PCRE2
                                                                          # .NET uses \w with \u200c and \u200d allowing a number in the first character (seems like it could be confused with numbered captures),
                                                                          # while JavaScript uses identifer characters, including $, and does not allow a number for the first character
-                    (?<goodLookaround>\(\?(=|!|<=|<!))                 | # lookahead and lookbehind
+                    (?<goodLookAhead>\(\?(=|!))                        |
+                    (?<goodLookBehind>\(\?(<=|<!))                     | # Look behind has many limitations
                     (?<badBalancing>\(\?<\w*-\w*>)                     | # .NET balancing captures are not supported
                     (?<badNamedCaptureName>\(\?<[^>]*>)                | # bad named capture name, didn't match goodNamedCapture
                     (?<badSingleQuoteNamedCapture>\(\?'[^']*')         | # single quoted capture names are not supported
@@ -359,18 +360,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     (?<badParen>\([\?\+\*].?)                          | # everything else unsupported that could start with a (, includes atomic groups, recursion, subroutines, branch reset, and future features
 
                     # leading ?\*\+, quantifiers
-                    (?<badQuantifiers>[\*\+][\+\*])                    | # possessive (ends with +) and useless quantifiers (ends with *)
-                    (?<goodQuantifiers>[\*\+]\??)                      | # greedy and lazy quantifiers
-                    (?<badZeroOrOne>[\?][\+\*])                        |
+                    (?<badQuantifiers>[\*\+\?][\+\*])                  | # possessive (ends with +) and useless quantifiers (ends with *)
+                    (?<goodOneOrMore>[\+]\??)                          | # greedy and lazy quantifiers
+                    (?<goodZeroOrMore>[\*]\??)                         |
                     (?<goodZeroOrOne>[\?]\??)                          |
 
                     # leading {, exact and limited quantifiers
                     (?<badExact>{\d+}[\+\*\?])                         | # exact quantifier can't be used with a modifier
-                    (?<goodExact>{\d+})                                | # standard exact quantifier, no optional lazy
+                    {(?<goodExact>\d+)}                                | # standard exact quantifier, no optional lazy
                     (?<badLimited>{\d+,\d+}[\+|\*])                    | # possessive and useless quantifiers
                     {(?<goodLimitedL>\d+),(?<goodLimitedH>\d+)}\??     | # standard limited quantifiers, with optional lazy
                     (?<badUnlimited>{\d+,}[\+|\*])                     |
-                    (?<goodUnlimited>{\d+,}\??)                        |
+                    {(?<goodUnlimited>\d+),}\??                        |
                     (?<badCurly>[{}])                                  | # more constrained, blocks {,3} and Java/Rust semantics that does not treat this as a literal
 
                     # character class
@@ -412,7 +413,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 void RegExError(ErrorResourceKey errKey, Match errToken = null, bool startContext = false, bool endContext = false, string postContext = null)
                 {
-                    const int contextLength = 8;
+                    const int contextLength = 12;
 
                     if (errToken == null)
                     {
@@ -422,7 +423,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     if (endContext)
                     {
                         var tokenEnd = errToken.Index + errToken.Length;
-                        var found = tokenEnd >= contextLength ? "..." + regexPattern.Substring(tokenEnd - contextLength, contextLength) : regexPattern.Substring(0, tokenEnd);
+                        var found = tokenEnd > contextLength ? "..." + regexPattern.Substring(tokenEnd - contextLength, contextLength) : regexPattern.Substring(0, tokenEnd);
                         errors.EnsureError(regExNode, errKey, found + postContext);
                     }
                     else if (startContext)
@@ -446,42 +447,68 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!openPoundComment && !openInlineComment)
                 {
-                    if (token.Groups["anchors"].Success || token.Groups["goodZeroOrOne"].Success || token.Groups["goodExact"].Success)
+                    if (token.Groups["anchors"].Success)
                     {
                         // nothing to do
+                    }
+                    else if (token.Groups["goodZeroOrMore"].Success)
+                    {
+                        if (!groupStack.SeenQuantifier(0, -1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodZeroOrOne"].Success)
+                    {
+                        if (!groupStack.SeenQuantifier(0, 1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodExact"].Success)
+                    {
+                        var exact = Convert.ToInt32(token.Groups["goodExact"].Value, CultureInfo.InvariantCulture);
+
+                        if (!groupStack.SeenQuantifier(exact, exact, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
                     }
                     else if (token.Groups["goodLimitedL"].Success)
                     {
                         var low = Convert.ToInt32(token.Groups["goodLimitedL"].Value, CultureInfo.InvariantCulture);
                         var high = Convert.ToInt32(token.Groups["goodLimitedH"].Value, CultureInfo.InvariantCulture);
 
-                        if (high < low)
+                        if (!groupStack.SeenQuantifier(low, high, out var error))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExLowHighQuantifierFlip, endContext: true);
-                            return false;
-                        }
-
-                        if (groupStack.InLookAround() && (high - low > 64))
-                        {
-                            // todo new error
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
+                            RegExError((ErrorResourceKey)error, endContext: true);
                             return false;
                         }
                     }
-                    else if (token.Groups["goodQuantifiers"].Success || token.Groups["goodUnlimited"].Success)
+                    else if (token.Groups["goodOneOrMore"].Success)
                     {
-                        if (groupStack.InLookAround())
+                        if (!groupStack.SeenQuantifier(1, -1, out var error))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExQuantifierInLookAround, endContext: true);
+                            RegExError((ErrorResourceKey)error, endContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodUnlimited"].Success)
+                    {
+                        var low = Convert.ToInt32(token.Groups["goodUnlimited"].Value, CultureInfo.InvariantCulture);
+
+                        if (!groupStack.SeenQuantifier(low, -1, out var error))
+                        {
+                            RegExError((ErrorResourceKey)error, endContext: true);
                             return false;
                         }
                     }
                     else if (token.Groups["else"].Success || token.Groups["goodEscape"].Success || token.Groups["goodEscapeOutsideCC"].Success || token.Groups["goodEscapeOutsideAndInsideCCIfPositive"].Success)
                     {
-                        if (!Regex.IsMatch(regexPattern.Substring(token.Index + token.Length), @"^(\*|\?|\{0+[,\}])"))
-                        {
-                            groupStack.Peek().SeenNonEmpty();
-                        }
+                        groupStack.SeenNonGroup();
                     }
                     else if (token.Groups["characterClass"].Success)
                     {
@@ -560,16 +587,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
 
-                        if (!Regex.IsMatch(regexPattern.Substring(token.Index + token.Length), @"^(\*|\?|\{0+[,\}])"))
-                        {
-                            groupStack.Peek().SeenNonEmpty();
-                        }
+                        groupStack.SeenNonGroup();
                     }
                     else if (token.Groups["goodNamedCapture"].Success)
                     {
                         var namedCapture = token.Groups["goodNamedCapture"].Value;
 
-                        if (groupStack.InLookAround())
+                        if (groupStack.InLookBehind())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround);
                             return false;
@@ -593,34 +617,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var captureInfo = new GroupInfo();
-                        if (!groupStack.Push(captureInfo))
+                        if (!groupStack.SeenOpen())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
                             return false;
                         }
 
-                        captures.Add(namedCapture, captureInfo);
+                        captures.Add(namedCapture, groupStack.Top());
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        var captureInfo = new GroupInfo() { IsNonCapture = true };
-                        if (!groupStack.Push(captureInfo))
+                        if (!groupStack.SeenOpen(isNonCapture: true))
                         {
                             RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
                             return false;
                         }
                     }
-                    else if (token.Groups["goodLookaround"].Success)
+                    else if (token.Groups["goodLookBehind"].Success)
                     {
-                        if (groupStack.InLookAround())
+                        if (groupStack.InLookBehind())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExNestedLookAround, startContext: true);
                             return false;
                         }
 
-                        var captureInfo = new GroupInfo() { IsLookAround = true };
-                        if (!groupStack.Push(captureInfo))
+                        if (!groupStack.SeenOpen(isLookBehind: true))
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            return false;
+                        }
+                    }
+                    else if (token.Groups["goodLookAhead"].Success)
+                    {
+                        if (!groupStack.SeenOpen())
                         {
                             RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
                             return false;
@@ -628,32 +657,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (token.Groups["alternation"].Success)
                     {
-                        groupStack.Peek().SeenAlternation();
+                        groupStack.SeenAlternation();
                     }
                     else if (token.Groups["openParen"].Success)
                     {
                         if (numberedCpature)
                         {
-                            if (groupStack.InLookAround())
+                            if (groupStack.InLookBehind())
                             {
                                 RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround, startContext: true);
                                 return false;
                             }
 
-                            var captureInfo = new GroupInfo();
-                            if (!groupStack.Push(captureInfo))
+                            if (!groupStack.SeenOpen(isNonCapture: true))
                             {
                                 RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
                                 return false;
                             }
 
                             captureNumber++;
-                            captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), captureInfo);
+                            captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), groupStack.Top());
                         }
                         else
                         {
-                            var captureInfo = new GroupInfo() { IsNonCapture = true };
-                            if (!groupStack.Push(captureInfo))
+                            if (!groupStack.SeenOpen(isNonCapture: true))
                             {
                                 RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
                                 return false;
@@ -668,13 +695,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        var captureInfo = groupStack.Pop();
-                        var lookAhead = regexPattern.Substring(token.Index + 1);
-
-                        if (!captureInfo.SeenClose(lookAhead, out var error))
+                        if (!groupStack.SeenClose(out var error))
                         {
-                            var match = Regex.Match(lookAhead, @"^(\*|\?|\+|\{[^\}]*\})");
-                            RegExError((ErrorResourceKey)error, endContext: true, postContext: match.Value);
+                            RegExError((ErrorResourceKey)error, endContext: true);
                             return false;
                         }
                     }
@@ -703,8 +726,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
 
-                        backRefs.Add(backRefName);
-
                         // group isn't defined, or not defined yet
                         if (!captures.ContainsKey(backRefName))
                         {
@@ -718,6 +739,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
                             return false;
                         }
+
+                        backRefs.Add(backRefName);
+
+                        if (groupStack.InLookBehind() && captures[backRefName].MaxSize == -1)
+                        {
+                            RegExError(TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround);
+                            return false;
+                        }
+
+                        // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
+                        groupStack.SeenNonGroup(captures[backRefName].MinSize, captures[backRefName].MaxSize);
                     }
                     else if (token.Groups["goodUEscape"].Success)
                     {
@@ -796,7 +828,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         RegExError(TexlStrings.ErrInvalidRegExBadEscapeOutsideCharacterClass);
                         return false;
                     }
-                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success || token.Groups["badZeroOrOne"].Success || token.Groups["badUnlimited"].Success)
+                    else if (token.Groups["badQuantifiers"].Success || token.Groups["badLimited"].Success || token.Groups["badUnlimited"].Success)
                     {
                         RegExError(TexlStrings.ErrInvalidRegExBadQuantifier);
                         return false;
@@ -841,11 +873,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // simulate "close" on the root expression, setup for back ref checks if the base had any alternations.
-            // can't error as there are no quantifiers.
-            if (!groupStack.Peek().SeenClose(string.Empty, out _))
-            {
-                throw new NotImplementedException("unexpected error closing regular expression group");
-            }
+            groupStack.SeenEnd();
 
             foreach (var backRef in backRefs)
             {
@@ -886,15 +914,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // The depth is limited so that the recursive descent of GroupInfo.IsPossibleZeroCapture() is limited.
         private class GroupStack
         {
-            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();
-            private bool _inLookAround;
             public const int MaxStackDepth = 32;
+
+            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();
+            private GroupInfo _lastGroup = new GroupInfo();
 
             public GroupStack()
             {
                 // We add a base level for stuff at the root of the regular expression, for example "a|b|c".
                 // This level is analyzed for backreferences, where "(a)|\1" should be an error
-                Push(new GroupInfo());
+                SeenOpen();
+            }
+
+            public GroupInfo Top()
+            {
+                return _groupStack.Peek();
             }
 
             public bool IsEmpty()
@@ -902,26 +936,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return _groupStack.Count <= 1;
             }
 
-            public bool InLookAround()
+            public bool InLookBehind()
             {
-                return _inLookAround;
+                return _groupStack.Peek().InLookBehind;
             }
 
-            public bool Push(GroupInfo groupInfo)
+            public bool SeenOpen(bool isNonCapture = false, bool isLookBehind = false)
             {
-                if (groupInfo.IsLookAround)
-                {
-                    _inLookAround = true;
-                }
-
                 if (_groupStack.Count >= MaxStackDepth)
                 {
                     return false;
                 }
 
+                var groupInfo = new GroupInfo { IsNonCapture = isNonCapture, InLookBehind = isLookBehind, IsGroup = true };
+
                 if (_groupStack.Count != 0)
                 {
                     groupInfo.Parent = _groupStack.Peek();
+
+                    if (groupInfo.Parent.InLookBehind)
+                    {
+                        groupInfo.InLookBehind = true;
+                    }
                 }
 
                 _groupStack.Push(groupInfo);
@@ -929,39 +965,49 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
-            public GroupInfo Peek()
+            public void SeenAlternation()
             {
-                return _groupStack.Peek();
+                _groupStack.Peek().SeenAlternation();
             }
 
-            public GroupInfo Pop()
+            public void SeenNonGroup(int min = 1, int max = 1)
             {
-                var groupInfo = _groupStack.Pop();
+                _lastGroup = _groupStack.Peek().SeenNonGroup(min, max);
+            }
 
-                if (groupInfo.IsLookAround)
-                {
-                    // LookArounds cannot be nested, no need to restore to previous value
-                    // We want _inLookAround to be true if there are gruops within the LookAround
-                    _inLookAround = false;
-                }
+            public bool SeenQuantifier(int min, int max, out ErrorResourceKey? error)
+            {
+                return _groupStack.Peek().SeenQuantifier(_lastGroup, min, max, out error);
+            }
 
-                return groupInfo;
+            public bool SeenClose(out ErrorResourceKey? error)
+            {
+                _lastGroup = _groupStack.Pop();
+                return _lastGroup.SeenClose(out error);
+            }
+
+            public void SeenEnd()
+            {
+                _groupStack.Peek().SeenEnd();
             }
         }
 
         private class GroupInfo
         {
             public bool IsNonCapture;               // this group is a non-capture group
-            public bool IsLookAround;               // this gruop is a look behind or look ahead
+            public bool IsGroup;
+            public bool InLookBehind;               // this gruop is a look behind or inside a look behind
             public bool IsClosed;                   // this group is closed (we've seen the ending paren), ok to use for backref
-            public bool PossibleEmpty = true;       // this group could be empty, set to false if we see something in it that can't be zero sized
-            public bool PossibleEmptyAlteration;    // this group contains an alternation, and one part of the alternation could be empty
             public bool ErrorOnZeroQuant;           // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
             public bool ErrorOnAnyQuant;            // used for look arounds, erorr on any quantifier
             public bool HasZeroQuant;               // this group has a quantifier
             public bool HasAlternation;             // this group has an alternation within
             public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
             public bool BackRefOK;                  // we've checked, and this back ref is OK
+            public int MaxSize;
+            public int MinSize;
+            public int MaxSizeAlternation;
+            public int MinSizeAlternation;
             public GroupInfo Parent;                // reference to the next level down
 
             public void SeenAlternation()
@@ -969,85 +1015,130 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // we need to examine each part of the alternation for a potential empty result
                 // PossibleEmpty is reset and PossibleEmptyAlternation is the accumulator for any empty parts
                 // HasAlternation is important because 
+                if (HasAlternation)
+                {
+                    MinSizeAlternation = Math.Min(MinSizeAlternation, MinSize);
+                    MaxSizeAlternation = MaxSizeAlternation == -1 || MaxSize == -1 ? -1 : Math.Max(MaxSizeAlternation, MaxSize);
+                }
+                else
+                {
+                    MinSizeAlternation = MinSize;
+                    MaxSizeAlternation = MaxSize;
+                }
 
                 HasAlternation = true;
 
-                if (PossibleEmpty)
+                MinSize = 0;
+                MaxSize = 0;
+            }
+
+            // for characters that aren't in a group, such as literal characters, anchors, escapes, character classes, etc.
+
+            public GroupInfo SeenNonGroup(int minSize = 1, int maxSize = 1)
+            {
+                MinSize += minSize;
+                MaxSize += maxSize;
+
+                return new GroupInfo()
                 {
-                    PossibleEmptyAlteration = true;
+                    MinSize = minSize,
+                    MaxSize = maxSize
+                };
+            }
+
+            public bool SeenQuantifier(GroupInfo lastGroup, int low, int high, out ErrorResourceKey? error)
+            {
+                // look behinds cannot contain an unlimited qunatifier
+                if (InLookBehind && high == -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
+                    return false;
                 }
 
-                PossibleEmpty = true;
+                // high can't be less than low, unless high is unlimited
+                if (high < low && high != -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExLowHighQuantifierFlip;
+                    return false;
+                }
+
+                if (lastGroup.IsGroup)
+                {
+                    if (lastGroup.ErrorOnZeroQuant)
+                    {
+                        error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                        return false;
+                    }
+
+                    if (lastGroup.ErrorOnAnyQuant)
+                    {
+                        error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
+                        return false;
+                    }
+
+                    lastGroup.HasZeroQuant = low == 0;
+
+                    if (low <= 1 && lastGroup.ErrorOnZeroQuant)
+                    {
+                        error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
+                        return false;
+                    }
+
+                    if ((low == 0 || (low > 0 && (lastGroup.MinSize == 0 || lastGroup.ContainsCapture))) && (!lastGroup.IsNonCapture || lastGroup.ContainsCapture))
+                    {
+                        ErrorOnZeroQuant = true;
+                    }
+                }
+
+                MaxSize = MaxSize == -1 || high == -1 ? -1 : MaxSize + (lastGroup.MaxSize * (high - 1));
+                MinSize += lastGroup.MinSize * (low - 1);
+
+                error = null;
+                return true;
             }
 
-            public void SeenNonEmpty()
+            public void SeenEnd()
             {
-                // groups that contain anything that isn't zero sized (for example, quantified by a * or ?)
-                PossibleEmpty = false;
-            }
-
-            public bool SeenClose(string lookAhead, out ErrorResourceKey? error)
-            {
-                IsClosed = true;
-
-                // in processing the end of capture groups, we lookahead for any quantifiers
-                //   -- Zero of More, including ranges that being with {0,
-                //   -- One or More, including ranges such as {3,10}, excludes the identity {1} and {1,1}
-                // quantifiers are later processed again as tokens for other errors, such as {hi,lo}
-                var zeroQuant = Regex.IsMatch(lookAhead, @"^(\*|\?|\{0+[,\}])");
-                var oneQuant = Regex.IsMatch(lookAhead, @"^(\+|\{0*([2-9]|1[0-9]|1,(?!0*1})))");
-
-                HasZeroQuant = zeroQuant;
-
                 if (HasAlternation)
                 {
                     SeenAlternation();                                // closes the last part of the alternation, the "c" in "(a|b|c)"
-                    PossibleEmpty = PossibleEmptyAlteration;          // pulls the aggregate as the final value
+                    MinSize = MinSizeAlternation;
+                    MaxSize = MaxSizeAlternation;
 
                     // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
                     // The capture group "b" in this case is not empty, but it is a capture in an alternation.
-                    ErrorOnZeroQuant = ErrorOnZeroQuant || ContainsCapture;   
+                    ErrorOnZeroQuant = ErrorOnZeroQuant || ContainsCapture;
                 }
+            }
+
+            public bool SeenClose(out ErrorResourceKey? error)
+            {
+                SeenEnd();
+
+                IsClosed = true;
 
                 // If we are possibly empty, we can't suport a zero quantifier.
-                if (PossibleEmpty)
+                if (MinSize == 0)
                 {
                     ErrorOnZeroQuant = true;
                 }
 
-                if ((zeroQuant || oneQuant) && ErrorOnZeroQuant)
-                {
-                    error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                    return false;
-                }
-
-                // Look arounds can never have quantification, JavaScript doesn't support this.
+                // Look behinds can never have quantification, JavaScript doesn't support this.
+                // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
                 // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
-                if (IsLookAround)
+                if (InLookBehind)
                 {
+                    if (MaxSize > 250)
+                    {
+                        error = TexlStrings.ErrInvalidRegExLookbehindTooManyChars;
+                        return false;
+                    }
+
                     ErrorOnAnyQuant = true;
-                }
-
-                // only do this regex test if we have a look around, the only way ErrorOnAnyQuant would be true
-                if (ErrorOnAnyQuant && Regex.IsMatch(lookAhead, @"^(\+|\*|\?|\{)"))
-                {
-                    error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
-                    return false;
-                }
-
-                // This needs to come after the error checks above, for the next iteration.
-                if ((zeroQuant || (oneQuant && (PossibleEmpty || ContainsCapture))) && (!IsNonCapture || ContainsCapture))
-                {
-                    ErrorOnZeroQuant = true;
                 }
 
                 if (Parent != null)
                 {
-                    if (!PossibleEmpty && !zeroQuant)
-                    {
-                        Parent.PossibleEmpty = false;
-                    }
-
                     Parent.ErrorOnZeroQuant |= ErrorOnZeroQuant;
                     Parent.ErrorOnAnyQuant |= ErrorOnAnyQuant;
 
@@ -1055,6 +1146,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         Parent.ContainsCapture = true;
                     }
+
+                    Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
+                    Parent.MinSize += MinSize;
                 }
 
                 error = null;
@@ -1071,21 +1165,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 int maxDepth = GroupStack.MaxStackDepth;
 
-                // ok to have alternation in the capture group, unless it is empty that PossibleEmpty would detect
-                if (HasZeroQuant || PossibleEmpty) 
+                // ok to have alternation in the capture group itself, unless it is empty that PossibleEmpty would detect
+                if (HasZeroQuant || MinSize == 0) 
                 {
                     return true;
                 }
 
+                // walk nested groups up to the base
                 for (var ptr = this.Parent; ptr != null && maxDepth-- >= 0; ptr = ptr.Parent)
                 {
-                    if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.PossibleEmpty)
+                    if (ptr.HasZeroQuant || ptr.HasAlternation || ptr.MinSize == 0)
                     {
                         return true;
                     }
                 }
 
-                // should never happen
+                // failsafe, should never happen
                 if (maxDepth < 0)
                 {
                     throw new IndexOutOfRangeException("regular expression maximum GroupStack depth exceeded");

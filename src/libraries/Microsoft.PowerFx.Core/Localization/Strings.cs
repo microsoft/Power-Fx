@@ -776,12 +776,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExQuantifiedCapture = new ErrorResourceKey("ErrInvalidRegExQuantifiedCapture");
         public static ErrorResourceKey ErrInvalidRegExCaptureInLookAround = new ErrorResourceKey("ErrInvalidRegExCaptureInLookAround");
         public static ErrorResourceKey ErrInvalidRegExNestedLookAround = new ErrorResourceKey("ErrInvalidRegExNestedLookAround");
-        public static ErrorResourceKey ErrInvalidRegExQuantifierInLookAround = new ErrorResourceKey("ErrInvalidRegExQuantifierInLookAround");
+        public static ErrorResourceKey ErrInvalidRegExUnlimitedQuantifierInLookAround = new ErrorResourceKey("ErrInvalidRegExUnlimitedQuantifierInLookAround");
         public static ErrorResourceKey ErrInvalidRegExBackRefToZeroCapture = new ErrorResourceKey("ErrInvalidRegExBackRefToZeroCapture");
         public static ErrorResourceKey ErrInvalidRegExGroupStackOverflow = new ErrorResourceKey("ErrInvalidRegExGroupStackOverflow");
         public static ErrorResourceKey ErrInvalidRegExQuantifierOursideLookAround = new ErrorResourceKey("ErrInvalidRegExQuantifierOursideLookAround");
         public static ErrorResourceKey ErrInvalidRegExNamedCaptureNameTooLong = new ErrorResourceKey("ErrInvalidRegExNamedCaptureNameTooLong");
         public static ErrorResourceKey ErrInvalidRegExLowHighQuantifierFlip = new ErrorResourceKey("ErrInvalidRegExLowHighQuantifierFlip");
+        public static ErrorResourceKey ErrInvalidRegExLookbehindTooManyChars = new ErrorResourceKey("ErrInvalidRegExLookbehindTooManyChars");
 
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey ErrVariableRegExOptions = new ErrorResourceKey("ErrVariableRegExOptions");
