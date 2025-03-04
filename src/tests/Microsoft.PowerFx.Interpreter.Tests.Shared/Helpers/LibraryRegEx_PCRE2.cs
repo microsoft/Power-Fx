@@ -104,6 +104,10 @@ namespace Microsoft.PowerFx.Functions
                 [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
                 [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
                 internal static extern IntPtr pcre2_compile_context_create_32(IntPtr generalContext);
+
+                [DllImport("pcre2-32.dll", CharSet = CharSet.Unicode)]
+                [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+                internal static extern int pcre2_set_newline_32(IntPtr generalContext, uint newlineOptions);
             }
 
             internal enum PCRE2_OPTIONS : uint
@@ -115,6 +119,21 @@ namespace Microsoft.PowerFx.Functions
                 UCP = 0x00020000,
                 UTF = 0x00080000,
                 NO_AUTO_CAPTURE = 0x00002000,
+            }
+
+            // from https://www.pcre.org/current/doc/html/pcre2api.html#SEC16
+            // PCRE2 supports five different conventions for indicating line breaks in strings:
+            // a single CR(carriage return) character, a single LF(linefeed) character,
+            // the two-character sequence CRLF, any of the three preceding, or any Unicode newline sequence.
+            // The Unicode newline sequences are the three just mentioned, plus the single characters VT(vertical tab, U+000B),
+            // FF(form feed, U+000C), NEL(next line, U+0085), LS(line separator, U+2028), and PS(paragraph separator, U+2029).
+
+            internal enum PCRE2_NEWLINE : uint
+            {
+                LF = 2,
+                CRLF = 3,
+                ANY = 4, // unicode
+                ANYCRLF = 5, // \r, \n, and \r\n
             }
 
             internal enum PCRE2_EXTRA_OPTIONS : uint
@@ -239,6 +258,7 @@ namespace Microsoft.PowerFx.Functions
                 PCRE2Mutex.WaitOne();
 
                 var context = NativeMethods.pcre2_compile_context_create_32(generalContext);
+                NativeMethods.pcre2_set_newline_32(context, (uint)PCRE2_NEWLINE.ANYCRLF);
 
 #if false
                 // not needed as we convert out of surrogate pairs above
