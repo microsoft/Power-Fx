@@ -195,6 +195,21 @@ Notify(z)
         }
 
         [Fact]
+        public void TestCIR()
+        {
+            _repl.AddPseudoFunction(new CIRPseudoFunction());
+
+            // CIR() function is a meta-function that
+            // circumvents eval and dumps the compact IR. 
+            _repl.HandleLine("CIR(1+2)");
+
+            Assert.Empty(_output.Get(OutputKind.Error));
+
+            var log = _output.Get(OutputKind.Repl);
+            Assert.Equal("AddDecimals(1,2)", log);
+        }
+
+        [Fact]
         public void ExtraSymols()
         {
             SymbolValues extraValues = new SymbolValues("ExtraValues");
