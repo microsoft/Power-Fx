@@ -4596,8 +4596,8 @@
     <comment>Error message indicating quantifiers are not supported in look behinds.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExQuantifierOursideLookAround_ShortMessage" xml:space="preserve">
-    <value>Invalid regular expression: Quantifiers are not supported on look behinds, found at the end of "{0}".</value>
-    <comment>Error message indicating quantifiers are not supported on look behinds.</comment>
+    <value>Invalid regular expression: Quantifiers are not supported on look behinds or look aheads, found at the end of "{0}".</value>
+    <comment>Error message indicating quantifiers are not supported on look behinds or look aheads.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidRegExBackRefToZeroCapture_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Back reference "{0}" to sub match that may not happen due to alternation or zero quantifier.</value>
@@ -4675,7 +4675,7 @@
     <value>Invalid regular expression: Quantifier range low number is greater than high number, found "{0}".</value>
     <comment>Error message.</comment>
   </data>
-  <data name="ErrorResource_ErrInvalidRegExGroupStackOverflow_ShortMessage" xml:space="preserve">
+  <data name="ErrorResource_ErrInvalidRegExGroupTrackerOverflow_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression: Too many nested groups, found at the beginning of "{0}".</value>
     <comment>Error Message.</comment>
   </data>

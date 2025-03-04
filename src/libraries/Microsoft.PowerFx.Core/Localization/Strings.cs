@@ -778,7 +778,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidRegExNestedLookAround = new ErrorResourceKey("ErrInvalidRegExNestedLookAround");
         public static ErrorResourceKey ErrInvalidRegExUnlimitedQuantifierInLookAround = new ErrorResourceKey("ErrInvalidRegExUnlimitedQuantifierInLookAround");
         public static ErrorResourceKey ErrInvalidRegExBackRefToZeroCapture = new ErrorResourceKey("ErrInvalidRegExBackRefToZeroCapture");
-        public static ErrorResourceKey ErrInvalidRegExGroupStackOverflow = new ErrorResourceKey("ErrInvalidRegExGroupStackOverflow");
+        public static ErrorResourceKey ErrInvalidRegExGroupTrackerOverflow = new ErrorResourceKey("ErrInvalidRegExGroupTrackerOverflow");
         public static ErrorResourceKey ErrInvalidRegExQuantifierOursideLookAround = new ErrorResourceKey("ErrInvalidRegExQuantifierOursideLookAround");
         public static ErrorResourceKey ErrInvalidRegExNamedCaptureNameTooLong = new ErrorResourceKey("ErrInvalidRegExNamedCaptureNameTooLong");
         public static ErrorResourceKey ErrInvalidRegExLowHighQuantifierFlip = new ErrorResourceKey("ErrInvalidRegExLowHighQuantifierFlip");
