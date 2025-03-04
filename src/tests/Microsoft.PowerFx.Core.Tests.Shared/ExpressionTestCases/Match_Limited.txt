@@ -184,10 +184,10 @@ Errors: Error 16-22: Invalid regular expression: Octal \0 character codes are no
 
 // ErrInvalidRegExBadNamedCaptureAlreadyExists
 >> Match( "test", "(?<one>t).*(?<one>t)" )
-Errors: Error 15-37: Invalid regular expression: Named sub match "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-37: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t)".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "test", "((?<one>t)|(?<one>t))" )
-Errors: Error 15-38: Invalid regular expression: Named sub match "(?<one>" defined more than once.|Error 0-5: The function 'Match' has some invalid arguments.
+Errors: Error 15-38: Invalid regular expression: Named sub match defined more than once, found at the beginning of "(?<one>t))".|Error 0-5: The function 'Match' has some invalid arguments.
 
 // Bad named capture group names
 

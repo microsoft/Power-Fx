@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -403,7 +404,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             int captureNumber = 0;                                  // last numbered capture encountered
             var groupStack = new GroupStack();                      // stack of all open groups, including captures and non-captures
-            var captures = new Dictionary<string, GroupInfo>();     // capture map from name or number (as a string)
             List<string> backRefs = new List<string>();             // list of back references
 
             bool openPoundComment = false;                          // there is an open end-of-line pound comment, only in freeFormMode
@@ -593,12 +593,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         var namedCapture = token.Groups["goodNamedCapture"].Value;
 
-                        if (groupStack.InLookBehind())
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround);
-                            return false;
-                        }
-
                         if (numberedCpature)
                         {
                             RegExError(TexlStrings.ErrInvalidRegExMixingNamedAndNumberedSubMatches);
@@ -611,25 +605,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        if (captures.ContainsKey(namedCapture))
+                        if (!groupStack.SeenOpen(out var error, name: namedCapture))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists);
+                            RegExError((ErrorResourceKey)error, startContext: true);
                             return false;
                         }
-
-                        if (!groupStack.SeenOpen())
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
-                            return false;
-                        }
-
-                        captures.Add(namedCapture, groupStack.Top());
                     }
                     else if (token.Groups["goodNonCapture"].Success)
                     {
-                        if (!groupStack.SeenOpen(isNonCapture: true))
+                        if (!groupStack.SeenOpen(out var error))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            RegExError((ErrorResourceKey)error, startContext: true);
                             return false;
                         }
                     }
@@ -641,17 +627,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             return false;
                         }
 
-                        if (!groupStack.SeenOpen(isLookBehind: true))
+                        if (!groupStack.SeenOpen(out var error, isLookBehind: true))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            RegExError((ErrorResourceKey)error, startContext: true);
                             return false;
                         }
                     }
                     else if (token.Groups["goodLookAhead"].Success)
                     {
-                        if (!groupStack.SeenOpen())
+                        if (!groupStack.SeenOpen(out var error, isLookAhead: true))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                            RegExError((ErrorResourceKey)error, startContext: true);
                             return false;
                         }
                     }
@@ -663,26 +649,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         if (numberedCpature)
                         {
-                            if (groupStack.InLookBehind())
-                            {
-                                RegExError(TexlStrings.ErrInvalidRegExCaptureInLookAround, startContext: true);
-                                return false;
-                            }
-
-                            if (!groupStack.SeenOpen(isNonCapture: true))
-                            {
-                                RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
-                                return false;
-                            }
-
                             captureNumber++;
-                            captures.Add(captureNumber.ToString(CultureInfo.InvariantCulture), groupStack.Top());
+                            if (!groupStack.SeenOpen(out var error, name: captureNumber.ToString(CultureInfo.InvariantCulture)))
+                            {
+                                RegExError((ErrorResourceKey)error, startContext: true);
+                                return false;
+                            }
                         }
                         else
                         {
-                            if (!groupStack.SeenOpen(isNonCapture: true))
+                            if (!groupStack.SeenOpen(out var error))
                             {
-                                RegExError(TexlStrings.ErrInvalidRegExGroupStackOverflow, startContext: true);
+                                RegExError((ErrorResourceKey)error, startContext: true);
                                 return false;
                             }
                         }
@@ -715,7 +693,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                                 return false;
                             }
                         }
-                        else // token.Groups["backRefNumber"].Success
+                        else
                         {
                             backRefName = token.Groups["backRefNumber"].Value;
 
@@ -726,30 +704,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             }
                         }
 
-                        // group isn't defined, or not defined yet
-                        if (!captures.ContainsKey(backRefName))
+                        if (!groupStack.SeenBackRef(backRefName, out var error))
                         {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefNotDefined);
-                            return false;
-                        }
-
-                        // group is not closed and thus self referencing
-                        if (!captures[backRefName].IsClosed)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing);
+                            RegExError((ErrorResourceKey)error);
                             return false;
                         }
 
                         backRefs.Add(backRefName);
-
-                        if (groupStack.InLookBehind() && captures[backRefName].MaxSize == -1)
-                        {
-                            RegExError(TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround);
-                            return false;
-                        }
-
-                        // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
-                        groupStack.SeenNonGroup(captures[backRefName].MinSize, captures[backRefName].MaxSize);
                     }
                     else if (token.Groups["goodUEscape"].Success)
                     {
@@ -877,7 +838,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var backRef in backRefs)
             {
-                if (captures[backRef].IsPossibleZeroCapture())
+                if (groupStack.CaptureIsPossibleZeroLength(backRef))
                 {
                     errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegExBackRefToZeroCapture, CharacterUtils.IsDigit(backRef[0]) ? "\\" + backRef : "\\k<" + backRef + ">");
                     return false;
@@ -918,12 +879,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();
             private GroupInfo _lastGroup = new GroupInfo();
+            private GroupInfo _inLookBehind;
+            private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();
 
             public GroupStack()
             {
                 // We add a base level for stuff at the root of the regular expression, for example "a|b|c".
                 // This level is analyzed for backreferences, where "(a)|\1" should be an error
-                SeenOpen();
+                SeenOpen(out _);
             }
 
             public GroupInfo Top()
@@ -938,30 +901,49 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool InLookBehind()
             {
-                return _groupStack.Peek().InLookBehind;
+                return _inLookBehind != null;
             }
 
-            public bool SeenOpen(bool isNonCapture = false, bool isLookBehind = false)
+            public bool SeenOpen(out ErrorResourceKey? error, string name = null, bool isLookBehind = false, bool isLookAhead = false)
             {
                 if (_groupStack.Count >= MaxStackDepth)
                 {
+                    error = TexlStrings.ErrInvalidRegExGroupStackOverflow;
                     return false;
                 }
 
-                var groupInfo = new GroupInfo { IsNonCapture = isNonCapture, InLookBehind = isLookBehind, IsGroup = true };
+                var groupInfo = new GroupInfo { IsNonCapture = name == null, IsGroup = true, IsLookAround = isLookBehind || isLookAhead };
+
+                if (name != null)
+                {
+                    if (_inLookBehind != null)
+                    {
+                        error = TexlStrings.ErrInvalidRegExCaptureInLookAround;
+                        return false;
+                    }
+
+                    if (_captureNames.ContainsKey(name))
+                    {
+                        error = TexlStrings.ErrInvalidRegExBadNamedCaptureAlreadyExists;
+                        return false;
+                    }
+
+                    _captureNames.Add(name, groupInfo);
+                }
+
+                if (isLookBehind)
+                {
+                    _inLookBehind = groupInfo;
+                }
 
                 if (_groupStack.Count != 0)
                 {
                     groupInfo.Parent = _groupStack.Peek();
-
-                    if (groupInfo.Parent.InLookBehind)
-                    {
-                        groupInfo.InLookBehind = true;
-                    }
                 }
 
                 _groupStack.Push(groupInfo);
 
+                error = null;
                 return true;
             }
 
@@ -977,12 +959,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool SeenQuantifier(int min, int max, out ErrorResourceKey? error)
             {
+                // look behinds cannot contain an unlimited qunatifier
+                if (_inLookBehind != null && max == -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
+                    return false;
+                }
+
                 return _groupStack.Peek().SeenQuantifier(_lastGroup, min, max, out error);
             }
 
             public bool SeenClose(out ErrorResourceKey? error)
             {
                 _lastGroup = _groupStack.Pop();
+
+                // Look behinds can never have quantification, JavaScript doesn't support this.
+                // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
+                // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
+                if (_inLookBehind == _lastGroup)
+                {
+                    if (_lastGroup.MaxSize > 250)
+                    {
+                        error = TexlStrings.ErrInvalidRegExLookbehindTooManyChars;
+                        return false;
+                    }
+
+                    _inLookBehind = null;
+                }
+
+                if (_lastGroup.IsLookAround)
+                { 
+                    _lastGroup.ErrorOnAnyQuant = true;
+                }
+
                 return _lastGroup.SeenClose(out error);
             }
 
@@ -990,13 +999,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 _groupStack.Peek().SeenEnd();
             }
+
+            public bool SeenBackRef(string name, out ErrorResourceKey? error)
+            {
+                if (!_captureNames.ContainsKey(name))
+                {
+                    error = TexlStrings.ErrInvalidRegExBadBackRefNotDefined;
+                    return false;
+                }
+
+                // group is not closed and thus self referencing
+                if (!_captureNames[name].IsClosed)
+                {
+                    error = TexlStrings.ErrInvalidRegExBadBackRefSelfReferencing;
+                    return false;
+                }
+
+                if (_inLookBehind != null && _captureNames[name].MaxSize == -1)
+                {
+                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
+                    return false;
+                }
+
+                // Backref maxsize is based on the size inside the capture, not any quantifiers on the capture
+                SeenNonGroup(_captureNames[name].MinSize, _captureNames[name].MaxSize);
+
+                error = null;
+                return true;
+            }
+
+            public bool CaptureIsPossibleZeroLength(string name)
+            {
+                return _captureNames[name].IsPossibleZeroLength();
+            }
         }
 
         private class GroupInfo
         {
             public bool IsNonCapture;               // this group is a non-capture group
+            public bool IsLookAround;
             public bool IsGroup;
-            public bool InLookBehind;               // this gruop is a look behind or inside a look behind
             public bool IsClosed;                   // this group is closed (we've seen the ending paren), ok to use for backref
             public bool ErrorOnZeroQuant;           // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
             public bool ErrorOnAnyQuant;            // used for look arounds, erorr on any quantifier
@@ -1048,13 +1090,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public bool SeenQuantifier(GroupInfo lastGroup, int low, int high, out ErrorResourceKey? error)
             {
-                // look behinds cannot contain an unlimited qunatifier
-                if (InLookBehind && high == -1)
-                {
-                    error = TexlStrings.ErrInvalidRegExUnlimitedQuantifierInLookAround;
-                    return false;
-                }
-
                 // high can't be less than low, unless high is unlimited
                 if (high < low && high != -1)
                 {
@@ -1123,20 +1158,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     ErrorOnZeroQuant = true;
                 }
 
-                // Look behinds can never have quantification, JavaScript doesn't support this.
-                // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
-                // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
-                if (InLookBehind)
-                {
-                    if (MaxSize > 250)
-                    {
-                        error = TexlStrings.ErrInvalidRegExLookbehindTooManyChars;
-                        return false;
-                    }
-
-                    ErrorOnAnyQuant = true;
-                }
-
                 if (Parent != null)
                 {
                     Parent.ErrorOnZeroQuant |= ErrorOnZeroQuant;
@@ -1147,15 +1168,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         Parent.ContainsCapture = true;
                     }
 
-                    Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
-                    Parent.MinSize += MinSize;
+                    // Look arounds have no size with respect to their parent
+                    if (!IsLookAround)
+                    {
+                        Parent.MaxSize = Parent.MaxSize == -1 || MaxSize == -1 ? -1 : Parent.MaxSize + MaxSize;
+                        Parent.MinSize += MinSize;
+                    }
                 }
 
                 error = null;
                 return true;
             }
 
-            public bool IsPossibleZeroCapture()
+            public bool IsPossibleZeroLength()
             {
                 // short circuit in case we are asked about the same capture
                 if (BackRefOK)

@@ -143,7 +143,7 @@ Errors: Error 16-28: Invalid regular expression: Quantifier on a group containin
 Errors: Error 16-28: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "(a|b|(c))+".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%abc%", "((a)|b|c){1}", MatchOptions.NumberedSubMatches )
-Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...((a)|b|c){1}".|Error 0-5: The function 'Match' has some invalid arguments.
+Error 16-30: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "((a)|b|c){1}".|Error 0-5: The function 'Match' has some invalid arguments.
 
 >> Match( "%abc%", "(a|(b)|c){1,}", MatchOptions.NumberedSubMatches )   // .net != node
 Errors: Error 16-31: Invalid regular expression: Quantifier on a group containing another quantifier or empty alternation that could result in an ambiguous result, found at the end of "...a|(b)|c){1,}".|Error 0-5: The function 'Match' has some invalid arguments.
