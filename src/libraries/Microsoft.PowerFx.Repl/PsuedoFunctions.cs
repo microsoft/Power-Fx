@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
@@ -45,6 +46,21 @@ namespace Microsoft.PowerFx.Repl
         }
 
         public string Name => "IR";        
+    }
+
+    /// <summary>
+    /// Print the compact IR() of an expression. 
+    /// </summary>
+    public class CIRPseudoFunction : IPseudoFunction
+    {
+        public async Task ExecuteAsync(CheckResult checkResult, PowerFxREPL repl, CancellationToken cancel)
+        {
+            var irText = PrettyPrintIRVisitor.ToString(checkResult);
+            await repl.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
+                .ConfigureAwait(false);
+        }
+
+        public string Name => "CIR";
     }
 
     /// <summary>

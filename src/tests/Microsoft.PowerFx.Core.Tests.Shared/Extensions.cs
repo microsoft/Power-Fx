@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
