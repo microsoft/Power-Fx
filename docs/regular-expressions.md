@@ -296,6 +296,6 @@ To avoid different results across Power Fx implementations, submatches that coul
 | `(?<submatch>a|b*)+` | Alternation within the submatch with something that could be empty could result in the entire submatch being empty. |
 | `((?<submatch>a)|b)+` | Alternation outside the submatch could match `b` in which case the submatch would be empty.|
 
-Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at leaset one `a` in he submatch, and is not blocked.
+Note that the submatch in `(?<submatch>a+)+` cannot be empty, as there must be at leaset one `a` in he submatch, and is supported.
 
 Backreferences to possibly empty submatches are also not supported. 

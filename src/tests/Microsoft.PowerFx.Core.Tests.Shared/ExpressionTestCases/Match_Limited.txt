@@ -1561,3 +1561,4 @@ Errors: Error 33-72: Invalid regular expression: Lookbehind exceeded maximum pos
 >> Match( "aaaaaaaaaaaaaaaaaaaaab", "((aa){2,})(?<!\1{2,12}aaaaaaaaaa)b", MatchOptions.NumberedSubMatches )
 Errors: Error 33-69: Invalid regular expression: Unlimited quantifiers are not supported in look behinds, found at the end of "\1".|Error 0-5: The function 'Match' has some invalid arguments.
 
+

@@ -846,16 +846,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // "C", "Cs", "Co", "Cn", are left out for now until we have a good scenario, as they differ between implementations
         };
 
-        // Used by IsSupportedRegularExpression, current stack of GroupInfos for open groups.
-        // Groups that have been closed may still have references through GroupInfo.Parent and captures list.
-        // The depth is limited so that the recursive descent of GroupInfo.IsPossibleZeroCapture() is limited.
+        // Tracks the groups in the regular expression.  Groups includes named and numbered capture groups, non-capture groups, and look arounds.
+        // Groups that have been closed, even though they aren't still on the stack, may still have references through GroupInfo.Parent, captures, and backRefs lists.
+        // The depth is limited so that the tree walk in GroupInfo.IsPossibleZeroCapture() is limited.
         private class GroupTracker
         {
-            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();
-            private GroupInfo _lastGroup = new GroupInfo();
-            private GroupInfo _inLookBehind;
-            private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();
-            private readonly List<string> _backRefs = new List<string>();
+            private readonly Stack<GroupInfo> _groupStack = new Stack<GroupInfo>();         // current stack of open groups
+            private GroupInfo _quantTarget = new GroupInfo();                               // pointer to the literal or group seen, to apply quantifiers to
+            private GroupInfo _inLookBehind;                                                // are we in a look behind?  they have special rules
+            private readonly Dictionary<string, GroupInfo> _captureNames = new Dictionary<string, GroupInfo>();       // named and numbered group lookup
+            private readonly List<string> _backRefs = new List<string>();                   // backrefs seen, processed in Complete to ensure they are non empty
 
             public GroupTracker()
             {
@@ -920,7 +920,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             public void SeenNonGroup(int min = 1, int max = 1)
             {
-                _lastGroup = _groupStack.Peek().SeenNonGroup(min, max);
+                _quantTarget = _groupStack.Peek().SeenNonGroup(min, max);
             }
 
             public bool SeenQuantifier(int min, int max, out ErrorResourceKey? error)
@@ -932,7 +932,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
-                return _groupStack.Peek().SeenQuantifier(_lastGroup, min, max, out error);
+                return _groupStack.Peek().SeenQuantifier(_quantTarget, min, max, out error);
             }
 
             public bool SeenClose(out ErrorResourceKey? error)
@@ -943,14 +943,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
-                _lastGroup = _groupStack.Pop();
-
-                // Look behinds can never have quantification, JavaScript doesn't support this.
+                _quantTarget = _groupStack.Pop();
+                
                 // Look behinds are limited in number of characters, PCRE2 doesn't support more than 255.
+                // This is why we track the MaxSize on all groups and literal characters.
                 // Can't just check the look around group, could be on a containing group, for example "((?=a))*".
-                if (_inLookBehind == _lastGroup)
+                if (_inLookBehind == _quantTarget)
                 {
-                    if (_lastGroup.MaxSize > MaxLookBehindPossibleCharacters)
+                    if (_quantTarget.MaxSize > MaxLookBehindPossibleCharacters)
                     {
                         error = TexlStrings.ErrInvalidRegExLookbehindTooManyChars;
                         return false;
@@ -959,12 +959,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     _inLookBehind = null;
                 }
 
-                if (_lastGroup.IsLookAround)
-                { 
-                    _lastGroup.ErrorOnAnyQuant = true;
+                // Look behinds can never have quantification, JavaScript doesn't support this.
+                if (_quantTarget.IsLookAround)
+                {
+                    _quantTarget.ErrorOnQuant_LookBehind = true;
                 }
 
-                return _lastGroup.SeenClose(out error);
+                return _quantTarget.SeenClose(out error);
             }
 
             public bool SeenBackRef(string name, out ErrorResourceKey? error)
@@ -1008,6 +1009,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
+                // for caompatibility reasons, back refs can't reference something that is posibly empty
                 foreach (var backRef in _backRefs)
                 {
                     if (_captureNames[backRef].IsPossibleZeroLength())
@@ -1023,14 +1025,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return true;
             }
 
+            // Information tracked for each group and its parent
             private class GroupInfo
             {
                 public bool IsNonCapture;               // this group is a non-capture group
                 public bool IsLookAround;               // is this gruop a look around? if so, limitations on quantifiers
                 public bool IsGroup;                    // is this an actual group, vs a group created for literal characters, escapes, character classes, etc.
                 public bool IsClosed;                   // this group is closed (we've seen the ending paren), ok to use for backref
-                public bool ErrorOnZeroQuant;           // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
-                public bool ErrorOnAnyQuant;            // used for look arounds, erorr on any quantifier
+                public bool ErrorOnQuant;               // we have a possibly empty capture group which has already seen a quantifier, next quantifier gets an error
+                public bool ErrorOnQuant_LookBehind;    // used for more specific error message for look behinds
                 public bool HasZeroQuant;               // this group has a quantifier
                 public bool HasAlternation;             // this group has an alternation within
                 public bool ContainsCapture;            // this gruop contains a cpature, perhaps nested down
@@ -1065,13 +1068,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (lastGroup.IsGroup)
                     {
-                        if (lastGroup.ErrorOnAnyQuant)
+                        if (lastGroup.ErrorOnQuant_LookBehind)
                         {
                             error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
                             return false;
                         }
 
-                        if (lastGroup.ErrorOnZeroQuant)
+                        if (lastGroup.ErrorOnQuant)
                         {
                             error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
                             return false;
@@ -1079,7 +1082,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         lastGroup.HasZeroQuant = low == 0;
 
-                        if (low <= 1 && lastGroup.ErrorOnZeroQuant)
+                        if (low <= 1 && lastGroup.ErrorOnQuant)
                         {
                             error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
                             return false;
@@ -1087,7 +1090,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         if ((low == 0 || (low > 0 && (lastGroup.MinSize == 0 || lastGroup.ContainsCapture))) && (!lastGroup.IsNonCapture || lastGroup.ContainsCapture))
                         {
-                            ErrorOnZeroQuant = true;
+                            ErrorOnQuant = true;
                         }
                     }
 
@@ -1131,7 +1134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         // an alternation with a capture can effectively be empty, for example "(a|(b)|c)".
                         // The capture group "b" in this case is not empty, but it is a capture in an alternation.
-                        ErrorOnZeroQuant = ErrorOnZeroQuant || ContainsCapture;
+                        ErrorOnQuant = ErrorOnQuant || ContainsCapture;
                     }
                 }
 
@@ -1144,13 +1147,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // If we are possibly empty, we can't suport a zero quantifier.
                     if (MinSize == 0)
                     {
-                        ErrorOnZeroQuant = true;
+                        ErrorOnQuant = true;
                     }
 
                     if (Parent != null)
                     {
-                        Parent.ErrorOnZeroQuant |= ErrorOnZeroQuant;
-                        Parent.ErrorOnAnyQuant |= ErrorOnAnyQuant;
+                        Parent.ErrorOnQuant |= ErrorOnQuant;
+                        Parent.ErrorOnQuant_LookBehind |= ErrorOnQuant_LookBehind;
 
                         if (!IsNonCapture)
                         {
