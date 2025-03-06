@@ -333,7 +333,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                            ([dfnrstw]                              |     # standard regex character classes, missing from .NET are aAeGzZv (no XRegExp support), other common are u{} and o
                             [\^\$\\\.\*\+\?\(\)\[\]\{\}\|\/]       |     # acceptable escaped characters with Unicode aware ECMAScript
                             [\#\ ]                                 |     # added for free spacing, always accepted for conssitency even in character classes, escape needs to be removed on Unicode aware ECMAScript
-                            c[a-zA-Z]                              |     # Ctrl character classes
                             x[0-9a-fA-F]{2}                        |     # hex character, must be exactly 2 hex digits
                             u[0-9a-fA-F]{4}))                          | # Unicode characters, must be exactly 4 hex digits
                     \\(?<goodUEscape>[pP])\{(?<UCategory>[\w=:-]+)\}   | # Unicode chaeracter classes, extra characters here for a better error message
@@ -1066,15 +1065,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     if (lastGroup.IsGroup)
                     {
-                        if (lastGroup.ErrorOnZeroQuant)
-                        {
-                            error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
-                            return false;
-                        }
-
                         if (lastGroup.ErrorOnAnyQuant)
                         {
                             error = TexlStrings.ErrInvalidRegExQuantifierOursideLookAround;
+                            return false;
+                        }
+
+                        if (lastGroup.ErrorOnZeroQuant)
+                        {
+                            error = TexlStrings.ErrInvalidRegExQuantifiedCapture;
                             return false;
                         }
 

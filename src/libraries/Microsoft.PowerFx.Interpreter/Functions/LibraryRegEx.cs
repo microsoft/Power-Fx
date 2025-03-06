@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     // ^ doesn't require any translation if not in multilline, only matches the start of the string
                     // MatchAll( "1a3" & Char(13) & "2b4", "(?m)^\d" ) would not match "2" without translation
-                    return openCharacterClass ? "^" : (multiline ? @"(?<=\A|\r\n|\r|\n)" : "^");
+                    return openCharacterClass ? "^" : (multiline ? @"(?:(?<=\A|\r\n|\n)|(?<=\r)(?!\n))" : "^");
                 }
 
                 string AlterEnd()
@@ -248,7 +248,7 @@ namespace Microsoft.PowerFx.Functions
                     // $ does require translation if not in multilline, as $ does look past newlines to the end in .NET but it doesn't take into account \r
                     // MatchAll( "1a3" & Char(13) & "2b4" & Char(13), "(?m)\d$" ) would not match "3" or "4" without translation
                     // Match( "1a3" & Char(13), "\d$" ) would also not match "3" without translation
-                    return openCharacterClass ? "$" : (multiline ? @"(?=\z|\r\n|\r|\n)" : @"(?=\z|\r\n\z|\r\z|\n\z)");
+                    return openCharacterClass ? "$" : (multiline ? @"(?:(?=\r\n|[\r]|\z)|(?<!\r)(?=\n))" : @"(?:(?=\r\n\z|[\r]?\z)|(?<!\r)(?=\n\z))");
                 }
 
                 for (; index < regex.Length; index++)

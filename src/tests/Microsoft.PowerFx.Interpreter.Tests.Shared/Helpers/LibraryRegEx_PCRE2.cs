@@ -145,6 +145,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 NOTEMPTY = 0x00000004,
                 NOTEMPTY_ATSTART = 0x00000008,
+                ANCHORED = 0x80000000,
+            }
+
+            internal enum PCRE2_RETURNCODES : int
+            {
+                ERROR_NOMATCH = -1,
+                ERROR_PARIAL = -2,
             }
 
             private static readonly Mutex PCRE2Mutex = new Mutex();  // protect concurrent access to the node process
@@ -288,14 +295,41 @@ namespace Microsoft.PowerFx.Functions
                 var startMatch = 0;
                 List<RecordValue> allMatches = new ();
 
-                // PCRE2 uses an older definition of Unicode where 180e is a space character, moving it to something else (used defined cahracter) here for category comparisons tests
+                // PCRE2 uses an older definition of Unicode where 180e is a space character, moving it to something else (user defined cahracter) here for category comparisons tests
                 subject = subject.Replace('\u180e', '\uf8ff');
 
+                // see https://pcre.org/current/doc/html/pcre2demo.html for the full demo of using the PCRE2 API
                 var subjectBytes = Encoding.UTF32.GetBytes(subject);
                 PCRE2_MATCH_OPTIONS matchOptions = 0;
-                while (startMatch >= 0 && NativeMethods.pcre2_match_32(code, subjectBytes, -1, startMatch, (uint)matchOptions, md, matchContext) > 0)
+                while (startMatch >= 0)
                 {
-                    Dictionary<string, NamedValue> fields = new ();
+                    var rc = NativeMethods.pcre2_match_32(code, subjectBytes, -1, startMatch, (uint)matchOptions, md, matchContext);
+
+                    if (matchAll && rc == (int)PCRE2_RETURNCODES.ERROR_NOMATCH)
+                    {
+                        if (startMatch + 1 < subject.Length && subject[startMatch] == '\r' && subject[startMatch + 1] == '\n')
+                        {
+                            startMatch += 2;
+                        }
+                        else
+                        {
+                            startMatch++;
+                        }
+
+                        if (startMatch > subject.Length)
+                        {
+                            break;
+                        }
+
+                        matchOptions = 0;
+                        continue;
+                    }
+                    else if (rc < 0)
+                    {
+                        break;
+                    }
+
+                    Dictionary<string, NamedValue> fields = new();
 
                     var sc = NativeMethods.pcre2_get_startchar_32(md);
                     fields.Add(STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)sc + 1)));
@@ -316,7 +350,7 @@ namespace Microsoft.PowerFx.Functions
 #else
                             if (matchOptions == 0)
                             {
-                                matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART;
+                                matchOptions = PCRE2_MATCH_OPTIONS.NOTEMPTY_ATSTART | PCRE2_MATCH_OPTIONS.ANCHORED;
                             }
                             else
                             {

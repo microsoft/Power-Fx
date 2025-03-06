@@ -86,13 +86,13 @@ namespace Microsoft.PowerFx.Functions
                     js.Append($"{(matchAll ? "true" : "false")});");
 
 #if false
-                // for debugging unicode passing of strings to Node, output ignored by deserializer but visible in the debugger
-                js.AppendLine(@"
-                    for (var i = 0; i < subject.length; i++)
-                    {
-                        console.log(subject[i] + '> ' + subject.charCodeAt(i).toString(16));
-                    }
-                ");
+                    // for debugging unicode passing of strings to Node, output ignored by deserializer but visible in the debugger
+                    js.AppendLine(@"
+                        for (var i = 0; i < subject.length; i++)
+                        {
+                            console.log(subject[i] + '> ' + subject.charCodeAt(i).toString(16));
+                        }
+                    ");
 #endif
 
                     if (node == null)
@@ -100,10 +100,23 @@ namespace Microsoft.PowerFx.Functions
                         string js2 = @"
                         function MatchTest( subject, pattern, flags, matchAll )
                         {
-                            const [alteredPattern, alteredFlags] = AlterRegex_JavaScript( pattern, flags );
+                            const newLineMap = AlterRegex_NeedToMapNewlines( pattern, flags );
+                            console.log( 'need to map: ' + newLineMap );
+
+                            const nlCode = newLineMap ? 0xf8f0 : 10;
+                            const crCode = newLineMap ? 0xf8f1 : 13;
+                            const nl = String.fromCharCode( nlCode );
+                            const cr = String.fromCharCode( crCode );
+
+                            if (crCode != 13 || nlCode != 10)
+                                subject = subject.replaceAll( '\r', cr ).replaceAll( '\n', nl );
+                               
+                            const [alteredPattern, alteredFlags, endGuards] = AlterRegex_JavaScript( pattern, flags, crCode, nlCode );
+
                             const regex = RegExp(alteredPattern, alteredFlags.concat(matchAll ? 'g' : ''));
                             const matches = matchAll ? [...subject.matchAll(regex)] : [subject.match(regex)];
-                            // console.log(alteredPattern);  // useful to debug AlterRegex_JavaScript
+                            console.log(alteredPattern);  // useful to debug AlterRegex_JavaScript
+                            console.log(encodeURI(subject));
                             console.log('%%begin%%');
                             if (matches.length != 0 && matches[0] != null)
                             {
@@ -112,8 +125,16 @@ namespace Microsoft.PowerFx.Functions
                                 {
                                     var o = new Object();
                                     o.Index = match.index;
-                                    o.Named = match.groups;
-                                    o.Numbered = match;
+                                    o.Named = new Object();
+                                  	for (const prop in match.groups)
+                                    {
+                                        o.Named[prop] = (match.groups[prop] == undefined ? undefined : newLineMap ? match.groups[prop].replaceAll( cr, '\r' ).replaceAll( nl, '\n' ) : match.groups[prop] );
+                                    }
+                                    o.Numbered = new Array();
+                                    for (const subMatch of match)
+                                    {
+                                  	    o.Numbered.push( subMatch == undefined ? undefined : newLineMap ? subMatch.replaceAll( cr, '\r' ).replaceAll( nl, '\n' ) : subMatch );
+                                    }
                                     arr.push(o);
                                 }
                                 console.log(JSON.stringify(arr));
@@ -191,10 +212,10 @@ namespace Microsoft.PowerFx.Functions
                     foreach (JSMatch match in result)
                     {
                         Dictionary<string, NamedValue> fields = new Dictionary<string, NamedValue>()
-                    {
-                        { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(match.Index) + 1)) },
-                        { FULLMATCH, new NamedValue(FULLMATCH, match.Numbered[0] == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(match.Numbered[0])) },
-                    };
+                        {
+                            { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(Convert.ToDouble(match.Index) + 1)) },
+                            { FULLMATCH, new NamedValue(FULLMATCH, match.Numbered[0] == null ? BlankValue.NewBlank(FormulaType.String) : StringValue.New(match.Numbered[0])) },
+                        };
 
                         if (match.Named != null)
                         {
