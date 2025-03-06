@@ -1341,6 +1341,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
 
+            if (typeOuter.IsLazyType)
+            {
+                typeOuter = typeOuter.LazyTypeProvider.GetExpandedType(typeOuter.IsTable);
+            }
+
             if (typeOuter.TypeTree.TryGetValue(name, out var typeCur))
             {
                 fError = true;
@@ -1371,9 +1376,15 @@ namespace Microsoft.PowerFx.Core.Types
                 fullType = LazyTypeProvider.GetExpandedType(IsTable);
             }
 
-            Contracts.Assert(!TypeTree.Contains(name));
-            var tree = TypeTree.SetItem(name, type);
-            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
+            Contracts.Assert(!fullType.TypeTree.Contains(name));
+
+            var tree = fullType.TypeTree.SetItem(name, type);
+            var newType = new DType(fullType.Kind, tree, AssociatedDataSources, fullType.DisplayNameProvider);
+
+            if (fullType.HasExpandInfo)
+            {
+                newType = CopyExpandInfo(newType, fullType);
+            }
 
             return newType;
         }
